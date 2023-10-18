@@ -38,7 +38,10 @@ export const GlobalStyles = createGlobalStyle`
         position: relative;
         width: 100%;
         overflow-x: hidden;
-    }
+    } 
+    a {
+        color: black;
+    }   
     a:hover {
 		text-decoration: underline;
     }
@@ -75,5 +78,5 @@ export const GlobalStyles = createGlobalStyle`
     button:focus {
         outline: none;
         box-shadow: none;
-    }       
+    }   
 `

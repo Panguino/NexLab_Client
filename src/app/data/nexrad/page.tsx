@@ -1,7 +1,7 @@
 'use client'
 
 const Page = () => {
-	return <>Home Page</>
+	return <>NexRad Landing Page</>
 }
 
 export default Page

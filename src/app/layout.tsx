@@ -1,6 +1,7 @@
 'use client'
 import { Normalize } from 'styled-normalize'
 import { GlobalStyles } from '@/styles/GlobalStyles'
+import Navigation from '@/components/layout/Navigation/Navigation'
 
 export default function RootLayout({ children }) {
 	return (
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
 			</head>
 			<body>
 				<GlobalStyles />
+				<Navigation />
 				{children}
 			</body>
 		</html>

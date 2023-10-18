@@ -1,7 +1,7 @@
 'use client'
 
 const Page = () => {
-	return <>Home Page</>
+	return <>Resources Landing Page</>
 }
 
 export default Page

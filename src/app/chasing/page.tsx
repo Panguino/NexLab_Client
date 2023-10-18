@@ -1,7 +1,7 @@
 'use client'
 
 const Page = () => {
-	return <>Home Page</>
+	return <>Storm Chasing Landing Page</>
 }
 
 export default Page
