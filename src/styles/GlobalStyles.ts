@@ -2,6 +2,10 @@ import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyles = createGlobalStyle`
 
+    :root { 
+        --font-primary: "Roboto", sans-sarif;
+        --font-secondary: "Montserrat", sans-serif;
+    }
     html, body {
         margin:0;
         padding:0;
@@ -72,8 +76,4 @@ export const GlobalStyles = createGlobalStyle`
         outline: none;
         box-shadow: none;
     }       
-    :root { 
-        --font-primary: "Roboto", sans-sarif;
-        --font-secondary: "Montserrat", sans-serif;
-    }
 `
