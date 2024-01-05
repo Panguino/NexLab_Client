@@ -7,7 +7,7 @@
     "clean": "gts clean",
     "lint": "gts check",
     "dev": "next",
-    "build": "node src/scripts/build/styles/index.ts && next build",
+    "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "start:local": "next start"
   },
