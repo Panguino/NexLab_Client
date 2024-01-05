@@ -5,6 +5,7 @@ export const Navigation = styled.div`
 	padding: 20px;
 	display: flex;
 	justify-content: space-between;
+	background-color: #ffffff;
 `
 
 export const Logo = styled.div`
