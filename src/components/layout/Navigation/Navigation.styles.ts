@@ -40,3 +40,15 @@ export const NavItem = styled.div`
 	font-size: 18px;
 	font-weight: 500;
 `
+
+export const NavItemButton = styled.div`
+	font-size: 14px;
+	font-weight: 500;
+	background-color: #333;
+	color: #fff;
+	padding: 8px 20px;
+	transition: background-color 0.2s ease;
+	&:hover {
+		background-color: #2677f0;
+	}
+`

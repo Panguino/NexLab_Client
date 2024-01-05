@@ -29,10 +29,10 @@ const Navigation = () => {
 			</S.NavItems>
 			<S.NavItems>
 				<Link href="/login/">
-					<S.NavItem>Login</S.NavItem>
+					<S.NavItemButton>Login</S.NavItemButton>
 				</Link>
 				<Link href="/signup/">
-					<S.NavItem>Signup</S.NavItem>
+					<S.NavItemButton>Signup</S.NavItemButton>
 				</Link>
 			</S.NavItems>
 		</S.Navigation>
