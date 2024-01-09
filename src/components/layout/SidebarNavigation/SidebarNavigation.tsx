@@ -1,7 +1,7 @@
-import * as S from './SidebarNavigation.styles'
+import styles from './SidebarNavigation.module.scss'
 
 const SidebarNavigation = ({ children }) => {
-	return <S.SidebarNavigation>{children}</S.SidebarNavigation>
+	return <div className={styles.SidebarNavigation}>{children}</div>
 }
 
 export default SidebarNavigation

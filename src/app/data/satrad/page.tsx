@@ -1,5 +1,3 @@
-'use client'
-
 const Page = () => {
 	return <>Satrad Landing Page</>
 }

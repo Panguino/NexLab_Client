@@ -1,11 +1,10 @@
-import Link from 'next/link'
-import * as S from './SubNavigation.styles'
+import styles from './SubNavigation.module.scss'
 
 const SubNavigation = ({ children }) => {
 	return (
-		<S.SubNavigation>
-			<S.NavItems>{children}</S.NavItems>
-		</S.SubNavigation>
+		<div className={styles.SubNavigation}>
+			<div className={styles.NavItems}>{children}</div>
+		</div>
 	)
 }
 
