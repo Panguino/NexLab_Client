@@ -1,0 +1,17 @@
+.SidebarGroup {
+  position: relative;
+  border-bottom: 1px solid #5c5c5c;
+  padding: 6px 0;
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
+.title {
+  position: relative;
+  font-family: var(--font-primary);
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 600;
+  color: #fff;
+  padding: 6px 0;
+}

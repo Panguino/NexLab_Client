@@ -2,7 +2,8 @@ import { gql } from '@apollo/client'
 import { getClient } from '@/apollo/apollo-client'
 import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavigation'
 import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
-import Link from 'next/link'
+import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
+import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 
 export default async function asyncLayout({ children }) {
 	const response = await getClient().query({
@@ -38,17 +39,12 @@ export default async function asyncLayout({ children }) {
 					// only return category if it has courses inside it
 					if (coursesData.length > 0) {
 						return (
-							<div key={index}>
-								<div>{Name}</div>
+							<SidebarGroup key={index} title={Name}>
 								{coursesData.map((course, index) => {
 									const { CourseID } = course.attributes
-									return (
-										<Link key={index} href={`/academics/classes/${course.id}`}>
-											<div>Earth {CourseID}</div>
-										</Link>
-									)
+									return <SidebarLink key={index} linkUrl={`/academics/classes/${course.id}`} name={`Earth ${CourseID}`} />
 								})}
-							</div>
+							</SidebarGroup>
 						)
 					}
 				})}

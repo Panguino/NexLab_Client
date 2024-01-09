@@ -1,6 +1,6 @@
 :root {
   --font-primary: "Roboto", sans-sarif;
-  --font-secondary: "Montserrat", sans-serif;
+  --font-secondary: "Inter", sans-serif;
 }
 html,
 body {
@@ -44,10 +44,25 @@ a:hover {
   text-decoration: underline;
 }
 h1 {
+  font-family: var(--font-primary);
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 130%;
+  padding: 0;
+  margin: 0;
 }
 h2 {
 }
 h3 {
+  font-family: var(--font-secondary);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 30px;
+  text-transform: capitalize;
+  padding: 0;
+  margin: 0;
 }
 h4 {
 }
@@ -56,6 +71,11 @@ h5 {
 h6 {
 }
 p {
+  font-family: Inter;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 30px;
 }
 ul,
 ol {

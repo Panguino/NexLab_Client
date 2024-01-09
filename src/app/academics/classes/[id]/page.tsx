@@ -41,8 +41,8 @@ const Page = async ({ params }) => {
 	const { Title, CourseID, Description, MaterialGroup } = response.data.course.data.attributes
 	return (
 		<div>
+			<h3>Earth {CourseID}</h3>
 			<h1>{Title}</h1>
-			<h2>{CourseID}</h2>
 			<RichText text={Description} />
 			{MaterialGroup.map((MaterialGroupItem, index) => {
 				const { Name, Materials } = MaterialGroupItem
