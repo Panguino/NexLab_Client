@@ -1,7 +1,7 @@
-import * as S from './SidebarWrapper.styles'
+import styles from './SidebarWrapper.module.scss'
 
 const SidebarWrapper = ({ children }) => {
-	return <S.SidebarWrapper>{children}</S.SidebarWrapper>
+	return <div className={styles.SidebarWrapper}>{children}</div>
 }
 
 export default SidebarWrapper

@@ -1,5 +1,3 @@
-'use client'
-
 import SubNavigation from '@/components/layout/SubNavigation/SubNavigation'
 import SubNavigationItem from '@/components/layout/SubNavigation/SubNavigationItem/SubNavigationItem'
 

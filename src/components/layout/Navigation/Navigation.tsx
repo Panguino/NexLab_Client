@@ -1,41 +1,41 @@
 import Link from 'next/link'
-import * as S from './Navigation.styles'
+import styles from './Navigation.module.scss'
 
 const Navigation = () => {
 	return (
-		<S.Navigation>
+		<div className={styles.Navigation}>
 			<Link href="/">
-				<S.Logo>
+				<div className={styles.Logo}>
 					<img src="/img/logo-cloud-filled.svg" />
 					<img src="/img/logo-text.svg" />
-				</S.Logo>
+				</div>
 			</Link>
-			<S.NavItems>
+			<div className={styles.NavItems}>
 				<Link href="/data/">
-					<S.NavItem>Weather Data</S.NavItem>
+					<div className={styles.NavItem}>Weather Data</div>
 				</Link>
 				<Link href="/academics/">
-					<S.NavItem>Academics</S.NavItem>
+					<div className={styles.NavItem}>Academics</div>
 				</Link>
 				<Link href="/chasing/">
-					<S.NavItem>Storm Chasing</S.NavItem>
+					<div className={styles.NavItem}>Storm Chasing</div>
 				</Link>
 				<Link href="/localwx/">
-					<S.NavItem>Local Weather</S.NavItem>
+					<div className={styles.NavItem}>Local Weather</div>
 				</Link>
 				<Link href="/faqs/">
-					<S.NavItem>FAQs</S.NavItem>
+					<div className={styles.NavItem}>FAQs</div>
 				</Link>
-			</S.NavItems>
-			<S.NavItems>
+			</div>
+			<div className={styles.NavItems}>
 				<Link href="/login/">
-					<S.NavItemButton>Login</S.NavItemButton>
+					<div className={styles.NavItemButton}>Login</div>
 				</Link>
 				<Link href="/signup/">
-					<S.NavItemButton>Signup</S.NavItemButton>
+					<div className={styles.NavItemButton}>Signup</div>
 				</Link>
-			</S.NavItems>
-		</S.Navigation>
+			</div>
+		</div>
 	)
 }
 
