@@ -1,0 +1,24 @@
+.LinkAccordianItem {
+  position: relative;
+  border-bottom: 1px solid #a5a5a5;
+  a {
+    display: flex;
+    text-decoration: none;
+    justify-content: space-between;
+    font-family: var(--font-secondary);
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 15px;
+    padding: 10px 0;
+    color: #505050;
+
+    &:hover {
+      text-decoration: none;
+      color: #000;
+    }
+  }
+  &:last-of-type {
+    border-bottom: none;
+  }
+}
