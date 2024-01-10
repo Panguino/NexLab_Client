@@ -5,6 +5,11 @@
   justify-content: center;
   background-color: #333;
   color: #fff;
+  position: fixed;
+  top: 73px;
+  z-index: 99;
+  min-height: 0;
+
   a {
     color: white;
     text-decoration: none;
@@ -19,4 +24,9 @@
   display: flex;
   gap: 20px;
   align-items: center;
+}
+.Spacer {
+  padding-top: 36px;
+  width: 100%;
+  display: block;
 }

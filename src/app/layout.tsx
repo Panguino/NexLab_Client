@@ -14,8 +14,10 @@ export default function RootLayout({ children }) {
 				<title>NexLab</title>
 			</head>
 			<body>
-				<Navigation />
-				{children}
+				<div className="all">
+					<Navigation />
+					{children}
+				</div>
 			</body>
 		</html>
 	)
