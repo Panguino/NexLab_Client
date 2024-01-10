@@ -1,34 +1,21 @@
-import { gql } from '@apollo/client'
-import { getClient } from '@/apollo/apollo-client'
+'use client'
+import { useEffect, useState } from 'react'
+
 import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavigation'
 import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
+import { getCourseCategories } from '@/apollo/getCourseCategories'
 
-export default async function asyncLayout({ children }) {
-	const response = await getClient().query({
-		query: gql`
-			query {
-				courseCategories {
-					data {
-						id
-						attributes {
-							Name
-							courses {
-								data {
-									id
-									attributes {
-										CourseID
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		`
-	})
-	const courseCategories = response.data.courseCategories.data
+export default function Layout({ children }) {
+	const [courseCategories, setCourseCategories] = useState([])
+	useEffect(() => {
+		const fetchData = async () => {
+			const res = await getCourseCategories()
+			setCourseCategories(res)
+		}
+		fetchData().catch(console.error)
+	}, [])
 
 	return (
 		<SidebarWrapper>

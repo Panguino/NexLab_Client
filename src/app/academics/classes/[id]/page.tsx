@@ -1,7 +1,8 @@
 import { gql } from '@apollo/client'
 
 import { getClient } from '@/apollo/apollo-client'
-import { RichText } from '@/components/elements/RichText/RichText'
+import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
+import { ClassInfo } from '@/components/blocks/ClassInfo/ClassInfo'
 
 const Page = async ({ params }) => {
 	const response = await getClient().query({
@@ -40,29 +41,9 @@ const Page = async ({ params }) => {
 	//console.log('res', response.data.course.data.attributes)
 	const { Title, CourseID, Description, MaterialGroup } = response.data.course.data.attributes
 	return (
-		<div>
-			<h3>Earth {CourseID}</h3>
-			<h1>{Title}</h1>
-			<RichText text={Description} />
-			{MaterialGroup.map((MaterialGroupItem, index) => {
-				const { Name, Materials } = MaterialGroupItem
-				// make sure materials group has items in it before displaying it
-				if (Materials.length > 0) {
-					return (
-						<div key={index}>
-							<b>{Name}</b>
-							{Materials.map((Material, index) => {
-								return (
-									<div key={index}>
-										{Material.Name} - {Material.File.data.attributes.url}
-									</div>
-								)
-							})}
-						</div>
-					)
-				}
-			})}
-		</div>
+		<PageContentWrapper>
+			<ClassInfo Title={Title} CourseID={CourseID} Description={Description} MaterialGroup={MaterialGroup} />
+		</PageContentWrapper>
 	)
 }
 
