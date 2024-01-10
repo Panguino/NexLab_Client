@@ -2,7 +2,7 @@
 import { gql } from '@apollo/client'
 import { getClient } from '@/apollo/apollo-client'
 
-export async function getCourseCategories() {
+export const getCourseCategories = async () => {
 	const response = await getClient().query({
 		query: gql`
 			query {
