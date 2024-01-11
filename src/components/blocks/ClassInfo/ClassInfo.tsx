@@ -20,7 +20,9 @@ export const ClassInfo = ({ Title, CourseID, Description, MaterialGroup }) => {
 						return (
 							<LinkAccordian key={index} title={Name}>
 								{Materials.map((Material, index) => {
-									return <LinkAccordianItem key={index} name={Material.Name} link={Material.File.data.attributes.url} />
+									const { Name, File, Link } = Material
+									const url = File?.data?.attributes?.url ? File.data.attributes.url : Link
+									return <LinkAccordianItem key={index} name={Name} link={url} />
 								})}
 							</LinkAccordian>
 						)
