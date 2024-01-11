@@ -21,6 +21,7 @@ const Page = async ({ params }) => {
 								Materials {
 									id
 									Name
+									Link
 									File {
 										data {
 											attributes {
