@@ -13,9 +13,11 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.0-rc.2",
-    "@apollo/experimental-nextjs-app-support": "^0.6.0",
+    "@apollo/experimental-nextjs-app-support": "^0.8.0",
+    "@fortawesome/fontawesome-free": "^6.5.1",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@radix-ui/react-scroll-area": "^1.0.5",
@@ -24,7 +26,7 @@
     "@types/react": "^18.2.18",
     "framer-motion": "^10.17.6",
     "next": "^14.0.4",
-    "next-auth": "^4.24.5",
+    "next-auth": "^4.24.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.69.7",
@@ -65,7 +67,7 @@
     ]
   },
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "repository": {
     "type": "git",
