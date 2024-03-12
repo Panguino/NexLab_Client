@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import MainContent from '@/components/layout/MainContent/MainContent'
 import { getDegrees } from '@/apollo/getDegrees'
 import { DegreeInfo } from '@/components/blocks/DegreeInfo/DegreeInfo'
 
@@ -15,12 +16,12 @@ const Page = () => {
 	}, [])
 	console.log(degrees) // comment out eventually
 	return (
-		<div>
+		<MainContent>
 			{degrees.map((d, index) => {
 				const { Title, Buttons, Description } = d.attributes
 				return <DegreeInfo key={index} Title={Title} Buttons={Buttons} Description={Description} />
 			})}
-		</div>
+		</MainContent>
 	)
 }
 
