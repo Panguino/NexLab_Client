@@ -1,0 +1,29 @@
+.formContainer {
+	display: flex;
+	flex-direction: column;
+	width: 60%;
+	gap: 20px;
+}
+
+.formContainer input[type='text'],
+.formContainer input[type='email'] {
+	background-color: white;
+	padding: 10px;
+	border-radius: 5px;
+	border: solid 1px darkgray;
+}
+.formContainer textarea {
+	background-color: white;
+	padding: 10px;
+	border-radius: 5px;
+	border: solid 1px darkgray;
+	min-height: 200px;
+}
+.formContainer button {
+	width: 20%;
+	padding: 10px 50px;
+	border-radius: 5px;
+	border: solid 1px darkgray;
+	box-sizing: content-box;
+	cursor: pointer;
+}
