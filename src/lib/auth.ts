@@ -17,7 +17,7 @@ export const authConfig: NextAuthOptions = {
 	callbacks: {
 		async session({ user, session, token }) {
 			session.user = token as any
-			console.log('session', user, session, token)
+			//console.log('session', user, session, token)
 			return Promise.resolve(session)
 		},
 
@@ -25,11 +25,11 @@ export const authConfig: NextAuthOptions = {
 			const isSignIn = user ? true : false
 			if (isSignIn && account) {
 				try {
-					console.log('Google Account >>>>>>>>>>>>>> ', account)
+					//console.log('Google Account >>>>>>>>>>>>>> ', account)
 					const public_url = process.env.NEXT_PUBLIC_API_URL
 					const response = await fetch(`${public_url}/api/auth/${account.provider}/callback?access_token=${account?.access_token}`)
 					const data = await response.json()
-					console.log('Strapi Callback Data >>>>>>>>>>>>>> ', data)
+					//console.log('Strapi Callback Data >>>>>>>>>>>>>> ', data)
 					token.jwt = data.jwt
 					token.id = data.user.id
 				} catch (error) {
