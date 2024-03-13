@@ -1,5 +1,4 @@
 'use client'
-
 import styles from './DarkmodeToggler.module.scss'
 import { useTheme } from 'next-themes'
 import { motion } from 'framer-motion'
