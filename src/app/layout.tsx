@@ -1,5 +1,6 @@
 import Navigation from '@/components/layout/Navigation/Navigation'
 import '@/styles/global.scss'
+import { ThemeProvider } from '@/components/providers/ThemeProvider/ThemeProvider'
 
 export default function RootLayout({ children }) {
 	return (
@@ -16,8 +17,10 @@ export default function RootLayout({ children }) {
 			</head>
 			<body>
 				<div className="all">
-					<Navigation />
-					{children}
+					<ThemeProvider attribute="class" defaultTheme="dark" storageKey="nl-theme-pref" enableSystem>
+						<Navigation />
+						{children}
+					</ThemeProvider>
 				</div>
 			</body>
 		</html>

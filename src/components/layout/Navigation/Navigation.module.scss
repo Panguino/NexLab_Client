@@ -3,7 +3,8 @@
   padding: 20px;
   display: flex;
   justify-content: space-between;
-  background-color: #ffffff;
+  background-color: var(--color-white-grey15);
+  transition: var(--themeChange);
   position: fixed;
   z-index: 100;
 }
