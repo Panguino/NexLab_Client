@@ -63,6 +63,8 @@ $themes: (
 @include theme();
 
 :root {
+  --font-primary: "Inter", sans-serif;
+  --font-secondary: "Bebas Neue", sans-serif;
   color-scheme: var(--initial-color-mode);
   --themeChange: 0.5s ease;
   --hoverChange: 0.3s ease;
@@ -89,7 +91,7 @@ body {
 }
 * {
   box-sizing: border-box;
-  font-family: var(--font-secondary);
+  font-family: var(--font-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   word-break: break-word;
@@ -115,6 +117,7 @@ h1 {
   margin: 0;
 }
 h2 {
+  font-family: var(--font-primary);
 }
 h3 {
   font-family: var(--font-secondary);
@@ -127,10 +130,13 @@ h3 {
   margin: 0;
 }
 h4 {
+  font-family: var(--font-primary);
 }
 h5 {
+  font-family: var(--font-primary);
 }
 h6 {
+  font-family: var(--font-primary);
 }
 p {
   font-family: Inter;
@@ -141,8 +147,10 @@ p {
 }
 ul,
 ol {
+  font-family: var(--font-primary);
 }
 table {
+  font-family: var(--font-primary);
 }
 input {
   min-height: auto;
@@ -158,4 +166,7 @@ textarea:focus,
 button:focus {
   outline: none;
   box-shadow: none;
+}
+.somerandomclass {
+  background: red;
 }
