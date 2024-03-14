@@ -1,29 +1,14 @@
 .DegreeInfo {
 	position: relative;
 	display: flex;
-	justify-content: space-between;
-	width: 100%;
-	margin: 0 auto 50px auto;
-	border-bottom: solid 1px grey;
-}
-.DegreeInfo:last-of-type {
-	border-bottom: none;
+	justify-content: space-evenly;
+	max-width: 1200px;
+	margin: 0 auto;
+	background-color: lightgrey;
 }
 .Info {
-	width: 40%;
-	padding: 20px;
-	box-sizing: border-box;
-}
-.Info h2 {
-	margin: 0 0 10px 0;
-}
-.ButtonGroup {
-	position: relative;
-	display: flex;
-	flex-direction: row;
-	gap: 10px;
+	flex-grow: 2;
 }
 .Description {
-	min-width: 0;
-	width: 59%;
+	flex-grow: 3;
 }
