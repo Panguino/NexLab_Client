@@ -1,0 +1,17 @@
+.darkmodeToggler {
+  display: flex;
+  cursor: pointer;
+  user-select: none;
+}
+.sun {
+  transform-origin: 50% 50%;
+  path {
+    fill: var(--color-white);
+  }
+}
+.moon {
+  transform-origin: 11px 10px;
+  path {
+    fill: var(--color-grey17);
+  }
+}

@@ -7,37 +7,45 @@
     "clean": "gts clean",
     "lint": "gts check",
     "dev": "next",
-    "build": "next build",
+    "build": "next build && npm run sassy",
     "start": "NODE_ENV=production node server.js",
-    "start:local": "next start"
+    "start:local": "next start",
+    "sassy": "node src/scripts/build/styles/index.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.8.0-rc.2",
-    "@apollo/experimental-nextjs-app-support": "^0.6.0",
+    "@apollo/experimental-nextjs-app-support": "^0.8.0",
+    "@fortawesome/fontawesome-free": "^6.5.1",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@strapi/blocks-react-renderer": "^1.0.0",
     "@types/node": "^18.15.11",
-    "@types/react": "^18.2.18",
-    "framer-motion": "^10.17.6",
+    "framer-motion": "^10.18.0",
     "next": "^14.0.4",
-    "next-auth": "^4.24.5",
+    "next-auth": "^4.24.7",
+    "next-themes": "^0.3.0",
+    "openid-client": "^5.6.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.69.7",
-    "typescript": "^5.3.3"
+    "sass-extract": "^3.0.0",
+    "typescript": "^5.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
     "@babel/eslint-parser": "^7.22.5",
+    "@types/react": "^18.2.65",
+    "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
     "eslint": "^8.46.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "gts": "^5.0.0",
     "prettier-eslint": "^15.0.1",
@@ -65,7 +73,7 @@
     ]
   },
   "engines": {
-    "node": "18.x"
+    "node": "20.x"
   },
   "repository": {
     "type": "git",
