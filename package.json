@@ -9,7 +9,8 @@
     "dev": "next",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
-    "start:local": "next start"
+    "start:local": "next start",
+    "sassy": "node src/scripts/build/styles/index.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.8.0-rc.2",
@@ -31,6 +32,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.69.7",
+    "sass-extract": "^3.0.0",
     "typescript": "^5.4.2"
   },
   "devDependencies": {
