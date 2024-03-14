@@ -63,6 +63,7 @@ $themes: (
 @include theme();
 
 :root {
+  --color-vars-ref: black;
   --font-primary: "Inter", sans-serif;
   --font-secondary: "Bebas Neue", sans-serif;
   color-scheme: var(--initial-color-mode);
