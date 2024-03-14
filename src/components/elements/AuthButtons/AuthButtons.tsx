@@ -12,7 +12,7 @@ export function GoogleSignInButton() {
 	return (
 		<button onClick={handleClick}>
 			<FontAwesomeIcon icon={faGoogle} />
-			<span>Continue with Google</span>
+			<span> with Google</span>
 		</button>
 	)
 }
@@ -24,7 +24,7 @@ export function FacebookSignInButton() {
 	return (
 		<button onClick={handleClick}>
 			<FontAwesomeIcon icon={faFacebook} />
-			<span>Continue with Facebook</span>
+			<span> with Facebook</span>
 		</button>
 	)
 }

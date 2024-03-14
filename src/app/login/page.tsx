@@ -1,13 +1,7 @@
-import { FacebookSignInButton, GoogleSignInButton } from '@/components/elements/AuthButtons/AuthButtons'
+import { Login } from '@/components/blocks/Login/Login'
 
 const Page = () => {
-	return (
-		<div>
-			<h1>Sign In</h1>
-			<GoogleSignInButton />
-			<FacebookSignInButton />
-		</div>
-	)
+	return <Login />
 }
 
 export default Page

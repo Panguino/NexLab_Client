@@ -80,7 +80,6 @@ body {
   padding: 0;
   height: 100%;
   min-height: 100%;
-  background-color: var(--color-grey0-grey20);
 }
 body {
   a:hover {
@@ -88,7 +87,8 @@ body {
   }
 }
 .all {
-  background: #f7f7f7;
+  background-color: var(--color-grey0-grey20);
+  transition: var(--themeChange);
   height: 100%;
   min-height: 100%;
   display: flex;

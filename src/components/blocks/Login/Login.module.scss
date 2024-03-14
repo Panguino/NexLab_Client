@@ -1,0 +1,24 @@
+.Login {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.box {
+  h1 {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--color-grey8);
+  }
+  button {
+    padding: 10px 20px;
+    display: block;
+    margin-top: 10px;
+    width: 100%;
+    cursor: pointer;
+    span {
+      padding-right: 10px;
+    }
+  }
+}
