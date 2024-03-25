@@ -1,0 +1,14 @@
+.MainContentWrapper {
+	position: relative;
+	background-color: lightgrey;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: stretch;
+	justify-content: center;
+	overflow: auto;
+}
+.CenterContent {
+	width: 100%;
+	max-width: 1200px;
+}
