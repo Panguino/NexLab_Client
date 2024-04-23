@@ -1,8 +1,9 @@
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import GoogleProvider from 'next-auth/providers/google'
 import FacebookProvider from 'next-auth/providers/facebook'
-import { NextAuthOptions } from 'next-auth'
+import { NextAuthOptions, getServerSession } from 'next-auth'
 
-export const authConfig: NextAuthOptions = {
+const authConfig: NextAuthOptions = {
 	providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -14,6 +15,9 @@ export const authConfig: NextAuthOptions = {
 		})
 	],
 	session: { strategy: 'jwt' },
+	pages: {
+		signIn: '/login'
+	},
 	callbacks: {
 		async session({ user, session, token }) {
 			session.user = token as any
@@ -36,8 +40,15 @@ export const authConfig: NextAuthOptions = {
 					console.error('Fetch failed:', error)
 				}
 			}
-			return Promise.resolve(token)
+			return Promise.resolve({ ...token, ...user })
 		}
 	},
 	secret: process.env.NEXTAUTH_SECRET as string
 }
+
+function auth(...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []) {
+	// <-- use this function to access the jwt from React components
+	return getServerSession(...args, authConfig) as any
+}
+
+export { authConfig, auth }

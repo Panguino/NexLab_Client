@@ -1,8 +1,9 @@
 import Navigation from '@/components/layout/Navigation/Navigation'
 import '@/styles/global.scss'
 import Providers from '@/components/providers/Providers/Providers'
+import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>
@@ -17,10 +18,12 @@ export default function RootLayout({ children }) {
 			</head>
 			<body>
 				<div className="all">
-					<Providers>
-						<Navigation />
-						{children}
-					</Providers>
+					<NextAuthProvider>
+						<Providers>
+							<Navigation />
+							{children}
+						</Providers>
+					</NextAuthProvider>
 				</div>
 			</body>
 		</html>
