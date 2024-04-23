@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import styles from './Navigation.module.scss'
+import { getServerSession } from 'next-auth'
+import LogStatus from '@/components/elements/LogStatus/LogStatus'
+import DarkmodeToggler from '@/components/elements/DarkmodeToggler/DarkmodeToggler'
 
-const Navigation = () => {
+const Navigation = async () => {
+	const session = await getServerSession()
 	return (
 		<>
 			<div className={styles.Navigation}>
@@ -29,12 +33,14 @@ const Navigation = () => {
 					</Link>
 				</div>
 				<div className={styles.NavItems}>
-					<Link href="/login/">
-						<div className={styles.NavItemButton}>Login</div>
-					</Link>
-					<Link href="/signup/">
-						<div className={styles.NavItemButton}>Signup</div>
-					</Link>
+					<DarkmodeToggler />
+					{session?.user?.email ? (
+						<LogStatus email={session?.user?.email} />
+					) : (
+						<Link href="/login/">
+							<div className={styles.NavItemButton}>Login</div>
+						</Link>
+					)}
 				</div>
 			</div>
 			<div className={styles.Spacer} />

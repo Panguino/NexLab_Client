@@ -1,0 +1,14 @@
+.DegreeInfo {
+	position: relative;
+	display: flex;
+	justify-content: space-evenly;
+	max-width: 1200px;
+	margin: 0 auto;
+	background-color: lightgrey;
+}
+.Info {
+	flex-grow: 2;
+}
+.Description {
+	flex-grow: 3;
+}

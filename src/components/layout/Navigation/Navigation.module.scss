@@ -3,7 +3,8 @@
   padding: 20px;
   display: flex;
   justify-content: space-between;
-  background-color: #ffffff;
+  background-color: var(--color-white-grey19);
+  transition: var(--themeChange);
   position: fixed;
   z-index: 100;
 }
@@ -31,6 +32,7 @@
   a {
     text-decoration: none;
     transition: color 0.2s ease;
+    color: var(--color-black-white);
     &:hover {
       color: #2677f0;
       text-decoration: none;

@@ -11,11 +11,11 @@
     font-weight: 500;
     line-height: 15px;
     padding: 10px 0;
-    color: #505050;
+    color: var(--color-grey12-grey8);
 
     &:hover {
       text-decoration: none;
-      color: #000;
+      color: var(--color-black-white);
     }
   }
   &:last-of-type {
