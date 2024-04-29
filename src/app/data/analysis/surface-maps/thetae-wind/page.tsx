@@ -1,7 +1,7 @@
 const Page = () => {
 	return (
 		<div>
-			<h1>Analysis Landing Page</h1>
+			<h1>Theta-E and 10m Wind</h1>
 			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum elementum, sem sed vehicula tincidunt, nulla ligula laoreet nibh, sed
 			tempus sem augue ac leo. Ut sed turpis iaculis ligula porta consectetur vitae vitae augue. Nullam imperdiet velit odio, sit amet egestas
 			purus ornare quis. Etiam vehicula eleifend auctor. Integer vel arcu eget lorem egestas efficitur ac quis diam. Mauris vestibulum turpis ac
