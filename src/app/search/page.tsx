@@ -1,5 +1,7 @@
+import { Meilisearch } from '@/components/blocks/Meilisearch/Meilisearch'
+
 const Page = () => {
-	return <>Search</>
+	return <Meilisearch />
 }
 
 export default Page

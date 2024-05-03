@@ -21,6 +21,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@meilisearch/instant-meilisearch": "^0.17.0",
     "@radix-ui/react-scroll-area": "^1.0.5",
     "@strapi/blocks-react-renderer": "^1.0.0",
     "@types/node": "^18.15.11",
@@ -31,6 +32,7 @@
     "openid-client": "^5.6.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-instantsearch": "^7.7.3",
     "sass": "^1.69.7",
     "sass-extract": "^3.0.0",
     "typescript": "^5.4.2"
