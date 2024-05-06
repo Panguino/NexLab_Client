@@ -1,0 +1,37 @@
+.SidebarSectionLink {
+  position: relative;
+  border-bottom: 1px solid var(--color-grey16);
+  &:last-child {
+    border-bottom: none;
+  }
+  a {
+    display: block;
+    font-family: var(--font-primary);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 13px;
+    padding: 8px 0;
+    color: #c9c9c9;
+    text-decoration: none;
+    transition: color 0.25s ease;
+    &:hover {
+      color: #fff;
+      text-decoration: none;
+      svg {
+        path {
+          fill: #fff;
+        }
+      }
+    }
+  }
+  svg {
+    position: absolute;
+    top: 8px;
+    right: 4px;
+    path {
+      transition: fill 0.25s ease;
+      fill: #c9c9c9;
+    }
+  }
+}
