@@ -1,0 +1,14 @@
+.TextSidebarPanels {
+  position: relative;
+  overflow-x: hidden;
+  .MainPanel {
+    position: relative;
+    padding: 20px;
+  }
+  .SubPanel {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+}
