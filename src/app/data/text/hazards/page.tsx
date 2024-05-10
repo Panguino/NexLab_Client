@@ -1,9 +1,7 @@
+import HazardsMap from '@/components/blocks/HazardsMap/HazardsMap'
+
 const Page = () => {
-	return (
-		<div>
-			<h1>Hazards</h1>
-		</div>
-	)
+	return <HazardsMap />
 }
 
 export default Page
