@@ -7,6 +7,7 @@ import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import SidebarSubPanel from '../SidebarSubPanel/SidebarSubPanel'
 import SidebarPanelPad from '../SidebarPanelPad/SidebarPanelPad'
+import HazardsPanel from '../SidebarPanels/HazardsPanel/HazardsPanel'
 
 const TextSidebarPanels = () => {
 	const basepath = '/data/text'
@@ -43,21 +44,7 @@ const TextSidebarPanels = () => {
 				</SidebarPanelPad>
 			</SidebarSubPanel>
 			<SidebarSubPanel path={`${basepath}/hazards`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Hazards" linkUrl={basepath} />
-				<SidebarPanelPad>
-					<SidebarGroup title="Categories">
-						<SidebarLink name="Fire" linkUrl={''} />
-						<SidebarLink name="Winter" linkUrl={''} />
-						<SidebarLink name="Marine" linkUrl={''} />
-						<SidebarLink name="Tropical" linkUrl={''} />
-						<SidebarLink name="Hydro" linkUrl={''} />
-						<SidebarLink name="Non-Precip" linkUrl={''} />
-						<SidebarLink name="Non-met" linkUrl={''} />
-						<SidebarLink name="Convective" linkUrl={''} />
-						<SidebarLink name="Special" linkUrl={''} />
-						<SidebarLink name="Alerts" linkUrl={''} />
-					</SidebarGroup>
-				</SidebarPanelPad>
+				<HazardsPanel basepath={basepath} />
 			</SidebarSubPanel>
 			<SidebarSubPanel path={`${basepath}/analysis-and-forecast`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="Analysis & Forecast" linkUrl={basepath} />

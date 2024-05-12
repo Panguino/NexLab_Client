@@ -15,6 +15,6 @@ const useDimensions = () => {
 			window.removeEventListener('resize', updateDimensions)
 		}
 	}, [ref])
-	return [ref, dimensions]
+	return [ref, dimensions] as const
 }
 export default useDimensions

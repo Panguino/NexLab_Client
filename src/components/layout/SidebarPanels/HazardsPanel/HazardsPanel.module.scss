@@ -1,0 +1,27 @@
+.HazardsPanel {
+  position: relative;
+  display: grid;
+  grid-template-columns: [title] 32% [statment] 17% [watch] 17% [advisory] 17% [warning] 17% [end];
+  grid-template-rows: 100px auto;
+}
+.gridItem {
+  font-size: 14px;
+  position: relative;
+}
+.rotatedTitle {
+  transform: translateX(17px) rotate(-80deg);
+  position: absolute;
+  width: 200px;
+  transform-origin: 0 50%;
+  bottom: 0;
+  left: 0;
+}
+.rowTitle {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+}
+.bigRow {
+  height: 130px;
+}

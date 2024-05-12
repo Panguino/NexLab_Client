@@ -1,5 +1,5 @@
-window.getAlertClass = function (alertName) {
-	var alertclass = {
+const getAlertIdByEvent = (alertName) => {
+	const alertclass = {
 		/* CONVECTIVE */
 		'Tornado Warning': 'convective warning tor',
 		'Severe Thunderstorm Warning': 'convective warning svr',
@@ -149,3 +149,5 @@ window.getAlertClass = function (alertName) {
 
 	return alertclass[alertName] || alertclass['default']
 }
+
+export default getAlertIdByEvent

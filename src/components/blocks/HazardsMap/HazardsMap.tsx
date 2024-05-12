@@ -2,11 +2,12 @@
 import { geoGraticule } from 'd3-geo'
 import * as d3 from 'd3'
 import { useEffect, useRef, useState } from 'react'
-import { booleanPointInPolygon, multiPolygon, polygon } from '@turf/turf'
+import { multiPolygon, polygon } from '@turf/turf'
 
+import hazardColors from '@/data/hazardColors.json'
 import styles from './HazardsMap.module.scss'
 import useDimensions from '@/hooks/useDimensions'
-import useMouseD3 from '@/hooks/useMouseD3'
+//import useMouseD3 from '@/hooks/useMouseD3'
 import {
 	getAlertsJson,
 	getCanadaGeoJson,
@@ -16,25 +17,35 @@ import {
 	getUSCountiesGeoJson,
 	getUSStatesGeoJson
 } from './HazardsMapData'
+import getAlertIdByEvent from '@/data/getAlertIdByEvent'
+import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
+import useHazardsStore from '@/store/useHazardsStore'
 
 const HazardsMap = () => {
+	const { setTooltipContent, setTooltipActive } = useHazardsStore((state) => state)
 	const canvasRef = useRef(null)
 	const [mapRef, { width, height }] = useDimensions()
+	const svgRef = useRef(null)
 	const [usMapData, setUsMapData] = useState(null)
 	const [canadaMapData, setCanadaMapData] = useState(null)
 	const [mexicoMapData, setMexicoMapData] = useState(null)
 	const [countiesMapData, setCountiesMapData] = useState(null)
 	const [coastalMapData, setCoastalMapData] = useState(null)
 	const [offshoreMapData, setOffshoreMapData] = useState(null)
-	const [regionColors, setRegionColors] = useState({})
+	const [allHazardCounties, setAllHazardCounties] = useState([])
 	const projRef = useRef(d3.geoAlbers().precision(0))
-	const shapesRef = useRef([])
 
 	useEffect(() => {
 		if (width && height) {
 			const scale = Math.min(width * 1.2, height * 2)
 			const translate = [width / 2, height / 2]
-			projRef.current.scale(scale).translate(translate)
+			projRef.current
+				.scale(scale)
+				.translate(translate)
+				.clipExtent([
+					[0, 0],
+					[width, height]
+				])
 
 			const zoom = d3
 				.zoom()
@@ -51,12 +62,12 @@ const HazardsMap = () => {
 				// })
 				.on('zoom', zoomed)
 
-			const canvas = d3.select(canvasRef.current)
-			canvas.call(zoom)
+			const svg = d3.select(svgRef.current)
+			svg.call(zoom)
 		}
-	}, [width, height, projRef, usMapData, canvasRef, canadaMapData, mexicoMapData, countiesMapData, regionColors, coastalMapData, offshoreMapData])
+	}, [width, height, projRef, usMapData, svgRef, canadaMapData, mexicoMapData, countiesMapData, coastalMapData, offshoreMapData, allHazardCounties])
 
-	const mouseCoords = useMouseD3(projRef.current)
+	//const mouseCoords = useMouseD3(projRef.current)
 	//console.log(mouseCoords)
 
 	useEffect(() => {
@@ -79,17 +90,35 @@ const HazardsMap = () => {
 			const canvas = canvasRef.current
 			const context = canvas?.getContext('2d')
 
-			if (
-				!context ||
-				!usMapData ||
-				!canadaMapData ||
-				!mexicoMapData ||
-				!countiesMapData ||
-				!regionColors ||
-				!coastalMapData ||
-				!offshoreMapData
-			) {
+			if (!context || !usMapData || !canadaMapData || !mexicoMapData || !countiesMapData || !coastalMapData || !offshoreMapData) {
 				return
+			}
+			if (svgRef.current) {
+				console.log('redrawMap svg', allHazardCounties)
+				const svg = d3.select(svgRef.current)
+				const geoPathGeneratorSvg = d3.geoPath().projection(projRef.current)
+
+				svg.selectAll('path.hazard-county').remove()
+
+				allHazardCounties.forEach((hazardCounty) => {
+					//console.log(getAlertIdByEvent(hazardCounty.alerts[0].properties.event))
+					svg.append('path')
+						.datum(hazardCounty.feature)
+						.attr('class', `hazard-county ${hazardCounty.id}`)
+						.attr('d', geoPathGeneratorSvg)
+						.attr('shapeId', hazardCounty.id)
+						.attr('fill', `rgb(${hazardColors[getAlertIdByEvent(hazardCounty.alerts[0].properties.event)]})`) //hazardColors[``]
+						.attr('stroke', 'rgba(0,0,0,0.1)')
+						.on('mouseover', (event, d) => {
+							console.log('mouseover', hazardCounty.id, event, d)
+							setTooltipContent({ alerts: hazardCounty.alerts, feature: hazardCounty.feature })
+							setTooltipActive(true)
+						})
+						.on('mouseout', (event, d) => {
+							console.log('mouseout', hazardCounty.id, event, d)
+							setTooltipActive(false)
+						})
+				})
 			}
 
 			const geoPathGenerator = d3.geoPath().projection(projRef.current).context(context) // if a context is provided, geoPath() understands that we work with canvas, not SVG
@@ -122,33 +151,22 @@ const HazardsMap = () => {
 			context.setLineDash([5]) // Set the line dash pattern
 			context.stroke()
 
-			// usa fill
+			// counties shapes
 			context.beginPath()
-			geoPathGenerator(usMapData)
+			geoPathGenerator(countiesMapData)
 			context.fillStyle = 'white'
 			context.fill()
-
-			// counties shapes
-			shapesRef.current.forEach(({ feature, id, alerts }) => {
-				if (!feature) {
-					return
-				}
-				context.beginPath()
-				geoPathGenerator(feature)
-				context.fillStyle = alerts.length === 0 ? 'rgba(0,0,0,0)' : 'red'
-				context.fill()
-				context.strokeStyle = 'rgba(0,0,0,0.4)'
-				context.setLineDash([])
-				context.lineWidth = 0.1
-				context.stroke()
-			})
+			context.strokeStyle = 'rgba(0,0,0,0.2)'
+			context.setLineDash([])
+			context.lineWidth = 0.2
+			context.stroke()
 
 			// usa fill
 			context.beginPath()
 			geoPathGenerator(usMapData)
 			context.fillStyle = 'transparent'
 			context.fill()
-			context.strokeStyle = 'rgba(0,0,0,0.8)'
+			context.strokeStyle = 'rgba(0,0,0,0.9)'
 			context.setLineDash([])
 			context.lineWidth = 0.1
 			context.stroke()
@@ -177,9 +195,22 @@ const HazardsMap = () => {
 
 	useEffect(() => {
 		redrawMap()
-	}, [width, height, projRef, usMapData, canvasRef, canadaMapData, mexicoMapData, countiesMapData, regionColors, coastalMapData, offshoreMapData])
+	}, [
+		width,
+		height,
+		projRef,
+		svgRef,
+		usMapData,
+		canvasRef,
+		canadaMapData,
+		mexicoMapData,
+		countiesMapData,
+		coastalMapData,
+		offshoreMapData,
+		allHazardCounties
+	])
 
-	useEffect(() => {
+	/*useEffect(() => {
 		const canvas = canvasRef.current
 
 		if (!canvas) {
@@ -193,7 +224,7 @@ const HazardsMap = () => {
 			const [lon, lat] = projRef.current.invert([x, y])
 			console.log('Clicked:', x, y, lon, lat)
 			// Check if the click is within any of the shapes
-			const newRegionColors = { ...regionColors }
+			//const newRegionColors = { ...regionColors }
 			shapesRef.current.forEach((shape) => {
 				newRegionColors[shape.feature.properties.FIPS] = 'rgb(230, 230, 230)'
 				if (shape.polygon && booleanPointInPolygon([lon, lat], shape.polygon)) {
@@ -212,7 +243,7 @@ const HazardsMap = () => {
 		return () => {
 			canvas.removeEventListener('click', handleClick)
 		}
-	}, [canvasRef, shapesRef, projRef, regionColors])
+	}, [canvasRef, projRef])*/
 
 	const getMapData = async () => {
 		const usGeoJson = await getUSStatesGeoJson()
@@ -235,79 +266,112 @@ const HazardsMap = () => {
 
 		const alertsJson = await getAlertsJson()
 		//console.log('alertsJson', alertsJson)
+
+		const hazardCounties = []
 		offshoreGeoJson.features.forEach((feature) => {
 			const id = feature.properties.ID
 			if (feature.geometry?.type === 'Polygon') {
-				shapesRef.current.push({
-					id,
-					feature,
-					polygon: polygon(feature.geometry.coordinates),
-					alerts: alertsJson.features.filter((alert) => {
-						return alert.properties.geocode.UGC.includes(id)
-					})
+				const shape = polygon(feature.geometry.coordinates)
+				const alerts = alertsJson.features.filter((alert) => {
+					return alert.properties.geocode.UGC.includes(id)
 				})
+				if (alerts.length > 0) {
+					hazardCounties.push({
+						id,
+						feature,
+						polygon: shape,
+						alerts: alerts
+					})
+				}
 			} else if (feature.geometry?.type === 'MultiPolygon') {
-				shapesRef.current.push({
-					id,
-					feature,
-					multiPolygon: multiPolygon(feature.geometry.coordinates),
-					alerts: alertsJson.features.filter((alert) => {
-						return alert.properties.geocode.UGC.includes(id)
-					})
+				const shape = multiPolygon(feature.geometry.coordinates)
+				const alerts = alertsJson.features.filter((alert) => {
+					return alert.properties.geocode.UGC.includes(id)
 				})
+				if (alerts.length > 0) {
+					hazardCounties.push({
+						id,
+						feature,
+						polygon: shape,
+						alerts: alerts
+					})
+				}
 			}
 		})
 
 		coastalGeoJson.features.forEach((feature) => {
 			const id = feature.properties.ID
 			if (feature.geometry?.type === 'Polygon') {
-				shapesRef.current.push({
-					id,
-					feature,
-					polygon: polygon(feature.geometry.coordinates),
-					alerts: alertsJson.features.filter((alert) => {
-						return alert.properties.geocode.UGC.includes(id)
-					})
+				const shape = polygon(feature.geometry.coordinates)
+				const alerts = alertsJson.features.filter((alert) => {
+					return alert.properties.geocode.UGC.includes(id)
 				})
+				if (alerts.length > 0) {
+					hazardCounties.push({
+						id,
+						feature,
+						polygon: shape,
+						alerts: alerts
+					})
+				}
 			} else if (feature.geometry?.type === 'MultiPolygon') {
-				shapesRef.current.push({
-					id,
-					feature,
-					multiPolygon: multiPolygon(feature.geometry.coordinates),
-					alerts: alertsJson.features.filter((alert) => {
-						return alert.properties.geocode.UGC.includes(id)
-					})
+				const shape = multiPolygon(feature.geometry.coordinates)
+				const alerts = alertsJson.features.filter((alert) => {
+					return alert.properties.geocode.UGC.includes(id)
 				})
+				if (alerts.length > 0) {
+					hazardCounties.push({
+						id,
+						feature,
+						polygon: shape,
+						alerts: alerts
+					})
+				}
 			}
 		})
 
 		usCountiesGeoJson.features.forEach((feature) => {
 			const id = feature.properties.FIPS.padStart(6, '0')
 			if (feature.geometry?.type === 'Polygon') {
-				shapesRef.current.push({
-					id,
-					feature,
-					polygon: polygon(feature.geometry.coordinates),
-					alerts: alertsJson.features.filter((alert) => {
-						return alert.properties.geocode.SAME.includes(id)
-					})
+				const shape = polygon(feature.geometry.coordinates)
+				const alerts = alertsJson.features.filter((alert) => {
+					if (alert.properties.geocode.SAME) {
+						return alert.properties.geocode?.SAME.includes(id)
+					}
 				})
+				if (alerts.length > 0) {
+					hazardCounties.push({
+						id,
+						feature,
+						polygon: shape,
+						alerts: alerts
+					})
+				}
 			} else if (feature.geometry?.type === 'MultiPolygon') {
-				shapesRef.current.push({
-					id,
-					feature,
-					multiPolygon: multiPolygon(feature.geometry.coordinates),
-					alerts: alertsJson.features.filter((alert) => {
-						return alert.properties.geocode.SAME.includes(id)
-					})
+				const shape = multiPolygon(feature.geometry.coordinates)
+				const alerts = alertsJson.features.filter((alert) => {
+					if (alert.properties.geocode.SAME) {
+						return alert.properties.geocode?.SAME.includes(id)
+					}
 				})
+				if (alerts.length > 0) {
+					hazardCounties.push({
+						id,
+						feature,
+						polygon: shape,
+						alerts: alerts
+					})
+				}
 			}
 		})
+		setAllHazardCounties(hazardCounties)
 	}
 
 	return (
 		<div ref={mapRef} className={styles.HazardsMap}>
-			<canvas ref={canvasRef} width={width} height={height} className={styles.map} />
+			<canvas ref={canvasRef} width={width} height={height} className={styles.canvasMap} />
+			<svg ref={svgRef} className={styles.svgMap} width={width} height={height} />
+			<HazardsTooltip />
 		</div>
 	)
 }
