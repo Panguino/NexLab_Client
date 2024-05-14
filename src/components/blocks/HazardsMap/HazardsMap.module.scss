@@ -17,7 +17,8 @@
     transition: fill 0.3s;
     cursor: pointer;
     &:hover {
-      fill: blue;
+      stroke: #fff;
+      stroke-width: 3px;
     }
   }
 }

@@ -27,7 +27,7 @@ const HazardsTooltip = () => {
 			<h4>{getTitle()}</h4>
 			{tooltipContent.alerts &&
 				tooltipContent.alerts.map((alert, index) => {
-					console.log(alert)
+					//console.log(alert)
 					return (
 						<div key={index} className={styles.alert}>
 							<div

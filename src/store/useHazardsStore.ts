@@ -1,9 +1,46 @@
+import { Feature } from '@turf/turf'
 import { create } from 'zustand'
 
-const useHazardsStore = create((set) => ({
+// Define the state shape
+interface HazardsState {
+	fireActive: boolean
+	winterActive: boolean
+	marineActive: boolean
+	tropicalActive: boolean
+	hydroActive: boolean
+	nonPrecipActive: boolean
+	nonMetActive: boolean
+	convectiveActive: boolean
+	specialActive: boolean
+	setFireActive: (active: boolean) => void
+	toggleFireActive: () => void
+	setWinterActive: (active: boolean) => void
+	toggleWinterActive: () => void
+	setMarineActive: (active: boolean) => void
+	toggleMarineActive: () => void
+	setTropicalActive: (active: boolean) => void
+	toggleTropicalActive: () => void
+	setHydroActive: (active: boolean) => void
+	toggleHydroActive: () => void
+	setNonPrecipActive: (active: boolean) => void
+	toggleNonPrecipActive: () => void
+	setNonMetActive: (active: boolean) => void
+	toggleNonMetActive: () => void
+	setConvectiveActive: (active: boolean) => void
+	toggleConvectiveActive: () => void
+	setSpecialActive: (active: boolean) => void
+	toggleSpecialActive: () => void
+	setAll: (active: boolean) => void
+	tooltipContent: { alerts: null | []; feature: null | Feature }
+	tooltipActive: boolean
+	setTooltipActive: (active: boolean) => void
+	setTooltipContent: (content: { alerts: null | []; feature: null | Feature }) => void
+}
+
+const useHazardsStore = create<HazardsState>((set) => ({
 	fireActive: true,
 	setFireActive: (active) => set({ fireActive: active }),
-	toggleFireActive: () => set((state) => ({ bears: !state.fireActive })),
+	toggleFireActive: () => set((state) => ({ fireActive: !state.fireActive })),
 	winterActive: true,
 	setWinterActive: (active) => set({ winterActive: active }),
 	toggleWinterActive: () => set((state) => ({ winterActive: !state.winterActive })),
@@ -40,13 +77,8 @@ const useHazardsStore = create((set) => ({
 			convectiveActive: active,
 			specialActive: active
 		}),
-	//bears: 0,
-	//increasePopulation: () => set((state) => ({ bears: state.bears + 1 })),
-	//removeAllBears: () => set({ bears: 0 }),
 	tooltipContent: { alerts: null, feature: null },
 	tooltipActive: false,
-	tooltipPosition: { x: 0, y: 0 },
-	setTooltipPosition: (position) => set({ tooltipPosition: position }),
 	setTooltipActive: (active) => set({ tooltipActive: active }),
 	setTooltipContent: (content) => set({ tooltipContent: content })
 }))
