@@ -36,6 +36,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fps-stats": "^0.3.1",
+    "react-gravatar": "^2.6.3",
     "react-instantsearch": "^7.7.3",
     "sass": "^1.69.7",
     "sass-extract": "^3.0.0",
