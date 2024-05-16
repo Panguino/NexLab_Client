@@ -10,7 +10,7 @@ import SidebarPanelPad from '../SidebarPanelPad/SidebarPanelPad'
 import HazardsPanel from '../SidebarPanels/HazardsPanel/HazardsPanel'
 
 const TextSidebarPanels = () => {
-	const basepath = '/data/text'
+	const basepath = '/weather-data/text'
 
 	return (
 		<div className={styles.TextSidebarPanels}>

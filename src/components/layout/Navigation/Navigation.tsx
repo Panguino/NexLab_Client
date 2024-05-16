@@ -16,7 +16,7 @@ const Navigation = async () => {
 					</div>
 				</Link>
 				<div className={styles.NavItems}>
-					<Link href="/data/">
+					<Link href="/weather-data/">
 						<div className={styles.NavItem}>Weather Data</div>
 					</Link>
 					<Link href="/academics/">
