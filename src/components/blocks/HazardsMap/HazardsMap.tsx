@@ -1,7 +1,7 @@
 'use client'
 import { geoGraticule } from 'd3-geo'
 import * as d3 from 'd3'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { multiPolygon, polygon } from '@turf/turf'
 
 import hazardColors from '@/data/hazardColors.json'
@@ -19,6 +19,7 @@ import {
 import getAlertIdByEvent from '@/data/getAlertIdByEvent'
 import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
 import useHazardsStore from '@/store/useHazardsStore'
+import useAnimationFrame from '@/hooks/useAnimationFrame'
 
 const HazardsMap = () => {
 	const { setTooltipContent, setTooltipActive } = useHazardsStore((state) => state)
@@ -36,6 +37,7 @@ const HazardsMap = () => {
 	const zoomRef = useRef<d3.ZoomBehavior<Element, unknown>>(null)
 
 	useEffect(() => {
+		console.log('changed zoom stuff')
 		if (width && height) {
 			const scale = Math.min(width * 1.2, height * 2)
 			const translate = [width / 2, height / 2]
@@ -62,39 +64,21 @@ const HazardsMap = () => {
 	}, [width, height, projRef, svgRef, allHazardCounties])
 
 	const zoomed = (event) => {
+		console.log('zooming or panning')
 		const { transform } = event
 		projRef.current.scale(transform.k * Math.min(width * 1.2, height * 2)).translate([transform.x, transform.y])
-		redrawMap()
+		//redrawMap(0)
 	}
 
 	useEffect(() => {
+		console.log('data loaded')
 		getMapData()
 	}, [])
 
-	useEffect(() => {
-		redrawMap()
-	}, [
-		width,
-		height,
-		projRef,
-		svgRef,
-		usMapData,
-		canvasRef,
-		canadaMapData,
-		mexicoMapData,
-		countiesMapData,
-		coastalMapData,
-		offshoreMapData,
-		allHazardCounties
-	])
+	const redrawMap = useCallback(
+		(deltaTime) => {
+			//console.log(deltaTime)
 
-	let animationFrameId = null
-	const redrawMap = () => {
-		if (animationFrameId !== null) {
-			cancelAnimationFrame(animationFrameId)
-		}
-
-		animationFrameId = requestAnimationFrame(() => {
 			const canvas = canvasRef.current
 			const context = canvas?.getContext('2d')
 
@@ -150,7 +134,7 @@ const HazardsMap = () => {
 
 			const geoPathGenerator = d3.geoPath().projection(projRef.current).context(context) // if a context is provided, geoPath() understands that we work with canvas, not SVG
 			context.clearRect(0, 0, width, height)
-
+			/*
 			// canada fill
 			context.beginPath()
 			geoPathGenerator(canadaMapData)
@@ -177,7 +161,7 @@ const HazardsMap = () => {
 			context.lineWidth = 0.3
 			context.setLineDash([5]) // Set the line dash pattern
 			context.stroke()
-			/*
+
 			// counties shapes
 			context.beginPath()
 			geoPathGenerator(countiesMapData)
@@ -187,11 +171,12 @@ const HazardsMap = () => {
 			context.setLineDash([])
 			context.lineWidth = 0.2
 			context.stroke()
-			*/
+
 			// usa fill
 			context.beginPath()
 			geoPathGenerator(usMapData)
-			context.fillStyle = 'rgb(250,250,250)'
+			//context.fillStyle = 'rgb(250,250,250)'
+			context.fillStyle = 'transparent'
 			context.fill()
 			context.strokeStyle = 'rgba(0,0,0,0.9)'
 			context.setLineDash([])
@@ -217,8 +202,29 @@ const HazardsMap = () => {
 			context.setLineDash([])
 			context.lineWidth = 0.3
 			context.stroke()
-		})
-	}
+			*/
+		},
+		[
+			width,
+			height,
+			projRef,
+			svgRef,
+			usMapData,
+			canvasRef,
+			canadaMapData,
+			mexicoMapData,
+			countiesMapData,
+			coastalMapData,
+			offshoreMapData,
+			allHazardCounties
+		]
+	)
+	useAnimationFrame(redrawMap)
+
+	useEffect(() => {
+		console.log('redrawMap reset')
+		redrawMap(0)
+	}, [redrawMap])
 
 	const getMapData = async () => {
 		const usGeoJson = await getUSStatesGeoJson()
@@ -240,6 +246,7 @@ const HazardsMap = () => {
 		setOffshoreMapData(offshoreGeoJson)
 
 		const alertsJson = await getAlertsJson()
+		console.log('alertsJson', alertsJson)
 		const hazardCounties = []
 		offshoreGeoJson.features.forEach((feature) => {
 			const id = feature.properties.ID
