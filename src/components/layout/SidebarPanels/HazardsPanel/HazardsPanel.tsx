@@ -5,10 +5,12 @@ import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import hazardColors from '@/data/hazardColors.json'
 import ColorSquare from './ColorSquare/ColorSquare'
+import useHazardsStore from '@/store/useHazardsStore'
 
 const HazardsPanel = ({ basepath }) => {
+	const { setFireActive } = useHazardsStore((state) => state)
 	const hazardInfo = [
-		{ name: 'Fire', id: 'fire' },
+		{ name: 'Fire', id: 'fire', setActive: setFireActive },
 		{ name: 'Winter', id: 'winter' },
 		{ name: 'Marine', id: 'marine' },
 		{ name: 'Tropical', id: 'tropical' },
@@ -38,7 +40,19 @@ const HazardsPanel = ({ basepath }) => {
 					})}
 					{hazardInfo.map((hazard, hazardIndex) => (
 						<React.Fragment key={hazardIndex}>
-							<div className={styles.gridItem}>
+							<div
+								className={styles.gridItem}
+								onMouseOver={() => {
+									if (hazard.setActive) {
+										hazard.setActive(true)
+									}
+								}}
+								onMouseOut={() => {
+									if (hazard.setActive) {
+										hazard.setActive(false)
+									}
+								}}
+							>
 								<span className={styles.rowTitle}>{hazard.name}</span>
 							</div>
 							{hazardType.map((severity, index) => {
