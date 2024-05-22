@@ -4,21 +4,24 @@
   background: #33404d;
   position: relative;
 }
-.canvasMap {
-  position: relative;
-  max-width: 100%;
-  background: #8aadcf;
-}
 .svgMap {
   position: absolute;
   top: 0;
   left: 0;
+  background-color: var(--color-blue1-blue2);
+  transition: var(--themeChange);
   path {
+    transition: var(--themeChange);
+  }
+  .hazardCounty {
     transition: fill 0.3s;
     cursor: pointer;
     &:hover {
       stroke: #fff;
-      stroke-width: 3px;
+      stroke-width: 1px;
     }
   }
+}
+.mapGroup {
+  position: relative;
 }
