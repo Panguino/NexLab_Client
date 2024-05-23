@@ -13,15 +13,43 @@
   path {
     transition: var(--themeChange);
   }
-  .hazardCounty {
-    transition: fill 0.3s;
-    cursor: pointer;
-    &:hover {
-      stroke: #fff;
-      stroke-width: 1px;
-    }
-  }
 }
 .mapGroup {
   position: relative;
+}
+.hazardCounty {
+  transition: fill 0.3s;
+  cursor: pointer;
+  stroke: var(--color-grey18-grey15);
+  stroke-width: 0.2;
+  &:hover {
+    stroke: #fff;
+    stroke-width: 1;
+  }
+}
+.otherregions {
+  fill: var(--color-grey2-grey16);
+  stroke: var(--color-white-grey18);
+  stroke-width: 0.3;
+}
+.latlong {
+  stroke: var(--color-grey12-grey8);
+  fill: none;
+  stroke-width: 0.3;
+  stroke-dasharray: 5;
+}
+.usabg {
+  fill: var(--color-white-grey13);
+  stroke: none;
+  stroke-width: 0.2;
+}
+.usafg {
+  fill: none;
+  stroke: var(--color-grey6-grey18);
+  stroke-width: 0.2;
+}
+.oceanregions {
+  fill: none;
+  stroke: var(--color-white-grey7);
+  stroke-width: 0.2;
 }
