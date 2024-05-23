@@ -42,7 +42,7 @@ sassExtract
 		let outputCss = ''
 
 		fs.readdirSync(cssDirectoryPath)
-			.filter((file) => path.extname(file) === '.css')
+			.filter((file) => path.extname(file) === '.css' || path.extname(file) === '.css')
 			.forEach((file) => {
 				const css = fs.readFileSync(path.join(cssDirectoryPath, file), 'utf8')
 				outputCss += css
