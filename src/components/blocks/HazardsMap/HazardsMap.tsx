@@ -37,7 +37,6 @@ const HazardsMap = () => {
 	const [offshoreMapData, setOffshoreMapData] = useState(null)
 	const [allHazardCounties, setAllHazardCounties] = useState([])
 	const projRef = useRef(d3.geoAlbers().precision(0))
-	const mapImageRef = useRef(null)
 
 	const [draggable, setDraggable] = useState(null)
 	const mapGroupRef = useRef(null)
@@ -48,15 +47,6 @@ const HazardsMap = () => {
 	const [zoomScale, setZoomScale] = useState(1)
 	const scaleFactor = 1.2
 	const [pointer, setPointer] = useState({ x: 0, y: 0 })
-	const [imageSize, setImageSize] = useState({ width: 9027, height: 5945 })
-
-	useEffect(() => {
-		if (mapGroupRef.current) {
-			console.log(mapGroupRef.current.getBoundingClientRect())
-			const { width, height } = mapGroupRef.current.getBoundingClientRect()
-			setImageSize({ width, height })
-		}
-	}, [mapGroupRef, allHazardCounties])
 
 	useEffect(() => {
 		if (document) {
@@ -157,33 +147,14 @@ const HazardsMap = () => {
 			svg.selectAll('path').remove()
 
 			//canada fill
-			svg.append('path')
-				.datum(canadaMapData)
-				.attr('class', `otherregions canada`)
-				.attr('d', geoPathGeneratorSvg)
-				.attr('fill', 'var(--color-grey2-grey16)')
-				.attr('stroke', 'var(--color-white-grey18)')
-				.attr('stroke-width', 0.3)
+			svg.append('path').datum(canadaMapData).attr('class', `${styles.otherregions} canada`).attr('d', geoPathGeneratorSvg)
 
 			//mexico fill
-			svg.append('path')
-				.datum(mexicoMapData)
-				.attr('class', `otherregions mexico`)
-				.attr('d', geoPathGeneratorSvg)
-				.attr('fill', 'var(--color-grey2-grey16)')
-				.attr('stroke', 'var(--color-white-grey18)')
-				.attr('stroke-width', 0.3)
+			svg.append('path').datum(mexicoMapData).attr('class', `${styles.otherregions} mexico`).attr('d', geoPathGeneratorSvg)
 
 			// Lat and long
 			const graticule = geoGraticule().step([6.5, 6.5])
-			svg.append('path')
-				.datum(graticule)
-				.attr('class', `canada`)
-				.attr('d', geoPathGeneratorSvg)
-				.attr('stroke', 'var(--color-grey12-grey8)')
-				.attr('fill', 'none')
-				.attr('stroke-width', 0.3)
-				.attr('stroke-dasharray', 5)
+			svg.append('path').datum(graticule).attr('class', `${styles.latlong} latlong`).attr('d', geoPathGeneratorSvg)
 
 			// counties
 			// svg.append('path')
@@ -195,13 +166,7 @@ const HazardsMap = () => {
 			// 	.attr('stroke-width', 0.2)
 
 			// state Borders
-			svg.append('path')
-				.datum(usMapData)
-				.attr('class', `otherregions mexico`)
-				.attr('d', geoPathGeneratorSvg)
-				.attr('fill', 'var(--color-white-grey13)')
-				.attr('stroke', 'none')
-				.attr('stroke-width', 0.2)
+			svg.append('path').datum(usMapData).attr('class', `${styles.usabg} conus`).attr('d', geoPathGeneratorSvg)
 
 			allHazardCounties.forEach((hazardCounty) => {
 				console.log(getAlertIdByEvent(hazardCounty.alerts))
@@ -215,9 +180,7 @@ const HazardsMap = () => {
 					.attr('d', geoPathGeneratorSvg)
 					.attr('shapeId', hazardCounty.id)
 					.attr('hazards', hazards)
-					.attr('fill', `rgb(${hazardColors[getAlertIdByEvent(hazardCounty.alerts[0].properties.event)]})`) //hazardColors[``]
-					.attr('stroke', 'var(--color-grey18-grey15)')
-					.attr('stroke-width', 0.2)
+					.attr('fill', `rgb(${hazardColors[getAlertIdByEvent(hazardCounty.alerts[0].properties.event)]})`)
 					.on('mouseover', (event) => {
 						//(event, d) => {
 						//console.log('mouseover', hazardCounty.id, event, d)
@@ -237,31 +200,13 @@ const HazardsMap = () => {
 			})
 
 			// state Borders
-			svg.append('path')
-				.datum(usMapData)
-				.attr('class', `otherregions mexico`)
-				.attr('d', geoPathGeneratorSvg)
-				.attr('fill', 'none')
-				.attr('stroke', 'var(--color-grey6-grey18)')
-				.attr('stroke-width', 0.2)
+			svg.append('path').datum(usMapData).attr('class', `${styles.usafg} conus`).attr('d', geoPathGeneratorSvg)
 
 			// // coastal borders
-			svg.append('path')
-				.datum(coastalMapData)
-				.attr('class', `otherregions mexico`)
-				.attr('d', geoPathGeneratorSvg)
-				.attr('fill', 'none')
-				.attr('stroke', 'var(--color-white-grey7)')
-				.attr('stroke-width', 0.1)
+			svg.append('path').datum(coastalMapData).attr('class', `${styles.oceanregions} coastal`).attr('d', geoPathGeneratorSvg)
 
 			// offshore borders
-			svg.append('path')
-				.datum(offshoreMapData)
-				.attr('class', `otherregions mexico`)
-				.attr('d', geoPathGeneratorSvg)
-				.attr('fill', 'none')
-				.attr('stroke', 'var(--color-white-grey7)')
-				.attr('stroke-width', 0.2)
+			svg.append('path').datum(offshoreMapData).attr('class', `${styles.oceanregions} offshore`).attr('d', geoPathGeneratorSvg)
 		}
 	}, [
 		width,
@@ -399,20 +344,9 @@ const HazardsMap = () => {
 		setAllHazardCounties(hazardCounties)
 	}
 
-	const offset = { x: 3745.5, y: 3188 }
-
 	return (
 		<div ref={mapRef} className={styles.HazardsMap} onWheel={onZoom}>
 			<svg ref={svgRef} className={styles.svgMap} width={width} height={height}>
-				{/* <image
-					ref={mapImageRef}
-					x={offset.x * -1}
-					y={offset.y * -1}
-					style={{ transformOrigin: `${offset.x}px ${offset.y}px` }}
-					width={imageSize.width}
-					height={imageSize.height}
-					xlinkHref="/img/data/text/hazards/map-nolines.webp"
-				></image> */}
 				<g ref={mapGroupRef} className={styles.mapGroup}></g>
 			</svg>
 			<HazardsTooltip />
