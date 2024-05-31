@@ -23,11 +23,13 @@ import {
 import getAlertIdByEvent from '@/util/getAlertIdByEvent'
 import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
 import useHazardsStore from '@/store/useHazardsStore'
+import useHazardsTooltipStore from '@/store/useHazardsTooltipStore'
 
 gsap.registerPlugin(Draggable)
 
 const HazardsMap = () => {
-	const { setTooltipContent, setTooltipActive, activeHazard, setHazardTotals } = useHazardsStore((state) => state)
+	const { activeHazard, setHazardTotals } = useHazardsStore((state) => state)
+	const { setTooltipContent, setTooltipActive } = useHazardsTooltipStore((state) => state)
 	const [mapRef, { width, height }] = useDimensions()
 	const svgRef = useRef(null)
 	const [usMapData, setUsMapData] = useState(null)

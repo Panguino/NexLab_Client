@@ -73,10 +73,9 @@ const HazardsPanel = ({ basepath }) => {
 							{hazardType.map((severity, index) => {
 								const hazardId = `${hazard.id} ${severity.id}`
 								return (
-									<motion.div
+									<div
 										key={index}
 										className={styles.gridItem}
-										animate={{ opacity: hazardId.includes(activeHazard) ? 1 : 0.5 }}
 										onMouseOver={() => {
 											setActiveHazard(hazardId)
 										}}
@@ -84,8 +83,12 @@ const HazardsPanel = ({ basepath }) => {
 											setActiveHazard('')
 										}}
 									>
-										<ColorSquare color={hazardColors[hazardId]} amount={hazardTotals[hazardId]} />
-									</motion.div>
+										<ColorSquare
+											color={hazardColors[hazardId]}
+											amount={hazardTotals[hazardId]}
+											opacity={hazardId.includes(activeHazard) ? 1 : 0.5}
+										/>
+									</div>
 								)
 							})}
 						</React.Fragment>
@@ -112,10 +115,9 @@ const HazardsPanel = ({ basepath }) => {
 					{hazardSevereType.map((severity, index) => {
 						const hazardId = `convective ${severity.id}`
 						return (
-							<motion.div
+							<div
 								key={index}
 								className={styles.gridItem}
-								animate={{ opacity: hazardId.includes(activeHazard) ? 1 : 0.5 }}
 								onMouseOver={() => {
 									setActiveHazard(hazardId)
 								}}
@@ -123,8 +125,12 @@ const HazardsPanel = ({ basepath }) => {
 									setActiveHazard('')
 								}}
 							>
-								<ColorSquare color={hazardColors[hazardId]} amount={hazardTotals[hazardId]} />
-							</motion.div>
+								<ColorSquare
+									color={hazardColors[hazardId]}
+									amount={hazardTotals[hazardId]}
+									opacity={hazardId.includes(activeHazard) ? 1 : 0.5}
+								/>
+							</div>
 						)
 					})}
 					<div
@@ -140,7 +146,6 @@ const HazardsPanel = ({ basepath }) => {
 					</div>
 					<motion.div
 						className={styles.gridItem}
-						animate={{ opacity: activeHazard === 'specialwx statement' || activeHazard === '' ? 1 : 0.5 }}
 						onMouseOver={() => {
 							setActiveHazard('specialwx statement')
 						}}
@@ -148,7 +153,11 @@ const HazardsPanel = ({ basepath }) => {
 							setActiveHazard('')
 						}}
 					>
-						<ColorSquare color={hazardColors['specialwx statement']} amount={hazardTotals['specialwx statement']} />
+						<ColorSquare
+							color={hazardColors['specialwx statement']}
+							amount={hazardTotals['specialwx statement']}
+							opacity={activeHazard === 'specialwx statement' || activeHazard === '' ? 1 : 0.5}
+						/>
 					</motion.div>
 				</div>
 			</SidebarPanelPad>
