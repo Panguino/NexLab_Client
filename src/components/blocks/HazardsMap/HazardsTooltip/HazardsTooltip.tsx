@@ -5,7 +5,7 @@ import useHazardsStore from '@/store/useHazardsStore'
 import styles from './HazardsTooltip.module.scss'
 import useMousePosition from '@/hooks/useMousePosition'
 import hazardColors from '@/data/hazardColors.json'
-import getAlertIdByEvent from '@/data/getAlertIdByEvent'
+import getAlertIdByEvent from '@/util/getAlertIdByEvent'
 
 const HazardsTooltip = () => {
 	const { tooltipContent, tooltipActive } = useHazardsStore((state) => state)

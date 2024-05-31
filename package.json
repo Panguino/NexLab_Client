@@ -26,6 +26,7 @@
     "@strapi/blocks-react-renderer": "^1.0.0",
     "@turf/turf": "^6.5.0",
     "@types/node": "^18.15.11",
+    "@uidotdev/usehooks": "^2.4.1",
     "d3": "^7.9.0",
     "framer-motion": "^10.18.0",
     "geojson": "^0.5.0",
