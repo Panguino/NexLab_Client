@@ -7,6 +7,7 @@
 .gridItem {
   font-size: 14px;
   position: relative;
+  cursor: pointer;
 }
 .rotatedTitle {
   transform: translateX(17px) rotate(-80deg);
@@ -15,12 +16,14 @@
   transform-origin: 0 50%;
   bottom: 0;
   left: 0;
+  cursor: pointer;
 }
 .rowTitle {
   display: flex;
   height: 100%;
   width: 100%;
   align-items: center;
+  cursor: pointer;
 }
 .bigRow {
   height: 130px;

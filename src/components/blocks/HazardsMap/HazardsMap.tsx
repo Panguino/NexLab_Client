@@ -5,6 +5,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { multiPolygon, polygon } from '@turf/turf'
 import { gsap } from 'gsap'
 import { Draggable } from 'gsap/Draggable'
+//import { useInterval } from "@uidotdev/usehooks";
+import { useAnimationFrame } from 'framer-motion'
 
 import hazardColors from '@/data/hazardColors.json'
 import styles from './HazardsMap.module.scss'
@@ -18,15 +20,14 @@ import {
 	getUSCountiesGeoJson,
 	getUSStatesGeoJson
 } from './HazardsMapData'
-import getAlertIdByEvent from '@/data/getAlertIdByEvent'
+import getAlertIdByEvent from '@/util/getAlertIdByEvent'
 import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
 import useHazardsStore from '@/store/useHazardsStore'
-import { useAnimationFrame } from 'framer-motion'
 
 gsap.registerPlugin(Draggable)
 
 const HazardsMap = () => {
-	const { setTooltipContent, setTooltipActive, fireActive } = useHazardsStore((state) => state)
+	const { setTooltipContent, setTooltipActive, activeHazard, setHazardTotals } = useHazardsStore((state) => state)
 	const [mapRef, { width, height }] = useDimensions()
 	const svgRef = useRef(null)
 	const [usMapData, setUsMapData] = useState(null)
@@ -48,18 +49,33 @@ const HazardsMap = () => {
 	const scaleFactor = 1.2
 	const [pointer, setPointer] = useState({ x: 0, y: 0 })
 
+	/*const [isAnimating, setIsAnimating] = useState(true)
+	const clear = useInterval(() => {
+		if (isAnimating) {
+			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
+			hazardCounties.forEach((hazardCounty) => {
+				gsap.to(hazardCounty, {
+				opacity: hazardCounty.getAttribute('hazards').includes(activeHazard) ? 1 : 0.2,
+				duration: 0.25,
+				ease: 'linear.easeNone'
+			})
+		})
+		}
+	}, 1000);*/
+
 	useEffect(() => {
 		if (document) {
 			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
 			hazardCounties.forEach((hazardCounty) => {
+				//console.log(hazardCounty.getAttribute('hazards'), activeHazard)
 				gsap.to(hazardCounty, {
-					opacity: fireActive ? (hazardCounty.getAttribute('hazards').includes('Fire') ? 1 : 0.2) : 1,
+					opacity: hazardCounty.getAttribute('hazards').includes(activeHazard) ? 1 : 0.2,
 					duration: 0.25,
 					ease: 'linear.easeNone'
 				})
 			})
 		}
-	}, [fireActive])
+	}, [activeHazard])
 
 	useAnimationFrame(() => {
 		updateZoom()
@@ -169,10 +185,10 @@ const HazardsMap = () => {
 			svg.append('path').datum(usMapData).attr('class', `${styles.usabg} conus`).attr('d', geoPathGeneratorSvg)
 
 			allHazardCounties.forEach((hazardCounty) => {
-				console.log(getAlertIdByEvent(hazardCounty.alerts))
+				//console.log(getAlertIdByEvent(hazardCounty.alerts))
 				let hazards = ''
 				hazardCounty.alerts.forEach((alert) => {
-					hazards += alert.properties.event + '|'
+					hazards += getAlertIdByEvent(alert.properties.event) + '|'
 				})
 				svg.append('path')
 					.datum(hazardCounty.feature)
@@ -341,7 +357,21 @@ const HazardsMap = () => {
 				}
 			}
 		})
+
 		setAllHazardCounties(hazardCounties)
+
+		// get totals for each hazrad type
+		const hazardCounts = []
+		for (const [key] of Object.entries(hazardColors)) {
+			hazardCounts[key] = 0
+		}
+		hazardCounties.forEach((hazardCounty) => {
+			hazardCounty.alerts.forEach((alert) => {
+				const alertType = getAlertIdByEvent(alert.properties.event)
+				hazardCounts[alertType]++
+			})
+		})
+		setHazardTotals(hazardCounts)
 	}
 
 	return (

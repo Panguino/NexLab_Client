@@ -6,11 +6,12 @@ import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad
 import hazardColors from '@/data/hazardColors.json'
 import ColorSquare from './ColorSquare/ColorSquare'
 import useHazardsStore from '@/store/useHazardsStore'
+import { motion } from 'framer-motion'
 
 const HazardsPanel = ({ basepath }) => {
-	const { setFireActive } = useHazardsStore((state) => state)
+	const { activeHazard, setActiveHazard, hazardTotals } = useHazardsStore((state) => state)
 	const hazardInfo = [
-		{ name: 'Fire', id: 'fire', setActive: setFireActive },
+		{ name: 'Fire', id: 'fire' },
 		{ name: 'Winter', id: 'winter' },
 		{ name: 'Marine', id: 'marine' },
 		{ name: 'Tropical', id: 'tropical' },
@@ -18,12 +19,17 @@ const HazardsPanel = ({ basepath }) => {
 		{ name: 'Non-Precip', id: 'nonprecip' },
 		{ name: 'Non-met', id: 'nonmet' }
 	]
-	const hazardType = ['Statement', 'Watch', 'Advisory', 'Warning']
+	const hazardType = [
+		{ name: 'Statement', id: 'statement' },
+		{ name: 'Watch', id: 'watch' },
+		{ name: 'Advisory', id: 'advisory' },
+		{ name: 'Warning', id: 'warning' }
+	]
 	const hazardSevereType = [
-		{ name: 'Severe Watch', id: 'convective watch svr' },
-		{ name: 'Severe Warning', id: 'convective warning svr' },
-		{ name: 'Tornado Watch', id: 'convective watch tor' },
-		{ name: 'Tornado Warning', id: 'convective warning tor' }
+		{ name: 'Severe Watch', id: 'watch svr' },
+		{ name: 'Severe Warning', id: 'warning svr' },
+		{ name: 'Tornado Watch', id: 'watch tor' },
+		{ name: 'Tornado Warning', id: 'warning tor' }
 	]
 	return (
 		<>
@@ -33,8 +39,19 @@ const HazardsPanel = ({ basepath }) => {
 					<div className={styles.gridItem}></div>
 					{hazardType.map((severity, index) => {
 						return (
-							<div key={index} className={styles.gridItem}>
-								<span className={styles.rotatedTitle}>{severity}</span>
+							<div
+								key={index}
+								className={styles.gridItem}
+								onMouseOver={() => {
+									if (severity.id) {
+										setActiveHazard(severity.id)
+									}
+								}}
+								onMouseOut={() => {
+									setActiveHazard('')
+								}}
+							>
+								<span className={styles.rotatedTitle}>{severity.name}</span>
 							</div>
 						)
 					})}
@@ -43,23 +60,32 @@ const HazardsPanel = ({ basepath }) => {
 							<div
 								className={styles.gridItem}
 								onMouseOver={() => {
-									if (hazard.setActive) {
-										hazard.setActive(true)
+									if (hazard.id) {
+										setActiveHazard(hazard.id)
 									}
 								}}
 								onMouseOut={() => {
-									if (hazard.setActive) {
-										hazard.setActive(false)
-									}
+									setActiveHazard('')
 								}}
 							>
 								<span className={styles.rowTitle}>{hazard.name}</span>
 							</div>
 							{hazardType.map((severity, index) => {
+								const hazardId = `${hazard.id} ${severity.id}`
 								return (
-									<div key={index} className={styles.gridItem}>
-										<ColorSquare color={hazardColors[`${hazard.id} ${severity.toLowerCase()}`]} />
-									</div>
+									<motion.div
+										key={index}
+										className={styles.gridItem}
+										animate={{ opacity: hazardId.includes(activeHazard) ? 1 : 0.5 }}
+										onMouseOver={() => {
+											setActiveHazard(hazardId)
+										}}
+										onMouseOut={() => {
+											setActiveHazard('')
+										}}
+									>
+										<ColorSquare color={hazardColors[hazardId]} amount={hazardTotals[hazardId]} />
+									</motion.div>
 								)
 							})}
 						</React.Fragment>
@@ -67,27 +93,63 @@ const HazardsPanel = ({ basepath }) => {
 					<div className={`${styles.gridItem} ${styles.bigRow}`}></div>
 					{hazardSevereType.map((severity, index) => {
 						return (
-							<div key={index} className={styles.gridItem}>
+							<motion.div key={index} className={styles.gridItem}>
 								<span className={styles.rotatedTitle}>{severity.name}</span>
-							</div>
+							</motion.div>
 						)
 					})}
-					<div className={styles.gridItem}>
+					<div
+						className={styles.gridItem}
+						onMouseOver={() => {
+							setActiveHazard('convective')
+						}}
+						onMouseOut={() => {
+							setActiveHazard('')
+						}}
+					>
 						<span className={styles.rowTitle}>Convective</span>
 					</div>
 					{hazardSevereType.map((severity, index) => {
+						const hazardId = `convective ${severity.id}`
 						return (
-							<div key={index} className={styles.gridItem}>
-								<ColorSquare color={hazardColors[severity.id]} />
-							</div>
+							<motion.div
+								key={index}
+								className={styles.gridItem}
+								animate={{ opacity: hazardId.includes(activeHazard) ? 1 : 0.5 }}
+								onMouseOver={() => {
+									setActiveHazard(hazardId)
+								}}
+								onMouseOut={() => {
+									setActiveHazard('')
+								}}
+							>
+								<ColorSquare color={hazardColors[hazardId]} amount={hazardTotals[hazardId]} />
+							</motion.div>
 						)
 					})}
-					<div className={styles.gridItem}>
+					<div
+						className={styles.gridItem}
+						onMouseOver={() => {
+							setActiveHazard('specialwx statement')
+						}}
+						onMouseOut={() => {
+							setActiveHazard('')
+						}}
+					>
 						<span className={styles.rowTitle}>Special</span>
 					</div>
-					<div className={styles.gridItem}>
-						<ColorSquare color={hazardColors['specialwx statement']} />
-					</div>
+					<motion.div
+						className={styles.gridItem}
+						animate={{ opacity: activeHazard === 'specialwx statement' || activeHazard === '' ? 1 : 0.5 }}
+						onMouseOver={() => {
+							setActiveHazard('specialwx statement')
+						}}
+						onMouseOut={() => {
+							setActiveHazard('')
+						}}
+					>
+						<ColorSquare color={hazardColors['specialwx statement']} amount={hazardTotals['specialwx statement']} />
+					</motion.div>
 				</div>
 			</SidebarPanelPad>
 		</>
