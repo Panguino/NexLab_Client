@@ -22,14 +22,18 @@ import {
 } from './HazardsMapData'
 import getAlertIdByEvent from '@/util/getAlertIdByEvent'
 import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
-import useHazardsStore from '@/store/useHazardsStore'
-import useHazardsTooltipStore from '@/store/useHazardsTooltipStore'
+import { useRootStore } from '@/store/useRootStore'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS } from '@/config/vars'
 
 gsap.registerPlugin(Draggable)
 
 const HazardsMap = () => {
-	const { activeHazard, setHazardTotals } = useHazardsStore((state) => state)
-	const { setTooltipContent, setTooltipActive } = useHazardsTooltipStore((state) => state)
+	const activeHazard = useRootStore.use.activeHazard()
+	const setHazardTotals = useRootStore.use.setHazardTotals()
+	const setTooltipActive = useRootStore.use.setTooltipActive()
+	const setTooltipContent = useRootStore.use.setTooltipContent()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+	const setSelectedCounty = useRootStore.use.setSelectedCounty()
 	const [mapRef, { width, height }] = useDimensions()
 	const svgRef = useRef(null)
 	const [usMapData, setUsMapData] = useState(null)
@@ -50,6 +54,8 @@ const HazardsMap = () => {
 	const [zoomScale, setZoomScale] = useState(1)
 	const scaleFactor = 1.2
 	const [pointer, setPointer] = useState({ x: 0, y: 0 })
+
+	//{[hazardid]: {currentHazard: 0, totalHazards: 3}}
 
 	/*const [isAnimating, setIsAnimating] = useState(true)
 	const clear = useInterval(() => {
@@ -75,6 +81,14 @@ const HazardsMap = () => {
 					duration: 0.25,
 					ease: 'linear.easeNone'
 				})
+				// fill county with active hazard color if it contains that active hazard
+				if (activeHazard in hazardColors && hazardCounty.getAttribute('hazards').includes(activeHazard)) {
+					gsap.to(hazardCounty, {
+						fill: `rgb(${hazardColors[activeHazard]})`,
+						duration: 0.25,
+						ease: 'linear.easeNone'
+					})
+				}
 			})
 		}
 	}, [activeHazard])
@@ -214,6 +228,8 @@ const HazardsMap = () => {
 					.on('click', (event) => {
 						//console.log(event, d)
 						console.log('click', hazardCounty.id, event)
+						openSlideoutPanel(DATA_TEXT_HAZARDS_MAP_DETAILS)
+						setSelectedCounty(hazardCounty)
 					})
 			})
 
@@ -239,7 +255,9 @@ const HazardsMap = () => {
 		offshoreMapData,
 		allHazardCounties,
 		setTooltipActive,
-		setTooltipContent
+		setTooltipContent,
+		openSlideoutPanel,
+		setSelectedCounty
 	])
 
 	const getMapData = async () => {
@@ -368,12 +386,27 @@ const HazardsMap = () => {
 			hazardCounts[key] = 0
 		}
 		hazardCounties.forEach((hazardCounty) => {
-			hazardCounty.alerts.forEach((alert) => {
+			flattenAlerts(hazardCounty.alerts).forEach((alert) => {
 				const alertType = getAlertIdByEvent(alert.properties.event)
 				hazardCounts[alertType]++
 			})
 		})
 		setHazardTotals(hazardCounts)
+	}
+
+	const flattenAlerts = (alerts: any) => {
+		const flatAlerts = []
+		const alertTypes = []
+		alerts.forEach((alert: any) => {
+			const alertType = getAlertIdByEvent(alert.properties.event)
+			if (alertTypes.includes(alertType)) {
+				return
+			} else {
+				flatAlerts.push(alert)
+			}
+			alertTypes.push(alertType)
+		})
+		return flatAlerts
 	}
 
 	return (
