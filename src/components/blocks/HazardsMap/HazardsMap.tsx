@@ -24,6 +24,7 @@ import getAlertIdByEvent from '@/util/getAlertIdByEvent'
 import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
 import { useRootStore } from '@/store/useRootStore'
 import { DATA_TEXT_HAZARDS_MAP_DETAILS } from '@/config/vars'
+import { useInterval } from '@/hooks/useInterval'
 
 gsap.registerPlugin(Draggable)
 
@@ -55,21 +56,26 @@ const HazardsMap = () => {
 	const scaleFactor = 1.2
 	const [pointer, setPointer] = useState({ x: 0, y: 0 })
 
-	//{[hazardid]: {currentHazard: 0, totalHazards: 3}}
+	const [multiAlertCounties, setMultiAlertCounties] = useState({})
 
-	/*const [isAnimating, setIsAnimating] = useState(true)
-	const clear = useInterval(() => {
+	// { index: 0, totalAlerts: flattenedAlerts.length }
+
+	const [isAnimating, setIsAnimating] = useState(true)
+
+	const animateMultiHazardCounties = () => {
+		//console.log('animating multi hazard counties', multiAlertCounties)
 		if (isAnimating) {
-			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
-			hazardCounties.forEach((hazardCounty) => {
-				gsap.to(hazardCounty, {
-				opacity: hazardCounty.getAttribute('hazards').includes(activeHazard) ? 1 : 0.2,
-				duration: 0.25,
-				ease: 'linear.easeNone'
-			})
-		})
+			const newMultiAlertCounties = { ...multiAlertCounties }
+			for (const id in multiAlertCounties) {
+				const { index, colors } = multiAlertCounties[id]
+				//console.log(id, index, colors)
+				gsap.to(`path[shapeId="${id}"]`, { fill: `rgb("${colors[index]}")`, duration: 0.5, ease: 'linear.easeNone' })
+				newMultiAlertCounties[id].index = index + 1 < colors.length ? index + 1 : 0
+			}
+			setMultiAlertCounties(newMultiAlertCounties)
 		}
-	}, 1000);*/
+	}
+	useInterval(animateMultiHazardCounties, 2000)
 
 	useEffect(() => {
 		if (document) {
@@ -385,12 +391,20 @@ const HazardsMap = () => {
 		for (const [key] of Object.entries(hazardColors)) {
 			hazardCounts[key] = 0
 		}
+		const multiAlertCountiesInfo = {}
 		hazardCounties.forEach((hazardCounty) => {
-			flattenAlerts(hazardCounty.alerts).forEach((alert) => {
+			const flattenedAlerts = flattenAlerts(hazardCounty.alerts)
+			const alertColors = []
+			flattenedAlerts.forEach((alert) => {
 				const alertType = getAlertIdByEvent(alert.properties.event)
+				alertColors.push(hazardColors[alertType])
 				hazardCounts[alertType]++
 			})
+			if (flattenedAlerts.length > 1) {
+				multiAlertCountiesInfo[hazardCounty.id] = { index: 0, colors: alertColors }
+			}
 		})
+		setMultiAlertCounties(multiAlertCountiesInfo)
 		setHazardTotals(hazardCounts)
 	}
 
