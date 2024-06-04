@@ -1,0 +1,52 @@
+.SlideoutPanel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+
+.PanelWrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 100%;
+}
+
+.OverflowPanel {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 30;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.Panel {
+  position: relative;
+  height: 100%;
+  background: var(--color-white-grey16);
+  transition: background-color var(--themeChange);
+  margin: 0 -10vw 0 0;
+  padding: 30px 12vw 30px 2%;
+  display: flex;
+  flex-direction: column;
+  z-index: 40;
+  box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
+  pointer-events: all;
+}
+
+.Close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding-right: 10vw;
+  cursor: pointer;
+  z-index: 44;
+}

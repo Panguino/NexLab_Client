@@ -22,12 +22,19 @@ import {
 } from './HazardsMapData'
 import getAlertIdByEvent from '@/util/getAlertIdByEvent'
 import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
-import useHazardsStore from '@/store/useHazardsStore'
+import { useRootStore } from '@/store/useRootStore'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS } from '@/config/vars'
+import { useInterval } from '@/hooks/useInterval'
 
 gsap.registerPlugin(Draggable)
 
 const HazardsMap = () => {
-	const { setTooltipContent, setTooltipActive, activeHazard, setHazardTotals } = useHazardsStore((state) => state)
+	const activeHazard = useRootStore.use.activeHazard()
+	const setHazardTotals = useRootStore.use.setHazardTotals()
+	const setTooltipActive = useRootStore.use.setTooltipActive()
+	const setTooltipContent = useRootStore.use.setTooltipContent()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+	const setSelectedCounty = useRootStore.use.setSelectedCounty()
 	const [mapRef, { width, height }] = useDimensions()
 	const svgRef = useRef(null)
 	const [usMapData, setUsMapData] = useState(null)
@@ -49,19 +56,26 @@ const HazardsMap = () => {
 	const scaleFactor = 1.2
 	const [pointer, setPointer] = useState({ x: 0, y: 0 })
 
-	/*const [isAnimating, setIsAnimating] = useState(true)
-	const clear = useInterval(() => {
+	const [multiAlertCounties, setMultiAlertCounties] = useState({})
+
+	// { index: 0, totalAlerts: flattenedAlerts.length }
+
+	const [isAnimating, setIsAnimating] = useState(true)
+
+	const animateMultiHazardCounties = () => {
+		//console.log('animating multi hazard counties', multiAlertCounties)
 		if (isAnimating) {
-			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
-			hazardCounties.forEach((hazardCounty) => {
-				gsap.to(hazardCounty, {
-				opacity: hazardCounty.getAttribute('hazards').includes(activeHazard) ? 1 : 0.2,
-				duration: 0.25,
-				ease: 'linear.easeNone'
-			})
-		})
+			const newMultiAlertCounties = { ...multiAlertCounties }
+			for (const id in multiAlertCounties) {
+				const { index, colors } = multiAlertCounties[id]
+				//console.log(id, index, colors)
+				gsap.to(`path[shapeId="${id}"]`, { fill: `rgb("${colors[index]}")`, duration: 0.5, ease: 'linear.easeNone' })
+				newMultiAlertCounties[id].index = index + 1 < colors.length ? index + 1 : 0
+			}
+			setMultiAlertCounties(newMultiAlertCounties)
 		}
-	}, 1000);*/
+	}
+	useInterval(animateMultiHazardCounties, 2000)
 
 	useEffect(() => {
 		if (document) {
@@ -73,6 +87,14 @@ const HazardsMap = () => {
 					duration: 0.25,
 					ease: 'linear.easeNone'
 				})
+				// fill county with active hazard color if it contains that active hazard
+				if (activeHazard in hazardColors && hazardCounty.getAttribute('hazards').includes(activeHazard)) {
+					gsap.to(hazardCounty, {
+						fill: `rgb(${hazardColors[activeHazard]})`,
+						duration: 0.25,
+						ease: 'linear.easeNone'
+					})
+				}
 			})
 		}
 	}, [activeHazard])
@@ -212,6 +234,8 @@ const HazardsMap = () => {
 					.on('click', (event) => {
 						//console.log(event, d)
 						console.log('click', hazardCounty.id, event)
+						openSlideoutPanel(DATA_TEXT_HAZARDS_MAP_DETAILS)
+						setSelectedCounty(hazardCounty)
 					})
 			})
 
@@ -237,7 +261,9 @@ const HazardsMap = () => {
 		offshoreMapData,
 		allHazardCounties,
 		setTooltipActive,
-		setTooltipContent
+		setTooltipContent,
+		openSlideoutPanel,
+		setSelectedCounty
 	])
 
 	const getMapData = async () => {
@@ -365,13 +391,36 @@ const HazardsMap = () => {
 		for (const [key] of Object.entries(hazardColors)) {
 			hazardCounts[key] = 0
 		}
+		const multiAlertCountiesInfo = {}
 		hazardCounties.forEach((hazardCounty) => {
-			hazardCounty.alerts.forEach((alert) => {
+			const flattenedAlerts = flattenAlerts(hazardCounty.alerts)
+			const alertColors = []
+			flattenedAlerts.forEach((alert) => {
 				const alertType = getAlertIdByEvent(alert.properties.event)
+				alertColors.push(hazardColors[alertType])
 				hazardCounts[alertType]++
 			})
+			if (flattenedAlerts.length > 1) {
+				multiAlertCountiesInfo[hazardCounty.id] = { index: 0, colors: alertColors }
+			}
 		})
+		setMultiAlertCounties(multiAlertCountiesInfo)
 		setHazardTotals(hazardCounts)
+	}
+
+	const flattenAlerts = (alerts: any) => {
+		const flatAlerts = []
+		const alertTypes = []
+		alerts.forEach((alert: any) => {
+			const alertType = getAlertIdByEvent(alert.properties.event)
+			if (alertTypes.includes(alertType)) {
+				return
+			} else {
+				flatAlerts.push(alert)
+			}
+			alertTypes.push(alertType)
+		})
+		return flatAlerts
 	}
 
 	return (
