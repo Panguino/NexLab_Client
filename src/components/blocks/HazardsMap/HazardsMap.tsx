@@ -57,10 +57,14 @@ const HazardsMap = () => {
 	const [pointer, setPointer] = useState({ x: 0, y: 0 })
 
 	const [multiAlertCounties, setMultiAlertCounties] = useState({})
+	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
+	const [isAnimating, setIsAnimating] = useState(true)
 
 	// { index: 0, totalAlerts: flattenedAlerts.length }
 
-	const [isAnimating, setIsAnimating] = useState(true)
+	useEffect(() => {
+		setIsAnimating(!slideoutPanelIsOpen)
+	}, [slideoutPanelIsOpen])
 
 	const animateMultiHazardCounties = () => {
 		//console.log('animating multi hazard counties', multiAlertCounties)

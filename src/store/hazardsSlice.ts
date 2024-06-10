@@ -8,5 +8,7 @@ export const createHazardsSlice = (set) => ({
 	setTooltipActive: (active) => set({ tooltipActive: active }),
 	setTooltipContent: (content) => set({ tooltipContent: content }),
 	selectedCounty: {},
-	setSelectedCounty: (county) => set({ selectedCounty: county })
+	setSelectedCounty: (county) => set({ selectedCounty: county, selectedAlert: 0 }),
+	selectedAlert: 0,
+	setSelectedAlert: (index) => set({ selectedAlert: index })
 })

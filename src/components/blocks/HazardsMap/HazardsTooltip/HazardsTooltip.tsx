@@ -6,22 +6,13 @@ import styles from './HazardsTooltip.module.scss'
 import useMousePosition from '@/hooks/useMousePosition'
 import hazardColors from '@/data/hazardColors.json'
 import getAlertIdByEvent from '@/util/getAlertIdByEvent'
+import { getTitleFromFeature } from '@/util/hazardMapUtils'
 
 const HazardsTooltip = () => {
 	const tooltipContent = useRootStore.use.tooltipContent()
 	const tooltipActive = useRootStore.use.tooltipActive()
 	const { x, y } = useMousePosition()
-	const getTitle = () => {
-		if (tooltipContent.feature) {
-			if (tooltipContent.feature.properties.COUNTYNAME) {
-				return `${tooltipContent.feature.properties.COUNTYNAME} county, ${tooltipContent.feature.properties.STATE}`
-			}
-			if (tooltipContent.feature.properties.NAME) {
-				return tooltipContent.feature.properties.NAME
-			}
-		}
-		return ''
-	}
+
 	const flattenAlerts = (alerts: any) => {
 		const flatAlerts = []
 		const alertTypes = []
@@ -39,7 +30,7 @@ const HazardsTooltip = () => {
 
 	return (
 		<motion.div className={styles.HazardsTooltip} animate={{ opacity: tooltipActive ? 1 : 0, x: x + 20, y: y }}>
-			<h4>{getTitle()}</h4>
+			<h4>{getTitleFromFeature(tooltipContent.feature)}</h4>
 			{tooltipContent.alerts &&
 				flattenAlerts(tooltipContent.alerts).map((alert: any, index) => {
 					//console.log(alert)
