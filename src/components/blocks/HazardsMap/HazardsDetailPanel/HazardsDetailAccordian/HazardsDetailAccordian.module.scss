@@ -1,0 +1,29 @@
+.header {
+  width: 800px;
+  padding: 13px 20px;
+  transition: border-color var(--themeChange);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-top: 1px solid var(--color-grey7-grey10);
+  .colorSquare {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    display: inline-block;
+  }
+  .ends {
+    margin-left: 10px;
+    font-size: 12px;
+  }
+}
+
+.contentWrapper {
+  flex-grow: 1;
+  overflow: hidden;
+  width: 100%;
+  font-size: 14px;
+}
+.content {
+  padding: 8px 20px 30px;
+}
