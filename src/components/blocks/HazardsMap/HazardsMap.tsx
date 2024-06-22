@@ -35,6 +35,8 @@ const HazardsMap = () => {
 	const setTooltipContent = useRootStore.use.setTooltipContent()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 	const setSelectedCounty = useRootStore.use.setSelectedCounty()
+	const selectedCounty = useRootStore.use.selectedCounty()
+
 	const [mapRef, { width, height }] = useDimensions()
 	const svgRef = useRef(null)
 	const [usMapData, setUsMapData] = useState(null)
@@ -61,6 +63,19 @@ const HazardsMap = () => {
 	const [isAnimating, setIsAnimating] = useState(true)
 
 	// { index: 0, totalAlerts: flattenedAlerts.length }
+
+	useEffect(() => {
+		if (document) {
+			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
+			console.log('selectedCounty', selectedCounty)
+			hazardCounties.forEach((hazardCounty) => {
+				hazardCounty.classList.remove(styles.activeCounty)
+				if (hazardCounty.getAttribute('shapeId') === selectedCounty.id) {
+					hazardCounty.classList.add(styles.activeCounty)
+				}
+			})
+		}
+	}, [selectedCounty])
 
 	useEffect(() => {
 		setIsAnimating(!slideoutPanelIsOpen)
@@ -118,6 +133,43 @@ const HazardsMap = () => {
 		setChaseScale(gsap.utils.clamp(minZoom, maxZoom, newScale))
 	}
 
+	const updatePosition = useCallback(
+		(target) => {
+			const mapGroup = mapGroupRef.current
+			const map = mapRef.current
+			if (!target || !mapGroup || !map) return
+
+			const props = gsap.getProperty(mapGroup)
+			const currentScale = Number(props('scaleX')) // Assuming scaleX and scaleY are the same
+			const currentX = Number(props('x'))
+			const currentY = Number(props('y'))
+			const newScale = 2 + 150 / ((target.getBoundingClientRect().width + target.getBoundingClientRect().height) / currentScale)
+			// get the target position, subtract the map container position offset, subtract the map position offset.
+			let targetX = target.getBoundingClientRect().x // county position
+			targetX -= mapRef.current.getBoundingClientRect().x // map containter offset from window
+			targetX += target.getBoundingClientRect().width / 2
+			targetX -= currentX
+			targetX /= currentScale
+			targetX *= -newScale
+			targetX += mapRef.current.getBoundingClientRect().width / 3
+
+			let targetY = target.getBoundingClientRect().y
+			targetY -= mapRef.current.getBoundingClientRect().y
+			targetY += target.getBoundingClientRect().width / 2
+			targetY -= currentY
+			targetY /= currentScale
+			targetY *= -newScale
+			targetY += mapRef.current.getBoundingClientRect().height / 2
+
+			// Use GSAP to smoothly transition to the new position
+			gsap.to(mapGroup, { duration: 0.5, scale: newScale, x: targetX, y: targetY, ease: 'power1.out' })
+
+			//setPointer({ x: -targetX * scale, y: -targetY * scale })
+			//setChaseScale(scale)
+		},
+		[mapGroupRef, mapRef]
+	)
+
 	const updateZoom = useCallback(() => {
 		const props = gsap.getProperty(mapGroupRef.current)
 
@@ -135,14 +187,14 @@ const HazardsMap = () => {
 		const localX = (pointer.x - x) / scale
 		const localY = (pointer.y - y) / scale
 
-		x += -(localX * zoomDelta)
-		y += -(localY * zoomDelta)
+		x -= localX * zoomDelta
+		y -= localY * zoomDelta
 
 		//x = gsap.utils.clamp(-(imageWidth  * zoomScale), viewWidth, x);
 		//y = gsap.utils.clamp(-(imageHeight * zoomScale), viewHeight, y);
 
-		setZoomScale(newZoom)
-		gsap.set(mapGroupRef.current, { scale: newZoom, x: x, y: y })
+		//setZoomScale(newZoom)
+		//gsap.set(mapGroupRef.current, { scale: newZoom, x: x, y: y })
 		//gsap.set(mapImageRef.current, { scale: newZoom, x: x, y: y })
 	}, [chaseScale, zoomScale, pointer, mapGroupRef])
 
@@ -240,6 +292,10 @@ const HazardsMap = () => {
 						console.log('click', hazardCounty.id, event)
 						openSlideoutPanel(DATA_TEXT_HAZARDS_MAP_DETAILS)
 						setSelectedCounty(hazardCounty)
+						//const newScale = 4
+						// TODO Fix the centering of the county
+						updatePosition(event.target)
+						//setChaseScale(gsap.utils.clamp(minZoom, maxZoom, newScale))
 					})
 			})
 
@@ -267,7 +323,8 @@ const HazardsMap = () => {
 		setTooltipActive,
 		setTooltipContent,
 		openSlideoutPanel,
-		setSelectedCounty
+		setSelectedCounty,
+		mapRef
 	])
 
 	const getMapData = async () => {

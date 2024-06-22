@@ -26,6 +26,10 @@
     stroke: #fff;
     stroke-width: 1;
   }
+  &.activeCounty {
+    stroke: #fff;
+    stroke-width: 1;
+  }
 }
 .otherregions {
   fill: var(--color-grey2-grey16);
