@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { multiPolygon, polygon } from '@turf/turf'
 import { gsap } from 'gsap'
 import { Draggable } from 'gsap/Draggable'
-//import { useInterval } from "@uidotdev/usehooks";
 import { useAnimationFrame } from 'framer-motion'
 
 import hazardColors from '@/data/hazardColors.json'
@@ -50,13 +49,13 @@ const HazardsMap = () => {
 
 	const [draggable, setDraggable] = useState(null)
 	const mapGroupRef = useRef(null)
-	const accel = 0.7
-	const [chaseScale, setChaseScale] = useState(1)
-	const minZoom = 0.0001
+	//const accel = 0.7
+	//const [chaseScale, setChaseScale] = useState(1)
+	const minZoom = 1
 	const maxZoom = 10
-	const [zoomScale, setZoomScale] = useState(1)
-	const scaleFactor = 1.2
-	const [pointer, setPointer] = useState({ x: 0, y: 0 })
+	//const [zoomScale, setZoomScale] = useState(1)
+	const scaleFactor = 1.6
+	//const [pointer, setPointer] = useState({ x: 0, y: 0 })
 
 	const [multiAlertCounties, setMultiAlertCounties] = useState({})
 	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
@@ -118,20 +117,53 @@ const HazardsMap = () => {
 		}
 	}, [activeHazard])
 
-	useAnimationFrame(() => {
-		updateZoom()
-	})
-	const onZoom = (event) => {
-		const wheel = event.detail || event.deltaY || 0
-		let newScale = chaseScale
-		if (wheel > 0) {
-			newScale /= scaleFactor
-		} else {
-			newScale *= scaleFactor
-		}
-		setPointer({ x: event.clientX - mapRef.current.getBoundingClientRect().x, y: event.clientY - mapRef.current.getBoundingClientRect().y })
-		setChaseScale(gsap.utils.clamp(minZoom, maxZoom, newScale))
-	}
+	// useAnimationFrame(() => {
+	// 	updateZoom()
+	// })
+	const onZoom = useCallback(
+		(event) => {
+			const mapGroup = mapGroupRef.current
+			const wheel = event.detail || event.deltaY || 0
+			const map = mapRef.current
+			const props = gsap.getProperty(mapGroup)
+			const currentScale = Number(props('scaleX')) // Assuming scaleX and scaleY are the same
+			const currentX = Number(props('x'))
+			const currentY = Number(props('y'))
+			if (!mapGroup || !map) return
+
+			let newScale = currentScale
+
+			if (wheel > 0) {
+				newScale /= scaleFactor
+			} else {
+				newScale *= scaleFactor
+			}
+			newScale = gsap.utils.clamp(minZoom, maxZoom, newScale)
+
+			// get the target position, subtract the map container position offset, subtract the map position offset.
+			let targetX = event.clientX // county position
+			console.log('targetX', targetX)
+			targetX -= mapRef.current.getBoundingClientRect().x // map containter offset from window
+			targetX -= currentX
+			targetX /= currentScale
+			targetX *= -newScale
+			targetX += event.clientX
+			targetX -= mapRef.current.getBoundingClientRect().x
+			//targetX += mapRef.current.getBoundingClientRect().width / 2
+
+			let targetY = event.clientY
+			targetY -= mapRef.current.getBoundingClientRect().y
+			targetY -= currentY
+			targetY /= currentScale
+			targetY *= -newScale
+			targetY += event.clientY
+			targetY -= mapRef.current.getBoundingClientRect().y
+			//targetY += mapRef.current.getBoundingClientRect().height / 2
+
+			gsap.to(mapGroup, { duration: 0.5, scale: newScale, x: targetX, y: targetY, ease: 'power1.out' })
+		},
+		[mapGroupRef, mapRef]
+	)
 
 	const updatePosition = useCallback(
 		(target) => {
@@ -143,9 +175,10 @@ const HazardsMap = () => {
 			const currentScale = Number(props('scaleX')) // Assuming scaleX and scaleY are the same
 			const currentX = Number(props('x'))
 			const currentY = Number(props('y'))
-			const newScale = 2 + 150 / ((target.getBoundingClientRect().width + target.getBoundingClientRect().height) / currentScale)
+			let newScale = 2 + 150 / ((target.getBoundingClientRect().width + target.getBoundingClientRect().height) / currentScale)
 			// get the target position, subtract the map container position offset, subtract the map position offset.
 			let targetX = target.getBoundingClientRect().x // county position
+			console.log('targetX', targetX)
 			targetX -= mapRef.current.getBoundingClientRect().x // map containter offset from window
 			targetX += target.getBoundingClientRect().width / 2
 			targetX -= currentX
@@ -161,6 +194,7 @@ const HazardsMap = () => {
 			targetY *= -newScale
 			targetY += mapRef.current.getBoundingClientRect().height / 2
 
+			newScale = gsap.utils.clamp(minZoom, maxZoom, newScale)
 			// Use GSAP to smoothly transition to the new position
 			gsap.to(mapGroup, { duration: 0.5, scale: newScale, x: targetX, y: targetY, ease: 'power1.out' })
 
@@ -169,34 +203,6 @@ const HazardsMap = () => {
 		},
 		[mapGroupRef, mapRef]
 	)
-
-	const updateZoom = useCallback(() => {
-		const props = gsap.getProperty(mapGroupRef.current)
-
-		const oldZoom = zoomScale
-		let newZoom = zoomScale
-
-		newZoom += (chaseScale - zoomScale) * accel
-
-		const zoomDelta = newZoom - oldZoom
-
-		const scale = Number(props('scaleX'))
-		let x = Number(props('x'))
-		let y = Number(props('y'))
-
-		const localX = (pointer.x - x) / scale
-		const localY = (pointer.y - y) / scale
-
-		x -= localX * zoomDelta
-		y -= localY * zoomDelta
-
-		//x = gsap.utils.clamp(-(imageWidth  * zoomScale), viewWidth, x);
-		//y = gsap.utils.clamp(-(imageHeight * zoomScale), viewHeight, y);
-
-		//setZoomScale(newZoom)
-		//gsap.set(mapGroupRef.current, { scale: newZoom, x: x, y: y })
-		//gsap.set(mapImageRef.current, { scale: newZoom, x: x, y: y })
-	}, [chaseScale, zoomScale, pointer, mapGroupRef])
 
 	useEffect(() => {
 		if (mapGroupRef?.current) {
@@ -208,21 +214,24 @@ const HazardsMap = () => {
 					onDragStart: () => {
 						setTooltipActive(false)
 					},
-					onDrag: () => {
-						updateZoom()
-					},
 					trigger: svgRef.current
 				})
 				setDraggable(newDraggable)
 			}
 		}
-	}, [mapGroupRef, draggable, setTooltipActive, updateZoom, svgRef])
+	}, [mapGroupRef, draggable, setTooltipActive, svgRef])
 
 	useEffect(() => {
 		if (width && height) {
 			const scale = Math.min(width * 1.2, height * 2)
 			const translate = [width / 2, height / 2]
-			projRef.current.scale(scale).translate(translate)
+			projRef.current
+				.scale(scale)
+				.translate(translate)
+				.clipExtent([
+					[0, 0],
+					[width, height]
+				])
 		}
 	}, [width, height, projRef, svgRef, allHazardCounties])
 
