@@ -5,6 +5,7 @@ import hazardColors from '@/data/hazardColors.json'
 import getAlertIdByEvent from '@/util/getAlertIdByEvent'
 import { getAlertTitleFromAlertFeature } from '@/util/hazardMapUtils'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import Carrot from '@/components/elements/icons/Carrot/Carrot'
 
 const HazardsDetailAccordian = ({ index, isOpen, setSelectedAlert, alert }) => {
 	const title = getAlertTitleFromAlertFeature(alert)
@@ -15,7 +16,13 @@ const HazardsDetailAccordian = ({ index, isOpen, setSelectedAlert, alert }) => {
 		<>
 			<div className={styles.header} onClick={() => setSelectedAlert(index)}>
 				<span className={styles.colorSquare} style={{ backgroundColor: hazardColor }} />
-				{title} -<span className={styles.ends}>Expires {moment(ends).calendar()}</span>
+				<div className={styles.headerText}>
+					<h4>{title}</h4>
+					<span className={styles.ends}>Expires {moment(ends).calendar()}</span>
+				</div>
+				<motion.div className={styles.openToggleCarrot} animate={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)' }}>
+					<Carrot />
+				</motion.div>
 			</div>
 			<AnimatePresence initial={false}>
 				{isOpen && (

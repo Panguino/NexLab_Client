@@ -1,11 +1,11 @@
 const getAlertIdByEvent = (alertName) => {
 	const alertclass = {
 		/* CONVECTIVE */
-		'Tornado Warning': 'convective warning tor',
-		'Severe Thunderstorm Warning': 'convective warning svr',
-		'Severe Weather Statement': 'convective warning svr',
-		'Tornado Watch': 'convective watch tor',
-		'Severe Thunderstorm Watch': 'convective watch svr',
+		'Tornado Warning': 'tor warning',
+		'Severe Thunderstorm Warning': 'svr warning',
+		'Severe Weather Statement': 'svr warning',
+		'Tornado Watch': 'tor watch',
+		'Severe Thunderstorm Watch': 'svr watch',
 
 		/* MARINE */
 		'Tsunami Warning': 'marine warning',

@@ -12,17 +12,18 @@ const HazardsDetailPanel = () => {
 	return (
 		<div className={styles.HazardsDetailPanel}>
 			<h1>{getTitleFromFeature(feature)}</h1>
-			{alerts.map((alert, index) => {
-				return (
-					<HazardsDetailAccordian
-						key={index}
-						index={index}
-						isOpen={selectedAlert === index}
-						setSelectedAlert={setSelectedAlert}
-						alert={alert}
-					/>
-				)
-			})}
+			{alerts &&
+				alerts.map((alert, index) => {
+					return (
+						<HazardsDetailAccordian
+							key={index}
+							index={index}
+							isOpen={selectedAlert === index}
+							setSelectedAlert={setSelectedAlert}
+							alert={alert}
+						/>
+					)
+				})}
 		</div>
 	)
 }
