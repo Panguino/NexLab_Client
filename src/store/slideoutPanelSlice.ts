@@ -1,6 +1,9 @@
-export const createSlideoutPanelSlice = (set) => ({
+export const createSlideoutPanelSlice = (set, get) => ({
 	slideoutPanelIsOpen: false,
 	currentSlideoutPanel: '',
 	openSlideoutPanel: (panel) => set(() => ({ slideoutPanelIsOpen: true, currentSlideoutPanel: panel })),
-	closeSlideoutPanel: () => set(() => ({ slideoutPanelIsOpen: false }))
+	closeSlideoutPanel: () => {
+		get().setSelectedCounty({})
+		set(() => ({ slideoutPanelIsOpen: false }))
+	}
 })

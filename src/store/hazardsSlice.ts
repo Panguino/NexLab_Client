@@ -1,4 +1,4 @@
-export const createHazardsSlice = (set) => ({
+export const createHazardsSlice = (set, get) => ({
 	activeHazard: '',
 	setActiveHazard: (active) => set({ activeHazard: active }),
 	hazardTotals: [],

@@ -6,6 +6,7 @@ import { DATA_TEXT_HAZARDS_MAP_DETAILS } from '@/config/vars'
 import styles from './SlideoutPanel.module.scss'
 import { useRootStore } from '@/store/useRootStore'
 import HazardsDetailPanel from '@/components/blocks/HazardsMap/HazardsDetailPanel/HazardsDetailPanel'
+import CloseX from '@/components/elements/icons/CloseX/CloseX'
 
 const SlideoutPanel = () => {
 	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
@@ -46,7 +47,7 @@ const SlideoutPanel = () => {
 					}}
 				>
 					<div className={styles.Close} onClick={closeSlideoutPanel}>
-						X
+						<CloseX />
 					</div>
 					{getPanelType(currentSlideoutPanel)}
 				</motion.div>
