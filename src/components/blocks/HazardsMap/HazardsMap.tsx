@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { multiPolygon, polygon } from '@turf/turf'
 import { gsap } from 'gsap'
 import { Draggable } from 'gsap/Draggable'
-import { useAnimationFrame } from 'framer-motion'
 
 import hazardColors from '@/data/hazardColors.json'
 import styles from './HazardsMap.module.scss'
@@ -49,19 +48,13 @@ const HazardsMap = () => {
 
 	const [draggable, setDraggable] = useState(null)
 	const mapGroupRef = useRef(null)
-	//const accel = 0.7
-	//const [chaseScale, setChaseScale] = useState(1)
 	const minZoom = 1
 	const maxZoom = 10
-	//const [zoomScale, setZoomScale] = useState(1)
 	const scaleFactor = 1.6
-	//const [pointer, setPointer] = useState({ x: 0, y: 0 })
 
 	const [multiAlertCounties, setMultiAlertCounties] = useState({})
 	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
 	const [isAnimating, setIsAnimating] = useState(true)
-
-	// { index: 0, totalAlerts: flattenedAlerts.length }
 
 	useEffect(() => {
 		if (document) {
@@ -117,9 +110,6 @@ const HazardsMap = () => {
 		}
 	}, [activeHazard])
 
-	// useAnimationFrame(() => {
-	// 	updateZoom()
-	// })
 	const onZoom = useCallback(
 		(event) => {
 			const mapGroup = mapGroupRef.current
@@ -142,14 +132,12 @@ const HazardsMap = () => {
 
 			// get the target position, subtract the map container position offset, subtract the map position offset.
 			let targetX = event.clientX // county position
-			console.log('targetX', targetX)
 			targetX -= mapRef.current.getBoundingClientRect().x // map containter offset from window
 			targetX -= currentX
 			targetX /= currentScale
 			targetX *= -newScale
 			targetX += event.clientX
 			targetX -= mapRef.current.getBoundingClientRect().x
-			//targetX += mapRef.current.getBoundingClientRect().width / 2
 
 			let targetY = event.clientY
 			targetY -= mapRef.current.getBoundingClientRect().y
@@ -158,11 +146,13 @@ const HazardsMap = () => {
 			targetY *= -newScale
 			targetY += event.clientY
 			targetY -= mapRef.current.getBoundingClientRect().y
-			//targetY += mapRef.current.getBoundingClientRect().height / 2
+
+			targetX = gsap.utils.clamp(-width * newScale + width, 0, targetX)
+			targetY = gsap.utils.clamp(-height * newScale + height, 0, targetY)
 
 			gsap.to(mapGroup, { duration: 0.5, scale: newScale, x: targetX, y: targetY, ease: 'power1.out' })
 		},
-		[mapGroupRef, mapRef]
+		[mapGroupRef, mapRef, width, height]
 	)
 
 	const updatePosition = useCallback(
@@ -178,7 +168,6 @@ const HazardsMap = () => {
 			let newScale = 2 + 150 / ((target.getBoundingClientRect().width + target.getBoundingClientRect().height) / currentScale)
 			// get the target position, subtract the map container position offset, subtract the map position offset.
 			let targetX = target.getBoundingClientRect().x // county position
-			console.log('targetX', targetX)
 			targetX -= mapRef.current.getBoundingClientRect().x // map containter offset from window
 			targetX += target.getBoundingClientRect().width / 2
 			targetX -= currentX
@@ -195,29 +184,27 @@ const HazardsMap = () => {
 			targetY += mapRef.current.getBoundingClientRect().height / 2
 
 			newScale = gsap.utils.clamp(minZoom, maxZoom, newScale)
+			targetX = gsap.utils.clamp(-width * newScale + width, 0, targetX)
+			targetY = gsap.utils.clamp(-height * newScale + height, 0, targetY)
 			// Use GSAP to smoothly transition to the new position
 			gsap.to(mapGroup, { duration: 0.5, scale: newScale, x: targetX, y: targetY, ease: 'power1.out' })
-
-			//setPointer({ x: -targetX * scale, y: -targetY * scale })
-			//setChaseScale(scale)
 		},
-		[mapGroupRef, mapRef]
+		[mapGroupRef, mapRef, width, height]
 	)
 
 	useEffect(() => {
-		if (mapGroupRef?.current) {
-			if (!draggable) {
-				const newDraggable = Draggable.create(mapGroupRef.current, {
-					inertia: true,
-					allowContextMenu: true,
-					cursor: 'auto',
-					onDragStart: () => {
-						setTooltipActive(false)
-					},
-					trigger: svgRef.current
-				})
-				setDraggable(newDraggable)
-			}
+		if (mapGroupRef?.current && svgRef?.current && !draggable) {
+			const newDraggable = Draggable.create(mapGroupRef.current, {
+				inertia: true,
+				bounds: svgRef.current,
+				allowContextMenu: true,
+				cursor: 'auto',
+				onDragStart: () => {
+					setTooltipActive(false)
+				},
+				trigger: svgRef.current
+			})
+			setDraggable(newDraggable)
 		}
 	}, [mapGroupRef, draggable, setTooltipActive, svgRef])
 
