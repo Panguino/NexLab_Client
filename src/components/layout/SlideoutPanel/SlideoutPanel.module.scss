@@ -48,4 +48,10 @@
   right: 20px;
   cursor: pointer;
   z-index: 44;
+
+  svg {
+    path {
+      fill: var(--color-grey17-grey1);
+    }
+  }
 }

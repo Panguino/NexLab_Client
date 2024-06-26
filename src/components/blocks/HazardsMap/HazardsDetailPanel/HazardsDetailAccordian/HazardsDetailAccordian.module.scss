@@ -7,7 +7,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  background-color: var(--color-grey7-grey13);
+  background-color: var(--color-grey1-grey13);
   position: relative;
   .headerText {
     h4 {
@@ -29,6 +29,11 @@
     top: 24px;
     right: 20px;
     transform-origin: 50% 50%;
+    svg {
+      path {
+        fill: var(--color-grey17-grey4);
+      }
+    }
   }
 }
 

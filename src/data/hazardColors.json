@@ -1,8 +1,8 @@
 {
-    "convective warning tor": "255,0,0",
-    "convective watch tor": "255,100,100",
-    "convective warning svr": "0,100,225",
-    "convective watch svr": "50,150,255",
+    "tor warning": "255,0,0",
+    "tor watch": "255,100,100",
+    "svr warning": "0,100,225",
+    "svr watch": "50,150,255",
     "fire warning": "255,110,0",
     "fire advisory": "232,100,0",
     "fire watch": "209,91,0",
