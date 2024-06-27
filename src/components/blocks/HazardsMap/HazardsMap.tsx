@@ -49,7 +49,7 @@ const HazardsMap = () => {
 	const [draggable, setDraggable] = useState(null)
 	const mapGroupRef = useRef(null)
 	const minZoom = 1
-	const maxZoom = 10
+	const maxZoom = 30
 	const scaleFactor = 1.6
 
 	const [multiAlertCounties, setMultiAlertCounties] = useState({})
@@ -166,7 +166,8 @@ const HazardsMap = () => {
 			const currentX = Number(props('x'))
 			const currentY = Number(props('y'))
 			let newScale = 2 + 150 / ((target.getBoundingClientRect().width + target.getBoundingClientRect().height) / currentScale)
-			// get the target position, subtract the map container position offset, subtract the map position offset.
+			//console.log('newScale', newScale, target.getBoundingClientRect().width, target.getBoundingClientRect().height, currentScale)
+			// get the target position, subtract the map container position offset, subtract the map position offset
 			let targetX = target.getBoundingClientRect().x // county position
 			targetX -= mapRef.current.getBoundingClientRect().x // map containter offset from window
 			targetX += target.getBoundingClientRect().width / 2
@@ -177,7 +178,7 @@ const HazardsMap = () => {
 
 			let targetY = target.getBoundingClientRect().y
 			targetY -= mapRef.current.getBoundingClientRect().y
-			targetY += target.getBoundingClientRect().width / 2
+			targetY += target.getBoundingClientRect().height / 2
 			targetY -= currentY
 			targetY /= currentScale
 			targetY *= -newScale
