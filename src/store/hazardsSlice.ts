@@ -10,5 +10,7 @@ export const createHazardsSlice = (set, get) => ({
 	selectedCounty: {},
 	setSelectedCounty: (county) => set({ selectedCounty: county, selectedAlert: 0 }),
 	selectedAlert: 0,
-	setSelectedAlert: (index) => set({ selectedAlert: index })
+	setSelectedAlert: (index) => set({ selectedAlert: index }),
+	selectedRegion: 'us',
+	setSelectedRegion: (region) => set({ selectedRegion: region })
 })

@@ -34,6 +34,7 @@ const HazardsMap = () => {
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 	const setSelectedCounty = useRootStore.use.setSelectedCounty()
 	const selectedCounty = useRootStore.use.selectedCounty()
+	const selectedRegion = useRootStore.use.selectedRegion()
 
 	const [mapRef, { width, height }] = useDimensions()
 	const svgRef = useRef(null)
@@ -55,6 +56,17 @@ const HazardsMap = () => {
 	const [multiAlertCounties, setMultiAlertCounties] = useState({})
 	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
 	const [isAnimating, setIsAnimating] = useState(true)
+
+	useEffect(() => {
+		if (projRef.current) {
+			if (selectedRegion === 'ak') {
+				projRef.current.origin([-160, 60]).parallels([55, 65])
+			}
+			if (selectedRegion === 'hi') {
+				projRef.current.origin([-160, 20]).parallels([8, 18])
+			}
+		}
+	}, [projRef, selectedRegion])
 
 	useEffect(() => {
 		if (document) {
@@ -321,7 +333,8 @@ const HazardsMap = () => {
 		setTooltipContent,
 		openSlideoutPanel,
 		setSelectedCounty,
-		mapRef
+		mapRef,
+		updatePosition
 	])
 
 	const getMapData = async () => {
