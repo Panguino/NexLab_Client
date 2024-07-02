@@ -8,7 +8,7 @@ const Navigation = async () => {
 	const session = await getServerSession()
 	return (
 		<>
-			<div className={styles.Navigation}>
+			<div className={`Navigation ${styles.Navigation}`}>
 				<Link href="/">
 					<div className={styles.Logo}>
 						<img src="/img/logo-cloud-filled.svg" />
@@ -43,7 +43,7 @@ const Navigation = async () => {
 					)}
 				</div>
 			</div>
-			<div className={styles.Spacer} />
+			<div className={`NavigationSpacer ${styles.Spacer}`} />
 		</>
 	)
 }

@@ -11,6 +11,8 @@ const HazardsPanel = ({ basepath }) => {
 	const activeHazard = useRootStore.use.activeHazard()
 	const setActiveHazard = useRootStore.use.setActiveHazard()
 	const hazardTotals = useRootStore.use.hazardTotals()
+	const selectedRegion = useRootStore.use.selectedRegion()
+	const setSelectedRegion = useRootStore.use.setSelectedRegion()
 	const hazardInfo = [
 		{ name: 'Fire', id: 'fire' },
 		{ name: 'Winter', id: 'winter' },
@@ -33,6 +35,21 @@ const HazardsPanel = ({ basepath }) => {
 		<>
 			<SidebarSectionHeader name="Hazards" linkUrl={basepath} />
 			<SidebarPanelPad>
+				<div className={styles.regionSelector}>
+					<select
+						value={selectedRegion}
+						onChange={(e) => {
+							setSelectedRegion(e.target.value)
+						}}
+					>
+						<option value="conus">Continental US</option>
+						<option value="ak">Alaska</option>
+						<option value="hi">Hawaii</option>
+						<option value="gum">Guam</option>
+						<option value="pr">Puerto Rico</option>
+						<option value="sam">American Samoa</option>
+					</select>
+				</div>
 				<div className={styles.HazardsPanel}>
 					<div className={styles.gridItem}></div>
 					{hazardType.map((severity, index) => {
