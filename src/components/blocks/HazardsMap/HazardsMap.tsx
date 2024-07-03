@@ -58,17 +58,6 @@ const HazardsMap = () => {
 	const [isAnimating, setIsAnimating] = useState(true)
 
 	useEffect(() => {
-		if (projRef.current) {
-			if (selectedRegion === 'ak') {
-				projRef.current.origin([-160, 60]).parallels([55, 65])
-			}
-			if (selectedRegion === 'hi') {
-				projRef.current.origin([-160, 20]).parallels([8, 18])
-			}
-		}
-	}, [projRef, selectedRegion])
-
-	useEffect(() => {
 		if (document) {
 			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
 			console.log('selectedCounty', selectedCounty)
@@ -206,6 +195,47 @@ const HazardsMap = () => {
 	)
 
 	useEffect(() => {
+		const translate = [width / 2, height / 2]
+		const generalScale = Math.min(width * 1.2, height * 2)
+		const projections = {
+			conus: {
+				scale: generalScale,
+				projection: d3.geoAlbers().precision(0).scale(2)
+			},
+			ak: {
+				scale: generalScale * 1.2,
+				projection: d3.geoConicEqualArea().precision(0).center([0, 62]).rotate([154, 0])
+			},
+			hi: {
+				scale: generalScale * 2,
+				projection: d3.geoMercator().precision(0).center([0, 20.5]).rotate([157, 0])
+			},
+			pr: {
+				scale: generalScale * 4,
+				projection: d3.geoConicEqualArea().precision(0).center([0, 18.21]).rotate([66, 0])
+			},
+			sam: {
+				scale: generalScale * 4,
+				projection: d3.geoMercator().precision(0).center([0, -13]).rotate([170, 0])
+			},
+			gum: {
+				scale: generalScale,
+				projection: d3.geoMercator().precision(0).center([0, 13.45]).rotate([-153, 0])
+			}
+		}
+
+		if (width && height) {
+			projRef.current = projections[selectedRegion].projection
+				.scale(projections[selectedRegion].scale)
+				.translate(translate)
+				.clipExtent([
+					[0, 0],
+					[width, height]
+				])
+		}
+	}, [selectedRegion, width, height])
+
+	useEffect(() => {
 		if (mapGroupRef?.current && svgRef?.current && !draggable) {
 			const newDraggable = Draggable.create(mapGroupRef.current, {
 				inertia: true,
@@ -220,20 +250,6 @@ const HazardsMap = () => {
 			setDraggable(newDraggable)
 		}
 	}, [mapGroupRef, draggable, setTooltipActive, svgRef])
-
-	useEffect(() => {
-		if (width && height) {
-			const scale = Math.min(width * 1.2, height * 2)
-			const translate = [width / 2, height / 2]
-			projRef.current
-				.scale(scale)
-				.translate(translate)
-				.clipExtent([
-					[0, 0],
-					[width, height]
-				])
-		}
-	}, [width, height, projRef, svgRef, allHazardCounties])
 
 	useEffect(() => {
 		getMapData()
@@ -334,7 +350,8 @@ const HazardsMap = () => {
 		openSlideoutPanel,
 		setSelectedCounty,
 		mapRef,
-		updatePosition
+		updatePosition,
+		selectedRegion
 	])
 
 	const getMapData = async () => {
