@@ -8,12 +8,12 @@ const { searchClient } = instantMeiliSearch(process.env.NEXT_PUBLIC_MEILISEARCH_
 
 const Hit = ({ hit }) => {
 	const { id, SEO, path, Title } = hit
-	const { metaTitle, metaDescription } = SEO
+	const { metaTitle, metaDescription, metaImage } = SEO
 	return (
 		<div key={id} id={id} className={styles.resultItem}>
 			<Link href={path ? path : '/'}>
 				<div className={styles.image}>
-					<img src="https://www.weather.gov/images/gsp/tdwr/TCLT1842Refl.gif" alt={Title} />
+					<img src={metaImage ? metaImage : 'https://www.weather.gov/images/gsp/tdwr/TCLT1842Refl.gif'} alt={Title} />
 				</div>
 				<div className={styles.info}>
 					<h2>{metaTitle}</h2>
