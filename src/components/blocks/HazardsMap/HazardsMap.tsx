@@ -6,7 +6,8 @@ import { multiPolygon, polygon } from '@turf/turf'
 import { gsap } from 'gsap'
 import { Draggable } from 'gsap/Draggable'
 
-import hazardColors from '@/data/hazardColors.json'
+//import hazardColors from '@/data/hazardColors.json'
+import { HAZARD_COLORS, HAZARD_LEVELS, HAZARD_TYPES } from '@/data/hazardMapVars'
 import styles from './HazardsMap.module.scss'
 import useDimensions from '@/hooks/useDimensions'
 import {
@@ -23,11 +24,13 @@ import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
 import { useRootStore } from '@/store/useRootStore'
 import { DATA_TEXT_HAZARDS_MAP_DETAILS } from '@/config/vars'
 import { useInterval } from '@/hooks/useInterval'
+import { highlightHazard } from '@/util/hazardMapUtils'
 
 gsap.registerPlugin(Draggable)
 
 const HazardsMap = () => {
-	const activeHazard = useRootStore.use.activeHazard()
+	const activeHazards = useRootStore.use.activeHazards()
+	const toggledHazards = useRootStore.use.toggledHazards()
 	const setHazardTotals = useRootStore.use.setHazardTotals()
 	const setTooltipActive = useRootStore.use.setTooltipActive()
 	const setTooltipContent = useRootStore.use.setTooltipContent()
@@ -60,7 +63,7 @@ const HazardsMap = () => {
 	useEffect(() => {
 		if (document) {
 			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
-			console.log('selectedCounty', selectedCounty)
+			//console.log('selectedCounty', selectedCounty)
 			hazardCounties.forEach((hazardCounty) => {
 				hazardCounty.classList.remove(styles.activeCounty)
 				if (hazardCounty.getAttribute('shapeId') === selectedCounty.id) {
@@ -95,21 +98,21 @@ const HazardsMap = () => {
 			hazardCounties.forEach((hazardCounty) => {
 				//console.log(hazardCounty.getAttribute('hazards'), activeHazard)
 				gsap.to(hazardCounty, {
-					opacity: hazardCounty.getAttribute('hazards').includes(activeHazard) ? 1 : 0.2,
+					opacity: highlightHazard(hazardCounty.getAttribute('hazards'), activeHazards, toggledHazards) ? 1 : 0.2,
 					duration: 0.25,
 					ease: 'linear.easeNone'
 				})
 				// fill county with active hazard color if it contains that active hazard
-				if (activeHazard in hazardColors && hazardCounty.getAttribute('hazards').includes(activeHazard)) {
+				/*if (activeHazard in hazardColors && hazardCounty.getAttribute('hazards').includes(activeHazard)) {
 					gsap.to(hazardCounty, {
 						fill: `rgb(${hazardColors[activeHazard]})`,
 						duration: 0.25,
 						ease: 'linear.easeNone'
 					})
-				}
+				}*/
 			})
 		}
-	}, [activeHazard])
+	}, [activeHazards])
 
 	const onZoom = useCallback(
 		(event) => {
@@ -293,13 +296,14 @@ const HazardsMap = () => {
 				hazardCounty.alerts.forEach((alert) => {
 					hazards += getAlertIdByEvent(alert.properties.event) + '|'
 				})
+				const hazardInfo = getAlertIdByEvent(hazardCounty.alerts[0].properties.event)
 				svg.append('path')
 					.datum(hazardCounty.feature)
 					.attr('class', `${styles.hazardCounty} ${hazardCounty.id}`)
 					.attr('d', geoPathGeneratorSvg)
 					.attr('shapeId', hazardCounty.id)
 					.attr('hazards', hazards)
-					.attr('fill', `rgb(${hazardColors[getAlertIdByEvent(hazardCounty.alerts[0].properties.event)]})`)
+					.attr('fill', `rgb(${HAZARD_COLORS[hazardInfo.type][hazardInfo.level]})`)
 					.on('mouseover', (event) => {
 						//(event, d) => {
 						//console.log('mouseover', hazardCounty.id, event, d)
@@ -476,17 +480,19 @@ const HazardsMap = () => {
 
 		// get totals for each hazrad type
 		const hazardCounts = []
-		for (const [key] of Object.entries(hazardColors)) {
-			hazardCounts[key] = 0
-		}
+		HAZARD_TYPES.forEach((type) => {
+			HAZARD_LEVELS.forEach((level) => {
+				hazardCounts[`${type} ${level}`] = 0
+			})
+		})
 		const multiAlertCountiesInfo = {}
 		hazardCounties.forEach((hazardCounty) => {
 			const flattenedAlerts = flattenAlerts(hazardCounty.alerts)
 			const alertColors = []
 			flattenedAlerts.forEach((alert) => {
-				const alertType = getAlertIdByEvent(alert.properties.event)
-				alertColors.push(hazardColors[alertType])
-				hazardCounts[alertType]++
+				const alertInfo = getAlertIdByEvent(alert.properties.event)
+				alertColors.push(HAZARD_COLORS[alertInfo.type][alertInfo.level])
+				hazardCounts[`${alertInfo.type} ${alertInfo.level}`]++
 			})
 			if (flattenedAlerts.length > 1) {
 				multiAlertCountiesInfo[hazardCounty.id] = { index: 0, colors: alertColors }
@@ -500,13 +506,13 @@ const HazardsMap = () => {
 		const flatAlerts = []
 		const alertTypes = []
 		alerts.forEach((alert: any) => {
-			const alertType = getAlertIdByEvent(alert.properties.event)
-			if (alertTypes.includes(alertType)) {
+			const alertInfo = getAlertIdByEvent(alert.properties.event)
+			if (alertTypes.includes(`${alertInfo.type} ${alertInfo.level}`)) {
 				return
 			} else {
 				flatAlerts.push(alert)
 			}
-			alertTypes.push(alertType)
+			alertTypes.push(`${alertInfo.type} ${alertInfo.level}`)
 		})
 		return flatAlerts
 	}
