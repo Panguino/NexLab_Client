@@ -1,10 +1,10 @@
-export const getTitleFromFeature = (feature) => {
-	if (feature && feature.properties) {
-		if (feature.properties.COUNTYNAME) {
-			return `${feature.properties.COUNTYNAME} county, ${feature.properties.STATE}`
+export const getTitleFromFeature = (properties) => {
+	if (properties) {
+		if (properties.COUNTYNAME) {
+			return `${properties.COUNTYNAME} county, ${properties.STATE}`
 		}
-		if (feature.properties.NAME) {
-			return feature.properties.NAME
+		if (properties.NAME) {
+			return properties.NAME
 		}
 	}
 	return ''
