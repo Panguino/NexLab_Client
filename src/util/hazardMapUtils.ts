@@ -10,24 +10,6 @@ export const getTitleFromFeature = (properties) => {
 	return ''
 }
 
-export const isHazardActive = (hazardId, activeHazards) => {
-	let hazardFound = false
-	activeHazards.map((hazard) => {
-		if (hazardId.includes(hazard)) {
-			hazardFound = true
-		}
-	})
-	return hazardFound
-}
-
-export const highlightHazard = (hazardId, activeHazards, toggledHazards) => {
-	return (
-		isHazardActive(hazardId, activeHazards) ||
-		(activeHazards.length === 0 && toggledHazards.length === 0) ||
-		isHazardActive(hazardId, toggledHazards)
-	)
-}
-
 export const calculateHazardTotals = (hazards) => {
 	const newTotals = {}
 	Object.keys(hazards).forEach((key) => {
@@ -39,4 +21,24 @@ export const calculateHazardTotals = (hazards) => {
 	})
 	console.log('newTotals', newTotals)
 	return newTotals
+}
+
+export const flattenAlerts = (alerts: any) => {
+	const flatAlerts = new Set()
+	const alertInfo = []
+	alerts.map((alert: any) => {
+		const alertId = `${alert.hazardInfo.type.type} ${alert.hazardInfo.level.level}`
+		if (!flatAlerts.has(alertId)) {
+			flatAlerts.add(`${alert.hazardInfo.type.type} ${alert.hazardInfo.level.level}`)
+			alertInfo.push({
+				color: alert.hazardInfo.color.HEX,
+				name: `${alert.hazardInfo.type.name} ${alert.hazardInfo.level.name}`,
+				id: `${alert.hazardInfo.type.type} ${alert.hazardInfo.level.level}`,
+				type: alert.hazardInfo.type.type,
+				level: alert.hazardInfo.level.level,
+				event: alert.event
+			})
+		}
+	})
+	return alertInfo
 }

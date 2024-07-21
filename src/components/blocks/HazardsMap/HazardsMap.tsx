@@ -12,22 +12,24 @@ import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
 import { useRootStore } from '@/store/useRootStore'
 import { DATA_TEXT_HAZARDS_MAP_DETAILS } from '@/config/vars'
 import { useInterval } from '@/hooks/useInterval'
-//import { highlightHazard } from '@/util/hazardMapUtils'
+import { flattenAlerts } from '@/util/hazardMapUtils'
 
 gsap.registerPlugin(Draggable)
 
 const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts }) => {
 	const regionHazards = useRootStore.use.regionHazards()
 	const setRegionHazards = useRootStore.use.setRegionHazards()
-	// const activeHazards = useRootStore.use.activeHazards()
-	// const toggledHazards = useRootStore.use.toggledHazards()
-	// const setHazardTotals = useRootStore.use.setHazardTotals()
 	const setTooltipActive = useRootStore.use.setTooltipActive()
 	const setTooltipContent = useRootStore.use.setTooltipContent()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 	const setSelectedCounty = useRootStore.use.setSelectedCounty()
 	const selectedCounty = useRootStore.use.selectedCounty()
 	const selectedRegion = useRootStore.use.selectedRegion()
+
+	const activeHazards = useRootStore.use.activeHazards()
+	const activeHazardLevels = useRootStore.use.activeHazardLevels()
+	const activeHazardTypes = useRootStore.use.activeHazardTypes()
+	const isHazardActive = useRootStore.use.isHazardActive()
 
 	const [mapRef, { width, height }] = useDimensions()
 	const svgRef = useRef(null)
@@ -79,27 +81,37 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 	}
 	useInterval(animateMultiHazardCounties, 2000)
 
-	// useEffect(() => {
-	// 	if (document) {
-	// 		const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
-	// 		hazardCounties.forEach((hazardCounty) => {
-	// 			//console.log(hazardCounty.getAttribute('hazards'), activeHazard)
-	// 			gsap.to(hazardCounty, {
-	// 				opacity: highlightHazard(hazardCounty.getAttribute('hazards'), activeHazards, toggledHazards) ? 1 : 0.2,
-	// 				duration: 0.25,
-	// 				ease: 'linear.easeNone'
-	// 			})
-	// 			// fill county with active hazard color if it contains that active hazard
-	// 			/*if (activeHazard in hazardColors && hazardCounty.getAttribute('hazards').includes(activeHazard)) {
-	// 				gsap.to(hazardCounty, {
-	// 					fill: `rgb(${hazardColors[activeHazard]})`,
-	// 					duration: 0.25,
-	// 					ease: 'linear.easeNone'
-	// 				})
-	// 			}*/
-	// 		})
-	// 	}
-	// }, [activeHazards])
+	useEffect(() => {
+		if (document) {
+			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
+			hazardCounties.forEach((hazardCounty) => {
+				//console.log(hazardCounty.getAttribute('hazards'), activeHazard)
+				const countyId = hazardCounty.getAttribute('shapeId')
+				if (!regionHazards[countyId]) return
+				const alerts = regionHazards[countyId].alerts
+				const flattenedAlerts = flattenAlerts(alerts)
+				let active = false
+				flattenedAlerts.forEach(({ type, level }) => {
+					if (isHazardActive(type, level)) {
+						active = true
+					}
+				})
+				gsap.to(hazardCounty, {
+					opacity: active ? 1 : 0.2,
+					duration: 0.15,
+					ease: 'linear.easeNone'
+				})
+				// fill county with active hazard color if it contains that active hazard
+				/*if (activeHazard in hazardColors && hazardCounty.getAttribute('hazards').includes(activeHazard)) {
+					gsap.to(hazardCounty, {
+						fill: `rgb(${hazardColors[activeHazard]})`,
+						duration: 0.25,
+						ease: 'linear.easeNone'
+					})
+				}*/
+			})
+		}
+	}, [activeHazardTypes, activeHazardLevels, activeHazards, isHazardActive, regionHazards])
 
 	const onZoom = useCallback(
 		(event) => {
