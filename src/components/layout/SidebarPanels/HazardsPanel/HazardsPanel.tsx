@@ -6,6 +6,7 @@ import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad
 import ColorSquare from './ColorSquare/ColorSquare'
 import { useRootStore } from '@/store/useRootStore'
 import { HAZARD_LEVELS, HAZARD_LEVEL_NAMES, HAZARD_TYPES, HAZARD_TYPE_NAMES, HAZARD_COLORS } from '@/data/hazardMapVars'
+import Select from '@/components/elements/Select/Select'
 
 const HazardsPanel = ({ basepath }) => {
 	const hazardTotals = useRootStore.use.hazardTotals()
@@ -39,24 +40,21 @@ const HazardsPanel = ({ basepath }) => {
 	toggledHazardRows
 	toggledHazardColumns
 
+	const regions = [
+		{ value: 'conus', label: 'Continental US' },
+		{ value: 'ak', label: 'Alaska' },
+		{ value: 'hi', label: 'Hawaii' },
+		{ value: 'gum', label: 'Guam' },
+		{ value: 'pr', label: 'Puerto Rico' },
+		{ value: 'sam', label: 'American Samoa' }
+	]
+
 	return (
 		<>
 			<SidebarSectionHeader name="Hazards" linkUrl={basepath} />
 			<SidebarPanelPad>
 				<div className={styles.regionSelector}>
-					<select
-						value={selectedRegion}
-						onChange={(e) => {
-							setSelectedRegion(e.target.value)
-						}}
-					>
-						<option value="conus">Continental US</option>
-						<option value="ak">Alaska</option>
-						<option value="hi">Hawaii</option>
-						<option value="gum">Guam</option>
-						<option value="pr">Puerto Rico</option>
-						<option value="sam">American Samoa</option>
-					</select>
+					<Select value={selectedRegion} options={regions} onChange={setSelectedRegion} placeholder={'Select Region'} />
 				</div>
 				<div className={styles.HazardsPanel}>
 					<div className={styles.gridItem}></div>

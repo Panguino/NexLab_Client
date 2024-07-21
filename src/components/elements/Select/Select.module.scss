@@ -1,0 +1,111 @@
+.wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.select {
+  cursor: pointer;
+  position: relative;
+  border-radius: 4px;
+  height: 40px;
+  width: 100%;
+  background-color: var(--color-grey19);
+  border: 2px solid var(--color-grey14);
+  transition: all var(--ease-themeChange);
+
+  label {
+    font-size: 16px;
+    color: var(--color-grey3);
+    position: absolute;
+    left: 5px;
+    top: 6px;
+    transform: translate(11px, 9px);
+    transition: all linear 0.12s;
+    z-index: 0;
+  }
+}
+.value {
+  color: var(--color-grey4-grey3);
+  transition: color var(--ease-themeChange);
+  font-size: 16px;
+  height: 35px;
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.options {
+  width: 100%;
+  z-index: 500;
+  position: absolute;
+  top: 38px;
+  left: 0;
+  border-radius: 0 0 4px 4px;
+  border: 1px solid var(--color-grey14);
+  border-top: 0px;
+  filter: drop-shadow(0px 4px 14px rgba(0, 0, 0, 0.11));
+  margin-bottom: 20px;
+  background-color: var(--color-grey19);
+  transition: all var(--ease-themeChange);
+}
+.arrow {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+}
+
+.option {
+  padding: 10px;
+  transition: all 0.2s ease-out;
+  font-size: 16px;
+  color: var(--color-grey3);
+
+  &:hover {
+    background-color: var(--color-blue3);
+    color: var(--color-white);
+  }
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+// ${({ open, value, labelAnimation }) =>
+//     (open || value) &&
+//     labelAnimation &&
+//     css`
+//         ${Label} {
+//             font-size: 11px;
+//             letter-spacing: 0.5px;
+//             transform: translate(10px, -12px);
+//             z-index: 1;
+//         }
+//     `}
+// ${({ open, value, labelAnimation }) =>
+//     (open || value) &&
+//     !labelAnimation &&
+//     css`
+//         ${Label} {
+//             display: none;
+//         }
+//     `}
+
+// export const Arrow = styled.div`
+//     position: absolute;
+//     top: 0;
+//     bottom: 0;
+//     margin: auto 0;
+//     right: 15px;
+//     pointer-events: none;
+//     display: flex;
+//     flex-direction: column;
+//     flex-wrap: nowrap;
+//     justify-content: center;
+//     transition: all 0.2s ease-out;
+// `
