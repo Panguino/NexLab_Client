@@ -4,10 +4,18 @@ export const createHazardsSlice = (set, get) => ({
 	isHazardActive: (hazardType, hazardLevel) => {
 		const hazardId = `${hazardType} ${hazardLevel}`
 		return (
+			get().toggledHazards.has(hazardId) ||
+			get().toggledHazardRows.has(hazardType) ||
+			get().toggledHazardColumns.has(hazardLevel) ||
 			get().activeHazards.has(hazardId) ||
 			get().activeHazardTypes.has(hazardType) ||
 			get().activeHazardLevels.has(hazardLevel) ||
-			(get().activeHazards.size === 0 && get().activeHazardTypes.size === 0 && get().activeHazardLevels.size === 0)
+			(get().activeHazards.size === 0 &&
+				get().activeHazardTypes.size === 0 &&
+				get().activeHazardLevels.size === 0 &&
+				get().toggledHazards.size === 0 &&
+				get().toggledHazardRows.size === 0 &&
+				get().toggledHazardColumns.size === 0)
 		)
 	},
 	//
@@ -42,23 +50,45 @@ export const createHazardsSlice = (set, get) => ({
 		}),
 	clearActiveHazardLevels: () => set({ activeHazardLevels: new Set() }),
 	//
+	isHazardToggled: (hazardType, hazardLevel) => {
+		const hazardId = `${hazardType} ${hazardLevel}`
+		return get().toggledHazards.has(hazardId) || get().toggledHazardRows.has(hazardType) || get().toggledHazardColumns.has(hazardLevel)
+	},
 	toggledHazards: new Set(),
 	toggleHazard: (hazard) =>
-		set((state) => ({
-			toggledHazards: state.toggledHazards.has(hazard)
-				? new Set(state.toggledHazards).delete(hazard)
-				: new Set(state.toggledHazards).add(hazard)
-		})),
-	addToggledHazard: (hazard) => set((state) => ({ toggledHazards: new Set(state.toggledHazards).add(hazard) })),
-	removeToggledHazard: (hazard) => set((state) => ({ toggledHazards: new Set(state.toggledHazards).delete(hazard) })),
+		set((state) => {
+			if (state.toggledHazards.has(hazard)) {
+				const updatedToggledHazards = new Set(state.toggledHazards)
+				updatedToggledHazards.delete(hazard)
+				return { toggledHazards: updatedToggledHazards }
+			} else {
+				return { toggledHazards: new Set(state.toggledHazards).add(hazard) }
+			}
+		}),
 	clearToggledHazards: () => set({ toggledHazards: new Set() }),
 	toggledHazardRows: new Set(),
-	toggleHazardRowOn: (hazard) => set((state) => ({ toggledHazardRows: new Set(state.toggledHazardRows).add(hazard) })),
-	toggleHazardRowOff: (hazard) => set((state) => ({ toggledHazardRows: new Set(state.toggledHazardRows).delete(hazard) })),
+	toggleHazardRow: (hazardRowId) =>
+		set((state) => {
+			if (state.toggledHazardRows.has(hazardRowId)) {
+				const updatedToggledHazardRows = new Set(state.toggledHazardRows)
+				updatedToggledHazardRows.delete(hazardRowId)
+				return { toggledHazardRows: updatedToggledHazardRows }
+			} else {
+				return { toggledHazardRows: new Set(state.toggledHazardRows).add(hazardRowId) }
+			}
+		}),
 	clearToggledHazardRows: () => set({ toggledHazardRows: new Set() }),
 	toggledHazardColumns: new Set(),
-	toggleHazardColumnOn: (hazard) => set((state) => ({ toggledHazardColumns: new Set(state.toggledHazardColumns).add(hazard) })),
-	toggleHazardColumnOff: (hazard) => set((state) => ({ toggledHazardColumns: new Set(state.toggledHazardColumns).delete(hazard) })),
+	toggleHazardColumn: (hazardColumnId) =>
+		set((state) => {
+			if (state.toggledHazardColumns.has(hazardColumnId)) {
+				const updatedToggledHazardColumns = new Set(state.toggledHazardColumns)
+				updatedToggledHazardColumns.delete(hazardColumnId)
+				return { toggledHazardColumns: updatedToggledHazardColumns }
+			} else {
+				return { toggledHazardColumns: new Set(state.toggledHazardColumns).add(hazardColumnId) }
+			}
+		}),
 	clearToggledHazardColumns: () => set({ toggledHazardColumns: new Set() }),
 	//
 	hazardTotals: {},
@@ -73,33 +103,3 @@ export const createHazardsSlice = (set, get) => ({
 	selectedRegion: 'conus',
 	setSelectedRegion: (region) => set({ selectedRegion: region })
 })
-
-/*
-export const createHazardsSlice = (set, get) => ({
-	// Ready to refactor the sets
-	activeHazards: new Set(),
-	addActiveHazard: (hazard) => set((state) => ({ activeHazards: new Set(state.activeHazards).add(hazard) })),
-	removeActiveHazard: (hazard) => set((state) => ({ activeHazards: new Set(state.activeHazards).delete(hazard) })),
-	clearActiveHazards: () => set({ activeHazards: new Set() }),
-	toggledHazards: [],
-	toggleHazard: (hazard) =>
-		set((state) => {
-			if (state.toggledHazards.includes(hazard)) {
-				return { toggledHazards: [...state.toggledHazards].filter((h) => h !== hazard) }
-			}
-			return { toggledHazards: [...state.toggledHazards, hazard] }
-		}),
-	clearToggledHazards: () => set({ toggledHazards: [] }),
-	hazardTotals: [],
-	setHazardTotals: (totals) => set({ hazardTotals: totals }),
-	tooltipContent: { alerts: null, feature: null },
-	tooltipActive: false,
-	setTooltipActive: (active) => set({ tooltipActive: active }),
-	setTooltipContent: (content) => set({ tooltipContent: content }),
-	selectedCounty: {},
-	setSelectedCounty: (county) => set({ selectedCounty: county, selectedAlert: 0 }),
-	selectedAlert: 0,
-	setSelectedAlert: (index) => set({ selectedAlert: index }),
-	selectedRegion: 'conus',
-	setSelectedRegion: (region) => set({ selectedRegion: region })
-})*/

@@ -26,6 +26,19 @@ const HazardsPanel = ({ basepath }) => {
 	activeHazards
 	activeHazardLevels
 	activeHazardTypes
+	//
+	const toggledHazards = useRootStore.use.toggledHazards()
+	const toggleHazard = useRootStore.use.toggleHazard()
+	const toggledHazardRows = useRootStore.use.toggledHazardRows()
+	const toggleHazardRow = useRootStore.use.toggleHazardRow()
+	const toggledHazardColumns = useRootStore.use.toggledHazardColumns()
+	const toggleHazardColumn = useRootStore.use.toggleHazardColumn()
+	const isHazardToggled = useRootStore.use.isHazardToggled()
+	// needs to re-render when these things change.
+	toggledHazards
+	toggledHazardRows
+	toggledHazardColumns
+
 	return (
 		<>
 			<SidebarSectionHeader name="Hazards" linkUrl={basepath} />
@@ -60,9 +73,7 @@ const HazardsPanel = ({ basepath }) => {
 									removeActiveHazardLevel(hazardLLevelId)
 								}}
 								onClick={() => {
-									// hazardInfo.map((hazard) => {
-									// 	toggleHazard(`${hazard.id} ${severity.id}`)
-									// })
+									toggleHazardColumn(hazardLLevelId)
 								}}
 							>
 								<span className={styles.rotatedTitle}>{name}</span>
@@ -82,9 +93,7 @@ const HazardsPanel = ({ basepath }) => {
 									removeActiveHazardType(hazardTypeId)
 								}}
 								onClick={() => {
-									/*hazardType.map((severity) => {
-										toggleHazard(`${hazard.id} ${severity.id}`)
-									})*/
+									toggleHazardRow(hazardTypeId)
 								}}
 							>
 								<span className={styles.rowTitle}>{HAZARD_TYPE_NAMES[hazardTypeId]}</span>
@@ -93,6 +102,7 @@ const HazardsPanel = ({ basepath }) => {
 								const hazardId = `${hazardTypeId} ${hazardLevelId}`
 								const hasAlerts = hazardTotals[hazardId] > 0 ? true : false
 								const hovered = isHazardActive(hazardTypeId, hazardLevelId)
+								const toggled = isHazardToggled(hazardTypeId, hazardLevelId)
 								const color = HAZARD_COLORS[hazardTypeId][hazardLevelId]
 								return (
 									<div
@@ -109,14 +119,16 @@ const HazardsPanel = ({ basepath }) => {
 											}
 										}}
 										onClick={() => {
-											//toggleHazard(hazardId)
+											if (hasAlerts) {
+												toggleHazard(hazardId)
+											}
 										}}
 									>
 										<ColorSquare
 											color={color}
 											amount={hazardTotals[hazardId]}
 											opacity={hovered ? 1 : 0.3}
-											active={false}
+											active={toggled && hasAlerts}
 											disabled={color === undefined}
 										/>
 									</div>
