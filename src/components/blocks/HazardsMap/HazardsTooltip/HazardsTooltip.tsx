@@ -30,8 +30,8 @@ const HazardsTooltip = () => {
 	return (
 		<motion.div className={styles.HazardsTooltip} animate={{ opacity: tooltipActive ? 1 : 0, x: x + 20, y: y }}>
 			<h4>{getTitleFromFeature(tooltipContent.properties)}</h4>
-			{tooltipContent.info &&
-				flattenAlerts(tooltipContent.info).map(({ color, name }, index) => {
+			{tooltipContent.alerts &&
+				flattenAlerts(tooltipContent.alerts).map(({ color, name }, index) => {
 					//console.log(alert)
 					return (
 						<div key={index} className={styles.alert}>

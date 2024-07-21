@@ -67,8 +67,9 @@ const Page = async () => {
 							alerts {
 								properties {
 									headline
-									event
 									ends
+									description
+									event
 									hazardInfo {
 										type {
 											type
@@ -97,6 +98,8 @@ const Page = async () => {
 							properties {
 								headline
 								ends
+								description
+								event
 								hazardInfo {
 									type {
 										type
@@ -124,6 +127,8 @@ const Page = async () => {
 							properties {
 								headline
 								ends
+								description
+								event
 								hazardInfo {
 									type {
 										type
@@ -185,7 +190,7 @@ const Page = async () => {
 					const shapeFeature = { type: county.type, geometry: county.geometry, properties: {} }
 					alerts[region.name][county.properties.ID] = {
 						shape: rewind(shapeFeature, { reverse: true }),
-						info: county.alerts.map((alert) => {
+						alerts: county.alerts.map((alert) => {
 							return alert.properties
 						}),
 						properties: county.properties
@@ -198,7 +203,7 @@ const Page = async () => {
 				const shapeFeature = { type: coast.type, geometry: coast.geometry, properties: {} }
 				alerts[region.name][coast.properties.ID] = {
 					shape: rewind(shapeFeature, { reverse: true }),
-					info: coast.alerts.map((alert) => {
+					alerts: coast.alerts.map((alert) => {
 						return alert.properties
 					}),
 					properties: coast.properties
@@ -210,7 +215,7 @@ const Page = async () => {
 				const shapeFeature = { type: offshore.type, geometry: offshore.geometry, properties: {} }
 				alerts[region.name][offshore.properties.ID] = {
 					shape: rewind(shapeFeature, { reverse: true }),
-					info: offshore.alerts.map((alert) => {
+					alerts: offshore.alerts.map((alert) => {
 						return alert.properties
 					}),
 					properties: offshore.properties

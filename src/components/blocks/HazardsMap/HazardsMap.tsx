@@ -10,12 +10,15 @@ import styles from './HazardsMap.module.scss'
 import useDimensions from '@/hooks/useDimensions'
 import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
 import { useRootStore } from '@/store/useRootStore'
-//import { useInterval } from '@/hooks/useInterval'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS } from '@/config/vars'
+import { useInterval } from '@/hooks/useInterval'
 //import { highlightHazard } from '@/util/hazardMapUtils'
 
 gsap.registerPlugin(Draggable)
 
 const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts }) => {
+	const regionHazards = useRootStore.use.regionHazards()
+	const setRegionHazards = useRootStore.use.setRegionHazards()
 	// const activeHazards = useRootStore.use.activeHazards()
 	// const toggledHazards = useRootStore.use.toggledHazards()
 	// const setHazardTotals = useRootStore.use.setHazardTotals()
@@ -36,17 +39,15 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 	const maxZoom = 30
 	const scaleFactor = 1.6
 
-	//const [multiAlertCounties, setMultiAlertCounties] = useState({})
-	//const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
-	//const [isAnimating, setIsAnimating] = useState(true)
+	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
+	const [isAnimating, setIsAnimating] = useState(true)
 
 	useEffect(() => {
 		if (document) {
 			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
-			//console.log('selectedCounty', selectedCounty)
 			hazardCounties.forEach((hazardCounty) => {
 				hazardCounty.classList.remove(styles.activeCounty)
-				if (hazardCounty.getAttribute('shapeId') === selectedCounty.id) {
+				if (hazardCounty.getAttribute('shapeId') === selectedCounty) {
 					hazardCounty.classList.add(styles.activeCounty)
 				}
 			})
@@ -54,27 +55,29 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 	}, [selectedCounty])
 
 	useEffect(() => {
-		console.log(alerts)
-	}, [alerts])
+		console.log(regionHazards)
+	}, [regionHazards])
 
-	// useEffect(() => {
-	// 	setIsAnimating(!slideoutPanelIsOpen)
-	// }, [slideoutPanelIsOpen])
+	useEffect(() => {
+		setIsAnimating(!slideoutPanelIsOpen)
+	}, [slideoutPanelIsOpen])
 
-	// const animateMultiHazardCounties = () => {
-	// 	//console.log('animating multi hazard counties', multiAlertCounties)
-	// 	if (isAnimating) {
-	// 		const newMultiAlertCounties = { ...multiAlertCounties }
-	// 		for (const id in multiAlertCounties) {
-	// 			const { index, colors } = multiAlertCounties[id]
-	// 			//console.log(id, index, colors)
-	// 			gsap.to(`path[shapeId="${id}"]`, { fill: `rgb("${colors[index]}")`, duration: 0.5, ease: 'linear.easeNone' })
-	// 			newMultiAlertCounties[id].index = index + 1 < colors.length ? index + 1 : 0
-	// 		}
-	// 		setMultiAlertCounties(newMultiAlertCounties)
-	// 	}
-	// }
-	// useInterval(animateMultiHazardCounties, 2000)
+	const animateMultiHazardCounties = () => {
+		if (isAnimating) {
+			for (const id in regionHazards) {
+				const alerts = regionHazards[id].alerts
+				if (alerts.length > 1) {
+					const countyshape = document.querySelector(`path[shapeId="${id}"]`)
+					const currentIndex = parseInt(countyshape.getAttribute('hazardIndex'))
+					const nextIndex = currentIndex + 1 < alerts.length ? currentIndex + 1 : 0
+					const color = alerts[nextIndex].hazardInfo.color.HEX
+					gsap.to(`path[shapeId="${id}"]`, { fill: color, duration: 0.5, ease: 'linear.easeNone' })
+					countyshape.setAttribute('hazardIndex', String(nextIndex))
+				}
+			}
+		}
+	}
+	useInterval(animateMultiHazardCounties, 2000)
 
 	// useEffect(() => {
 	// 	if (document) {
@@ -223,6 +226,20 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 	}, [selectedRegion, width, height])
 
 	useEffect(() => {
+		if (selectedRegion) {
+			const ids = {
+				conus: 'Continental United States',
+				ak: 'Alaska',
+				hi: 'Hawaii',
+				pr: 'Puerto Rico',
+				sam: 'American Samoa',
+				gum: 'Guam'
+			}
+			setRegionHazards(alerts[ids[selectedRegion]])
+		}
+	}, [setRegionHazards, selectedRegion, alerts])
+
+	useEffect(() => {
 		if (mapGroupRef?.current && svgRef?.current && !draggable) {
 			const newDraggable = Draggable.create(mapGroupRef.current, {
 				inertia: true,
@@ -239,7 +256,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 	}, [mapGroupRef, draggable, setTooltipActive, svgRef])
 
 	useEffect(() => {
-		if (!displayRegions || !displayStates) {
+		if (!displayRegions || !displayStates || !regionHazards) {
 			return
 		}
 		if (mapGroupRef.current) {
@@ -258,75 +275,30 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 			// state regions
 			svg.append('path').datum(displayStates).attr('class', `${styles.usabg} usastates`).attr('d', geoPathGeneratorSvg)
 
-			Object.keys(alerts['Continental United States']).forEach((key) => {
-				const { shape, info, properties } = alerts['Continental United States'][key]
-				const { hazardInfo } = info[0]
+			Object.keys(regionHazards).forEach((key) => {
+				const { shape, alerts, properties } = regionHazards[key]
+				const { hazardInfo } = alerts[0]
 				svg.append('path')
 					.datum(shape)
 					.attr('class', `${styles.hazardCounty} ${hazardInfo.type.type} ${hazardInfo.level.level}`)
 					.attr('d', geoPathGeneratorSvg)
 					.attr('shapeId', key)
+					.attr('hazardIndex', 0)
 					.attr('fill', `${hazardInfo.color.HEX}`)
 					.on('mouseover', (event) => {
-						//(event, d) => {
-						//console.log('mouseover', hazardCounty.id, event, d)
-						setTooltipContent({ info, properties })
+						setTooltipContent({ alerts, properties })
 						setTooltipActive(true)
 						d3.select(event.target).raise()
 					})
 					.on('mouseout', () => {
-						//(event, d) => {
-						//console.log('mouseout', hazardCounty.id, event, d)
 						setTooltipActive(false)
 					})
 					.on('click', (event) => {
-						//console.log(event, d)
-						//console.log('click', hazardCounty.id, event)
-						//openSlideoutPanel(DATA_TEXT_HAZARDS_MAP_DETAILS)
-						//setSelectedCounty(hazardCounty)
-						//const newScale = 4
-						// TODO Fix the centering of the county
+						openSlideoutPanel(DATA_TEXT_HAZARDS_MAP_DETAILS)
+						setSelectedCounty(key)
 						updatePosition(event.target)
-						//setChaseScale(gsap.utils.clamp(minZoom, maxZoom, newScale))
 					})
 			})
-			// allHazardCounties.forEach((hazardCounty) => {
-			// 	//console.log(getAlertIdByEvent(hazardCounty.alerts))
-			// 	let hazards = ''
-			// 	hazardCounty.alerts.forEach((alert) => {
-			// 		hazards += getAlertIdByEvent(alert.properties.event) + '|'
-			// 	})
-			// 	const hazardInfo = getAlertIdByEvent(hazardCounty.alerts[0].properties.event)
-			// 	svg.append('path')
-			// 		.datum(hazardCounty.feature)
-			// 		.attr('class', `${styles.hazardCounty} ${hazardCounty.id}`)
-			// 		.attr('d', geoPathGeneratorSvg)
-			// 		.attr('shapeId', hazardCounty.id)
-			// 		.attr('hazards', hazards)
-			// 		.attr('fill', `rgb(${HAZARD_COLORS[hazardInfo.type][hazardInfo.level]})`)
-			// 		.on('mouseover', (event) => {
-			// 			//(event, d) => {
-			// 			//console.log('mouseover', hazardCounty.id, event, d)
-			// 			setTooltipContent({ alerts: hazardCounty.alerts, feature: hazardCounty.feature })
-			// 			setTooltipActive(true)
-			// 			d3.select(event.target).raise()
-			// 		})
-			// 		.on('mouseout', () => {
-			// 			//(event, d) => {
-			// 			//console.log('mouseout', hazardCounty.id, event, d)
-			// 			setTooltipActive(false)
-			// 		})
-			// 		.on('click', (event) => {
-			// 			//console.log(event, d)
-			// 			console.log('click', hazardCounty.id, event)
-			// 			openSlideoutPanel(DATA_TEXT_HAZARDS_MAP_DETAILS)
-			// 			setSelectedCounty(hazardCounty)
-			// 			//const newScale = 4
-			// 			// TODO Fix the centering of the county
-			// 			updatePosition(event.target)
-			// 			//setChaseScale(gsap.utils.clamp(minZoom, maxZoom, newScale))
-			// 		})
-			// })
 
 			// state Borders
 			svg.append('path').datum(displayStates).attr('class', `${styles.usafg} conus`).attr('d', geoPathGeneratorSvg)
@@ -349,7 +321,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 		displayRegions,
 		displayStates,
 		displayOffshores,
-		alerts
+		regionHazards
 	])
 
 	return (

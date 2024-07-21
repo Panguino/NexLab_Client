@@ -10,13 +10,6 @@ export const getTitleFromFeature = (properties) => {
 	return ''
 }
 
-export const getAlertTitleFromAlertFeature = (alertFeature) => {
-	if (alertFeature && alertFeature.properties) {
-		return alertFeature.properties.event
-	}
-	return ''
-}
-
 export const isHazardActive = (hazardId, activeHazards) => {
 	let hazardFound = false
 	activeHazards.map((hazard) => {
@@ -33,4 +26,17 @@ export const highlightHazard = (hazardId, activeHazards, toggledHazards) => {
 		(activeHazards.length === 0 && toggledHazards.length === 0) ||
 		isHazardActive(hazardId, toggledHazards)
 	)
+}
+
+export const calculateHazardTotals = (hazards) => {
+	const newTotals = {}
+	Object.keys(hazards).forEach((key) => {
+		hazards[key].alerts.forEach((alert) => {
+			const { hazardInfo } = alert
+			const id = `${hazardInfo.type.type} ${hazardInfo.level.level}`
+			newTotals[id] = newTotals[id] ? newTotals[id] + 1 : 1
+		})
+	})
+	console.log('newTotals', newTotals)
+	return newTotals
 }

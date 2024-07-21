@@ -1,4 +1,9 @@
+import { calculateHazardTotals } from '@/util/hazardMapUtils'
+
 export const createHazardsSlice = (set, get) => ({
+	//
+	regionHazards: {},
+	setRegionHazards: (hazards) => set({ regionHazards: hazards, hazardTotals: calculateHazardTotals(hazards) }),
 	//
 	activeHazards: new Set(),
 	addActiveHazard: (hazard) => set((state) => ({ activeHazards: new Set(state.activeHazards).add(hazard) })),
@@ -13,7 +18,6 @@ export const createHazardsSlice = (set, get) => ({
 	removeActiveHazardLevel: (level) => set((state) => ({ activeHazardLevels: new Set(state.activeHazardLevels).delete(level) })),
 	clearActiveHazardLevels: () => set({ activeHazardLevels: new Set() }),
 	//
-
 	toggledHazards: new Set(),
 	toggleHazard: (hazard) =>
 		set((state) => ({
@@ -32,8 +36,8 @@ export const createHazardsSlice = (set, get) => ({
 	toggleHazardColumnOn: (hazard) => set((state) => ({ toggledHazardColumns: new Set(state.toggledHazardColumns).add(hazard) })),
 	toggleHazardColumnOff: (hazard) => set((state) => ({ toggledHazardColumns: new Set(state.toggledHazardColumns).delete(hazard) })),
 	clearToggledHazardColumns: () => set({ toggledHazardColumns: new Set() }),
-	hazardTotals: [],
-	setHazardTotals: (totals) => set({ hazardTotals: totals }),
+	//
+	hazardTotals: {},
 	tooltipContent: { alerts: null, feature: null },
 	tooltipActive: false,
 	setTooltipActive: (active) => set({ tooltipActive: active }),
