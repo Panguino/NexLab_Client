@@ -10,7 +10,7 @@ import styles from './HazardsMap.module.scss'
 import useDimensions from '@/hooks/useDimensions'
 import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
 import { useRootStore } from '@/store/useRootStore'
-import { DATA_TEXT_HAZARDS_MAP_DETAILS } from '@/config/vars'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/config/vars'
 import { useInterval } from '@/hooks/useInterval'
 import { flattenAlerts } from '@/util/hazardMapUtils'
 
@@ -197,6 +197,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 	)
 
 	useEffect(() => {
+		// update region and width and height for projection when those variables change
 		const translate = [width / 2, height / 2]
 		const generalScale = Math.min(width * 1.2, height * 2)
 		const projections = {
@@ -252,6 +253,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 	}, [setRegionHazards, selectedRegion, alerts])
 
 	useEffect(() => {
+		// Panning draggable functionality
 		if (mapGroupRef?.current && svgRef?.current && !draggable) {
 			const newDraggable = Draggable.create(mapGroupRef.current, {
 				inertia: true,
@@ -306,7 +308,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 						setTooltipActive(false)
 					})
 					.on('click', (event) => {
-						openSlideoutPanel(DATA_TEXT_HAZARDS_MAP_DETAILS)
+						openSlideoutPanel(DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT)
 						setSelectedCounty(key)
 						updatePosition(event.target)
 					})

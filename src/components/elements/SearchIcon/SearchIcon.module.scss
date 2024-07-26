@@ -1,0 +1,19 @@
+.SearchIcon {
+  display: flex;
+  background-color: rgba(255, 255, 255, 0);
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 6px;
+
+  &:hover {
+    svg path {
+      fill: var(--color-blue3);
+    }
+  }
+  svg path {
+    transition: var(--themeChange);
+    fill: var(--color-grey16-white);
+  }
+}

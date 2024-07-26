@@ -3,6 +3,7 @@ import { InstantSearch, SearchBox, Hits } from 'react-instantsearch'
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch'
 import styles from './Meilisearch.module.scss'
 import Link from 'next/link'
+import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 
 const { searchClient } = instantMeiliSearch(process.env.NEXT_PUBLIC_MEILISEARCH_HOST, process.env.NEXT_PUBLIC_MEILISEARCH_KEY, { primaryKey: 'id' })
 
@@ -27,11 +28,14 @@ const Hit = ({ hit }) => {
 export const Meilisearch = () => {
 	return (
 		<div className={styles.Meilisearch}>
-			<h4>Site Search</h4>
-			<InstantSearch indexName="page" searchClient={searchClient} future={{ preserveSharedStateOnUnmount: true }}>
-				<SearchBox className={styles.searchbox} />
-				<Hits hitComponent={Hit} />
-			</InstantSearch>
+			<ScrollArea>
+				<div className={styles.resultsContainer}>
+					<InstantSearch indexName="page" searchClient={searchClient} future={{ preserveSharedStateOnUnmount: true }}>
+						<SearchBox className={styles.searchbox} />
+						<Hits hitComponent={Hit} />
+					</InstantSearch>
+				</div>
+			</ScrollArea>
 		</div>
 	)
 }
