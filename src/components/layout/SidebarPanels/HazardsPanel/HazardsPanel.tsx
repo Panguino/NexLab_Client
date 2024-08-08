@@ -3,108 +3,131 @@ import React from 'react'
 import styles from './HazardsPanel.module.scss'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
-import hazardColors from '@/data/hazardColors.json'
 import ColorSquare from './ColorSquare/ColorSquare'
 import { useRootStore } from '@/store/useRootStore'
+import { HAZARD_LEVELS, HAZARD_LEVEL_NAMES, HAZARD_TYPES, HAZARD_TYPE_NAMES, HAZARD_COLORS } from '@/data/hazardMapVars'
+import Select from '@/components/elements/Select/Select'
 
 const HazardsPanel = ({ basepath }) => {
-	const activeHazard = useRootStore.use.activeHazard()
-	const setActiveHazard = useRootStore.use.setActiveHazard()
 	const hazardTotals = useRootStore.use.hazardTotals()
 	const selectedRegion = useRootStore.use.selectedRegion()
 	const setSelectedRegion = useRootStore.use.setSelectedRegion()
-	const hazardInfo = [
-		{ name: 'Fire', id: 'fire' },
-		{ name: 'Winter', id: 'winter' },
-		{ name: 'Marine', id: 'marine' },
-		{ name: 'Tropical', id: 'tropical' },
-		{ name: 'Hydro', id: 'hydrological' },
-		{ name: 'Non-Precip', id: 'nonprecip' },
-		{ name: 'Non-met', id: 'nonmet' },
-		{ name: 'Tornado', id: 'tor' },
-		{ name: 'Severe', id: 'svr' },
-		{ name: 'Special', id: 'specialwx' }
+	//
+	const activeHazardTypes = useRootStore.use.activeHazardTypes()
+	const addActiveHazardType = useRootStore.use.addActiveHazardType()
+	const removeActiveHazardType = useRootStore.use.removeActiveHazardType()
+	const activeHazardLevels = useRootStore.use.activeHazardLevels()
+	const addActiveHazardLevel = useRootStore.use.addActiveHazardLevel()
+	const removeActiveHazardLevel = useRootStore.use.removeActiveHazardLevel()
+	const activeHazards = useRootStore.use.activeHazards()
+	const addActiveHazard = useRootStore.use.addActiveHazard()
+	const removeActiveHazard = useRootStore.use.removeActiveHazard()
+	const isHazardActive = useRootStore.use.isHazardActive()
+	// needs to re-render when these things change.
+	activeHazards
+	activeHazardLevels
+	activeHazardTypes
+	//
+	const toggledHazards = useRootStore.use.toggledHazards()
+	const toggleHazard = useRootStore.use.toggleHazard()
+	const toggledHazardRows = useRootStore.use.toggledHazardRows()
+	const toggleHazardRow = useRootStore.use.toggleHazardRow()
+	const toggledHazardColumns = useRootStore.use.toggledHazardColumns()
+	const toggleHazardColumn = useRootStore.use.toggleHazardColumn()
+	const isHazardToggled = useRootStore.use.isHazardToggled()
+	// needs to re-render when these things change.
+	toggledHazards
+	toggledHazardRows
+	toggledHazardColumns
+
+	const regions = [
+		{ value: 'conus', label: 'Continental US' },
+		{ value: 'ak', label: 'Alaska' },
+		{ value: 'hi', label: 'Hawaii' },
+		{ value: 'gum', label: 'Guam' },
+		{ value: 'pr', label: 'Puerto Rico' },
+		{ value: 'sam', label: 'American Samoa' }
 	]
-	const hazardType = [
-		{ name: 'Statement', id: 'statement' },
-		{ name: 'Watch', id: 'watch' },
-		{ name: 'Advisory', id: 'advisory' },
-		{ name: 'Warning', id: 'warning' }
-	]
+
 	return (
 		<>
 			<SidebarSectionHeader name="Hazards" linkUrl={basepath} />
 			<SidebarPanelPad>
 				<div className={styles.regionSelector}>
-					<select
-						value={selectedRegion}
-						onChange={(e) => {
-							setSelectedRegion(e.target.value)
-						}}
-					>
-						<option value="conus">Continental US</option>
-						<option value="ak">Alaska</option>
-						<option value="hi">Hawaii</option>
-						<option value="gum">Guam</option>
-						<option value="pr">Puerto Rico</option>
-						<option value="sam">American Samoa</option>
-					</select>
+					<Select value={selectedRegion} options={regions} onChange={setSelectedRegion} placeholder={'Select Region'} />
 				</div>
 				<div className={styles.HazardsPanel}>
 					<div className={styles.gridItem}></div>
-					{hazardType.map((severity, index) => {
+					{HAZARD_LEVELS.map((hazardLLevelId, index) => {
+						const name = HAZARD_LEVEL_NAMES[hazardLLevelId]
 						return (
 							<div
 								key={index}
 								className={styles.gridItem}
 								onMouseOver={() => {
-									if (severity.id) {
-										setActiveHazard(severity.id)
-									}
+									addActiveHazardLevel(hazardLLevelId)
 								}}
 								onMouseOut={() => {
-									setActiveHazard('')
+									removeActiveHazardLevel(hazardLLevelId)
+								}}
+								onClick={() => {
+									toggleHazardColumn(hazardLLevelId)
 								}}
 							>
-								<span className={styles.rotatedTitle}>{severity.name}</span>
+								<span className={styles.rotatedTitle}>{name}</span>
 							</div>
 						)
 					})}
-					{hazardInfo.map((hazard, hazardIndex) => (
+					{HAZARD_TYPES.sort((a, b) => {
+						return a.localeCompare(b)
+					}).map((hazardTypeId, hazardIndex) => (
 						<React.Fragment key={hazardIndex}>
 							<div
 								className={styles.gridItem}
 								onMouseOver={() => {
-									if (hazard.id) {
-										setActiveHazard(hazard.id)
-									}
+									addActiveHazardType(hazardTypeId)
 								}}
 								onMouseOut={() => {
-									setActiveHazard('')
+									removeActiveHazardType(hazardTypeId)
+								}}
+								onClick={() => {
+									toggleHazardRow(hazardTypeId)
 								}}
 							>
-								<span className={styles.rowTitle}>{hazard.name}</span>
+								<span className={styles.rowTitle}>{HAZARD_TYPE_NAMES[hazardTypeId]}</span>
 							</div>
-							{hazardType.map((severity, index) => {
-								const hazardId = `${hazard.id} ${severity.id}`
-								const active = hazardColors[hazardId] ? true : false
+							{HAZARD_LEVELS.map((hazardLevelId, index) => {
+								const hazardId = `${hazardTypeId} ${hazardLevelId}`
+								const hasAlerts = hazardTotals[hazardId] > 0 ? true : false
+								const hovered = isHazardActive(hazardTypeId, hazardLevelId)
+								const toggled = isHazardToggled(hazardTypeId, hazardLevelId)
+								const color = HAZARD_COLORS[hazardTypeId][hazardLevelId]
 								return (
 									<div
 										key={index}
 										className={styles.gridItem}
 										onMouseOver={() => {
-											if (active) {
-												setActiveHazard(hazardId)
+											if (hasAlerts) {
+												addActiveHazard(hazardId)
 											}
 										}}
 										onMouseOut={() => {
-											setActiveHazard('')
+											if (hasAlerts) {
+												removeActiveHazard(hazardId)
+											}
+										}}
+										onClick={() => {
+											if (hasAlerts) {
+												toggleHazard(hazardId)
+											}
 										}}
 									>
 										<ColorSquare
-											color={hazardColors[hazardId]}
+											color={color}
 											amount={hazardTotals[hazardId]}
-											opacity={hazardId.includes(activeHazard) ? 1 : 0.5}
+											opacity={hovered ? 1 : 0.3}
+											active={toggled && hasAlerts}
+											disabled={color === undefined}
 										/>
 									</div>
 								)

@@ -7,23 +7,30 @@ const HazardsDetailPanel = () => {
 	const selectedCounty = useRootStore.use.selectedCounty()
 	const selectedAlert = useRootStore.use.selectedAlert()
 	const setSelectedAlert = useRootStore.use.setSelectedAlert()
-	const { alerts, feature } = selectedCounty
+	const regionHazards = useRootStore.use.regionHazards()
+
+	const county = regionHazards[selectedCounty]
 
 	return (
 		<div className={styles.HazardsDetailPanel}>
-			<h1>{getTitleFromFeature(feature)}</h1>
-			{alerts &&
-				alerts.map((alert, index) => {
-					return (
-						<HazardsDetailAccordian
-							key={index}
-							index={index}
-							isOpen={selectedAlert === index}
-							setSelectedAlert={setSelectedAlert}
-							alert={alert}
-						/>
-					)
-				})}
+			{county && (
+				<>
+					<h1>{getTitleFromFeature(county.properties)}</h1>
+					{county.alerts &&
+						county.alerts.map((alert, index) => {
+							//console.log('alert', alert)
+							return (
+								<HazardsDetailAccordian
+									key={index}
+									index={index}
+									isOpen={selectedAlert === index}
+									setSelectedAlert={setSelectedAlert}
+									alert={alert}
+								/>
+							)
+						})}
+				</>
+			)}
 		</div>
 	)
 }

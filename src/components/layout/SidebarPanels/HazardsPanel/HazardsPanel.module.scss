@@ -13,13 +13,16 @@
   cursor: pointer;
 }
 .rotatedTitle {
-  transform: translateX(17px) rotate(-80deg);
+  transform: translateX(17px) rotate(-65deg);
   position: absolute;
-  width: 200px;
+  width: 85px;
   transform-origin: 0 50%;
   bottom: 0;
   left: 0;
   cursor: pointer;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--color-grey3);
 }
 .rowTitle {
   display: flex;
@@ -27,6 +30,9 @@
   width: 100%;
   align-items: center;
   cursor: pointer;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--color-grey3);
 }
 .bigRow {
   height: 130px;

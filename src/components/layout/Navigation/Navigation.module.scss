@@ -7,6 +7,9 @@
   transition: var(--themeChange);
   position: fixed;
   z-index: 100;
+  box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
 }
 
 .Logo {
@@ -34,7 +37,7 @@
     transition: color 0.2s ease;
     color: var(--color-black-white);
     &:hover {
-      color: #2677f0;
+      color: var(--color-blue3);
       text-decoration: none;
     }
   }
@@ -52,7 +55,7 @@
   padding: 8px 20px;
   transition: background-color 0.2s ease;
   &:hover {
-    background-color: #2677f0;
+    background-color: var(--color-blue3);
   }
 }
 
