@@ -1,5 +1,6 @@
 .searchbox {
   padding: 0 0 20px;
+  margin-right: 100px;
   form {
     display: flex;
     gap: 10px;
@@ -9,7 +10,7 @@
   input {
     width: 100%;
     padding: 10px;
-    border: var(--color-grey6-grey14) 1px solid;
+    border: var(--color-grey15-grey9) 1px solid;
     border-radius: 5px;
     font-size: 16px;
   }
@@ -17,7 +18,7 @@
     padding: 13px 14px 12px;
     border-radius: 5px;
     border-width: 0px;
-    background-color: var(--color-grey6-grey14);
+    background-color: var(--color-grey6-grey12);
     svg {
       width: 14px;
       height: 14px;
@@ -26,14 +27,17 @@
 }
 .Meilisearch {
   position: relative;
-  padding: 30px 0;
-  width: 100%;
-  max-width: 900px;
+  width: 800px;
+  height: 100%;
   margin: 0 auto;
+  background: var(--color-white-grey18);
   ol {
     list-style: none;
     padding: 0;
     margin: 0;
+  }
+  h4 {
+    margin-top: 0;
   }
 }
 .resultItem {
@@ -62,14 +66,21 @@
     h2 {
       text-decoration: none;
       color: var(--color-grey14-grey1);
+      font-size: 19px;
+      line-height: 28px;
       padding: 0;
       margin: 0;
     }
     p {
       text-decoration: none;
       color: var(--color-grey10-grey6);
+      font-size: 15px;
+      line-height: 22px;
       margin: 0;
       padding: 0;
     }
   }
+}
+.resultsContainer {
+  padding: 30px 50px 0 30px;
 }

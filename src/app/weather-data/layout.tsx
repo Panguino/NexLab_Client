@@ -8,7 +8,7 @@ export default function Layout({ children }) {
 				<SubNavigationItem name="Analysis" link="/weather-data/analysis/" />
 				<SubNavigationItem name="Satellite & Radar" link="/weather-data/satrad/" />
 				<SubNavigationItem name="Nexrad Radar" link="/weather-data/nexrad/" />
-				<SubNavigationItem name="Numberical Models" link="/weather-data/forecast/" />
+				<SubNavigationItem name="Numerical Models" link="/weather-data/forecast/" />
 				<SubNavigationItem name="Text Products" link="/weather-data/text/" />
 				<SubNavigationItem name="Resources" link="/weather-data/resources/" />
 			</SubNavigation>

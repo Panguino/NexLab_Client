@@ -2,6 +2,7 @@ import Navigation from '@/components/layout/Navigation/Navigation'
 import '@/styles/global.scss'
 import Providers from '@/components/providers/Providers/Providers'
 import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
+import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
 
 export default async function RootLayout({ children }) {
 	return (
@@ -20,6 +21,7 @@ export default async function RootLayout({ children }) {
 				<div className="all">
 					<NextAuthProvider>
 						<Providers>
+							<SlideoutPanel />
 							<Navigation />
 							{children}
 						</Providers>

@@ -3,6 +3,7 @@ import styles from './Navigation.module.scss'
 import { getServerSession } from 'next-auth'
 import LogStatus from '@/components/elements/LogStatus/LogStatus'
 import DarkmodeToggler from '@/components/elements/DarkmodeToggler/DarkmodeToggler'
+import SearchIcon from '@/components/elements/SearchIcon/SearchIcon'
 
 const Navigation = async () => {
 	const session = await getServerSession()
@@ -33,6 +34,7 @@ const Navigation = async () => {
 					</Link>
 				</div>
 				<div className={styles.NavItems}>
+					<SearchIcon />
 					<DarkmodeToggler />
 					{session?.user?.email ? (
 						<LogStatus email={session?.user?.email} />
