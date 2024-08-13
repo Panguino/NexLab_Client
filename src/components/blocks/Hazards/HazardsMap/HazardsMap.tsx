@@ -16,9 +16,8 @@ import { flattenAlerts } from '@/util/hazardMapUtils'
 
 gsap.registerPlugin(Draggable)
 
-const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts }) => {
+const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 	const regionHazards = useRootStore.use.regionHazards()
-	const setRegionHazards = useRootStore.use.setRegionHazards()
 	const setTooltipActive = useRootStore.use.setTooltipActive()
 	const setTooltipContent = useRootStore.use.setTooltipContent()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
@@ -237,20 +236,6 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores, alerts })
 				])
 		}
 	}, [selectedRegion, width, height])
-
-	useEffect(() => {
-		if (selectedRegion) {
-			const ids = {
-				conus: 'Continental United States',
-				ak: 'Alaska',
-				hi: 'Hawaii',
-				pr: 'Puerto Rico',
-				sam: 'American Samoa',
-				gum: 'Guam'
-			}
-			setRegionHazards(alerts[ids[selectedRegion]])
-		}
-	}, [setRegionHazards, selectedRegion, alerts])
 
 	useEffect(() => {
 		// Panning draggable functionality

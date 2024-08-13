@@ -12,6 +12,8 @@ const HazardsPanel = ({ basepath }) => {
 	const hazardTotals = useRootStore.use.hazardTotals()
 	const selectedRegion = useRootStore.use.selectedRegion()
 	const setSelectedRegion = useRootStore.use.setSelectedRegion()
+	const selectedView = useRootStore.use.selectedView()
+	const setSelectedView = useRootStore.use.setSelectedView()
 	//
 	const activeHazardTypes = useRootStore.use.activeHazardTypes()
 	const addActiveHazardType = useRootStore.use.addActiveHazardType()
@@ -40,6 +42,10 @@ const HazardsPanel = ({ basepath }) => {
 	toggledHazardRows
 	toggledHazardColumns
 
+	const views = [
+		{ value: 'map', label: 'Map' },
+		{ value: 'table', label: 'Table' }
+	]
 	const regions = [
 		{ value: 'conus', label: 'Continental US' },
 		{ value: 'ak', label: 'Alaska' },
@@ -53,6 +59,9 @@ const HazardsPanel = ({ basepath }) => {
 		<>
 			<SidebarSectionHeader name="Hazards" linkUrl={basepath} />
 			<SidebarPanelPad>
+				<div className={styles.regionSelector}>
+					<Select value={selectedView} options={views} onChange={setSelectedView} placeholder={'Select View'} />
+				</div>
 				<div className={styles.regionSelector}>
 					<Select value={selectedRegion} options={regions} onChange={setSelectedRegion} placeholder={'Select Region'} />
 				</div>
