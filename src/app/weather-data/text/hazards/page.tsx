@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 import { getDataClient } from '@/apollo/apollo-client'
-import HazardsMap from '@/components/blocks/HazardsMap/HazardsMap'
 import { rewind } from '@turf/turf'
+import Hazards from '@/components/blocks/Hazards/Hazards'
 
 const Page = async () => {
 	const regionData = await getDataClient().query({
@@ -121,7 +121,7 @@ const Page = async () => {
 						geometry
 						properties {
 							ID
-							Name
+							NAME
 						}
 						alerts {
 							properties {
@@ -224,7 +224,7 @@ const Page = async () => {
 		})
 	})
 
-	return <HazardsMap displayRegions={displayRegionsFeatures} displayStates={displayStates} displayOffshores={displayOffshores} alerts={alerts} />
+	return <Hazards displayRegions={displayRegionsFeatures} displayStates={displayStates} displayOffshores={displayOffshores} alerts={alerts} />
 }
 
 export default Page
