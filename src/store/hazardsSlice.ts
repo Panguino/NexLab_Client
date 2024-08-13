@@ -101,5 +101,7 @@ export const createHazardsSlice = (set, get) => ({
 	selectedAlert: 0,
 	setSelectedAlert: (index) => set({ selectedAlert: index }),
 	selectedRegion: 'conus',
-	setSelectedRegion: (region) => set({ selectedRegion: region })
+	setSelectedRegion: (region) => set({ selectedRegion: region }),
+	selectedView: 'map',
+	setSelectedView: (view) => set({ selectedView: view })
 })
