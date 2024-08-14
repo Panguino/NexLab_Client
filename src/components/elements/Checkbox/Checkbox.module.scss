@@ -1,0 +1,21 @@
+.Checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  span {
+    font-size: 13px;
+    color: var(--color-grey6);
+  }
+}
+.check {
+  padding: 5px;
+  border: 1px solid var(--color-grey14);
+  background-color: var(--color-grey19);
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}

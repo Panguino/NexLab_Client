@@ -103,5 +103,11 @@ export const createHazardsSlice = (set, get) => ({
 	selectedRegion: 'conus',
 	setSelectedRegion: (region) => set({ selectedRegion: region }),
 	selectedView: 'map',
-	setSelectedView: (view) => set({ selectedView: view })
+	setSelectedView: (view) => set({ selectedView: view }),
+	allHazards: {},
+	setAllHazards: (hazards) => set({ allHazards: hazards }),
+	hazardRefreshInterval: 5,
+	setHazardRefreshInterval: (interval) => set({ hazardRefreshInterval: interval }),
+	hazardRefreshActive: true,
+	setHazardRefreshActive: (active) => set({ hazardRefreshActive: active })
 })

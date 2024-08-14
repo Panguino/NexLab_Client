@@ -7,6 +7,7 @@ import ColorSquare from './ColorSquare/ColorSquare'
 import { useRootStore } from '@/store/useRootStore'
 import { HAZARD_LEVELS, HAZARD_LEVEL_NAMES, HAZARD_TYPES, HAZARD_TYPE_NAMES, HAZARD_COLORS } from '@/data/hazardMapVars'
 import Select from '@/components/elements/Select/Select'
+import AutoRefreshToggler from '@/components/elements/AutoRefreshToggler/AutoRefreshToggler'
 
 const HazardsPanel = ({ basepath }) => {
 	const hazardTotals = useRootStore.use.hazardTotals()
@@ -144,6 +145,7 @@ const HazardsPanel = ({ basepath }) => {
 						</React.Fragment>
 					))}
 				</div>
+				<AutoRefreshToggler />
 			</SidebarPanelPad>
 		</>
 	)
