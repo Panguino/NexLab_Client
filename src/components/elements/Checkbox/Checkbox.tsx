@@ -3,7 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './Checkbox.module.scss'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
-const Checkbox = ({ label, value, onChange }) => {
+interface CheckboxProps {
+	label: string
+	value: boolean
+	onChange: (value: boolean) => void
+}
+
+const Checkbox = ({ label, value, onChange }: CheckboxProps) => {
 	return (
 		<div
 			className={styles.Checkbox}
