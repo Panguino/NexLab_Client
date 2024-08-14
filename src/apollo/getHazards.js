@@ -18,6 +18,8 @@ export const getHazards = async () => {
 								ID
 								STATE
 								COUNTYNAME
+								LAT
+								LON
 							}
 							alerts {
 								properties {
@@ -48,6 +50,8 @@ export const getHazards = async () => {
 						properties {
 							ID
 							NAME
+							LAT
+							LON
 						}
 						alerts {
 							properties {
@@ -77,6 +81,8 @@ export const getHazards = async () => {
 						properties {
 							ID
 							NAME
+							LAT
+							LON
 						}
 						alerts {
 							properties {
