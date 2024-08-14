@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client'
 import { getClient } from '@/apollo/apollo-client'
-import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
 
 const Page = async ({ params }) => {
 	const response = await getClient().query({
@@ -47,7 +46,7 @@ const Page = async ({ params }) => {
 
 	const api_point_data = await api_point_res.json()
 
-	console.log({ api_point_data })
+	// console.log({ api_point_data })
 
 	// Our Office products
 	// adding that leading K is only a problem if somehow we expand this service outside the CONUS
@@ -70,11 +69,9 @@ const Page = async ({ params }) => {
 
 	const api_station_data = await api_station_res.json()
 
-	console.log({ api_station_data })
+	// console.log({ api_station_data })
 
-	// api_station_data.observationStations[0] + '/observations?limit=1'
-
-	// Get Current Conditions from Nearest Observation Station
+	// Get Current Conditions from Nearest Observation Station, [0] = Nearest, limit=1 = Newest
 	const api_obs_call = `${api_station_data.observationStations[0]}/observations?limit=1`
 
 	// Fetch Current Conditions
@@ -91,11 +88,30 @@ const Page = async ({ params }) => {
 
 	const api_obs_data = await api_obs_res.json()
 
-	console.log(api_obs_data)
+	console.log('OBSERVATION', api_obs_data['@graph'][0], 'clouds', api_obs_data['@graph'][0].cloudLayers)
+
+	// Get 7 day forecast data
+	const api_fcst_call = `${api_point_data.forecast}`
+
+	// fetch fcst
+	const api_fcst_res = await fetch(api_fcst_call, {
+		headers: {
+			'User-Agent': 'College of DuPage - Meteorology: Campus Weather (wxstaff@weather.cod.edu)',
+			Accept: 'application/ld+json'
+		}
+	})
+
+	if (!api_fcst_res.ok) {
+		throw new Error(`HTTP error! status: ${api_fcst_res.status}`)
+	}
+
+	const api_fcst_data = await api_fcst_res.json()
+
+	// console.log('FORECAST', api_fcst_data.periods)
 
 	return (
-		<PageContentWrapper>
-			<h1>Campus {params.id}</h1>
+		<>
+			<p>Campus {params.id}</p>
 			<p>Name: {Name}</p>
 			<p>Latitude: {Latitude}</p>
 			<p>Longitude: {Longitude}</p>
@@ -105,7 +121,14 @@ const Page = async ({ params }) => {
 			<p>CWA Products: {cod_cwa}</p>
 			<p>Worded Forecast: {api_point_data.forecast}</p>
 			<p>Potential Meteogram Forecast (gridded): {api_point_data.forecastGridData}</p>
-		</PageContentWrapper>
+			<h2>Forecast</h2>
+			{api_fcst_data.periods.map((period, index) => (
+				<div key={index}>
+					<h3>{period.name}</h3>
+					<p>{period.detailedForecast}</p>
+				</div>
+			))}
+		</>
 	)
 }
 
