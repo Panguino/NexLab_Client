@@ -19,7 +19,7 @@ const authConfig: NextAuthOptions = {
 		signIn: '/login'
 	},
 	callbacks: {
-		async session({ user, session, token }) {
+		async session({ session, token }) {
 			session.user = token as any
 			//console.log('session', user, session, token)
 			return Promise.resolve(session)

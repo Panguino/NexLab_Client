@@ -13,8 +13,8 @@
   height: 40px;
   width: 100%;
   background-color: var(--color-grey19);
-  border: 2px solid var(--color-grey14);
-  transition: all var(--ease-themeChange);
+  border: 1px solid var(--color-grey14);
+  transition: all var(--themeChange);
 
   label {
     font-size: 16px;
@@ -29,7 +29,7 @@
 }
 .value {
   color: var(--color-grey4-grey3);
-  transition: color var(--ease-themeChange);
+  transition: color var(--themeChange);
   font-size: 16px;
   height: 35px;
   width: 100%;
@@ -52,7 +52,7 @@
   filter: drop-shadow(0px 4px 14px rgba(0, 0, 0, 0.11));
   margin-bottom: 20px;
   background-color: var(--color-grey19);
-  transition: all var(--ease-themeChange);
+  transition: all var(--themeChange);
 }
 .arrow {
   position: absolute;

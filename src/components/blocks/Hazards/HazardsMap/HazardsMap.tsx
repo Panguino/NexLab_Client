@@ -323,6 +323,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 		regionHazards
 	])
 
+	console.log(width, height)
 	return (
 		<div ref={mapRef} className={styles.HazardsMap} onWheel={onZoom}>
 			<svg ref={svgRef} className={styles.svgMap} width={width} height={height}>

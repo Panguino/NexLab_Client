@@ -18,7 +18,7 @@ const HazardsTable = () => {
 	const rowData = []
 	Object.keys(regionHazards).forEach((key) => {
 		const { alerts, properties } = regionHazards[key]
-		const { STATE, COUNTYNAME, ID, NAME } = properties
+		const { STATE, COUNTYNAME, ID, NAME, LAT, LON } = properties
 		alerts.forEach((alert) => {
 			const { headline, event, hazardInfo } = alert
 			rowData.push({
@@ -26,6 +26,8 @@ const HazardsTable = () => {
 				COUNTYNAME,
 				NAME,
 				ID,
+				LAT,
+				LON,
 				headline: headline,
 				event: event,
 				hazardType: hazardInfo.type.name,
@@ -36,6 +38,8 @@ const HazardsTable = () => {
 	// Column Definitions: Defines the columns to be displayed.
 	const colDefs: ColDef[] = [
 		{ field: 'ID', resizable: true, width: 120 },
+		{ field: 'LAT', resizable: true, width: 120 },
+		{ field: 'LON', resizable: true, width: 120 },
 		{ field: 'STATE', resizable: true, width: 100 },
 		{ field: 'COUNTYNAME', resizable: true, width: 150 },
 		{ field: 'NAME', resizable: true, width: 180 },
