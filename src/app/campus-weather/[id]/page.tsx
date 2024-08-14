@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client'
 import { getClient } from '@/apollo/apollo-client'
+import { CampusWeatherDetail } from '@/components/blocks/CampusWeatherDetail/CampusWeatherDetail'
 
 const Page = async ({ params }) => {
 	const response = await getClient().query({
@@ -27,7 +28,7 @@ const Page = async ({ params }) => {
 	})
 
 	// Return from the DB
-	const { Name, Latitude, Longitude } = response.data.campus.data.attributes
+	const { Latitude, Longitude } = response.data.campus.data.attributes
 
 	// Construct the URL for the weather API request
 	const api_point_call = `https://api.weather.gov/points/${Latitude},${Longitude}`
@@ -50,7 +51,7 @@ const Page = async ({ params }) => {
 
 	// Our Office products
 	// adding that leading K is only a problem if somehow we expand this service outside the CONUS
-	const cod_cwa = 'https://weather.cod.edu/textserv/office/K' + api_point_data.cwa
+	// const cod_cwa = 'https://weather.cod.edu/textserv/office/K' + api_point_data.cwa
 
 	// Calling all stations...
 	const api_station_call = `${api_point_data.observationStations}`
@@ -88,7 +89,7 @@ const Page = async ({ params }) => {
 
 	const api_obs_data = await api_obs_res.json()
 
-	console.log('OBSERVATION', api_obs_data['@graph'][0], 'clouds', api_obs_data['@graph'][0].cloudLayers)
+	// console.log('OBSERVATION', api_obs_data['@graph'][0], 'clouds', api_obs_data['@graph'][0].cloudLayers)
 
 	// Get 7 day forecast data
 	const api_fcst_call = `${api_point_data.forecast}`
@@ -107,28 +108,14 @@ const Page = async ({ params }) => {
 
 	const api_fcst_data = await api_fcst_res.json()
 
-	// console.log('FORECAST', api_fcst_data.periods)
+	console.log('FORECAST', api_fcst_data.periods)
 
 	return (
-		<>
-			<p>Campus {params.id}</p>
-			<p>Name: {Name}</p>
-			<p>Latitude: {Latitude}</p>
-			<p>Longitude: {Longitude}</p>
-			<p>Obs Data From: {api_obs_data['@graph'][0].rawMessage}</p>
-			<p>Temperature: {api_obs_data['@graph'][0].temperature.value}&deg;C</p>
-			<p>Dewpoint: {api_obs_data['@graph'][0].dewpoint.value}&deg;C</p>
-			<p>CWA Products: {cod_cwa}</p>
-			<p>Worded Forecast: {api_point_data.forecast}</p>
-			<p>Potential Meteogram Forecast (gridded): {api_point_data.forecastGridData}</p>
-			<h2>Forecast</h2>
-			{api_fcst_data.periods.map((period, index) => (
-				<div key={index}>
-					<h3>{period.name}</h3>
-					<p>{period.detailedForecast}</p>
-				</div>
-			))}
-		</>
+		<CampusWeatherDetail
+			campusDetails={{ ...response.data.campus.data.attributes }}
+			currentWeatherData={api_obs_data['@graph'][0]}
+			forecastData={api_fcst_data.periods}
+		/>
 	)
 }
 
