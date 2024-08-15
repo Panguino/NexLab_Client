@@ -3,15 +3,34 @@ import Checkbox from '../Checkbox/Checkbox'
 import styles from './AutoRefreshToggler.module.scss'
 import MultiButtonToggle from '../MultiButtonToggle/MultiButtonToggle'
 import { useRootStore } from '@/store/useRootStore'
+import { getHazards } from '@/apollo/getHazards'
+import { useIntervalWithCountdown } from '@/hooks/useIntervalWithCountdown'
+import { prepareAlertsFromAPI } from '@/util/hazardMapUtils'
 
 const AutoRefreshToggler = () => {
-	const hazardRefreshActive = useRootStore.use.hazardRefreshActive()
 	const setHazardRefreshActive = useRootStore.use.setHazardRefreshActive()
-	const hazardRefreshInterval = useRootStore.use.hazardRefreshInterval()
 	const setHazardRefreshInterval = useRootStore.use.setHazardRefreshInterval()
+	const hazardRefreshInterval = useRootStore.use.hazardRefreshInterval()
+	const hazardRefreshActive = useRootStore.use.hazardRefreshActive()
+	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
+	const setAllHazards = useRootStore.use.setAllHazards()
+
+	const refreshAlertData = async () => {
+		if (hazardRefreshActive && !slideoutPanelIsOpen) {
+			const conusCountiesData = await getHazards()
+			const alerts = prepareAlertsFromAPI(conusCountiesData)
+			setAllHazards(alerts)
+		}
+	}
+	const { timeRemaining } = useIntervalWithCountdown(refreshAlertData, hazardRefreshInterval * 60 * 1000)
+
 	return (
 		<div className={styles.AutoRefreshToggler}>
-			<Checkbox label="Enable auto-refresh" value={hazardRefreshActive} onChange={setHazardRefreshActive} />
+			<Checkbox
+				label={`Enable auto-refresh (${(timeRemaining / 1000).toFixed(0)})`}
+				value={hazardRefreshActive}
+				onChange={setHazardRefreshActive}
+			/>
 			<MultiButtonToggle
 				options={[
 					{ label: '1 min', value: 1 },
