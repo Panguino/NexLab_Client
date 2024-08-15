@@ -24,13 +24,16 @@ const AutoRefreshToggler = () => {
 	}
 	const { timeRemaining } = useIntervalWithCountdown(refreshAlertData, hazardRefreshInterval * 60 * 1000)
 
+	const formatTime = (time) => {
+		const timeInSeconds = Math.floor(time / 1000)
+		const minutes = Math.floor(timeInSeconds / 60)
+		const seconds = timeInSeconds % 60
+		return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+	}
+
 	return (
 		<div className={styles.AutoRefreshToggler}>
-			<Checkbox
-				label={`Enable auto-refresh (${(timeRemaining / 1000).toFixed(0)})`}
-				value={hazardRefreshActive}
-				onChange={setHazardRefreshActive}
-			/>
+			<Checkbox label={`Enable auto-refresh (${formatTime(timeRemaining)})`} value={hazardRefreshActive} onChange={setHazardRefreshActive} />
 			<MultiButtonToggle
 				options={[
 					{ label: '1 min', value: 1 },
