@@ -1,3 +1,27 @@
 .CampusWeatherDetail {
 	position: relative;
+	.CurrentConditionsContainer {
+		width: 200px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px; /* Adjust the gap as needed */
+	}
+
+	.weatherSymbol {
+		flex: 1 1 25%; /* Spans 2 columns */
+		text-align: center; /* Center the image */
+	}
+
+	.airTemperature {
+		flex: 1 1 50%; /* Spans 2 columns */
+		text-align: center; /* Center the text */
+	}
+
+	.apparentTemperature,
+	.dewpointTemperature,
+	.humidity,
+	.wind {
+		flex: 1 1 25%; /* Each takes a single column */
+		text-align: center; /* Center the text */
+	}
 }

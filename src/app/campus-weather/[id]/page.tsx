@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client'
 import { getClient } from '@/apollo/apollo-client'
 import { CampusWeatherDetail } from '@/components/blocks/CampusWeatherDetail/CampusWeatherDetail'
+import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
 
 const Page = async ({ params }) => {
 	const response = await getClient().query({
@@ -47,7 +48,7 @@ const Page = async ({ params }) => {
 
 	const api_point_data = await api_point_res.json()
 
-	// console.log({ api_point_data })
+	console.log({ api_point_data })
 
 	// Our Office products
 	// adding that leading K is only a problem if somehow we expand this service outside the CONUS
@@ -70,8 +71,6 @@ const Page = async ({ params }) => {
 
 	const api_station_data = await api_station_res.json()
 
-	// console.log({ api_station_data })
-
 	// Get Current Conditions from Nearest Observation Station, [0] = Nearest, limit=1 = Newest
 	const api_obs_call = `${api_station_data.observationStations[0]}/observations?limit=1`
 
@@ -88,8 +87,6 @@ const Page = async ({ params }) => {
 	}
 
 	const api_obs_data = await api_obs_res.json()
-
-	// console.log('OBSERVATION', api_obs_data['@graph'][0], 'clouds', api_obs_data['@graph'][0].cloudLayers)
 
 	// Get 7 day forecast data
 	const api_fcst_call = `${api_point_data.forecast}`
@@ -108,14 +105,14 @@ const Page = async ({ params }) => {
 
 	const api_fcst_data = await api_fcst_res.json()
 
-	console.log('FORECAST', api_fcst_data.periods)
-
 	return (
-		<CampusWeatherDetail
-			campusDetails={{ ...response.data.campus.data.attributes }}
-			currentWeatherData={api_obs_data['@graph'][0]}
-			forecastData={api_fcst_data.periods}
-		/>
+		<PageContentWrapper>
+			<CampusWeatherDetail
+				campusDetails={{ ...response.data.campus.data.attributes }}
+				currentWeatherData={api_obs_data['@graph'][0]}
+				forecastData={api_fcst_data.periods}
+			/>
+		</PageContentWrapper>
 	)
 }
 
