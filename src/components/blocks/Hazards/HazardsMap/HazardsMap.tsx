@@ -56,10 +56,6 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 	}, [selectedCounty])
 
 	useEffect(() => {
-		console.log(regionHazards)
-	}, [regionHazards])
-
-	useEffect(() => {
 		setIsAnimating(!slideoutPanelIsOpen)
 	}, [slideoutPanelIsOpen])
 
@@ -323,7 +319,6 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 		regionHazards
 	])
 
-	console.log(width, height)
 	return (
 		<div ref={mapRef} className={styles.HazardsMap} onWheel={onZoom}>
 			<svg ref={svgRef} className={styles.svgMap} width={width} height={height}>
