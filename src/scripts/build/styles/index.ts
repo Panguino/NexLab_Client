@@ -2,34 +2,24 @@ const sassExtract = require('sass-extract')
 const fs = require('fs')
 const path = require('path')
 
-function isOdd(num: number): boolean {
+function isOdd(num) {
 	return num % 2 === 1
-}
-
-interface ColorVarProps {
-	color: string
-	value: string
-}
-interface ColorPairVarProps {
-	name: string
-	value1: string
-	value2: string
 }
 
 sassExtract
 	.render({
 		file: 'src/styles/global.scss',
 	})
-	.then((rendered: any) => {
-		const colors: ColorVarProps[] = []
+	.then((rendered) => {
+		const colors = []
 		let stripped = rendered.vars.global.$themes.declarations[0].expression.split('"')
 		stripped = stripped.slice(1)
-		stripped.map((value: string, index: number) => {
+		stripped.map((value, index) => {
 			if (!isOdd(index)) {
 				colors.push({ color: value, value: stripped[index + 1].split(',')[0].split(' ')[1] })
 			}
 		})
-		const colorVars: ColorPairVarProps[] = []
+		const colorVars = []
 		colors.map((value1) => {
 			colors.map((value2) => {
 				colorVars.push({
@@ -49,8 +39,8 @@ sassExtract
 		let outputCss = ''
 
 		fs.readdirSync(cssDirectoryPath)
-			.filter((file: any) => path.extname(file) === '.css')
-			.forEach((file: any) => {
+			.filter((file) => path.extname(file) === '.css')
+			.forEach((file) => {
 				const css = fs.readFileSync(path.join(cssDirectoryPath, file), 'utf8')
 				outputCss += css
 			})
@@ -94,7 +84,7 @@ sassExtract
 		fs.writeFileSync(path.join(cssDirectoryPath, rootCssFile), fileContents)
 	})
 
-function minifyHexColor(color: string): string {
+function minifyHexColor(color) {
 	if (/^#([a-fA-F0-9])\1([a-fA-F0-9])\2([a-fA-F0-9])\3$/i.test(color)) {
 		return '#' + color[1] + color[3] + color[5]
 	}

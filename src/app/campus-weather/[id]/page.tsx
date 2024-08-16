@@ -118,3 +118,5 @@ const Page = async ({ params }: NextPageProps) => {
 }
 
 export default Page
+
+export const dynamic = 'force-dynamic'
