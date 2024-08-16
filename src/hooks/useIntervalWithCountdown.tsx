@@ -12,7 +12,7 @@ export function useIntervalWithCountdown(callback: () => void, delay: number | n
 	useEffect(() => {
 		if (delay === null) {
 			setTimeRemaining(null)
-			return
+			return null
 		}
 
 		// Set the end time for the current interval.
