@@ -36,6 +36,7 @@ export default function Layout({ children }) {
 									</SidebarGroup>
 								)
 							}
+							return null
 						})}
 					</div>
 				</ScrollArea>
