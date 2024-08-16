@@ -6,7 +6,7 @@ const useMouseD3 = (projection: GeoProjection) => {
 
 	useEffect(() => {
 		if (!projection) {
-			return
+			return null
 		}
 		const handleMouseMove = (event: MouseEvent) => {
 			const [lon, lat] = projection.invert([event.clientX, event.clientY])
