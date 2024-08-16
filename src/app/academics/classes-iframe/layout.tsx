@@ -32,7 +32,6 @@ export default function Layout({ children }) {
 						{courseCategories.map((courseCategory, index) => {
 							const { Name, courses } = courseCategory.attributes
 							const coursesData = courses.data
-							// only return category if it has courses inside it
 							if (coursesData.length > 0) {
 								return (
 									<SidebarGroup key={index} title={Name}>
@@ -49,6 +48,7 @@ export default function Layout({ children }) {
 									</SidebarGroup>
 								)
 							}
+							return null
 						})}
 					</div>
 				</ScrollArea>
