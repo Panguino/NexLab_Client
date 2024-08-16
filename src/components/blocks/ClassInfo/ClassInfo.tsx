@@ -27,6 +27,7 @@ export const ClassInfo = ({ Title, CourseID, Description, MaterialGroup }) => {
 							</LinkAccordian>
 						)
 					}
+					return null
 				})}
 			</div>
 		</div>
