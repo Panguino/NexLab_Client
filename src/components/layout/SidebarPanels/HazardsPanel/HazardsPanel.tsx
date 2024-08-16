@@ -1,15 +1,19 @@
 'use client'
-import React from 'react'
-import styles from './HazardsPanel.module.scss'
+import AutoRefreshToggler from '@/components/elements/AutoRefreshToggler/AutoRefreshToggler'
+import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
-import ColorSquare from './ColorSquare/ColorSquare'
+import { HAZARD_COLORS, HAZARD_LEVELS, HAZARD_LEVEL_NAMES, HAZARD_TYPES, HAZARD_TYPE_NAMES } from '@/data/hazardMapVars'
 import { useRootStore } from '@/store/useRootStore'
-import { HAZARD_LEVELS, HAZARD_LEVEL_NAMES, HAZARD_TYPES, HAZARD_TYPE_NAMES, HAZARD_COLORS } from '@/data/hazardMapVars'
-import Select from '@/components/elements/Select/Select'
-import AutoRefreshToggler from '@/components/elements/AutoRefreshToggler/AutoRefreshToggler'
+import React from 'react'
+import ColorSquare from './ColorSquare/ColorSquare'
+import styles from './HazardsPanel.module.scss'
 
-const HazardsPanel = ({ basepath }) => {
+interface hazardsPanelProps {
+	basepath: string
+}
+
+const HazardsPanel = ({ basepath }: hazardsPanelProps) => {
 	const hazardTotals = useRootStore.use.hazardTotals()
 	const selectedRegion = useRootStore.use.selectedRegion()
 	const setSelectedRegion = useRootStore.use.setSelectedRegion()
@@ -45,7 +49,7 @@ const HazardsPanel = ({ basepath }) => {
 
 	const views = [
 		{ value: 'map', label: 'Map' },
-		{ value: 'table', label: 'Table' }
+		{ value: 'table', label: 'Table' },
 	]
 	const regions = [
 		{ value: 'conus', label: 'Continental US' },
@@ -53,7 +57,7 @@ const HazardsPanel = ({ basepath }) => {
 		{ value: 'hi', label: 'Hawaii' },
 		{ value: 'gum', label: 'Guam' },
 		{ value: 'pr', label: 'Puerto Rico' },
-		{ value: 'sam', label: 'American Samoa' }
+		{ value: 'sam', label: 'American Samoa' },
 	]
 
 	return (

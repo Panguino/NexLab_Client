@@ -1,5 +1,10 @@
 import { rewind } from '@turf/turf'
 
+/**
+ * Check if an object position is within the camera's view.
+ * @param properties - Vector3
+ * @returns string
+ */
 export const getTitleFromFeature = (properties) => {
 	if (properties) {
 		if (properties.COUNTYNAME) {
@@ -21,14 +26,13 @@ export const calculateHazardTotals = (hazards) => {
 			newTotals[id] = newTotals[id] ? newTotals[id] + 1 : 1
 		})
 	})
-	console.log('newTotals', newTotals)
 	return newTotals
 }
 
-export const flattenAlerts = (alerts: any) => {
+export const flattenAlerts = (alerts) => {
 	const flatAlerts = new Set()
 	const alertInfo = []
-	alerts.map((alert: any) => {
+	alerts.map((alert) => {
 		const alertId = `${alert.hazardInfo.type.type} ${alert.hazardInfo.level.level}`
 		if (!flatAlerts.has(alertId)) {
 			flatAlerts.add(`${alert.hazardInfo.type.type} ${alert.hazardInfo.level.level}`)
@@ -38,52 +42,52 @@ export const flattenAlerts = (alerts: any) => {
 				id: `${alert.hazardInfo.type.type} ${alert.hazardInfo.level.level}`,
 				type: alert.hazardInfo.type.type,
 				level: alert.hazardInfo.level.level,
-				event: alert.event
+				event: alert.event,
 			})
 		}
 	})
 	return alertInfo
 }
 
-export const prepareAlertsFromAPI = (conusCountiesData: any) => {
+export const prepareAlertsFromAPI = (conusCountiesData) => {
 	const alerts = {}
-	conusCountiesData.data.getRegions.forEach((region) => {
+	conusCountiesData.getRegions.forEach((region) => {
 		alerts[region.name] = {}
 		region.states.forEach((state) => {
 			state.counties.forEach((county) => {
-				if (county.alerts.length != 0) {
+				if (county.alerts.length !== 0) {
 					const shapeFeature = { type: county.type, geometry: county.geometry, properties: {} }
 					alerts[region.name][county.properties.ID] = {
 						shape: rewind(shapeFeature, { reverse: true }),
 						alerts: county.alerts.map((alert) => {
 							return alert.properties
 						}),
-						properties: county.properties
+						properties: county.properties,
 					}
 				}
 			})
 		})
 		region.coasts.forEach((coast) => {
-			if (coast.alerts.length != 0) {
+			if (coast.alerts.length !== 0) {
 				const shapeFeature = { type: coast.type, geometry: coast.geometry, properties: {} }
 				alerts[region.name][coast.properties.ID] = {
 					shape: rewind(shapeFeature, { reverse: true }),
 					alerts: coast.alerts.map((alert) => {
 						return alert.properties
 					}),
-					properties: coast.properties
+					properties: coast.properties,
 				}
 			}
 		})
 		region.offshores.forEach((offshore) => {
-			if (offshore.alerts.length != 0) {
+			if (offshore.alerts.length !== 0) {
 				const shapeFeature = { type: offshore.type, geometry: offshore.geometry, properties: {} }
 				alerts[region.name][offshore.properties.ID] = {
 					shape: rewind(shapeFeature, { reverse: true }),
 					alerts: offshore.alerts.map((alert) => {
 						return alert.properties
 					}),
-					properties: offshore.properties
+					properties: offshore.properties,
 				}
 			}
 		})

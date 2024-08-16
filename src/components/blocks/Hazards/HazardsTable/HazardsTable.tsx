@@ -1,4 +1,5 @@
 'use client'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/config/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-grid.css'
@@ -6,7 +7,6 @@ import 'ag-grid-community/styles/ag-theme-material.css'
 import { AgGridReact } from 'ag-grid-react'
 import { useState } from 'react'
 import styles from './HazardsTable.module.scss'
-import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/config/vars'
 
 const HazardsTable = () => {
 	const [searchText, setSearchText] = useState('')
@@ -31,7 +31,7 @@ const HazardsTable = () => {
 				headline: headline,
 				event: event,
 				hazardType: hazardInfo.type.name,
-				hazardLevel: hazardInfo.level.name
+				hazardLevel: hazardInfo.level.name,
 			})
 		})
 	})
@@ -46,7 +46,7 @@ const HazardsTable = () => {
 		{ field: 'headline', resizable: true, width: 450 },
 		{ field: 'event', resizable: true },
 		{ field: 'hazardType', resizable: true, width: 150 },
-		{ field: 'hazardLevel', resizable: true, width: 150 }
+		{ field: 'hazardLevel', resizable: true, width: 150 },
 	]
 
 	const onSearchTextBoxChanged = (e) => {

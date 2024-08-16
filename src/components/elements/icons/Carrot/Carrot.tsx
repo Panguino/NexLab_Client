@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Carrot = (props) => {
 	return (
 		<svg {...props} width="18" height="11" viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg">

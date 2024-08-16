@@ -1,6 +1,56 @@
 import { calculateHazardTotals } from '@/util/hazardMapUtils'
+import { ZustandStateSlice } from './useRootStore'
 
-export const createHazardsSlice = (set, get) => ({
+// Define the state shape
+export interface IHazardsSlice {
+	regionHazards: Record<string, any>
+	activeHazards: Set<string>
+	activeHazardTypes: Set<string>
+	activeHazardLevels: Set<string>
+	toggledHazards: Set<string>
+	toggledHazardRows: Set<string>
+	toggledHazardColumns: Set<string>
+	hazardTotals: Record<string, any>
+	tooltipContent: { alerts: any; feature: any }
+	tooltipActive: boolean
+	selectedCounty: Record<string, any>
+	selectedAlert: number
+	selectedRegion: string
+	selectedView: string
+	allHazards: Record<string, any>
+	hazardRefreshInterval: number
+	hazardRefreshActive: boolean
+	isHazardActive: (hazardType: string, hazardLevel: string) => boolean
+	setRegionHazards: (hazards: Record<string, any>) => void
+	addActiveHazard: (hazard: string) => void
+	removeActiveHazard: (hazard: string) => void
+	clearActiveHazards: () => void
+	addActiveHazardType: (type: string) => void
+	removeActiveHazardType: (type: string) => void
+	clearActiveHazardTypes: () => void
+	addActiveHazardLevel: (level: string) => void
+	removeActiveHazardLevel: (level: string) => void
+	clearActiveHazardLevels: () => void
+	isHazardToggled: (hazardType: string, hazardLevel: string) => boolean
+	toggleHazard: (hazard: string) => void
+	clearToggledHazards: () => void
+	toggleHazardRow: (hazardRowId: string) => void
+	clearToggledHazardRows: () => void
+	toggleHazardColumn: (hazardColumnId: string) => void
+	clearToggledHazardColumns: () => void
+	setTooltipActive: (active: boolean) => void
+	setTooltipContent: (content: { alerts: any; feature: any }) => void
+	setSelectedCounty: (county: Record<string, any>) => void
+	setSelectedAlert: (index: number) => void
+	setSelectedRegion: (region: string) => void
+	setSelectedView: (view: string) => void
+	setAllHazards: (hazards: Record<string, any>) => void
+	setHazardRefreshInterval: (interval: number) => void
+	setHazardRefreshActive: (active: boolean) => void
+}
+
+// Update the createHazardsSlice function to use StateCreator
+export const createHazardsSlice: ZustandStateSlice<IHazardsSlice> = (set, get) => ({
 	isHazardActive: (hazardType, hazardLevel) => {
 		const hazardId = `${hazardType} ${hazardLevel}`
 		return (
@@ -109,5 +159,5 @@ export const createHazardsSlice = (set, get) => ({
 	hazardRefreshInterval: 5,
 	setHazardRefreshInterval: (interval) => set({ hazardRefreshInterval: interval }),
 	hazardRefreshActive: true,
-	setHazardRefreshActive: (active) => set({ hazardRefreshActive: active })
+	setHazardRefreshActive: (active) => set({ hazardRefreshActive: active }),
 })

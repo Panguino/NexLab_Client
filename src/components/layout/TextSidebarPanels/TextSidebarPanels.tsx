@@ -1,13 +1,13 @@
 'use client'
 
-import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/SidebarSectionLink'
-import styles from './TextSidebarPanels.module.scss'
-import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
-import SidebarSubPanel from '../SidebarSubPanel/SidebarSubPanel'
+import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
+import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/SidebarSectionLink'
 import SidebarPanelPad from '../SidebarPanelPad/SidebarPanelPad'
 import HazardsPanel from '../SidebarPanels/HazardsPanel/HazardsPanel'
+import SidebarSubPanel from '../SidebarSubPanel/SidebarSubPanel'
+import styles from './TextSidebarPanels.module.scss'
 
 const TextSidebarPanels = () => {
 	const basepath = '/weather-data/text'

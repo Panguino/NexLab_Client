@@ -1,11 +1,11 @@
 'use client'
-import Checkbox from '../Checkbox/Checkbox'
-import styles from './AutoRefreshToggler.module.scss'
-import MultiButtonToggle from '../MultiButtonToggle/MultiButtonToggle'
-import { useRootStore } from '@/store/useRootStore'
-import { getHazards } from '@/apollo/getHazards'
+import { getHazards } from '@/apollo/data/getHazards'
 import { useIntervalWithCountdown } from '@/hooks/useIntervalWithCountdown'
+import { useRootStore } from '@/store/useRootStore'
 import { prepareAlertsFromAPI } from '@/util/hazardMapUtils'
+import Checkbox from '../Checkbox/Checkbox'
+import MultiButtonToggle from '../MultiButtonToggle/MultiButtonToggle'
+import styles from './AutoRefreshToggler.module.scss'
 
 const AutoRefreshToggler = () => {
 	const setHazardRefreshActive = useRootStore.use.setHazardRefreshActive()
@@ -39,7 +39,7 @@ const AutoRefreshToggler = () => {
 					{ label: '1 min', value: 1 },
 					{ label: '2 min', value: 2 },
 					{ label: '5 min', value: 5 },
-					{ label: '10 min', value: 10 }
+					{ label: '10 min', value: 10 },
 				]}
 				value={hazardRefreshInterval}
 				onChange={setHazardRefreshInterval}

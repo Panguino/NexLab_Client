@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState, useRef } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 const useDimensions = () => {
 	const ref = useRef(null)

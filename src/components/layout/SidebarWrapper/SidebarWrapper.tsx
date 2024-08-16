@@ -1,6 +1,11 @@
+import React from 'react'
 import styles from './SidebarWrapper.module.scss'
 
-const SidebarWrapper = ({ children }) => {
+interface SidebarWrapperProps {
+	children: React.ReactNode
+}
+
+const SidebarWrapper = ({ children }: SidebarWrapperProps) => {
 	return <div className={styles.SidebarWrapper}>{children}</div>
 }
 

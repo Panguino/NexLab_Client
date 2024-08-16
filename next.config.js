@@ -1,7 +1,7 @@
 module.exports = {
 	eslint: {
-		ignoreDuringBuilds: true
+		ignoreDuringBuilds: true,
 	},
 	reactStrictMode: false,
-	swcMinify: true
+	swcMinify: true,
 }

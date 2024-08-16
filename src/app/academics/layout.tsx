@@ -6,9 +6,9 @@ export default function Layout({ children }) {
 		<>
 			<SubNavigation>
 				<SubNavigationItem name="Classes & Notes" link="/academics/classes/" />
-				<SubNavigationItem name="AS Degree" link="/academics/asdegree/" />
-				<SubNavigationItem name="Four Year Programs" link="/academics/transfer/" />
-				<SubNavigationItem name="AMS" link="/academics/ams/" />
+				<SubNavigationItem name="Degrees" link="/academics/degrees/" />
+				<SubNavigationItem name="AMS Club" link="/academics/ams-club/" />
+				<SubNavigationItem name="Student Resources" link="/academics/student-resources/" />
 			</SubNavigation>
 			{children}
 		</>

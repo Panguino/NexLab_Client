@@ -6,8 +6,8 @@ export const { getClient } = registerApolloClient(() => {
 		cache: new InMemoryCache(),
 		link: new HttpLink({
 			uri: process.env.NEXT_PUBLIC_API_URL + '/graphql',
-			fetchOptions: { cache: 'no-store' }
-		})
+			fetchOptions: { cache: 'no-store' },
+		}),
 	})
 })
 
@@ -16,7 +16,7 @@ export const { getClient: getDataClient } = registerApolloClient(() => {
 		cache: new InMemoryCache(),
 		link: new HttpLink({
 			uri: process.env.NEXT_PUBLIC_DATA_API_URL + '/graphql',
-			fetchOptions: { cache: 'no-store' }
-		})
+			fetchOptions: { cache: 'no-store' },
+		}),
 	})
 })

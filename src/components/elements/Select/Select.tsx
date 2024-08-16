@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import styles from './Select.module.scss'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import styles from './Select.module.scss'
 
 const Select = ({ value, options, onChange, placeholder, optionsEmptyText = 'No options' }) => {
 	const [open, setOpen] = useState(false)

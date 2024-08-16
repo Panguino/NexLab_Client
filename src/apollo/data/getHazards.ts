@@ -1,11 +1,12 @@
 'use server'
-import { gql } from '@apollo/client'
 import { getDataClient } from '@/apollo/apollo-client'
+import { GetHazardsQuery } from '@/gql/generated/graphql'
+import { gql } from '@apollo/client'
 
-export const getHazards = async () => {
-	const conusCountiesData = await getDataClient().query({
+export const getHazards = async (): Promise<GetHazardsQuery> => {
+	const getRegionsResponse = await getDataClient().query({
 		query: gql`
-			query {
+			query getHazards {
 				getRegions(regions: [CONUS, ALASKA, HAWAII, PUERTO_RICO, GUAM, AMERICAN_SAMOA]) {
 					name
 					states {
@@ -108,8 +109,8 @@ export const getHazards = async () => {
 					}
 				}
 			}
-		`
+		`,
 	})
 
-	return conusCountiesData
+	return getRegionsResponse.data as GetHazardsQuery
 }

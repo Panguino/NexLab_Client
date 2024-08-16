@@ -2,33 +2,40 @@ const sassExtract = require('sass-extract')
 const fs = require('fs')
 const path = require('path')
 
-function isOdd(num) {
-	return num % 2
+function isOdd(num: number): boolean {
+	return num % 2 === 1
+}
+
+interface ColorVarProps {
+	color: string
+	value: string
+}
+interface ColorPairVarProps {
+	name: string
+	value1: string
+	value2: string
 }
 
 sassExtract
 	.render({
-		file: 'src/styles/global.scss'
+		file: 'src/styles/global.scss',
 	})
-	.then((rendered) => {
-		//console.log(rendered.vars.global.$themes)
-		let colors = []
+	.then((rendered: any) => {
+		const colors: ColorVarProps[] = []
 		let stripped = rendered.vars.global.$themes.declarations[0].expression.split('"')
 		stripped = stripped.slice(1)
-		//console.log(stripped)
-		stripped.map((value, index) => {
+		stripped.map((value: string, index: number) => {
 			if (!isOdd(index)) {
 				colors.push({ color: value, value: stripped[index + 1].split(',')[0].split(' ')[1] })
 			}
 		})
-		let colorVars = []
-		// console.log(colors);
-		colors.map((value1, index1) => {
-			colors.map((value2, index2) => {
+		const colorVars: ColorPairVarProps[] = []
+		colors.map((value1) => {
+			colors.map((value2) => {
 				colorVars.push({
 					name: `--color-${value1.color}-${value2.color}`,
 					value1: value1.value,
-					value2: value2.value
+					value2: value2.value,
 				})
 			})
 		})
@@ -42,8 +49,8 @@ sassExtract
 		let outputCss = ''
 
 		fs.readdirSync(cssDirectoryPath)
-			.filter((file) => path.extname(file) === '.css')
-			.forEach((file) => {
+			.filter((file: any) => path.extname(file) === '.css')
+			.forEach((file: any) => {
 				const css = fs.readFileSync(path.join(cssDirectoryPath, file), 'utf8')
 				outputCss += css
 			})
@@ -52,8 +59,8 @@ sassExtract
 		// fs.writeFileSync(outputPath, outputCss);
 
 		//count how many times each color is used
-		let inactiveColors = colorVars.filter((colorVar) => {
-			let matches = outputCss.match(new RegExp(`${colorVar.name}(:|\\))`, 'g'))
+		const inactiveColors = colorVars.filter((colorVar) => {
+			const matches = outputCss.match(new RegExp(`${colorVar.name}(:|\\))`, 'g'))
 			return matches && matches.length <= 2
 		})
 		console.log('inactive colorVars:', inactiveColors.length)
@@ -87,7 +94,7 @@ sassExtract
 		fs.writeFileSync(path.join(cssDirectoryPath, rootCssFile), fileContents)
 	})
 
-function minifyHexColor(color) {
+function minifyHexColor(color: string): string {
 	if (/^#([a-fA-F0-9])\1([a-fA-F0-9])\2([a-fA-F0-9])\3$/i.test(color)) {
 		return '#' + color[1] + color[3] + color[5]
 	}

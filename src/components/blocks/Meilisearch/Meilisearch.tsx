@@ -1,13 +1,15 @@
 'use client'
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch'
-import { instantMeiliSearch } from '@meilisearch/instant-meilisearch'
-import styles from './Meilisearch.module.scss'
-import Link from 'next/link'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import { instantMeiliSearch } from '@meilisearch/instant-meilisearch'
+import Link from 'next/link'
+import { Hits, InstantSearch, SearchBox } from 'react-instantsearch'
+import styles from './Meilisearch.module.scss'
 
-const { searchClient } = instantMeiliSearch(process.env.NEXT_PUBLIC_MEILISEARCH_HOST, process.env.NEXT_PUBLIC_MEILISEARCH_KEY, { primaryKey: 'id' })
+const { searchClient } = instantMeiliSearch(process.env.NEXT_PUBLIC_MEILISEARCH_HOST ?? '', process.env.NEXT_PUBLIC_MEILISEARCH_KEY ?? '', {
+	primaryKey: 'id',
+})
 
-const Hit = ({ hit }) => {
+const Hit = ({ hit }: { hit: any }) => {
 	const { id, SEO, path, Title, Image } = hit
 	const { metaTitle, metaDescription } = SEO
 	return (

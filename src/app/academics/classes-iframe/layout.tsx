@@ -1,12 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavigation'
-import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
+import { getCourseCategories } from '@/apollo/strapi/getCourseCategories'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
-import { getCourseCategories } from '@/apollo/getCourseCategories'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavigation'
+import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
 
 export default function Layout({ children }) {
 	const [courseCategories, setCourseCategories] = useState([])

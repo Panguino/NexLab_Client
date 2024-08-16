@@ -1,90 +1,69 @@
-import { gql } from '@apollo/client'
-import { getDataClient } from '@/apollo/apollo-client'
-import { rewind } from '@turf/turf'
+import { getHazards } from '@/apollo/data/getHazards'
+import { getRegionShapes } from '@/apollo/data/getRegionShapes'
 import Hazards from '@/components/blocks/Hazards/Hazards'
-import { getHazards } from '@/apollo/getHazards'
 import { prepareAlertsFromAPI } from '@/util/hazardMapUtils'
+import { AllGeoJSON, rewind } from '@turf/turf'
 
 const Page = async () => {
-	const regionData = await getDataClient().query({
-		query: gql`
-			query {
-				getRegions(
-					regions: [
-						CANADA
-						PANAMA
-						MEXICO
-						CUBA
-						GUATEMALA
-						BELIZE
-						HONDURAS
-						EL_SALVADOR
-						DOMINICAN_REPUBLIC
-						HAITI
-						JAMAICA
-						BAHAMAS
-						NICARAGUA
-						COSTA_RICA
-					]
-				) {
-					name
-					states {
-						type
-						geometry
-					}
-				}
+	const displayRegions: AllGeoJSON[] = []
+	const regionData = await getRegionShapes()
+	if (regionData && regionData.getRegions) {
+		regionData.getRegions.forEach((region) => {
+			if (region && region.states) {
+				region.states.forEach((state) => {
+					displayRegions.push(rewind(state as AllGeoJSON, { reverse: true }))
+				})
 			}
-		`
-	})
-
-	const displayRegions = []
-
-	regionData.data.getRegions.forEach((region) => {
-		region.states.forEach((state) => {
-			displayRegions.push(rewind(state, { reverse: true }))
 		})
-	})
-
+	}
 	const displayRegionsFeatures = {
 		type: 'FeatureCollection',
-		features: displayRegions
+		features: displayRegions,
 	}
 
-	// api call
+	const displayStateRegions: AllGeoJSON[] = []
 	const conusCountiesData = await getHazards()
-
-	const displayStateRegions = []
-
-	conusCountiesData.data.getRegions.forEach((region) => {
-		region.states.forEach((state) => {
-			const optimizedState = { type: state.type, geometry: state.geometry, properties: {} }
-			displayStateRegions.push(rewind(optimizedState, { reverse: true }))
+	if (conusCountiesData && conusCountiesData.getRegions) {
+		conusCountiesData.getRegions.forEach((region) => {
+			if (region && region.states) {
+				region.states.forEach((state) => {
+					if (state && state.type && state.geometry) {
+						const optimizedState = { type: state.type, geometry: state.geometry, properties: {} }
+						displayStateRegions.push(rewind(optimizedState as AllGeoJSON, { reverse: true }))
+					}
+				})
+			}
 		})
-	})
-
+	}
 	const displayStates = {
 		type: 'FeatureCollection',
-		features: displayStateRegions
+		features: displayStateRegions,
 	}
-
-	const displayOffshoreRegions = []
-
-	conusCountiesData.data.getRegions.forEach((region) => {
-		region.coasts.forEach((coasts) => {
-			const optimizedCoast = { type: coasts.type, geometry: coasts.geometry, properties: {} }
-			displayOffshoreRegions.push(rewind(optimizedCoast, { reverse: true }))
+	const displayOffshoreRegions: AllGeoJSON[] = []
+	if (conusCountiesData && conusCountiesData.getRegions) {
+		conusCountiesData.getRegions.forEach((region) => {
+			if (region && region.coasts) {
+				region.coasts.forEach((coasts) => {
+					if (coasts && coasts.type && coasts.geometry) {
+						const optimizedCoast = { type: coasts.type, geometry: coasts.geometry, properties: {} }
+						displayOffshoreRegions.push(rewind(optimizedCoast as AllGeoJSON, { reverse: true }))
+					}
+				})
+			}
+			if (region && region.offshores) {
+				region.offshores.forEach((offshores) => {
+					if (offshores && offshores.type && offshores.geometry) {
+						const optimizedOffshore = { type: offshores.type, geometry: offshores.geometry, properties: {} }
+						displayOffshoreRegions.push(rewind(optimizedOffshore as AllGeoJSON, { reverse: true }))
+					}
+				})
+			}
 		})
-		region.offshores.forEach((offshores) => {
-			const optimizedOffshore = { type: offshores.type, geometry: offshores.geometry, properties: {} }
-			displayOffshoreRegions.push(rewind(optimizedOffshore, { reverse: true }))
-		})
-	})
-
+	}
 	const displayOffshores = {
 		type: 'FeatureCollection',
-		features: displayOffshoreRegions
+		features: displayOffshoreRegions,
 	}
-
 	const alerts = prepareAlertsFromAPI(conusCountiesData)
 
 	return <Hazards displayRegions={displayRegionsFeatures} displayStates={displayStates} displayOffshores={displayOffshores} alerts={alerts} />

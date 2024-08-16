@@ -12,11 +12,26 @@ import {
 	HAZARD_TYPE_SPECIALWX_ID,
 	HAZARD_TYPE_TORNADO_ID,
 	HAZARD_TYPE_TROPICAL_ID,
-	HAZARD_TYPE_WINTER_ID
+	HAZARD_TYPE_WINTER_ID,
 } from '@/data/hazardMapVars'
 
-const getAlertIdByEvent = (alertName) => {
-	const alertclass = {
+interface AlertInfoProps {
+	level: string
+	type: string
+}
+interface AlertDefinitions {
+	[key: string]: AlertInfoProps // This line allows any string to be used as a key
+}
+
+/**
+ * Looks up hazard level and type based on the alert event name.
+ *
+ * @param {string} alertEventName - the name to lookup
+ * @returns {AlertInfoProps} A object with properties level and type based on the input alert event name
+ *
+ */
+const getAlertIdByEvent = (alertEventName: string): AlertInfoProps => {
+	const alertDefinitions: AlertDefinitions = {
 		/* CONVECTIVE */
 		'Tornado Warning': { level: HAZARD_LEVEL_WARNING_ID, type: HAZARD_TYPE_TORNADO_ID },
 		'Severe Thunderstorm Warning': { level: HAZARD_LEVEL_WARNING_ID, type: HAZARD_TYPE_SEVERE_ID },
@@ -159,12 +174,12 @@ const getAlertIdByEvent = (alertName) => {
 		'Special Weather Statement': { level: HAZARD_LEVEL_STATEMENT_ID, type: HAZARD_TYPE_SPECIALWX_ID },
 
 		/* DEFAULT */
-		default: { level: HAZARD_LEVEL_STATEMENT_ID, type: HAZARD_TYPE_SPECIALWX_ID }
-		// known occurances
-		// Hydrologic Outlook - fcst - likely to be filtered out
+		default: { level: HAZARD_LEVEL_STATEMENT_ID, type: HAZARD_TYPE_SPECIALWX_ID },
 	}
 
-	return alertclass[alertName] || alertclass['default']
+	const alertInfo = alertDefinitions[alertEventName] || alertDefinitions['default']
+
+	return alertInfo as AlertInfoProps
 }
 
 export default getAlertIdByEvent

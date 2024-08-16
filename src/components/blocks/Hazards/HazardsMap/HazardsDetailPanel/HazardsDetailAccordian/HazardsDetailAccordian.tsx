@@ -1,9 +1,8 @@
-import { motion, AnimatePresence } from 'framer-motion'
+import Carrot from '@/components/elements/icons/Carrot/Carrot'
+import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import { AnimatePresence, motion } from 'framer-motion'
 import moment from 'moment'
 import styles from './HazardsDetailAccordian.module.scss'
-
-import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
-import Carrot from '@/components/elements/icons/Carrot/Carrot'
 
 const HazardsDetailAccordian = ({ index, isOpen, setSelectedAlert, alert }) => {
 	const { ends, description, hazardInfo, event } = alert
@@ -30,7 +29,7 @@ const HazardsDetailAccordian = ({ index, isOpen, setSelectedAlert, alert }) => {
 						exit="collapsed"
 						variants={{
 							open: { opacity: 1, height: 1000 },
-							collapsed: { opacity: 0, height: 0 }
+							collapsed: { opacity: 0, height: 0 },
 						}}
 						transition={{ duration: 0.4 }}
 					>

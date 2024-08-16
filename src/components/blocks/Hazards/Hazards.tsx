@@ -1,8 +1,8 @@
 'use client'
 import { useRootStore } from '@/store/useRootStore'
+import { useEffect } from 'react'
 import HazardsMap from './HazardsMap/HazardsMap'
 import HazardsTable from './HazardsTable/HazardsTable'
-import { useEffect } from 'react'
 
 const Hazards = ({ displayRegions, displayStates, displayOffshores, alerts }) => {
 	const selectedView = useRootStore.use.selectedView()
@@ -23,7 +23,7 @@ const Hazards = ({ displayRegions, displayStates, displayOffshores, alerts }) =>
 				hi: 'Hawaii',
 				pr: 'Puerto Rico',
 				sam: 'American Samoa',
-				gum: 'Guam'
+				gum: 'Guam',
 			}
 			setRegionHazards(allHazards[ids[selectedRegion]])
 		}

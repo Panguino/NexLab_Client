@@ -1,7 +1,7 @@
 'use client'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './Checkbox.module.scss'
-import { faCheck } from '@fortawesome/free-solid-svg-icons'
 
 interface CheckboxProps {
 	label: string

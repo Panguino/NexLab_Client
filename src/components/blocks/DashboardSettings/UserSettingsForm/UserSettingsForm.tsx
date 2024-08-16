@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './UserSettingsForm.module.scss'
 
 export const UserSettingsForm = ({ initialValue, jwt }) => {
@@ -11,9 +11,9 @@ export const UserSettingsForm = ({ initialValue, jwt }) => {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${jwt}`
+				Authorization: `Bearer ${jwt}`,
 			},
-			body: JSON.stringify({ TestInfo: testInfo })
+			body: JSON.stringify({ TestInfo: testInfo }),
 		})
 		console.log(response)
 		// Todo Validate Success or move this code into hook/convert into page favoriting

@@ -1,11 +1,11 @@
 'use server'
-import { gql } from '@apollo/client'
 import { getClient } from '@/apollo/apollo-client'
+import { gql } from '@apollo/client'
 
 export const getCourseCategories = async () => {
 	const response = await getClient().query({
 		query: gql`
-			query {
+			query getCourseCategories {
 				courseCategories {
 					data {
 						id
@@ -23,7 +23,7 @@ export const getCourseCategories = async () => {
 					}
 				}
 			}
-		`
+		`,
 	})
 	return response.data.courseCategories.data
 }

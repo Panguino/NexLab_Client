@@ -1,9 +1,10 @@
-import { gql } from '@apollo/client'
 import { getClient } from '@/apollo/apollo-client'
+import { NextPageProps } from '@/app/types'
 import { CampusWeatherDetail } from '@/components/blocks/CampusWeatherDetail/CampusWeatherDetail'
 import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
+import { gql } from '@apollo/client'
 
-const Page = async ({ params }) => {
+const Page = async ({ params }: NextPageProps) => {
 	const response = await getClient().query({
 		query: gql`
             query {
@@ -25,7 +26,7 @@ const Page = async ({ params }) => {
                     }
                 }
             }
-        `
+        `,
 	})
 
 	// Return from the DB
@@ -38,8 +39,8 @@ const Page = async ({ params }) => {
 	const api_point_res = await fetch(api_point_call, {
 		headers: {
 			'User-Agent': 'College of DuPage - Meteorology: Campus Weather (wxstaff@weather.cod.edu)',
-			Accept: 'application/ld+json'
-		}
+			Accept: 'application/ld+json',
+		},
 	})
 
 	if (!api_point_res.ok) {
@@ -61,8 +62,8 @@ const Page = async ({ params }) => {
 	const api_station_res = await fetch(api_station_call, {
 		headers: {
 			'User-Agent': 'College of DuPage - Meteorology: Campus Weather (wxstaff@weather.cod.edu)',
-			Accept: 'application/ld+json'
-		}
+			Accept: 'application/ld+json',
+		},
 	})
 
 	if (!api_station_res.ok) {
@@ -78,8 +79,8 @@ const Page = async ({ params }) => {
 	const api_obs_res = await fetch(api_obs_call, {
 		headers: {
 			'User-Agent': 'College of DuPage - Meteorology: Campus Weather (wxstaff@weather.cod.edu)',
-			Accept: 'application/ld+json'
-		}
+			Accept: 'application/ld+json',
+		},
 	})
 
 	if (!api_obs_res.ok) {
@@ -95,8 +96,8 @@ const Page = async ({ params }) => {
 	const api_fcst_res = await fetch(api_fcst_call, {
 		headers: {
 			'User-Agent': 'College of DuPage - Meteorology: Campus Weather (wxstaff@weather.cod.edu)',
-			Accept: 'application/ld+json'
-		}
+			Accept: 'application/ld+json',
+		},
 	})
 
 	if (!api_fcst_res.ok) {

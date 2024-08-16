@@ -1,17 +1,24 @@
 'use client'
-import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
+import { usePathname } from 'next/navigation'
 
 import styles from './SidebarSubPanel.module.scss'
 
 const defaultTransition = {
 	default: {
 		duration: 0.4,
-		ease: 'easeInOut'
-	}
+		ease: 'easeInOut',
+	},
 }
 
-const SidebarSubPanel = ({ path, children, activeX, inactiveX }) => {
+interface SidebarSubPanelProps {
+	path: string
+	children: React.ReactNode
+	activeX: number
+	inactiveX: number
+}
+
+const SidebarSubPanel = ({ path, children, activeX, inactiveX }: SidebarSubPanelProps) => {
 	const pathname = usePathname()
 	return (
 		<motion.div

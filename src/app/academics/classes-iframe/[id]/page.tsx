@@ -1,46 +1,12 @@
-import { gql } from '@apollo/client'
-
-import { getClient } from '@/apollo/apollo-client'
-import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
+import { getCourseById } from '@/apollo/strapi/getCourseById'
 import { ClassInfo } from '@/components/blocks/ClassInfo/ClassInfo'
+import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
 
 const Page = async ({ params }) => {
-	const response = await getClient().query({
-		query: gql`
-			query {
-				course(id: ${params.id}) {
-					data {
-						id
-						attributes {							
-							Title
-							CourseID
-							Description
-							MaterialGroup {
-								id
-								Name
-								Materials {
-									id
-									Name
-									Link
-									File {
-										data {
-											attributes {
-												url
-												size
-												ext
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		`
-	})
+	const course = await getCourseById(params.id)
+	console.log('course', course)
 	//console.log('res', response.data.course.data.attributes)
-	const { Title, CourseID, Description, MaterialGroup } = response.data.course.data.attributes
+	const { Title, CourseID, Description, MaterialGroup } = course
 	return (
 		<PageContentWrapper>
 			<ClassInfo Title={Title} CourseID={CourseID} Description={Description} MaterialGroup={MaterialGroup} />

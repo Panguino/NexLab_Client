@@ -1,9 +1,9 @@
 'use client'
-import { motion } from 'framer-motion'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import styles from './LinkAccordian.module.scss'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { motion } from 'framer-motion'
 import { useState } from 'react'
+import styles from './LinkAccordian.module.scss'
 
 export const LinkAccordian = ({ title, children }) => {
 	const [open, setOpen] = useState(true)

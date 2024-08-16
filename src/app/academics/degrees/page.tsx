@@ -1,19 +1,8 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-import { getDegrees } from '@/apollo/getDegrees'
+import { getDegrees } from '@/apollo/strapi/getDegrees'
 import { DegreeInfo } from '@/components/blocks/DegreeInfo/DegreeInfo'
 
-const Page = () => {
-	const [degrees, setDegrees] = useState([])
-	useEffect(() => {
-		const fetchData = async () => {
-			const res = await getDegrees()
-			setDegrees(res)
-		}
-		fetchData().catch(console.error)
-	}, [])
-	console.log(degrees) // comment out eventually
+const Page = async () => {
+	const degrees = await getDegrees()
 	return (
 		<div>
 			{degrees.map((d, index) => {

@@ -2,13 +2,13 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
-import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT, SEARCH_RESULTS_SLIDEOUT } from '@/config/vars'
-import styles from './SlideoutPanel.module.scss'
-import { useRootStore } from '@/store/useRootStore'
 import HazardsDetailPanel from '@/components/blocks/Hazards/HazardsMap/HazardsDetailPanel/HazardsDetailPanel'
-import CloseX from '@/components/elements/icons/CloseX/CloseX'
 import { Meilisearch } from '@/components/blocks/Meilisearch/Meilisearch'
+import CloseX from '@/components/elements/icons/CloseX/CloseX'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT, SEARCH_RESULTS_SLIDEOUT } from '@/config/vars'
+import { useRootStore } from '@/store/useRootStore'
 import { usePathname } from 'next/navigation'
+import styles from './SlideoutPanel.module.scss'
 
 const SlideoutPanel = () => {
 	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
@@ -25,7 +25,7 @@ const SlideoutPanel = () => {
 		closeSlideoutPanel()
 	}, [pathname, closeSlideoutPanel])
 
-	const getPanelType = (type) => {
+	const getPanelType = (type: string) => {
 		//console.log('opening slideoutpannel', type)
 		switch (type) {
 			case DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT:

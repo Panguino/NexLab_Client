@@ -1,6 +1,11 @@
+import React from 'react'
 import styles from './SubNavigation.module.scss'
 
-const SubNavigation = ({ children }) => {
+interface SubNavigationProps {
+	children: React.ReactNode
+}
+
+const SubNavigation = ({ children }: SubNavigationProps) => {
 	return (
 		<>
 			<div className={`SubNavigation ${styles.SubNavigation}`}>

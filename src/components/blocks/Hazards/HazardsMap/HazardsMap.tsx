@@ -1,18 +1,16 @@
 'use client'
-import { geoGraticule } from 'd3-geo'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/config/vars'
+import useDimensions from '@/hooks/useDimensions'
+import { useInterval } from '@/hooks/useInterval'
+import { useRootStore } from '@/store/useRootStore'
+import { flattenAlerts } from '@/util/hazardMapUtils'
 import * as d3 from 'd3'
-import { useCallback, useEffect, useRef, useState } from 'react'
-
+import { geoGraticule } from 'd3-geo'
 import { gsap } from 'gsap'
 import { Draggable } from 'gsap/Draggable'
-
+import { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './HazardsMap.module.scss'
-import useDimensions from '@/hooks/useDimensions'
 import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
-import { useRootStore } from '@/store/useRootStore'
-import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/config/vars'
-import { useInterval } from '@/hooks/useInterval'
-import { flattenAlerts } from '@/util/hazardMapUtils'
 
 gsap.registerPlugin(Draggable)
 
@@ -94,7 +92,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 				gsap.to(hazardCounty, {
 					opacity: active ? 1 : 0.2,
 					duration: 0.15,
-					ease: 'linear.easeNone'
+					ease: 'linear.easeNone',
 				})
 				// fill county with active hazard color if it contains that active hazard
 				/*if (activeHazard in hazardColors && hazardCounty.getAttribute('hazards').includes(activeHazard)) {
@@ -150,7 +148,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 
 			gsap.to(mapGroup, { duration: 0.5, scale: newScale, x: targetX, y: targetY, ease: 'power1.out' })
 		},
-		[mapGroupRef, mapRef, width, height]
+		[mapGroupRef, mapRef, width, height],
 	)
 
 	const updatePosition = useCallback(
@@ -188,7 +186,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 			// Use GSAP to smoothly transition to the new position
 			gsap.to(mapGroup, { duration: 0.5, scale: newScale, x: targetX, y: targetY, ease: 'power1.out' })
 		},
-		[mapGroupRef, mapRef, width, height]
+		[mapGroupRef, mapRef, width, height],
 	)
 
 	useEffect(() => {
@@ -198,28 +196,28 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 		const projections = {
 			conus: {
 				scale: generalScale,
-				projection: d3.geoAlbers().precision(0).scale(2)
+				projection: d3.geoAlbers().precision(0).scale(2),
 			},
 			ak: {
 				scale: generalScale * 1.2,
-				projection: d3.geoConicEqualArea().precision(0).center([0, 62]).rotate([154, 0])
+				projection: d3.geoConicEqualArea().precision(0).center([0, 62]).rotate([154, 0]),
 			},
 			hi: {
 				scale: generalScale * 2,
-				projection: d3.geoMercator().precision(0).center([0, 20.5]).rotate([157, 0])
+				projection: d3.geoMercator().precision(0).center([0, 20.5]).rotate([157, 0]),
 			},
 			pr: {
 				scale: generalScale * 4,
-				projection: d3.geoConicEqualArea().precision(0).center([0, 18.21]).rotate([66, 0])
+				projection: d3.geoConicEqualArea().precision(0).center([0, 18.21]).rotate([66, 0]),
 			},
 			sam: {
 				scale: generalScale * 4,
-				projection: d3.geoMercator().precision(0).center([0, -13]).rotate([170, 0])
+				projection: d3.geoMercator().precision(0).center([0, -13]).rotate([170, 0]),
 			},
 			gum: {
 				scale: generalScale,
-				projection: d3.geoMercator().precision(0).center([0, 13.45]).rotate([-153, 0])
-			}
+				projection: d3.geoMercator().precision(0).center([0, 13.45]).rotate([-153, 0]),
+			},
 		}
 
 		if (width && height) {
@@ -228,7 +226,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 				.translate(translate)
 				.clipExtent([
 					[0, 0],
-					[width, height]
+					[width, height],
 				])
 		}
 	}, [selectedRegion, width, height])
@@ -244,7 +242,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 				onDragStart: () => {
 					setTooltipActive(false)
 				},
-				trigger: svgRef.current
+				trigger: svgRef.current,
 			})
 			setDraggable(newDraggable)
 		}
@@ -316,7 +314,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 		displayRegions,
 		displayStates,
 		displayOffshores,
-		regionHazards
+		regionHazards,
 	])
 
 	return (

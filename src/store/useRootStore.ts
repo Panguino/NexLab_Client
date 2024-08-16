@@ -1,14 +1,18 @@
-import { create } from 'zustand'
 import { enableMapSet } from 'immer'
+import { StateCreator, create } from 'zustand'
 import createSelectors from './createSelectors'
-import { createHazardsSlice } from './hazardsSlice'
-import { createSlideoutPanelSlice } from './slideoutPanelSlice'
+import { IHazardsSlice, createHazardsSlice } from './hazardsSlice'
+import { ISlideoutPanelSlice, createSlideoutPanelSlice } from './slideoutPanelSlice'
 
 enableMapSet()
 
-const useRootStoreBase = create((set, get) => ({
-	...createHazardsSlice(set, get),
-	...createSlideoutPanelSlice(set, get)
+export interface IGlobalStore extends IHazardsSlice, ISlideoutPanelSlice {}
+
+export type ZustandStateSlice<T> = StateCreator<IGlobalStore, [], [], T>
+
+const useRootStoreBase = create<IGlobalStore>((...args) => ({
+	...createHazardsSlice(...args),
+	...createSlideoutPanelSlice(...args),
 }))
 
 export const useRootStore = createSelectors(useRootStoreBase as any)

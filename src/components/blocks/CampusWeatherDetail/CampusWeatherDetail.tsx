@@ -26,7 +26,7 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 				<div className={styles.airTemperature}>{celsiusToFahrenheit(temperature.value)}&deg;F</div>
 				<div className={styles.apparentTemperature}>
 					Feels Like:{' '}
-					{celsiusToFahrenheit(windChill.value != null ? windChill.value : heatIndex.value != null ? heatIndex.value : temperature.value)}
+					{celsiusToFahrenheit(windChill.value !== null ? windChill.value : heatIndex.value !== null ? heatIndex.value : temperature.value)}
 					&deg;F
 				</div>
 				<div className={styles.dewpointTemperature}>Dewpoint: {celsiusToFahrenheit(dewpoint.value)}&deg;F</div>

@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 
 const useAnimationFrame = (callback: (deltaTime: number) => void) => {
 	const requestRef = useRef<number>()
@@ -13,7 +13,7 @@ const useAnimationFrame = (callback: (deltaTime: number) => void) => {
 			previousTimeRef.current = time
 			requestRef.current = requestAnimationFrame(animate)
 		},
-		[callback]
+		[callback],
 	)
 
 	useEffect(() => {

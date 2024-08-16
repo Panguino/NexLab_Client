@@ -1,10 +1,9 @@
 'use client'
-import { motion } from 'framer-motion'
-
-import { useRootStore } from '@/store/useRootStore'
-import styles from './HazardsTooltip.module.scss'
 import useMousePosition from '@/hooks/useMousePosition'
+import { useRootStore } from '@/store/useRootStore'
 import { flattenAlerts, getTitleFromFeature } from '@/util/hazardMapUtils'
+import { motion } from 'framer-motion'
+import styles from './HazardsTooltip.module.scss'
 
 const HazardsTooltip = () => {
 	const tooltipContent = useRootStore.use.tooltipContent()
