@@ -14,8 +14,8 @@ const defaultTransition = {
 interface SidebarSubPanelProps {
 	path: string
 	children: React.ReactNode
-	activeX: number
-	inactiveX: number
+	activeX: string | number
+	inactiveX: string | number
 }
 
 const SidebarSubPanel = ({ path, children, activeX, inactiveX }: SidebarSubPanelProps) => {
