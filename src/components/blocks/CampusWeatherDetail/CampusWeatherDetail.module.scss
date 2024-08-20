@@ -1,27 +1,49 @@
 .CampusWeatherDetail {
-	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	width: 100%; /* Occupies the entire width of the parent */
+
+	.CampusTitle {
+		flex: 1 1 100%; /* Occupies the entire first row */
+		text-align: center; /* Center the title */
+	}
+
 	.CurrentConditionsContainer {
-		width: 200px;
+		flex: 1 1;
 		display: flex;
 		flex-wrap: wrap;
-		gap: 10px; /* Adjust the gap as needed */
+
+		.weatherSymbol {
+			flex: 1 1 100%; /* Occupies the entire first row within CurrentConditionsContainer */
+			text-align: center;
+			border-radius: 50%;
+			margin: 0 auto;
+		}
+
+		.airTemperature {
+			flex: 1 1 100%; /* Occupies the entire second row within CurrentConditionsContainer */
+			text-align: center;
+		}
+
+		.apparentTemperature,
+		.dewpointTemperature,
+		.humidity,
+		.wind {
+			flex: 1 1;
+			text-align: center;
+		}
+	}
+	.Spacer {
+		flex: 1 1 auto; /* Takes up remaining space */
 	}
 
-	.weatherSymbol {
-		flex: 1 1 25%; /* Spans 2 columns */
-		text-align: center; /* Center the image */
+	.CampusLogo {
+		flex: 1 1; /* Occupies 75% of the second row */
+		text-align: center; /* Center the logo */
+		margin: auto; /* Center the logo vertically */
 	}
 
-	.airTemperature {
-		flex: 1 1 50%; /* Spans 2 columns */
-		text-align: center; /* Center the text */
-	}
-
-	.apparentTemperature,
-	.dewpointTemperature,
-	.humidity,
-	.wind {
-		flex: 1 1 25%; /* Each takes a single column */
-		text-align: center; /* Center the text */
+	.CampusForecastContainer {
+		flex: 1 1 100%; /* Occupies the entire third row */
 	}
 }

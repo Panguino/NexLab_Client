@@ -20,29 +20,38 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 	}
 	return (
 		<div className={styles.CampusWeatherDetail}>
-			<div className={styles.CampusTitle}>{Name}</div>
+			<h2 className={styles.CampusTitle}>{Name}</h2>
 			<div className={styles.CurrentConditionsContainer}>
 				<img src={icon} className={styles.weatherSymbol} />
 				<div className={styles.airTemperature}>{celsiusToFahrenheit(temperature.value)}&deg;F</div>
 				<div className={styles.apparentTemperature}>
-					Feels Like:{' '}
+					Feels Like:
+					<br />
 					{celsiusToFahrenheit(windChill.value !== null ? windChill.value : heatIndex.value !== null ? heatIndex.value : temperature.value)}
 					&deg;F
 				</div>
-				<div className={styles.dewpointTemperature}>Dewpoint: {celsiusToFahrenheit(dewpoint.value)}&deg;F</div>
-				<div className={styles.humidity}>Relative Humidity: {relativeHumidity.value.toFixed(1)} %</div>
+				<div className={styles.dewpointTemperature}>
+					Dewpoint: <br /> {celsiusToFahrenheit(dewpoint.value)}&deg;F
+				</div>
+				<div className={styles.humidity}>
+					Humidity: <br /> {relativeHumidity.value.toFixed(1)} %
+				</div>
 				<div className={styles.wind}>
-					Wind: {getCompassDirection(windDirection.value)} at {kphToMph(windSpeed.value)} mph
+					Wind: <br /> {getCompassDirection(windDirection.value)} at {kphToMph(windSpeed.value)} mph
 				</div>
 			</div>
+			<div className={styles.Spacer}></div>
+			<div className={styles.Spacer}></div>
 			<img src={Logo.data.attributes.url} className={styles.CampusLogo} />
-			<h2>Forecast</h2>
-			{forecastData.map((period, index) => (
-				<div key={index}>
-					<h3>{period.name}</h3>
-					<p>{period.detailedForecast}</p>
-				</div>
-			))}
+			<div className={styles.CampusForecastContainer}>
+				<h2>Forecast</h2>
+				{forecastData.map((period, index) => (
+					<div key={index}>
+						<h3>{period.name}</h3>
+						<p>{period.detailedForecast}</p>
+					</div>
+				))}
+			</div>
 		</div>
 	)
 }
