@@ -20,7 +20,8 @@ export interface IHazardsSlice {
 	allHazards: Record<string, any>
 	hazardRefreshInterval: number
 	hazardRefreshActive: boolean
-	isHazardActive: (hazardType: string, hazardLevel: string) => boolean
+	anyActiveOrToggledHazards: () => boolean
+	isHazardVisible: (hazardType: string, hazardLevel: string) => boolean
 	setRegionHazards: (hazards: Record<string, any>) => void
 	addActiveHazard: (hazard: string) => void
 	removeActiveHazard: (hazard: string) => void
@@ -51,7 +52,18 @@ export interface IHazardsSlice {
 
 // Update the createHazardsSlice function to use StateCreator
 export const createHazardsSlice: ZustandStateSlice<IHazardsSlice> = (set, get) => ({
-	isHazardActive: (hazardType, hazardLevel) => {
+	anyActiveOrToggledHazards: () => {
+		return (
+			get().activeHazards.size === 0 &&
+			get().activeHazardTypes.size === 0 &&
+			get().activeHazardLevels.size === 0 &&
+			get().toggledHazards.size === 0 &&
+			get().toggledHazardRows.size === 0 &&
+			get().toggledHazardColumns.size === 0
+		)
+	},
+
+	isHazardVisible: (hazardType, hazardLevel) => {
 		const hazardId = `${hazardType} ${hazardLevel}`
 		return (
 			get().toggledHazards.has(hazardId) ||
@@ -59,13 +71,7 @@ export const createHazardsSlice: ZustandStateSlice<IHazardsSlice> = (set, get) =
 			get().toggledHazardColumns.has(hazardLevel) ||
 			get().activeHazards.has(hazardId) ||
 			get().activeHazardTypes.has(hazardType) ||
-			get().activeHazardLevels.has(hazardLevel) ||
-			(get().activeHazards.size === 0 &&
-				get().activeHazardTypes.size === 0 &&
-				get().activeHazardLevels.size === 0 &&
-				get().toggledHazards.size === 0 &&
-				get().toggledHazardRows.size === 0 &&
-				get().toggledHazardColumns.size === 0)
+			get().activeHazardLevels.has(hazardLevel)
 		)
 	},
 	//
