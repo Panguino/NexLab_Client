@@ -29,7 +29,8 @@ const HazardsPanel = ({ basepath }: hazardsPanelProps) => {
 	const activeHazards = useRootStore.use.activeHazards()
 	const addActiveHazard = useRootStore.use.addActiveHazard()
 	const removeActiveHazard = useRootStore.use.removeActiveHazard()
-	const isHazardActive = useRootStore.use.isHazardActive()
+	const anyActiveOrToggledHazards = useRootStore.use.anyActiveOrToggledHazards()
+	const isHazardVisible = useRootStore.use.isHazardVisible()
 	// needs to re-render when these things change.
 	activeHazards
 	activeHazardLevels
@@ -113,7 +114,7 @@ const HazardsPanel = ({ basepath }: hazardsPanelProps) => {
 							{HAZARD_LEVELS.map((hazardLevelId, index) => {
 								const hazardId = `${hazardTypeId} ${hazardLevelId}`
 								const hasAlerts = hazardTotals[hazardId] > 0 ? true : false
-								const hovered = isHazardActive(hazardTypeId, hazardLevelId)
+								const hovered = isHazardVisible(hazardTypeId, hazardLevelId) || anyActiveOrToggledHazards()
 								const toggled = isHazardToggled(hazardTypeId, hazardLevelId)
 								const color = HAZARD_COLORS[hazardTypeId][hazardLevelId]
 								return (

@@ -26,7 +26,8 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 	const activeHazards = useRootStore.use.activeHazards()
 	const activeHazardLevels = useRootStore.use.activeHazardLevels()
 	const activeHazardTypes = useRootStore.use.activeHazardTypes()
-	const isHazardActive = useRootStore.use.isHazardActive()
+	const isHazardVisible = useRootStore.use.isHazardVisible()
+	const anyActiveOrToggledHazards = useRootStore.use.anyActiveOrToggledHazards()
 
 	const [mapRef, { width, height }] = useDimensions()
 	const svgRef = useRef(null)
@@ -65,8 +66,10 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 					const countyshape = document.querySelector(`path[shapeId="${id}"]`)
 					const currentIndex = parseInt(countyshape.getAttribute('hazardIndex'))
 					const nextIndex = currentIndex + 1 < alerts.length ? currentIndex + 1 : 0
-					const color = alerts[nextIndex].hazardInfo.color.HEX
-					gsap.to(`path[shapeId="${id}"]`, { fill: color, duration: 0.5, ease: 'linear.easeNone' })
+					const { type, level, color } = alerts[nextIndex].hazardInfo
+					if (isHazardVisible(type.type, level.level) || anyActiveOrToggledHazards()) {
+						gsap.to(`path[shapeId="${id}"]`, { fill: color.HEX, duration: 0.5, ease: 'linear.easeNone' })
+					}
 					countyshape.setAttribute('hazardIndex', String(nextIndex))
 				}
 			}
@@ -84,27 +87,30 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 				const alerts = regionHazards[countyId].alerts
 				const flattenedAlerts = flattenAlerts(alerts)
 				let active = false
-				flattenedAlerts.forEach(({ type, level }) => {
-					if (isHazardActive(type, level)) {
+				const activeHazardColors = []
+				flattenedAlerts.forEach(({ type, level, color }) => {
+					if (isHazardVisible(type, level)) {
 						active = true
+						activeHazardColors.push(color)
 					}
 				})
 				gsap.to(hazardCounty, {
-					opacity: active ? 1 : 0.2,
+					opacity: active || anyActiveOrToggledHazards() ? 1 : 0.2,
 					duration: 0.15,
 					ease: 'linear.easeNone',
 				})
+
 				// fill county with active hazard color if it contains that active hazard
-				/*if (activeHazard in hazardColors && hazardCounty.getAttribute('hazards').includes(activeHazard)) {
+				if (active && !anyActiveOrToggledHazards()) {
 					gsap.to(hazardCounty, {
-						fill: `rgb(${hazardColors[activeHazard]})`,
+						fill: activeHazardColors[0],
 						duration: 0.25,
-						ease: 'linear.easeNone'
+						ease: 'linear.easeNone',
 					})
-				}*/
+				}
 			})
 		}
-	}, [activeHazardTypes, activeHazardLevels, activeHazards, isHazardActive, regionHazards])
+	}, [activeHazardTypes, activeHazardLevels, activeHazards, anyActiveOrToggledHazards, regionHazards, isHazardVisible])
 
 	const onZoom = useCallback(
 		(event) => {
