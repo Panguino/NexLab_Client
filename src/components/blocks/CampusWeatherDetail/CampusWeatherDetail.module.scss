@@ -1,28 +1,31 @@
 .CampusWeatherDetail {
 	display: flex;
 	flex-wrap: wrap;
-	width: 100%; /* Occupies the entire width of the parent */
+	width: 100%;
 
 	.CampusTitle {
-		flex: 1 1 100%; /* Occupies the entire first row */
-		text-align: center; /* Center the title */
+		flex: 1 1 100%;
+		text-align: center;
 	}
 
 	.CurrentConditionsContainer {
 		flex: 1 1;
 		display: flex;
 		flex-wrap: wrap;
+		gap: 10px;
 
 		.weatherSymbol {
-			flex: 1 1 100%; /* Occupies the entire first row within CurrentConditionsContainer */
+			flex: 1 1 100%;
 			text-align: center;
 			border-radius: 50%;
 			margin: 0 auto;
+			padding: 50px;
 		}
 
 		.airTemperature {
-			flex: 1 1 100%; /* Occupies the entire second row within CurrentConditionsContainer */
+			flex: 1 1 100%;
 			text-align: center;
+			font-size: 2em;
 		}
 
 		.apparentTemperature,
@@ -31,19 +34,40 @@
 		.wind {
 			flex: 1 1;
 			text-align: center;
+			.label {
+				font-size: 0.8em;
+			}
+			.value {
+				font-size: 1em;
+			}
 		}
 	}
 	.Spacer {
-		flex: 1 1 auto; /* Takes up remaining space */
+		flex: 2 1 auto; /* Takes up remaining space */
 	}
 
 	.CampusLogo {
-		flex: 1 1; /* Occupies 75% of the second row */
-		text-align: center; /* Center the logo */
-		margin: auto; /* Center the logo vertically */
+		flex: 1 1;
+		text-align: center;
+		margin: auto;
+		padding: 50px;
 	}
 
 	.CampusForecastContainer {
-		flex: 1 1 100%; /* Occupies the entire third row */
+		flex: 1 1 100%;
+		.period {
+			padding: 20px;
+			h3,
+			p {
+				margin: 0;
+				padding: 0;
+			}
+			p {
+				font-size: 1em;
+			}
+		}
+		.period:nth-child(odd) {
+			background-color: rgba($color: #ffffff, $alpha: 0.1);
+		}
 	}
 }
