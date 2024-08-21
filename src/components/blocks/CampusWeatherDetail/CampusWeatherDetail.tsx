@@ -4,7 +4,7 @@ import styles from './CampusWeatherDetail.module.scss'
 
 export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDetails }) => {
 	const { Name, Logo } = campusDetails
-	const { temperature, dewpoint, windDirection, windSpeed, icon, relativeHumidity, windChill, heatIndex } = currentWeatherData
+	const { temperature, dewpoint, windDirection, windSpeed, icon, relativeHumidity, windChill, heatIndex, textDescription } = currentWeatherData
 	console.log('ob', currentWeatherData)
 
 	const celsiusToFahrenheit = (celsius) => {
@@ -24,6 +24,7 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 			<div className={styles.CurrentConditionsContainer}>
 				<img src={icon} className={styles.weatherSymbol} />
 				<div className={styles.airTemperature}>{celsiusToFahrenheit(temperature.value)}&deg;F</div>
+				<div className={styles.weatherDescription}>{textDescription}</div>
 				<div className={styles.apparentTemperature}>
 					<h4 className={styles.label}>Feels Like:</h4>
 					<span className={styles.value}>

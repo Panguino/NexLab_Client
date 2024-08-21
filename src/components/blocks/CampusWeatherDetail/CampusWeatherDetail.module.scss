@@ -21,7 +21,10 @@
 			margin: 0 auto;
 			padding: 50px;
 		}
-
+		.weatherDescription {
+			flex: 1 1 100%;
+			text-align: center;
+		}
 		.airTemperature {
 			flex: 1 1 100%;
 			text-align: center;
