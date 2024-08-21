@@ -6,14 +6,14 @@ import styles from './HazardsDetailAccordian.module.scss'
 
 const HazardsDetailAccordian = ({ index, isOpen, setSelectedAlert, alert }) => {
 	const { ends, description, hazardInfo, event } = alert
-
+	console.log(alert)
 	return (
 		<>
 			<div className={styles.header} onClick={() => setSelectedAlert(index)}>
 				<span className={styles.colorSquare} style={{ backgroundColor: hazardInfo.color.HEX }} />
 				<div className={styles.headerText}>
 					<h4>{event}</h4>
-					<span className={styles.ends}>Expires {moment(ends).calendar()}</span>
+					<span className={styles.ends}>Expires {ends ? moment(ends).calendar() : ' N/A'}</span>
 				</div>
 				<motion.div className={styles.openToggleCarrot} animate={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)' }}>
 					<Carrot />
