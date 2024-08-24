@@ -11,10 +11,6 @@
     -   reference the Monday ID number in the branch name
     -   name is 3-4 word description of feature using `-`s as spaces
 
--   Set Branch upstream to remote
-
-    -   `git push --set-upstream origin [branch name]`
-
 -   Commit often to this branch locally
 
     -   `git commit -m "commit description"`
