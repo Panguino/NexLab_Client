@@ -12,6 +12,9 @@ jobs:
     chromatic:
         name: Run Chromatic
         runs-on: ubuntu-latest
+        permissions:
+            issues: write
+            contents: read
         env:
             # 7 GiB by default on GitHub, setting this to 16 GiB
             # Need to increase the memory limit for Chromatic to run
