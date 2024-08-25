@@ -1,7 +1,7 @@
 import Providers from '@/components/providers/Providers/Providers'
 import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
-import Checkbox from './Checkbox'
+import Checkbox, { CheckboxProps } from './Checkbox'
 
 const meta: Meta<typeof Checkbox> = {
 	title: 'Components/Form/Checkbox',
@@ -17,7 +17,7 @@ const meta: Meta<typeof Checkbox> = {
 export default meta
 
 const TemplateFactory = () => {
-	const Template: StoryFn<typeof Checkbox> = (args) => {
+	const Template: StoryFn<CheckboxProps> = (args) => {
 		const [value, setValue] = useState(false)
 
 		return <Checkbox value={value} onChange={setValue} label={args.label} />
@@ -25,8 +25,8 @@ const TemplateFactory = () => {
 	return Template
 }
 
-export const Simple = TemplateFactory()
-Simple.args = {
+export const SimpleCheckbox: StoryFn<CheckboxProps> = TemplateFactory()
+SimpleCheckbox.args = {
 	label: 'I agree to clicking on this checkbox',
 	onChange: () => alert('Clicked!'),
 }
