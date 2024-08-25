@@ -1,4 +1,5 @@
 import type { Preview } from '@storybook/react'
+import '../src/styles/global.scss'
 
 const preview: Preview = {
 	parameters: {
@@ -9,7 +10,7 @@ const preview: Preview = {
 			},
 		},
 		backgrounds: {
-			default: 'Slingshot Black',
+			default: 'Nexlab Black',
 			values: [
 				{
 					name: 'light',
@@ -20,7 +21,7 @@ const preview: Preview = {
 					value: '#333333',
 				},
 				{
-					name: 'Slingshot Black',
+					name: 'Nexlab Black',
 					value: '#000000',
 				},
 			],
@@ -36,7 +37,7 @@ const preview: Preview = {
 		},
 		layout: 'fullscreen',
 	},
-	tags: ['autodocs'],
+	tags: ['autodocs', 'autodocs'],
 }
 
 export default preview

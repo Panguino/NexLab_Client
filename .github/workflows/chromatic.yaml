@@ -1,0 +1,82 @@
+name: 'Chromatic'
+
+on:
+    pull_request:
+        types: [opened, synchronize]
+        branches:
+            - development
+            - 'feature/**'
+            - 'issue/**'
+
+jobs:
+    chromatic:
+        name: Run Chromatic
+        runs-on: ubuntu-latest
+        env:
+            # 7 GiB by default on GitHub, setting this to 16 GiB
+            # Need to increase the memory limit for Chromatic to run
+            # https://github.com/chromaui/chromatic-cli/issues/550#issuecomment-1150713820
+            NODE_OPTIONS: --max-old-space-size=16384
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set node version
+              uses: actions/setup-node@v4
+              with:
+                  node-version-file: 'package.json'
+                  cache: 'npm'
+
+            - name: Install dependencies
+              run: |
+                  npm ci .
+
+            - name: Run Chromatic
+              id: chromatic_build
+              uses: chromaui/action@latest
+              with:
+                  projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+                  onlyChanged: true
+                  exitZeroOnChanges: true
+                  exitOnceUploaded: true
+
+            - name: Manage PR Comment
+              uses: actions/github-script@v6
+              with:
+                  script: |
+                      const { owner, repo } = context.repo;
+                      const issue_number = context.issue.number;
+
+                      const { data: comments } = await github.rest.issues.listComments({
+                        owner,
+                        repo,
+                        issue_number,
+                      });
+
+                      const botComment = comments.find(comment => 
+                        comment.user.login === 'github-actions[bot]' && 
+                        comment.body.includes('Storybook Results')
+                      );
+
+                      if (botComment) {
+                        await github.rest.issues.deleteComment({
+                          owner,
+                          repo,
+                          comment_id: botComment.id,
+                        });
+                      }
+
+                      const commentBody = `| **Storybook Results 🎨** |  |
+                      | --- | --- |
+                      | **Build Results** | [Build Link](${{ steps.chromatic_build.outputs.buildUrl }}) |
+                      | **Storybook Preview** | [Preview Link](${{ steps.chromatic_build.outputs.storybookUrl }}) |
+                      | **Component Count** | ${{ steps.chromatic_build.outputs.componentCount }} |`;
+
+                      await github.rest.issues.createComment({
+                        owner,
+                        repo,
+                        issue_number,
+                        body: commentBody,
+                      });

@@ -1,9 +1,9 @@
 import { create } from '@storybook/theming/create'
-const logo = require('../public/img/logo-cloud.svg') as string
+const logoText = require('../public/img/logo-text.svg') as string
 
 export default create({
 	base: 'dark',
 	brandTitle: 'NexLab React Component Storybook',
-	brandImage: logo,
+	brandImage: logoText,
 	brandTarget: '_blank',
 })
