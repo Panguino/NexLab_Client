@@ -13,7 +13,9 @@
     "graphql-codegen": "graphql-codegen --config codegen.ts",
     "graphql-codegen:strapi": "graphql-codegen --config codegen-strapi.ts",
     "optimize_css_vars": "node src/scripts/build/styles/index.ts",
-    "storybook": "concurrently \"storybook dev -p 6006\" \"npx tsc --watch\""
+    "storybook": "concurrently \"storybook dev -p 6006\" \"npx tsc --watch\"",
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=chpt_913fc0afc650601"
   },
   "dependencies": {
     "@apollo/client": "^3.8.0-rc.2",
