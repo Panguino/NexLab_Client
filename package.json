@@ -31,7 +31,7 @@
     "@graphql-codegen/typescript-react-apollo": "^4.3.0",
     "@meilisearch/instant-meilisearch": "^0.17.0",
     "@next/env": "^14.2.5",
-    "@radix-ui/react-scroll-area": "^1.0.5",
+    "@radix-ui/react-scroll-area": "^1.1.0",
     "@storybook/test": "^8.2.9",
     "@strapi/blocks-react-renderer": "^1.0.0",
     "@turf/turf": "^6.5.0",
