@@ -1,0 +1,11 @@
+@import "/src/styles/vars";
+
+.MobileMenu {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: block;
+  }
+}

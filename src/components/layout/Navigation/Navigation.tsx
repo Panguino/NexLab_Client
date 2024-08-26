@@ -1,14 +1,13 @@
+import AuthMenuStatusInfo from '@/components/elements/AuthMenuStatusInfo/AuthMenuStatusInfo'
 import DarkmodeToggler from '@/components/elements/DarkmodeToggler/DarkmodeToggler'
-import LogStatus from '@/components/elements/LogStatus/LogStatus'
 import SearchIcon from '@/components/elements/SearchIcon/SearchIcon'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { getServerSession } from 'next-auth'
 import Link from 'next/link'
+import MobileMenu from '../MobileMenu/MobileMenu'
 import styles from './Navigation.module.scss'
 
-const Navigation = async () => {
-	const session = await getServerSession()
+const Navigation = () => {
 	return (
 		<>
 			<div className={`Navigation ${styles.Navigation}`}>
@@ -38,19 +37,14 @@ const Navigation = async () => {
 				<div className={styles.NavItems}>
 					<SearchIcon />
 					<DarkmodeToggler />
-					{session?.user?.email ? (
-						<LogStatus email={session?.user?.email} />
-					) : (
-						<Link href="/login/">
-							<div className={styles.NavItemButton}>Login</div>
-						</Link>
-					)}
+					<AuthMenuStatusInfo />
 				</div>
 				<div className={styles.Hamburger}>
 					<FontAwesomeIcon icon={faBars} />
 				</div>
 			</div>
 			<div className={`NavigationSpacer ${styles.Spacer}`} />
+			<MobileMenu items={[{ name: 'menuItem' }]} />
 		</>
 	)
 }

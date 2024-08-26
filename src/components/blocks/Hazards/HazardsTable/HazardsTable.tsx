@@ -1,5 +1,5 @@
 'use client'
-import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/config/vars'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-grid.css'
