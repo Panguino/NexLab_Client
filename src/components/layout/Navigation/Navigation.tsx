@@ -1,6 +1,8 @@
 import DarkmodeToggler from '@/components/elements/DarkmodeToggler/DarkmodeToggler'
 import LogStatus from '@/components/elements/LogStatus/LogStatus'
 import SearchIcon from '@/components/elements/SearchIcon/SearchIcon'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 import styles from './Navigation.module.scss'
@@ -43,6 +45,9 @@ const Navigation = async () => {
 							<div className={styles.NavItemButton}>Login</div>
 						</Link>
 					)}
+				</div>
+				<div className={styles.Hamburger}>
+					<FontAwesomeIcon icon={faBars} />
 				</div>
 			</div>
 			<div className={`NavigationSpacer ${styles.Spacer}`} />
