@@ -1,4 +1,4 @@
-import { celsiusToFahrenheit, getCompassDirection, kphToMph } from '@/util/campusUnitConversion'
+import { celsiusToFahrenheit, getCompassDirection, kphToMph } from '@/util/unitConversion'
 import styles from './CampusWeatherCurrentConditions.module.scss'
 import { CampusWeatherCurrentValue } from './CampusWeatherCurrentValue/CampusWeatherCurrentValue'
 
