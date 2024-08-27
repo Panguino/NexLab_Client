@@ -35,4 +35,7 @@
   padding-top: 36px;
   width: 100%;
   display: block;
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: none;
+  }
 }

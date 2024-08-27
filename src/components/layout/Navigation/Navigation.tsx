@@ -1,8 +1,7 @@
 import AuthMenuStatusInfo from '@/components/elements/AuthMenuStatusInfo/AuthMenuStatusInfo'
 import DarkmodeToggler from '@/components/elements/DarkmodeToggler/DarkmodeToggler'
+import HamburgerMenuIcon from '@/components/elements/HamburgerMenuIcon/HamburgerMenuIcon'
 import SearchIcon from '@/components/elements/SearchIcon/SearchIcon'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import MobileMenu from '../MobileMenu/MobileMenu'
 import styles from './Navigation.module.scss'
@@ -39,12 +38,12 @@ const Navigation = () => {
 					<DarkmodeToggler />
 					<AuthMenuStatusInfo />
 				</div>
-				<div className={styles.Hamburger}>
-					<FontAwesomeIcon icon={faBars} />
-				</div>
+				<HamburgerMenuIcon />
 			</div>
 			<div className={`NavigationSpacer ${styles.Spacer}`} />
-			<MobileMenu items={[{ name: 'menuItem' }]} />
+			<MobileMenu>
+				<div className={`NavigationSpacer ${styles.Spacer}`} />
+			</MobileMenu>
 		</>
 	)
 }

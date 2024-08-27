@@ -1,0 +1,11 @@
+@import "/src/styles/vars";
+
+.HamburgerMenuIcon {
+  display: none;
+  font-size: 30px;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: flex;
+  }
+}
