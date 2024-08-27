@@ -1,8 +1,8 @@
 import { celsiusToFahrenheit, getCompassDirection, kphToMph } from '@/util/unitConversion'
-import styles from './CampusWeatherCurrentConditions.module.scss'
-import { CampusWeatherCurrentValue } from './CampusWeatherCurrentValue/CampusWeatherCurrentValue'
+import styles from './CurrentConditions.module.scss'
+import { CurrentValue } from './CurrentValue/CurrentValue'
 
-export const CampusWeatherCurrentConditions = ({ currentWeatherData }) => {
+export const CurrentConditions = ({ currentWeatherData }) => {
 	const { temperature, dewpoint, windDirection, windSpeed, icon, relativeHumidity, windChill, heatIndex, textDescription } = currentWeatherData
 	let apparentTemperature
 	if (windChill.value !== null) {
@@ -19,10 +19,10 @@ export const CampusWeatherCurrentConditions = ({ currentWeatherData }) => {
 			<img src={icon} className={styles.weatherSymbol} />
 			<div className={styles.airTemperature}>{celsiusToFahrenheit(temperature.value)}&deg;F</div>
 			<div className={styles.weatherDescription}>{textDescription}</div>
-			<CampusWeatherCurrentValue label="Feels Like" value={celsiusToFahrenheit(apparentTemperature) + '\u00B0F'} />
-			<CampusWeatherCurrentValue label="Dewpoint" value={celsiusToFahrenheit(dewpoint.value) + '\u00B0F'} />
-			<CampusWeatherCurrentValue label="Humidity" value={relativeHumidity.value.toFixed(0) + '%'} />
-			<CampusWeatherCurrentValue label="Wind" value={kphToMph(windSpeed.value) + 'mph (' + getCompassDirection(windDirection.value) + ')'} />
+			<CurrentValue label="Feels Like" value={celsiusToFahrenheit(apparentTemperature) + '\u00B0F'} />
+			<CurrentValue label="Dewpoint" value={celsiusToFahrenheit(dewpoint.value) + '\u00B0F'} />
+			<CurrentValue label="Humidity" value={relativeHumidity.value.toFixed(0) + '%'} />
+			<CurrentValue label="Wind" value={kphToMph(windSpeed.value) + 'mph (' + getCompassDirection(windDirection.value) + ')'} />
 		</div>
 	)
 }

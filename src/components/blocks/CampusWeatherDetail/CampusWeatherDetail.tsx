@@ -1,7 +1,7 @@
 // 'use client'
 
-import { CampusWeatherCurrentConditions } from './CampusWeatherCurrentConditions/CampusWeatherCurrentConditions'
 import styles from './CampusWeatherDetail.module.scss'
+import { CurrentConditions } from './CurrentConditions/CurrentConditions'
 
 export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDetails }) => {
 	const { Name, Logo } = campusDetails
@@ -9,7 +9,7 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 	return (
 		<div className={styles.CampusWeatherDetail}>
 			<h2 className={styles.CampusTitle}>{Name}</h2>
-			<CampusWeatherCurrentConditions currentWeatherData={currentWeatherData} />
+			<CurrentConditions currentWeatherData={currentWeatherData} />
 			<div className={styles.Spacer}></div>
 			<img src={Logo.data.attributes.url} className={styles.CampusLogo} />
 			<div className={styles.CampusForecastContainer}>

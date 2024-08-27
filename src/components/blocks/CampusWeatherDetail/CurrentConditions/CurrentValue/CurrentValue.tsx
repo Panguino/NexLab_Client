@@ -1,6 +1,6 @@
-import styles from './CampusWeatherCurrentValue.module.scss'
+import styles from './CurrentValue.module.scss'
 
-export const CampusWeatherCurrentValue = ({ label, value }) => {
+export const CurrentValue = ({ label, value }) => {
 	return (
 		<div className={styles.parameter}>
 			<h4 className={styles.label}>{label}</h4>
