@@ -1,6 +1,6 @@
 'use client'
 import { useRootStore } from '@/store/useRootStore'
-import { motion } from 'framer-motion'
+import { circOut, motion } from 'framer-motion'
 import styles from './MobileMenu.module.scss'
 
 const MobileMenu = ({ children }) => {
@@ -21,7 +21,12 @@ const MobileMenu = ({ children }) => {
 	// }
 
 	return (
-		<motion.div className={styles.MobileMenu} initial={{ x: '100%' }} animate={{ x: mobileMenuIsOpen ? 0 : '100%' }} exit={{ x: '100%' }}>
+		<motion.div
+			className={styles.MobileMenu}
+			initial={{ x: '100%' }}
+			animate={{ x: mobileMenuIsOpen ? 0 : '100%' }}
+			transition={{ duration: mobileMenuIsOpen ? 0.4 : 0.25, ease: circOut }}
+		>
 			{children}
 			{items.map((item) => (
 				<div key={item.name}>{item.name}</div>

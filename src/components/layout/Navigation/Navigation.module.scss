@@ -14,6 +14,9 @@
   box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
+  @media (max-width: $mobile-menu-breakpoint) {
+    height: 50px;
+  }
 }
 
 .Logo {
@@ -31,6 +34,14 @@
       height: 25px;
       &:last-of-type {
         height: 17px;
+      }
+    }
+  }
+  @media (max-width: $mobile-menu-breakpoint) {
+    img {
+      height: 22px;
+      &:last-of-type {
+        height: 16px;
       }
     }
   }
@@ -67,4 +78,7 @@
   padding-top: 70px;
   width: 100%;
   display: block;
+  @media (max-width: $mobile-menu-breakpoint) {
+    padding-top: 50px;
+  }
 }
