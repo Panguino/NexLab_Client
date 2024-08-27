@@ -12,8 +12,8 @@ export const CampusWeatherCurrentConditions = ({ currentWeatherData }) => {
 			<img src={icon} className={styles.weatherSymbol} />
 			<div className={styles.airTemperature}>{celsiusToFahrenheit(temperature.value)}&deg;F</div>
 			<div className={styles.weatherDescription}>{textDescription}</div>
-			<CampusWeatherCurrentValue label="Feels Like" value={celsiusToFahrenheit(apparentTemperature) + `\u00B0F`} />
-			<CampusWeatherCurrentValue label="Dewpoint" value={celsiusToFahrenheit(dewpoint.value) + `\u00B0F`} />
+			<CampusWeatherCurrentValue label="Feels Like" value={celsiusToFahrenheit(apparentTemperature) + '\u00B0F'} />
+			<CampusWeatherCurrentValue label="Dewpoint" value={celsiusToFahrenheit(dewpoint.value) + '\u00B0F'} />
 			<CampusWeatherCurrentValue label="Humidity" value={relativeHumidity.value.toFixed(0) + '%'} />
 			<CampusWeatherCurrentValue label="Wind" value={kphToMph(windSpeed.value) + 'mph (' + getCompassDirection(windDirection.value) + ')'} />
 		</div>
