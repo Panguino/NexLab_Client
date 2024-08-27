@@ -4,7 +4,20 @@ import { CampusWeatherCurrentValue } from './CampusWeatherCurrentValue/CampusWea
 
 export const CampusWeatherCurrentConditions = ({ currentWeatherData }) => {
 	const { temperature, dewpoint, windDirection, windSpeed, icon, relativeHumidity, windChill, heatIndex, textDescription } = currentWeatherData
-	const apparentTemperature = windChill.value !== null ? windChill.value : heatIndex.value !== null ? heatIndex.value : temperature.value
+	let apparentTemperature
+	switch (apparentTemperature) {
+		// Wind Chill and Heat Index are "apparent" temperature values, colloquially referred to as "feels like"
+		// they can not occur at the same time so there will never be overlapping cases
+		case windChill.value !== null:
+			apparentTemperature = windChill.value
+			break
+		case heatIndex.value !== null:
+			apparentTemperature = heatIndex.value
+			break
+		default:
+			apparentTemperature = temperature.value
+			break
+	}
 	console.log('ob', currentWeatherData)
 
 	return (
