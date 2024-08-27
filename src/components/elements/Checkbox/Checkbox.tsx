@@ -3,7 +3,7 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './Checkbox.module.scss'
 
-interface CheckboxProps {
+export interface CheckboxProps {
 	label: string
 	value: boolean
 	onChange: (value: boolean) => void
