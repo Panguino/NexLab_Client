@@ -1,7 +1,7 @@
 const Page = () => {
 	return (
 		<div>
-			<h1>GEFS</h1>
+			<h1>GFP</h1>
 		</div>
 	)
 }

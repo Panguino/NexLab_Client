@@ -1,5 +1,5 @@
 const Page = () => {
-	return <>Registration</>
+	return <>Vertical Wind Profile</>
 }
 
 export default Page

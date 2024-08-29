@@ -1,7 +1,7 @@
 const Page = () => {
 	return (
 		<div>
-			<h1>Jet</h1>
+			<h1>GEFS</h1>
 		</div>
 	)
 }
