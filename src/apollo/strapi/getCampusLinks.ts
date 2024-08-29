@@ -5,17 +5,32 @@ import { gql } from '@apollo/client'
 export const getCampusLinks = async () => {
 	const campusLinkResponse = await getClient().query({
 		query: gql`
-			query getCampusLinks {
-				campusWeatherLinks {
+			query {
+				menusMenu(id: "2") {
 					data {
-						id
 						attributes {
-							Name
+							title
+							slug
+							items {
+								data {
+									id
+									attributes {
+										title
+										url
+										target
+										parent {
+											data {
+												id
+											}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
 			}
 		`,
 	})
-	return campusLinkResponse.data.campusWeatherLinks.data
+	return campusLinkResponse.data.menusMenu.data.attributes.items.data
 }
