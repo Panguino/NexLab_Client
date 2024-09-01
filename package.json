@@ -70,7 +70,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
-    "@babel/eslint-parser": "^7.22.5",
+    "@babel/eslint-parser": "^7.25.1",
     "@chromatic-com/storybook": "^1.7.0",
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/typescript": "^4.0.9",
