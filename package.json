@@ -64,7 +64,7 @@
     "sass": "^1.77.8",
     "sass-extract": "^3.0.0",
     "topojson-client": "^3.1.0",
-    "typescript": "^5.4.2",
+    "typescript": "^5.5.4",
     "usehooks-ts": "^3.1.0",
     "zustand": "^4.5.2"
   },
