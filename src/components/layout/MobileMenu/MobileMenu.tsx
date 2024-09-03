@@ -15,6 +15,7 @@ const MobileMenu = ({ children, navItems }) => {
 	// const goBack = () => {
 	// 	setActiveMenu(activeMenu.slice(0, activeMenu.length - 1))
 	// }
+	console.log('menuItems', navItems)
 
 	return (
 		<motion.div
@@ -26,7 +27,7 @@ const MobileMenu = ({ children, navItems }) => {
 			{children}
 			{navItems.map((item) => (
 				<div key={item.id}>
-					{item.title} - {item.path}
+					{item.attributes.title} - {item.attributes.url}
 				</div>
 			))}
 		</motion.div>

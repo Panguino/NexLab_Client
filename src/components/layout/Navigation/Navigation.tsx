@@ -1,62 +1,14 @@
-import { getClient } from '@/apollo/apollo-client'
+import { getMobileMenu } from '@/apollo/strapi/getMobileMenu'
 import AuthMenuStatusInfo from '@/components/elements/AuthMenuStatusInfo/AuthMenuStatusInfo'
 import DarkmodeToggler from '@/components/elements/DarkmodeToggler/DarkmodeToggler'
 import HamburgerMenuIcon from '@/components/elements/HamburgerMenuIcon/HamburgerMenuIcon'
 import SearchIcon from '@/components/elements/SearchIcon/SearchIcon'
-import { gql } from '@apollo/client'
 import Link from 'next/link'
 import MobileMenu from '../MobileMenu/MobileMenu'
 import styles from './Navigation.module.scss'
 
 const Navigation = async () => {
-	const response = await getClient().query({
-		query: gql`
-			query {
-				renderNavigation(navigationIdOrSlug: "1") {
-					id
-					title
-					path
-					externalPath
-					order
-					parent {
-						id
-					}
-				}
-			}
-		`,
-	})
-	console.log('res', response.data.renderNavigation)
-	const resMenu = await getClient().query({
-		query: gql`
-			query {
-				menusMenu(id: "1") {
-					data {
-						attributes {
-							title
-							slug
-							items {
-								data {
-									id
-									attributes {
-										title
-										url
-										target
-										parent {
-											data {
-												id
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		`,
-	})
-	const menuItems = resMenu.data.menusMenu.data.attributes.items.data
-	console.log('menuItems', menuItems)
+	const mobileMenuItems = await getMobileMenu()
 
 	return (
 		<>
@@ -92,7 +44,7 @@ const Navigation = async () => {
 				<HamburgerMenuIcon />
 			</div>
 			<div className={`NavigationSpacer ${styles.Spacer}`} />
-			<MobileMenu navItems={response.data.renderNavigation}>
+			<MobileMenu navItems={mobileMenuItems}>
 				<div className={`NavigationSpacer ${styles.Spacer}`} />
 			</MobileMenu>
 		</>
