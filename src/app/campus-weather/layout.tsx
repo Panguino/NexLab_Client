@@ -10,6 +10,9 @@ import { useEffect, useState } from 'react'
 
 export default function Layout({ children }) {
 	const [campusLinks, setCampusLinks] = useState([])
+	const essentialLinks = campusLinks[0]
+	const helpfulLinks = campusLinks[1]
+	const safetyLinks = campusLinks[2]
 	useEffect(() => {
 		const fetchData = async () => {
 			const res = await getCampusLinks()
@@ -17,20 +20,30 @@ export default function Layout({ children }) {
 		}
 		fetchData().catch(console.error)
 	}, [])
-	console.log(campusLinks)
+	console.log(essentialLinks, helpfulLinks, safetyLinks)
 	return (
 		<SidebarWrapper>
 			<SidebarNavigation>
 				<ScrollArea>
 					<div style={{ padding: '10px 20px 30px 20px' }}>
 						<LinkAccordian title="Important Essentials">
-							{campusLinks.map((campusLink, index) => {
+							{essentialLinks.map((campusLink, index) => {
 								const { title, url } = campusLink.attributes
 								return <LinkAccordianItem key={index} link={url} name={title} />
 							})}
 						</LinkAccordian>
-						<LinkAccordian title="Helpful Infromation">// build into strapi</LinkAccordian>
-						<LinkAccordian title="Weather Safety">// build into strapi</LinkAccordian>
+						<LinkAccordian title="Helpful Information">
+							{helpfulLinks.map((campusLink, index) => {
+								const { title, url } = campusLink.attributes
+								return <LinkAccordianItem key={index} link={url} name={title} />
+							})}
+						</LinkAccordian>
+						<LinkAccordian title="Weather Safety">
+							{safetyLinks.map((campusLink, index) => {
+								const { title, url } = campusLink.attributes
+								return <LinkAccordianItem key={index} link={url} name={title} />
+							})}
+						</LinkAccordian>
 					</div>
 				</ScrollArea>
 			</SidebarNavigation>
