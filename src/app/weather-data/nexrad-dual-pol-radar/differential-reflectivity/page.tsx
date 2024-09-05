@@ -1,5 +1,5 @@
 const Page = () => {
-	return <>mosiac</>
+	return <>Differential Reflectivity</>
 }
 
 export default Page

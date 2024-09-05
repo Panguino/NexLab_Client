@@ -26,10 +26,10 @@ const Navigation = async () => {
 					<Link href="/academics/">
 						<div className={styles.NavItem}>Academics</div>
 					</Link>
-					<Link href="/chasing/">
+					<Link href="/academics/storm-chasing/">
 						<div className={styles.NavItem}>Storm Chasing</div>
 					</Link>
-					<Link href="/localwx/">
+					<Link href="/campus-weather/">
 						<div className={styles.NavItem}>Local Weather</div>
 					</Link>
 					<Link href="/faqs/">
