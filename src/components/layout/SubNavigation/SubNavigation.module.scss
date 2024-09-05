@@ -1,3 +1,5 @@
+@import "/src/styles/vars";
+
 .SubNavigation {
   width: 100%;
   padding: 10px;
@@ -19,6 +21,10 @@
       text-decoration: none;
     }
   }
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: none;
+  }
 }
 .NavItems {
   display: flex;
@@ -29,4 +35,7 @@
   padding-top: 36px;
   width: 100%;
   display: block;
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: none;
+  }
 }

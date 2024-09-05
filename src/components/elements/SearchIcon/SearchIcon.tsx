@@ -1,5 +1,5 @@
 'use client'
-import { SEARCH_RESULTS_SLIDEOUT } from '@/config/vars'
+import { SEARCH_RESULTS_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
