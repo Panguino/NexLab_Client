@@ -11,7 +11,7 @@ export const getMobileMenu = async () => {
 						attributes {
 							title
 							slug
-							items {
+							items(pagination: { limit: 1000 }) {
 								data {
 									id
 									attributes {
