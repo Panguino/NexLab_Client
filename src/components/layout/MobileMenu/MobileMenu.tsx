@@ -8,16 +8,6 @@ const MobileMenu = ({ children, navItems }) => {
 	const mobileMenuIsOpen = useRootStore.use.mobileMenuIsOpen()
 
 	const [menuId, setMenuId] = useState(null)
-	// const [activeMenu, setActiveMenu] = useState([{ items, name: 'main' }]) // Stack of menus
-
-	// const goDeeper = (subItems, name) => {
-	// 	setActiveMenu([...activeMenu, { items: subItems, name }])
-	// }
-
-	// const goBack = () => {
-	// 	setActiveMenu(activeMenu.slice(0, activeMenu.length - 1))
-	// }
-	//console.log('menuItems', navItems)
 
 	const ifMenuItemHasChildren = (menuItemId) => {
 		return navItems.some((navItem) => navItem.attributes.parent.data?.id === menuItemId)
@@ -25,6 +15,8 @@ const MobileMenu = ({ children, navItems }) => {
 	const getParentIdByChildMenuId = (childMenuId) => {
 		return navItems.find((navItem) => navItem.id === childMenuId).attributes.parent.data?.id || null
 	}
+
+	console.log('navItems', navItems)
 	console.log('menuId', menuId)
 	return (
 		<motion.div
