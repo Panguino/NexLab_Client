@@ -1,5 +1,5 @@
 'use client'
-import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/config/vars'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/data/vars'
 import useDimensions from '@/hooks/useDimensions'
 import { useInterval } from '@/hooks/useInterval'
 import { useRootStore } from '@/store/useRootStore'

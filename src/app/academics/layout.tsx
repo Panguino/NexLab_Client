@@ -5,10 +5,10 @@ export default function Layout({ children }) {
 	return (
 		<>
 			<SubNavigation>
-				<SubNavigationItem name="Classes & Notes" link="/academics/classes/" />
-				<SubNavigationItem name="Degrees" link="/academics/degrees/" />
-				<SubNavigationItem name="AMS Club" link="/academics/ams-club/" />
-				<SubNavigationItem name="Student Resources" link="/academics/student-resources/" />
+				<SubNavigationItem name="Classes & Notes" link="/academics/courses/" />
+				<SubNavigationItem name="Degrees" link="/academics/degrees-certificates/" />
+				<SubNavigationItem name="AMS Club" link="/academics/cod-american-meteorological-society/" />
+				<SubNavigationItem name="Staff" link="/academics/staff/" />
 			</SubNavigation>
 			{children}
 		</>

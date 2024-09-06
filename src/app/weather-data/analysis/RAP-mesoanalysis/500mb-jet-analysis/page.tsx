@@ -1,7 +1,7 @@
 const Page = () => {
 	return (
 		<div>
-			<h1>GFP</h1>
+			<h1>500 Jet</h1>
 		</div>
 	)
 }

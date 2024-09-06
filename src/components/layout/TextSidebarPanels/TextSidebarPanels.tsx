@@ -10,24 +10,23 @@ import SidebarSubPanel from '../SidebarSubPanel/SidebarSubPanel'
 import styles from './TextSidebarPanels.module.scss'
 
 const TextSidebarPanels = () => {
-	const basepath = '/weather-data/text'
+	const basepath = '/weather-data/text-hazards-outlooks'
 
 	return (
 		<div className={styles.TextSidebarPanels}>
 			<SidebarSubPanel path={basepath} activeX="0%" inactiveX="-100%">
 				<SidebarPanelPad>
-					<SidebarSectionLink name="NWS WFO" linkUrl={`${basepath}/NWF-WFO`} />
-					<SidebarSectionLink name="Hazards" linkUrl={`${basepath}/hazards`} />
-					<SidebarSectionLink name="Analysis & Forecast" linkUrl={`${basepath}/analysis-and-forecast`} />
-					<SidebarSectionLink name="Climatology" linkUrl={`${basepath}/climatology`} />
-					<SidebarSectionLink name="Convective" linkUrl={`${basepath}/convective`} />
-					<SidebarSectionLink name="Tropical" linkUrl={`${basepath}/tropical`} />
-					<SidebarSectionLink name="Winter" linkUrl={`${basepath}/winter`} />
-					<SidebarSectionLink name="Hydrological" linkUrl={`${basepath}/hydrological`} />
-					<SidebarSectionLink name="Fire & Drought" linkUrl={`${basepath}/fire-and-drought`} />
-					<SidebarSectionLink name="Marine" linkUrl={`${basepath}/marine`} />
-					<SidebarSectionLink name="Aviation" linkUrl={`${basepath}/aviation`} />
-					<SidebarSectionLink name="Space" linkUrl={`${basepath}/space`} />
+					<SidebarSectionLink name="NWS WFO" linkUrl={`${basepath}/nws-wfo-national-weather-service-forecast-offices`} />
+					<SidebarSectionLink name="Hazards" linkUrl={`${basepath}/active-weather-hazards`} />
+					<SidebarSectionLink name="Analysis & Forecast" linkUrl={`${basepath}/analysis-forecast`} />
+					<SidebarSectionLink name="Climatology" linkUrl={`${basepath}/cpc-climate`} />
+					<SidebarSectionLink name="Convective" linkUrl={`${basepath}/spc-convective-weather`} />
+					<SidebarSectionLink name="Tropical" linkUrl={`${basepath}/nhc-tropical-hurricane-weather`} />
+					<SidebarSectionLink name="Winter" linkUrl={`${basepath}/wpc-winter-weather`} />
+					<SidebarSectionLink name="Hydrological" linkUrl={`${basepath}/nws-rfc-hydrological`} />
+					<SidebarSectionLink name="Fire & Drought" linkUrl={`${basepath}/spc-usdm-fire-weather-drought`} />
+					<SidebarSectionLink name="Marine" linkUrl={`${basepath}/nws-opc-nhc-marine-weather`} />
+					<SidebarSectionLink name="Space" linkUrl={`${basepath}/swpc-space-weather`} />
 				</SidebarPanelPad>
 			</SidebarSubPanel>
 			<SidebarSubPanel path={`${basepath}/NWF-WFO`} activeX="0%" inactiveX="100%">

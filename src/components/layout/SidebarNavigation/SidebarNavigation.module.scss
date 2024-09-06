@@ -1,7 +1,13 @@
+@import "/src/styles/vars";
+
 .SidebarNavigation {
   width: 300px;
   min-width: 300px;
   background: #222;
   color: #fff;
   z-index: 120;
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: none;
+  }
 }
