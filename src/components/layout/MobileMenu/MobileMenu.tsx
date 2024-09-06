@@ -1,13 +1,36 @@
 'use client'
 import { useRootStore } from '@/store/useRootStore'
-import { circOut, motion } from 'framer-motion'
-import { useState } from 'react'
+import { AnimatePresence, circOut, motion } from 'framer-motion'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import ScrollArea from '../ScrollArea/ScrollArea'
 import styles from './MobileMenu.module.scss'
+import MobileMenuItem from './MobileMenuItem/MobileMenuItem'
+
+const variants = {
+	initial: (direction) => ({
+		x: direction > 0 ? '100%' : '-100%',
+	}),
+	animate: {
+		x: 0,
+		transition: { type: 'tween', duration: 0.5 },
+	},
+	exit: (direction) => ({
+		x: direction < 0 ? '100%' : '-100%',
+		transition: { type: 'tween', duration: 0.5 },
+	}),
+}
 
 const MobileMenu = ({ children, navItems }) => {
 	const mobileMenuIsOpen = useRootStore.use.mobileMenuIsOpen()
-
+	const closeMobileMenu = useRootStore.use.closeMobileMenu()
+	const [direction, setDirection] = useState(1)
 	const [menuId, setMenuId] = useState(null)
+	const pathname = usePathname()
+
+	useEffect(() => {
+		closeMobileMenu()
+	}, [pathname, closeMobileMenu])
 
 	const ifMenuItemHasChildren = (menuItemId) => {
 		return navItems.some((navItem) => navItem.attributes.parent.data?.id === menuItemId)
@@ -25,24 +48,50 @@ const MobileMenu = ({ children, navItems }) => {
 			animate={{ x: mobileMenuIsOpen ? 0 : '100%' }}
 			transition={{ duration: mobileMenuIsOpen ? 0.4 : 0.25, ease: circOut }}
 		>
-			{children}
-			{menuId !== null && ifMenuItemHasChildren(menuId) && <div onClick={() => setMenuId(getParentIdByChildMenuId(menuId))}>-- Back</div>}
-			{navItems
-				.filter((item) => item.attributes.parent.data?.id === menuId || item.attributes.parent.data === menuId)
-				.map((item) => {
-					return (
-						<div
-							key={item.id}
-							onClick={() => {
-								if (ifMenuItemHasChildren(item.id)) {
-									setMenuId(item.id)
-								}
-							}}
-						>
-							{item.attributes.title} - {item.attributes.url} ---- {ifMenuItemHasChildren(item.id) && 'has children'}
-						</div>
-					)
-				})}
+			<AnimatePresence initial={false} custom={direction}>
+				<motion.div
+					key={menuId}
+					className={styles.container}
+					custom={direction}
+					variants={variants}
+					initial="initial"
+					animate="animate"
+					exit="exit"
+				>
+					<ScrollArea>
+						{children}
+						{menuId !== null && ifMenuItemHasChildren(menuId) && (
+							<MobileMenuItem
+								title="Back"
+								url={null}
+								leftArrow={true}
+								onArrowClick={() => {
+									setDirection(-1)
+									setMenuId(getParentIdByChildMenuId(menuId))
+								}}
+							/>
+						)}
+						{navItems
+							.filter((item) => item.attributes.parent.data?.id === menuId || item.attributes.parent.data === menuId)
+							.map((item) => {
+								return (
+									<MobileMenuItem
+										title={item.attributes.title}
+										url={item.attributes.url}
+										onArrowClick={
+											ifMenuItemHasChildren(item.id)
+												? () => {
+														setDirection(1)
+														setMenuId(item.id)
+													}
+												: null
+										}
+									/>
+								)
+							})}
+					</ScrollArea>
+				</motion.div>
+			</AnimatePresence>
 		</motion.div>
 	)
 }
