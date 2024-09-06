@@ -13,11 +13,11 @@ const variants = {
 	}),
 	animate: {
 		x: 0,
-		transition: { type: 'tween', duration: 0.5 },
+		transition: { type: 'tween', duration: 0.35, ease: circOut },
 	},
 	exit: (direction) => ({
 		x: direction < 0 ? '100%' : '-100%',
-		transition: { type: 'tween', duration: 0.5 },
+		transition: { type: 'tween', duration: 0.35, ease: circOut },
 	}),
 }
 
@@ -33,10 +33,10 @@ const MobileMenu = ({ children, navItems }) => {
 	}, [pathname, closeMobileMenu])
 
 	const ifMenuItemHasChildren = (menuItemId) => {
-		return navItems.some((navItem) => navItem.attributes.parent.data?.id === menuItemId)
+		return navItems.some((navItem) => navItem.parentId === menuItemId)
 	}
 	const getParentIdByChildMenuId = (childMenuId) => {
-		return navItems.find((navItem) => navItem.id === childMenuId).attributes.parent.data?.id || null
+		return navItems.find((navItem) => navItem.id === childMenuId).parentId || null
 	}
 
 	console.log('navItems', navItems)
@@ -72,17 +72,19 @@ const MobileMenu = ({ children, navItems }) => {
 							/>
 						)}
 						{navItems
-							.filter((item) => item.attributes.parent.data?.id === menuId || item.attributes.parent.data === menuId)
-							.map((item) => {
+							.filter(({ parentId }) => parentId === menuId)
+							.map(({ title, url, target, id }) => {
 								return (
 									<MobileMenuItem
-										title={item.attributes.title}
-										url={item.attributes.url}
+										key={id}
+										title={title}
+										url={url}
+										target={target}
 										onArrowClick={
-											ifMenuItemHasChildren(item.id)
+											ifMenuItemHasChildren(id)
 												? () => {
 														setDirection(1)
-														setMenuId(item.id)
+														setMenuId(id)
 													}
 												: null
 										}
