@@ -38,6 +38,15 @@ const MobileMenu = ({ children, navItems }) => {
 	const getParentIdByChildMenuId = (childMenuId) => {
 		return navItems.find((navItem) => navItem.id === childMenuId).parentId || null
 	}
+	const buildFullUrl = (itemId) => {
+		const currentItem = navItems.find((item) => item.id === itemId)
+		if (!currentItem) {
+			return ''
+		}
+		const parentUrl = currentItem.parentId ? buildFullUrl(currentItem.parentId) : ''
+		const fullUrl = `${parentUrl}${currentItem.url}`
+		return fullUrl
+	}
 
 	console.log('navItems', navItems)
 	console.log('menuId', menuId)
@@ -73,13 +82,13 @@ const MobileMenu = ({ children, navItems }) => {
 						)}
 						{navItems
 							.filter(({ parentId }) => parentId === menuId)
-							.map(({ title, url, target, id }) => {
+							.map(({ title, target, id }) => {
 								return (
 									<MobileMenuItem
 										key={id}
 										title={title}
-										url={url}
-										target={target}
+										url={buildFullUrl(id)}
+										target={`_${target}`}
 										onArrowClick={
 											ifMenuItemHasChildren(id)
 												? () => {
