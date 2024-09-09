@@ -1,6 +1,8 @@
 'use client'
 
 import { getCampusLinks } from '@/apollo/strapi/getCampusLinks'
+import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
+import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavigation'
 import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
@@ -15,16 +17,9 @@ export default function Layout({ children }) {
 		}
 		fetchData().catch(console.error)
 	}, [])
-	console.log(campusLinks)
 
-	const [menuId, setMenuId] = useState(null)
+	const [menuId] = useState(null)
 
-	const ifMenuItemHasChildren = (menuItemId) => {
-		return campusLinks.some((campusLink) => campusLink.attributes.parent.data?.id === menuItemId)
-	}
-	// const getParentIdByChildMenuId = (childMenuId) => {
-	// 	return campusLinks.find((campusLink) => campusLink.id === childMenuId).attributes.parent.data?.id || null
-	// }
 	return (
 		<SidebarWrapper>
 			<SidebarNavigation>
@@ -34,18 +29,18 @@ export default function Layout({ children }) {
 							.filter((item) => item.attributes.parent.data?.id === menuId || item.attributes.parent.data === menuId)
 							.map((item) => {
 								return (
-									<div
-										key={item.id}
-										onClick={() => {
-											// I know i dont need this but it works
-											// need to output links right away and start using SidebarGroup/Link
-											if (ifMenuItemHasChildren(item.id)) {
-												setMenuId(item.id)
-											}
-										}}
-									>
-										{item.attributes.title} - {item.attributes.url} ---- {ifMenuItemHasChildren(item.id) && 'has children'}
-									</div>
+									<SidebarGroup title={item.attributes.title} key={item.id}>
+										{campusLinks
+											.filter((childItem) => childItem.attributes.parent.data?.id === item.id)
+											.map((childItem) => (
+												<SidebarLink
+													key={childItem.id}
+													name={childItem.attributes.title}
+													linkUrl={childItem.attributes.url}
+													target={childItem.attributes.target}
+												/>
+											))}
+									</SidebarGroup>
 								)
 							})}
 					</div>
