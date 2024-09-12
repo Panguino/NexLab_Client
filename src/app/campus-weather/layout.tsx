@@ -29,7 +29,7 @@ export default function Layout({ children }) {
 							.filter((item) => item.attributes.parent.data?.id === menuId || item.attributes.parent.data === menuId)
 							.map((item) => {
 								return (
-									<SidebarGroup title={item.attributes.title} key={item.id}>
+									<SidebarGroup title={item.attributes.title} styleType="dot" key={item.id}>
 										{campusLinks
 											.filter((childItem) => childItem.attributes.parent.data?.id === item.id)
 											.map((childItem) => (

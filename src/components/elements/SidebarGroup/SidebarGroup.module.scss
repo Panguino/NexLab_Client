@@ -1,11 +1,25 @@
 .SidebarGroup {
-	--left-border-dot-top: 22px;
-
 	position: relative;
 	padding: 6px 10px;
+	border-bottom: solid 1px #5c5c5c;
 	&:last-of-type {
 		border-bottom: none;
 	}
+
+	.title {
+		position: relative;
+		font-family: var(--font-primary);
+		font-size: 15px;
+		font-style: normal;
+		font-weight: 600;
+		color: #fff;
+		padding: 6px 0;
+	}
+}
+.SidebarGroup.withDot {
+	--left-border-dot-top: 22px;
+	border-bottom: none;
+
 	&::after {
 		content: '';
 		position: absolute;
@@ -24,14 +38,5 @@
 		height: calc(calc(100% - 10px) - var(--left-border-dot-top));
 		width: 1px;
 		background-color: #5c5c5c;
-	}
-	.title {
-		position: relative;
-		font-family: var(--font-primary);
-		font-size: 15px;
-		font-style: normal;
-		font-weight: 600;
-		color: #fff;
-		padding: 6px 0;
 	}
 }
