@@ -10,7 +10,7 @@ import SidebarSubPanel from '../SidebarSubPanel/SidebarSubPanel'
 import styles from './TextSidebarPanels.module.scss'
 
 const TextSidebarPanels = () => {
-	const basepath = '/weather-data/text'
+	const basepath = '/weather-data/text-hazards-outlooks'
 
 	return (
 		<div className={styles.TextSidebarPanels}>
@@ -42,7 +42,7 @@ const TextSidebarPanels = () => {
 					</SidebarGroup>
 				</SidebarPanelPad>
 			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/hazards`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel path={`${basepath}/active-weather-hazards`} activeX="0%" inactiveX="100%">
 				<HazardsPanel basepath={basepath} />
 			</SidebarSubPanel>
 			<SidebarSubPanel path={`${basepath}/analysis-and-forecast`} activeX="0%" inactiveX="100%">

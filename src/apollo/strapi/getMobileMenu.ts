@@ -32,5 +32,16 @@ export const getMobileMenu = async () => {
 			}
 		`,
 	})
-	return resMenu.data.menusMenu.data.attributes.items.data
+
+	const items = resMenu.data.menusMenu.data.attributes.items.data.map((item) => {
+		return {
+			id: item.id,
+			parentId: item.attributes.parent.data?.id || null,
+			title: item.attributes.title,
+			url: item.attributes.url,
+			target: item.attributes.target,
+		}
+	})
+
+	return items
 }
