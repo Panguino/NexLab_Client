@@ -31,7 +31,7 @@ export default function Layout({ children }) {
 									<SidebarGroup key={index} title={Name}>
 										{coursesData.map((course, index) => {
 											const { CourseID } = course.attributes
-											return <SidebarLink key={index} linkUrl={`/academics/classes/${course.id}`} name={`Earth ${CourseID}`} />
+											return <SidebarLink key={index} linkUrl={`/academics/courses/${course.id}`} name={`Earth ${CourseID}`} />
 										})}
 									</SidebarGroup>
 								)
