@@ -4,6 +4,8 @@ import useDimensions from '@/hooks/useDimensions'
 import { useInterval } from '@/hooks/useInterval'
 import { useRootStore } from '@/store/useRootStore'
 import { flattenAlerts } from '@/util/hazardMapUtils'
+import { faDownLeftAndUpRightToCenter, faUpRightAndDownLeftFromCenter } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as d3 from 'd3'
 import { geoGraticule } from 'd3-geo'
 import { gsap } from 'gsap'
@@ -28,6 +30,8 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 	const activeHazardTypes = useRootStore.use.activeHazardTypes()
 	const isHazardVisible = useRootStore.use.isHazardVisible()
 	const anyActiveOrToggledHazards = useRootStore.use.anyActiveOrToggledHazards()
+	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
+	const setHazardMapFullScreen = useRootStore.use.setHazardMapFullScreen()
 
 	const [mapRef, { width, height }] = useDimensions()
 	const svgRef = useRef(null)
@@ -235,7 +239,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 					[width, height],
 				])
 		}
-	}, [selectedRegion, width, height])
+	}, [selectedRegion, width, height, mapRef])
 
 	useEffect(() => {
 		// Panning draggable functionality
@@ -329,6 +333,14 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 				<g ref={mapGroupRef} className={styles.mapGroup}></g>
 			</svg>
 			<HazardsTooltip />
+			<div
+				className={styles.fullScreenButton}
+				onClick={() => {
+					setHazardMapFullScreen(!hazardMapFullScreen)
+				}}
+			>
+				<FontAwesomeIcon icon={hazardMapFullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
+			</div>
 		</div>
 	)
 }

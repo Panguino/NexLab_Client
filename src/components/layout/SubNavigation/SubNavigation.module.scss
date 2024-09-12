@@ -21,6 +21,9 @@
       text-decoration: none;
     }
   }
+  &.hide {
+    display: none;
+  }
 
   @media (max-width: $mobile-menu-breakpoint) {
     display: none;
@@ -35,6 +38,9 @@
   padding-top: 36px;
   width: 100%;
   display: block;
+  &.hide {
+    display: none;
+  }
   @media (max-width: $mobile-menu-breakpoint) {
     display: none;
   }
