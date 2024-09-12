@@ -49,8 +49,6 @@ const Page = async ({ params }: NextPageProps) => {
 
 	const api_point_data = await api_point_res.json()
 
-	console.log({ api_point_data })
-
 	// Our Office products
 	// adding that leading K is only a problem if somehow we expand this service outside the CONUS
 	// const cod_cwa = 'https://weather.cod.edu/textserv/office/K' + api_point_data.cwa

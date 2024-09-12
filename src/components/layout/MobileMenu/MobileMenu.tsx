@@ -48,8 +48,6 @@ const MobileMenu = ({ children, navItems }) => {
 		return fullUrl
 	}
 
-	console.log('navItems', navItems)
-	console.log('menuId', menuId)
 	return (
 		<motion.div
 			className={styles.MobileMenu}

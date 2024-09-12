@@ -6,7 +6,6 @@ import styles from './HazardsDetailAccordian.module.scss'
 
 const HazardsDetailAccordian = ({ index, isOpen, setSelectedAlert, alert }) => {
 	const { ends, description, hazardInfo, event } = alert
-	console.log(alert)
 	return (
 		<>
 			<div className={styles.header} onClick={() => setSelectedAlert(index)}>

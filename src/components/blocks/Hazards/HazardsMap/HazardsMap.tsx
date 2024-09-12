@@ -85,7 +85,6 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 		if (document) {
 			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
 			hazardCounties.forEach((hazardCounty) => {
-				//console.log(hazardCounty.getAttribute('hazards'), activeHazard)
 				const countyId = hazardCounty.getAttribute('shapeId')
 				if (!regionHazards[countyId]) return
 				const alerts = regionHazards[countyId].alerts
@@ -172,7 +171,6 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 			const currentX = Number(props('x'))
 			const currentY = Number(props('y'))
 			let newScale = 2 + 150 / ((target.getBoundingClientRect().width + target.getBoundingClientRect().height) / currentScale)
-			//console.log('newScale', newScale, target.getBoundingClientRect().width, target.getBoundingClientRect().height, currentScale)
 			// get the target position, subtract the map container position offset, subtract the map position offset
 			let targetX = target.getBoundingClientRect().x // county position
 			targetX -= mapRef.current.getBoundingClientRect().x // map containter offset from window

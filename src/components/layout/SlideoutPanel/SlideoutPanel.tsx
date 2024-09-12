@@ -26,7 +26,6 @@ const SlideoutPanel = () => {
 	}, [pathname, closeSlideoutPanel])
 
 	const getPanelType = (type: string) => {
-		//console.log('opening slideoutpannel', type)
 		switch (type) {
 			case DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT:
 				return <HazardsDetailPanel />

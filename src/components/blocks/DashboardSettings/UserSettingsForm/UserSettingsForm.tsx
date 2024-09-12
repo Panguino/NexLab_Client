@@ -15,7 +15,6 @@ export const UserSettingsForm = ({ initialValue, jwt }) => {
 			},
 			body: JSON.stringify({ TestInfo: testInfo }),
 		})
-		console.log(response)
 		// Todo Validate Success or move this code into hook/convert into page favoriting
 	}
 
