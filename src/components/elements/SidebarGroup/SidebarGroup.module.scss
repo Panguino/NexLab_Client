@@ -1,17 +1,37 @@
 .SidebarGroup {
-  position: relative;
-  border-bottom: 1px solid #5c5c5c;
-  padding: 6px 0;
-  &:last-of-type {
-    border-bottom: none;
-  }
-}
-.title {
-  position: relative;
-  font-family: var(--font-primary);
-  font-size: 15px;
-  font-style: normal;
-  font-weight: 600;
-  color: #fff;
-  padding: 6px 0;
+	--left-border-dot-top: 22px;
+
+	position: relative;
+	padding: 6px 10px;
+	&:last-of-type {
+		border-bottom: none;
+	}
+	&::after {
+		content: '';
+		position: absolute;
+		top: calc(var(--left-border-dot-top) - 5px);
+		left: -4px;
+		width: 9px;
+		height: 9px;
+		background-color: grey;
+		border-radius: 50%;
+	}
+	&::before {
+		content: '';
+		position: absolute;
+		top: var(--left-border-dot-top);
+		left: 0;
+		height: calc(calc(100% - 10px) - var(--left-border-dot-top));
+		width: 1px;
+		background-color: #5c5c5c;
+	}
+	.title {
+		position: relative;
+		font-family: var(--font-primary);
+		font-size: 15px;
+		font-style: normal;
+		font-weight: 600;
+		color: #fff;
+		padding: 6px 0;
+	}
 }
