@@ -4,6 +4,8 @@ import useDimensions from '@/hooks/useDimensions'
 import { useInterval } from '@/hooks/useInterval'
 import { useRootStore } from '@/store/useRootStore'
 import { flattenAlerts } from '@/util/hazardMapUtils'
+import { faDownLeftAndUpRightToCenter, faUpRightAndDownLeftFromCenter } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as d3 from 'd3'
 import { geoGraticule } from 'd3-geo'
 import { gsap } from 'gsap'
@@ -28,6 +30,8 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 	const activeHazardTypes = useRootStore.use.activeHazardTypes()
 	const isHazardVisible = useRootStore.use.isHazardVisible()
 	const anyActiveOrToggledHazards = useRootStore.use.anyActiveOrToggledHazards()
+	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
+	const setHazardMapFullScreen = useRootStore.use.setHazardMapFullScreen()
 
 	const [mapRef, { width, height }] = useDimensions()
 	const svgRef = useRef(null)
@@ -81,7 +85,6 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 		if (document) {
 			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
 			hazardCounties.forEach((hazardCounty) => {
-				//console.log(hazardCounty.getAttribute('hazards'), activeHazard)
 				const countyId = hazardCounty.getAttribute('shapeId')
 				if (!regionHazards[countyId]) return
 				const alerts = regionHazards[countyId].alerts
@@ -168,7 +171,6 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 			const currentX = Number(props('x'))
 			const currentY = Number(props('y'))
 			let newScale = 2 + 150 / ((target.getBoundingClientRect().width + target.getBoundingClientRect().height) / currentScale)
-			//console.log('newScale', newScale, target.getBoundingClientRect().width, target.getBoundingClientRect().height, currentScale)
 			// get the target position, subtract the map container position offset, subtract the map position offset
 			let targetX = target.getBoundingClientRect().x // county position
 			targetX -= mapRef.current.getBoundingClientRect().x // map containter offset from window
@@ -235,7 +237,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 					[width, height],
 				])
 		}
-	}, [selectedRegion, width, height])
+	}, [selectedRegion, width, height, mapRef])
 
 	useEffect(() => {
 		// Panning draggable functionality
@@ -329,6 +331,14 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 				<g ref={mapGroupRef} className={styles.mapGroup}></g>
 			</svg>
 			<HazardsTooltip />
+			<div
+				className={styles.fullScreenButton}
+				onClick={() => {
+					setHazardMapFullScreen(!hazardMapFullScreen)
+				}}
+			>
+				<FontAwesomeIcon icon={hazardMapFullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
+			</div>
 		</div>
 	)
 }

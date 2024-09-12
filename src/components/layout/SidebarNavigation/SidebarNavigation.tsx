@@ -1,3 +1,5 @@
+'use client'
+import { useRootStore } from '@/store/useRootStore'
 import styles from './SidebarNavigation.module.scss'
 
 interface SidebarNavigationProps {
@@ -5,7 +7,9 @@ interface SidebarNavigationProps {
 }
 
 const SidebarNavigation = ({ children }: SidebarNavigationProps) => {
-	return <div className={styles.SidebarNavigation}>{children}</div>
+	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
+	const hideSidebar = hazardMapFullScreen
+	return <div className={`${styles.SidebarNavigation} ${hideSidebar ? styles.hide : ''} `}>{children}</div>
 }
 
 export default SidebarNavigation

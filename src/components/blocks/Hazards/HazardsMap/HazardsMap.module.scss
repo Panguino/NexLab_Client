@@ -58,3 +58,24 @@
   stroke: var(--color-white-grey7);
   stroke-width: 0.2;
 }
+.fullScreenButton {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 100;
+  background: var(--color-blue1-blue2);
+  color: var(--color-white-grey4);
+  padding: 5px;
+  font-size: 22px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  &:hover {
+    color: var(--color-blue3-white);
+    border-color: var(--color-blue3-white);
+  }
+  svg {
+    display: block;
+    transform: rotate(90deg);
+  }
+}
