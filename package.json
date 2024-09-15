@@ -60,7 +60,7 @@
     "react-fps-stats": "^0.3.1",
     "react-gravatar": "^2.6.3",
     "react-instantsearch": "^7.7.3",
-    "react-zoom-pan-pinch": "^3.4.4",
+    "react-zoom-pan-pinch": "^3.6.1",
     "sass": "^1.77.8",
     "sass-extract": "^3.0.0",
     "topojson-client": "^3.1.0",
