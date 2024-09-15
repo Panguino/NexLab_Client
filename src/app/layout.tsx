@@ -24,6 +24,7 @@ export default async function RootLayout({ children }) {
 				<meta name="msapplication-TileColor" content="#2b5797" />
 				<meta name="theme-color" content="#ffffff"></meta>
 				<meta name="referrer" content="strict-origin-when-cross-origin" />
+				<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 				<title>NexLab</title>
 			</head>
 			<body>
