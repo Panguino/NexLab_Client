@@ -5,7 +5,7 @@ const useDimensions = (aspectRatio?: number) => {
 	const [dimensions, setDimensions] = useState({ width: 0, height: 0, x: 0, y: 0, adjustedWidth: 0, adjustedHeight: 0 })
 
 	useLayoutEffect(() => {
-		if (!ref.current) return
+		if (!ref.current) return () => {}
 
 		const updateDimensions = () => {
 			const rect = ref.current.getBoundingClientRect()
