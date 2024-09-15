@@ -3,14 +3,9 @@
   height: 100%;
   background: #33404d;
   position: relative;
-  // fix for react-zoom-pan-pinch being 0 width and height
 }
 .svgMap {
-  position: absolute;
-  top: 0;
-  left: 0;
   background-color: var(--color-blue1-blue2);
-  //transition: var(--themeChange);
   path {
     transition: var(--themeChange);
   }
