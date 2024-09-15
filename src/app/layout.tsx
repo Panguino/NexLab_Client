@@ -4,6 +4,7 @@ import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
 import Providers from '@/components/providers/Providers/Providers'
 import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
 import '@/styles/global.scss'
+import { Viewport } from 'next'
 
 export default async function RootLayout({ children }) {
 	const mobileMenuItems = await getMobileMenu()
@@ -24,7 +25,6 @@ export default async function RootLayout({ children }) {
 				<meta name="msapplication-TileColor" content="#2b5797" />
 				<meta name="theme-color" content="#ffffff"></meta>
 				<meta name="referrer" content="strict-origin-when-cross-origin" />
-				<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 				<title>NexLab</title>
 			</head>
 			<body>
@@ -42,3 +42,9 @@ export default async function RootLayout({ children }) {
 	)
 }
 export const dynamic = 'force-dynamic'
+export const viewport: Viewport = {
+	initialScale: 1,
+	width: 'device-width',
+	maximumScale: 1,
+	userScalable: false,
+}
