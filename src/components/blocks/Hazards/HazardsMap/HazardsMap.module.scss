@@ -74,4 +74,8 @@
     display: block;
     transform: rotate(90deg);
   }
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: none;
+  }
 }
