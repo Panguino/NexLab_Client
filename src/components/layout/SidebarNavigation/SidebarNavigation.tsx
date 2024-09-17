@@ -1,4 +1,5 @@
 'use client'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
@@ -9,6 +10,7 @@ interface SidebarNavigationProps {
 }
 
 const SidebarNavigation = ({ children }: SidebarNavigationProps) => {
+	const { isMobile } = useIsMobile()
 	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
 	const mobileSidebarMenuIsOpen = useRootStore.use.mobileSidebarMenuIsOpen()
 	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
@@ -22,7 +24,7 @@ const SidebarNavigation = ({ children }: SidebarNavigationProps) => {
 	return (
 		<div
 			className={`${styles.SidebarNavigation} ${hideSidebar ? styles.hide : ''}`}
-			style={{ transform: mobileSidebarMenuIsOpen ? 'translateX(0)' : 'translateX(-100%)' }}
+			style={{ transform: !isMobile || mobileSidebarMenuIsOpen ? 'translateX(0)' : 'translateX(-100%)' }}
 		>
 			{children}
 		</div>
