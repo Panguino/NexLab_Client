@@ -1,5 +1,7 @@
 'use client'
 import { useRootStore } from '@/store/useRootStore'
+import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
 import styles from './SidebarNavigation.module.scss'
 
 interface SidebarNavigationProps {
@@ -8,8 +10,23 @@ interface SidebarNavigationProps {
 
 const SidebarNavigation = ({ children }: SidebarNavigationProps) => {
 	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
+	const mobileSidebarMenuIsOpen = useRootStore.use.mobileSidebarMenuIsOpen()
+	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
 	const hideSidebar = hazardMapFullScreen
-	return <div className={`${styles.SidebarNavigation} ${hideSidebar ? styles.hide : ''} `}>{children}</div>
+	const pathname = usePathname()
+
+	useEffect(() => {
+		closeMobileSidebarMenu()
+	}, [pathname, closeMobileSidebarMenu])
+
+	return (
+		<div
+			className={`${styles.SidebarNavigation} ${hideSidebar ? styles.hide : ''}`}
+			style={{ transform: mobileSidebarMenuIsOpen ? 'translateX(0)' : 'translateX(-100%)' }}
+		>
+			{children}
+		</div>
+	)
 }
 
 export default SidebarNavigation

@@ -1,0 +1,28 @@
+@import "/src/styles/vars";
+
+.MobileIconNav {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  border-radius: 7px;
+  overflow: hidden;
+  z-index: 100;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: flex;
+  }
+}
+.icon {
+  padding: 10px;
+  font-size: 15px;
+  line-height: 15px;
+  display: block;
+  background: var(--color-grey1-grey13);
+  display: inline-block;
+  cursor: pointer;
+  transition: transform var(--themeChange);
+  transform: scale(1);
+  color: var(--color-grey15-grey5);
+}

@@ -1,4 +1,5 @@
 'use client'
+import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/data/vars'
 import useDimensions from '@/hooks/useDimensions'
 import { useInterval } from '@/hooks/useInterval'
@@ -58,7 +59,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 
 	const animateMultiHazardCounties = () => {
 		if (isAnimating) {
-			/*for (const id in regionHazards) {
+			for (const id in regionHazards) {
 				const alerts = regionHazards[id].alerts
 				if (alerts.length > 1) {
 					const countyshape = document.querySelector(`path[shapeId="${id}"]`)
@@ -70,7 +71,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 					}
 					countyshape.setAttribute('hazardIndex', String(nextIndex))
 				}
-			}*/
+			}
 		}
 	}
 	useInterval(animateMultiHazardCounties, 2000)
@@ -242,6 +243,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 			>
 				<FontAwesomeIcon icon={hazardMapFullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
 			</div>
+			<MobileIconNav />
 		</div>
 	)
 }
