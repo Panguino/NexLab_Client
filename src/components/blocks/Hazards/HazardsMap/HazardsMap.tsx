@@ -1,5 +1,4 @@
 'use client'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/data/vars'
 import useDimensions from '@/hooks/useDimensions'
 import { useInterval } from '@/hooks/useInterval'
@@ -243,7 +242,6 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 			>
 				<FontAwesomeIcon icon={hazardMapFullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
 			</div>
-			<MobileIconNav />
 		</div>
 	)
 }
