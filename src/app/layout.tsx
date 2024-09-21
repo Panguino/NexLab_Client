@@ -4,6 +4,7 @@ import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
 import Providers from '@/components/providers/Providers/Providers'
 import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
 import '@/styles/global.scss'
+import { Viewport } from 'next'
 
 export default async function RootLayout({ children }) {
 	const mobileMenuItems = await getMobileMenu()
@@ -41,3 +42,9 @@ export default async function RootLayout({ children }) {
 	)
 }
 export const dynamic = 'force-dynamic'
+export const viewport: Viewport = {
+	initialScale: 1,
+	width: 'device-width',
+	maximumScale: 1,
+	userScalable: false,
+}

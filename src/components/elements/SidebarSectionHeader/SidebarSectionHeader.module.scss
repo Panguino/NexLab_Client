@@ -1,6 +1,11 @@
+@import "/src/styles/vars";
+
 .SidebarSectionHeader {
   background: #000;
   width: 100%;
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: none;
+  }
   a {
     display: block;
     font-family: var(--font-primary);

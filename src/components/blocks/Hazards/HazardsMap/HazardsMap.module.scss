@@ -1,15 +1,13 @@
+@import "/src/styles/vars";
+
 .HazardsMap {
-  width: 100%;
-  height: 100%;
   background: #33404d;
   position: relative;
+  flex-grow: 1;
+  overflow: hidden;
 }
 .svgMap {
-  position: absolute;
-  top: 0;
-  left: 0;
   background-color: var(--color-blue1-blue2);
-  //transition: var(--themeChange);
   path {
     transition: var(--themeChange);
   }
@@ -77,5 +75,9 @@
   svg {
     display: block;
     transform: rotate(90deg);
+  }
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: none;
   }
 }

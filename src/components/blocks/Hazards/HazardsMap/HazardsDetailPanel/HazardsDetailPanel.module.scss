@@ -1,8 +1,11 @@
+@import "/src/styles/vars";
+
 .HazardsDetailPanel {
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
   h1 {
     font-size: 24px;
     line-height: 24px;
@@ -10,6 +13,12 @@
     font-weight: 600;
     padding: 14px 60px 14px 20px;
     max-width: 600px;
+    width: 100%;
     text-overflow: ellipsis;
+
+    @media (max-width: $mobile-menu-breakpoint) {
+      font-size: 17px;
+      line-height: 17px;
+    }
   }
 }
