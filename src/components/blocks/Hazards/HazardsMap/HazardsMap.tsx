@@ -149,7 +149,7 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 					[adjustedWidth, adjustedHeight],
 				])
 		}
-	}, [selectedRegion, adjustedWidth, adjustedHeight, mapRef])
+	}, [selectedRegion, adjustedWidth, adjustedHeight, mapRef, hazardMapFullScreen])
 
 	useEffect(() => {
 		if (!displayRegions || !displayStates || !regionHazards) {

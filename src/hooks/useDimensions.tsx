@@ -26,7 +26,6 @@ const useDimensions = (aspectRatio?: number) => {
 				}
 				// If containerAspectRatio equals aspectRatio, no adjustment needed
 			}
-
 			setDimensions({ width, height, adjustedWidth, adjustedHeight, x: rect.x, y: rect.y })
 		}
 
