@@ -45,7 +45,6 @@ sassExtract
 				outputCss += css
 			})
 
-		// console.log(outputCss)
 		// fs.writeFileSync(outputPath, outputCss);
 
 		//count how many times each color is used
@@ -67,7 +66,6 @@ sassExtract
 
 			// Check if the file contains the `--color-vars-ref` variable
 			if (cssContent.includes('--color-vars-ref')) {
-				//console.log(`The file ${file} contains the --color-vars-ref variable.`)
 				rootCssFile = file
 			}
 		}

@@ -20,6 +20,7 @@ export interface IHazardsSlice {
 	allHazards: Record<string, any>
 	hazardRefreshInterval: number
 	hazardRefreshActive: boolean
+	hazardMapFullScreen: boolean
 	anyActiveOrToggledHazards: () => boolean
 	isHazardVisible: (hazardType: string, hazardLevel: string) => boolean
 	setRegionHazards: (hazards: Record<string, any>) => void
@@ -48,6 +49,7 @@ export interface IHazardsSlice {
 	setAllHazards: (hazards: Record<string, any>) => void
 	setHazardRefreshInterval: (interval: number) => void
 	setHazardRefreshActive: (active: boolean) => void
+	setHazardMapFullScreen: (fullScreen: boolean) => void
 }
 
 // Update the createHazardsSlice function to use StateCreator
@@ -166,4 +168,6 @@ export const createHazardsSlice: ZustandStateSlice<IHazardsSlice> = (set, get) =
 	setHazardRefreshInterval: (interval) => set({ hazardRefreshInterval: interval }),
 	hazardRefreshActive: true,
 	setHazardRefreshActive: (active) => set({ hazardRefreshActive: active }),
+	hazardMapFullScreen: false,
+	setHazardMapFullScreen: (fullScreen) => set({ hazardMapFullScreen: fullScreen }),
 })

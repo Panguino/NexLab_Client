@@ -12,7 +12,6 @@ export const CurrentConditions = ({ currentWeatherData }) => {
 	} else {
 		apparentTemperature = temperature.value
 	}
-	// console.log('ob', currentWeatherData)
 
 	return (
 		<div className={styles.CurrentConditionsContainer}>

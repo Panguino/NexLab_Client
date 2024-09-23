@@ -4,15 +4,15 @@ import useDimensions from '@/hooks/useDimensions'
 import { useInterval } from '@/hooks/useInterval'
 import { useRootStore } from '@/store/useRootStore'
 import { flattenAlerts } from '@/util/hazardMapUtils'
+import { faDownLeftAndUpRightToCenter, faUpRightAndDownLeftFromCenter } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as d3 from 'd3'
 import { geoGraticule } from 'd3-geo'
 import { gsap } from 'gsap'
-import { Draggable } from 'gsap/Draggable'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import styles from './HazardsMap.module.scss'
 import HazardsTooltip from './HazardsTooltip/HazardsTooltip'
-
-gsap.registerPlugin(Draggable)
 
 const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 	const regionHazards = useRootStore.use.regionHazards()
@@ -28,16 +28,14 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 	const activeHazardTypes = useRootStore.use.activeHazardTypes()
 	const isHazardVisible = useRootStore.use.isHazardVisible()
 	const anyActiveOrToggledHazards = useRootStore.use.anyActiveOrToggledHazards()
+	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
+	const setHazardMapFullScreen = useRootStore.use.setHazardMapFullScreen()
 
-	const [mapRef, { width, height }] = useDimensions()
+	const [mapRef, { width, height, adjustedHeight, adjustedWidth }] = useDimensions(7 / 4)
 	const svgRef = useRef(null)
 	const projRef = useRef(d3.geoAlbers().precision(0))
 
-	const [draggable, setDraggable] = useState(null)
 	const mapGroupRef = useRef(null)
-	const minZoom = 1
-	const maxZoom = 30
-	const scaleFactor = 1.6
 
 	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
 	const [isAnimating, setIsAnimating] = useState(true)
@@ -81,7 +79,6 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 		if (document) {
 			const hazardCounties = document.querySelectorAll(`.${styles.hazardCounty}`)
 			hazardCounties.forEach((hazardCounty) => {
-				//console.log(hazardCounty.getAttribute('hazards'), activeHazard)
 				const countyId = hazardCounty.getAttribute('shapeId')
 				if (!regionHazards[countyId]) return
 				const alerts = regionHazards[countyId].alerts
@@ -112,93 +109,10 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 		}
 	}, [activeHazardTypes, activeHazardLevels, activeHazards, anyActiveOrToggledHazards, regionHazards, isHazardVisible])
 
-	const onZoom = useCallback(
-		(event) => {
-			const mapGroup = mapGroupRef.current
-			const wheel = event.detail || event.deltaY || 0
-			const map = mapRef.current
-			const props = gsap.getProperty(mapGroup)
-			const currentScale = Number(props('scaleX')) // Assuming scaleX and scaleY are the same
-			const currentX = Number(props('x'))
-			const currentY = Number(props('y'))
-			if (!mapGroup || !map) return
-
-			let newScale = currentScale
-
-			if (wheel > 0) {
-				newScale /= scaleFactor
-			} else {
-				newScale *= scaleFactor
-			}
-			newScale = gsap.utils.clamp(minZoom, maxZoom, newScale)
-
-			// get the target position, subtract the map container position offset, subtract the map position offset.
-			let targetX = event.clientX // county position
-			targetX -= mapRef.current.getBoundingClientRect().x // map containter offset from window
-			targetX -= currentX
-			targetX /= currentScale
-			targetX *= -newScale
-			targetX += event.clientX
-			targetX -= mapRef.current.getBoundingClientRect().x
-
-			let targetY = event.clientY
-			targetY -= mapRef.current.getBoundingClientRect().y
-			targetY -= currentY
-			targetY /= currentScale
-			targetY *= -newScale
-			targetY += event.clientY
-			targetY -= mapRef.current.getBoundingClientRect().y
-
-			targetX = gsap.utils.clamp(-width * newScale + width, 0, targetX)
-			targetY = gsap.utils.clamp(-height * newScale + height, 0, targetY)
-
-			gsap.to(mapGroup, { duration: 0.5, scale: newScale, x: targetX, y: targetY, ease: 'power1.out' })
-		},
-		[mapGroupRef, mapRef, width, height],
-	)
-
-	const updatePosition = useCallback(
-		(target) => {
-			const mapGroup = mapGroupRef.current
-			const map = mapRef.current
-			if (!target || !mapGroup || !map) return
-
-			const props = gsap.getProperty(mapGroup)
-			const currentScale = Number(props('scaleX')) // Assuming scaleX and scaleY are the same
-			const currentX = Number(props('x'))
-			const currentY = Number(props('y'))
-			let newScale = 2 + 150 / ((target.getBoundingClientRect().width + target.getBoundingClientRect().height) / currentScale)
-			//console.log('newScale', newScale, target.getBoundingClientRect().width, target.getBoundingClientRect().height, currentScale)
-			// get the target position, subtract the map container position offset, subtract the map position offset
-			let targetX = target.getBoundingClientRect().x // county position
-			targetX -= mapRef.current.getBoundingClientRect().x // map containter offset from window
-			targetX += target.getBoundingClientRect().width / 2
-			targetX -= currentX
-			targetX /= currentScale
-			targetX *= -newScale
-			targetX += mapRef.current.getBoundingClientRect().width / 3
-
-			let targetY = target.getBoundingClientRect().y
-			targetY -= mapRef.current.getBoundingClientRect().y
-			targetY += target.getBoundingClientRect().height / 2
-			targetY -= currentY
-			targetY /= currentScale
-			targetY *= -newScale
-			targetY += mapRef.current.getBoundingClientRect().height / 2
-
-			newScale = gsap.utils.clamp(minZoom, maxZoom, newScale)
-			targetX = gsap.utils.clamp(-width * newScale + width, 0, targetX)
-			targetY = gsap.utils.clamp(-height * newScale + height, 0, targetY)
-			// Use GSAP to smoothly transition to the new position
-			gsap.to(mapGroup, { duration: 0.5, scale: newScale, x: targetX, y: targetY, ease: 'power1.out' })
-		},
-		[mapGroupRef, mapRef, width, height],
-	)
-
 	useEffect(() => {
 		// update region and width and height for projection when those variables change
-		const translate = [width / 2, height / 2]
-		const generalScale = Math.min(width * 1.2, height * 2)
+		const translate = [adjustedWidth / 2, adjustedHeight / 2]
+		const generalScale = Math.min(adjustedWidth * 1.2, adjustedHeight * 2)
 		const projections = {
 			conus: {
 				scale: generalScale,
@@ -226,33 +140,16 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 			},
 		}
 
-		if (width && height) {
+		if (adjustedWidth && adjustedHeight) {
 			projRef.current = projections[selectedRegion].projection
 				.scale(projections[selectedRegion].scale)
 				.translate(translate)
 				.clipExtent([
 					[0, 0],
-					[width, height],
+					[adjustedWidth, adjustedHeight],
 				])
 		}
-	}, [selectedRegion, width, height])
-
-	useEffect(() => {
-		// Panning draggable functionality
-		if (mapGroupRef?.current && svgRef?.current && !draggable) {
-			const newDraggable = Draggable.create(mapGroupRef.current, {
-				inertia: true,
-				bounds: svgRef.current,
-				allowContextMenu: true,
-				cursor: 'auto',
-				onDragStart: () => {
-					setTooltipActive(false)
-				},
-				trigger: svgRef.current,
-			})
-			setDraggable(newDraggable)
-		}
-	}, [mapGroupRef, draggable, setTooltipActive, svgRef])
+	}, [selectedRegion, adjustedWidth, adjustedHeight, mapRef, hazardMapFullScreen])
 
 	useEffect(() => {
 		if (!displayRegions || !displayStates || !regionHazards) {
@@ -292,10 +189,9 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 					.on('mouseout', () => {
 						setTooltipActive(false)
 					})
-					.on('click', (event) => {
+					.on('click', () => {
 						openSlideoutPanel(DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT)
 						setSelectedCounty(key)
-						updatePosition(event.target)
 					})
 			})
 
@@ -306,8 +202,8 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 			svg.append('path').datum(displayOffshores).attr('class', `${styles.oceanregions} coastal offshore`).attr('d', geoPathGeneratorSvg)
 		}
 	}, [
-		width,
-		height,
+		adjustedWidth,
+		adjustedHeight,
 		projRef,
 		mapGroupRef,
 		setTooltipActive,
@@ -315,7 +211,6 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 		openSlideoutPanel,
 		setSelectedCounty,
 		mapRef,
-		updatePosition,
 		selectedRegion,
 		displayRegions,
 		displayStates,
@@ -324,11 +219,29 @@ const HazardsMap = ({ displayRegions, displayStates, displayOffshores }) => {
 	])
 
 	return (
-		<div ref={mapRef} className={styles.HazardsMap} onWheel={onZoom}>
-			<svg ref={svgRef} className={styles.svgMap} width={width} height={height}>
-				<g ref={mapGroupRef} className={styles.mapGroup}></g>
-			</svg>
+		<div ref={mapRef} className={styles.HazardsMap}>
+			<TransformWrapper initialScale={1} disablePadding centerOnInit>
+				<TransformComponent
+					wrapperStyle={{
+						width: width,
+						height: height,
+					}}
+					contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
+				>
+					<svg ref={svgRef} className={styles.svgMap} width={adjustedWidth} height={adjustedHeight}>
+						<g ref={mapGroupRef} className={styles.mapGroup}></g>
+					</svg>
+				</TransformComponent>
+			</TransformWrapper>
 			<HazardsTooltip />
+			<div
+				className={styles.fullScreenButton}
+				onClick={() => {
+					setHazardMapFullScreen(!hazardMapFullScreen)
+				}}
+			>
+				<FontAwesomeIcon icon={hazardMapFullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
+			</div>
 		</div>
 	)
 }

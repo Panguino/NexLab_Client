@@ -1,18 +1,20 @@
-import { getMobileMenu } from '@/apollo/strapi/getMobileMenu'
+'use client'
 import AuthMenuStatusInfo from '@/components/elements/AuthMenuStatusInfo/AuthMenuStatusInfo'
 import DarkmodeToggler from '@/components/elements/DarkmodeToggler/DarkmodeToggler'
 import HamburgerMenuIcon from '@/components/elements/HamburgerMenuIcon/HamburgerMenuIcon'
 import SearchIcon from '@/components/elements/SearchIcon/SearchIcon'
+import { useRootStore } from '@/store/useRootStore'
 import Link from 'next/link'
 import MobileMenu from '../MobileMenu/MobileMenu'
 import styles from './Navigation.module.scss'
 
-const Navigation = async () => {
-	const mobileMenuItems = await getMobileMenu()
+const Navigation = ({ mobileMenuItems }) => {
+	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
+	const hideNavigation = hazardMapFullScreen
 
 	return (
 		<>
-			<div className={`Navigation ${styles.Navigation}`}>
+			<div className={`Navigation ${styles.Navigation} ${hideNavigation ? styles.hide : ''}`}>
 				<Link href="/">
 					<div className={styles.Logo}>
 						<img src="/img/logo-cloud-filled.svg" />
@@ -43,7 +45,7 @@ const Navigation = async () => {
 				</div>
 				<HamburgerMenuIcon />
 			</div>
-			<div className={`NavigationSpacer ${styles.Spacer}`} />
+			<div className={`NavigationSpacer ${styles.Spacer} ${hideNavigation ? styles.hide : ''}`} />
 			<MobileMenu navItems={mobileMenuItems}>
 				<div className={`NavigationSpacer ${styles.Spacer}`} />
 			</MobileMenu>
