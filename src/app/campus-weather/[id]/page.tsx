@@ -29,6 +29,25 @@ const Page = async ({ params }: NextPageProps) => {
         `,
 	})
 
+	// Collect the COD WxBug Data
+	const cod_wxbug_call = 'https://climate.cod.edu/data/cwx/current/KCDP-current-conditions.json'
+
+	// Fetch the weather data
+	const cod_wxbug_res = await fetch(cod_wxbug_call, {
+		headers: {
+			'User-Agent': 'College of DuPage - Meteorology: Campus Weather (wxstaff@weather.cod.edu)',
+			Accept: 'application/ld+json',
+		},
+	})
+
+	if (!cod_wxbug_res.ok) {
+		throw new Error(`HTTP error! status: ${cod_wxbug_res.status}`)
+	}
+
+	const cod_wxbug_data = await cod_wxbug_res.json()
+
+	console.log({ cod_wxbug_data })
+
 	// Return from the DB
 	const { Latitude, Longitude } = response.data.campus.data.attributes
 
