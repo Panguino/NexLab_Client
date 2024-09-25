@@ -1,18 +1,18 @@
 .SidebarLink {
-	a {
-		display: block;
-		font-family: var(--font-primary);
-		font-size: 13px;
-		font-style: normal;
-		font-weight: 400;
-		line-height: 13px;
-		padding: 6px 0;
-		color: var(--color-grey3);
-		text-decoration: none;
-		transition: color 0.25s ease;
-		&:hover {
-			color: #fff;
-			text-decoration: none;
-		}
-	}
+  a {
+    display: block;
+    font-family: var(--font-primary);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 13px;
+    padding: 6px 0;
+    color: var(--color-grey3);
+    text-decoration: none;
+    transition: color 0.25s ease;
+    &:hover {
+      color: var(--color-white);
+      text-decoration: none;
+    }
+  }
 }

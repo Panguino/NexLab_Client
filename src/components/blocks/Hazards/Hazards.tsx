@@ -1,4 +1,5 @@
 'use client'
+import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { useEffect } from 'react'
 import HazardsMap from './HazardsMap/HazardsMap'
@@ -39,6 +40,7 @@ const Hazards = ({ displayRegions, displayStates, displayOffshores, alerts }) =>
 					{selectedView === 'table' ? <HazardsTable /> : null}
 				</>
 			) : null}
+			<MobileIconNav />
 		</>
 	)
 }

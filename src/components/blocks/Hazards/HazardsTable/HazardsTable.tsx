@@ -54,7 +54,6 @@ const HazardsTable = () => {
 	}
 
 	const onRowClicked = (event) => {
-		//console.log('Row clicked', event.data)
 		openSlideoutPanel(DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT)
 		setSelectedCounty(event.data.ID)
 	}

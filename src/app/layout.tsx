@@ -1,10 +1,13 @@
+import { getMobileMenu } from '@/apollo/strapi/getMobileMenu'
 import Navigation from '@/components/layout/Navigation/Navigation'
 import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
 import Providers from '@/components/providers/Providers/Providers'
 import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
 import '@/styles/global.scss'
+import { Viewport } from 'next'
 
 export default async function RootLayout({ children }) {
+	const mobileMenuItems = await getMobileMenu()
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>
@@ -29,7 +32,7 @@ export default async function RootLayout({ children }) {
 					<NextAuthProvider>
 						<Providers>
 							<SlideoutPanel />
-							<Navigation />
+							<Navigation mobileMenuItems={mobileMenuItems} />
 							{children}
 						</Providers>
 					</NextAuthProvider>
@@ -39,3 +42,9 @@ export default async function RootLayout({ children }) {
 	)
 }
 export const dynamic = 'force-dynamic'
+export const viewport: Viewport = {
+	initialScale: 1,
+	width: 'device-width',
+	maximumScale: 1,
+	userScalable: false,
+}
