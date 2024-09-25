@@ -1,7 +1,7 @@
 .SidebarGroup {
 	position: relative;
 	padding: 6px 10px;
-	border-bottom: solid 1px #5c5c5c;
+	border-bottom: solid 1px var(--color-grey10);
 	&:last-of-type {
 		border-bottom: none;
 	}
@@ -27,7 +27,7 @@
 		left: -4px;
 		width: 9px;
 		height: 9px;
-		background-color: grey;
+		background-color: var(--color-grey10);
 		border-radius: 50%;
 	}
 	&::before {
@@ -37,6 +37,6 @@
 		left: 0;
 		height: calc(calc(100% - 10px) - var(--left-border-dot-top));
 		width: 1px;
-		background-color: #5c5c5c;
+		background-color: var(--color-grey10);
 	}
 }
