@@ -1,20 +1,10 @@
 .SidebarGroup {
-<<<<<<< HEAD
-	position: relative;
-	padding: 6px 10px;
-	border-bottom: solid 1px var(--color-grey10);
-	&:last-of-type {
-		border-bottom: none;
-	}
-=======
   position: relative;
-  padding: 6px 10px 6px 3px;
-  border-bottom: solid 1px #5c5c5c;
+  padding: 6px 10px;
+  border-bottom: solid 1px var(--color-grey10);
   &:last-of-type {
     border-bottom: none;
   }
->>>>>>> origin/feature/NXL-7289682407-campus-weather-sidebar
-
   .title {
     position: relative;
     font-family: var(--font-primary);
@@ -28,47 +18,24 @@
     --left-border-dot-top: 22px;
     border-bottom: none;
     padding-left: 15px;
-
-<<<<<<< HEAD
-	&::after {
-		content: '';
-		position: absolute;
-		top: calc(var(--left-border-dot-top) - 5px);
-		left: -4px;
-		width: 9px;
-		height: 9px;
-		background-color: var(--color-grey10);
-		border-radius: 50%;
-	}
-	&::before {
-		content: '';
-		position: absolute;
-		top: var(--left-border-dot-top);
-		left: 0;
-		height: calc(calc(100% - 10px) - var(--left-border-dot-top));
-		width: 1px;
-		background-color: var(--color-grey10);
-	}
-=======
-    &::after {
-      content: "";
-      position: absolute;
-      top: calc(var(--left-border-dot-top) - 5px);
-      left: -4px;
-      width: 9px;
-      height: 9px;
-      background-color: grey;
-      border-radius: 50%;
-    }
-    &::before {
-      content: "";
-      position: absolute;
-      top: var(--left-border-dot-top);
-      left: 0;
-      height: calc(calc(100% - 10px) - var(--left-border-dot-top));
-      width: 1px;
-      background-color: #5c5c5c;
-    }
   }
->>>>>>> origin/feature/NXL-7289682407-campus-weather-sidebar
+  &::after {
+    content: "";
+    position: absolute;
+    top: calc(var(--left-border-dot-top) - 5px);
+    left: -4px;
+    width: 9px;
+    height: 9px;
+    background-color: var(--color-grey10);
+    border-radius: 50%;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    top: var(--left-border-dot-top);
+    left: 0;
+    height: calc(calc(100% - 10px) - var(--left-border-dot-top));
+    width: 1px;
+    background-color: var(--color-grey10);
+  }
 }
