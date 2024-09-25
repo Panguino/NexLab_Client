@@ -4,15 +4,15 @@ import { CurrentValue } from './CurrentValue/CurrentValue'
 
 export const CurrentConditions = ({ currentWeatherData }) => {
 	const { temperature, dewpoint, windDirection, windSpeed, icon, relativeHumidity, windChill, heatIndex, textDescription } = currentWeatherData
+
 	let apparentTemperature
 	if (windChill.value !== null) {
 		apparentTemperature = windChill.value
-	} else if (heatIndex !== null) {
+	} else if (heatIndex.value !== null) {
 		apparentTemperature = heatIndex.value
 	} else {
 		apparentTemperature = temperature.value
 	}
-	// console.log('ob', currentWeatherData)
 
 	return (
 		<div className={styles.CurrentConditionsContainer}>
