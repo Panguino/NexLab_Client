@@ -2,7 +2,7 @@
 import AuthMenuStatusInfo from '@/components/elements/AuthMenuStatusInfo/AuthMenuStatusInfo'
 import DarkmodeToggler from '@/components/elements/DarkmodeToggler/DarkmodeToggler'
 import HamburgerMenuIcon from '@/components/elements/HamburgerMenuIcon/HamburgerMenuIcon'
-import SearchIcon from '@/components/elements/SearchIcon/SearchIcon'
+import SearchIcon from '@/components/elements/icons/SearchIcon/SearchIcon'
 import { useRootStore } from '@/store/useRootStore'
 import Link from 'next/link'
 import MobileMenu from '../MobileMenu/MobileMenu'
