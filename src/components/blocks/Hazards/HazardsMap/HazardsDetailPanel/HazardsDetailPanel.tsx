@@ -18,7 +18,6 @@ const HazardsDetailPanel = () => {
 					<h1>{getTitleFromFeature(county.properties)}</h1>
 					{county.alerts &&
 						county.alerts.map((alert, index) => {
-							//console.log('alert', alert)
 							return (
 								<HazardsDetailAccordian
 									key={index}

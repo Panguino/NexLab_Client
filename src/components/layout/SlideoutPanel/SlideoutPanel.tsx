@@ -26,7 +26,6 @@ const SlideoutPanel = () => {
 	}, [pathname, closeSlideoutPanel])
 
 	const getPanelType = (type: string) => {
-		//console.log('opening slideoutpannel', type)
 		switch (type) {
 			case DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT:
 				return <HazardsDetailPanel />
@@ -40,7 +39,7 @@ const SlideoutPanel = () => {
 	return (
 		<div className={styles.SlideoutPanel}>
 			<div className={styles.PanelWrapper} style={{ paddingTop: pathname !== '/' ? '106px' : '69px' }}>
-				<motion.div className={styles.OverflowPanel} animate={{ opacity: hovering ? 1 : 0 }} />
+				<motion.div className={styles.OverflowPanel} animate={{ opacity: slideoutPanelIsOpen && hovering ? 1 : 0 }} />
 				<motion.div
 					className={styles.Panel}
 					animate={{ x: slideoutPanelIsOpen ? '0%' : '100%', transition: { ease: 'backOut', duration: 0.35 } }}

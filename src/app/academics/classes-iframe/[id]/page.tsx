@@ -4,8 +4,6 @@ import PageContentWrapper from '@/components/layout/PageContentWrapper/PageConte
 
 const Page = async ({ params }) => {
 	const course = await getCourseById(params.id)
-	console.log('course', course)
-	//console.log('res', response.data.course.data.attributes)
 	const { Title, CourseID, Description, MaterialGroup } = course
 	return (
 		<PageContentWrapper>

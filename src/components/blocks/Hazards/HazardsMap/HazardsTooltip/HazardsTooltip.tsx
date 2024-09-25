@@ -15,7 +15,6 @@ const HazardsTooltip = () => {
 			<h4>{getTitleFromFeature(tooltipContent.properties)}</h4>
 			{tooltipContent.alerts &&
 				flattenAlerts(tooltipContent.alerts).map(({ color, name, event }, index) => {
-					//console.log(alert)
 					return (
 						<div key={index} className={styles.alert}>
 							<div className={styles.color} style={{ backgroundColor: color }} />

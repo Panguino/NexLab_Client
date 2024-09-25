@@ -1,6 +1,8 @@
+@import "/src/styles/vars";
+
 .header {
-  width: 600px;
-  min-width: 600px;
+  width: 100%;
+  max-width: 600px;
   padding: 13px 20px;
   margin: 3px 0;
   transition: background-color var(--themeChange);
@@ -9,6 +11,12 @@
   cursor: pointer;
   background-color: var(--color-grey1-grey13);
   position: relative;
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    font-size: 14px;
+    line-height: 14px;
+    padding: 10px 20px;
+  }
   .headerText {
     h4 {
       margin: 0;
@@ -16,6 +24,9 @@
     }
     .ends {
       font-size: 12px;
+      @media (max-width: $mobile-menu-breakpoint) {
+        font-size: 10px;
+      }
     }
   }
   .colorSquare {
@@ -29,6 +40,11 @@
     top: 24px;
     right: 20px;
     transform-origin: 50% 50%;
+
+    @media (max-width: $mobile-menu-breakpoint) {
+      top: 19px;
+      right: 20px;
+    }
     svg {
       path {
         fill: var(--color-grey17-grey4);
@@ -41,12 +57,15 @@
   flex-grow: 1;
   overflow: hidden;
   width: 100%;
-  font-size: 14px;
 }
 .content {
   padding: 20px 20px 30px;
   transition: color var(--themeChange);
   color: var(--color-grey17-grey4);
   font-size: 15px;
-  width: 600px;
+  max-width: 600px;
+  width: 100%;
+  @media (max-width: $mobile-menu-breakpoint) {
+    font-size: 12px;
+  }
 }

@@ -1,3 +1,5 @@
+@import "/src/styles/vars";
+
 .HazardsTooltip {
   position: fixed;
   background: green;
@@ -5,6 +7,7 @@
   z-index: 100;
   top: 0;
   left: 0;
+  touch-action: none;
   pointer-events: none;
   background: var(--color-white);
   border: 1px solid var(--color-grey2);
@@ -12,6 +15,10 @@
   -moz-box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.2);
   padding: 5px;
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: none !important;
+  }
   h4 {
     margin: 0;
     padding: 0;
