@@ -29,7 +29,7 @@
     "@graphql-codegen/client-preset": "^4.3.3",
     "@graphql-codegen/introspection": "^4.0.3",
     "@graphql-codegen/typescript-react-apollo": "^4.3.0",
-    "@meilisearch/instant-meilisearch": "^0.17.0",
+    "@meilisearch/instant-meilisearch": "^0.20.1",
     "@next/env": "^14.2.5",
     "@radix-ui/react-scroll-area": "^1.1.0",
     "@storybook/test": "^8.2.9",
