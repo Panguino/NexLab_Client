@@ -8,7 +8,7 @@ interface PageContentWrapperProps {
 
 const PageContentWrapper = ({ children }: PageContentWrapperProps) => {
 	return (
-		<div>
+		<div className={styles.PageContentWrapperContainer}>
 			<ScrollArea>
 				<div className={styles.PageContentWrapper}>{children}</div>
 			</ScrollArea>

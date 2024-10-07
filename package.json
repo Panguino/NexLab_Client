@@ -66,6 +66,8 @@
     "topojson-client": "^3.1.0",
     "typescript": "^5.5.4",
     "usehooks-ts": "^3.1.0",
+    "storybook": "^8.2.9",
+    "@storybook/react": "^8.2.9",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
@@ -80,7 +82,6 @@
     "@storybook/blocks": "^8.2.9",
     "@storybook/manager-api": "^8.2.9",
     "@storybook/nextjs": "^8.2.9",
-    "@storybook/react": "^8.2.9",
     "@storybook/theming": "^8.2.9",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.2.22",
@@ -96,7 +97,6 @@
     "eslint-plugin-storybook": "^0.8.0",
     "gts": "^5.3.1",
     "prettier-eslint": "^15.0.1",
-    "storybook": "^8.2.9",
     "ts-node": "^10.9.1"
   },
   "browserslist": {

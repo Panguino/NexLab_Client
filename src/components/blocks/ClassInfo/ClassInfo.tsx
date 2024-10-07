@@ -1,5 +1,5 @@
-import { LinkAccordian } from '@/components/elements/LinkAccordian/LinkAccordian'
-import { LinkAccordianItem } from '@/components/elements/LinkAccordian/LinkAccordianItem/LinkAccordianItem'
+import { Accordian } from '@/components/elements/Accordian/Accordian'
+import { LinkAccordianItem } from '@/components/elements/LinkAccordianItem/LinkAccordianItem'
 import { RichText } from '@/components/elements/RichText/RichText'
 
 import styles from './ClassInfo.module.scss'
@@ -18,13 +18,13 @@ export const ClassInfo = ({ Title, CourseID, Description, MaterialGroup }) => {
 					// make sure materials group has items in it before displaying it
 					if (Materials.length > 0) {
 						return (
-							<LinkAccordian key={index} title={Name}>
+							<Accordian key={index} title={Name}>
 								{Materials.map((Material, index) => {
 									const { Name, File, Link } = Material
 									const url = File?.data?.attributes?.url ? File.data.attributes.url : Link
 									return <LinkAccordianItem key={index} name={Name} link={url} />
 								})}
-							</LinkAccordian>
+							</Accordian>
 						)
 					}
 					return null
