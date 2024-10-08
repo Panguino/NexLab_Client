@@ -3,7 +3,7 @@ import { CurrentValue } from './CurrentValue/CurrentValue'
 
 export const CurrentConditions = ({ currentWeatherData }) => {
 	const { temperature, dewpoint, apparentTemperature, relativeHumidity, windSpeed, windDirection, textDescription, icon = '#' } = currentWeatherData
-	console.log(currentWeatherData)
+	// console.log(currentWeatherData)
 	return (
 		<div className={styles.CurrentConditionsContainer}>
 			<img src={icon} className={styles.weatherSymbol} />
