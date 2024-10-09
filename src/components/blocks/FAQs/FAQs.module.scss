@@ -8,6 +8,15 @@
   > div:last-child {
     width: 55%;
   }
+  @media screen and (max-width: 1000px) {
+    flex-direction: column;
+    > div:first-child {
+      width: 100%;
+    }
+    > div:last-child {
+      width: 100%;
+    }
+  }
 }
 .answer {
   padding: 0 12px;
