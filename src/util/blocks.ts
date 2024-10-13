@@ -48,6 +48,8 @@ export const convertStrapiBlocksData = (blocksData) => {
 					body: blockData.body,
 					button: convertButton(blockData.Button),
 				}
+			default:
+				return null
 		}
 	})
 	return blocks
