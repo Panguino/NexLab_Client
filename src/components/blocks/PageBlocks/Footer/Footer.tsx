@@ -40,7 +40,7 @@ export const Footer = () => {
 					<br />
 					<Link href="/terms-of-use"> Terms of Use</Link>
 					<br />
-					<Link href="/faqs">faqs</Link>
+					<Link href="/faqs">FAQs</Link>
 				</div>
 			</div>
 			<div className={styles.copyRight}>© {new Date().getFullYear()} College of DuPage NEXLAB</div>
