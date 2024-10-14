@@ -114,7 +114,7 @@ body {
   word-break: break-word;
 }
 a {
-  color: black;
+  color: var(--color-blue3-blue4);
 }
 a:hover {
   text-decoration: underline;

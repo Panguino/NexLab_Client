@@ -1,17 +1,17 @@
-import { RichText } from '@/components/elements/RichText/RichText'
-
 import { Accordian } from '@/components/elements/Accordian/Accordian'
+import { RichText } from '@/components/elements/RichText/RichText'
+import { RootNode } from '@strapi/blocks-react-renderer/dist/BlocksRenderer'
 import styles from './FAQs.module.scss'
 
 type FAQ = {
 	id: string
 	question: string
-	answer: string
+	answer: RootNode[]
 }
 
 interface IFAQs {
 	title: string
-	body: JSON
+	body: RootNode[]
 	faqs: FAQ[]
 }
 

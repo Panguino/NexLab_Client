@@ -28,7 +28,7 @@ const Navigation = ({ mobileMenuItems }) => {
 					<Link href="/academics/">
 						<div className={styles.NavItem}>Academics</div>
 					</Link>
-					<Link href="/academics/storm-chasing/">
+					<Link href="/storm-chasing/">
 						<div className={styles.NavItem}>Storm Chasing</div>
 					</Link>
 					<Link href="/campus-weather/">
