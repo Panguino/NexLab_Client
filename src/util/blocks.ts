@@ -17,6 +17,28 @@ const convertTripData = (TripsData) => {
 		}
 	})
 }
+const convertDegreeData = (degreesData) => {
+	return degreesData.data.map((degree) => {
+		console.log('degree', degree)
+		const { Title, Buttons, Description, Schools } = degree.attributes
+		return {
+			title: Title,
+			body: Description,
+			buttons: Buttons.map((buttonData) => convertButton(buttonData)),
+			schools: Schools.map(({ SchoolList, SchoolLinks }) => {
+				return {
+					schoolList: SchoolList,
+					schoolLinks: SchoolLinks.map(({ School, Link }) => {
+						return {
+							school: School,
+							link: Link,
+						}
+					}),
+				}
+			}),
+		}
+	})
+}
 export const convertStrapiBlocksData = (blocksData) => {
 	const blocks = blocksData.map((blockData) => {
 		console.log(blockData)
@@ -69,7 +91,7 @@ export const convertStrapiBlocksData = (blocksData) => {
 			case 'ComponentBlocksDegree':
 				return {
 					type: 'Degrees',
-					degrees: blockData.degrees.data,
+					degrees: convertDegreeData(blockData.degrees),
 				}
 			default:
 				return null

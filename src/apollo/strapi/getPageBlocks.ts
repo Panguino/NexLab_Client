@@ -99,6 +99,7 @@ export const getPageBlocks = async (id) => {
                                                     Label
                                                     Link
                                                     Style
+                                                    target
                                                 }
                                                 Schools {
                                                     SchoolList
