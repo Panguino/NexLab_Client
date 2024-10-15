@@ -16,8 +16,6 @@ interface ITwoPanelIconInfo {
 }
 
 export const TwoPanelIconInfo = ({ panels }: ITwoPanelIconInfo) => {
-	console.log(panels)
-
 	return (
 		<div className={styles.twoPanelIconInfo}>
 			{panels.map(({ icon, heading, body, buttonLabel, buttonUrl, buttonTarget, backgroundImage }, index) => {

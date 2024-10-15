@@ -6,8 +6,20 @@ const convertButton = (buttonData) => {
 		target: buttonData.target,
 	}
 }
+const convertTripData = (TripsData) => {
+	return TripsData.map(({ startDate, endDate, Status, Instructor, Assistant }) => {
+		return {
+			startDate,
+			endDate,
+			status: Status,
+			instructor: Instructor,
+			assistant: Assistant,
+		}
+	})
+}
 export const convertStrapiBlocksData = (blocksData) => {
 	const blocks = blocksData.map((blockData) => {
+		console.log(blockData)
 		switch (blockData.__typename) {
 			case 'ComponentBlocksPageHeading':
 				return {
@@ -47,6 +59,17 @@ export const convertStrapiBlocksData = (blocksData) => {
 					heading: blockData.heading,
 					body: blockData.body,
 					button: convertButton(blockData.Button),
+					trips: convertTripData(blockData.Trips),
+				}
+			case 'ComponentBlocksRichText':
+				return {
+					type: 'RichText',
+					body: blockData.body,
+				}
+			case 'ComponentBlocksDegree':
+				return {
+					type: 'Degrees',
+					degrees: blockData.degrees,
 				}
 			default:
 				return null

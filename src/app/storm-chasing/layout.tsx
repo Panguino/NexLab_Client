@@ -5,6 +5,7 @@ export default function Layout({ children }) {
 	return (
 		<>
 			<SubNavigation>
+				<SubNavigationItem name="Trips & Registration" link="/storm-chasing/trips-and-registration/" />
 				<SubNavigationItem name="Materials" link="/storm-chasing/materials/" />
 				<SubNavigationItem name="Media" link="/storm-chasing/media/" />
 				<SubNavigationItem name="Tracker" link="/storm-chasing/tracker/" />
