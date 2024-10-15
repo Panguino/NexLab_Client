@@ -4,7 +4,7 @@ import styles from './DegreeInfo.module.scss'
 
 export const DegreeInfo = ({ Title, Buttons, Description }) => {
 	return (
-		<div className={styles.DegreeInfo}>
+		<div className={styles.degreeInfo}>
 			<div className={styles.Info}>
 				<h3>{Title}</h3>
 				{Buttons.map((button, index) => {

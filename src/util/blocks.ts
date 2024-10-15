@@ -69,7 +69,7 @@ export const convertStrapiBlocksData = (blocksData) => {
 			case 'ComponentBlocksDegree':
 				return {
 					type: 'Degrees',
-					degrees: blockData.degrees,
+					degrees: blockData.degrees.data,
 				}
 			default:
 				return null
