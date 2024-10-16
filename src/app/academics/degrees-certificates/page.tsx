@@ -1,17 +1,9 @@
-import { getDegrees } from '@/apollo/strapi/getDegrees'
-import { DegreeInfo } from '@/components/blocks/DegreeInfo/DegreeInfo'
+import { getPageBlocks } from '@/apollo/strapi/getPageBlocks'
+import { PageBlocks } from '@/components/blocks/PageBlocks/PageBlocks'
 
 const Page = async () => {
-	const degrees = await getDegrees()
-	return (
-		<div>
-			{degrees.map((d, index) => {
-				const { Title, Buttons, Description } = d.attributes
-				return <DegreeInfo key={index} Title={Title} Buttons={Buttons} Description={Description} />
-			})}
-		</div>
-	)
+	const blocks = await getPageBlocks(129)
+	return <PageBlocks blocks={blocks} />
 }
 
 export default Page
-export const dynamic = 'force-dynamic'

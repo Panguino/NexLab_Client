@@ -78,6 +78,39 @@ export const getPageBlocks = async (id) => {
                                         Style
                                         target
                                     }
+                                    Trips {
+                                        startDate
+                                        endDate
+                                        Status
+                                        Instructor
+                                        Assistant
+                                    }
+                                }
+                                ... on ComponentBlocksRichText {
+                                    body
+                                }
+                                ... on ComponentBlocksDegree {
+                                    degrees {
+                                        data { 
+                                            attributes {
+                                                Title
+                                                Description
+                                                Buttons {
+                                                    Label
+                                                    Link
+                                                    Style
+                                                    target
+                                                }
+                                                Schools {
+                                                    SchoolList
+                                                    SchoolLinks {
+                                                        School
+                                                        Link
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
