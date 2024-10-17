@@ -71,6 +71,8 @@ const Page = async ({ params }: NextPageProps) => {
 
 		const cod_wxbug_data = await cod_wxbug_res.json()
 
+		// console.log(cod_wxbug_data)
+
 		const temperature = cod_wxbug_data.temp
 		const dewpoint = cod_wxbug_data.dewp
 		const apparentTemperature = cod_wxbug_data.atemp
@@ -120,7 +122,7 @@ const Page = async ({ params }: NextPageProps) => {
 
 		const api_obs_data = await api_obs_res.json()
 
-		console.log(api_obs_data['@graph'][0])
+		console.log(api_obs_data['@graph'][0].cloudLayers)
 
 		let { temperature } = api_obs_data['@graph'][0]
 		const { windChill, heatIndex } = api_obs_data['@graph'][0]
@@ -161,6 +163,8 @@ const Page = async ({ params }: NextPageProps) => {
 	}
 
 	const api_fcst_data = await api_fcst_res.json()
+
+	// console.log(api_fcst_data)
 
 	return (
 		<PageContentWrapper>
