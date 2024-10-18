@@ -1,19 +1,22 @@
-import { convertAPIiconName } from '@/util/getCampusWeatherIcon'
+import { convertIconName } from '@/util/getCampusWeatherIcon'
 import styles from './CurrentConditions.module.scss'
 import { CurrentValue } from './CurrentValue/CurrentValue'
 
 export const CurrentConditions = ({ currentWeatherData }) => {
 	const {
+		dataSource,
+		dayNight,
 		temperature,
 		dewpoint,
 		apparentTemperature,
 		relativeHumidity,
 		windSpeed,
 		windDirection,
+		sky,
 		textDescription,
-		icon = null,
+		icon,
 	} = currentWeatherData
-	const weatherIcon = icon !== null ? convertAPIiconName(icon) : ('/temp-icons/unknown.svg' as string)
+	const weatherIcon = icon !== null ? convertIconName(icon, sky, dayNight, dataSource) : ('/temp-icons/unknown.svg' as string)
 	// console.log(currentWeatherData)
 	return (
 		<div className={styles.CurrentConditionsContainer}>
