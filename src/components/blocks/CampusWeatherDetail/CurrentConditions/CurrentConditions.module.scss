@@ -7,9 +7,9 @@
 	.weatherSymbol {
 		flex: 1 1 100%;
 		text-align: center;
-		border-radius: 50%;
 		margin: 0 auto;
-		padding: 50px;
+		max-width: 100%;
+		filter: invert(50%);
 	}
 	.weatherDescription {
 		flex: 1 1 100%;
