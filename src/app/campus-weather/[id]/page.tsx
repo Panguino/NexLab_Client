@@ -71,6 +71,8 @@ const Page = async ({ params }: NextPageProps) => {
 
 		const cod_wxbug_data = await cod_wxbug_res.json()
 
+		// console.log(cod_wxbug_data)
+		const dataSource = 'cod'
 		const temperature = cod_wxbug_data.temp
 		const dewpoint = cod_wxbug_data.dewp
 		const apparentTemperature = cod_wxbug_data.atemp
@@ -78,9 +80,25 @@ const Page = async ({ params }: NextPageProps) => {
 		const windSpeed = cod_wxbug_data.wind.mag
 		const windDirection = cod_wxbug_data.wind.dir.abbr
 		const textDescription = cod_wxbug_data.wx.wxtitle
-		current_conditions = { temperature, dewpoint, apparentTemperature, relativeHumidity, windSpeed, windDirection, textDescription }
+		const icon = cod_wxbug_data.wx.symbol
+		const dayNight = cod_wxbug_data.dayNight
+		const sky = cod_wxbug_data.sky < 8 ? 'bkn' : 'ovc'
 
-		// console.log({ cod_wxbug_data }, cod_wxbug_data.wind)
+		current_conditions = {
+			dataSource,
+			dayNight,
+			temperature,
+			dewpoint,
+			apparentTemperature,
+			relativeHumidity,
+			windSpeed,
+			windDirection,
+			sky,
+			textDescription,
+			icon,
+		}
+
+		console.log({ cod_wxbug_data })
 	} else {
 		// Our Office products
 		// adding that leading K is only a problem if somehow we expand this service outside the CONUS
@@ -120,7 +138,7 @@ const Page = async ({ params }: NextPageProps) => {
 
 		const api_obs_data = await api_obs_res.json()
 
-		console.log(api_obs_data['@graph'][0])
+		// console.log(api_obs_data['@graph'][0])
 
 		let { temperature } = api_obs_data['@graph'][0]
 		const { windChill, heatIndex } = api_obs_data['@graph'][0]
@@ -134,6 +152,7 @@ const Page = async ({ params }: NextPageProps) => {
 			apparentTemperature = temperature.value
 		}
 
+		const dataSource = 'api'
 		temperature = celsiusToFahrenheit(api_obs_data['@graph'][0].temperature.value)
 		const dewpoint = celsiusToFahrenheit(api_obs_data['@graph'][0].dewpoint.value)
 		apparentTemperature = celsiusToFahrenheit(apparentTemperature)
@@ -142,7 +161,38 @@ const Page = async ({ params }: NextPageProps) => {
 		const windDirection = getCompassDirection(api_obs_data['@graph'][0].windDirection.value)
 		const textDescription = api_obs_data['@graph'][0].textDescription
 		const icon = api_obs_data['@graph'][0].icon
-		current_conditions = { temperature, dewpoint, apparentTemperature, relativeHumidity, windSpeed, windDirection, textDescription, icon }
+		// const dayNight = icon.includes('day') ? 'day' : 'night'
+		const dayNight = null // this isn't needed for api calls, just need var set to null
+		let sky = api_obs_data['@graph'][0].cloudLayers.amount
+
+		switch (sky) {
+			case 'CLR':
+			case 'FEW':
+			case 'SCT':
+			case 'BKN':
+				sky = 'bkn' // all treated as 'non-overcast'
+				break
+			case 'OVC':
+			case 'VV':
+				sky = 'ovc' // all treated as overcast
+				break
+			default:
+				sky = 'ovc' // totally fine to catch any anomalies this way
+				break
+		}
+		current_conditions = {
+			dataSource,
+			dayNight,
+			temperature,
+			dewpoint,
+			apparentTemperature,
+			relativeHumidity,
+			windSpeed,
+			windDirection,
+			sky,
+			textDescription,
+			icon,
+		}
 	}
 
 	// Get 7 day forecast data
@@ -161,6 +211,8 @@ const Page = async ({ params }: NextPageProps) => {
 	}
 
 	const api_fcst_data = await api_fcst_res.json()
+
+	// console.log(api_fcst_data)
 
 	return (
 		<PageContentWrapper>
