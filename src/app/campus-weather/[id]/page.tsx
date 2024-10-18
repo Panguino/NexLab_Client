@@ -98,7 +98,7 @@ const Page = async ({ params }: NextPageProps) => {
 			icon,
 		}
 
-		console.log({ cod_wxbug_data })
+		// console.log({ cod_wxbug_data })
 	} else {
 		// Our Office products
 		// adding that leading K is only a problem if somehow we expand this service outside the CONUS
