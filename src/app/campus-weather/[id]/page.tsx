@@ -1,7 +1,8 @@
 import { getClient } from '@/apollo/apollo-client'
 import { NextPageProps } from '@/app/types'
 import { CampusWeatherDetail } from '@/components/blocks/CampusWeatherDetail/CampusWeatherDetail'
-import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
+// import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
+import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { getAPIdataFromLocation, getAPIforecast, getAPIweatherConditions, getCODweatherConditions } from '@/util/getCampusWeatherData'
 import { gql } from '@apollo/client'
 
@@ -53,13 +54,13 @@ const Page = async ({ params }: NextPageProps) => {
 	const api_fcst_data = await getAPIforecast(api_point_data)
 
 	return (
-		<PageContentWrapper>
+		<ScrollArea>
 			<CampusWeatherDetail
 				campusDetails={{ ...response.data.campus.data.attributes }}
 				currentWeatherData={current_conditions}
 				forecastData={api_fcst_data.periods}
 			/>
-		</PageContentWrapper>
+		</ScrollArea>
 	)
 }
 

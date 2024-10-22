@@ -2,24 +2,45 @@
 
 .CampusWeatherDetail {
 	display: flex;
-	flex: 1 1 33.33%;
-	flex-wrap: wrap;
+	flex-direction: column;
 	width: 100%;
+	padding: 10px 20px;
 
-	.CampusTitle {
-		flex: 1 1 100%;
-		text-align: center;
-	}
-	.Spacer {
-		flex: 2 1 auto; /* Takes up remaining space */
+	.topSectionContainer {
+		display: flex;
+		flex-direction: column;
+		background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
+			url('https://cdn.pixabay.com/photo/2018/03/11/12/14/raindrops-3216607_960_720.jpg'); /* placeholder, use campus image */
+		background-size: cover;
+		padding: 25px;
+		color: white;
+		border-radius: 15px;
+
+		.CampusTitle {
+			.logo {
+				width: 75px;
+				margin: 0 auto;
+				vertical-align: middle;
+				padding: 10px;
+			}
+			flex: 1 1;
+			text-align: center;
+		}
+
+		.CurrentDataContainer {
+			display: flex;
+			flex: 1 1;
+			width: 100%;
+
+			.conditionsContainer,
+			.skycamContainer,
+			.radarContainer {
+				display: flex;
+				flex: 1 1 33.33%;
+			}
+		}
 	}
 
-	.CampusLogo {
-		flex: 1 1;
-		text-align: center;
-		margin: auto;
-		padding: 50px;
-	}
 	.forecastTiles {
 		display: flex;
 		flex-wrap: nowrap;
@@ -36,10 +57,11 @@
 			border-radius: 12px;
 			overflow: hidden;
 
-			h3 {
+			h2 {
 				margin: 0;
 				padding: 5px 10px;
 				background-color: #2677f0;
+				color: white;
 				font-family: sans-serif;
 				font-size: 16px;
 				text-align: center;
@@ -52,6 +74,16 @@
 
 				.CampusForecastTileContentDay,
 				.CampusForecastTileContentNight {
+					.tilePortionTitle {
+						border-radius: 5px;
+						background-color: var(--color-grey5-grey15);
+						margin: 10px;
+					}
+					.temperatureLabel {
+						font-size: 16px;
+						margin: 0;
+						padding: 0;
+					}
 					img {
 						width: 75px;
 						filter: invert(50%);
@@ -73,13 +105,16 @@
 		flex: 1 1 100%;
 		.period {
 			padding: 20px;
-			h3,
+			h2,
 			p {
 				margin: 0;
 				padding: 0;
 			}
+			h2 {
+				font-size: 16px;
+			}
 			p {
-				font-size: 1em;
+				font-size: 14px;
 			}
 		}
 		.period:nth-child(odd) {

@@ -1,6 +1,6 @@
 // 'use client'
 
-import { convertAPIiconName } from '@/util/getCampusWeatherIcon'
+import { convertIconName } from '@/util/getCampusWeatherIcon'
 import styles from './CampusWeatherDetail.module.scss'
 import { CurrentConditions } from './CurrentConditions/CurrentConditions'
 
@@ -18,24 +18,25 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 			// naturally skips night periods in the loop, barring a leading night period
 			tileObj['title'] = `${period.name} ${dateName}`
 			tileObj['day'] = {}
-			tileObj['day']['icon'] = convertAPIiconName(period.icon)
+			tileObj['day']['icon'] = convertIconName(period.icon, null, 'day', 'api')
 			tileObj['day']['temperature'] = `${period.temperature}\u00B0`
 			tileObj['day']['wind'] = period.windSpeed
 			tileObj['day']['precip'] = period.probabilityOfPrecipitation.value
 			if (forecastData[index + 1] !== undefined) {
 				// since we skip night periods, we need to populate the night period now
 				tileObj['night'] = {}
-				tileObj['night']['icon'] = convertAPIiconName(forecastData[index + 1].icon)
+				tileObj['night']['icon'] = convertIconName(forecastData[index + 1].icon, null, 'day', 'api')
 				tileObj['night']['temperature'] = `${forecastData[index + 1].temperature}\u00B0`
 				tileObj['night']['wind'] = forecastData[index + 1].windSpeed
 				tileObj['night']['precip'] = forecastData[index + 1].probabilityOfPrecipitation.value
 			}
 			tileData.push(tileObj)
 		} else if (!period.isDaytime && forecastData[index - 1] === undefined) {
-			// catch the first night period
+			// catch a leading solo night period
+			// exclude date in title on this occasion, once passed midnight it will match "tomorrow's" date and appear confusing
 			tileObj['title'] = period.name.replace(' Night', '')
 			tileObj['night'] = {}
-			tileObj['night']['icon'] = convertAPIiconName(period.icon)
+			tileObj['night']['icon'] = convertIconName(period.icon, null, 'day', 'api')
 			tileObj['night']['temperature'] = `${period.temperature}\u00B0`
 			tileObj['night']['wind'] = period.windSpeed
 			tileObj['night']['precip'] = period.probabilityOfPrecipitation.value
@@ -46,20 +47,29 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 
 	return (
 		<div className={styles.CampusWeatherDetail}>
-			<h2 className={styles.CampusTitle}>{Name}</h2>
-			<CurrentConditions currentWeatherData={currentWeatherData} />
-			<div className={styles.Spacer}></div>
-			<img src={Logo.data.attributes.url} className={styles.CampusLogo} />
+			<div className={styles.topSectionContainer}>
+				<h2 className={styles.CampusTitle}>
+					<img src={Logo.data.attributes.url} className={styles.logo} />
+					{Name}
+				</h2>
+				<div className={styles.CurrentDataContainer}>
+					<div className={styles.conditionsContainer}>
+						<CurrentConditions currentWeatherData={currentWeatherData} />
+					</div>
+					<div className={styles.skycamContainer}>{/* <SkyCam /> */}</div>
+					<div className={styles.radarContainer}>{/* <Radar /> */}</div>
+				</div>
+			</div>
 			<div className={styles.forecastTiles}>
 				{tileData.map((tile, index) => (
 					<div key={index} className={styles.CampusForecastTile}>
-						<h3>{tile.title}</h3>
+						<h2>{tile.title}</h2>
 						<div className={styles.CampusForecastTileContent}>
 							{tile.day !== undefined ? (
 								<div className={styles.CampusForecastTileContentDay}>
-									<p>Day</p>
+									<p className={styles.tilePortionTitle}>Day</p>
 									<img src={tile.day.icon} />
-									<p>H: {tile.day.temperature}</p>
+									<p className={styles.temperatureLabel}>H: {tile.day.temperature}</p>
 									<p>{tile.day.wind}</p>
 								</div>
 							) : (
@@ -67,9 +77,9 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 							)}
 							{tile.night !== undefined ? (
 								<div className={styles.CampusForecastTileContentNight}>
-									<p>Night</p>
+									<p className={styles.tilePortionTitle}>Night</p>
 									<img src={tile.night.icon} />
-									<p>L: {tile.night.temperature}</p>
+									<p className={styles.temperatureLabel}>L: {tile.night.temperature}</p>
 									<p>{tile.night.wind}</p>
 								</div>
 							) : (
@@ -82,7 +92,7 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 			<div className={styles.CampusForecastContainer}>
 				{forecastData.map((period, index) => (
 					<div key={index} className={styles.period}>
-						<h3>{period.name}</h3>
+						<h2>{period.name}</h2>
 						<p>{period.detailedForecast}</p>
 					</div>
 				))}
