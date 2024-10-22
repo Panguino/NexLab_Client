@@ -2,7 +2,7 @@
 import AuthMenuStatusInfo from '@/components/elements/AuthMenuStatusInfo/AuthMenuStatusInfo'
 import DarkmodeToggler from '@/components/elements/DarkmodeToggler/DarkmodeToggler'
 import HamburgerMenuIcon from '@/components/elements/HamburgerMenuIcon/HamburgerMenuIcon'
-import SearchIcon from '@/components/elements/SearchIcon/SearchIcon'
+import SearchIcon from '@/components/elements/icons/SearchIcon/SearchIcon'
 import { useRootStore } from '@/store/useRootStore'
 import Link from 'next/link'
 import MobileMenu from '../MobileMenu/MobileMenu'
@@ -28,14 +28,14 @@ const Navigation = ({ mobileMenuItems }) => {
 					<Link href="/academics/">
 						<div className={styles.NavItem}>Academics</div>
 					</Link>
-					<Link href="/academics/storm-chasing/">
+					<Link href="/storm-chasing/">
 						<div className={styles.NavItem}>Storm Chasing</div>
 					</Link>
 					<Link href="/campus-weather/">
 						<div className={styles.NavItem}>Local Weather</div>
 					</Link>
-					<Link href="/faqs/">
-						<div className={styles.NavItem}>FAQs</div>
+					<Link href="/donate/">
+						<div className={styles.NavItem}>Donate</div>
 					</Link>
 				</div>
 				<div className={styles.NavItems}>

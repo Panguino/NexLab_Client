@@ -3,14 +3,21 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
-import styles from './LinkAccordian.module.scss'
+import styles from './Accordian.module.scss'
 
-export const LinkAccordian = ({ title, children }) => {
-	const [open, setOpen] = useState(true)
+interface AccordianProps {
+	title: string
+	children: React.ReactNode
+	initiallyClosed?: boolean
+	variant?: 'default' | 'line'
+}
+
+export const Accordian = ({ title, children, initiallyClosed = false, variant = 'default' }: AccordianProps) => {
+	const [open, setOpen] = useState(!initiallyClosed)
 	return (
-		<div className={styles.LinkAccordian}>
+		<div className={styles.accordian}>
 			<div
-				className={styles.title}
+				className={`${styles.title} ${styles[`variant-${variant}`]}`}
 				onClick={() => {
 					setOpen(!open)
 				}}

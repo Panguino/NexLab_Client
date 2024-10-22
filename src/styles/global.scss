@@ -40,6 +40,8 @@ $themes: (
     "blue2": #233544,
     "blue3": #2677f0,
     "blue4": #0ec5ff,
+    "blue5": #154da1,
+    "blue6": #0c2a58,
   ),
 );
 
@@ -114,7 +116,7 @@ body {
   word-break: break-word;
 }
 a {
-  color: black;
+  color: var(--color-blue3-blue4);
 }
 a:hover {
   text-decoration: underline;
@@ -152,10 +154,11 @@ h6 {
 }
 p {
   font-family: Inter;
-  font-size: 18px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 30px;
+  line-height: 26px;
+  color: var(--color-grey16-grey5);
 }
 ul,
 ol {

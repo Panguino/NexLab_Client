@@ -333,7 +333,7 @@ const iconLookupAPI = {
 	hurricane: weatherIcons[38],
 }
 
-export const convertAPIiconName = (icon_input, cloud_coverage_input = null) => {
+const convertAPIiconName = (icon_input, cloud_coverage_input = null) => {
 	const icon_parameters = icon_input.replace('https://api.weather.gov/icons/land/', '').replace('?size=medium', '').split('/')
 	const time_of_day = icon_parameters[0] // aka dayNight
 	let output, cloud_coverage
