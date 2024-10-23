@@ -1,7 +1,6 @@
 import { getClient } from '@/apollo/apollo-client'
 import { NextPageProps } from '@/app/types'
 import { CampusWeatherDetail } from '@/components/blocks/CampusWeatherDetail/CampusWeatherDetail'
-// import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { getAPIdataFromLocation, getAPIforecast, getAPIweatherConditions, getCODweatherConditions } from '@/util/getCampusWeatherData'
 import { gql } from '@apollo/client'
@@ -37,6 +36,7 @@ const Page = async ({ params }: NextPageProps) => {
 
 	// Collect data from NWS API based on campus location
 	const api_point_data = await getAPIdataFromLocation(Latitude, Longitude)
+	// console.log(api_point_data)
 
 	// Determine where current conditions are coming from
 	let current_conditions = null

@@ -17,12 +17,12 @@
 	}
 	.weatherHeadlineContainer {
 		flex: 1 1 100%;
-		.weatherDescription {
-			text-align: center;
-		}
+		text-align: center;
 		.airTemperature {
-			text-align: center;
 			font-size: 36px;
+		}
+		.weatherDescription {
+			font-size: 24px;
 		}
 	}
 	.valuesContainer {

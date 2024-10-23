@@ -4,7 +4,7 @@
 	display: flex;
 	flex-direction: column;
 	width: 100%;
-	padding: 10px 20px;
+	padding: 20px;
 
 	.topSectionContainer {
 		display: flex;
@@ -12,9 +12,10 @@
 		background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
 			url('https://cdn.pixabay.com/photo/2018/03/11/12/14/raindrops-3216607_960_720.jpg'); /* placeholder, use campus image */
 		background-size: cover;
-		padding: 25px;
+		padding: 15px;
 		color: white;
 		border-radius: 15px;
+		margin-bottom: 20px;
 
 		.CampusTitle {
 			.logo {
@@ -25,6 +26,7 @@
 			}
 			flex: 1 1;
 			text-align: center;
+			margin: 0;
 		}
 
 		.CurrentDataContainer {
@@ -47,62 +49,14 @@
 		justify-content: center;
 		width: 100%;
 		gap: 10px;
-		margin: 25px auto;
-
-		.CampusForecastTile {
-			flex: 0 1 calc(12.5% - 10px); /* Allow tiles to grow and shrink, but not smaller than 125px */
-			box-sizing: border-box;
-			display: flex;
-			flex-direction: column;
-			border-radius: 12px;
-			overflow: hidden;
-
-			h2 {
-				margin: 0;
-				padding: 5px 10px;
-				background-color: #2677f0;
-				color: white;
-				font-family: sans-serif;
-				font-size: 16px;
-				text-align: center;
-				width: 100%; /* Ensures the h3 spans full width of the child */
-				box-sizing: border-box;
-			}
-			.CampusForecastTileContent {
-				display: flex;
-				justify-content: space-between;
-
-				.CampusForecastTileContentDay,
-				.CampusForecastTileContentNight {
-					.tilePortionTitle {
-						border-radius: 5px;
-						background-color: var(--color-grey5-grey15);
-						margin: 10px;
-					}
-					.temperatureLabel {
-						font-size: 16px;
-						margin: 0;
-						padding: 0;
-					}
-					img {
-						width: 75px;
-						filter: invert(50%);
-					}
-					p {
-						font-size: 12px;
-					}
-					flex: 1 1 50%; /* Each div takes up half the width */
-					box-sizing: border-box;
-					text-align: center;
-					color: var(--color-grey18-grey2);
-					background-color: var(--color-grey2-grey18); /* Optional, just for visibility */
-				}
-			}
-		}
+		margin: 0 auto 20px auto;
 	}
 
 	.CampusForecastContainer {
-		flex: 1 1 100%;
+		flex: 1 1;
+		margin: 0 auto;
+		width: 100%;
+
 		.period {
 			padding: 20px;
 			h2,

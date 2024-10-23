@@ -3,11 +3,11 @@
 import { convertIconName } from '@/util/getCampusWeatherIcon'
 import styles from './CampusWeatherDetail.module.scss'
 import { CurrentConditions } from './CurrentConditions/CurrentConditions'
+import { ForecastTile } from './ForecastTiles/ForecastTile'
 
 export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDetails }) => {
 	const { Name, Logo } = campusDetails
 	const tileData = []
-	console.log(forecastData)
 
 	for (const [index, period] of forecastData.entries()) {
 		const tileObj = {}
@@ -43,7 +43,6 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 			tileData.push(tileObj)
 		}
 	}
-	console.log(tileData)
 
 	return (
 		<div className={styles.CampusWeatherDetail}>
@@ -62,31 +61,7 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 			</div>
 			<div className={styles.forecastTiles}>
 				{tileData.map((tile, index) => (
-					<div key={index} className={styles.CampusForecastTile}>
-						<h2>{tile.title}</h2>
-						<div className={styles.CampusForecastTileContent}>
-							{tile.day !== undefined ? (
-								<div className={styles.CampusForecastTileContentDay}>
-									<p className={styles.tilePortionTitle}>Day</p>
-									<img src={tile.day.icon} />
-									<p className={styles.temperatureLabel}>H: {tile.day.temperature}</p>
-									<p>{tile.day.wind}</p>
-								</div>
-							) : (
-								<div className={styles.CampusForecastTileContentDay}>&nbsp;</div>
-							)}
-							{tile.night !== undefined ? (
-								<div className={styles.CampusForecastTileContentNight}>
-									<p className={styles.tilePortionTitle}>Night</p>
-									<img src={tile.night.icon} />
-									<p className={styles.temperatureLabel}>L: {tile.night.temperature}</p>
-									<p>{tile.night.wind}</p>
-								</div>
-							) : (
-								<div className={styles.CampusForecastTileContentNight}>&nbsp;</div>
-							)}
-						</div>
-					</div>
+					<ForecastTile key={index} index={index} forecastTileData={tile} />
 				))}
 			</div>
 			<div className={styles.CampusForecastContainer}>
