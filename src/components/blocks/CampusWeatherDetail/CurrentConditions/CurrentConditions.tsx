@@ -20,13 +20,19 @@ export const CurrentConditions = ({ currentWeatherData }) => {
 	// console.log(currentWeatherData)
 	return (
 		<div className={styles.CurrentConditionsContainer}>
-			<img src={weatherIcon} className={styles.weatherSymbol} />
-			<div className={styles.airTemperature}>{temperature}&deg;F</div>
-			<div className={styles.weatherDescription}>{textDescription}</div>
-			<CurrentValue label="Feels Like" value={apparentTemperature + '\u00B0F'} />
-			<CurrentValue label="Dewpoint" value={dewpoint + '\u00B0F'} />
-			<CurrentValue label="Humidity" value={relativeHumidity + '%'} />
-			<CurrentValue label="Wind" value={windSpeed + 'mph (' + windDirection + ')'} />
+			<div className={styles.symbolContainer}>
+				<img src={weatherIcon} className={styles.weatherSymbol} />
+			</div>
+			<div className={styles.weatherHeadlineContainer}>
+				<div className={styles.airTemperature}>{temperature}&deg;F</div>
+				<div className={styles.weatherDescription}>{textDescription}</div>
+			</div>
+			<div className={styles.valuesContainer}>
+				<CurrentValue label="Feels Like" value={apparentTemperature + '\u00B0F'} />
+				<CurrentValue label="Dewpoint" value={dewpoint + '\u00B0F'} />
+				<CurrentValue label="Humidity" value={relativeHumidity + '%'} />
+				<CurrentValue label="Wind" value={windSpeed + 'mph (' + windDirection + ')'} />
+			</div>
 		</div>
 	)
 }
