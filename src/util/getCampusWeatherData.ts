@@ -178,7 +178,7 @@ export const getAPIweatherConditions = async (api_point_data) => {
 export const getAPIforecast = async (api_point_data) => {
 	// Get 7 day forecast data
 	const api_fcst_call = `${api_point_data.forecast}`
-	console.log(api_fcst_call)
+	// console.log(api_fcst_call)
 
 	// fetch fcst
 	const api_fcst_res = await fetch(api_fcst_call, {
