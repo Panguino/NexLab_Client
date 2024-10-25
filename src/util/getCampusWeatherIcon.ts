@@ -35,7 +35,7 @@ const weatherIcons = [
 	'blizzard',
 	'non_overcast_thunderstorm_day',
 	'non_overcast_thunderstorm_night',
-	'overcast_thunderstorm',
+	'thunderstorm',
 	'tornado',
 	'tropical_storm',
 	'hurricane',
