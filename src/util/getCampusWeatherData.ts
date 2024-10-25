@@ -1,4 +1,57 @@
+import { ForecastTile, IForecastTile } from '@/components/blocks/CampusWeatherDetail/ForecastTiles/ForecastTile'
 import { celsiusToFahrenheit, getCompassDirection, kphToMph } from '@/util/unitConversion'
+import { convertIconName } from './getCampusWeatherIcon'
+
+export const getForcastTileDataFromForecastData = (forecastData): (typeof ForecastTile)[] => {
+	const tileData = []
+
+	for (const [index, period] of forecastData.entries()) {
+		const tile: IForecastTile = {
+			title: '',
+			dayData: {
+				icon: '',
+				temp: '',
+				wind: '',
+			},
+			nightData: {
+				icon: '',
+				temp: '',
+				wind: '',
+			},
+			size: 'default',
+		}
+		const startTime = new Date(period.startTime)
+		const dateName = `${startTime.getMonth() + 1}/${startTime.getDate()}`
+
+		if (period.isDaytime) {
+			// naturally skips night periods in the loop, barring a leading night period
+			tile.title = `${period.name} ${dateName}`
+			tile.dayData.icon = convertIconName(period.icon, null, 'day', 'api')
+			tile.dayData.temp = `${period.temperature}\u00B0`
+			tile.dayData.wind = period.windSpeed
+			// period.probabilityOfPrecipitation.value
+			if (forecastData[index + 1] !== undefined) {
+				// since we skip night periods, we need to populate the night period now
+				tile.nightData.icon = convertIconName(forecastData[index + 1].icon, null, 'day', 'api')
+				tile.nightData.temp = `${forecastData[index + 1].temperature}\u00B0`
+				tile.nightData.wind = forecastData[index + 1].windSpeed
+				// forecastData[index + 1].probabilityOfPrecipitation.value
+			}
+			tileData.push(tile)
+		} else if (!period.isDaytime && forecastData[index - 1] === undefined) {
+			// catch a leading solo night period
+			// exclude date in title on this occasion, once passed midnight it will match "tomorrow's" date and appear confusing
+			tile.title = period.name.replace(' Night', '')
+			tile.nightData.icon = convertIconName(period.icon, null, 'day', 'api')
+			tile.nightData.temp = `${period.temperature}\u00B0`
+			tile.nightData.wind = period.windSpeed
+			// period.probabilityOfPrecipitation.value
+			tileData.push(tile)
+		}
+	}
+
+	return tileData
+}
 
 export const getAPIdataFromLocation = async (Latitude, Longitude) => {
 	// Construct the URL for the weather API request

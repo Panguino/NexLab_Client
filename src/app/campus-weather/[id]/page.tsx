@@ -1,46 +1,27 @@
-import { getClient } from '@/apollo/apollo-client'
+import { getCampusById } from '@/apollo/strapi/getCampusById'
 import { NextPageProps } from '@/app/types'
 import { CampusWeatherDetail } from '@/components/blocks/CampusWeatherDetail/CampusWeatherDetail'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
-import { getAPIdataFromLocation, getAPIforecast, getAPIweatherConditions, getCODweatherConditions } from '@/util/getCampusWeatherData'
-import { gql } from '@apollo/client'
+import {
+	getAPIdataFromLocation,
+	getAPIforecast,
+	getAPIweatherConditions,
+	getCODweatherConditions,
+	getForcastTileDataFromForecastData,
+} from '@/util/getCampusWeatherData'
 
 const Page = async ({ params }: NextPageProps) => {
-	const response = await getClient().query({
-		query: gql`
-            query {
-                campus(id: ${params.id}) {
-                    data {
-                        id
-                        attributes {							
-                            Name
-                            Latitude
-                            Longitude
-                            Logo {
-                                data {
-                                    attributes {
-                                        url
-                                    }
-                                }
-                            }
-							uniqueWeatherConditions
-                        }
-                    }
-                }
-            }
-        `,
-	})
+	const campusData = await getCampusById(params.id)
 
 	// Return from the DB
-	const { Latitude, Longitude } = response.data.campus.data.attributes
+	const { Latitude, Longitude } = campusData
 
 	// Collect data from NWS API based on campus location
 	const api_point_data = await getAPIdataFromLocation(Latitude, Longitude)
-	// console.log(api_point_data)
 
 	// Determine where current conditions are coming from
 	let current_conditions = null
-	if (response.data.campus.data.attributes.uniqueWeatherConditions) {
+	if (campusData.uniqueWeatherConditions) {
 		current_conditions = await getCODweatherConditions()
 	} else {
 		// Our Office products
@@ -53,10 +34,17 @@ const Page = async ({ params }: NextPageProps) => {
 	// Collect 7 day forecast from NWS API
 	const api_fcst_data = await getAPIforecast(api_point_data)
 
+	console.log('api_fcst_data', api_fcst_data)
+	console.log('current_conditions', current_conditions)
+	console.log('api_point_data', campusData)
+
+	const tileData = getForcastTileDataFromForecastData(api_fcst_data.periods)
+
 	return (
 		<ScrollArea>
 			<CampusWeatherDetail
-				campusDetails={{ ...response.data.campus.data.attributes }}
+				campusDetails={{ ...campusData }}
+				tileData={tileData}
 				currentWeatherData={current_conditions}
 				forecastData={api_fcst_data.periods}
 			/>

@@ -1,54 +1,55 @@
-.CampusForecastTile {
-	flex: 0 1 calc(12.5% - 10px); /* Allow tiles to grow and shrink, but not smaller than 125px */
-	box-sizing: border-box;
-	display: flex;
-	flex-direction: column;
-	border-radius: 12px;
-	overflow: hidden;
+.ForecastTile {
+  flex: 0 1 calc(12.5% - 10px); /* Allow tiles to grow and shrink, but not smaller than 125px */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 100%;
 
-	h2 {
-		margin: 0;
-		padding: 5px 10px;
-		background-color: #2677f0;
-		color: white;
-		font-family: sans-serif;
-		font-size: 16px;
-		text-align: center;
-		width: 100%; /* Ensures the h3 spans full width of the child */
-		box-sizing: border-box;
-	}
-	.CampusForecastTileContent {
-		display: flex;
-		justify-content: space-between;
+  h2 {
+    margin: 0;
+    padding: 8px 10px;
+    background-color: var(--color-blue3);
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
+    box-sizing: border-box;
+  }
+  .content {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: var(--color-grey2-grey18);
 
-		.CampusForecastTileContentDay,
-		.CampusForecastTileContentNight {
-			.tilePortionTitle {
-				border-radius: 5px;
-				background-color: var(--color-grey5-grey15);
-				margin: 10px;
-			}
-			.temperatureLabel {
-				font-size: 16px;
-				margin: 0;
-				padding-bottom: 10px;
-			}
-			.windLabel {
-				margin: 0;
-				padding-bottom: 10px;
-			}
-			img {
-				width: 75px;
-				filter: invert(50%);
-			}
-			p {
-				font-size: 12px;
-			}
-			flex: 1 1 50%; /* Each div takes up half the width */
-			box-sizing: border-box;
-			text-align: center;
-			color: var(--color-grey18-grey2);
-			background-color: var(--color-grey2-grey18); /* Optional, just for visibility */
-		}
-	}
+    .info {
+      flex: 1 1 50%;
+      text-align: center;
+      color: var(--color-grey18-grey2);
+
+      h3 {
+        font-family: var(--font-primary);
+        font-weight: 500;
+        font-size: 14px;
+        text-transform: uppercase;
+      }
+      img {
+        width: 75px;
+        filter: invert(50%);
+      }
+      p {
+        font-size: 12px;
+      }
+      .temp {
+        font-size: 16px;
+        margin: 0;
+        padding-bottom: 10px;
+      }
+      .wind {
+        margin: 0;
+        padding-bottom: 10px;
+      }
+    }
+  }
 }
