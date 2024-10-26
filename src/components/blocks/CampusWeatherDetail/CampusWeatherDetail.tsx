@@ -1,11 +1,8 @@
-// 'use client'
-
-import { convertIconName } from '@/util/getCampusWeatherIcon'
 import styles from './CampusWeatherDetail.module.scss'
 import { CurrentConditions } from './CurrentConditions/CurrentConditions'
 import { ForecastTile } from './ForecastTiles/ForecastTile'
 
-export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDetails }) => {
+export const CampusWeatherDetail = ({ currentWeatherData, tileData, forecastData, campusDetails }) => {
 	const { Name, Logo } = campusDetails
 	const tileData = []
 
@@ -60,8 +57,8 @@ export const CampusWeatherDetail = ({ currentWeatherData, forecastData, campusDe
 				</div>
 			</div>
 			<div className={styles.forecastTiles}>
-				{tileData.map((tile, index) => (
-					<ForecastTile key={index} index={index} forecastTileData={tile} />
+				{tileData.map(({ title, dayData, nightData, size }, index) => (
+					<ForecastTile key={index} title={title} dayData={dayData} nightData={nightData} size={size} />
 				))}
 			</div>
 			<div className={styles.CampusForecastContainer}>
