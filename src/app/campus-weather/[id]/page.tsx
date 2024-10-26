@@ -34,9 +34,10 @@ const Page = async ({ params }: NextPageProps) => {
 	// Collect 7 day forecast from NWS API
 	const api_fcst_data = await getAPIforecast(api_point_data)
 
-	console.log('api_fcst_data', api_fcst_data)
-	console.log('current_conditions', current_conditions)
-	console.log('api_point_data', campusData)
+	// console.log('LOGGING IN CAMPUS PAGE')
+	// console.log('api_fcst_data', api_fcst_data)
+	// console.log('current_conditions', current_conditions)
+	// console.log('campusData', campusData)
 
 	const tileData = getForcastTileDataFromForecastData(api_fcst_data.periods)
 

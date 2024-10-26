@@ -4,7 +4,13 @@ import WidgetWrapper from '@/components/blocks/WidgetWrapper/WidgetWrapper'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import SideInfo from '@/components/layout/SideInfo/SideInfo'
 import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
-import { getAPIdataFromLocation, getAPIforecast, getAPIweatherConditions, getCODweatherConditions } from '@/util/getCampusWeatherData'
+import {
+	getAPIdataFromLocation,
+	getAPIforecast,
+	getAPIweatherConditions,
+	getCODweatherConditions,
+	getForcastTileDataFromForecastData,
+} from '@/util/getCampusWeatherData'
 import { gql } from '@apollo/client'
 
 const Page = async () => {
@@ -49,7 +55,14 @@ const Page = async () => {
 				current_conditions = await getAPIweatherConditions(campusAPIdata)
 			}
 			const forecastData = await getAPIforecast(campusAPIdata)
-			return { id: campus.id, conditions: current_conditions, forecast: forecastData }
+			const forecastTileData = getForcastTileDataFromForecastData(forecastData.periods, 'small')
+			const widgetConditions = {
+				temp: current_conditions.temperature,
+				feels: current_conditions.apparentTemperature,
+				humidity: current_conditions.relativeHumidity,
+				icon: current_conditions.icon,
+			}
+			return { id: campus.id, conditions: widgetConditions, forecast: forecastTileData.slice(0, 2) }
 		})
 
 		campusWeather = await Promise.all(source_promises)
@@ -57,7 +70,6 @@ const Page = async () => {
 	}
 
 	campusWeather = await fetchSources()
-	console.log(campusWeather)
 
 	return (
 		<>
@@ -87,7 +99,7 @@ const Page = async () => {
 					<WidgetWrapper>
 						{campuses.map((campus) => {
 							const weatherData = campusWeather.find((weather) => weather.id === campus.id)
-							return <CampusWidget campusDetails={campus} weatherData={weatherData} />
+							return <CampusWidget key={campus.id} campusDetails={campus} weatherData={weatherData} />
 						})}
 					</WidgetWrapper>
 				</ScrollArea>

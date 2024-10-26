@@ -2,7 +2,7 @@ import { ForecastTile, IForecastTile } from '@/components/blocks/CampusWeatherDe
 import { celsiusToFahrenheit, getCompassDirection, kphToMph } from '@/util/unitConversion'
 import { convertIconName } from './getCampusWeatherIcon'
 
-export const getForcastTileDataFromForecastData = (forecastData): (typeof ForecastTile)[] => {
+export const getForcastTileDataFromForecastData = (forecastData, size = 'default'): (typeof ForecastTile)[] => {
 	const tileData = []
 
 	for (const [index, period] of forecastData.entries()) {
@@ -18,7 +18,7 @@ export const getForcastTileDataFromForecastData = (forecastData): (typeof Foreca
 				temp: '',
 				wind: '',
 			},
-			size: 'default',
+			size: size !== 'default' ? 'small' : 'default',
 		}
 		const startTime = new Date(period.startTime)
 		const dateName = `${startTime.getMonth() + 1}/${startTime.getDate()}`
@@ -32,7 +32,7 @@ export const getForcastTileDataFromForecastData = (forecastData): (typeof Foreca
 			// period.probabilityOfPrecipitation.value
 			if (forecastData[index + 1] !== undefined) {
 				// since we skip night periods, we need to populate the night period now
-				tile.nightData.icon = convertIconName(forecastData[index + 1].icon, null, 'day', 'api')
+				tile.nightData.icon = convertIconName(forecastData[index + 1].icon, null, 'night', 'api')
 				tile.nightData.temp = `${forecastData[index + 1].temperature}\u00B0`
 				tile.nightData.wind = forecastData[index + 1].windSpeed
 				// forecastData[index + 1].probabilityOfPrecipitation.value
@@ -42,7 +42,7 @@ export const getForcastTileDataFromForecastData = (forecastData): (typeof Foreca
 			// catch a leading solo night period
 			// exclude date in title on this occasion, once passed midnight it will match "tomorrow's" date and appear confusing
 			tile.title = period.name.replace(' Night', '')
-			tile.nightData.icon = convertIconName(period.icon, null, 'day', 'api')
+			tile.nightData.icon = convertIconName(period.icon, null, 'night', 'api')
 			tile.nightData.temp = `${period.temperature}\u00B0`
 			tile.nightData.wind = period.windSpeed
 			// period.probabilityOfPrecipitation.value
@@ -100,9 +100,9 @@ export const getCODweatherConditions = async () => {
 	const windSpeed = cod_wxbug_data.wind.mag
 	const windDirection = cod_wxbug_data.wind.dir.abbr
 	const textDescription = cod_wxbug_data.wx.wxtitle
-	const icon = cod_wxbug_data.wx.symbol
 	const dayNight = cod_wxbug_data.dayNight
 	const sky = cod_wxbug_data.sky < 8 ? 'bkn' : 'ovc'
+	const icon = convertIconName(cod_wxbug_data.wx.symbol, sky, dayNight, dataSource)
 
 	const current_conditions = {
 		dataSource,
@@ -155,6 +155,7 @@ export const getAPIweatherConditions = async (api_point_data) => {
 
 	// Get Current Conditions from Nearest Observation Station, [0] = Nearest, limit=1 = Newest
 	const api_obs_call = `${api_station_data.observationStations[stationKey]}/observations?limit=1`
+	console.log('api ob call', api_obs_call)
 
 	// Fetch Current Conditions
 	const api_obs_res = await fetch(api_obs_call, {
@@ -192,11 +193,8 @@ export const getAPIweatherConditions = async (api_point_data) => {
 	const windSpeed = kphToMph(api_obs_data['@graph'][0].windSpeed.value)
 	const windDirection = getCompassDirection(api_obs_data['@graph'][0].windDirection.value)
 	const textDescription = api_obs_data['@graph'][0].textDescription
-	const icon = api_obs_data['@graph'][0].icon
-	// const dayNight = icon.includes('day') ? 'day' : 'night'
 	const dayNight = null // this isn't needed for api calls, just need var set to null
 	let sky = api_obs_data['@graph'][0].cloudLayers.amount
-
 	switch (sky) {
 		case 'CLR':
 		case 'FEW':
@@ -212,6 +210,8 @@ export const getAPIweatherConditions = async (api_point_data) => {
 			sky = 'ovc' // totally fine to catch any anomalies this way
 			break
 	}
+	const icon = convertIconName(api_obs_data['@graph'][0].icon, sky, dayNight, dataSource)
+
 	const current_conditions = {
 		dataSource,
 		dayNight,

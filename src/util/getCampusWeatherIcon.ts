@@ -334,55 +334,59 @@ const iconLookupAPI = {
 }
 
 const convertAPIiconName = (icon_input, cloud_coverage_input = null) => {
-	const icon_parameters = icon_input.replace('https://api.weather.gov/icons/land/', '').replace('?size=medium', '').split('/')
-	const time_of_day = icon_parameters[0] // aka dayNight
-	let output, cloud_coverage
-
-	if (icon_parameters.length > 2) {
-		// dual image - check for probability of precipitation and remove from string
-		const first_image = icon_parameters[1].includes(',') ? icon_parameters[1].split(',')[0] : icon_parameters[1]
-		const second_image = icon_parameters[2].includes(',') ? icon_parameters[2].split(',')[0] : icon_parameters[2]
-		const iconPriority = Object.keys(iconLookupAPI)
-		const higher_priority_icon = iconPriority.indexOf(first_image) < iconPriority.indexOf(second_image) ? second_image : first_image
-		const lower_priority_icon = iconPriority.indexOf(first_image) < iconPriority.indexOf(second_image) ? first_image : second_image
-		if (cloud_coverage_input !== null) {
-			cloud_coverage = cloud_coverage_input !== 'ovc' ? 'bkn' : 'ovc'
-		} else {
-			cloud_coverage = iconPriority.indexOf(lower_priority_icon) < iconPriority.indexOf('ovc') ? 'bkn' : 'ovc'
-		}
-
-		if (typeof iconLookupAPI[higher_priority_icon] === 'string') {
-			output = iconLookupAPI[higher_priority_icon]
-		} else if (typeof iconLookupAPI[higher_priority_icon][time_of_day] === 'string') {
-			output = iconLookupAPI[higher_priority_icon][time_of_day]
-		} else if (typeof iconLookupAPI[higher_priority_icon][time_of_day][cloud_coverage] === 'string') {
-			output = iconLookupAPI[higher_priority_icon][time_of_day][cloud_coverage]
-		} else {
-			output = 'unknown'
-		}
+	if (icon_input === null) {
+		return '/temp-icons/unknown.svg'
 	} else {
-		// single image - just use the first image in the string
-		const icon = icon_parameters[1].includes(',') ? icon_parameters[1].split(',')[0] : icon_parameters[1]
+		const icon_parameters = icon_input.replace('https://api.weather.gov/icons/land/', '').replace('?size=medium', '').split('/')
+		const time_of_day = icon_parameters[0] // aka dayNight
+		let output, cloud_coverage
 
-		// this step may not be necessary anymore, but ensures we select non-overcast variants when possible
-		if (cloud_coverage_input !== null) {
-			cloud_coverage = cloud_coverage_input !== 'ovc' ? 'bkn' : 'ovc'
-		} else {
-			cloud_coverage = 'ovc'
-		}
+		if (icon_parameters.length > 2) {
+			// dual image - check for probability of precipitation and remove from string
+			const first_image = icon_parameters[1].includes(',') ? icon_parameters[1].split(',')[0] : icon_parameters[1]
+			const second_image = icon_parameters[2].includes(',') ? icon_parameters[2].split(',')[0] : icon_parameters[2]
+			const iconPriority = Object.keys(iconLookupAPI)
+			const higher_priority_icon = iconPriority.indexOf(first_image) < iconPriority.indexOf(second_image) ? second_image : first_image
+			const lower_priority_icon = iconPriority.indexOf(first_image) < iconPriority.indexOf(second_image) ? first_image : second_image
+			if (cloud_coverage_input !== null) {
+				cloud_coverage = cloud_coverage_input !== 'ovc' ? 'bkn' : 'ovc'
+			} else {
+				cloud_coverage = iconPriority.indexOf(lower_priority_icon) < iconPriority.indexOf('ovc') ? 'bkn' : 'ovc'
+			}
 
-		if (typeof iconLookupAPI[icon] === 'string') {
-			output = iconLookupAPI[icon]
-		} else if (typeof iconLookupAPI[icon][time_of_day] === 'string') {
-			output = iconLookupAPI[icon][time_of_day]
-		} else if (typeof iconLookupAPI[icon][time_of_day][cloud_coverage] === 'string') {
-			output = iconLookupAPI[icon][time_of_day][cloud_coverage]
+			if (typeof iconLookupAPI[higher_priority_icon] === 'string') {
+				output = iconLookupAPI[higher_priority_icon]
+			} else if (typeof iconLookupAPI[higher_priority_icon][time_of_day] === 'string') {
+				output = iconLookupAPI[higher_priority_icon][time_of_day]
+			} else if (typeof iconLookupAPI[higher_priority_icon][time_of_day][cloud_coverage] === 'string') {
+				output = iconLookupAPI[higher_priority_icon][time_of_day][cloud_coverage]
+			} else {
+				output = 'unknown'
+			}
 		} else {
-			output = 'unknown'
+			// single image - just use the first image in the string
+			const icon = icon_parameters[1].includes(',') ? icon_parameters[1].split(',')[0] : icon_parameters[1]
+
+			// this step may not be necessary anymore, but ensures we select non-overcast variants when possible
+			if (cloud_coverage_input !== null) {
+				cloud_coverage = cloud_coverage_input !== 'ovc' ? 'bkn' : 'ovc'
+			} else {
+				cloud_coverage = 'ovc'
+			}
+
+			if (typeof iconLookupAPI[icon] === 'string') {
+				output = iconLookupAPI[icon]
+			} else if (typeof iconLookupAPI[icon][time_of_day] === 'string') {
+				output = iconLookupAPI[icon][time_of_day]
+			} else if (typeof iconLookupAPI[icon][time_of_day][cloud_coverage] === 'string') {
+				output = iconLookupAPI[icon][time_of_day][cloud_coverage]
+			} else {
+				output = 'unknown'
+			}
 		}
+		const icon_url = `/temp-icons/${output}.svg`
+		return icon_url
 	}
-	const icon_url = `/temp-icons/${output}.svg`
-	return icon_url
 }
 
 const convertCODiconName = (icon_input, cloud_coverage_input, dayNight) => {
@@ -409,7 +413,7 @@ export const convertIconName = (icon_input, cloud_coverage_input, dayNight, data
 			output = convertAPIiconName(icon_input, cloud_coverage_input) // dayNight derived from icon_input
 			break
 		default:
-			output = null
+			output = '/temp-icons/unknown.svg'
 			break
 	}
 	return output
