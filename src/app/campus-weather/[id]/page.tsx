@@ -2,6 +2,7 @@ import { getCampusById } from '@/apollo/strapi/getCampusById'
 import { NextPageProps } from '@/app/types'
 import { CampusWeatherDetail } from '@/components/blocks/CampusWeatherDetail/CampusWeatherDetail'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import { nexrad_data } from '@/util/dataCall'
 import {
 	getAPIdataFromLocation,
 	getAPIforecast,
@@ -34,11 +35,13 @@ const Page = async ({ params }: NextPageProps) => {
 	// Collect 7 day forecast from NWS API
 	const api_fcst_data = await getAPIforecast(api_point_data)
 
-	console.log('api_fcst_data', api_fcst_data)
-	console.log('current_conditions', current_conditions)
-	console.log('api_point_data', campusData)
+	// console.log('api_fcst_data', api_fcst_data)
+	// console.log('current_conditions', current_conditions)
+	// console.log('api_point_data', campusData)
 
 	const tileData = getForcastTileDataFromForecastData(api_fcst_data.periods)
+
+	const radarData = await nexrad_data('LOT', 'N0B', '24')
 
 	return (
 		<ScrollArea>
@@ -47,6 +50,7 @@ const Page = async ({ params }: NextPageProps) => {
 				tileData={tileData}
 				currentWeatherData={current_conditions}
 				forecastData={api_fcst_data.periods}
+				nexradData={radarData}
 			/>
 		</ScrollArea>
 	)

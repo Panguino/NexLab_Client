@@ -1,6 +1,4 @@
-import { nexrad_data } from '@/util/dataCall'
-
-export const getNexradData = async (site, product, frames) => {
-	const data = await nexrad_data(site, product, frames)
-	return data
+export const Animator = async (frames) => {
+	console.log(frames)
+	return <div>Animator</div>
 }

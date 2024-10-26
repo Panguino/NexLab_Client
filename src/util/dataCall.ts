@@ -15,6 +15,7 @@ export const nexrad_data = async (site, product, frames) => {
 	}
 
 	const nexrad_data_data = await nexrad_data_res.json()
+	const nexrad_data_files = nexrad_data_data.err === false ? nexrad_data_data.files : []
 
-	console.log(nexrad_data_data)
+	return nexrad_data_files
 }

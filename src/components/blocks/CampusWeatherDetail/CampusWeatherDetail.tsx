@@ -1,8 +1,9 @@
+import { Animator } from '@/components/elements/Animator/Animator'
 import styles from './CampusWeatherDetail.module.scss'
 import { CurrentConditions } from './CurrentConditions/CurrentConditions'
 import { ForecastTile } from './ForecastTiles/ForecastTile'
 
-export const CampusWeatherDetail = ({ currentWeatherData, tileData, forecastData, campusDetails }) => {
+export const CampusWeatherDetail = ({ currentWeatherData, tileData, forecastData, campusDetails, nexradData }) => {
 	const { Name, Logo } = campusDetails
 
 	return (
@@ -17,7 +18,9 @@ export const CampusWeatherDetail = ({ currentWeatherData, tileData, forecastData
 						<CurrentConditions currentWeatherData={currentWeatherData} />
 					</div>
 					<div className={styles.skycamContainer}>{/* <SkyCam /> */}</div>
-					<div className={styles.radarContainer}>{/* <Radar /> */}</div>
+					<div className={styles.radarContainer}>
+						<Animator frames={nexradData} />
+					</div>
 				</div>
 			</div>
 			<div className={styles.forecastTiles}>
