@@ -7,6 +7,7 @@ const meta: Meta<typeof Animator> = {
 	component: Animator,
 	argTypes: {
 		frames: { control: false },
+		interval: { control: { type: 'number' } },
 	},
 	decorators: [(Story) => <Providers>{Story()}</Providers>],
 }
@@ -22,6 +23,7 @@ const TemplateFactory = () => {
 
 export const simpleAutoPlay: StoryFn<typeof Animator> = TemplateFactory()
 simpleAutoPlay.args = {
+	interval: 0.25,
 	frames: [
 		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1144.gif',
 		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1151.gif',
