@@ -2,9 +2,10 @@
 	display: flex;
 	flex-flow: row wrap;
 	gap: 10px;
-	justify-content: space-evenly;
+	justify-content: center;
 	align-items: flex-start;
 	align-content: flex-start;
+	padding: 0 0 20px 0;
 
 	.widgetWrapperTitle {
 		font-size: 32px;

@@ -1,5 +1,6 @@
 import { getClient } from '@/apollo/apollo-client'
 import { CampusWidget } from '@/components/blocks/CampusWidget/CampusWidget'
+import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import WidgetWrapper from '@/components/blocks/WidgetWrapper/WidgetWrapper'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import SideInfo from '@/components/layout/SideInfo/SideInfo'
@@ -102,6 +103,7 @@ const Page = async () => {
 							return <CampusWidget key={campus.id} campusDetails={campus} weatherData={weatherData} />
 						})}
 					</WidgetWrapper>
+					<Footer />
 				</ScrollArea>
 			</SidebarWrapper>
 		</>

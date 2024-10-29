@@ -2,7 +2,7 @@
 	display: flex;
 	flex-flow: column nowrap;
 	flex: 1 1 25%;
-	max-width: 400px;
+	max-width: 350px;
 	border-radius: 20px;
 	overflow: hidden;
 	background-color: var(--color-grey1-grey8);
@@ -11,7 +11,8 @@
 
 	.campusTitle {
 		display: flex;
-		background-color: var(--color-grey5-grey15);
+		background-color: var(--color-grey15);
+		color: white;
 		margin: 0;
 		font-size: 14px;
 		height: 50px;
@@ -20,12 +21,61 @@
 		padding: 30px 10px;
 		text-align: right;
 		img {
-			width: 60px;
-			border-radius: 30px;
+			width: 50px;
+			border-radius: 25px;
 			overflow: hidden;
-			padding: 5px;
 			vertical-align: middle;
 			background-color: var(--color-grey5);
 		}
+	}
+	.conditionsContainer {
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-between;
+		align-items: stretch;
+		.icon {
+			flex: 2 2;
+			width: 40%;
+			height: 150px;
+		}
+		.temp {
+			flex: 1 1;
+			font-size: 28px;
+			font-weight: bold;
+			width: 30%;
+			text-align: center;
+			align-self: center;
+		}
+		.subValuesContainer {
+			flex: 2 2;
+			width: 30%;
+			display: flex;
+			flex-flow: column nowrap;
+			justify-content: center;
+			align-items: stretch;
+			.feels,
+			.humidity {
+				flex: 1 1;
+				width: 100%;
+				height: 75px;
+			}
+		}
+	}
+	.forecastContainer {
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-around;
+		align-items: stretch;
+		gap: 10px;
+		.tileContainer {
+			flex: 1 1 50%;
+			width: calc(50% - 20px);
+		}
+	}
+	.buttonContainer {
+		text-align: center;
+		width: fit-content;
+		padding: 10px;
+		margin: 0 auto;
 	}
 }

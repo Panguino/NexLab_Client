@@ -3,11 +3,13 @@ import { CurrentConditions } from './CurrentConditions/CurrentConditions'
 import { ForecastTile } from './ForecastTiles/ForecastTile'
 
 export const CampusWeatherDetail = ({ currentWeatherData, tileData, forecastData, campusDetails }) => {
-	const { Name, Logo } = campusDetails
+	const { Name, Logo, banner } = campusDetails
+	const banner_class = `banner${banner.data.id}`
+	console.log('logging in detail', campusDetails)
 
 	return (
 		<div className={styles.CampusWeatherDetail}>
-			<div className={styles.topSectionContainer}>
+			<div className={`${styles.topSectionContainer} ${styles[banner_class]}`}>
 				<h2 className={styles.CampusTitle}>
 					<img src={Logo.data.attributes.url} className={styles.logo} />
 					{Name}

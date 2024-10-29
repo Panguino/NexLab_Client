@@ -13,6 +13,14 @@ export const getCampusById = async (id: string) => {
                             Name
                             Latitude
                             Longitude
+                            banner {
+                                data {
+                                    id
+                                    attributes {
+                                        url
+                                    }
+                                }
+                            }
                             Logo {
                                 data {
                                     attributes {

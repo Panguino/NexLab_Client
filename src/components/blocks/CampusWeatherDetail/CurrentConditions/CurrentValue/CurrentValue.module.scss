@@ -1,8 +1,14 @@
 .parameter {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: center;
+	align-items: center;
 	flex: 1 1;
 	text-align: center;
 	.label {
 		font-size: 14px;
+		margin: 0;
+		padding: 10px 0;
 	}
 	.value {
 		font-size: 18px;

@@ -4,16 +4,42 @@
 	width: 100%;
 	padding: 20px;
 
+	--banner-dimming: linear-gradient(rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 33%, rgba(0, 0, 0, 0) 100%);
+
 	.topSectionContainer {
 		display: flex;
 		flex-direction: column;
-		background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)),
-			url('https://cdn.pixabay.com/photo/2018/03/11/12/14/raindrops-3216607_960_720.jpg'); /* placeholder, use campus image */
-		background-size: cover;
+		background-image: var(--banner-dimming), url('https://cdn.pixabay.com/photo/2018/03/11/12/14/raindrops-3216607_960_720.jpg'); /* placeholder, use campus image */
+		background-size: 100% auto;
 		padding: 15px;
 		color: white;
 		border-radius: 15px;
 		margin-bottom: 20px;
+
+		&.banner206 {
+			background-image: var(--banner-dimming), url('https://res.cloudinary.com/hyfzxgu1v/image/upload/v1730006297/cod_banner_5146665245.png');
+		}
+		&.banner199 {
+			background-image: var(--banner-dimming), url('https://res.cloudinary.com/hyfzxgu1v/image/upload/v1730006295/dgnhs_banner_e0ac031940.png');
+		}
+		&.banner204 {
+			background-image: var(--banner-dimming), url('https://res.cloudinary.com/hyfzxgu1v/image/upload/v1730006294/dgshs_banner_5ba7265f2f.png');
+		}
+		&.banner200 {
+			background-image: var(--banner-dimming), url('https://res.cloudinary.com/hyfzxgu1v/image/upload/v1730006295/lphs_banner_1ca6f3b47d.png');
+		}
+		&.banner201 {
+			background-image: var(--banner-dimming), url('https://res.cloudinary.com/hyfzxgu1v/image/upload/v1730006294/lhs_banner_9c5b510ebc.png');
+		}
+		&.banner203 {
+			background-image: var(--banner-dimming), url('https://res.cloudinary.com/hyfzxgu1v/image/upload/v1730006297/pnhs_banner_0c18dcd64c.png');
+		}
+		&.banner205 {
+			background-image: var(--banner-dimming), url('https://res.cloudinary.com/hyfzxgu1v/image/upload/v1730006294/wcchs_banner_e72b812861.png');
+		}
+		&.banner202 {
+			background-image: var(--banner-dimming), url('https://res.cloudinary.com/hyfzxgu1v/image/upload/v1730006295/navypier_74cc1252ac.png');
+		}
 
 		.CampusTitle {
 			.logo {
@@ -37,6 +63,11 @@
 			.radarContainer {
 				display: flex;
 				flex: 1 1 33.33%;
+			}
+			.conditionsContainer {
+				background-color: rgba(0, 0, 0, 0.5);
+				padding: 10px;
+				border-radius: 10px;
 			}
 		}
 	}
