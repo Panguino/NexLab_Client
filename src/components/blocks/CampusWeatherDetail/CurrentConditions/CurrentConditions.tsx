@@ -1,3 +1,4 @@
+import Sunny from '@/assets/icons/sunny.svg'
 import styles from './CurrentConditions.module.scss'
 import { CurrentValue } from './CurrentValue/CurrentValue'
 
@@ -9,6 +10,7 @@ export const CurrentConditions = ({ currentWeatherData }) => {
 		<div className={styles.CurrentConditionsContainer}>
 			<div className={styles.symbolContainer}>
 				<img src={icon} className={styles.weatherSymbol} />
+				<Sunny />
 			</div>
 			<div className={styles.weatherHeadlineContainer}>
 				<div className={styles.airTemperature}>{temperature}&deg;F</div>
