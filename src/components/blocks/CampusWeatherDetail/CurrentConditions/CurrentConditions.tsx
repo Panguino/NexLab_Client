@@ -9,7 +9,7 @@ export const CurrentConditions = ({ currentWeatherData }) => {
 	return (
 		<div className={styles.CurrentConditionsContainer}>
 			<div className={styles.symbolContainer}>
-				<img src={icon} className={styles.weatherSymbol} />
+				<img src={icon} className={styles.weatherSymbol} alt="" />
 				<Sunny />
 			</div>
 			<div className={styles.weatherHeadlineContainer}>
