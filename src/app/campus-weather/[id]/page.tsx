@@ -39,7 +39,7 @@ const Page = async ({ params }: NextPageProps) => {
 	// console.log('current_conditions', current_conditions)
 	// console.log('campusData', campusData)
 
-	const tileData = getForcastTileDataFromForecastData(api_fcst_data.periods)
+	const tileData = await getForcastTileDataFromForecastData(api_fcst_data.periods)
 
 	return (
 		<ScrollArea>

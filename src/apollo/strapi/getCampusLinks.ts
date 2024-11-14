@@ -6,24 +6,17 @@ export const getCampusLinks = async () => {
 	const campusLinksResponse = await getClient().query({
 		query: gql`
 			query {
-				menusMenu(id: "2") {
+				campusweatherLink {
 					data {
 						attributes {
-							title
-							slug
-							items(pagination: { limit: 1000 }) {
-								data {
+							LinkGroup {
+								id
+								Heading
+								Links {
 									id
-									attributes {
-										title
-										url
-										target
-										parent {
-											data {
-												id
-											}
-										}
-									}
+									text
+									url
+									target
 								}
 							}
 						}
@@ -32,5 +25,5 @@ export const getCampusLinks = async () => {
 			}
 		`,
 	})
-	return campusLinksResponse.data.menusMenu.data.attributes.items.data
+	return campusLinksResponse.data.campusweatherLink.data.attributes.LinkGroup
 }
