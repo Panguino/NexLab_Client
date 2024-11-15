@@ -1,4 +1,4 @@
-export const nexrad_data = async (site, product, frames) => {
+export const nexradData = async (site, product, frames) => {
 	// Construct the URL for the weather API request
 	const nexrad_data_call = `https://weather.cod.edu/satrad/nexrad/assets/php/get-files.php?parms=${site}-${product}-0-${frames}-100`
 

@@ -1,0 +1,23 @@
+.CampusForecastContainer {
+  flex: 1 1;
+  margin: 0 auto;
+  width: 100%;
+
+  .period {
+    padding: 20px;
+    h2,
+    p {
+      margin: 0;
+      padding: 0;
+    }
+    h2 {
+      font-size: 16px;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+  .period:nth-child(odd) {
+    background-color: var(--color-grey2-grey18);
+  }
+}

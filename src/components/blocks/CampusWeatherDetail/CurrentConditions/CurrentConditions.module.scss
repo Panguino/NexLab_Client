@@ -1,33 +1,34 @@
-.CurrentConditionsContainer {
-	display: flex;
-	flex-direction: column;
-	width: 100%;
+.currentConditions {
+  padding: 17px 35px;
+  background-color: var(--color-white-grey19);
+  transition: background-color var(--themeChange);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 23px;
 
-	.symbolContainer {
-		display: flex;
-		flex: 1 1 100%;
-		justify-content: center;
-		.weatherSymbol {
-			width: 100%;
-			max-width: 200px;
-			text-align: center;
-			margin: 0 auto;
-			filter: invert(100%);
-		}
-	}
-	.weatherHeadlineContainer {
-		flex: 1 1 100%;
-		text-align: center;
-		.airTemperature {
-			font-size: 36px;
-		}
-		.weatherDescription {
-			font-size: 24px;
-		}
-	}
-	.valuesContainer {
-		flex: 1 1 100%;
-		display: flex;
-		flex-direction: row;
-	}
+  .logo {
+    width: 216px;
+  }
+  .mainTemp {
+    border: 1px solid var(--color-grey5-grey15);
+    padding: 10px 30px;
+    text-align: center;
+    font-size: 38px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 47px;
+    letter-spacing: 1.259px;
+    color: var(--color-grey18-grey2);
+    transition: color var(--themeChange);
+  }
+  .detailsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, auto);
+    column-gap: 37px;
+    row-gap: 12px;
+    width: auto;
+  }
 }

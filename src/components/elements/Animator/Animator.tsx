@@ -1,12 +1,15 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import styles from './Animator.module.scss'
 
 interface IAnimator {
 	frames: string[]
+	hideControls?: boolean
+	autoPlay?: boolean
 	interval?: number // Time between frames in milliseconds
 }
 
-export const Animator = ({ frames, interval = 0.5 }: IAnimator) => {
+export const Animator = ({ frames, interval = 0.5, hideControls = false, autoPlay = false }: IAnimator) => {
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState<string[]>([])
@@ -61,14 +64,22 @@ export const Animator = ({ frames, interval = 0.5 }: IAnimator) => {
 		}
 	}
 
+	useEffect(() => {
+		if (loadedFrames.length > 0 && autoPlay) {
+			setIsPlaying(true)
+		}
+	}, [autoPlay, loadedFrames])
+
 	return (
-		<div>
+		<div className={styles.animator}>
 			{loadedFrames.length > 0 && <img width="300px" height="300px" src={loadedFrames[currentFrame]} alt={`Frame ${currentFrame}`} />}
-			<div>
-				<button onClick={play}>Play</button>
-				<button onClick={pause}>Pause</button>
-				<input type="range" min="0" max={loadedFrames.length - 1} value={currentFrame} onChange={(e) => seek(Number(e.target.value))} />
-			</div>
+			{!hideControls && (
+				<div>
+					<button onClick={play}>Play</button>
+					<button onClick={pause}>Pause</button>
+					<input type="range" min="0" max={loadedFrames.length - 1} value={currentFrame} onChange={(e) => seek(Number(e.target.value))} />
+				</div>
+			)}
 		</div>
 	)
 }

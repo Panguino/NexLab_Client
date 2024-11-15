@@ -1,6 +1,6 @@
 import { Button } from '@/components/elements/Button/Button'
 import { CurrentValue } from '../CampusWeatherDetail/CurrentConditions/CurrentValue/CurrentValue'
-import { ForecastTile } from '../CampusWeatherDetail/ForecastTiles/ForecastTile'
+import { ForecastTile } from '../CampusWeatherDetail/ForecastTiles/ForecastTile/ForecastTile'
 import styles from './CampusWidget.module.scss'
 
 export const CampusWidget = ({ campusDetails, weatherData }) => {

@@ -1,8 +1,8 @@
-import { ForecastTile, IForecastTile } from '@/components/blocks/CampusWeatherDetail/ForecastTiles/ForecastTile'
+import { IForecastTile } from '@/components/blocks/CampusWeatherDetail/ForecastTiles/ForecastTile/ForecastTile'
 import { celsiusToFahrenheit, getCompassDirection, kphToMph } from '@/util/unitConversion'
 import { convertIconName } from './getCampusWeatherIcon'
 
-export const getForcastTileDataFromForecastData = (forecastData, size = 'default'): (typeof ForecastTile)[] => {
+export const getForcastTileDataFromForecastData = (forecastData, size = 'default'): IForecastTile[] => {
 	const tileData = []
 
 	for (const [index, period] of forecastData.entries()) {
@@ -95,7 +95,7 @@ export const getCODweatherConditions = async () => {
 	const dataSource = 'cod'
 	const temperature = cod_wxbug_data.temp
 	const dewpoint = cod_wxbug_data.dewp
-	const apparentTemperature = cod_wxbug_data.atemp
+	const feelsLikeTemperature = cod_wxbug_data.atemp
 	const relativeHumidity = cod_wxbug_data.rhum
 	const windSpeed = cod_wxbug_data.wind.mag
 	const windDirection = cod_wxbug_data.wind.dir.abbr
@@ -109,7 +109,7 @@ export const getCODweatherConditions = async () => {
 		dayNight,
 		temperature,
 		dewpoint,
-		apparentTemperature,
+		feelsLikeTemperature,
 		relativeHumidity,
 		windSpeed,
 		windDirection,
@@ -176,19 +176,19 @@ export const getAPIweatherConditions = async (api_point_data) => {
 	let { temperature } = api_obs_data['@graph'][0]
 	const { windChill, heatIndex } = api_obs_data['@graph'][0]
 
-	let apparentTemperature
+	let feelsLikeTemperature
 	if (windChill.value !== null) {
-		apparentTemperature = windChill.value
+		feelsLikeTemperature = windChill.value
 	} else if (heatIndex.value !== null) {
-		apparentTemperature = heatIndex.value
+		feelsLikeTemperature = heatIndex.value
 	} else {
-		apparentTemperature = temperature.value
+		feelsLikeTemperature = temperature.value
 	}
 
 	const dataSource = 'api'
 	temperature = celsiusToFahrenheit(api_obs_data['@graph'][0].temperature.value)
 	const dewpoint = celsiusToFahrenheit(api_obs_data['@graph'][0].dewpoint.value)
-	apparentTemperature = celsiusToFahrenheit(apparentTemperature)
+	feelsLikeTemperature = celsiusToFahrenheit(feelsLikeTemperature)
 	const relativeHumidity = api_obs_data['@graph'][0].relativeHumidity.value.toFixed(0)
 	const windSpeed = kphToMph(api_obs_data['@graph'][0].windSpeed.value)
 	const windDirection = getCompassDirection(api_obs_data['@graph'][0].windDirection.value)
@@ -212,12 +212,12 @@ export const getAPIweatherConditions = async (api_point_data) => {
 	}
 	const icon = convertIconName(api_obs_data['@graph'][0].icon, sky, dayNight, dataSource)
 
-	const current_conditions = {
+	const currentConditions = {
 		dataSource,
 		dayNight,
 		temperature,
 		dewpoint,
-		apparentTemperature,
+		feelsLikeTemperature,
 		relativeHumidity,
 		windSpeed,
 		windDirection,
@@ -225,7 +225,7 @@ export const getAPIweatherConditions = async (api_point_data) => {
 		textDescription,
 		icon,
 	}
-	return current_conditions
+	return currentConditions
 }
 
 export const getAPIforecast = async (api_point_data) => {
