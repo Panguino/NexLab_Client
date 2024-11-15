@@ -13,7 +13,7 @@ export const CampusOverview = ({ campusImage, currentConditions, radarImageSeque
 		<div className={styles.campusOverview}>
 			<div className={styles.campusImageContainer} style={{ backgroundImage: `url('${campusImage}')` }} />
 			<CurrentConditions {...currentConditions} />
-			<Animator frames={radarImageSequence} hideControls autoPlay interval={0.1} />
+			<Animator frames={radarImageSequence} autoPlay hideControls interval={0.1} />
 		</div>
 	)
 }

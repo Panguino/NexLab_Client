@@ -2,6 +2,14 @@ import { IForecastTile } from '@/components/blocks/CampusWeatherDetail/ForecastT
 import { celsiusToFahrenheit, getCompassDirection, kphToMph } from '@/util/unitConversion'
 import { convertIconName } from './getCampusWeatherIcon'
 
+const parseWindSpeed = (windSpeed) => {
+	if (windSpeed === null) {
+		return '--'
+	}
+	const parsedWindSpeed = windSpeed.replace('mph', '').replace(' to ', '-')
+	return parsedWindSpeed
+}
+
 export const getForcastTileDataFromForecastData = (forecastData, size = 'default'): IForecastTile[] => {
 	const tileData = []
 
@@ -27,14 +35,14 @@ export const getForcastTileDataFromForecastData = (forecastData, size = 'default
 			// naturally skips night periods in the loop, barring a leading night period
 			tile.title = `${period.name} ${dateName}`
 			tile.dayData.icon = convertIconName(period.icon, null, 'day', 'api')
-			tile.dayData.temp = `${period.temperature}\u00B0`
-			tile.dayData.wind = period.windSpeed
+			tile.dayData.temp = period.temperature
+			tile.dayData.wind = parseWindSpeed(period.windSpeed)
 			// period.probabilityOfPrecipitation.value
 			if (forecastData[index + 1] !== undefined) {
 				// since we skip night periods, we need to populate the night period now
 				tile.nightData.icon = convertIconName(forecastData[index + 1].icon, null, 'night', 'api')
-				tile.nightData.temp = `${forecastData[index + 1].temperature}\u00B0`
-				tile.nightData.wind = forecastData[index + 1].windSpeed
+				tile.nightData.temp = forecastData[index + 1].temperature
+				tile.nightData.wind = parseWindSpeed(forecastData[index + 1].windSpeed)
 				// forecastData[index + 1].probabilityOfPrecipitation.value
 			}
 			tileData.push(tile)
@@ -43,8 +51,8 @@ export const getForcastTileDataFromForecastData = (forecastData, size = 'default
 			// exclude date in title on this occasion, once passed midnight it will match "tomorrow's" date and appear confusing
 			tile.title = period.name.replace(' Night', '')
 			tile.nightData.icon = convertIconName(period.icon, null, 'night', 'api')
-			tile.nightData.temp = `${period.temperature}\u00B0`
-			tile.nightData.wind = period.windSpeed
+			tile.nightData.temp = period.temperature
+			tile.nightData.wind = parseWindSpeed(period.windSpeed)
 			// period.probabilityOfPrecipitation.value
 			tileData.push(tile)
 		}

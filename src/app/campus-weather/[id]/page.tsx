@@ -2,6 +2,7 @@ import { getCampusById } from '@/apollo/strapi/getCampusById'
 import { NextPageProps } from '@/app/types'
 import { CampusOverview } from '@/components/blocks/CampusWeatherDetail/CampusOverview/CampusOverview'
 import { CampusWeatherDetail } from '@/components/blocks/CampusWeatherDetail/CampusWeatherDetail'
+import { ForecastTiles } from '@/components/blocks/CampusWeatherDetail/ForecastTiles/ForecastTiles'
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { nexradData } from '@/util/dataCall'
@@ -15,12 +16,10 @@ import {
 
 const Page = async ({ params }: NextPageProps) => {
 	const campusData = await getCampusById(params.id)
-
-	// Return from the DB
 	const { latitude, longitude } = campusData
 
 	// Collect data from NWS API based on campus location
-	const api_point_data = await getAPIdataFromLocation(latitude, longitude)
+	const apiPointData = await getAPIdataFromLocation(latitude, longitude)
 
 	// Determine where current conditions are coming from
 	let currentConditions = null
@@ -31,28 +30,29 @@ const Page = async ({ params }: NextPageProps) => {
 		// adding that leading K is only a problem if somehow we expand this service outside the CONUS
 		// const cod_cwa = 'https://weather.cod.edu/textserv/office/K' + api_point_data.cwa
 
-		currentConditions = await getAPIweatherConditions(api_point_data)
+		currentConditions = await getAPIweatherConditions(apiPointData)
 	}
 	currentConditions = { ...currentConditions, logo: campusData.logo }
 
 	// Collect 7 day forecast from NWS API
-	const api_fcst_data = await getAPIforecast(api_point_data)
+	const apiForcastData = await getAPIforecast(apiPointData)
 
 	// console.log('LOGGING IN CAMPUS PAGE')
 	// console.log('api_fcst_data', api_fcst_data)
 	// console.log('current_conditions', current_conditions)
 	// console.log('campusData', campusData)
 
-	const tileData = await getForcastTileDataFromForecastData(api_fcst_data.periods)
+	const tileData = await getForcastTileDataFromForecastData(apiForcastData.periods)
 
 	const radarData = await nexradData('LOT', 'N0B', '24')
-	console.log(currentConditions)
+	console.log(tileData)
 
 	return (
 		<ScrollArea>
 			<CampusWeatherDetail>
 				<CampusOverview campusImage={campusData.banner} currentConditions={currentConditions} radarImageSequence={radarData} />
-				{/* <ForecastTiles tileData={tileData} />
+				<ForecastTiles tileData={tileData} />
+				{/*
 				<TextForecastPanel forecastData={api_fcst_data.periods} /> */}
 			</CampusWeatherDetail>
 			<Footer />

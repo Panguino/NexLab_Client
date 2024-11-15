@@ -1,4 +1,91 @@
-// I probably should learn a better way to do this, but for now, this is how I'm doing it.
+import Blizzard from '@/assets/icons/blizzard.svg'
+import Clear from '@/assets/icons/clear.svg'
+import ClearWindy from '@/assets/icons/clear_windy.svg'
+import ExtremeCold from '@/assets/icons/extreme_cold.svg'
+import ExtremeHeat from '@/assets/icons/extreme_heat.svg'
+import Hurricane from '@/assets/icons/hurricane.svg'
+import NonOvercastDay from '@/assets/icons/non_overcast_day.svg'
+import NonOvercastDrizzleDay from '@/assets/icons/non_overcast_drizzle_day.svg'
+import NonOvercastDrizzleNight from '@/assets/icons/non_overcast_drizzle_night.svg'
+import NonOvercastFogDay from '@/assets/icons/non_overcast_fog_day.svg'
+import NonOvercastFogNight from '@/assets/icons/non_overcast_fog_night.svg'
+import NonOvercastFreezingRainDay from '@/assets/icons/non_overcast_freezing_rain_day.svg'
+import NonOvercastFreezingRainNight from '@/assets/icons/non_overcast_freezing_rain_night.svg'
+import NonOvercastMistHazeDay from '@/assets/icons/non_overcast_mist_haze_day.svg'
+import NonOvercastMistHazeNight from '@/assets/icons/non_overcast_mist_haze_night.svg'
+import NonOvercastNight from '@/assets/icons/non_overcast_night.svg'
+import NonOvercastRainDay from '@/assets/icons/non_overcast_rain_day.svg'
+import NonOvercastRainNight from '@/assets/icons/non_overcast_rain_night.svg'
+import NonOvercastSleetDay from '@/assets/icons/non_overcast_sleet_day.svg'
+import NonOvercastSleetNight from '@/assets/icons/non_overcast_sleet_night.svg'
+import NonOvercastSnowDay from '@/assets/icons/non_overcast_snow_day.svg'
+import NonOvercastSnowNight from '@/assets/icons/non_overcast_snow_night.svg'
+import NonOvercastThunderstormDay from '@/assets/icons/non_overcast_thunderstorm_day.svg'
+import NonOvercastThunderstormNight from '@/assets/icons/non_overcast_thunderstorm_night.svg'
+import NonOvercastWindyDay from '@/assets/icons/non_overcast_windy_day.svg'
+import NonOvercastWindyNight from '@/assets/icons/non_overcast_windy_night.svg'
+import Overcast from '@/assets/icons/overcast.svg'
+import OvercastDrizzle from '@/assets/icons/overcast_drizzle.svg'
+import OvercastFog from '@/assets/icons/overcast_fog.svg'
+import OvercastFreezingRain from '@/assets/icons/overcast_freezing_rain.svg'
+import OvercastMistHaze from '@/assets/icons/overcast_mist_haze.svg'
+import OvercastRain from '@/assets/icons/overcast_rain.svg'
+import OvercastSleet from '@/assets/icons/overcast_sleet.svg'
+import OvercastSnow from '@/assets/icons/overcast_snow.svg'
+import OvercastWindy from '@/assets/icons/overcast_windy.svg'
+import Sunny from '@/assets/icons/sunny.svg'
+import Thunderstorm from '@/assets/icons/thunderstorm.svg'
+import Tornado from '@/assets/icons/tornado.svg'
+import TropicalStorm from '@/assets/icons/tropical_storm.svg'
+import Unknown from '@/assets/icons/unknown.svg'
+
+const weatherIconComponents = {
+	sunny: Sunny,
+	clear: Clear,
+	non_overcast_day: NonOvercastDay,
+	non_overcast_night: NonOvercastNight,
+	overcast: Overcast,
+	non_overcast_mist_haze_day: NonOvercastMistHazeDay,
+	non_overcast_mist_haze_night: NonOvercastMistHazeNight,
+	overcast_mist_haze: OvercastMistHaze,
+	non_overcast_fog_day: NonOvercastFogDay,
+	non_overcast_fog_night: NonOvercastFogNight,
+	overcast_fog: OvercastFog,
+	extreme_heat: ExtremeHeat,
+	extreme_cold: ExtremeCold,
+	clear_windy: ClearWindy,
+	non_overcast_windy_day: NonOvercastWindyDay,
+	non_overcast_windy_night: NonOvercastWindyNight,
+	overcast_windy: OvercastWindy,
+	non_overcast_drizzle_day: NonOvercastDrizzleDay,
+	non_overcast_drizzle_night: NonOvercastDrizzleNight,
+	overcast_drizzle: OvercastDrizzle,
+	non_overcast_rain_day: NonOvercastRainDay,
+	non_overcast_rain_night: NonOvercastRainNight,
+	overcast_rain: OvercastRain,
+	non_overcast_snow_day: NonOvercastSnowDay,
+	non_overcast_snow_night: NonOvercastSnowNight,
+	overcast_snow: OvercastSnow,
+	non_overcast_sleet_day: NonOvercastSleetDay,
+	non_overcast_sleet_night: NonOvercastSleetNight,
+	overcast_sleet: OvercastSleet,
+	non_overcast_freezing_rain_day: NonOvercastFreezingRainDay,
+	non_overcast_freezing_rain_night: NonOvercastFreezingRainNight,
+	overcast_freezing_rain: OvercastFreezingRain,
+	blizzard: Blizzard,
+	non_overcast_thunderstorm_day: NonOvercastThunderstormDay,
+	non_overcast_thunderstorm_night: NonOvercastThunderstormNight,
+	thunderstorm: Thunderstorm,
+	tornado: Tornado,
+	tropical_storm: TropicalStorm,
+	hurricane: Hurricane,
+	unknown: Unknown,
+}
+
+export const getWeatherIconComponent = (iconName) => {
+	return weatherIconComponents[iconName] || Unknown
+}
+
 const weatherIcons = [
 	'sunny',
 	'clear',
@@ -384,24 +471,23 @@ const convertAPIiconName = (icon_input, cloud_coverage_input = null) => {
 				output = 'unknown'
 			}
 		}
-		const icon_url = `/temp-icons/${output}.svg`
-		return icon_url
+		return output
 	}
 }
 
 const convertCODiconName = (icon_input, cloud_coverage_input, dayNight) => {
-	let output = null
+	let icon = null
 	if (typeof iconLookupCOD[icon_input] === 'string') {
-		output = iconLookupCOD[icon_input]
+		icon = iconLookupCOD[icon_input]
 	} else if (typeof iconLookupCOD[icon_input][dayNight] === 'string') {
-		output = iconLookupCOD[icon_input][dayNight]
+		icon = iconLookupCOD[icon_input][dayNight]
 	} else if (typeof iconLookupCOD[icon_input][dayNight][cloud_coverage_input] === 'string') {
-		output = iconLookupCOD[icon_input][dayNight][cloud_coverage_input]
+		icon = iconLookupCOD[icon_input][dayNight][cloud_coverage_input]
 	} else {
-		output = 'unknown'
+		icon = 'unknown'
 	}
-	const icon_url = `/temp-icons/${output}.svg`
-	return icon_url
+	console.log('icon', icon)
+	return icon
 }
 export const convertIconName = (icon_input, cloud_coverage_input, dayNight, dataSource) => {
 	let output = null
@@ -413,7 +499,7 @@ export const convertIconName = (icon_input, cloud_coverage_input, dayNight, data
 			output = convertAPIiconName(icon_input, cloud_coverage_input) // dayNight derived from icon_input
 			break
 		default:
-			output = '/temp-icons/unknown.svg'
+			output = 'unknown'
 			break
 	}
 	return output

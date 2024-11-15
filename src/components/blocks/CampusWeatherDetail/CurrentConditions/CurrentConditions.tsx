@@ -2,6 +2,7 @@
 
 import { useRootStore } from '@/store/useRootStore'
 import { WindDirection } from '@/types/WindDirection'
+import { getWeatherIconComponent } from '@/util/getCampusWeatherIcon'
 import styles from './CurrentConditions.module.scss'
 import { CurrentValue } from './CurrentValue/CurrentValue'
 
@@ -27,14 +28,16 @@ export const CurrentConditions = ({
 	icon,
 }: ICurrentConditionsProps) => {
 	const temperatureUnit = useRootStore.use.temperatureUnit()
+	const Icon = getWeatherIconComponent(icon)
 	return (
 		<div className={styles.currentConditions}>
 			<img src={logo} className={styles.logo} alt="" />
-			{/* <div className={styles.symbolContainer}>
-				<img src={icon} className={styles.weatherSymbol} alt="" />
-			</div> */}
 			<div className={styles.mainTemp}>
-				{temperature}&deg;{temperatureUnit}
+				<Icon />
+				<span>
+					{temperature}
+					<sup>&deg;{temperatureUnit}</sup>
+				</span>
 			</div>
 			<div className={styles.detailsGrid}>
 				<CurrentValue label="Feels Like" value={feelsLikeTemperature} unit={`\u00B0${temperatureUnit}`} />
