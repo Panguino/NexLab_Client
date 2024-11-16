@@ -3,6 +3,7 @@ import { NextPageProps } from '@/app/types'
 import { CampusOverview } from '@/components/blocks/CampusWeatherDetail/CampusOverview/CampusOverview'
 import { CampusWeatherDetail } from '@/components/blocks/CampusWeatherDetail/CampusWeatherDetail'
 import { ForecastTiles } from '@/components/blocks/CampusWeatherDetail/ForecastTiles/ForecastTiles'
+import { TextForecastPanel } from '@/components/blocks/CampusWeatherDetail/TextForecastPanel/TextForecastPanel'
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { nexradData } from '@/util/dataCall'
@@ -45,15 +46,14 @@ const Page = async ({ params }: NextPageProps) => {
 	const tileData = await getForcastTileDataFromForecastData(apiForcastData.periods)
 
 	const radarData = await nexradData('LOT', 'N0B', '24')
-	console.log(tileData)
+	//console.log(tileData)
 
 	return (
-		<ScrollArea>
+		<ScrollArea removeDisplayTable>
 			<CampusWeatherDetail>
 				<CampusOverview campusImage={campusData.banner} currentConditions={currentConditions} radarImageSequence={radarData} />
 				<ForecastTiles tileData={tileData} />
-				{/*
-				<TextForecastPanel forecastData={api_fcst_data.periods} /> */}
+				<TextForecastPanel forecastData={apiForcastData.periods} />
 			</CampusWeatherDetail>
 			<Footer />
 		</ScrollArea>
