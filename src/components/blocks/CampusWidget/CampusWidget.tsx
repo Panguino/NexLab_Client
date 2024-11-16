@@ -13,13 +13,13 @@ export const CampusWidget = ({ campusDetails, weatherData }) => {
 			</div>
 			<div className={styles.conditionsContainer}>
 				<img src={weatherData.conditions.icon} className={styles.icon} />
-				<div className={styles.temp}>{`${weatherData.conditions.temp}\u00B0F`}</div>
+				<div className={styles.temp}>{weatherData.conditions.temp}</div>
 				<div className={styles.subValuesContainer}>
 					<div className={styles.feels}>
-						<CurrentValue value={`${weatherData.conditions.feels}\u00B0F`} label="Feels Like" />
+						<CurrentValue value={weatherData.conditions.feels} label="Feels Like" />
 					</div>
 					<div className={styles.humidity}>
-						<CurrentValue value={`${weatherData.conditions.humidity}%`} label="Humidity" />
+						<CurrentValue value={weatherData.conditions.humidity} label="Humidity" />
 					</div>
 				</div>
 			</div>
