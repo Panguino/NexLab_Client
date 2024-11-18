@@ -1,4 +1,91 @@
-// I probably should learn a better way to do this, but for now, this is how I'm doing it.
+import Blizzard from '@/assets/icons/blizzard.svg'
+import Clear from '@/assets/icons/clear.svg'
+import ClearWindy from '@/assets/icons/clear_windy.svg'
+import ExtremeCold from '@/assets/icons/extreme_cold.svg'
+import ExtremeHeat from '@/assets/icons/extreme_heat.svg'
+import Hurricane from '@/assets/icons/hurricane.svg'
+import NonOvercastDay from '@/assets/icons/non_overcast_day.svg'
+import NonOvercastDrizzleDay from '@/assets/icons/non_overcast_drizzle_day.svg'
+import NonOvercastDrizzleNight from '@/assets/icons/non_overcast_drizzle_night.svg'
+import NonOvercastFogDay from '@/assets/icons/non_overcast_fog_day.svg'
+import NonOvercastFogNight from '@/assets/icons/non_overcast_fog_night.svg'
+import NonOvercastFreezingRainDay from '@/assets/icons/non_overcast_freezing_rain_day.svg'
+import NonOvercastFreezingRainNight from '@/assets/icons/non_overcast_freezing_rain_night.svg'
+import NonOvercastMistHazeDay from '@/assets/icons/non_overcast_mist_haze_day.svg'
+import NonOvercastMistHazeNight from '@/assets/icons/non_overcast_mist_haze_night.svg'
+import NonOvercastNight from '@/assets/icons/non_overcast_night.svg'
+import NonOvercastRainDay from '@/assets/icons/non_overcast_rain_day.svg'
+import NonOvercastRainNight from '@/assets/icons/non_overcast_rain_night.svg'
+import NonOvercastSleetDay from '@/assets/icons/non_overcast_sleet_day.svg'
+import NonOvercastSleetNight from '@/assets/icons/non_overcast_sleet_night.svg'
+import NonOvercastSnowDay from '@/assets/icons/non_overcast_snow_day.svg'
+import NonOvercastSnowNight from '@/assets/icons/non_overcast_snow_night.svg'
+import NonOvercastThunderstormDay from '@/assets/icons/non_overcast_thunderstorm_day.svg'
+import NonOvercastThunderstormNight from '@/assets/icons/non_overcast_thunderstorm_night.svg'
+import NonOvercastWindyDay from '@/assets/icons/non_overcast_windy_day.svg'
+import NonOvercastWindyNight from '@/assets/icons/non_overcast_windy_night.svg'
+import Overcast from '@/assets/icons/overcast.svg'
+import OvercastDrizzle from '@/assets/icons/overcast_drizzle.svg'
+import OvercastFog from '@/assets/icons/overcast_fog.svg'
+import OvercastFreezingRain from '@/assets/icons/overcast_freezing_rain.svg'
+import OvercastMistHaze from '@/assets/icons/overcast_mist_haze.svg'
+import OvercastRain from '@/assets/icons/overcast_rain.svg'
+import OvercastSleet from '@/assets/icons/overcast_sleet.svg'
+import OvercastSnow from '@/assets/icons/overcast_snow.svg'
+import OvercastWindy from '@/assets/icons/overcast_windy.svg'
+import Sunny from '@/assets/icons/sunny.svg'
+import Thunderstorm from '@/assets/icons/thunderstorm.svg'
+import Tornado from '@/assets/icons/tornado.svg'
+import TropicalStorm from '@/assets/icons/tropical_storm.svg'
+import Unknown from '@/assets/icons/unknown.svg'
+
+const weatherIconComponents = {
+	sunny: Sunny,
+	clear: Clear,
+	non_overcast_day: NonOvercastDay,
+	non_overcast_night: NonOvercastNight,
+	overcast: Overcast,
+	non_overcast_mist_haze_day: NonOvercastMistHazeDay,
+	non_overcast_mist_haze_night: NonOvercastMistHazeNight,
+	overcast_mist_haze: OvercastMistHaze,
+	non_overcast_fog_day: NonOvercastFogDay,
+	non_overcast_fog_night: NonOvercastFogNight,
+	overcast_fog: OvercastFog,
+	extreme_heat: ExtremeHeat,
+	extreme_cold: ExtremeCold,
+	clear_windy: ClearWindy,
+	non_overcast_windy_day: NonOvercastWindyDay,
+	non_overcast_windy_night: NonOvercastWindyNight,
+	overcast_windy: OvercastWindy,
+	non_overcast_drizzle_day: NonOvercastDrizzleDay,
+	non_overcast_drizzle_night: NonOvercastDrizzleNight,
+	overcast_drizzle: OvercastDrizzle,
+	non_overcast_rain_day: NonOvercastRainDay,
+	non_overcast_rain_night: NonOvercastRainNight,
+	overcast_rain: OvercastRain,
+	non_overcast_snow_day: NonOvercastSnowDay,
+	non_overcast_snow_night: NonOvercastSnowNight,
+	overcast_snow: OvercastSnow,
+	non_overcast_sleet_day: NonOvercastSleetDay,
+	non_overcast_sleet_night: NonOvercastSleetNight,
+	overcast_sleet: OvercastSleet,
+	non_overcast_freezing_rain_day: NonOvercastFreezingRainDay,
+	non_overcast_freezing_rain_night: NonOvercastFreezingRainNight,
+	overcast_freezing_rain: OvercastFreezingRain,
+	blizzard: Blizzard,
+	non_overcast_thunderstorm_day: NonOvercastThunderstormDay,
+	non_overcast_thunderstorm_night: NonOvercastThunderstormNight,
+	thunderstorm: Thunderstorm,
+	tornado: Tornado,
+	tropical_storm: TropicalStorm,
+	hurricane: Hurricane,
+	unknown: Unknown,
+}
+
+export const getWeatherIconComponent = (iconName) => {
+	return weatherIconComponents[iconName] || Unknown
+}
+
 const weatherIcons = [
 	'sunny',
 	'clear',
@@ -35,7 +122,7 @@ const weatherIcons = [
 	'blizzard',
 	'non_overcast_thunderstorm_day',
 	'non_overcast_thunderstorm_night',
-	'overcast_thunderstorm',
+	'thunderstorm',
 	'tornado',
 	'tropical_storm',
 	'hurricane',
@@ -334,70 +421,73 @@ const iconLookupAPI = {
 }
 
 const convertAPIiconName = (icon_input, cloud_coverage_input = null) => {
-	const icon_parameters = icon_input.replace('https://api.weather.gov/icons/land/', '').replace('?size=medium', '').split('/')
-	const time_of_day = icon_parameters[0] // aka dayNight
-	let output, cloud_coverage
-
-	if (icon_parameters.length > 2) {
-		// dual image - check for probability of precipitation and remove from string
-		const first_image = icon_parameters[1].includes(',') ? icon_parameters[1].split(',')[0] : icon_parameters[1]
-		const second_image = icon_parameters[2].includes(',') ? icon_parameters[2].split(',')[0] : icon_parameters[2]
-		const iconPriority = Object.keys(iconLookupAPI)
-		const higher_priority_icon = iconPriority.indexOf(first_image) < iconPriority.indexOf(second_image) ? second_image : first_image
-		const lower_priority_icon = iconPriority.indexOf(first_image) < iconPriority.indexOf(second_image) ? first_image : second_image
-		if (cloud_coverage_input !== null) {
-			cloud_coverage = cloud_coverage_input !== 'ovc' ? 'bkn' : 'ovc'
-		} else {
-			cloud_coverage = iconPriority.indexOf(lower_priority_icon) < iconPriority.indexOf('ovc') ? 'bkn' : 'ovc'
-		}
-
-		if (typeof iconLookupAPI[higher_priority_icon] === 'string') {
-			output = iconLookupAPI[higher_priority_icon]
-		} else if (typeof iconLookupAPI[higher_priority_icon][time_of_day] === 'string') {
-			output = iconLookupAPI[higher_priority_icon][time_of_day]
-		} else if (typeof iconLookupAPI[higher_priority_icon][time_of_day][cloud_coverage] === 'string') {
-			output = iconLookupAPI[higher_priority_icon][time_of_day][cloud_coverage]
-		} else {
-			output = 'unknown'
-		}
+	if (icon_input === null) {
+		return '/temp-icons/unknown.svg'
 	} else {
-		// single image - just use the first image in the string
-		const icon = icon_parameters[1].includes(',') ? icon_parameters[1].split(',')[0] : icon_parameters[1]
+		const icon_parameters = icon_input.replace('https://api.weather.gov/icons/land/', '').replace('?size=medium', '').split('/')
+		const time_of_day = icon_parameters[0] // aka dayNight
+		let output, cloud_coverage
 
-		// this step may not be necessary anymore, but ensures we select non-overcast variants when possible
-		if (cloud_coverage_input !== null) {
-			cloud_coverage = cloud_coverage_input !== 'ovc' ? 'bkn' : 'ovc'
-		} else {
-			cloud_coverage = 'ovc'
-		}
+		if (icon_parameters.length > 2) {
+			// dual image - check for probability of precipitation and remove from string
+			const first_image = icon_parameters[1].includes(',') ? icon_parameters[1].split(',')[0] : icon_parameters[1]
+			const second_image = icon_parameters[2].includes(',') ? icon_parameters[2].split(',')[0] : icon_parameters[2]
+			const iconPriority = Object.keys(iconLookupAPI)
+			const higher_priority_icon = iconPriority.indexOf(first_image) < iconPriority.indexOf(second_image) ? second_image : first_image
+			const lower_priority_icon = iconPriority.indexOf(first_image) < iconPriority.indexOf(second_image) ? first_image : second_image
+			if (cloud_coverage_input !== null) {
+				cloud_coverage = cloud_coverage_input !== 'ovc' ? 'bkn' : 'ovc'
+			} else {
+				cloud_coverage = iconPriority.indexOf(lower_priority_icon) < iconPriority.indexOf('ovc') ? 'bkn' : 'ovc'
+			}
 
-		if (typeof iconLookupAPI[icon] === 'string') {
-			output = iconLookupAPI[icon]
-		} else if (typeof iconLookupAPI[icon][time_of_day] === 'string') {
-			output = iconLookupAPI[icon][time_of_day]
-		} else if (typeof iconLookupAPI[icon][time_of_day][cloud_coverage] === 'string') {
-			output = iconLookupAPI[icon][time_of_day][cloud_coverage]
+			if (typeof iconLookupAPI[higher_priority_icon] === 'string') {
+				output = iconLookupAPI[higher_priority_icon]
+			} else if (typeof iconLookupAPI[higher_priority_icon][time_of_day] === 'string') {
+				output = iconLookupAPI[higher_priority_icon][time_of_day]
+			} else if (typeof iconLookupAPI[higher_priority_icon][time_of_day][cloud_coverage] === 'string') {
+				output = iconLookupAPI[higher_priority_icon][time_of_day][cloud_coverage]
+			} else {
+				output = 'unknown'
+			}
 		} else {
-			output = 'unknown'
+			// single image - just use the first image in the string
+			const icon = icon_parameters[1].includes(',') ? icon_parameters[1].split(',')[0] : icon_parameters[1]
+
+			// this step may not be necessary anymore, but ensures we select non-overcast variants when possible
+			if (cloud_coverage_input !== null) {
+				cloud_coverage = cloud_coverage_input !== 'ovc' ? 'bkn' : 'ovc'
+			} else {
+				cloud_coverage = 'ovc'
+			}
+
+			if (typeof iconLookupAPI[icon] === 'string') {
+				output = iconLookupAPI[icon]
+			} else if (typeof iconLookupAPI[icon][time_of_day] === 'string') {
+				output = iconLookupAPI[icon][time_of_day]
+			} else if (typeof iconLookupAPI[icon][time_of_day][cloud_coverage] === 'string') {
+				output = iconLookupAPI[icon][time_of_day][cloud_coverage]
+			} else {
+				output = 'unknown'
+			}
 		}
+		return output
 	}
-	const icon_url = `/temp-icons/${output}.svg`
-	return icon_url
 }
 
 const convertCODiconName = (icon_input, cloud_coverage_input, dayNight) => {
-	let output = null
+	let icon = null
 	if (typeof iconLookupCOD[icon_input] === 'string') {
-		output = iconLookupCOD[icon_input]
+		icon = iconLookupCOD[icon_input]
 	} else if (typeof iconLookupCOD[icon_input][dayNight] === 'string') {
-		output = iconLookupCOD[icon_input][dayNight]
+		icon = iconLookupCOD[icon_input][dayNight]
 	} else if (typeof iconLookupCOD[icon_input][dayNight][cloud_coverage_input] === 'string') {
-		output = iconLookupCOD[icon_input][dayNight][cloud_coverage_input]
+		icon = iconLookupCOD[icon_input][dayNight][cloud_coverage_input]
 	} else {
-		output = 'unknown'
+		icon = 'unknown'
 	}
-	const icon_url = `/temp-icons/${output}.svg`
-	return icon_url
+	console.log('icon', icon)
+	return icon
 }
 export const convertIconName = (icon_input, cloud_coverage_input, dayNight, dataSource) => {
 	let output = null
@@ -409,7 +499,7 @@ export const convertIconName = (icon_input, cloud_coverage_input, dayNight, data
 			output = convertAPIiconName(icon_input, cloud_coverage_input) // dayNight derived from icon_input
 			break
 		default:
-			output = null
+			output = 'unknown'
 			break
 	}
 	return output

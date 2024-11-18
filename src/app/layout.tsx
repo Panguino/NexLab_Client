@@ -1,13 +1,12 @@
-import { getMobileMenu } from '@/apollo/strapi/getMobileMenu'
 import Navigation from '@/components/layout/Navigation/Navigation'
 import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
 import Providers from '@/components/providers/Providers/Providers'
 import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
+import { mobileMenuItems } from '@/data/mobileMenuItems'
 import '@/styles/global.scss'
 import { Viewport } from 'next'
 
 export default async function RootLayout({ children }) {
-	const mobileMenuItems = await getMobileMenu()
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<head>

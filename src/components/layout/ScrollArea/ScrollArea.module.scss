@@ -1,6 +1,7 @@
 .ScrollAreaRoot {
   width: 100%;
   height: 100%;
+  max-width: 100%;
   overflow: hidden;
   --scrollbar-size: 10px;
 }
@@ -9,6 +10,11 @@
   width: 100%;
   height: 100%;
   border-radius: inherit;
+}
+.removeTable {
+  > div {
+    display: block !important;
+  }
 }
 
 .ScrollAreaScrollbar {

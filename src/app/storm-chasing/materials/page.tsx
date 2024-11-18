@@ -1,11 +1,12 @@
 import { getChasingMaterials } from '@/apollo/strapi/getChasingMaterials'
 import { ChasingMaterials } from '@/components/blocks/_stormChasing/ChasingMaterials/ChasingMaterials'
-import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
+import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
+import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 
 const Page = async () => {
 	const { title, body, leftGroupTitle, leftGroupMaterials, rightGroupTitle, rightGroupMaterials } = await getChasingMaterials()
 	return (
-		<PageContentWrapper>
+		<ScrollArea>
 			<ChasingMaterials
 				title={title}
 				body={body}
@@ -14,7 +15,8 @@ const Page = async () => {
 				rightGroupTitle={rightGroupTitle}
 				rightGroupMaterials={rightGroupMaterials}
 			/>
-		</PageContentWrapper>
+			<Footer />
+		</ScrollArea>
 	)
 }
 

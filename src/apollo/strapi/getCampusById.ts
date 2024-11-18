@@ -13,6 +13,14 @@ export const getCampusById = async (id: string) => {
                             Name
                             Latitude
                             Longitude
+                            banner {
+                                data {
+                                    id
+                                    attributes {
+                                        url
+                                    }
+                                }
+                            }
                             Logo {
                                 data {
                                     attributes {
@@ -27,5 +35,13 @@ export const getCampusById = async (id: string) => {
             }
 		`,
 	})
-	return campusResponse.data.campus.data.attributes
+	const { Name, Latitude, Longitude, banner, Logo, uniqueWeatherConditions } = campusResponse.data.campus.data.attributes
+	return {
+		name: Name,
+		latitude: Latitude,
+		longitude: Longitude,
+		banner: banner?.data?.attributes?.url,
+		logo: Logo?.data?.attributes?.url,
+		uniqueWeatherConditions: uniqueWeatherConditions,
+	}
 }

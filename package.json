@@ -32,6 +32,7 @@
     "@meilisearch/instant-meilisearch": "^0.17.0",
     "@next/env": "^14.2.5",
     "@radix-ui/react-scroll-area": "^1.1.0",
+    "@storybook/react": "^8.2.9",
     "@storybook/test": "^8.2.9",
     "@strapi/blocks-react-renderer": "^1.0.0",
     "@turf/turf": "^6.5.0",
@@ -63,11 +64,10 @@
     "react-zoom-pan-pinch": "3.6.0",
     "sass": "^1.77.8",
     "sass-extract": "^3.0.0",
+    "storybook": "^8.2.9",
     "topojson-client": "^3.1.0",
     "typescript": "^5.5.4",
     "usehooks-ts": "^3.1.0",
-    "storybook": "^8.2.9",
-    "@storybook/react": "^8.2.9",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
@@ -83,6 +83,7 @@
     "@storybook/manager-api": "^8.2.9",
     "@storybook/nextjs": "^8.2.9",
     "@storybook/theming": "^8.2.9",
+    "@svgr/webpack": "^8.1.0",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^6.3.0",

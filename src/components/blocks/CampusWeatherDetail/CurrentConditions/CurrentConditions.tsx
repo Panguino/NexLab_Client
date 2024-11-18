@@ -1,37 +1,49 @@
-import { convertIconName } from '@/util/getCampusWeatherIcon'
+'use client'
+
+import { useRootStore } from '@/store/useRootStore'
+import { WindDirection } from '@/types/WindDirection'
+import { getWeatherIconComponent } from '@/util/getCampusWeatherIcon'
 import styles from './CurrentConditions.module.scss'
 import { CurrentValue } from './CurrentValue/CurrentValue'
 
-export const CurrentConditions = ({ currentWeatherData }) => {
-	const {
-		dataSource,
-		dayNight,
-		temperature,
-		dewpoint,
-		apparentTemperature,
-		relativeHumidity,
-		windSpeed,
-		windDirection,
-		sky,
-		textDescription,
-		icon,
-	} = currentWeatherData
-	const weatherIcon = icon !== null ? convertIconName(icon, sky, dayNight, dataSource) : ('/temp-icons/unknown.svg' as string)
-	// console.log(currentWeatherData)
+interface ICurrentConditionsProps {
+	logo: string
+	temperature: number
+	dewpoint: number
+	feelsLikeTemperature: number
+	relativeHumidity: number
+	windSpeed: number
+	windDirection: WindDirection
+	icon: string
+}
+
+export const CurrentConditions = ({
+	logo,
+	temperature,
+	dewpoint,
+	feelsLikeTemperature,
+	relativeHumidity,
+	windSpeed,
+	windDirection,
+	icon,
+}: ICurrentConditionsProps) => {
+	const temperatureUnit = useRootStore.use.temperatureUnit()
+	const Icon = getWeatherIconComponent(icon)
 	return (
-		<div className={styles.CurrentConditionsContainer}>
-			<div className={styles.symbolContainer}>
-				<img src={weatherIcon} className={styles.weatherSymbol} />
+		<div className={styles.currentConditions}>
+			<img src={logo} className={styles.logo} alt="" />
+			<div className={styles.mainTemp}>
+				<Icon />
+				<span>
+					{temperature}
+					<sup>&deg;{temperatureUnit}</sup>
+				</span>
 			</div>
-			<div className={styles.weatherHeadlineContainer}>
-				<div className={styles.airTemperature}>{temperature}&deg;F</div>
-				<div className={styles.weatherDescription}>{textDescription}</div>
-			</div>
-			<div className={styles.valuesContainer}>
-				<CurrentValue label="Feels Like" value={apparentTemperature + '\u00B0F'} />
-				<CurrentValue label="Dewpoint" value={dewpoint + '\u00B0F'} />
-				<CurrentValue label="Humidity" value={relativeHumidity + '%'} />
-				<CurrentValue label="Wind" value={windSpeed + 'mph (' + windDirection + ')'} />
+			<div className={styles.detailsGrid}>
+				<CurrentValue label="Feels Like" value={feelsLikeTemperature} unit={`\u00B0${temperatureUnit}`} />
+				<CurrentValue label="Dew Point" value={dewpoint} unit={`\u00B0${temperatureUnit}`} />
+				<CurrentValue label="Humidity" value={relativeHumidity} unit="%" />
+				<CurrentValue label="Wind" value={windSpeed} specialUnit1="MPH" specialUnit2={windDirection} />
 			</div>
 		</div>
 	)

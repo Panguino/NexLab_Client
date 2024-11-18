@@ -1,12 +1,17 @@
 import styles from './LoadingPanel.module.scss'
 
-const LoadingPanel = () => {
+const LoadingPanel = ({ size = 0.5, hideText = false }) => {
 	return (
-		<div className={styles.LoadingPanel}>
+		<div
+			className={styles.LoadingPanel}
+			style={{
+				transform: `scale(${size.toFixed(2)})`,
+			}}
+		>
 			<video autoPlay={true} muted playsInline loop>
 				<source src="/vid/loading.webm" type="video/webm" />
 			</video>
-			<p>Loading...</p>
+			{!hideText && <p>Loading...</p>}
 		</div>
 	)
 }
