@@ -22,7 +22,7 @@
     display: flex;
     justify-content: space-between;
     padding: 10px;
-    background-color: var(--color-grey2-grey18);
+    background-color: var(--color-white-grey18);
 
     .info {
       flex: 1 1 45%;
@@ -79,11 +79,11 @@
           width: 25px;
           height: 25px;
           path {
-            fill: var(--color-grey16-grey8);
+            fill: var(--color-grey10-grey8);
           }
         }
         .windValue {
-          color: var(--color-grey16-grey8);
+          color: var(--color-grey10-grey8);
           font-size: 11px;
           span {
             display: block;

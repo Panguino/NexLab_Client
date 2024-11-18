@@ -4,7 +4,6 @@ import { ForecastTile } from '../CampusWeatherDetail/ForecastTiles/ForecastTile/
 import styles from './CampusWidget.module.scss'
 
 export const CampusWidget = ({ campusDetails, weatherData }) => {
-	console.log('logging in component', campusDetails, weatherData)
 	return (
 		<div className={styles.widgetContainer}>
 			<div className={styles.campusTitle}>

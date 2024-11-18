@@ -61,6 +61,43 @@ export const getForcastTileDataFromForecastData = (forecastData, size = 'default
 	return tileData
 }
 
+export const getTextForecastPanelFromForecastData = (forecastData) => {
+	const textForecastPanel = []
+	const groupedForecast = {}
+
+	for (const period of forecastData) {
+		const date = new Date(period.startTime)
+		const dateMonth = date.toLocaleString('default', { month: 'short' })
+		const dateDay = date.getDate()
+		const isDaytime = date.getHours() < 18 // Assuming daytime is before 6 PM
+
+		const key = `${dateMonth} ${dateDay}`
+
+		if (!groupedForecast[key]) {
+			groupedForecast[key] = {
+				dateMonth,
+				dateDay,
+				daytimeForecastDetails: null,
+				eveningForecastDetails: null,
+			}
+		}
+
+		const forecastDetails = period.detailedForecast
+
+		if (isDaytime) {
+			groupedForecast[key].daytimeForecastDetails = forecastDetails
+		} else {
+			groupedForecast[key].eveningForecastDetails = forecastDetails
+		}
+	}
+
+	for (const key in groupedForecast) {
+		textForecastPanel.push(groupedForecast[key])
+	}
+
+	return textForecastPanel
+}
+
 export const getAPIdataFromLocation = async (Latitude, Longitude) => {
 	// Construct the URL for the weather API request
 	const api_point_call = `https://api.weather.gov/points/${Latitude},${Longitude}`

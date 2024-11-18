@@ -13,6 +13,7 @@ import {
 	getAPIweatherConditions,
 	getCODweatherConditions,
 	getForcastTileDataFromForecastData,
+	getTextForecastPanelFromForecastData,
 } from '@/util/getCampusWeatherData'
 
 const Page = async ({ params }: NextPageProps) => {
@@ -38,23 +39,19 @@ const Page = async ({ params }: NextPageProps) => {
 	// Collect 7 day forecast from NWS API
 	const apiForcastData = await getAPIforecast(apiPointData)
 
-	// console.log('LOGGING IN CAMPUS PAGE')
-	// console.log('api_fcst_data', api_fcst_data)
-	// console.log('current_conditions', current_conditions)
-	// console.log('campusData', campusData)
-
 	const tileData = await getForcastTileDataFromForecastData(apiForcastData.periods)
-
+	const textForecastPanelData = await getTextForecastPanelFromForecastData(apiForcastData.periods)
 	const radarData = await nexradData('LOT', 'N0B', '24')
-	//console.log(tileData)
 
 	return (
 		<ScrollArea removeDisplayTable>
-			<CampusWeatherDetail>
-				<CampusOverview campusImage={campusData.banner} currentConditions={currentConditions} radarImageSequence={radarData} />
-				<ForecastTiles tileData={tileData} />
-				<TextForecastPanel forecastData={apiForcastData.periods} />
-			</CampusWeatherDetail>
+			<div style={{ padding: 30 }}>
+				<CampusWeatherDetail>
+					<CampusOverview campusImage={campusData.banner} currentConditions={currentConditions} radarImageSequence={radarData} />
+					<ForecastTiles tileData={tileData} />
+					<TextForecastPanel forecastData={textForecastPanelData} />
+				</CampusWeatherDetail>
+			</div>
 			<Footer />
 		</ScrollArea>
 	)
