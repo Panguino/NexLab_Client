@@ -1,6 +1,6 @@
 # NexLab_Client
 
-Front end nextjs framework for Nexlab website!
+Front end nextjs framework for Nexlab website
 
 ## GIT Workflow
 
