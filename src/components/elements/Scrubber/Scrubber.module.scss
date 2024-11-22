@@ -1,0 +1,105 @@
+$track-color: #424242;
+$thumb-color: #fff;
+
+$thumb-radius: 50px;
+$thumb-height: 26px;
+$thumb-width: 45px;
+$thumb-border-width: 0px;
+$thumb-border-color: white;
+
+$track-width: 100%;
+$track-height: 8px;
+$track-border-width: 1px;
+$track-border-color: black;
+
+$track-radius: 5px;
+$contrast: 5%;
+
+@mixin track() {
+  width: $track-width;
+  height: $track-height;
+  cursor: pointer;
+}
+
+@mixin thumb() {
+  border: $thumb-border-width solid $thumb-border-color;
+  height: $thumb-height;
+  width: $thumb-width;
+  border-radius: $thumb-radius;
+  background-image: url("/img/vertical-lines.png");
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-color: $thumb-color;
+  cursor: pointer;
+}
+
+.timelineScrubber {
+  width: 100%;
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: $thumb-height / 2 0;
+    width: $track-width;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::-webkit-slider-runnable-track {
+      @include track();
+      background: $track-color;
+      border-radius: $track-radius;
+      border: $track-border-width solid $track-border-color;
+    }
+
+    &::-webkit-slider-thumb {
+      @include thumb();
+      -webkit-appearance: none;
+      margin-top: ($track-height / 2) - ($thumb-height / 2);
+    }
+
+    &:focus::-webkit-slider-runnable-track {
+      background: lighten($track-color, $contrast);
+    }
+
+    &::-moz-range-track {
+      @include track();
+      background: $track-color;
+      border-radius: $track-radius;
+      border: $track-border-width solid $track-border-color;
+    }
+    &::-moz-range-thumb {
+      @include thumb();
+    }
+
+    &::-ms-track {
+      @include track();
+      background: transparent;
+      border-color: transparent;
+      border-width: $thumb-width 0;
+      color: transparent;
+    }
+
+    &::-ms-fill-lower {
+      background: darken($track-color, $contrast);
+      border: $track-border-width solid $track-border-color;
+      border-radius: $track-radius * 2;
+    }
+    &::-ms-fill-upper {
+      background: $track-color;
+      border: $track-border-width solid $track-border-color;
+      border-radius: $track-radius * 2;
+    }
+    &::-ms-thumb {
+      @include thumb();
+    }
+    &:focus::-ms-fill-lower {
+      background: $track-color;
+    }
+    &:focus::-ms-fill-upper {
+      background: lighten($track-color, $contrast);
+    }
+  }
+}
