@@ -8,9 +8,10 @@ interface ITimeDisplayProps {
 }
 
 const TimeDisplay: React.FC<ITimeDisplayProps> = ({ value, maxValue, unit }) => {
-	const displayMaxValue = maxValue ? ` / ${maxValue}${unit}` : ''
+	const displayUnit = unit ? unit : ''
+	const displayMaxValue = maxValue ? ` / ${maxValue}${displayUnit}` : ''
 
-	return <div className={styles.timeDisplay}>{`${value}${unit}${displayMaxValue}`}</div>
+	return <div className={styles.timeDisplay}>{`${value}${displayUnit}${displayMaxValue}`}</div>
 }
 
 export default TimeDisplay
