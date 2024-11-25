@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
-import BasicPlaybackControls from './BasicPlaybackControls'
+import BasicPlaybackControls, { LoopMethod } from './BasicPlaybackControls'
 
 export default {
 	title: 'Components/BasicPlaybackControls',
@@ -32,7 +32,7 @@ Default.args = {
 	onPlayPauseClick: () => {},
 	onStepForwardClick: () => {},
 	onStepBackwardClick: () => {},
-	loopMethod: 'left-to-right',
+	loopMethod: LoopMethod.LeftToRight,
 	onLoopMethodToggle: (nextMethod) => {
 		console.log(nextMethod)
 	},
