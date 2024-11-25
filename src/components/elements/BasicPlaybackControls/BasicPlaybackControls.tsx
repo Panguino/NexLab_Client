@@ -4,9 +4,9 @@ import React from 'react'
 import styles from './BasicPlaybackControls.module.scss'
 
 export enum LoopMethod {
-	LeftToRight = 'left-to-right',
-	RightToLeft = 'right-to-left',
-	Bounce = 'bounce',
+	LeftToRight = 'LOOP_METHOD_LEFT_TO_RIGHT',
+	RightToLeft = 'LOOP_METHOD_RIGHT_TO_LEFT',
+	Bounce = 'LOOP_METHOD_BOUNCE',
 }
 
 interface IBasicPlaybackControlsProps {
