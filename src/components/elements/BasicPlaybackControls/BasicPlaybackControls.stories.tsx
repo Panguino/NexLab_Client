@@ -15,17 +15,12 @@ const Template: StoryFn<typeof BasicPlaybackControls> = (args) => {
 		setIsPlaying(!isPlaying)
 	}
 
-	const handleLoopMethodToggle = () => {
-		const nextMethod = loopMethod === 'left-to-right' ? 'right-to-left' : loopMethod === 'right-to-left' ? 'bounce' : 'left-to-right'
-		setLoopMethod(nextMethod)
-	}
-
 	return (
 		<BasicPlaybackControls
 			{...args}
 			isPlaying={isPlaying}
 			onPlayPauseClick={handlePlayPauseClick}
-			onLoopMethodToggle={handleLoopMethodToggle}
+			onLoopMethodToggle={setLoopMethod}
 			loopMethod={loopMethod}
 		/>
 	)
@@ -38,5 +33,7 @@ Default.args = {
 	onStepForwardClick: () => {},
 	onStepBackwardClick: () => {},
 	loopMethod: 'left-to-right',
-	onLoopMethodToggle: () => {},
+	onLoopMethodToggle: (nextMethod) => {
+		console.log(nextMethod)
+	},
 }

@@ -3,13 +3,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React from 'react'
 import styles from './BasicPlaybackControls.module.scss'
 
+export enum LoopMethod {
+	LeftToRight = 'left-to-right',
+	RightToLeft = 'right-to-left',
+	Bounce = 'bounce',
+}
+
 interface IBasicPlaybackControlsProps {
 	isPlaying: boolean
 	onPlayPauseClick: () => void
 	onStepForwardClick: () => void
 	onStepBackwardClick: () => void
-	loopMethod: 'left-to-right' | 'right-to-left' | 'bounce'
-	onLoopMethodToggle: () => void
+	loopMethod: LoopMethod
+	onLoopMethodToggle: (nextMethod: LoopMethod) => void
 }
 
 const BasicPlaybackControls: React.FC<IBasicPlaybackControlsProps> = ({
@@ -22,15 +28,24 @@ const BasicPlaybackControls: React.FC<IBasicPlaybackControlsProps> = ({
 }) => {
 	const getLoopMethodIcon = () => {
 		switch (loopMethod) {
-			case 'left-to-right':
-				return faArrowRight
-			case 'right-to-left':
+			case LoopMethod.RightToLeft:
 				return faArrowLeft
-			case 'bounce':
+			case LoopMethod.Bounce:
 				return faArrowsLeftRight
 			default:
 				return faArrowRight
 		}
+	}
+	const handleOnLoopMethodToggle = () => {
+		onLoopMethodToggle(getNextLoopMethod())
+	}
+
+	const getNextLoopMethod = (): LoopMethod => {
+		return loopMethod === LoopMethod.LeftToRight
+			? LoopMethod.RightToLeft
+			: loopMethod === LoopMethod.RightToLeft
+				? LoopMethod.Bounce
+				: LoopMethod.LeftToRight
 	}
 
 	return (
@@ -45,7 +60,7 @@ const BasicPlaybackControls: React.FC<IBasicPlaybackControlsProps> = ({
 				<button onClick={onStepForwardClick} className={styles.button}>
 					<FontAwesomeIcon icon={faStepForward} />
 				</button>
-				<button onClick={onLoopMethodToggle} className={styles.button}>
+				<button onClick={handleOnLoopMethodToggle} className={styles.button}>
 					<FontAwesomeIcon icon={getLoopMethodIcon()} />
 				</button>
 			</div>
