@@ -1,4 +1,5 @@
 import React from 'react'
+import styles from './TimeDisplay.module.scss'
 
 interface ITimeDisplayProps {
 	value: string
@@ -9,7 +10,7 @@ interface ITimeDisplayProps {
 const TimeDisplay: React.FC<ITimeDisplayProps> = ({ value, maxValue, unit }) => {
 	const displayMaxValue = maxValue ? ` / ${maxValue}${unit}` : ''
 
-	return <div>{`${value}${unit}${displayMaxValue}`}</div>
+	return <div className={styles.timeDisplay}>{`${value}${unit}${displayMaxValue}`}</div>
 }
 
 export default TimeDisplay
