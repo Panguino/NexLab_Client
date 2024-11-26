@@ -1,55 +1,24 @@
 'use client'
-import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
+import { faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import styles from './Animator.module.scss'
+import { AnimatorImageMachine } from './AnimatorImageMachine/AnimatorImageMachine'
 
 interface IAnimator {
 	frames: string[]
 	hideControls?: boolean
+	hideZoomControls?: boolean
 	autoPlay?: boolean
-	interval?: number // Time between frames in milliseconds
+	interval?: number
 }
 
-export const Animator = ({ frames, interval = 0.5, hideControls = false, autoPlay = false }: IAnimator) => {
+export const Animator = ({ frames, interval = 0.5, hideControls = false, autoPlay = false, hideZoomControls = false }: IAnimator) => {
+	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [isPlaying, setIsPlaying] = useState(false)
-	const [loadedFrames, setLoadedFrames] = useState([])
-	const [isLoading, setIsLoading] = useState(true)
 	const intervalRef = useRef<number | null>(null)
-
-	useEffect(() => {
-		const loadImages = async () => {
-			const validFrames = []
-			for (const frame of frames) {
-				const cachedImage = localStorage.getItem(frame)
-				if (cachedImage) {
-					const img = new Image()
-					img.src = cachedImage
-					validFrames.push(img)
-				} else {
-					try {
-						await new Promise<void>((resolve, reject) => {
-							const img = new Image()
-							img.src = frame
-							img.onload = () => {
-								validFrames.push(img)
-								localStorage.setItem(frame, img.src)
-								resolve()
-							}
-							img.onerror = () => reject()
-						})
-					} catch {
-						console.warn(`Failed to load image: ${frame}`)
-					}
-				}
-			}
-			setLoadedFrames(validFrames)
-			setIsLoading(false)
-		}
-
-		loadImages()
-		return
-	}, [frames])
 
 	useEffect(() => {
 		if (isPlaying) {
@@ -85,16 +54,39 @@ export const Animator = ({ frames, interval = 0.5, hideControls = false, autoPla
 
 	return (
 		<div className={styles.animator}>
-			<div className={styles.imageContainer}>
-				{isLoading ? (
-					<LoadingPanel size={0.35} hideText />
-				) : (
-					loadedFrames.length > 0 &&
-					loadedFrames.map((frame, index) => <img key={index} src={frame.src} style={{ opacity: index === currentFrame ? 1 : 0 }} />)
+			<TransformWrapper disablePadding doubleClick={{ disabled: true }}>
+				{({ zoomIn, zoomOut, resetTransform }) => (
+					<>
+						<TransformComponent>
+							<AnimatorImageMachine
+								frames={frames}
+								currentFrame={currentFrame}
+								loadedFrames={loadedFrames}
+								setLoadedFrames={setLoadedFrames}
+							/>
+						</TransformComponent>
+						{!hideZoomControls && (
+							<div className={styles.zoomControls}>
+								<button onClick={() => zoomIn()}>
+									<FontAwesomeIcon icon={faSearchPlus} />
+								</button>
+								<button onClick={() => zoomOut()}>
+									<FontAwesomeIcon icon={faSearchMinus} />
+								</button>
+								<button
+									onClick={() => {
+										resetTransform()
+									}}
+								>
+									<FontAwesomeIcon icon={faUndo} />
+								</button>
+							</div>
+						)}
+					</>
 				)}
-			</div>
+			</TransformWrapper>
 			{!hideControls && (
-				<div>
+				<div className={styles.controls}>
 					<button onClick={play}>Play</button>
 					<button onClick={pause}>Pause</button>
 					<input type="range" min="0" max={loadedFrames.length - 1} value={currentFrame} onChange={(e) => seek(Number(e.target.value))} />

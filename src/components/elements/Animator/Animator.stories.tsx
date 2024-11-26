@@ -16,14 +16,29 @@ const meta: Meta<typeof Animator> = {
 export default meta
 
 const TemplateFactory = () => {
-	const Template: StoryFn<typeof Animator> = ({ frames }) => {
-		return <Animator frames={frames} />
+	const Template: StoryFn<typeof Animator> = (args) => {
+		return <Animator {...args} />
 	}
 	return Template
 }
 
-export const simpleAutoPlay: StoryFn<typeof Animator> = TemplateFactory()
-simpleAutoPlay.args = {
+export const simpleAutoPlayNoControls: StoryFn<typeof Animator> = TemplateFactory()
+simpleAutoPlayNoControls.args = {
 	interval: 0.25,
 	frames: testFrames,
+	autoPlay: true,
+	hideControls: true,
+}
+export const simpleAutoPlayControls: StoryFn<typeof Animator> = TemplateFactory()
+simpleAutoPlayControls.args = {
+	interval: 0.25,
+	frames: testFrames,
+	autoPlay: true,
+}
+export const simpleAutoPlayControlsNoZoom: StoryFn<typeof Animator> = TemplateFactory()
+simpleAutoPlayControlsNoZoom.args = {
+	interval: 0.25,
+	frames: testFrames,
+	autoPlay: true,
+	hideZoomControls: true,
 }
