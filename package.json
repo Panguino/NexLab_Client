@@ -65,6 +65,7 @@
     "sass": "^1.77.8",
     "sass-extract": "^3.0.0",
     "storybook": "^8.2.9",
+    "storybook-dark-mode": "^4.0.2",
     "topojson-client": "^3.1.0",
     "typescript": "^5.5.4",
     "usehooks-ts": "^3.1.0",
