@@ -1,4 +1,5 @@
 'use client'
+import useDimensions from '@/hooks/useDimensions'
 import { faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
@@ -8,17 +9,20 @@ import { AnimatorImageMachine } from './AnimatorImageMachine/AnimatorImageMachin
 
 interface IAnimator {
 	frames: string[]
+	ratio?: number
 	hideControls?: boolean
 	hideZoomControls?: boolean
 	autoPlay?: boolean
 	interval?: number
 }
 
-export const Animator = ({ frames, interval = 0.5, hideControls = false, autoPlay = false, hideZoomControls = false }: IAnimator) => {
+export const Animator = ({ frames, ratio = 1, interval = 0.5, hideControls = false, autoPlay = false, hideZoomControls = false }: IAnimator) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [isPlaying, setIsPlaying] = useState(false)
 	const intervalRef = useRef<number | null>(null)
+	const transformRef = useRef(null)
+	const [animatorRef, { width, height, adjustedHeight, adjustedWidth }] = useDimensions(ratio)
 
 	useEffect(() => {
 		if (isPlaying) {
@@ -52,12 +56,31 @@ export const Animator = ({ frames, interval = 0.5, hideControls = false, autoPla
 		}
 	}, [autoPlay, loadedFrames])
 
+	useEffect(() => {
+		const handleResize = () => {
+			if (transformRef.current) {
+				transformRef.current.resetTransform()
+			}
+		}
+
+		window.addEventListener('resize', handleResize)
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+
 	return (
-		<div className={styles.animator}>
-			<TransformWrapper disablePadding doubleClick={{ disabled: true }}>
+		<div ref={animatorRef} className={styles.animator}>
+			<TransformWrapper ref={transformRef} disablePadding doubleClick={{ disabled: true }}>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
-						<TransformComponent>
+						<TransformComponent
+							wrapperStyle={{
+								width: width,
+								height: height,
+							}}
+							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
+						>
 							<AnimatorImageMachine
 								frames={frames}
 								currentFrame={currentFrame}

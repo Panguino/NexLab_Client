@@ -10,7 +10,13 @@ const meta: Meta<typeof Animator> = {
 		frames: { control: false },
 		interval: { control: { type: 'number' } },
 	},
-	decorators: [(Story) => <Providers>{Story()}</Providers>],
+	decorators: [
+		(Story) => (
+			<Providers>
+				<div style={{ height: '100vh' }}>{Story()}</div>
+			</Providers>
+		),
+	],
 }
 
 export default meta
@@ -22,23 +28,34 @@ const TemplateFactory = () => {
 	return Template
 }
 
-export const simpleAutoPlayNoControls: StoryFn<typeof Animator> = TemplateFactory()
-simpleAutoPlayNoControls.args = {
+export const autoPlayNoControls: StoryFn<typeof Animator> = TemplateFactory()
+autoPlayNoControls.args = {
 	interval: 0.25,
 	frames: testFrames,
 	autoPlay: true,
 	hideControls: true,
 }
-export const simpleAutoPlayControls: StoryFn<typeof Animator> = TemplateFactory()
-simpleAutoPlayControls.args = {
+export const autoPlayControls: StoryFn<typeof Animator> = TemplateFactory()
+autoPlayControls.args = {
 	interval: 0.25,
 	frames: testFrames,
 	autoPlay: true,
 }
-export const simpleAutoPlayControlsNoZoom: StoryFn<typeof Animator> = TemplateFactory()
-simpleAutoPlayControlsNoZoom.args = {
+export const autoPlayControlsNoZoom: StoryFn<typeof Animator> = TemplateFactory()
+autoPlayControlsNoZoom.args = {
 	interval: 0.25,
 	frames: testFrames,
 	autoPlay: true,
 	hideZoomControls: true,
+}
+export const responsiveSize: StoryFn<typeof Animator> = TemplateFactory()
+responsiveSize.args = {
+	interval: 0.25,
+	frames: testFrames,
+}
+export const specificRatio: StoryFn<typeof Animator> = TemplateFactory()
+specificRatio.args = {
+	interval: 0.25,
+	frames: testFrames,
+	ratio: 7 / 5,
 }
