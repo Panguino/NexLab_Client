@@ -54,7 +54,7 @@ export const Animator = ({ frames, interval = 0.5, hideControls = false, autoPla
 
 	return (
 		<div className={styles.animator}>
-			<TransformWrapper disablePadding doubleClick={{ disabled: true }}>
+			<TransformWrapper disablePadding doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }}>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
 						<TransformComponent>
