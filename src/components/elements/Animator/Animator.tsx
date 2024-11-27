@@ -71,7 +71,7 @@ export const Animator = ({ frames, ratio = 1, interval = 0.5, hideControls = fal
 
 	return (
 		<div ref={animatorRef} className={styles.animator}>
-			<TransformWrapper ref={transformRef} disablePadding doubleClick={{ disabled: true }}>
+			<TransformWrapper ref={transformRef} disablePadding centerOnInit doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }}>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
 						<TransformComponent
