@@ -59,3 +59,10 @@ specificRatio.args = {
 	frames: testFrames,
 	ratio: 7 / 5,
 }
+export const maxWidthAndHeight: StoryFn<typeof Animator> = TemplateFactory()
+maxWidthAndHeight.args = {
+	interval: 0.25,
+	frames: testFrames,
+	maxWidth: 500,
+	maxHeight: 500,
+}

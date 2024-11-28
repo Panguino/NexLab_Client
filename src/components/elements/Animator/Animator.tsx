@@ -10,13 +10,24 @@ import { AnimatorImageMachine } from './AnimatorImageMachine/AnimatorImageMachin
 interface IAnimator {
 	frames: string[]
 	ratio?: number
+	maxHeight?: number
+	maxWidth?: number
 	hideControls?: boolean
 	hideZoomControls?: boolean
 	autoPlay?: boolean
 	interval?: number
 }
 
-export const Animator = ({ frames, ratio = 1, interval = 0.5, hideControls = false, autoPlay = false, hideZoomControls = false }: IAnimator) => {
+export const Animator = ({
+	frames,
+	ratio = 1,
+	maxHeight,
+	maxWidth,
+	interval = 0.5,
+	hideControls = false,
+	autoPlay = false,
+	hideZoomControls = false,
+}: IAnimator) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [isPlaying, setIsPlaying] = useState(false)
@@ -70,7 +81,7 @@ export const Animator = ({ frames, ratio = 1, interval = 0.5, hideControls = fal
 	}, [])
 
 	return (
-		<div ref={animatorRef} className={styles.animator}>
+		<div ref={animatorRef} className={styles.animator} style={{ maxHeight: maxHeight || '100%', maxWidth: maxWidth || '100%' }}>
 			<TransformWrapper ref={transformRef} disablePadding centerOnInit doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }}>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
