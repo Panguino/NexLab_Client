@@ -63,6 +63,6 @@ export const maxWidthAndHeight: StoryFn<typeof Animator> = TemplateFactory()
 maxWidthAndHeight.args = {
 	interval: 0.25,
 	frames: testFrames,
-	maxWidth: 500,
-	maxHeight: 500,
+	width: 500,
+	height: 500,
 }

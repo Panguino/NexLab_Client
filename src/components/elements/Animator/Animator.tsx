@@ -10,8 +10,8 @@ import { AnimatorImageMachine } from './AnimatorImageMachine/AnimatorImageMachin
 interface IAnimator {
 	frames: string[]
 	ratio?: number
-	maxHeight?: number
-	maxWidth?: number
+	height?: number
+	width?: number
 	hideControls?: boolean
 	hideZoomControls?: boolean
 	autoPlay?: boolean
@@ -21,8 +21,8 @@ interface IAnimator {
 export const Animator = ({
 	frames,
 	ratio = 1,
-	maxHeight,
-	maxWidth,
+	height,
+	width,
 	interval = 0.5,
 	hideControls = false,
 	autoPlay = false,
@@ -33,7 +33,7 @@ export const Animator = ({
 	const [isPlaying, setIsPlaying] = useState(false)
 	const intervalRef = useRef<number | null>(null)
 	const transformRef = useRef(null)
-	const [animatorRef, { width, height, adjustedHeight, adjustedWidth }] = useDimensions(ratio)
+	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio)
 
 	useEffect(() => {
 		if (isPlaying) {
@@ -81,14 +81,14 @@ export const Animator = ({
 	}, [])
 
 	return (
-		<div ref={animatorRef} className={styles.animator} style={{ maxHeight: maxHeight || '100%', maxWidth: maxWidth || '100%' }}>
+		<div ref={animatorRef} className={styles.animator} style={{ height: height || '100%', width: width || '100%' }}>
 			<TransformWrapper ref={transformRef} disablePadding centerOnInit doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }}>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
 						<TransformComponent
 							wrapperStyle={{
-								width: width,
-								height: height,
+								width: _width,
+								height: _height,
 							}}
 							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
 						>
