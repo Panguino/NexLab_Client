@@ -4,10 +4,14 @@ import { faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
+import BasicPlaybackControls, { LoopMethod } from '../BasicPlaybackControls/BasicPlaybackControls'
+import Scrubber from '../Scrubber/Scrubber'
 import styles from './Animator.module.scss'
 import { AnimatorImageMachine } from './AnimatorImageMachine/AnimatorImageMachine'
 
-interface IAnimator {
+type direction = 1 | -1
+
+interface IAnimatorProps {
 	frames: string[]
 	ratio?: number
 	height?: number
@@ -23,22 +27,44 @@ export const Animator = ({
 	ratio = 1,
 	height,
 	width,
-	interval = 0.5,
+	interval = 0.1,
 	hideControls = false,
 	autoPlay = false,
 	hideZoomControls = false,
-}: IAnimator) => {
+}: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(0)
+	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
+	const [playDirection, setPlayDirection] = useState<direction>(1)
 	const [isPlaying, setIsPlaying] = useState(false)
 	const intervalRef = useRef<number | null>(null)
 	const transformRef = useRef(null)
 	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio)
 
 	useEffect(() => {
+		if (loopMethod === LoopMethod.LeftToRight) {
+			setPlayDirection(1)
+		} else if (loopMethod === LoopMethod.RightToLeft) {
+			setPlayDirection(-1)
+		} else if (loopMethod === LoopMethod.Bounce) {
+			if (currentFrame === 0) {
+				setPlayDirection(1)
+			} else if (currentFrame === loadedFrames.length - 1) {
+				setPlayDirection(-1)
+			}
+		}
+	}, [playDirection, loopMethod, currentFrame, loadedFrames.length])
+
+	useEffect(() => {
 		if (isPlaying) {
 			intervalRef.current = window.setInterval(() => {
-				setCurrentFrame((prevFrame) => (prevFrame + 1) % loadedFrames.length)
+				setCurrentFrame((prevFrame) => {
+					const nextFrame = (prevFrame + 1 * playDirection) % loadedFrames.length
+					if (nextFrame < 0) {
+						return loadedFrames.length - 1
+					}
+					return nextFrame
+				})
 			}, interval * 1000)
 		} else if (intervalRef.current) {
 			clearInterval(intervalRef.current)
@@ -50,15 +76,28 @@ export const Animator = ({
 				clearInterval(intervalRef.current)
 			}
 		}
-	}, [isPlaying, interval, loadedFrames.length])
+	}, [isPlaying, interval, loadedFrames.length, playDirection])
 
-	const play = () => setIsPlaying(true)
-	const pause = () => setIsPlaying(false)
+	const playPause = () => {
+		if (isPlaying) {
+			setIsPlaying(false)
+		} else {
+			setIsPlaying(true)
+		}
+	}
 	const seek = (frameIndex: number) => {
 		setCurrentFrame(frameIndex)
 		if (isPlaying) {
-			pause()
+			setIsPlaying(false)
 		}
+	}
+	const stepForward = () => {
+		setIsPlaying(false)
+		seek((currentFrame + 1) % loadedFrames.length)
+	}
+	const stepBackward = () => {
+		setIsPlaying(false)
+		seek((currentFrame - 1 + loadedFrames.length) % loadedFrames.length)
 	}
 
 	useEffect(() => {
@@ -120,10 +159,18 @@ export const Animator = ({
 				)}
 			</TransformWrapper>
 			{!hideControls && (
-				<div className={styles.controls}>
-					<button onClick={play}>Play</button>
-					<button onClick={pause}>Pause</button>
-					<input type="range" min="0" max={loadedFrames.length - 1} value={currentFrame} onChange={(e) => seek(Number(e.target.value))} />
+				<div className={styles.controlsContainer}>
+					<div className={styles.controls}>
+						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
+						<BasicPlaybackControls
+							isPlaying={isPlaying}
+							loopMethod={loopMethod}
+							onLoopMethodToggle={setLoopMethod}
+							onStepBackwardClick={stepBackward}
+							onStepForwardClick={stepForward}
+							onPlayPauseClick={playPause}
+						/>
+					</div>
 				</div>
 			)}
 		</div>

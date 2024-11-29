@@ -37,7 +37,7 @@ autoPlayNoControls.args = {
 }
 export const autoPlayControls: StoryFn<typeof Animator> = TemplateFactory()
 autoPlayControls.args = {
-	interval: 0.25,
+	interval: 0.01,
 	frames: testFrames,
 	autoPlay: true,
 }
