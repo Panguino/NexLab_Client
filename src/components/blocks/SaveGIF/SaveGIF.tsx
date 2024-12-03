@@ -26,14 +26,29 @@ const SaveGIF: React.FC<SaveGIFProps> = ({ gifSaveName = 'animation.gif', onGifS
 
 	return (
 		<div className="save-gif-component">
-			<p className="instruction-text">
-				The GIF will use the current animation settings (e.g., frame rate, start/end frames, dwell times). Please adjust the settings in the
-				animator to achieve the desired output before saving.
-			</p>
-			<input type="text" value={filename} onChange={(e) => setFilename(e.target.value)} className="filename-input" />
-			<button onClick={handleSave} className="save-button">
-				Save GIF
-			</button>
+			<div className="input-wrapper">
+				<p className="instruction-text">
+					The GIF will use the current animation settings (e.g., frame rate, start/end frames, dwell times). Please adjust the settings in
+					the animator to achieve the desired output before saving.
+				</p>
+				<div className="filename-wrapper">
+					<label className="filename-label" htmlFor="filename-input">
+						Filename:
+					</label>
+					<input
+						id="filename-input"
+						type="text"
+						value={filename}
+						onChange={(e) => setFilename(e.target.value)}
+						className="filename-input"
+					/>
+				</div>
+				<div className="save-button-wrapper">
+					<button onClick={handleSave} className="save-button">
+						Save GIF
+					</button>
+				</div>
+			</div>
 			{error && <p className="error-message">{error}</p>}
 		</div>
 	)

@@ -3,24 +3,56 @@
 	flex-direction: column;
 	align-items: flex-start;
 	gap: 10px;
+	width: 100%;
+}
+
+.input-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
 }
 
 .instruction-text {
 	font-size: 14px;
-	color: #333;
+	color: var(--color-grey17-grey5);
+	width: 40%;
+	padding: 10px;
+}
+
+.filename-wrapper {
+	display: flex;
+	flex-direction: column;
+	width: 40%;
+}
+
+.filename-label {
+	font-size: 14px;
+	color: var(--color-grey17-grey5);
+	margin-bottom: 5px;
 }
 
 .filename-input {
 	padding: 8px;
 	font-size: 14px;
-	width: 100%;
+	color: var(--color-grey17-grey5);
+	border: 1px solid var(--color-grey17-grey5);
 	box-sizing: border-box;
+}
+
+.save-button-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 20%;
+	padding: 10px;
 }
 
 .save-button {
 	padding: 8px 16px;
 	font-size: 14px;
 	cursor: pointer;
+	width: 80%;
 }
 
 .error-message {
