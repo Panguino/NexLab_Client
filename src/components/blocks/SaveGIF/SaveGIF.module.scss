@@ -1,4 +1,4 @@
-.save-gif-component {
+.saveGifComponent {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -6,33 +6,43 @@
 	width: 100%;
 }
 
-.input-wrapper {
+.inputWrapper {
 	display: flex;
 	align-items: center;
 	gap: 10px;
 	width: 100%;
 }
-
-.instruction-text {
-	font-size: 14px;
-	color: var(--color-grey17-grey5);
+.instructionWrapper {
+	display: flex;
+	flex-direction: column;
 	width: 40%;
 	padding: 10px;
 }
 
-.filename-wrapper {
+.instructionTitle {
+	font-size: 16px;
+	color: var(--color-grey17-grey5);
+	margin: 0;
+	padding: 0;
+}
+.instructionText {
+	font-size: 14px;
+	color: var(--color-grey17-grey5);
+}
+
+.filenameWrapper {
 	display: flex;
 	flex-direction: column;
 	width: 40%;
 }
 
-.filename-label {
+.filenameLabel {
 	font-size: 14px;
 	color: var(--color-grey17-grey5);
 	margin-bottom: 5px;
 }
 
-.filename-input {
+.filenameInput {
 	padding: 8px;
 	font-size: 14px;
 	color: var(--color-grey17-grey5);
@@ -40,7 +50,7 @@
 	box-sizing: border-box;
 }
 
-.save-button-wrapper {
+.saveButtonWrapper {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -48,14 +58,22 @@
 	padding: 10px;
 }
 
-.save-button {
+.saveButton {
 	padding: 8px 16px;
 	font-size: 14px;
+	color: white;
+	background-color: var(--color-blue3);
 	cursor: pointer;
-	width: 80%;
+	width: 100%;
+	border: none;
 }
 
-.error-message {
+.saveButton:disabled {
+	background-color: var(--color-grey5);
+	cursor: not-allowed;
+}
+
+.errorMessage {
 	color: red;
 	font-size: 12px;
 }
