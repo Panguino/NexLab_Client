@@ -5,7 +5,7 @@ import styles from './ProductInfo.module.scss'
 interface ProductInfoProps {
 	info?: React.ReactNode
 	image?: string
-	description?: React.ReactNode
+	description?: string
 }
 
 const ProductInfo: React.FC<ProductInfoProps> = ({ info, image, description }) => {
