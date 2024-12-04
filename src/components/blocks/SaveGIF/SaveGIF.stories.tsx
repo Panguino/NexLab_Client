@@ -1,5 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react'
 import SaveGIF from './SaveGIF'
+import { testFrames } from './TestData'
 
 export default {
 	title: 'Components/SaveGIF',
@@ -12,19 +13,19 @@ export const Default = Template.bind({})
 Default.args = {
 	gifSaveName: 'animation.gif',
 	onGifSave: (filename: string) => console.log(`GIF saved with filename: ${filename}`),
-	framesAvailable: true,
+	framesAvailable: testFrames,
 }
 
 export const ModifiedFilename = Template.bind({})
 ModifiedFilename.args = {
 	gifSaveName: 'custom_animation.gif',
 	onGifSave: (filename: string) => console.log(`GIF saved with filename: ${filename}`),
-	framesAvailable: true,
+	framesAvailable: testFrames,
 }
 
 export const NoFramesAvailable = Template.bind({})
 NoFramesAvailable.args = {
 	gifSaveName: 'animation.gif',
 	onGifSave: (filename: string) => console.log(`GIF saved with filename: ${filename}`),
-	framesAvailable: false,
+	framesAvailable: [],
 }

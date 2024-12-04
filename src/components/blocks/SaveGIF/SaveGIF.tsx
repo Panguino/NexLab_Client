@@ -4,22 +4,23 @@ import styles from './SaveGIF.module.scss'
 interface SaveGIFProps {
 	gifSaveName?: string
 	onGifSave: (filename: string) => void
-	framesAvailable: boolean
+	framesAvailable: any[] | undefined
 }
 
 const SaveGIF: React.FC<SaveGIFProps> = ({ gifSaveName = 'animation.gif', onGifSave, framesAvailable }) => {
 	const [filename, setFilename] = useState(gifSaveName)
 	const [error, setError] = useState('')
 	const [isButtonDisabled, setIsButtonDisabled] = useState(!gifSaveName)
+	const [buttonText, setButtonText] = useState('Save GIF')
 
 	useEffect(() => {
 		setIsButtonDisabled(!filename)
 	}, [filename])
 
 	const handleSave = () => {
-		if (!framesAvailable) {
-			// setError('No frames available for saving.')
-			// return
+		if (!framesAvailable || framesAvailable.length === 0) {
+			setError('No frames available for saving.')
+			return
 		}
 		if (!filename || /[<>:"/\\|?*]/.test(filename)) {
 			setError('Invalid filename.')
@@ -27,6 +28,13 @@ const SaveGIF: React.FC<SaveGIFProps> = ({ gifSaveName = 'animation.gif', onGifS
 		}
 		setError('')
 		onGifSave(filename)
+		setButtonText('Saved!')
+		setIsButtonDisabled(true)
+	}
+	const handleFilenameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setFilename(e.target.value)
+		setButtonText('Save GIF')
+		setIsButtonDisabled(!e.target.value)
 	}
 
 	return (
@@ -43,21 +51,15 @@ const SaveGIF: React.FC<SaveGIFProps> = ({ gifSaveName = 'animation.gif', onGifS
 					<label className={styles.filenameLabel} htmlFor="filename-input">
 						Filename:
 					</label>
-					<input
-						id="filename-input"
-						type="text"
-						value={filename}
-						onChange={(e) => setFilename(e.target.value)}
-						className={styles.filenameInput}
-					/>
+					<input id="filename-input" type="text" value={filename} onChange={handleFilenameChange} className={styles.filenameInput} />
+					{error && <p className={styles.errorMessage}>{error}</p>}
 				</div>
 				<div className={styles.saveButtonWrapper}>
 					<button onClick={handleSave} className={styles.saveButton} disabled={isButtonDisabled}>
-						Save GIF
+						{buttonText}
 					</button>
 				</div>
 			</div>
-			{error && <p className={styles.errorMessage}>{error}</p>}
 		</div>
 	)
 }
