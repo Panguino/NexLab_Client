@@ -1,26 +1,28 @@
 // src/components/ProductInfo/ProductInfo.stories.tsx
 import { Meta, StoryFn } from '@storybook/react'
 import ProductInfo from './ProductInfo'
+import { infoBlob } from './testInfo'
 
 export default {
 	title: 'Components/ProductInfo',
 	component: ProductInfo,
 } as Meta
 
-const productInfoContent = (
-	<div>
-		<h2>Base Reflectivity</h2>
-		<p>Abbreviation: BREF</p>
-		<p>Units: dBz</p>
-		<p>Tilt: 0.5deg</p>
-		<p>
-			More Info:{' '}
-			<a href="https://www.noaa.gov/jetstream/reflectivity" target="_blank">
-				NOAA
-			</a>
-		</p>
-	</div>
-)
+// const productInfoContent = (
+// 	<div>
+// 		<h2>Base Reflectivity</h2>
+// 		<p>Abbreviation: BREF</p>
+// 		<p>Units: dBz</p>
+// 		<p>Tilt: 0.5deg</p>
+// 		<p>
+// 			More Info:{' '}
+// 			<a href="https://www.noaa.gov/jetstream/reflectivity" target="_blank">
+// 				NOAA
+// 			</a>
+// 		</p>
+// 	</div>
+// )
+const productInfoContent = infoBlob
 
 const productImage = 'https://climate.cod.edu/storybook/nexrad/GRB.N0B.20241125.1942.gif'
 
