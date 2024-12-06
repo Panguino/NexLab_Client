@@ -1,7 +1,6 @@
-import { faCog, faHome, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Meta, StoryFn } from '@storybook/react'
-import React from 'react'
 import { Tab, Tabs } from './Tabs'
 
 export default {
@@ -22,53 +21,39 @@ TabsWithIcons.args = {
 		<Tab
 			label={
 				<>
-					<FontAwesomeIcon icon={faHome} /> Home
+					<FontAwesomeIcon icon={faInfoCircle} /> Info
 				</>
 			}
 		>
-			Home Content
+			Information Panel
 		</Tab>,
 		<Tab
 			label={
 				<>
-					<FontAwesomeIcon icon={faUser} /> Profile
+					<FontAwesomeIcon icon={faWarning} /> Alerts
 				</>
 			}
 		>
-			Profile Content
+			Alerts Panel
 		</Tab>,
 		<Tab
 			label={
 				<>
-					<FontAwesomeIcon icon={faCog} /> Settings
+					<FontAwesomeIcon icon={faLayerGroup} /> Overlays
 				</>
 			}
 		>
-			Settings Content
+			Overlays Panel
+		</Tab>,
+
+		<Tab
+			label={
+				<>
+					<FontAwesomeIcon icon={faDownload} /> Download
+				</>
+			}
+		>
+			Download Panel
 		</Tab>,
 	],
-}
-
-export const DynamicTabs = () => {
-	const [tabs, setTabs] = React.useState([
-		{ label: 'Tab 1', content: 'Content 1' },
-		{ label: 'Tab 2', content: 'Content 2' },
-	])
-
-	const addTab = () => {
-		setTabs([...tabs, { label: `Tab ${tabs.length + 1}`, content: `Content ${tabs.length + 1}` }])
-	}
-
-	return (
-		<>
-			<button onClick={addTab}>Add Tab</button>
-			<Tabs>
-				{tabs.map((tab, index) => (
-					<Tab key={index} label={tab.label}>
-						{tab.content}
-					</Tab>
-				))}
-			</Tabs>
-		</>
-	)
 }

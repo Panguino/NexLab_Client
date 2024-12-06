@@ -1,4 +1,5 @@
 import React, { ReactNode, useState } from 'react'
+import styles from './Tabs.module.scss'
 
 interface TabProps {
 	label: ReactNode
@@ -17,15 +18,15 @@ export const Tabs: React.FC<TabsProps> = ({ children }) => {
 	const [activeTab, setActiveTab] = useState(0)
 
 	return (
-		<div>
-			<div className="tab-labels">
+		<div className={styles.tabs}>
+			<div className={styles.tabLabels}>
 				{React.Children.map(children, (child, index) => (
-					<button key={index} className={index === activeTab ? 'active' : ''} onClick={() => setActiveTab(index)}>
+					<div key={index} className={index === activeTab ? styles.activeTab : styles.inactiveTab} onClick={() => setActiveTab(index)}>
 						{child.props.label}
-					</button>
+					</div>
 				))}
 			</div>
-			<div className="tab-content">{React.Children.map(children, (child, index) => (index === activeTab ? child : null))}</div>
+			<div className={styles.tabContent}>{React.Children.map(children, (child, index) => (index === activeTab ? child : null))}</div>
 		</div>
 	)
 }
