@@ -5,6 +5,11 @@ import { FloatingInfoPanel } from './FloatingInfoPanel'
 export default {
 	title: 'Components/FloatingInfoPanel',
 	component: FloatingInfoPanel,
+	argTypes: {
+		onClose: { control: false },
+		children: { control: false },
+		title: { control: 'text' },
+	},
 } as Meta
 
 const Template: StoryFn<typeof FloatingInfoPanel> = (args) => {
