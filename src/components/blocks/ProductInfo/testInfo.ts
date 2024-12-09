@@ -1,13 +1,4 @@
 export const infoBlob = [
-	// {
-	// 	type: 'paragraph',
-	// 	children: [
-	// 		{
-	// 			text: "Introduction to the earth's climate, climate change, and the interactions between climate and the global environment. Physical, chemical, biological, and social factors contributing to climate and global change are investigated. Topics explored are: climate classifications, global warming and greenhouse effect, acid rain, ozone depletion, regional drought, and cataclysmic climate change. Man-made climate change as opposed to natural variability, along with human responses to potential climate change are debated.",
-	// 			type: 'text',
-	// 		},
-	// 	],
-	// },
 	{
 		type: 'heading',
 		level: 4,
