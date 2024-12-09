@@ -38,16 +38,6 @@ DefaultStyling.args = {
 	variant: 'default',
 }
 
-export const SimpleStyling = Template.bind({})
-SimpleStyling.args = {
-	items: [
-		{ name: 'Option 1', value: 'opt1' },
-		{ name: 'Option 2', value: 'opt2' },
-		{ name: 'Option 3', value: 'opt3' },
-	],
-	variant: 'simple',
-}
-
 export const ColumnLayout = Template.bind({})
 ColumnLayout.args = {
 	items: [

@@ -11,13 +11,6 @@
 		cursor: pointer;
 	}
 
-	&.simple .pill-item {
-		color: #007bff;
-		padding: 10px 20px;
-		margin: 5px;
-		cursor: pointer;
-	}
-
 	.pill-item.selected {
 		background-color: #0056b3;
 		color: white;
@@ -33,5 +26,13 @@
 
 	&.columns-4 .pill-item {
 		flex: 0 0 25%;
+	}
+
+	&.columns-5 .pill-item {
+		flex: 0 0 20%;
+	}
+
+	&.columns-6 .pill-item {
+		flex: 0 0 16.66%;
 	}
 }

@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import './PillSelector.scss'
 
-interface PillItem {
+export interface PillItem {
 	name: string
 	value: string
 }
 
-interface PillSelectorProps {
+export interface PillSelectorProps {
 	items: PillItem[]
 	mode?: 'single' | 'multi'
 	columns?: number
