@@ -1,4 +1,5 @@
 import { Button } from '@/components/elements/Button/Button'
+import InputText from '@/components/elements/InputText/InputText'
 import React, { useEffect, useState } from 'react'
 import styles from './SaveGIF.module.scss'
 
@@ -49,17 +50,11 @@ const SaveGIF: React.FC<SaveGIFProps> = ({ gifSaveName = 'animation.gif', doGifS
 					</p>
 				</div>
 				<div className={styles.filenameWrapper}>
-					<label className={styles.filenameLabel} htmlFor="filename-input">
-						Filename:
-					</label>
-					<input id="filename-input" type="text" value={filename} onChange={handleFilenameChange} className={styles.filenameInput} />
+					<InputText label="Filename" value={filename} onChange={handleFilenameChange} />
 					{error && <p className={styles.errorMessage}>{error}</p>}
 				</div>
 				<div className={styles.saveButtonWrapper}>
 					<Button label={buttonText} onClick={handleSave} disabled={isButtonDisabled} />
-					{/* <button onClick={handleSave} className={styles.saveButton} disabled={isButtonDisabled}>
-						{buttonText}
-					</button> */}
 				</div>
 			</div>
 		</div>
