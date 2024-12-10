@@ -3,40 +3,43 @@ import './PillSelector.scss'
 
 export interface PillItem {
 	name: string
-	value: string
+	value: string[]
 }
 
 export interface PillSelectorProps {
 	items: PillItem[]
-	mode?: 'single' | 'multi'
+	maxSelect?: number
 	columns?: number
-	onChange?: (selected: string | string[]) => void
-	variant?: 'default' | 'simple'
+	onChange?: (selected: string[]) => void
 }
 
-const PillSelector: React.FC<PillSelectorProps> = ({ items, mode = 'single', columns, onChange, variant = 'default' }) => {
+const PillSelector: React.FC<PillSelectorProps> = ({ items, maxSelect = 1, columns, onChange }) => {
 	const [selected, setSelected] = useState<string[]>([])
 
 	const handleClick = (value: string) => {
 		let newSelected: string[]
-		if (mode === 'single') {
-			newSelected = [value]
+		if (selected.includes(value)) {
+			newSelected = selected.filter((item) => item !== value)
 		} else {
-			newSelected = selected.includes(value) ? selected.filter((item) => item !== value) : [...selected, value]
+			if (maxSelect === -1 || selected.length < maxSelect) {
+				newSelected = [...selected, value]
+			} else {
+				newSelected = selected
+			}
 		}
 		setSelected(newSelected)
 		if (onChange) {
-			onChange(mode === 'single' ? newSelected[0] : newSelected)
+			onChange(newSelected)
 		}
 	}
 
 	return (
-		<div className={`pill-selector ${variant} ${columns ? `columns-${columns}` : ''}`}>
+		<div className={`pill-selector ${columns ? `columns-${columns}` : ''}`}>
 			{items.map((item) => (
 				<div
-					key={item.value}
-					className={`pill-item ${selected.includes(item.value) ? 'selected' : ''}`}
-					onClick={() => handleClick(item.value)}
+					key={item.value.join(',')}
+					className={`pill-item ${selected.includes(item.value.join(',')) ? 'selected' : ''}`}
+					onClick={() => handleClick(item.value.join(','))}
 				>
 					{item.name}
 				</div>
