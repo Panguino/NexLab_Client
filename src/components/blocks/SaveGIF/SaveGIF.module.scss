@@ -42,21 +42,6 @@
 			justify-content: center;
 			width: 20%;
 			align-items: center;
-
-			.saveButton {
-				padding: 8px 16px;
-				font-size: 14px;
-				color: white;
-				background-color: var(--color-blue3);
-				cursor: pointer;
-				width: 80%;
-				border: none;
-
-				&:disabled {
-					background-color: var(--color-grey5);
-					cursor: not-allowed;
-				}
-			}
 		}
 	}
 }
