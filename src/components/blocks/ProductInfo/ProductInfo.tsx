@@ -7,7 +7,7 @@ import styles from './ProductInfo.module.scss'
 interface ProductInfoProps {
 	info?: RichTextContent
 	image?: string
-	description?: string
+	description?: RichTextContent
 }
 
 const ProductInfo: React.FC<ProductInfoProps> = ({ info, image, description }) => {
@@ -15,7 +15,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ info, image, description }) =
 		<div className={styles.productInfo}>
 			<div className={styles.productInfoColumnLeft}>{info && <RichText text={info} />}</div>
 			<div className={styles.productInfoColumnCenter}>{image && <img src={image} alt="Product" />}</div>
-			<div className={styles.productInfoColumnRight}>{description}</div>
+			<div className={styles.productInfoColumnRight}>{description && <RichText text={description} />}</div>
 		</div>
 	)
 }

@@ -4,7 +4,7 @@ export const infoBlob = [
 		level: 4,
 		children: [
 			{
-				text: 'Base Reflectivity',
+				text: 'Product Title',
 				type: 'text',
 			},
 		],
@@ -14,25 +14,11 @@ export const infoBlob = [
 		children: [
 			{
 				bold: true,
-				text: 'Abbreviation: ',
+				text: 'Detail: ',
 				type: 'text',
 			},
 			{
-				text: 'BREF',
-				type: 'text',
-			},
-		],
-	},
-	{
-		type: 'paragraph',
-		children: [
-			{
-				bold: true,
-				text: 'Units:',
-				type: 'text',
-			},
-			{
-				text: 'dBz',
+				text: 'specification',
 				type: 'text',
 			},
 		],
@@ -42,11 +28,36 @@ export const infoBlob = [
 		children: [
 			{
 				bold: true,
-				text: 'Tilt: ',
+				text: 'Detail: ',
 				type: 'text',
 			},
 			{
-				text: '0.5deg',
+				text: 'specification',
+				type: 'text',
+			},
+		],
+	},
+	{
+		type: 'paragraph',
+		children: [
+			{
+				bold: true,
+				text: 'Detail: ',
+				type: 'text',
+			},
+			{
+				text: 'specification',
+				type: 'text',
+			},
+		],
+	},
+]
+export const descriptionBlob = [
+	{
+		type: 'paragraph',
+		children: [
+			{
+				text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.',
 				type: 'text',
 			},
 		],
