@@ -1,13 +1,14 @@
+import { Button } from '@/components/elements/Button/Button'
 import React, { useEffect, useState } from 'react'
 import styles from './SaveGIF.module.scss'
 
 interface SaveGIFProps {
 	gifSaveName?: string
-	onGifSave: (filename: string) => void
+	doGifSave: (filename: string) => void
 	framesAvailable: any[] | undefined
 }
 
-const SaveGIF: React.FC<SaveGIFProps> = ({ gifSaveName = 'animation.gif', onGifSave, framesAvailable }) => {
+const SaveGIF: React.FC<SaveGIFProps> = ({ gifSaveName = 'animation.gif', doGifSave, framesAvailable }) => {
 	const [filename, setFilename] = useState(gifSaveName)
 	const [error, setError] = useState('')
 	const [isButtonDisabled, setIsButtonDisabled] = useState(!gifSaveName)
@@ -27,7 +28,7 @@ const SaveGIF: React.FC<SaveGIFProps> = ({ gifSaveName = 'animation.gif', onGifS
 			return
 		}
 		setError('')
-		onGifSave(filename)
+		doGifSave(filename)
 		setButtonText('Saved!')
 		setIsButtonDisabled(true)
 	}
@@ -55,9 +56,10 @@ const SaveGIF: React.FC<SaveGIFProps> = ({ gifSaveName = 'animation.gif', onGifS
 					{error && <p className={styles.errorMessage}>{error}</p>}
 				</div>
 				<div className={styles.saveButtonWrapper}>
-					<button onClick={handleSave} className={styles.saveButton} disabled={isButtonDisabled}>
+					<Button label={buttonText} onClick={handleSave} disabled={isButtonDisabled} />
+					{/* <button onClick={handleSave} className={styles.saveButton} disabled={isButtonDisabled}>
 						{buttonText}
-					</button>
+					</button> */}
 				</div>
 			</div>
 		</div>
