@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './PillSelector.scss'
+import styles from './PillSelector.module.scss'
 
 export interface PillItem {
 	name: string
@@ -21,7 +21,9 @@ const PillSelector: React.FC<PillSelectorProps> = ({ items, maxSelect = 1, colum
 		if (selected.includes(value)) {
 			newSelected = selected.filter((item) => item !== value)
 		} else {
-			if (maxSelect === -1 || selected.length < maxSelect) {
+			if (maxSelect === 1) {
+				newSelected = [value]
+			} else if (maxSelect === -1 || selected.length < maxSelect) {
 				newSelected = [...selected, value]
 			} else {
 				newSelected = selected
@@ -34,14 +36,16 @@ const PillSelector: React.FC<PillSelectorProps> = ({ items, maxSelect = 1, colum
 	}
 
 	return (
-		<div className={`pill-selector ${columns ? `columns-${columns}` : ''}`}>
+		<div className={`${styles.pillSelector} ${columns ? styles[`columns-${columns}`] : ''}`}>
 			{items.map((item) => (
-				<div
-					key={item.value.join(',')}
-					className={`pill-item ${selected.includes(item.value.join(',')) ? 'selected' : ''}`}
-					onClick={() => handleClick(item.value.join(','))}
-				>
-					{item.name}
+				<div className={styles.pillItemWrapper} key={item.value.join(',')}>
+					<div
+						key={item.value.join(',')}
+						className={`${styles.pillItem} ${selected.includes(item.value.join(',')) ? styles.pillItemSelected : ''}`}
+						onClick={() => handleClick(item.value.join(','))}
+					>
+						{item.name}
+					</div>
 				</div>
 			))}
 		</div>
