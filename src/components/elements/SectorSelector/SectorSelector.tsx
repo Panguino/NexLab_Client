@@ -24,10 +24,11 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 		const translate = [width / 2, height / 2]
 		// eslint-disable-next-line prettier/prettier
 		const projection = d3
-			.geoAlbers()
+			.geoOrthographic() // like a 2d globe
 			.precision(0)
-			.scale(height * 2)
+			.scale(height * 2) // zoom
 			.translate(translate)
+			.rotate([98, -40]) // center projection by using inverse lat,lon
 		const path = d3.geoPath().projection(projection)
 
 		svg.selectAll('*').remove()
