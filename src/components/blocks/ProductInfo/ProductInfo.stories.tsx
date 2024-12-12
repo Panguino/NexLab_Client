@@ -6,6 +6,10 @@ import { descriptionBlob, infoBlob } from './testInfo'
 export default {
 	title: 'Components/ProductInfo',
 	component: ProductInfo,
+	argTypes: {
+		info: { control: false },
+		description: { control: false },
+	},
 } as Meta
 
 const productInfoContent = infoBlob
