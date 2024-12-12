@@ -23,6 +23,10 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 
 		svg.selectAll('*').remove()
 
+		// Draw the map paths
+		svg.append('g').selectAll('path').data(sectors).enter().append('path').attr('d', path).attr('class', styles.mapPath)
+
+		// Draw the circles
 		svg.append('g')
 			.selectAll('circle')
 			.data(sectors)

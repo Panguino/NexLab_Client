@@ -1,9 +1,6 @@
 import { StoryFn } from '@storybook/react'
 import { useState } from 'react'
-<<<<<<< Tabnine <<<<<<<
-import { SectorSelector } from './SectorSelector'//-
-import SectorSelector from './SectorSelector'//+
->>>>>>> Tabnine >>>>>>>// {"conversationId":"fc5c3510-7fba-4ec5-9c62-e13918891f40","source":"instruct"}
+import SectorSelector from './SectorSelector'
 
 export default {
 	title: 'Components/SectorSelector',
