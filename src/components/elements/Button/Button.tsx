@@ -3,7 +3,7 @@ import Link from 'next/link'
 import styles from './Button.module.scss'
 
 export type ButtonType = {
-	label: string
+	label?: string | null
 	link?: string | null
 	target?: string | null
 	style?: string | null
