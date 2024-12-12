@@ -88,6 +88,9 @@ body {
   height: 100%;
   min-height: 100%;
   overflow: hidden;
+  &.sb-show-main {
+    overflow: auto;
+  }
 }
 body {
   a:hover {
