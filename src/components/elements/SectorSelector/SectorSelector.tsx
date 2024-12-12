@@ -26,9 +26,8 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 		const projection = d3
 			.geoAlbers()
 			.precision(0)
-			.scale(height * 1.5)
+			.scale(height * 2)
 			.translate(translate)
-		// const projection = d3.geoConicConformal().scale(1000).translate([-700, -300]).rotate([100, 0]).center([-100, 40])
 		const path = d3.geoPath().projection(projection)
 
 		svg.selectAll('*').remove()
@@ -47,20 +46,22 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 			.append('circle')
 			.attr('cx', (d) => projection(d.coordinates)[0])
 			.attr('cy', (d) => projection(d.coordinates)[1])
-			.attr('r', 40)
+			.attr('r', 10)
 			.attr('class', styles.pointRegion)
 			.on('mouseover', (_event, d) => {
+				d3.select(_event.currentTarget).attr('r', 25)
 				svg.append('text')
 					.attr('x', projection(d.coordinates)[0])
-					.attr('y', projection(d.coordinates)[1] - 10)
+					.attr('y', projection(d.coordinates)[1] - 7)
 					.attr('class', styles.tooltip)
-					.text(d.name)
+					.text(d.id)
 			})
-			.on('mouseout', () => {
+			.on('mouseout', (_event) => {
+				d3.select(_event.currentTarget).attr('r', 10)
 				svg.selectAll(`.${styles.tooltip}`).remove()
 			})
 			.on('click', (_event, d) => {
-				onChange(d.id)
+				onChange(`${d.id} - ${d.name}`)
 			})
 
 		pointsGroup

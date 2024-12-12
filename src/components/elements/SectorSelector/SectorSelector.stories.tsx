@@ -1,10 +1,14 @@
 import { StoryFn } from '@storybook/react'
 import { useState } from 'react'
 import SectorSelector from './SectorSelector'
+import { nexradSites } from './nexradSites'
 
 export default {
 	title: 'Components/SectorSelector',
 	component: SectorSelector,
+	argTypes: {
+		sectors: { control: { disable: true } },
+	},
 }
 
 const Template: StoryFn<typeof SectorSelector> = (args) => {
@@ -20,10 +24,6 @@ const Template: StoryFn<typeof SectorSelector> = (args) => {
 
 export const Default = Template.bind({})
 Default.args = {
-	sectors: [
-		{ id: '1', name: 'Sector 1', type: 'Point', coordinates: [-100, 40] },
-		{ id: '2', name: 'Sector 2', type: 'Point', coordinates: [-90, 35] },
-		{ id: '3', name: 'Sector 3', type: 'Point', coordinates: [-80, 30] },
-	],
+	sectors: nexradSites,
 	sector: '',
 }

@@ -11,12 +11,13 @@
 	fill: white;
 	stroke: black;
 	stroke-width: 2px;
-	pointer-events: none !important;
+	pointer-events: none;
 	user-select: none;
 }
 .pointRegion {
 	cursor: pointer;
 	fill: transparent;
+	transition: ease all 0.25s;
 	&:hover {
 		fill: rgb(0, 100, 255, 0.5);
 		stroke: rgb(0, 100, 255);
@@ -30,4 +31,5 @@
 	fill: black;
 	font-size: 12px;
 	text-anchor: middle;
+	transition: ease all 0.25s;
 }
