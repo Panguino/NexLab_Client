@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
 import React, { useEffect, useRef } from 'react'
 import styles from './SectorSelector.module.scss'
+import mapJson from './northAmerica.geo.json'
 
 export type ISectorSelectorProps = {
 	sectors: {
@@ -18,13 +19,13 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 
 	useEffect(() => {
 		const svg = d3.select(svgRef.current)
-		const projection = d3.geoConicConformal().scale(1000).translate([500, 300])
+		const projection = d3.geoConicConformal().scale(1000).translate([-700, -300]).rotate([100, 0]).center([-100, 40])
 		const path = d3.geoPath().projection(projection)
 
 		svg.selectAll('*').remove()
 
-		// Draw the map paths
-		svg.append('g').selectAll('path').data(sectors).enter().append('path').attr('d', path).attr('class', styles.mapPath)
+		// Draw the map paths using GeoJSON data
+		svg.append('g').selectAll('path').data(mapJson.features).enter().append('path').attr('d', path).attr('class', styles.mapPath)
 
 		// Draw the circles
 		svg.append('g')

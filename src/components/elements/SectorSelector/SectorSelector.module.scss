@@ -1,8 +1,13 @@
 .SectorSelector {
 	width: 100%;
 	height: 600px;
+	background-color: lightblue;
 }
-
+.mapPath {
+	fill: #8f7951;
+	stroke: #000;
+	stroke-width: 1px;
+}
 .point {
 	fill: blue;
 	cursor: pointer;
