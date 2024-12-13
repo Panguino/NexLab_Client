@@ -1,45 +1,46 @@
 .SectorSelector {
-	max-width: 1000px;
-	background-color: var(--color-blue1-blue2);
+  background-color: var(--color-blue1-blue2);
+  width: 100%;
+  height: 100%;
 }
 .mapPath {
-	fill: var(--color-grey2-grey16);
-	// stroke: var(--color-white-grey18);
-	// stroke-width: 1px;
-	transition: var(--themeChange);
+  fill: var(--color-grey2-grey16);
+  // stroke: var(--color-white-grey18);
+  // stroke-width: 1px;
+  transition: var(--themeChange);
 }
 .lakePath {
-	fill: var(--color-blue1-blue2);
+  fill: var(--color-blue1-blue2);
 }
 .statePath {
-	fill: none;
-	stroke: var(--color-white-grey18);
-	stroke-width: 1px;
+  fill: none;
+  stroke: var(--color-white-grey18);
+  stroke-width: 1px;
 }
 .point {
-	fill: white;
-	stroke: black;
-	stroke-width: 2px;
-	pointer-events: none;
-	user-select: none;
+  fill: white;
+  stroke: black;
+  stroke-width: 2px;
+  pointer-events: none;
+  user-select: none;
 }
 .pointRegion {
-	cursor: pointer;
-	fill: transparent;
-	transition: ease all 0.25s;
-	&:hover {
-		fill: var(--color-blue3);
-		stroke: var(--color-blue4);
-		opacity: 0.8;
-		stroke-width: 2px;
-	}
+  cursor: pointer;
+  fill: transparent;
+  transition: ease all 0.25s;
+  &:hover {
+    fill: var(--color-blue3);
+    stroke: var(--color-blue4);
+    opacity: 0.8;
+    stroke-width: 2px;
+  }
 }
 
 .tooltip {
-	pointer-events: none;
-	user-select: none;
-	fill: white;
-	font-size: 10px;
-	text-anchor: middle;
-	transition: ease all 0.25s;
+  pointer-events: none;
+  user-select: none;
+  fill: white;
+  font-size: 10px;
+  text-anchor: middle;
+  transition: ease all 0.25s;
 }

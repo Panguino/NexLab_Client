@@ -96,7 +96,11 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 	if (!d3config) return <></>
 	const { width, height } = d3config
 
-	return <svg ref={svgRef} viewBox={`0 0 ${width} ${height}`} width="100%" height="100%" className={styles.SectorSelector}></svg>
+	return (
+		<div className={styles.SectorSelector}>
+			<svg ref={svgRef} viewBox={`0 0 ${width} ${height}`} width="100%" height="100%"></svg>
+		</div>
+	)
 }
 
 export default SectorSelector
