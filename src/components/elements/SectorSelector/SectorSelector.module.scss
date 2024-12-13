@@ -1,35 +1,36 @@
 .SectorSelector {
-	max-width: 1000px;
-	background-color: lightblue;
+  max-width: 1000px;
+  background-color: var(--color-blue1-blue2);
 }
 .mapPath {
-	fill: #8f7951;
-	stroke: #000;
-	stroke-width: 1px;
+  fill: var(--color-grey2-grey16);
+  stroke: var(--color-white-grey18);
+  stroke-width: 1px;
+  transition: var(--themeChange);
 }
 .point {
-	fill: white;
-	stroke: black;
-	stroke-width: 2px;
-	pointer-events: none;
-	user-select: none;
+  fill: white;
+  stroke: black;
+  stroke-width: 2px;
+  pointer-events: none;
+  user-select: none;
 }
 .pointRegion {
-	cursor: pointer;
-	fill: transparent;
-	transition: ease all 0.25s;
-	&:hover {
-		fill: rgb(0, 100, 255, 0.5);
-		stroke: rgb(0, 100, 255);
-		stroke-width: 2px;
-	}
+  cursor: pointer;
+  fill: transparent;
+  transition: ease all 0.25s;
+  &:hover {
+    fill: rgb(0, 100, 255, 0.5);
+    stroke: rgb(0, 100, 255);
+    stroke-width: 2px;
+  }
 }
 
 .tooltip {
-	pointer-events: none;
-	user-select: none;
-	fill: black;
-	font-size: 12px;
-	text-anchor: middle;
-	transition: ease all 0.25s;
+  pointer-events: none;
+  user-select: none;
+  fill: black;
+  font-size: 12px;
+  text-anchor: middle;
+  transition: ease all 0.25s;
 }
