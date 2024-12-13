@@ -27,10 +27,6 @@ export type ISectorSelectorProps = {
 const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onChange, d3config }) => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
 
-	console.log('d3config', d3config)
-	console.log('sectors', sectors)
-	console.log('sector', sector)
-
 	useEffect(() => {
 		if (!d3config) return
 		const { width, height, scale, rotate } = d3config
