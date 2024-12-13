@@ -20,8 +20,9 @@
   fill: transparent;
   transition: ease all 0.25s;
   &:hover {
-    fill: rgb(0, 100, 255, 0.5);
-    stroke: rgb(0, 100, 255);
+    fill: var(--color-blue3);
+    stroke: var(--color-blue4);
+    opacity: 0.8;
     stroke-width: 2px;
   }
 }
