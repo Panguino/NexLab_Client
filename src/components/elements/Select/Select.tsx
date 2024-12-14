@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import styles from './Select.module.scss'
 
-const Select = ({ value, options, onChange, placeholder, optionsEmptyText = 'No options' }) => {
+const Select = ({ value, options, onChange, placeholder = '', optionsEmptyText = 'No options' }) => {
 	const [open, setOpen] = useState(false)
 	const wrapperRef = useRef(null)
 
@@ -32,7 +32,7 @@ const Select = ({ value, options, onChange, placeholder, optionsEmptyText = 'No 
 	useEffect(() => {
 		if (value && options) {
 			const foundValue = options.find((option) => option.value === value).value
-			if (foundValue) {
+			if (foundValue !== value) {
 				onChange(foundValue)
 			}
 		}
