@@ -31,6 +31,7 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 		if (!d3config) return
 		const { width, height, scale, rotate } = d3config
 		const svg = d3.select(svgRef.current)
+		const center = [-rotate[0], -rotate[1]]
 		const translate = [width / 2, height / 2]
 		const projection = d3
 			.geoOrthographic() // like a 2d globe
@@ -41,6 +42,10 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 		const path = d3.geoPath().projection(projection)
 
 		svg.selectAll('*').remove()
+		// Draw the visible circle of the globe
+		const circle = d3.geoCircle().center(center).radius(90)
+		svg.append('path').datum(circle()).attr('d', path).attr('class', styles.globe)
+
 		// Draw the map paths using GeoJSON data
 		svg.append('g').selectAll('path').data(mapJson.features).enter().append('path').attr('d', path).attr('class', styles.mapPath)
 
@@ -55,7 +60,7 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 		// Draw interactive regions
 		pointsGroup
 			.selectAll('circle.pointRegion')
-			.data(sectors)
+			.data(sectors.filter((d) => d3.geoDistance(center, d.coordinates) < Math.PI / 2))
 			.enter()
 			.append('circle')
 			.attr('cx', (d) => projection(d.coordinates)[0])
@@ -80,7 +85,7 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 
 		pointsGroup
 			.selectAll('circle.point')
-			.data(sectors)
+			.data(sectors.filter((d) => d3.geoDistance(center, d.coordinates) < Math.PI / 2))
 			.enter()
 			.append('circle')
 			.attr('cx', (d) => projection(d.coordinates)[0])
