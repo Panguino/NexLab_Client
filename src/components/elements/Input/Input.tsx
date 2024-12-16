@@ -1,13 +1,13 @@
 import React from 'react'
-import styles from './InputText.module.scss'
+import styles from './Input.module.scss'
 
-export interface InputTextProps {
+export interface InputProps {
 	label?: string | null
 	value: string
 	onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const InputText: React.FC<InputTextProps> = ({ label, value, onChange }) => {
+const Input: React.FC<InputProps> = ({ label, value, onChange }) => {
 	return (
 		<>
 			{label && (
@@ -20,4 +20,4 @@ const InputText: React.FC<InputTextProps> = ({ label, value, onChange }) => {
 	)
 }
 
-export default InputText
+export default Input
