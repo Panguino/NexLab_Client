@@ -4,9 +4,9 @@ import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/SidebarSectionLink'
-import SidebarPanelPad from '../SidebarPanelPad/SidebarPanelPad'
-import HazardsPanel from '../SidebarPanels/HazardsPanel/HazardsPanel'
-import SidebarSubPanel from '../SidebarSubPanel/SidebarSubPanel'
+import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
+import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
+import HazardsPanel from '../HazardsPanel/HazardsPanel'
 import styles from './TextSidebarPanels.module.scss'
 
 const TextSidebarPanels = () => {
