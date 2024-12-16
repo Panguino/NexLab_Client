@@ -6,7 +6,7 @@ import { ForecastTiles } from '@/components/blocks/CampusWeatherDetail/ForecastT
 import { TextForecastPanel } from '@/components/blocks/CampusWeatherDetail/TextForecastPanel/TextForecastPanel'
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
-import { nexradData } from '@/util/dataCall'
+import { getNexradData } from '@/util/dataCall'
 import {
 	getAPIdataFromLocation,
 	getAPIforecast,
@@ -41,7 +41,7 @@ const Page = async ({ params }: NextPageProps) => {
 
 	const tileData = await getForcastTileDataFromForecastData(apiForcastData.periods)
 	const textForecastPanelData = await getTextForecastPanelFromForecastData(apiForcastData.periods)
-	const radarData = await nexradData('LOT', 'N0B', '24')
+	const radarData = await getNexradData('LOT', 'N0B', '24')
 
 	return (
 		<ScrollArea removeDisplayTable>
