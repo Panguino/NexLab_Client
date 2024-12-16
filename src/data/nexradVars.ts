@@ -235,145 +235,184 @@ export const NEXRAD_PRODUCT_N3X = 'N3X'
 export const NEXRAD_PRODUCT_NVW = 'NVW'
 export const NEXRAD_PRODUCT_OHA = 'OHA'
 
-export const NEXRAD_ALL_PRODUCTS = {
+export const NEXRAD_PRODUCT_GROUP_PRECIPITATION = 'Precipitation'
+export const NEXRAD_PRODUCT_GROUP_BASE_REFLECTIVITY = 'Base Reflectivity'
+export const NEXRAD_PRODUCT_GROUP_CORRELATION_COEFFICIENT = 'Correlation Coefficient'
+export const NEXRAD_PRODUCT_GROUP_BASE_VELOCITY = 'Base Velocity'
+export const NEXRAD_PRODUCT_GROUP_SPECIFIC_DIFFERENTIAL_PHASE = 'Specific Differential Phase'
+export const NEXRAD_PRODUCT_GROUP_STORM_RELATIVE_MEAN_VELOCITY = 'Storm Relative Mean Velocity'
+export const NEXRAD_PRODUCT_GROUP_DIFFERENTIAL_REFLECTIVITY = 'Differential Reflectivity'
+export const NEXRAD_PRODUCT_GROUP_OTHER_PRODUCTS = 'Other Products'
+
+export const NEXRAD_PRODUCTS = {
 	[NEXRAD_PRODUCT_DSP]: {
 		title: 'Storm Total Precipitation',
-		group: 'Precipitation',
+		group: NEXRAD_PRODUCT_GROUP_PRECIPITATION,
 		label: 'Storm Total',
 	},
 	[NEXRAD_PRODUCT_DVL]: {
 		title: 'Vertically Integrated Liquid',
-		group: 'Other Products',
+		group: NEXRAD_PRODUCT_GROUP_OTHER_PRODUCTS,
 		label: 'VIL',
 	},
 	[NEXRAD_PRODUCT_EET]: {
 		title: 'Echo Tops',
-		group: 'Other Products',
+		group: NEXRAD_PRODUCT_GROUP_OTHER_PRODUCTS,
 		label: 'Echo Tops',
 	},
 	[NEXRAD_PRODUCT_HHC]: {
 		title: 'Hydrometeor Classification',
-		group: 'Other Products',
+		group: NEXRAD_PRODUCT_GROUP_OTHER_PRODUCTS,
 		label: 'HHC',
 	},
 	[NEXRAD_PRODUCT_N0B]: {
 		title: 'Base Reflectivity (0.5)',
-		group: 'Base Reflectivity',
+		group: NEXRAD_PRODUCT_GROUP_BASE_REFLECTIVITY,
 		label: '1',
 	},
 	[NEXRAD_PRODUCT_N0C]: {
 		title: 'Correlation Coefficient (0.5)',
-		group: 'Correlation Coefficient',
+		group: NEXRAD_PRODUCT_GROUP_CORRELATION_COEFFICIENT,
 		label: '1',
 	},
 	[NEXRAD_PRODUCT_N0G]: {
 		title: 'Base Velocity (0.5)',
-		group: 'Base Velocity',
+		group: NEXRAD_PRODUCT_GROUP_BASE_VELOCITY,
 		label: '1',
 	},
 	[NEXRAD_PRODUCT_N0K]: {
 		title: 'Specific Differential Phase (0.5)',
-		group: 'Specific Differential Phase',
+		group: NEXRAD_PRODUCT_GROUP_SPECIFIC_DIFFERENTIAL_PHASE,
 		label: '1',
 	},
 	[NEXRAD_PRODUCT_N0S]: {
 		title: 'Storm Relative Mean Velocity (0.5)',
-		group: 'Storm Relative Mean Velocity',
+		group: NEXRAD_PRODUCT_GROUP_STORM_RELATIVE_MEAN_VELOCITY,
 		label: '1',
 	},
 	[NEXRAD_PRODUCT_N0X]: {
 		title: 'Differential Reflectivity (0.5)',
-		group: 'Differential Reflectivity',
+		group: NEXRAD_PRODUCT_GROUP_DIFFERENTIAL_REFLECTIVITY,
 		label: '1',
 	},
 	[NEXRAD_PRODUCT_N1B]: {
 		title: 'Base Reflectivity (1.5)',
-		group: 'Base Reflectivity',
+		group: NEXRAD_PRODUCT_GROUP_BASE_VELOCITY,
 		label: '2',
 	},
 	[NEXRAD_PRODUCT_N1C]: {
 		title: 'Correlation Coefficient (1.5)',
-		group: 'Correlation Coefficient',
+		group: NEXRAD_PRODUCT_GROUP_CORRELATION_COEFFICIENT,
 		label: '2',
 	},
 	[NEXRAD_PRODUCT_N1G]: {
 		title: 'Base Velocity (1.5)',
-		group: 'Base Velocity',
+		group: NEXRAD_PRODUCT_GROUP_BASE_VELOCITY,
 		label: '2',
 	},
 	[NEXRAD_PRODUCT_N1K]: {
 		title: 'Specific Differential Phase (1.5)',
-		group: 'Specific Differential Phase',
+		group: NEXRAD_PRODUCT_GROUP_SPECIFIC_DIFFERENTIAL_PHASE,
 		label: '2',
 	},
 	[NEXRAD_PRODUCT_N1X]: {
 		title: 'Differential Reflectivity (1.5)',
-		group: 'Differential Reflectivity',
+		group: NEXRAD_PRODUCT_GROUP_DIFFERENTIAL_REFLECTIVITY,
 		label: '2',
 	},
 	[NEXRAD_PRODUCT_N2B]: {
 		title: 'Base Reflectivity (2.5)',
-		group: 'Base Reflectivity',
+		group: NEXRAD_PRODUCT_GROUP_BASE_VELOCITY,
 		label: '3',
 	},
 	[NEXRAD_PRODUCT_N2C]: {
 		title: 'Correlation Coefficient (2.5)',
-		group: 'Correlation Coefficient',
+		group: NEXRAD_PRODUCT_GROUP_CORRELATION_COEFFICIENT,
 		label: '3',
 	},
 	[NEXRAD_PRODUCT_N2K]: {
 		title: 'Specific Differential Phase (2.5)',
-		group: 'Specific Differential Phase',
+		group: NEXRAD_PRODUCT_GROUP_SPECIFIC_DIFFERENTIAL_PHASE,
 		label: '3',
 	},
 	[NEXRAD_PRODUCT_N2U]: {
 		title: 'Base Velocity (2.5)',
-		group: 'Base Velocity',
+		group: NEXRAD_PRODUCT_GROUP_BASE_VELOCITY,
 		label: '3',
 	},
 	[NEXRAD_PRODUCT_N2X]: {
 		title: 'Differential Reflectivity (2.5)',
-		group: 'Differential Reflectivity',
+		group: NEXRAD_PRODUCT_GROUP_DIFFERENTIAL_REFLECTIVITY,
 		label: '3',
 	},
 	[NEXRAD_PRODUCT_N3B]: {
 		title: 'Base Reflectivity (3.5)',
-		group: 'Base Reflectivity',
+		group: NEXRAD_PRODUCT_GROUP_BASE_VELOCITY,
 		label: '4',
 	},
 	[NEXRAD_PRODUCT_N3C]: {
 		title: 'Correlation Coefficient (3.5)',
-		group: 'Correlation Coefficient',
+		group: NEXRAD_PRODUCT_GROUP_CORRELATION_COEFFICIENT,
 		label: '4',
 	},
 	[NEXRAD_PRODUCT_N3K]: {
 		title: 'Specific Differential Phase (3.5)',
-		group: 'Specific Differential Phase',
+		group: NEXRAD_PRODUCT_GROUP_SPECIFIC_DIFFERENTIAL_PHASE,
 		label: '4',
 	},
 	[NEXRAD_PRODUCT_N3U]: {
 		title: 'Base Velocity (3.5)',
-		group: 'Base Velocity',
+		group: NEXRAD_PRODUCT_GROUP_BASE_VELOCITY,
 		label: '4',
 	},
 	[NEXRAD_PRODUCT_N3X]: {
 		title: 'Differential Reflectivity (3.5)',
-		group: 'Differential Reflectivity',
+		group: NEXRAD_PRODUCT_GROUP_DIFFERENTIAL_REFLECTIVITY,
 		label: '4',
 	},
 	[NEXRAD_PRODUCT_NVW]: {
 		title: 'VAD Wind Profile',
-		group: 'Other Products',
+		group: NEXRAD_PRODUCT_GROUP_OTHER_PRODUCTS,
 		label: 'VWP',
 	},
 	[NEXRAD_PRODUCT_OHA]: {
 		title: 'One Hour Precipitation',
-		group: 'Precipitation',
+		group: NEXRAD_PRODUCT_GROUP_PRECIPITATION,
 		label: '1 hour',
 	},
 }
 
-export const ALL_SITES = {
+const NEXRAD_ALL_PRODUCTS = [
+	NEXRAD_PRODUCT_DSP,
+	NEXRAD_PRODUCT_DVL,
+	NEXRAD_PRODUCT_EET,
+	NEXRAD_PRODUCT_HHC,
+	NEXRAD_PRODUCT_N0B,
+	NEXRAD_PRODUCT_N0C,
+	NEXRAD_PRODUCT_N0G,
+	NEXRAD_PRODUCT_N0K,
+	NEXRAD_PRODUCT_N0S,
+	NEXRAD_PRODUCT_N0X,
+	NEXRAD_PRODUCT_N1B,
+	NEXRAD_PRODUCT_N1C,
+	NEXRAD_PRODUCT_N1G,
+	NEXRAD_PRODUCT_N1K,
+	NEXRAD_PRODUCT_N1X,
+	NEXRAD_PRODUCT_N2B,
+	NEXRAD_PRODUCT_N2C,
+	NEXRAD_PRODUCT_N2K,
+	NEXRAD_PRODUCT_N2U,
+	NEXRAD_PRODUCT_N2X,
+	NEXRAD_PRODUCT_N3B,
+	NEXRAD_PRODUCT_N3C,
+	NEXRAD_PRODUCT_N3K,
+	NEXRAD_PRODUCT_N3U,
+	NEXRAD_PRODUCT_N3X,
+	NEXRAD_PRODUCT_NVW,
+	NEXRAD_PRODUCT_OHA,
+]
+
+export const NEXRAD_SITES = {
 	[SITE_ABC]: {
 		name: 'Bethel',
 		type: 'Point',
@@ -1576,11 +1615,13 @@ export const ALL_SITES = {
 	},
 }
 
+const ALL_SITES = Object.keys(NEXRAD_SITES).map((key) => key)
+
 interface NexradRegion {
 	label: string
 	rotate: [number, number]
 	scale: number
-	sites: typeof ALL_SITES
+	sites: string[]
 }
 
 export const NEXRAD_REGIONS: { [key: string]: NexradRegion } = {

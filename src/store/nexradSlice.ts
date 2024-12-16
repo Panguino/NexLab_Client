@@ -1,20 +1,24 @@
-import { NEXRAD_PRODUCT_DSP, NEXRAD_REGION_CONUS_ID, SITE_ORD } from '@/data/nexradVars'
+import { NEXRAD_PRODUCT_DSP, NEXRAD_REGION_CONUS_ID, SITE_LOT } from '@/data/nexradVars'
 import { ZustandStateSlice } from './useRootStore'
 
 export interface INexradSlice {
 	nexradSite: string
 	nexradRegion: string
 	nexradProduct: string
-	setNexradSite: (sector: string) => void
-	setNexradRegion: (selectedRegion: string) => void
-	setNexradProduct: (selectedProduct: string) => void
+	nexradNumberOfFrames: number
+	setNexradSite: (siteId: string) => void
+	setNexradRegion: (regionId: string) => void
+	setNexradProduct: (productId: string) => void
+	setNexradNumberOfFrames: (frames: number) => void
 }
 
 export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
-	nexradSite: SITE_ORD,
-	setNexradSite: (nexradSite: string) => set(() => ({ nexradSite })),
+	nexradSite: SITE_LOT,
+	setNexradSite: (siteId: string) => set(() => ({ nexradSite: siteId })),
 	nexradRegion: NEXRAD_REGION_CONUS_ID,
-	setNexradRegion: (nexradRegion: string) => set(() => ({ nexradRegion })),
+	setNexradRegion: (regionId: string) => set(() => ({ nexradRegion: regionId })),
 	nexradProduct: NEXRAD_PRODUCT_DSP,
-	setNexradProduct: (nexradProduct: string) => set(() => ({ nexradProduct })),
+	setNexradProduct: (productId: string) => set(() => ({ nexradProduct: productId })),
+	nexradNumberOfFrames: 24,
+	setNexradNumberOfFrames: (frames: number) => set(() => ({ nexradNumberOfFrames: frames })),
 })
