@@ -18,6 +18,7 @@ export const AnimatorImageMachine = ({ frames, currentFrame, loadedFrames, setLo
 			return
 		}
 		const loadImages = async () => {
+			setIsLoading(true)
 			const validFrames = []
 			for (const frame of frames) {
 				const cachedImage = localStorage.getItem(frame)
