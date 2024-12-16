@@ -44,7 +44,7 @@ const Select = ({ value, options, onChange, placeholder = '', optionsEmptyText =
 		<div className={styles.wrapper}>
 			<div className={styles.select} ref={wrapperRef} onClick={() => setOpen((prevOpen) => !prevOpen)}>
 				{!foundValue && placeholder && <label>{placeholder}</label>}
-				{foundValue.label && <div className={styles.value}>{foundValue.label}</div>}
+				{foundValue && foundValue.label && <div className={styles.value}>{foundValue.label}</div>}
 
 				<motion.div className={styles.arrow} animate={{ transform: `${open ? 'rotate(180deg)' : 'rotate(0deg)'}` }}>
 					<FontAwesomeIcon icon={faChevronDown} />
