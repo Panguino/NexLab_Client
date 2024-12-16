@@ -1,6 +1,7 @@
 'use client'
 
 import { Animator } from '@/components/elements/Animator/Animator'
+import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
 import { getNexradData } from '@/util/dataCall'
 import React, { useEffect, useState } from 'react'
@@ -14,7 +15,7 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = () => {
 	const nexradSite = useRootStore.use.nexradSite()
 	const nexradProduct = useRootStore.use.nexradProduct()
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
-
+	const [wrapperRef, { width: width, height: height }] = useDimensions(1)
 	const [nexradData, setNexradData] = useState([])
 
 	useEffect(() => {
@@ -27,8 +28,10 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = () => {
 	}, [nexradSite, nexradProduct, nexradNumberOfFrames])
 
 	return (
-		<div className={styles.nexradAnimator}>
-			<Animator frames={nexradData} />
+		<div className={styles.nexradAnimator} ref={wrapperRef}>
+			<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
+				<Animator frames={nexradData} />
+			</div>
 		</div>
 	)
 }
