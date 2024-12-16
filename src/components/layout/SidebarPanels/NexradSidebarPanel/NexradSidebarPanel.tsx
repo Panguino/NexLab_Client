@@ -3,7 +3,7 @@
 import { Button } from '@/components/elements/Button/Button'
 import SectorSelector from '@/components/elements/SectorSelector/SectorSelector'
 import Select from '@/components/elements/Select/Select'
-import { NEXRAD_PRODUCTS, NEXRAD_REGION_CONUS_ID, NEXRAD_REGIONS, NEXRAD_SITES } from '@/data/nexradVars'
+import { ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS, NEXRAD_REGION_CONUS_ID, NEXRAD_REGIONS, NEXRAD_SITES } from '@/data/nexradVars'
 import { useRootStore } from '@/store/useRootStore'
 import { useEffect, useRef, useState } from 'react'
 import styles from './NexradSidebarPanel.module.scss'
@@ -14,13 +14,14 @@ const NexradSidebarPanel = () => {
 	const setNexradSite = useRootStore.use.setNexradSite()
 	const nexradRegion = useRootStore.use.nexradRegion()
 	const setNexradRegion = useRootStore.use.setNexradRegion()
+	const nexradProduct = useRootStore.use.nexradProduct()
 	const setNexradProduct = useRootStore.use.setNexradProduct()
 	const [sectorSelectorOpen, setSectorSelectorOpen] = useState(false)
 
 	const [sites, setSites] = useState(NEXRAD_REGIONS[NEXRAD_REGION_CONUS_ID].sites)
 	const [d3config, setD3config] = useState({
-		width: 1000,
-		height: 600,
+		width: 900,
+		height: 900,
 		rotate: NEXRAD_REGIONS[NEXRAD_REGION_CONUS_ID].rotate,
 		scale: NEXRAD_REGIONS[NEXRAD_REGION_CONUS_ID].scale,
 	})
@@ -47,7 +48,6 @@ const NexradSidebarPanel = () => {
 				setSectorSelectorOpen(false)
 			}
 		}
-
 		document.addEventListener('mousedown', handleClickOutsideSectorSelector)
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutsideSectorSelector)
@@ -72,15 +72,28 @@ const NexradSidebarPanel = () => {
 				</div>
 			)}
 			{productsArray &&
-				productsArray.map((id) => {
+				ALL_NEXRAD_GROUPS.map((groupId) => {
 					return (
-						<div
-							key={id}
-							onClick={() => {
-								setNexradProduct(id)
-							}}
-						>
-							{NEXRAD_PRODUCTS[id].title}
+						<div key={groupId}>
+							<div>{NEXRAD_GROUPS[groupId].label}</div>
+							{productsArray.map((productId) => {
+								return NEXRAD_GROUPS[groupId].products.map((groupProductId) => {
+									if (productId === groupProductId) {
+										return (
+											<div
+												key={productId}
+												onClick={() => {
+													setNexradProduct(productId)
+												}}
+												style={{ paddingLeft: 10, color: productId === nexradProduct ? 'red' : 'grey' }}
+											>
+												{NEXRAD_PRODUCTS[productId].label}
+											</div>
+										)
+									}
+									return <></>
+								})
+							})}
 						</div>
 					)
 				})}
