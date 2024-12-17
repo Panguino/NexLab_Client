@@ -256,31 +256,31 @@ export const ALL_NEXRAD_GROUPS = [
 export const NEXRAD_GROUPS = {
 	[NEXRAD_PRODUCT_GROUP_BASE_REFLECTIVITY]: {
 		label: 'Base Reflectivity',
-		sublabel: 'tilt',
+		sublabel: 'Tilt',
 		columns: 4,
 		products: [NEXRAD_PRODUCT_BASEREF_0_5, NEXRAD_PRODUCT_BASEREF_1_5, NEXRAD_PRODUCT_BASEREF_2_5, NEXRAD_PRODUCT_BASEREF_3_5],
 	},
 	[NEXRAD_PRODUCT_GROUP_BASE_VELOCITY]: {
 		label: 'Base Velocity',
-		sublabel: 'tilt',
+		sublabel: 'Tilt',
 		columns: 4,
 		products: [NEXRAD_PRODUCT_BASEVEL_0_5, NEXRAD_PRODUCT_BASEVEL_1_5, NEXRAD_PRODUCT_BASEVEL_2_5, NEXRAD_PRODUCT_BASEVEL_3_5],
 	},
 	[NEXRAD_PRODUCT_GROUP_CORRELATION_COEFFICIENT]: {
 		label: 'Correlation Coefficient',
-		sublabel: 'tilt',
+		sublabel: 'Tilt',
 		columns: 4,
 		products: [NEXRAD_PRODUCT_COEFFICIENT_0_5, NEXRAD_PRODUCT_COEFFICIENT_1_5, NEXRAD_PRODUCT_COEFFICIENT_2_5, NEXRAD_PRODUCT_COEFFICIENT_3_5],
 	},
 	[NEXRAD_PRODUCT_GROUP_SPECIFIC_DIFFERENTIAL_PHASE]: {
 		label: 'Specific Differential Phase',
-		sublabel: 'tilt',
+		sublabel: 'Tilt',
 		columns: 4,
 		products: [NEXRAD_PRODUCT_PHASE_0_5, NEXRAD_PRODUCT_PHASE_1_5, NEXRAD_PRODUCT_PHASE_2_5, NEXRAD_PRODUCT_PHASE_3_5],
 	},
 	[NEXRAD_PRODUCT_GROUP_DIFFERENTIAL_REFLECTIVITY]: {
 		label: 'Differential Reflectivity',
-		sublabel: 'tilt',
+		sublabel: 'Tilt',
 		columns: 4,
 		products: [NEXRAD_PRODUCT_DIGITALREF_0_5, NEXRAD_PRODUCT_DIGITALREF_1_5, NEXRAD_PRODUCT_DIGITALREF_2_5, NEXRAD_PRODUCT_DIGITALREF_3_5],
 	},

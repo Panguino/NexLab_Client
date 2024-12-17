@@ -102,8 +102,8 @@ const NexradSidebarPanel = () => {
 						<Select value={nexradRegion} options={regionOptions} onChange={handleRegionChange} />
 						<Button onClick={() => setSectorSelectorOpen(true)} label={`Site:  ${nexradSite} - ${NEXRAD_SITES[nexradSite].name}`} />
 					</div>
-					{transformedData.map(({ groupId, label, columns, products }) => (
-						<SidebarGroup key={groupId} title={label}>
+					{transformedData.map(({ groupId, label, sublabel, columns, products }) => (
+						<SidebarGroup key={groupId} title={label} extraInfo={sublabel && `(${sublabel})`}>
 							<SidebarGrid columns={columns}>
 								{products.map(({ id, label }) => (
 									<SidebarLink key={id} name={label} onClick={() => setNexradProduct(id)} active={id === nexradProduct} />
