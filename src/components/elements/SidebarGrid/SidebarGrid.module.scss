@@ -1,29 +1,9 @@
 .SidebarGrid {
-	display: grid;
-	grid-template-rows: auto;
-	width: 100%;
+  display: grid;
+  grid-template-rows: auto;
+  width: 100%;
 }
 
 .grid {
-	display: grid;
-}
-
-.option {
-	display: flex;
-	font-size: 12px;
-	align-items: center;
-	justify-content: center;
-	padding: 10px 0;
-	cursor: pointer;
-	text-align: center;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	box-sizing: border-box;
-	color: var(--color-grey17-grey3);
-}
-
-.selected {
-	background-color: var(--color-blue3);
-	color: white;
+  display: grid;
 }

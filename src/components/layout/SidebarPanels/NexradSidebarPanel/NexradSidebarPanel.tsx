@@ -3,9 +3,13 @@
 import { Button } from '@/components/elements/Button/Button'
 import SectorSelector from '@/components/elements/SectorSelector/SectorSelector'
 import Select from '@/components/elements/Select/Select'
+import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
+import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
+import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS, NEXRAD_REGION_CONUS_ID, NEXRAD_REGIONS, NEXRAD_SITES } from '@/data/nexradVars'
 import { useRootStore } from '@/store/useRootStore'
 import { useEffect, useRef, useState } from 'react'
+import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './NexradSidebarPanel.module.scss'
 
 const NexradSidebarPanel = () => {
@@ -62,42 +66,54 @@ const NexradSidebarPanel = () => {
 	})
 	const productsArray = NEXRAD_SITES[nexradSite].products
 
+	const transformData = (productsArray, allNexradGroups, nexradGroups, nexradProducts) => {
+		const transformedData = allNexradGroups.map((groupId) => {
+			const group = nexradGroups[groupId]
+			const products = productsArray
+				.filter((productId) => group.products.includes(productId))
+				.map((productId) => ({
+					id: productId,
+					label: nexradProducts[productId].label,
+				}))
+
+			return {
+				groupId,
+				label: group.label,
+				sublabel: group.sublabel,
+				columns: group.columns,
+				products,
+			}
+		})
+
+		return transformedData
+	}
+	const transformedData = transformData(productsArray, ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS)
+
 	return (
-		<div className={styles.NexradSidebarPanel}>
-			<Select value={nexradRegion} options={regionOptions} onChange={handleRegionChange} />
-			<Button onClick={() => setSectorSelectorOpen(true)} label={`Site:  ${nexradSite} - ${NEXRAD_SITES[nexradSite].name}`} />
+		<>
 			{sectorSelectorOpen && (
 				<div ref={sectorSelectorRef} className={styles.siteSelector}>
 					<SectorSelector sectors={sectorArray} d3config={d3config} sector={nexradSite} onChange={handleSiteChange} />
 				</div>
 			)}
-			{productsArray &&
-				ALL_NEXRAD_GROUPS.map((groupId) => {
-					return (
-						<div key={groupId}>
-							<div>{NEXRAD_GROUPS[groupId].label}</div>
-							{productsArray.map((productId) => {
-								return NEXRAD_GROUPS[groupId].products.map((groupProductId) => {
-									if (productId === groupProductId) {
-										return (
-											<div
-												key={productId}
-												onClick={() => {
-													setNexradProduct(productId)
-												}}
-												style={{ paddingLeft: 10, color: productId === nexradProduct ? 'red' : 'grey' }}
-											>
-												{NEXRAD_PRODUCTS[productId].label}
-											</div>
-										)
-									}
-									return <></>
-								})
-							})}
-						</div>
-					)
-				})}
-		</div>
+			<ScrollArea>
+				<div className={styles.NexradSidebarPanel}>
+					<div className={styles.options}>
+						<Select value={nexradRegion} options={regionOptions} onChange={handleRegionChange} />
+						<Button onClick={() => setSectorSelectorOpen(true)} label={`Site:  ${nexradSite} - ${NEXRAD_SITES[nexradSite].name}`} />
+					</div>
+					{transformedData.map(({ groupId, label, columns, products }) => (
+						<SidebarGroup key={groupId} title={label}>
+							<SidebarGrid columns={columns}>
+								{products.map(({ id, label }) => (
+									<SidebarLink key={id} name={label} onClick={() => setNexradProduct(id)} active={id === nexradProduct} />
+								))}
+							</SidebarGrid>
+						</SidebarGroup>
+					))}
+				</div>
+			</ScrollArea>
+		</>
 	)
 }
 

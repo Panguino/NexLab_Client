@@ -1,6 +1,12 @@
 .NexradSidebarPanel {
   position: relative;
 }
+.options {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 .siteSelector {
   position: absolute;
   right: -1000px;
