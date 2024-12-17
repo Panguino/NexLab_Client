@@ -20,9 +20,10 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	box-sizing: border-box;
+	color: var(--color-grey17-grey3);
 }
 
 .selected {
-	background-color: #007bff;
+	background-color: var(--color-blue3);
 	color: white;
 }
