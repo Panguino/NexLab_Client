@@ -47,6 +47,9 @@ CustomColumnCount.args = {
 	columns: 2,
 }
 
+const outputStyles = {
+	color: '#888',
+}
 export const OnChangeHandlerDemo: StoryFn<typeof SidebarGrid> = (args) => {
 	const [selectedOption, setSelectedOption] = useState<string>(`Selected: ${commonArgs.selected[0].name}`)
 	const handleChange = (selected: { name: string }) => {
@@ -56,7 +59,7 @@ export const OnChangeHandlerDemo: StoryFn<typeof SidebarGrid> = (args) => {
 	return (
 		<div>
 			<SidebarGrid {...args} onChange={handleChange} />
-			<div>{selectedOption}</div>
+			<div style={outputStyles}>{selectedOption}</div>
 		</div>
 	)
 }
