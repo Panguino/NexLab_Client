@@ -8,18 +8,18 @@ import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS, NEXRAD_REGION_CONUS_ID, NEXRAD_REGIONS, NEXRAD_SITES } from '@/data/nexradVars'
 import { useRootStore } from '@/store/useRootStore'
+import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './NexradSidebarPanel.module.scss'
 
 const NexradSidebarPanel = () => {
+	const router = useRouter()
 	const sectorSelectorRef = useRef(null)
 	const nexradSite = useRootStore.use.nexradSite()
-	const setNexradSite = useRootStore.use.setNexradSite()
 	const nexradRegion = useRootStore.use.nexradRegion()
 	const setNexradRegion = useRootStore.use.setNexradRegion()
 	const nexradProduct = useRootStore.use.nexradProduct()
-	const setNexradProduct = useRootStore.use.setNexradProduct()
 	const [sectorSelectorOpen, setSectorSelectorOpen] = useState(false)
 
 	const [sites, setSites] = useState(NEXRAD_REGIONS[NEXRAD_REGION_CONUS_ID].sites)
@@ -44,7 +44,7 @@ const NexradSidebarPanel = () => {
 	}
 	const handleSiteChange = (site) => {
 		setSectorSelectorOpen(false)
-		setNexradSite(site)
+		router.push(`/weather-data/nexrad-dual-pol-radar/${nexradProduct}/${site}`)
 	}
 	useEffect(() => {
 		const handleClickOutsideSectorSelector = (event) => {
@@ -106,7 +106,12 @@ const NexradSidebarPanel = () => {
 						<SidebarGroup key={groupId} title={label} extraInfo={sublabel && `(${sublabel})`}>
 							<SidebarGrid columns={columns}>
 								{products.map(({ id, label }) => (
-									<SidebarLink key={id} name={label} onClick={() => setNexradProduct(id)} active={id === nexradProduct} />
+									<SidebarLink
+										key={id}
+										name={label}
+										linkUrl={`/weather-data/nexrad-dual-pol-radar/${id}/${nexradSite}`}
+										active={id === nexradProduct}
+									/>
 								))}
 							</SidebarGrid>
 						</SidebarGroup>

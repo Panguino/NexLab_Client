@@ -9,14 +9,25 @@ import styles from './NexradAnimator.module.scss'
 
 interface NexradAnimatorProps {
 	// Add any props you need for the component here
+	productId: string
+	siteId: string
 }
 
-const NexradAnimator: React.FC<NexradAnimatorProps> = () => {
+const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId }) => {
 	const nexradSite = useRootStore.use.nexradSite()
+	const setNexradSite = useRootStore.use.setNexradSite()
 	const nexradProduct = useRootStore.use.nexradProduct()
+	const setNexradProduct = useRootStore.use.setNexradProduct()
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
 	const [wrapperRef, { width: width, height: height }] = useDimensions(1)
 	const [nexradData, setNexradData] = useState([])
+
+	useEffect(() => {
+		if (siteId && productId) {
+			setNexradSite(siteId)
+			setNexradProduct(productId)
+		}
+	}, [productId, siteId, setNexradSite, setNexradProduct])
 
 	useEffect(() => {
 		async function getData() {
