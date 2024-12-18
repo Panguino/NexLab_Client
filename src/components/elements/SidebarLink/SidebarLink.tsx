@@ -7,11 +7,12 @@ interface ISidebarLinkProps {
 	target?: string
 	onClick?: () => void
 	active?: boolean
+	limited?: boolean
 }
 
-export const SidebarLink = ({ name, linkUrl, target = '_self', onClick, active }: ISidebarLinkProps) => {
+export const SidebarLink = ({ name, linkUrl, target = '_self', onClick, active, limited }: ISidebarLinkProps) => {
 	return (
-		<div className={`${styles.SidebarLink} ${active ? styles.active : ''}`}>
+		<div className={`${styles.SidebarLink} ${active ? styles.active : ''} ${limited ? styles.limited : ''}`}>
 			{linkUrl ? (
 				<Link href={linkUrl} target={target}>
 					{name}

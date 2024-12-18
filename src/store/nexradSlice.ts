@@ -1,4 +1,6 @@
-import { NEXRAD_PRODUCT_BASEREF_0_5, NEXRAD_REGION_CONUS_ID, SITE_LOT } from '@/data/nexradVars'
+import { NEXRAD_PRODUCT_BASEREF_0_5 } from '@/data/nexrad/products'
+import { NEXRAD_REGION_CONUS_ID } from '@/data/nexrad/regions'
+import { SITE_LOT } from '@/data/nexrad/sites'
 import { ZustandStateSlice } from './useRootStore'
 
 export interface INexradSlice {

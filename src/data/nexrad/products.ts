@@ -37,30 +37,42 @@ export const NEXRAD_PRODUCT_GROUP_OTHER_PRODUCTS = 'Other Products'
 export const NEXRAD_GROUPS = {
 	[NEXRAD_PRODUCT_GROUP_BASE_REFLECTIVITY]: {
 		label: 'Base Reflectivity',
+		sublabel: 'Tilt',
+		columns: 4,
 		products: [NEXRAD_PRODUCT_BASEREF_0_5, NEXRAD_PRODUCT_BASEREF_1_5, NEXRAD_PRODUCT_BASEREF_2_5, NEXRAD_PRODUCT_BASEREF_3_5],
 	},
 	[NEXRAD_PRODUCT_GROUP_BASE_VELOCITY]: {
 		label: 'Base Velocity',
+		sublabel: 'Tilt',
+		columns: 4,
 		products: [NEXRAD_PRODUCT_BASEVEL_0_5, NEXRAD_PRODUCT_BASEVEL_1_5, NEXRAD_PRODUCT_BASEVEL_2_5, NEXRAD_PRODUCT_BASEVEL_3_5],
 	},
 	[NEXRAD_PRODUCT_GROUP_CORRELATION_COEFFICIENT]: {
 		label: 'Correlation Coefficient',
+		sublabel: 'Tilt',
+		columns: 4,
 		products: [NEXRAD_PRODUCT_COEFFICIENT_0_5, NEXRAD_PRODUCT_COEFFICIENT_1_5, NEXRAD_PRODUCT_COEFFICIENT_2_5, NEXRAD_PRODUCT_COEFFICIENT_3_5],
 	},
 	[NEXRAD_PRODUCT_GROUP_SPECIFIC_DIFFERENTIAL_PHASE]: {
 		label: 'Specific Differential Phase',
+		sublabel: 'Tilt',
+		columns: 4,
 		products: [NEXRAD_PRODUCT_PHASE_0_5, NEXRAD_PRODUCT_PHASE_1_5, NEXRAD_PRODUCT_PHASE_2_5, NEXRAD_PRODUCT_PHASE_3_5],
 	},
 	[NEXRAD_PRODUCT_GROUP_DIFFERENTIAL_REFLECTIVITY]: {
 		label: 'Differential Reflectivity',
+		sublabel: 'Tilt',
+		columns: 4,
 		products: [NEXRAD_PRODUCT_DIGITALREF_0_5, NEXRAD_PRODUCT_DIGITALREF_1_5, NEXRAD_PRODUCT_DIGITALREF_2_5, NEXRAD_PRODUCT_DIGITALREF_3_5],
 	},
 	[NEXRAD_PRODUCT_GROUP_PRECIPITATION]: {
 		label: 'Precipitation',
+		columns: 2,
 		products: [NEXRAD_PRODUCT_PRECIP_1HOUR, NEXRAD_PRODUCT_PRECIP_STORMTOTAL],
 	},
 	[NEXRAD_PRODUCT_GROUP_OTHER_PRODUCTS]: {
 		label: 'Other Products',
+		columns: 1,
 		products: [
 			NEXRAD_PRODUCT_STORMVEL_0_5,
 			NEXRAD_PRODUCT_VADPROFILE,
@@ -70,6 +82,7 @@ export const NEXRAD_GROUPS = {
 		],
 	},
 }
+
 export const ALL_NEXRAD_GROUPS = [
 	NEXRAD_PRODUCT_GROUP_BASE_REFLECTIVITY,
 	NEXRAD_PRODUCT_GROUP_BASE_VELOCITY,
@@ -83,84 +96,111 @@ export const ALL_NEXRAD_GROUPS = [
 export const NEXRAD_PRODUCTS = {
 	[NEXRAD_PRODUCT_PRECIP_STORMTOTAL]: {
 		label: 'Storm Total',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_VERTICALLIQUID]: {
 		label: 'Vertically Integrated Liquid',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_ECHOTOPS]: {
 		label: 'Echo Tops',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_HYDROCLASS]: {
 		label: 'Hydrometeor Classification',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_BASEREF_0_5]: {
 		label: '0.5',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_COEFFICIENT_0_5]: {
 		label: '0.5',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_BASEVEL_0_5]: {
 		label: '0.5',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_PHASE_0_5]: {
 		label: '0.5',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_STORMVEL_0_5]: {
 		label: 'Storm Relative Mean Velocity (0.5)',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_DIGITALREF_0_5]: {
 		label: '0.5',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_BASEREF_1_5]: {
 		label: '1.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_COEFFICIENT_1_5]: {
 		label: '1.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_BASEVEL_1_5]: {
 		label: '1.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_PHASE_1_5]: {
 		label: '1.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_DIGITALREF_1_5]: {
 		label: '1.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_BASEREF_2_5]: {
 		label: '2.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_COEFFICIENT_2_5]: {
 		label: '2.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_PHASE_2_5]: {
 		label: '2.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_BASEVEL_2_5]: {
 		label: '2.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_DIGITALREF_2_5]: {
 		label: '2.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_BASEREF_3_5]: {
 		label: '3.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_COEFFICIENT_3_5]: {
 		label: '3.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_PHASE_3_5]: {
 		label: '3.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_BASEVEL_3_5]: {
 		label: '3.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_DIGITALREF_3_5]: {
 		label: '3.5',
+		limited: true,
 	},
 	[NEXRAD_PRODUCT_VADPROFILE]: {
 		label: 'VAD Wind Profile',
+		limited: false,
 	},
 	[NEXRAD_PRODUCT_PRECIP_1HOUR]: {
 		label: 'One Hour',
+		limited: false,
 	},
 }
 
@@ -178,8 +218,8 @@ export const NEXRAD_ALL_PRODUCTS = [
 	NEXRAD_PRODUCT_DIGITALREF_1_5,
 	NEXRAD_PRODUCT_DIGITALREF_2_5,
 	NEXRAD_PRODUCT_DIGITALREF_3_5,
-	NEXRAD_PRODUCT_COEFFICIENT_1_5,
 	NEXRAD_PRODUCT_COEFFICIENT_0_5,
+	NEXRAD_PRODUCT_COEFFICIENT_1_5,
 	NEXRAD_PRODUCT_COEFFICIENT_2_5,
 	NEXRAD_PRODUCT_COEFFICIENT_3_5,
 	NEXRAD_PRODUCT_PHASE_0_5,

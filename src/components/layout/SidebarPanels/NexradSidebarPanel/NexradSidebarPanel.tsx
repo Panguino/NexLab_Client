@@ -6,7 +6,10 @@ import Select from '@/components/elements/Select/Select'
 import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
-import { ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS, NEXRAD_REGION_CONUS_ID, NEXRAD_REGIONS, NEXRAD_SITES } from '@/data/nexradVars'
+import { ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS } from '@/data/nexrad/products'
+import { NEXRAD_REGION_CONUS_ID, NEXRAD_REGIONS } from '@/data/nexrad/regions'
+import { NEXRAD_SITES } from '@/data/nexrad/sites'
+
 import { useRootStore } from '@/store/useRootStore'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -66,7 +69,7 @@ const NexradSidebarPanel = () => {
 	})
 	const productsArray = NEXRAD_SITES[nexradSite].products
 
-	const transformData = (productsArray, allNexradGroups, nexradGroups, nexradProducts) => {
+	const transformData = (productsArray, allNexradGroups, nexradGroups, nexradProducts, NEXRAD_SITES, nexradSite) => {
 		const transformedData = allNexradGroups.map((groupId) => {
 			const group = nexradGroups[groupId]
 			const products = productsArray
@@ -74,6 +77,7 @@ const NexradSidebarPanel = () => {
 				.map((productId) => ({
 					id: productId,
 					label: nexradProducts[productId].label,
+					limited: NEXRAD_SITES[nexradSite].limited === true ? nexradProducts[productId].limited : false,
 				}))
 
 			return {
@@ -87,7 +91,7 @@ const NexradSidebarPanel = () => {
 
 		return transformedData
 	}
-	const panelGroupedProducts = transformData(productsArray, ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS)
+	const panelGroupedProducts = transformData(productsArray, ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS, NEXRAD_SITES, nexradSite)
 
 	return (
 		<>
@@ -105,12 +109,13 @@ const NexradSidebarPanel = () => {
 					{panelGroupedProducts.map(({ groupId, label, sublabel, columns, products }) => (
 						<SidebarGroup key={groupId} title={label} extraInfo={sublabel && `(${sublabel})`}>
 							<SidebarGrid columns={columns}>
-								{products.map(({ id, label }) => (
+								{products.map(({ id, label, limited }) => (
 									<SidebarLink
 										key={id}
 										name={label}
 										linkUrl={`/weather-data/nexrad-dual-pol-radar/${id}/${nexradSite}`}
 										active={id === nexradProduct}
+										limited={limited}
 									/>
 								))}
 							</SidebarGrid>
