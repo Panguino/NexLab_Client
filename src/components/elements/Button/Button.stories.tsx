@@ -42,7 +42,7 @@ const TemplateStyles: StoryFn = (args) => {
 
 export const StyleExamples = TemplateStyles.bind({})
 StyleExamples.args = {
-	label: 'Example Button',
+	label: 'Base Style',
 	link: 'https://www.google.com',
 	target: '_blank',
 	disabled: false,
