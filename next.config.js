@@ -29,4 +29,16 @@ module.exports = {
 	},
 	reactStrictMode: false,
 	swcMinify: true,
+	redirects: async () => [
+		{
+			source: '/weather-data/nexrad-dual-pol-radar',
+			destination: '/weather-data/nexrad-dual-pol-radar/N0B/LOT',
+			permanent: true,
+		},
+		{
+			source: '/weather-data/nexrad-dual-pol-radar/:slug',
+			destination: '/weather-data/nexrad-dual-pol-radar/:slug/LOT',
+			permanent: true,
+		},
+	],
 }
