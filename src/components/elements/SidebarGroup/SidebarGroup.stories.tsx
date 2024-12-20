@@ -2,26 +2,25 @@ import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavi
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
 import { Meta, StoryFn } from '@storybook/react'
-import { SidebarGroup } from '../SidebarGroup/SidebarGroup'
 import { SidebarLink } from '../SidebarLink/SidebarLink'
-import SidebarGrid from './SidebarGrid'
+import { SidebarGroup } from './SidebarGroup'
 
 export default {
-	title: 'Components/Sidebar/SidebarGrid',
-	component: SidebarGrid,
+	title: 'Components/Sidebar/SidebarGroup',
+	component: SidebarGroup,
 	argTypes: {
 		children: { control: { disable: true } },
 	},
-} as Meta<typeof SidebarGrid>
+} as Meta<typeof SidebarGroup>
 
 const createLinksData = (numLinks: number) => {
 	return Array.from({ length: numLinks }, (_, index) => ({
-		name: `${String(index + 1).padStart(3, '0')}`,
+		name: `Link ${index + 1}`,
 		linkUrl: '/',
 	}))
 }
 
-const linksData = createLinksData(12)
+const linksData = createLinksData(4)
 
 const content = (
 	<>
@@ -31,14 +30,12 @@ const content = (
 	</>
 )
 
-const Template: StoryFn<typeof SidebarGrid> = (args) => {
+const Template: StoryFn<typeof SidebarGroup> = (args) => {
 	return (
 		<SidebarWrapper>
 			<SidebarNavigation>
 				<SidebarPanelPad>
-					<SidebarGroup title="Grid Example">
-						<SidebarGrid {...args} />
-					</SidebarGroup>
+					<SidebarGroup {...args} />
 				</SidebarPanelPad>
 			</SidebarNavigation>
 		</SidebarWrapper>
@@ -47,6 +44,23 @@ const Template: StoryFn<typeof SidebarGrid> = (args) => {
 
 export const Default = Template.bind({})
 Default.args = {
-	columns: 4,
+	title: 'Sidebar Group',
+	styleType: 'default',
+	children: content,
+}
+
+export const WithDot = Template.bind({})
+WithDot.args = {
+	title: 'Sidebar Group',
+	extraInfo: 'with Dot',
+	styleType: 'dot',
+	children: content,
+}
+
+export const WithExtraInfo = Template.bind({})
+WithExtraInfo.args = {
+	title: 'Sidebar Group',
+	extraInfo: 'Info',
+	styleType: 'default',
 	children: content,
 }

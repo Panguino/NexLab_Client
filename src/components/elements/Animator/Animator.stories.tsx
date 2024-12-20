@@ -4,7 +4,7 @@ import { Animator } from './Animator'
 import { testFrames } from './AnimatorTestData'
 
 const meta: Meta<typeof Animator> = {
-	title: 'Components/Animator',
+	title: 'Components/Animator/Animator',
 	component: Animator,
 	argTypes: {
 		frames: { control: false },

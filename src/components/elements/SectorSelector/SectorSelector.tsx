@@ -80,7 +80,7 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				svg.selectAll(`.${styles.tooltip}`).remove()
 			})
 			.on('click', (_event, d) => {
-				onChange(`${d.id} - ${d.name}`)
+				onChange(d.id)
 			})
 
 		pointsGroup
