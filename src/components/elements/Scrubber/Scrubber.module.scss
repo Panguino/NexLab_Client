@@ -1,0 +1,104 @@
+$track-color: var(--color-grey5-grey15);
+$thumb-color: var(--color-white);
+$thumb-border: var(--color-grey3-white);
+$track-border: var(--color-grey7-grey13);
+
+.timelineScrubber {
+  width: 100%;
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 13px 0;
+    width: 100%;
+
+    &:focus {
+      outline: none;
+    }
+
+    &::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: $track-color;
+      border-radius: 5px;
+      border: 1px solid $track-border;
+    }
+
+    &::-webkit-slider-thumb {
+      border: 1px solid $thumb-border;
+      height: 26px;
+      width: 45px;
+      border-radius: 50px;
+      background-image: url("/img/vertical-lines.png");
+      background-size: 20px 20px;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      background-color: $thumb-color;
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -9px;
+      box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    &::-moz-range-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: $track-color;
+      border-radius: 5px;
+      border: 1px solid $track-border;
+    }
+    &::-moz-range-thumb {
+      border: 1px solid $thumb-border;
+      height: 26px;
+      width: 45px;
+      border-radius: 50px;
+      background-image: url("/img/vertical-lines.png");
+      background-size: 20px 20px;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      background-color: $thumb-color;
+      cursor: pointer;
+    }
+
+    &::-ms-track {
+      width: 100%;
+      height: 8px;
+      cursor: pointer;
+      background: transparent;
+      border-color: transparent;
+      border-width: 45px 0;
+      color: transparent;
+    }
+
+    &::-ms-fill-lower {
+      background: $track-color;
+      border: 1px solid $track-border;
+      border-radius: 10px;
+    }
+    &::-ms-fill-upper {
+      background: $track-color;
+      border: 1px solid $track-border;
+      border-radius: 10px;
+    }
+    &::-ms-thumb {
+      border: 1px solid $thumb-border;
+      height: 26px;
+      width: 45px;
+      border-radius: 50px;
+      background-image: url("/img/vertical-lines.png");
+      background-size: 20px 20px;
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      background-color: $thumb-color;
+      cursor: pointer;
+    }
+    &:focus::-ms-fill-lower {
+      background: $track-color;
+    }
+    &:focus::-ms-fill-upper {
+      background: $track-color;
+    }
+  }
+}

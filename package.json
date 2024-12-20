@@ -65,6 +65,7 @@
     "sass": "^1.77.8",
     "sass-extract": "^3.0.0",
     "storybook": "^8.2.9",
+    "storybook-dark-mode": "^4.0.2",
     "topojson-client": "^3.1.0",
     "typescript": "^5.5.4",
     "usehooks-ts": "^3.1.0",
@@ -95,7 +96,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-storybook": "^0.8.0",
+    "eslint-plugin-storybook": "^0.11.1",
     "gts": "^5.3.1",
     "prettier-eslint": "^15.0.1",
     "ts-node": "^10.9.1"

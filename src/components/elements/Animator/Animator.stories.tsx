@@ -1,53 +1,68 @@
 import Providers from '@/components/providers/Providers/Providers'
 import { Meta, StoryFn } from '@storybook/react'
 import { Animator } from './Animator'
+import { testFrames } from './AnimatorTestData'
 
 const meta: Meta<typeof Animator> = {
-	title: 'Components/Animator',
+	title: 'Components/Animator/Animator',
 	component: Animator,
 	argTypes: {
 		frames: { control: false },
 		interval: { control: { type: 'number' } },
 	},
-	decorators: [(Story) => <Providers>{Story()}</Providers>],
+	decorators: [
+		(Story) => (
+			<Providers>
+				<div style={{ height: '100vh' }}>{Story()}</div>
+			</Providers>
+		),
+	],
 }
 
 export default meta
 
 const TemplateFactory = () => {
-	const Template: StoryFn<typeof Animator> = ({ frames }) => {
-		return <Animator frames={frames} />
+	const Template: StoryFn<typeof Animator> = (args) => {
+		return <Animator {...args} />
 	}
 	return Template
 }
 
-export const simpleAutoPlay: StoryFn<typeof Animator> = TemplateFactory()
-simpleAutoPlay.args = {
+export const autoPlayNoControls: StoryFn<typeof Animator> = TemplateFactory()
+autoPlayNoControls.args = {
 	interval: 0.25,
-	frames: [
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1144.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1151.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1158.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1205.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1212.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1219.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1227.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1234.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1241.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1248.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1255.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1302.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1309.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1316.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1323.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1330.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1337.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1345.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1352.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1358.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1405.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1412.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1419.gif',
-		'https://weather.cod.edu/cdata/nexrad/LOT/N0B/LOT.N0B.20241028.1426.gif',
-	],
+	frames: testFrames,
+	autoPlay: true,
+	hideControls: true,
+}
+export const autoPlayControls: StoryFn<typeof Animator> = TemplateFactory()
+autoPlayControls.args = {
+	interval: 0.01,
+	frames: testFrames,
+	autoPlay: true,
+}
+export const autoPlayControlsNoZoom: StoryFn<typeof Animator> = TemplateFactory()
+autoPlayControlsNoZoom.args = {
+	interval: 0.25,
+	frames: testFrames,
+	autoPlay: true,
+	hideZoomControls: true,
+}
+export const responsiveSize: StoryFn<typeof Animator> = TemplateFactory()
+responsiveSize.args = {
+	interval: 0.25,
+	frames: testFrames,
+}
+export const specificRatio: StoryFn<typeof Animator> = TemplateFactory()
+specificRatio.args = {
+	interval: 0.25,
+	frames: testFrames,
+	ratio: 7 / 5,
+}
+export const maxWidthAndHeight: StoryFn<typeof Animator> = TemplateFactory()
+maxWidthAndHeight.args = {
+	interval: 0.25,
+	frames: testFrames,
+	width: 500,
+	height: 500,
 }

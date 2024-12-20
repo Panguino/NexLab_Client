@@ -22,7 +22,7 @@ const preview: Preview = {
 				},
 				{
 					name: 'Nexlab Black',
-					value: '#000000',
+					value: 'var(--color-white-grey19)',
 				},
 			],
 		},
@@ -36,6 +36,12 @@ const preview: Preview = {
 			canvas: { sourceState: 'shown' },
 		},
 		layout: 'fullscreen',
+		darkMode: {
+			darkClass: 'dark',
+			lightClass: 'light',
+			classTarget: 'html',
+			stylePreview: true,
+		},
 	},
 	tags: ['autodocs', 'autodocs'],
 }

@@ -1,60 +1,70 @@
 'use client'
-import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
+import useDimensions from '@/hooks/useDimensions'
+import { faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
+import BasicPlaybackControls, { LoopMethod } from '../BasicPlaybackControls/BasicPlaybackControls'
+import Scrubber from '../Scrubber/Scrubber'
 import styles from './Animator.module.scss'
+import { AnimatorImageMachine } from './AnimatorImageMachine/AnimatorImageMachine'
 
-interface IAnimator {
+type direction = 1 | -1
+
+interface IAnimatorProps {
 	frames: string[]
+	ratio?: number
+	height?: number
+	width?: number
 	hideControls?: boolean
+	hideZoomControls?: boolean
 	autoPlay?: boolean
-	interval?: number // Time between frames in milliseconds
+	interval?: number
 }
 
-export const Animator = ({ frames, interval = 0.5, hideControls = false, autoPlay = false }: IAnimator) => {
-	const [currentFrame, setCurrentFrame] = useState(0)
-	const [isPlaying, setIsPlaying] = useState(false)
+export const Animator = ({
+	frames,
+	ratio = 1,
+	height,
+	width,
+	interval = 0.1,
+	hideControls = false,
+	autoPlay = false,
+	hideZoomControls = false,
+}: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
-	const [isLoading, setIsLoading] = useState(true)
+	const [currentFrame, setCurrentFrame] = useState(0)
+	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
+	const [playDirection, setPlayDirection] = useState<direction>(1)
+	const [isPlaying, setIsPlaying] = useState(false)
 	const intervalRef = useRef<number | null>(null)
+	const transformRef = useRef(null)
+	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio)
 
 	useEffect(() => {
-		const loadImages = async () => {
-			const validFrames = []
-			for (const frame of frames) {
-				const cachedImage = localStorage.getItem(frame)
-				if (cachedImage) {
-					const img = new Image()
-					img.src = cachedImage
-					validFrames.push(img)
-				} else {
-					try {
-						await new Promise<void>((resolve, reject) => {
-							const img = new Image()
-							img.src = frame
-							img.onload = () => {
-								validFrames.push(img)
-								localStorage.setItem(frame, img.src)
-								resolve()
-							}
-							img.onerror = () => reject()
-						})
-					} catch {
-						console.warn(`Failed to load image: ${frame}`)
-					}
-				}
+		if (loopMethod === LoopMethod.LeftToRight) {
+			setPlayDirection(1)
+		} else if (loopMethod === LoopMethod.RightToLeft) {
+			setPlayDirection(-1)
+		} else if (loopMethod === LoopMethod.Bounce) {
+			if (currentFrame === 0) {
+				setPlayDirection(1)
+			} else if (currentFrame === loadedFrames.length - 1) {
+				setPlayDirection(-1)
 			}
-			setLoadedFrames(validFrames)
-			setIsLoading(false)
 		}
-
-		loadImages()
-		return
-	}, [frames])
+	}, [playDirection, loopMethod, currentFrame, loadedFrames.length])
 
 	useEffect(() => {
 		if (isPlaying) {
 			intervalRef.current = window.setInterval(() => {
-				setCurrentFrame((prevFrame) => (prevFrame + 1) % loadedFrames.length)
+				setCurrentFrame((prevFrame) => {
+					const nextFrame = (prevFrame + 1 * playDirection) % loadedFrames.length
+					if (nextFrame < 0) {
+						return loadedFrames.length - 1
+					}
+					return nextFrame
+				})
 			}, interval * 1000)
 		} else if (intervalRef.current) {
 			clearInterval(intervalRef.current)
@@ -66,15 +76,28 @@ export const Animator = ({ frames, interval = 0.5, hideControls = false, autoPla
 				clearInterval(intervalRef.current)
 			}
 		}
-	}, [isPlaying, interval, loadedFrames.length])
+	}, [isPlaying, interval, loadedFrames.length, playDirection])
 
-	const play = () => setIsPlaying(true)
-	const pause = () => setIsPlaying(false)
+	const playPause = () => {
+		if (isPlaying) {
+			setIsPlaying(false)
+		} else {
+			setIsPlaying(true)
+		}
+	}
 	const seek = (frameIndex: number) => {
 		setCurrentFrame(frameIndex)
 		if (isPlaying) {
-			pause()
+			setIsPlaying(false)
 		}
+	}
+	const stepForward = () => {
+		setIsPlaying(false)
+		seek((currentFrame + 1) % loadedFrames.length)
+	}
+	const stepBackward = () => {
+		setIsPlaying(false)
+		seek((currentFrame - 1 + loadedFrames.length) % loadedFrames.length)
 	}
 
 	useEffect(() => {
@@ -83,21 +106,71 @@ export const Animator = ({ frames, interval = 0.5, hideControls = false, autoPla
 		}
 	}, [autoPlay, loadedFrames])
 
+	useEffect(() => {
+		const handleResize = () => {
+			if (transformRef.current) {
+				transformRef.current.resetTransform()
+			}
+		}
+
+		window.addEventListener('resize', handleResize)
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
+
 	return (
-		<div className={styles.animator}>
-			<div className={styles.imageContainer}>
-				{isLoading ? (
-					<LoadingPanel size={0.35} hideText />
-				) : (
-					loadedFrames.length > 0 &&
-					loadedFrames.map((frame, index) => <img key={index} src={frame.src} style={{ opacity: index === currentFrame ? 1 : 0 }} />)
+		<div ref={animatorRef} className={styles.animator} style={{ height: height || '100%', width: width || '100%' }}>
+			<TransformWrapper ref={transformRef} disablePadding centerOnInit doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }}>
+				{({ zoomIn, zoomOut, resetTransform }) => (
+					<>
+						<TransformComponent
+							wrapperStyle={{
+								width: _width,
+								height: _height,
+							}}
+							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
+						>
+							<AnimatorImageMachine
+								frames={frames}
+								currentFrame={currentFrame}
+								loadedFrames={loadedFrames}
+								setLoadedFrames={setLoadedFrames}
+							/>
+						</TransformComponent>
+						{!hideZoomControls && (
+							<div className={styles.zoomControls}>
+								<button onClick={() => zoomIn()}>
+									<FontAwesomeIcon icon={faSearchPlus} />
+								</button>
+								<button onClick={() => zoomOut()}>
+									<FontAwesomeIcon icon={faSearchMinus} />
+								</button>
+								<button
+									onClick={() => {
+										resetTransform()
+									}}
+								>
+									<FontAwesomeIcon icon={faUndo} />
+								</button>
+							</div>
+						)}
+					</>
 				)}
-			</div>
+			</TransformWrapper>
 			{!hideControls && (
-				<div>
-					<button onClick={play}>Play</button>
-					<button onClick={pause}>Pause</button>
-					<input type="range" min="0" max={loadedFrames.length - 1} value={currentFrame} onChange={(e) => seek(Number(e.target.value))} />
+				<div className={styles.controlsContainer}>
+					<div className={styles.controls}>
+						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
+						<BasicPlaybackControls
+							isPlaying={isPlaying}
+							loopMethod={loopMethod}
+							onLoopMethodToggle={setLoopMethod}
+							onStepBackwardClick={stepBackward}
+							onStepForwardClick={stepForward}
+							onPlayPauseClick={playPause}
+						/>
+					</div>
 				</div>
 			)}
 		</div>

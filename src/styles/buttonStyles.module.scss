@@ -1,0 +1,36 @@
+.outlineWhiteBlue {
+  background-color: transparent;
+  border: 2px solid var(--color-white);
+  color: var(--color-white);
+  &:hover {
+    background: var(--color-blue5-blue3);
+    color: var(--color-white);
+  }
+}
+
+.whiteBlue {
+  background-color: var(--color-blue3-white);
+  border: 2px solid var(--color-blue3-white);
+  color: var(--color-white-blue5);
+  &:hover {
+    background: var(--color-blue5-blue3);
+    color: var(--color-white);
+  }
+}
+
+.blue {
+  background-color: var(--color-blue3);
+  border: 2px solid var(--color-blue3);
+  color: var(--color-white);
+  &:hover {
+    background: var(--color-blue5);
+    border: 2px solid var(--color-blue5);
+    color: var(--color-white);
+  }
+}
+
+.small {
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 12px;
+}
