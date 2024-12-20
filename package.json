@@ -67,7 +67,7 @@
     "storybook": "^8.2.9",
     "storybook-dark-mode": "^4.0.2",
     "topojson-client": "^3.1.0",
-    "typescript": "^5.5.4",
+    "typescript": "^5.7.2",
     "usehooks-ts": "^3.1.0",
     "zustand": "^4.5.2"
   },
