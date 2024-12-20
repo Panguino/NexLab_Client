@@ -6,7 +6,7 @@ import { SidebarLink } from '../SidebarLink/SidebarLink'
 import { SidebarGroup } from './SidebarGroup'
 
 export default {
-	title: 'Elements/SidebarGroup',
+	title: 'Components/Sidebar/SidebarGroup',
 	component: SidebarGroup,
 	argTypes: {
 		children: { control: { disable: true } },

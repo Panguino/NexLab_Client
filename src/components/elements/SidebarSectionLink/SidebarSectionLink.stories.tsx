@@ -5,7 +5,7 @@ import { Meta, StoryFn } from '@storybook/react'
 import { SidebarSectionLink } from './SidebarSectionLink'
 
 export default {
-	title: 'Elements/SidebarSectionLink',
+	title: 'Components/Sidebar/SidebarSectionLink',
 	component: SidebarSectionLink,
 } as Meta<typeof SidebarSectionLink>
 

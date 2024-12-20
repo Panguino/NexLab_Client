@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react'
 import PillSelector, { PillSelectorProps } from './PillSelector'
 
 export default {
-	title: 'Components/PillSelector',
+	title: 'Components/Form/PillSelector',
 	component: PillSelector,
 } as Meta
 
