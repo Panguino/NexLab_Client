@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Scrubber from './Scrubber'
 
 export default {
-	title: 'Components/Scrubber',
+	title: 'Components/Animator/Scrubber',
 	component: Scrubber,
 } as Meta
 

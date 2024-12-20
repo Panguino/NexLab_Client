@@ -2,10 +2,11 @@ import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavi
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
 import { Meta, StoryFn } from '@storybook/react'
+import { SidebarGroup } from '../SidebarGroup/SidebarGroup'
 import { SidebarLink } from './SidebarLink'
 
 export default {
-	title: 'Elements/SidebarLink',
+	title: 'Components/Sidebar/SidebarLink',
 	component: SidebarLink,
 	argTypes: {
 		onClick: { control: { disable: true } },
@@ -17,8 +18,9 @@ const Template: StoryFn<typeof SidebarLink> = (args) => {
 		<SidebarWrapper>
 			<SidebarNavigation>
 				<SidebarPanelPad>
-					<h4>Sidebar Link</h4>
-					<SidebarLink {...args} />
+					<SidebarGroup title="Link Example">
+						<SidebarLink {...args} />
+					</SidebarGroup>
 				</SidebarPanelPad>
 			</SidebarNavigation>
 		</SidebarWrapper>

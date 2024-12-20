@@ -3,7 +3,7 @@ import { useState } from 'react'
 import BasicPlaybackControls, { LoopMethod } from './BasicPlaybackControls'
 
 export default {
-	title: 'Components/BasicPlaybackControls',
+	title: 'Components/Animator/BasicPlaybackControls',
 	component: BasicPlaybackControls,
 } as Meta
 

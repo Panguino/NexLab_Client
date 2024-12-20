@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react'
 import TimeDisplay from './TimeDisplay'
 
 export default {
-	title: 'Components/TimeDisplay',
+	title: 'Components/Animator/TimeDisplay',
 	component: TimeDisplay,
 } as Meta
 

@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import styles from './SidebarSectionHeader.module.scss'
 
-export const SidebarSectionHeader = ({ name, linkUrl }) => {
+interface ISidebarSectionHeaderProps {
+	name: string
+	linkUrl: string
+}
+
+export const SidebarSectionHeader = ({ name, linkUrl }: ISidebarSectionHeaderProps) => {
 	return (
 		<div className={styles.SidebarSectionHeader}>
 			<Link href={linkUrl}>

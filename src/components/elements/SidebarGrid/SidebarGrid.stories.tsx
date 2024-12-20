@@ -2,11 +2,12 @@ import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavi
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
 import { Meta, StoryFn } from '@storybook/react'
+import { SidebarGroup } from '../SidebarGroup/SidebarGroup'
 import { SidebarLink } from '../SidebarLink/SidebarLink'
 import SidebarGrid from './SidebarGrid'
 
 export default {
-	title: 'Elements/SidebarGrid',
+	title: 'Components/Sidebar/SidebarGrid',
 	component: SidebarGrid,
 	argTypes: {
 		children: { control: { disable: true } },
@@ -35,8 +36,9 @@ const Template: StoryFn<typeof SidebarGrid> = (args) => {
 		<SidebarWrapper>
 			<SidebarNavigation>
 				<SidebarPanelPad>
-					<h4>Content organized into grid</h4>
-					<SidebarGrid {...args} />
+					<SidebarGroup title="Grid Example">
+						<SidebarGrid {...args} />
+					</SidebarGroup>
 				</SidebarPanelPad>
 			</SidebarNavigation>
 		</SidebarWrapper>
