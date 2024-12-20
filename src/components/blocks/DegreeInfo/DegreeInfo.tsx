@@ -12,7 +12,7 @@ export const DegreeInfo = ({ title, buttons, body, schools }) => {
 				<h3>{title}</h3>
 				<div className={styles.buttons}>
 					{buttons.map(({ label, link, style, target }, index) => {
-						return <Button key={index} label={label} link={link} style={style} target={target} />
+						return <Button key={index} label={label} link={link} variantClassName={style} target={target} />
 					})}
 				</div>
 			</div>
