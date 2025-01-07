@@ -50,16 +50,16 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId }) =>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-					Info
+					Info TODO
 				</Tab>
 				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-					Alerts
+					Alerts TODO
 				</Tab>
 				<Tab label="Overlays" icon={<FontAwesomeIcon icon={faLayerGroup} />}>
-					Overlays
+					Overlays TODO
 				</Tab>
 				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-					Download
+					Download / Save Gif TODO
 				</Tab>
 			</Tabs>
 		</div>
