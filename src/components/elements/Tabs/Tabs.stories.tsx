@@ -1,6 +1,7 @@
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Meta, StoryFn } from '@storybook/react'
+import { useState } from 'react'
 import { Tab, Tabs } from './Tabs'
 
 export default {
@@ -8,7 +9,14 @@ export default {
 	component: Tabs,
 } as Meta
 
-const Template: StoryFn = (args) => <Tabs {...args}>{args.children}</Tabs>
+const Template: StoryFn = (args) => {
+	const [activeTab, setActiveTab] = useState(0)
+	return (
+		<Tabs {...args} activeTab={activeTab} setActiveTab={setActiveTab}>
+			{args.children}
+		</Tabs>
+	)
+}
 
 export const BasicTabs = Template.bind({})
 BasicTabs.args = {
