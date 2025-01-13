@@ -1,4 +1,3 @@
-// src/components/ProductInfo/ProductInfo.tsx
 import { RichText } from '@/components/elements/RichText/RichText'
 import { RichTextContent } from '@/types/RichTextTypes'
 import React from 'react'
