@@ -1,23 +1,31 @@
 export const getNexradData = async (site, product, frames) => {
-	// TODO add guardrails for sites, products and frames that we don't support
+	try {
+		// TODO add guardrails for sites, products and frames that we don't support
 
-	// Construct the URL for the weather API request
-	const nexrad_data_call = `https://weather.cod.edu/satrad/nexrad/assets/php/get-files.php?parms=${site}-${product}-0-${frames}-100`
+		// Construct the URL for the weather API request
+		const nexrad_data_call = `https://weather.cod.edu/satrad/nexrad/assets/php/get-files.php?parms=${site}-${product}-0-${frames}-100`
 
-	// Fetch the weather data
-	const nexrad_data_res = await fetch(nexrad_data_call, {
-		headers: {
-			'User-Agent': 'College of DuPage - Meteorology: Campus Weather (wxstaff@weather.cod.edu)',
-			Accept: 'application/ld+json',
-		},
-	})
+		// Fetch the weather data
+		const nexrad_data_res = await fetch(nexrad_data_call, {
+			method: 'GET',
+			headers: {
+				Origin: window.location.origin, // helpful for avoiding CORS errors
+				// user agent not allowed - investigate later
+				// 'User-Agent': 'College of DuPage - Meteorology: Campus Weather (wxstaff@weather.cod.edu)',
+				Accept: 'application/ld+json',
+			},
+		})
 
-	if (!nexrad_data_res.ok) {
-		throw new Error(`HTTP error! status: ${nexrad_data_res.status}`)
+		if (!nexrad_data_res.ok) {
+			throw new Error(`HTTP error! status: ${nexrad_data_res.status}`)
+		}
+
+		const nexrad_data_data = await nexrad_data_res.json()
+		const nexrad_data_files = nexrad_data_data.err === false ? nexrad_data_data.files : []
+
+		return nexrad_data_files
+	} catch (error) {
+		console.error('Error fetching Nexrad data:', error)
+		throw error
 	}
-
-	const nexrad_data_data = await nexrad_data_res.json()
-	const nexrad_data_files = nexrad_data_data.err === false ? nexrad_data_data.files : []
-
-	return nexrad_data_files
 }
