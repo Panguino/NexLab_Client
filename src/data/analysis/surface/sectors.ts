@@ -1,20 +1,20 @@
 import { ALL_PRODUCTS, SURFACE_PRODUCT_RAW } from './products'
 
-export const SECTOR_US = 'us'
-export const SECTOR_CANADA = 'can'
-export const SECTOR_EAST_CANADA = 'ecan'
-export const SECTOR_NORTHEAST_US = 'ne'
-export const SECTOR_SOUTHEAST_US = 'se'
-export const SECTOR_MIDWEST_US = 'mw'
-export const SECTOR_GULF_COAST = 'gc'
-export const SECTOR_TORNADO_ALLEY = 'tor'
-export const SECTOR_CENTRAL_PLAINS = 'cp'
-export const SECTOR_NORTHERN_GREAT_PLAINS = 'ngp'
-export const SECTOR_CENTRAL_GREAT_PLAINS = 'cgp'
-export const SECTOR_SOUTHERN_GREAT_PLAINS = 'sgp'
-export const SECTOR_CANADIAN_PRAIRIES = 'canp'
-export const SECTOR_NORTHWEST_US = 'nw'
-export const SECTOR_SOUTHWEST_US = 'sw'
+export const SECTOR_US = 'US'
+export const SECTOR_CANADA = 'Canada'
+export const SECTOR_EAST_CANADA = 'caneast'
+export const SECTOR_NORTHEAST_US = 'northeast'
+export const SECTOR_SOUTHEAST_US = 'southeast'
+export const SECTOR_MIDWEST_US = 'midwest'
+export const SECTOR_GULF_COAST = 'gulfcoast'
+export const SECTOR_TORNADO_ALLEY = 'toralley'
+export const SECTOR_CENTRAL_PLAINS = 'siouxland'
+export const SECTOR_NORTHERN_GREAT_PLAINS = 'nrnplains'
+export const SECTOR_CENTRAL_GREAT_PLAINS = 'cntrlplains'
+export const SECTOR_SOUTHERN_GREAT_PLAINS = 'srnplains'
+export const SECTOR_CANADIAN_PRAIRIES = 'canprairies'
+export const SECTOR_NORTHWEST_US = 'northwest'
+export const SECTOR_SOUTHWEST_US = 'southwest'
 
 export const SECTOR_ALABAMA = 'al'
 export const SECTOR_ALASKA = 'ak'
@@ -141,7 +141,7 @@ export const LARGE_SECTORS = {
 		products: ALL_PRODUCTS,
 	},
 	[SECTOR_CENTRAL_PLAINS]: {
-		name: 'Central Plains',
+		name: 'Siouxland / Central Plains',
 		type: 'Geobox',
 		coordinates: [
 			[-106.6, 36.8],
