@@ -3,7 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
-import { getNexradData } from '@/util/dataCall'
+import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import React, { useEffect, useState } from 'react'
 import styles from './NexradAnimator.module.scss'
 
