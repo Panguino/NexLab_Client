@@ -1,10 +1,10 @@
-export const PRODUCT_SKEWT = 'skewt'
-export const PRODUCT_STUVE = 'stuve'
-export const PRODUCT_SHARPPY = 'sharppy'
-export const PRODUCT_TEXT = 'text'
-export const PRODUCT_HODO = 'hodo'
+const PRODUCT_SKEWT = 'skewt'
+const PRODUCT_STUVE = 'stuve'
+const PRODUCT_SHARPPY = 'sharppy'
+const PRODUCT_TEXT = 'text'
+const PRODUCT_HODO = 'hodo'
 
-export const ALL_PRODUCTS = {
+export const ALL_SOUNDING_PRODUCTS = {
 	[PRODUCT_SKEWT]: {
 		label: 'Skew-T Diagram',
 	},

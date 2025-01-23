@@ -9,7 +9,7 @@ const XSECT_SECTOR_SIL_GRB = 'sil-grb'
 
 const ALL_PRODUCTS = ['xsect']
 
-export const ALL_SECTORS = {
+export const ALL_CROSS_SECTORS = {
 	[XSECT_SECTOR_DRT_BIS]: {
 		name: 'Del Rio, TX to Bismark, ND',
 		type: 'Line',

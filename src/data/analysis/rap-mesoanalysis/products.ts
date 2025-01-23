@@ -13,7 +13,7 @@ export const RAPMESO_PRODUCT_500_700_AVG_QV_DIVERGENCE = 'qvect'
 export const RAPMESO_PRODUCT_TRENBERTH_FORCING = 'trenberth'
 export const RAPMESO_PRODUCT_WATER_VAPOR_VORTICITY = 'wvvor'
 
-export const ALL_PRODUCTS = {
+export const ALL_RAPMESO_PRODUCTS = {
 	[RAPMESO_PRODUCT_300_DIVERGENCE]: {
 		label: '300mb Divergence',
 	},
