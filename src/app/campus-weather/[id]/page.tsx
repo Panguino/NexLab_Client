@@ -6,7 +6,7 @@ import { ForecastTiles } from '@/components/blocks/CampusWeatherDetail/ForecastT
 import { TextForecastPanel } from '@/components/blocks/CampusWeatherDetail/TextForecastPanel/TextForecastPanel'
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
-import { getNexradData } from '@/util/dataCall'
+import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import {
 	getAPIdataFromLocation,
 	getAPIforecast,
