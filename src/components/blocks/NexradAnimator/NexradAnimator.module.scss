@@ -1,15 +1,15 @@
-.nexradAnimator {
-  flex-grow: 1;
-  max-height: 100%;
-  display: flex;
-  justify-content: center;
-}
-.nexradAnimator {
-  position: relative;
-}
 .nexradAnimatorContainer {
   position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.nexradAnimator {
+  flex-grow: 1;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  overflow: auto;
 }
