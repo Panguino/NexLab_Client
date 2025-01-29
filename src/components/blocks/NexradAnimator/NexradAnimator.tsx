@@ -4,19 +4,21 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
+import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import React, { useEffect, useState } from 'react'
+import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
 import styles from './NexradAnimator.module.scss'
 
 interface NexradAnimatorProps {
 	// Add any props you need for the component here
 	productId: string
 	siteId: string
+	productInfo: ProductInfoProps
 }
 
-const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId }) => {
+const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId, productInfo }) => {
 	const [activeTab, setActiveTab] = useState(0)
 	const nexradSite = useRootStore.use.nexradSite()
 	const setNexradSite = useRootStore.use.setNexradSite()
@@ -50,7 +52,7 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId }) =>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-					Info TODO
+					<ProductInfo {...productInfo} />
 				</Tab>
 				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
 					Alerts TODO
