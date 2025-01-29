@@ -6,6 +6,7 @@ import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader
 import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/SidebarSectionLink'
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
+import SoundingsPanel from '../SoundingsPanel/SoundingsPanel'
 import styles from './AnalysisSidebarPanels.module.scss'
 
 const AnalysisSidebarPanels = () => {
@@ -38,15 +39,7 @@ const AnalysisSidebarPanels = () => {
 				</SidebarPanelPad>
 			</SidebarSubPanel>
 			<SidebarSubPanel path={`${basepath}/soundings`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Soundings" linkUrl={basepath} />
-				<SidebarPanelPad>
-					<SidebarGroup title="Upper Air Soundings">
-						<SidebarLink name="CONUS" linkUrl={''} />
-						<SidebarLink name="CANADA" linkUrl={''} />
-						<SidebarLink name="ALASKA" linkUrl={''} />
-						<SidebarLink name="MEXICO" linkUrl={''} />
-					</SidebarGroup>
-				</SidebarPanelPad>
+				<SoundingsPanel basepath={basepath} />
 			</SidebarSubPanel>
 			<SidebarSubPanel path={`${basepath}/isentropic-maps`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="Isentropic Maps" linkUrl={basepath} />
