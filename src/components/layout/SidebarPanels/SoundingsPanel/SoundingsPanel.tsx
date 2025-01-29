@@ -76,17 +76,17 @@ export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
 	})
 
 	return (
-		<>
+		<div className={styles.soundingsPanel}>
 			{sectorSelectorOpen && (
 				<div ref={sectorSelectorRef} className={styles.siteSelector}>
 					<SectorSelector sectors={sectorArray} d3config={d3config} sector={soundingSite} onChange={handleSiteChange} />
-					<Button onClick={() => setSectorSelectorOpen(true)} label={`Site:  ${soundingSite} - ${ALL_SOUNDING_SITES[soundingSite].name}`} />
 				</div>
 			)}
 			<SidebarSectionHeader name="Soundings" linkUrl={`${basepath}`} />
 			<SidebarPanelPad>
 				<div className={styles.options}>
 					<Select value={soundingRegion} options={regionOptions} onChange={handleRegionChange} />
+					<Button onClick={() => setSectorSelectorOpen(true)} label={`Site:  ${soundingSite} - ${ALL_SOUNDING_SITES[soundingSite].name}`} />
 				</div>
 				{productsArray.map(({ id, label }) => (
 					<SidebarLink
@@ -96,7 +96,7 @@ export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
 					/>
 				))}
 			</SidebarPanelPad>
-		</>
+		</div>
 	)
 }
 
