@@ -23,6 +23,21 @@ const AnalysisSidebarPanels = () => {
 					<SidebarSectionLink name="Isentropic Analysis" linkUrl={`${basepath}/isentropic-maps`} />
 				</SidebarPanelPad>
 			</SidebarSubPanel>
+			<SidebarSubPanel path={`${basepath}/surface-maps`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Surface Maps" linkUrl={basepath} />
+			</SidebarSubPanel>
+			<SidebarSubPanel path={`${basepath}/upper-air`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Upper Air Maps" linkUrl={basepath} />
+			</SidebarSubPanel>
+			<SidebarSubPanel path={`${basepath}/soundings`} activeX="0%" inactiveX="100%">
+				<SoundingsPanel basepath={basepath} />
+			</SidebarSubPanel>
+			<SidebarSubPanel path={`${basepath}/rap-mesoanalysis`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="RAP Mesoanalysis" linkUrl={basepath} />
+			</SidebarSubPanel>
+			<SidebarSubPanel path={`${basepath}/isentropic-maps`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Isentropic Maps" linkUrl={basepath} />
+			</SidebarSubPanel>
 			<SidebarSubPanel path={`${basepath}/cross-sectional-analysis`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="Cross-Sectional Analysis" linkUrl={basepath} />
 				<SidebarPanelPad>
@@ -37,18 +52,6 @@ const AnalysisSidebarPanels = () => {
 						<SidebarLink name="Riverton, WY to White Lake, MI" linkUrl={'riw-dtx'} />
 					</SidebarGroup>
 				</SidebarPanelPad>
-			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/soundings`} activeX="0%" inactiveX="100%">
-				<SoundingsPanel basepath={basepath} />
-			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/isentropic-maps`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Isentropic Maps" linkUrl={basepath} />
-			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/upper-air`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Upper Air Maps" linkUrl={basepath} />
-			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/surface-maps`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Surface Maps" linkUrl={basepath} />
 			</SidebarSubPanel>
 		</div>
 	)
