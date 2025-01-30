@@ -19,6 +19,7 @@ const AnalysisSidebarPanels = () => {
 					<SidebarSectionLink name="Surface Maps" linkUrl={`${basepath}/surface-maps`} />
 					<SidebarSectionLink name="Upper Air maps" linkUrl={`${basepath}/upper-air`} />
 					<SidebarSectionLink name="Soundings" linkUrl={`${basepath}/soundings`} />
+					<SidebarSectionLink name="RAP Mesoanalysis" linkUrl={`${basepath}/rap-mesoanalysis`} />
 					<SidebarSectionLink name="Cross-Sectional Analysis" linkUrl={`${basepath}/cross-sectional-analysis`} />
 					<SidebarSectionLink name="Isentropic Analysis" linkUrl={`${basepath}/isentropic-maps`} />
 				</SidebarPanelPad>
