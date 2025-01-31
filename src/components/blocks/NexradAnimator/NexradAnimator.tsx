@@ -1,19 +1,25 @@
 'use client'
 
 import { Animator } from '@/components/elements/Animator/Animator'
+import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
 import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
+import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
+import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
 import styles from './NexradAnimator.module.scss'
 
 interface NexradAnimatorProps {
 	// Add any props you need for the component here
 	productId: string
 	siteId: string
+	productInfo: ProductInfoProps
 }
 
-const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId }) => {
+const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId, productInfo }) => {
+	const [activeTab, setActiveTab] = useState(0)
 	const nexradSite = useRootStore.use.nexradSite()
 	const setNexradSite = useRootStore.use.setNexradSite()
 	const nexradProduct = useRootStore.use.nexradProduct()
@@ -32,17 +38,32 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId }) =>
 	useEffect(() => {
 		async function getData() {
 			const data = await getNexradData(nexradSite, nexradProduct, nexradNumberOfFrames)
-			console.log(data)
 			setNexradData(data)
 		}
 		getData()
 	}, [nexradSite, nexradProduct, nexradNumberOfFrames])
 
 	return (
-		<div className={styles.nexradAnimator} ref={wrapperRef}>
-			<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
-				<Animator frames={nexradData} />
+		<div className={styles.nexradAnimatorContainer}>
+			<div className={styles.nexradAnimator} ref={wrapperRef}>
+				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
+					<Animator frames={nexradData} />
+				</div>
 			</div>
+			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
+				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+					<ProductInfo {...productInfo} />
+				</Tab>
+				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
+					Alerts TODO
+				</Tab>
+				<Tab label="Overlays" icon={<FontAwesomeIcon icon={faLayerGroup} />}>
+					Overlays TODO
+				</Tab>
+				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
+					Download / Save Gif TODO
+				</Tab>
+			</Tabs>
 		</div>
 	)
 }
