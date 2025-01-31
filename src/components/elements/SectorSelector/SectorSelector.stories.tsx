@@ -1,9 +1,25 @@
+import { LARGE_SURFACE_SECTORS, STATE_SURFACE_SECTORS } from '@/data/analysis/surface/sectors'
 import { StoryFn } from '@storybook/react'
 import { useState } from 'react'
 import Select from '../Select/Select'
 import SectorSelector from './SectorSelector'
-import { nexradSites } from './nexradSites'
 import { regions } from './regions'
+
+const pointSectors = Object.entries(STATE_SURFACE_SECTORS)
+	.slice(0, 3)
+	.map(([sector, sectorObj]) => ({
+		id: sector,
+		...sectorObj,
+	}))
+
+const geoboxSectors = Object.entries(LARGE_SURFACE_SECTORS)
+	.slice(0, 3)
+	.map(([sector, sectorObj]) => ({
+		id: sector,
+		...sectorObj,
+	}))
+
+const sectorOptions = Object.fromEntries([pointSectors, geoboxSectors])
 
 export default {
 	title: 'Components/SectorSelector',
@@ -55,7 +71,7 @@ const TemplatePlain: StoryFn<typeof SectorSelector> = (args) => {
 
 export const Default = TemplatePlain.bind({})
 Default.args = {
-	sectors: nexradSites,
+	sectors: sectorOptions,
 	sector: '',
 	d3config: {
 		width: 1000,
@@ -67,7 +83,7 @@ Default.args = {
 
 export const RegionSelection = TemplateSelect.bind({})
 RegionSelection.args = {
-	sectors: nexradSites,
+	sectors: sectorOptions,
 	sector: '',
 	d3config: {
 		width: 1000,
