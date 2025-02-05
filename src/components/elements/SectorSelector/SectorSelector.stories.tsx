@@ -5,19 +5,15 @@ import Select from '../Select/Select'
 import SectorSelector from './SectorSelector'
 import { regions } from './regions'
 
-const pointSectors = Object.entries(STATE_SURFACE_SECTORS)
-	.slice(11, 14)
-	.map(([sector, sectorObj]) => ({
-		id: sector,
-		...sectorObj,
-	}))
+const pointSectors = Object.entries(STATE_SURFACE_SECTORS).map(([sector, sectorObj]) => ({
+	id: sector,
+	...sectorObj,
+}))
 
-const geoboxSectors = Object.entries(LARGE_SURFACE_SECTORS)
-	.slice(6, 9)
-	.map(([sector, sectorObj]) => ({
-		id: sector,
-		...sectorObj,
-	}))
+const geoboxSectors = Object.entries(LARGE_SURFACE_SECTORS).map(([sector, sectorObj]) => ({
+	id: sector,
+	...sectorObj,
+}))
 
 const sectorOptions = [...pointSectors, ...geoboxSectors]
 
@@ -73,7 +69,19 @@ const TemplatePlain: StoryFn<typeof SectorSelector> = (args) => {
 
 export const Default = TemplatePlain.bind({})
 Default.args = {
-	sectors: sectorOptions,
+	sectors: pointSectors,
+	sector: '',
+	d3config: {
+		width: 1000,
+		height: 600,
+		rotate: regions.CONUS.rotate,
+		scale: regions.CONUS.scale,
+	},
+}
+
+export const GeoboxSectors = TemplateSelect.bind({})
+GeoboxSectors.args = {
+	sectors: geoboxSectors,
 	sector: '',
 	d3config: {
 		width: 1000,
@@ -85,7 +93,7 @@ Default.args = {
 
 export const RegionSelection = TemplateSelect.bind({})
 RegionSelection.args = {
-	sectors: sectorOptions,
+	sectors: pointSectors,
 	sector: '',
 	d3config: {
 		width: 1000,
