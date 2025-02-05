@@ -56,11 +56,22 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 		statesGroup.selectAll('path.statePath').data(statesJson.features).enter().append('path').attr('d', path).attr('class', styles.statePath)
 
 		// Filter sectors that are visible in this view of the projection
-		const filteredSectors = sectors.filter((d) => d3.geoDistance(center, d.coordinates) < Math.PI / 2)
+		// const filteredSectors = sectors.filter((d) => d3.geoDistance(center, d.coordinates) < Math.PI / 2)
 
 		// Split the sectors by type
-		const pointSectors = filteredSectors.filter((d) => d.type === 'Point')
-		const geoboxSectors = filteredSectors.filter((d) => d.type === 'Geobox')
+		const pointSectors = sectors.filter((d) => {
+			let isVisible = false
+			isVisible = d.type === 'Point' ? d3.geoDistance(center, d.coordinates) < Math.PI / 2 : false
+			return d.type === 'Point' && isVisible
+		})
+		const geoboxSectors = sectors.filter((d) => {
+			let isVisible = false
+			if (d.type === 'Geobox') {
+				const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+				isVisible = d3.geoDistance(center, d3.geoCentroid(geobox)) < Math.PI / 2
+			}
+			return d.type === 'Geobox' && isVisible
+		})
 
 		// Draw Point sectors and their mouse triggers
 		if (pointSectors.length > 0) {
@@ -80,7 +91,7 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 						.attr('x', projection(d.coordinates)[0])
 						.attr('y', projection(d.coordinates)[1] - 10)
 						.attr('class', styles.tooltip)
-						.text(d.id)
+						.text(d.name)
 				})
 				.on('mouseout', (_event) => {
 					d3.select(_event.currentTarget).attr('r', 10)
@@ -105,28 +116,52 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 		if (geoboxSectors.length > 0) {
 			const geoboxGroup = svg.append('g')
 
+			// Draw the visible geobox outlines
+			geoboxGroup
+				.selectAll('path.geobox')
+				.data(geoboxSectors)
+				.enter()
+				.append('path')
+				.attr('d', (d) => {
+					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					return path(geobox)
+				})
+				.attr('class', (d) => `${styles.geobox} ${d.id}`)
+
 			// Draw the invisible geobox mouse trigger
 			geoboxGroup
 				.selectAll('path.geoboxTrigger')
 				.data(geoboxSectors)
 				.enter()
 				.append('circle')
-				.attr('cx', (d) => projection(d3.geoCentroid(d.coordinates))[0])
-				.attr('cy', (d) => projection(d3.geoCentroid(d.coordinates))[1])
+				.attr('cx', (d) => {
+					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					return projection(d3.geoCentroid(geobox))[0]
+				})
+				.attr('cy', (d) => {
+					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					return projection(d3.geoCentroid(geobox))[1]
+				})
 				.attr('r', 25)
 				.attr('class', styles.geoboxTrigger)
+				.attr('id', (d) => d.id)
 				.on('mouseover', (_event, d) => {
+					const geoboxOutline = d3.geoGraticule().extentMajor(d.coordinates).outline()
 					// draw the visible geobox
-					svg.append('path').attr('d', d3.geoGraticule().extentMajor(d.coordinates).outline()).attr('class', styles.geobox)
+					d3.select(`.${styles.geobox}.${d.id}`).attr('style', 'opacity: 0.5')
 					// draw the tooltip
 					svg.append('text')
-						.attr('x', projection(d3.geoCentroid(d.coordinates))[0])
-						.attr('y', projection(d3.geoCentroid(d.coordinates))[1] - 10)
+						.attr('x', () => {
+							return projection(d3.geoCentroid(geoboxOutline))[0]
+						})
+						.attr('y', () => {
+							return projection(d3.geoCentroid(geoboxOutline))[1] - 10
+						})
 						.attr('class', styles.tooltip)
 						.text(d.name)
 				})
-				.on('mouseout', () => {
-					svg.selectAll(`.${styles.geobox}`).remove()
+				.on('mouseout', (d) => {
+					d3.select(`.${styles.geobox}.${d.target.id}`).attr('style', 'opacity: 0')
 					svg.selectAll(`.${styles.tooltip}`).remove()
 				})
 				.on('click', (_event, d) => {
@@ -139,8 +174,14 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				.data(geoboxSectors)
 				.enter()
 				.append('circle')
-				.attr('cx', (d) => projection(d3.geoCentroid(d.coordinates))[0])
-				.attr('cy', (d) => projection(d3.geoCentroid(d.coordinates))[1])
+				.attr('cx', (d) => {
+					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					return projection(d3.geoCentroid(geobox))[0]
+				})
+				.attr('cy', (d) => {
+					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					return projection(d3.geoCentroid(geobox))[1]
+				})
 				.attr('r', 5)
 				.attr('class', styles.point)
 		}

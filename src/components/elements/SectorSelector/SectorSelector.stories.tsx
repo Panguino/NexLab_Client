@@ -6,20 +6,22 @@ import SectorSelector from './SectorSelector'
 import { regions } from './regions'
 
 const pointSectors = Object.entries(STATE_SURFACE_SECTORS)
-	.slice(0, 3)
+	.slice(11, 14)
 	.map(([sector, sectorObj]) => ({
 		id: sector,
 		...sectorObj,
 	}))
 
 const geoboxSectors = Object.entries(LARGE_SURFACE_SECTORS)
-	.slice(0, 3)
+	.slice(6, 9)
 	.map(([sector, sectorObj]) => ({
 		id: sector,
 		...sectorObj,
 	}))
 
-const sectorOptions = Object.fromEntries([pointSectors, geoboxSectors])
+const sectorOptions = [...pointSectors, ...geoboxSectors]
+
+console.log('sector options', sectorOptions)
 
 export default {
 	title: 'Components/SectorSelector',
