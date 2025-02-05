@@ -15,10 +15,6 @@ const geoboxSectors = Object.entries(LARGE_SURFACE_SECTORS).map(([sector, sector
 	...sectorObj,
 }))
 
-const sectorOptions = [...pointSectors, ...geoboxSectors]
-
-console.log('sector options', sectorOptions)
-
 export default {
 	title: 'Components/SectorSelector',
 	component: SectorSelector,
