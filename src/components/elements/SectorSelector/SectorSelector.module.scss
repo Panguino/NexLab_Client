@@ -35,6 +35,18 @@
 		stroke-width: 2px;
 	}
 }
+.geoboxTrigger {
+	cursor: pointer;
+	fill: transparent;
+}
+.geobox {
+	fill: var(--color-blue3);
+	stroke: var(--color-blue4);
+	opacity: 0;
+	stroke-width: 2px;
+	pointer-events: none;
+	transition: ease all 0.25s;
+}
 
 .tooltip {
 	pointer-events: none;
