@@ -16,7 +16,7 @@ export type ISectorSelectorProps = {
 	sectors: {
 		id: string
 		name: string
-		type: 'Point' | 'Geobox'
+		type: 'Point' | 'Geobox' | 'Line'
 		coordinates: [number, number] | [[number, number], [number, number]]
 	}[]
 	sector: string
@@ -72,6 +72,30 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 			}
 			return d.type === 'Geobox' && isVisible
 		})
+
+		const lineSectors = sectors.filter((d) => {
+			let isVisible = false
+			if (d.type === 'Line') {
+				const midpoint = d3.interpolate(d.coordinates[0], d.coordinates[1])(0.5)
+				isVisible = d3.geoDistance(center, midpoint) < Math.PI / 2
+			}
+			return d.type === 'Line' && isVisible
+		})
+
+		// Necessary data transformation to generate Line feature from endpoints
+		const arcFromCoordinates = (pointA, pointB) => {
+			const interpolation = d3.geoInterpolate(pointA, pointB)
+			const numPoints = 100
+			const arc = d3.range(numPoints).map((d) => interpolation(d / (numPoints - 1)))
+			const arcFeature = {
+				type: 'Feature',
+				geometry: {
+					type: 'LineString',
+					coordinates: arc,
+				},
+			}
+			return arcFeature
+		}
 
 		// Draw Point sectors and their mouse triggers
 		if (pointSectors.length > 0) {
@@ -184,6 +208,56 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				})
 				.attr('r', 5)
 				.attr('class', styles.point)
+		}
+
+		// Draw Line sectors and their mouse triggers
+		if (lineSectors.length > 0) {
+			const lineGroup = svg.append('g')
+
+			lineGroup
+				.selectAll('path.line')
+				.data(lineSectors)
+				.enter()
+				.append('path')
+				.attr('class', styles.line)
+				.attr('d', (d) => path(arcFromCoordinates(d.coordinates[0], d.coordinates[1])))
+				.on('mouseover', (_event, d) => {
+					svg.append('text')
+						.attr('x', projection(d.coordinates[0])[0])
+						.attr('y', projection(d.coordinates[0])[1] - 10)
+						.attr('class', styles.tooltip)
+						.text(d.label[0])
+					svg.append('text')
+						.attr('x', projection(d.coordinates[1])[0])
+						.attr('y', projection(d.coordinates[1])[1] - 10)
+						.attr('class', styles.tooltip)
+						.text(d.label[1])
+				})
+				.on('mouseout', () => {
+					svg.selectAll(`.${styles.tooltip}`).remove()
+				})
+				.on('click', (_event, d) => {
+					console.log(d.id)
+					onChange(d.id)
+				})
+			lineGroup
+				.selectAll('circle.lineEnd')
+				.data(lineSectors)
+				.enter()
+				.append('circle')
+				.attr('cx', (d) => projection(d.coordinates[0])[0])
+				.attr('cy', (d) => projection(d.coordinates[0])[1])
+				.attr('r', 5)
+				.attr('class', styles.lineEnd)
+			lineGroup
+				.selectAll('circle.lineEnd')
+				.data(lineSectors)
+				.enter()
+				.append('circle')
+				.attr('cx', (d) => projection(d.coordinates[1])[0])
+				.attr('cy', (d) => projection(d.coordinates[1])[1])
+				.attr('r', 5)
+				.attr('class', styles.lineEnd)
 		}
 	}, [sectors, onChange, sector, d3config])
 

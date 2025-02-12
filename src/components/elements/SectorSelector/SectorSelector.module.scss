@@ -17,7 +17,8 @@
 	stroke: var(--color-white-grey18);
 	stroke-width: 1px;
 }
-.point {
+.point,
+.lineEnd {
 	fill: white;
 	stroke: black;
 	stroke-width: 2px;
@@ -47,7 +48,16 @@
 	pointer-events: none;
 	transition: ease all 0.25s;
 }
-
+.line {
+	fill: none;
+	stroke: var(--color-blue4);
+	stroke-width: 3px;
+	transition: ease all 0.25s;
+	&:hover {
+		cursor: pointer;
+		stroke-width: 6px;
+	}
+}
 .tooltip {
 	pointer-events: none;
 	user-select: none;
