@@ -20,6 +20,7 @@ interface IAnimatorProps {
 	hideZoomControls?: boolean
 	autoPlay?: boolean
 	interval?: number
+	settingsComponent?: React.ReactNode | null
 }
 
 export const Animator = ({
@@ -31,6 +32,7 @@ export const Animator = ({
 	hideControls = false,
 	autoPlay = false,
 	hideZoomControls = false,
+	settingsComponent = null,
 }: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(0)
@@ -170,6 +172,7 @@ export const Animator = ({
 							onStepForwardClick={stepForward}
 							onPlayPauseClick={playPause}
 						/>
+						{settingsComponent}
 					</div>
 				</div>
 			)}

@@ -9,6 +9,7 @@ export default {
 		onClose: { control: false },
 		children: { control: false },
 		title: { control: 'text' },
+		className: { control: false },
 	},
 } as Meta
 

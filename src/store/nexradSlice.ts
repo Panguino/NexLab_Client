@@ -8,9 +8,11 @@ export interface INexradSlice {
 	nexradRegion: string
 	nexradProduct: string
 	nexradNumberOfFrames: number
+	nexradFrameRate: number
 	setNexradSite: (siteId: string) => void
 	setNexradRegion: (regionId: string) => void
 	setNexradProduct: (productId: string) => void
+	setNexradFrameRate: (frameRate: number) => void
 	setNexradNumberOfFrames: (frames: number) => void
 }
 
@@ -23,4 +25,6 @@ export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
 	setNexradProduct: (productId: string) => set(() => ({ nexradProduct: productId })),
 	nexradNumberOfFrames: 24,
 	setNexradNumberOfFrames: (frames: number) => set(() => ({ nexradNumberOfFrames: frames })),
+	nexradFrameRate: 0.25,
+	setNexradFrameRate: (frameRate: number) => set(() => ({ nexradFrameRate: frameRate })),
 })

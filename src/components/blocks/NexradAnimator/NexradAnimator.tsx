@@ -1,6 +1,7 @@
 'use client'
 
 import { Animator } from '@/components/elements/Animator/Animator'
+import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
@@ -8,6 +9,7 @@ import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
+import NexradAnimatorSettings from '../_animatorSettingPanels/NexradAnimatorSettings/NexradAnimatorSettings'
 import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
 import styles from './NexradAnimator.module.scss'
 
@@ -19,9 +21,10 @@ interface NexradAnimatorProps {
 }
 
 const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId, productInfo }) => {
-	const [activeTab, setActiveTab] = useState(0)
+	const [activeTab, setActiveTab] = useState(-1)
 	const nexradSite = useRootStore.use.nexradSite()
 	const setNexradSite = useRootStore.use.setNexradSite()
+	const nexradFrameRate = useRootStore.use.nexradFrameRate()
 	const nexradProduct = useRootStore.use.nexradProduct()
 	const setNexradProduct = useRootStore.use.setNexradProduct()
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
@@ -47,7 +50,15 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId, prod
 		<div className={styles.nexradAnimatorContainer}>
 			<div className={styles.nexradAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
-					<Animator frames={nexradData} />
+					<Animator
+						frames={nexradData}
+						interval={nexradFrameRate}
+						settingsComponent={
+							<AnimatorSettings title="Settings">
+								<NexradAnimatorSettings />
+							</AnimatorSettings>
+						}
+					/>
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
