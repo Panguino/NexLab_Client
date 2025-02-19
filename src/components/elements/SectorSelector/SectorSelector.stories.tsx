@@ -1,3 +1,4 @@
+import { ALL_CROSS_SECTORS } from '@/data/analysis/cross-sectional-analysis/sectors'
 import { LARGE_SURFACE_SECTORS, STATE_SURFACE_SECTORS } from '@/data/analysis/surface/sectors'
 import { StoryFn } from '@storybook/react'
 import { useState } from 'react'
@@ -11,6 +12,11 @@ const pointSectors = Object.entries(STATE_SURFACE_SECTORS).map(([sector, sectorO
 }))
 
 const geoboxSectors = Object.entries(LARGE_SURFACE_SECTORS).map(([sector, sectorObj]) => ({
+	id: sector,
+	...sectorObj,
+}))
+
+const crossSectors = Object.entries(ALL_CROSS_SECTORS).map(([sector, sectorObj]) => ({
 	id: sector,
 	...sectorObj,
 }))
@@ -78,6 +84,18 @@ Default.args = {
 export const GeoboxSectors = TemplateSelect.bind({})
 GeoboxSectors.args = {
 	sectors: geoboxSectors,
+	sector: '',
+	d3config: {
+		width: 1000,
+		height: 600,
+		rotate: regions.CONUS.rotate,
+		scale: regions.CONUS.scale,
+	},
+}
+
+export const CrossSectors = TemplateSelect.bind({})
+CrossSectors.args = {
+	sectors: crossSectors,
 	sector: '',
 	d3config: {
 		width: 1000,
