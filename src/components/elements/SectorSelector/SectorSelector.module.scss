@@ -72,9 +72,7 @@
 .tooltip {
 	pointer-events: none;
 	user-select: none;
-	fill: white;
-	background: #333;
-	border: 1px solid #999;
+	fill: var(--color-grey18-grey2);
 	padding: 2px 5px;
 	font-size: 10px;
 	text-anchor: middle;
@@ -85,11 +83,11 @@
 .lineName {
 	pointer-events: none;
 	user-select: none;
+	font-size: 14px;
 	color: white;
 	background: #333;
 	border: 1px solid #999;
 	padding: 2px 5px;
-	font-size: 10px;
 	position: absolute;
 	transition: ease all 0.25s;
 	z-index: 100;
