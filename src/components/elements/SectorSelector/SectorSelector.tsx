@@ -17,6 +17,8 @@ export type ISectorSelectorProps = {
 		id: string
 		name: string
 		type: 'Point' | 'Geobox' | 'Line'
+		dotStyle: string
+		dotSymbol: { type: d3.SymbolType; fill: string; stroke: string } | null
 		coordinates: [number, number] | [[number, number], [number, number]]
 	}[]
 	sector: string
@@ -58,6 +60,19 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 		// Filter sectors that are visible in this view of the projection
 		// const filteredSectors = sectors.filter((d) => d3.geoDistance(center, d.coordinates) < Math.PI / 2)
 
+		// convert dotStyle into symbols
+		const symbolGenerator = d3.symbol().size(100) // used to create dots
+		const makeDotSymbol = (dotStyle) => {
+			const [symbolType, color] = dotStyle.split('-')
+			if (!symbolType || !color) return null
+			const symbolAttr = {
+				type: d3['symbol' + symbolType],
+				fill: color,
+				stroke: 'black',
+			}
+			return symbolAttr
+		}
+
 		// Split the sectors by type
 		const pointSectors = sectors.filter((d) => {
 			let isVisible = false
@@ -78,6 +93,7 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 			if (d.type === 'Line') {
 				const midpoint = d3.interpolate(d.coordinates[0], d.coordinates[1])(0.5)
 				isVisible = d3.geoDistance(center, midpoint) < Math.PI / 2
+				d.dotSymbol = d.dotStyle ? makeDotSymbol(d.dotStyle) : makeDotSymbol('Circle-white')
 			}
 			return d.type === 'Line' && isVisible
 		})
@@ -267,14 +283,16 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 
 			// Draw the line start and end points
 			lineGroup
-				.selectAll('circle.lineEnd')
+				.selectAll('.lineEnd')
 				.data(lineSectors)
 				.enter()
-				.append('circle')
-				.attr('cx', (d) => projection(d.coordinates[0])[0])
-				.attr('cy', (d) => projection(d.coordinates[0])[1])
-				.attr('r', 5)
-				.attr('class', styles.lineEnd)
+				.append('path')
+				.attr('d', (d) => symbolGenerator.type(d.dotSymbol.type)())
+				.attr('transform', (d) => `translate(${projection(d.coordinates[0])})`)
+				.attr('fill', (d) => d.dotSymbol.fill)
+				.attr('stroke', (d) => d.dotSymbol.stroke)
+				.attr('stroke-width', 2)
+			// .attr('class', styles.lineEnd)
 			lineGroup
 				.selectAll('circle.lineEnd')
 				.data(lineSectors)
