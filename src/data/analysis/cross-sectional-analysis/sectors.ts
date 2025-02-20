@@ -1,3 +1,5 @@
+import { DotColor, DotShape } from '@/data/d3Map/dotStyles'
+
 const XSECT_SECTOR_DRT_BIS = 'drt-bis'
 const XSECT_SECTOR_ABQ_BNA = 'abq-bna'
 const XSECT_SECTOR_CRP_RIW = 'crp-riw'
@@ -24,7 +26,8 @@ export const ALL_CROSS_SECTORS = {
 		name: 'Albuquerque, NM to Nashville, TN',
 		label: ['ABQ', 'BNA'],
 		type: 'Line',
-		dotStyle: 'Triangle-yellow',
+		dotShape: DotShape.Cross,
+		dotColor: DotColor.Blue,
 		coordinates: [
 			[-106.6, 35.1],
 			[-86.67, 36.13],
@@ -45,7 +48,8 @@ export const ALL_CROSS_SECTORS = {
 		name: 'Denver, CO to Willmington, OH',
 		label: ['DEN', 'ILN'],
 		type: 'Line',
-		dotStyle: 'Diamond-green',
+		dotShape: DotShape.Square,
+		dotColor: DotColor.Purple,
 		coordinates: [
 			[-104.67, 39.85],
 			[-83.79, 39.43],
