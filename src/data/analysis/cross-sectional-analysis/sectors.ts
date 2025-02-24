@@ -16,6 +16,8 @@ export const ALL_CROSS_SECTORS = {
 		name: 'Del Rio, TX to Bismark, ND',
 		label: ['DRT', 'BIS'],
 		type: 'Line',
+		DotShape: DotShape.Circle,
+		DotColor: DotColor.White,
 		coordinates: [
 			[-100.9, 29.37],
 			[-100.76, 46.81],
@@ -26,8 +28,6 @@ export const ALL_CROSS_SECTORS = {
 		name: 'Albuquerque, NM to Nashville, TN',
 		label: ['ABQ', 'BNA'],
 		type: 'Line',
-		dotShape: DotShape.Cross,
-		dotColor: DotColor.Blue,
 		coordinates: [
 			[-106.6, 35.1],
 			[-86.67, 36.13],
@@ -48,8 +48,6 @@ export const ALL_CROSS_SECTORS = {
 		name: 'Denver, CO to Willmington, OH',
 		label: ['DEN', 'ILN'],
 		type: 'Line',
-		dotShape: DotShape.Square,
-		dotColor: DotColor.Purple,
 		coordinates: [
 			[-104.67, 39.85],
 			[-83.79, 39.43],

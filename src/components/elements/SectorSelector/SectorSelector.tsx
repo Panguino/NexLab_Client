@@ -137,10 +137,10 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				.selectAll('circle.point')
 				.data(pointSectors)
 				.enter()
-				.append('circle')
-				.attr('cx', (d) => projection(d.coordinates)[0])
-				.attr('cy', (d) => projection(d.coordinates)[1])
-				.attr('r', 5)
+				.append('path')
+				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
+				.attr('transform', (d) => `translate(${projection(d.coordinates)})`)
+				.attr('fill', (d) => d.dotColor)
 				.attr('class', styles.point)
 		}
 
@@ -201,20 +201,18 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				})
 
 			// Draw the geobox center point
+			// projection(d3.geoCentroid(geobox))
 			geoboxGroup
 				.selectAll('circle.point')
 				.data(geoboxSectors)
 				.enter()
-				.append('circle')
-				.attr('cx', (d) => {
+				.append('path')
+				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
+				.attr('transform', (d) => {
 					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
-					return projection(d3.geoCentroid(geobox))[0]
+					return `translate(${projection(d3.geoCentroid(geobox))})`
 				})
-				.attr('cy', (d) => {
-					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
-					return projection(d3.geoCentroid(geobox))[1]
-				})
-				.attr('r', 5)
+				.attr('fill', (d) => d.dotColor)
 				.attr('class', styles.point)
 		}
 
@@ -275,23 +273,23 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 
 			// Draw the line start and end points
 			lineGroup
-				.selectAll('.lineEnd')
+				.selectAll('.point')
 				.data(lineSectors)
 				.enter()
 				.append('path')
 				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
 				.attr('transform', (d) => `translate(${projection(d.coordinates[0])})`)
 				.attr('fill', (d) => d.dotColor)
-				.attr('class', styles.lineEnd)
+				.attr('class', styles.point)
 			lineGroup
-				.selectAll('.lineEnd')
+				.selectAll('.point')
 				.data(lineSectors)
 				.enter()
 				.append('path')
 				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
 				.attr('transform', (d) => `translate(${projection(d.coordinates[1])})`)
 				.attr('fill', (d) => d.dotColor)
-				.attr('class', styles.lineEnd)
+				.attr('class', styles.point)
 		}
 	}, [sectors, onChange, sector, d3config])
 
