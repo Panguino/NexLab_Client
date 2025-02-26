@@ -16,8 +16,8 @@ export type ISectorSelectorProps = {
 	sectors: {
 		id: string
 		name: string
-		type: string
-		coordinates: [number, number]
+		type: 'Point' | 'Geobox' | 'Line'
+		coordinates: [number, number] | [[number, number], [number, number]]
 	}[]
 	sector: string
 	onChange: (id: string) => void
@@ -54,44 +54,237 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 
 		const statesGroup = svg.append('g')
 		statesGroup.selectAll('path.statePath').data(statesJson.features).enter().append('path').attr('d', path).attr('class', styles.statePath)
-		// Draw the circles
-		const pointsGroup = svg.append('g')
 
-		// Draw interactive regions
-		pointsGroup
-			.selectAll('circle.pointRegion')
-			.data(sectors.filter((d) => d3.geoDistance(center, d.coordinates) < Math.PI / 2))
-			.enter()
-			.append('circle')
-			.attr('cx', (d) => projection(d.coordinates)[0])
-			.attr('cy', (d) => projection(d.coordinates)[1])
-			.attr('r', 10)
-			.attr('class', styles.pointRegion)
-			.on('mouseover', (_event, d) => {
-				d3.select(_event.currentTarget).attr('r', 25)
-				svg.append('text')
-					.attr('x', projection(d.coordinates)[0])
-					.attr('y', projection(d.coordinates)[1] - 10)
-					.attr('class', styles.tooltip)
-					.text(d.id)
-			})
-			.on('mouseout', (_event) => {
-				d3.select(_event.currentTarget).attr('r', 10)
-				svg.selectAll(`.${styles.tooltip}`).remove()
-			})
-			.on('click', (_event, d) => {
-				onChange(d.id)
-			})
+		// Filter sectors that are visible in this view of the projection
+		// const filteredSectors = sectors.filter((d) => d3.geoDistance(center, d.coordinates) < Math.PI / 2)
 
-		pointsGroup
-			.selectAll('circle.point')
-			.data(sectors.filter((d) => d3.geoDistance(center, d.coordinates) < Math.PI / 2))
-			.enter()
-			.append('circle')
-			.attr('cx', (d) => projection(d.coordinates)[0])
-			.attr('cy', (d) => projection(d.coordinates)[1])
-			.attr('r', 5)
-			.attr('class', styles.point)
+		// Split the sectors by type
+		const pointSectors = sectors.filter((d) => {
+			let isVisible = false
+			isVisible = d.type === 'Point' ? d3.geoDistance(center, d.coordinates) < Math.PI / 2 : false
+			return d.type === 'Point' && isVisible
+		})
+		const geoboxSectors = sectors.filter((d) => {
+			let isVisible = false
+			if (d.type === 'Geobox') {
+				const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+				isVisible = d3.geoDistance(center, d3.geoCentroid(geobox)) < Math.PI / 2
+			}
+			return d.type === 'Geobox' && isVisible
+		})
+
+		const lineSectors = sectors.filter((d) => {
+			let isVisible = false
+			if (d.type === 'Line') {
+				const midpoint = d3.interpolate(d.coordinates[0], d.coordinates[1])(0.5)
+				isVisible = d3.geoDistance(center, midpoint) < Math.PI / 2
+			}
+			return d.type === 'Line' && isVisible
+		})
+
+		// Necessary data transformation to generate Line feature from endpoints
+		const arcFromCoordinates = (pointA, pointB) => {
+			const interpolation = d3.geoInterpolate(pointA, pointB)
+			const numPoints = 100
+			const arc = d3.range(numPoints).map((d) => interpolation(d / (numPoints - 1)))
+			const arcFeature = {
+				type: 'Feature',
+				geometry: {
+					type: 'LineString',
+					coordinates: arc,
+				},
+			}
+			return arcFeature
+		}
+
+		// Draw Point sectors and their mouse triggers
+		if (pointSectors.length > 0) {
+			const pointsGroup = svg.append('g')
+			pointsGroup
+				.selectAll('circle.pointRegion')
+				.data(pointSectors)
+				.enter()
+				.append('circle')
+				.attr('cx', (d) => projection(d.coordinates)[0])
+				.attr('cy', (d) => projection(d.coordinates)[1])
+				.attr('r', 10)
+				.attr('class', styles.pointRegion)
+				.on('mouseover', (_event, d) => {
+					d3.select(_event.currentTarget).attr('r', 25)
+					svg.append('text')
+						.attr('x', projection(d.coordinates)[0])
+						.attr('y', projection(d.coordinates)[1] - 10)
+						.attr('class', styles.tooltip)
+						.text(d.name)
+				})
+				.on('mouseout', (_event) => {
+					d3.select(_event.currentTarget).attr('r', 10)
+					svg.selectAll(`.${styles.tooltip}`).remove()
+				})
+				.on('click', (_event, d) => {
+					onChange(d.id)
+				})
+
+			pointsGroup
+				.selectAll('circle.point')
+				.data(pointSectors)
+				.enter()
+				.append('circle')
+				.attr('cx', (d) => projection(d.coordinates)[0])
+				.attr('cy', (d) => projection(d.coordinates)[1])
+				.attr('r', 5)
+				.attr('class', styles.point)
+		}
+
+		// Draw Geobox sectors and their mouse triggers
+		if (geoboxSectors.length > 0) {
+			const geoboxGroup = svg.append('g')
+
+			// Draw the visible geobox outlines
+			geoboxGroup
+				.selectAll('path.geobox')
+				.data(geoboxSectors)
+				.enter()
+				.append('path')
+				.attr('d', (d) => {
+					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					return path(geobox)
+				})
+				.attr('class', (d) => `${styles.geobox} ${d.id}`)
+
+			// Draw the invisible geobox mouse trigger
+			geoboxGroup
+				.selectAll('path.geoboxTrigger')
+				.data(geoboxSectors)
+				.enter()
+				.append('circle')
+				.attr('cx', (d) => {
+					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					return projection(d3.geoCentroid(geobox))[0]
+				})
+				.attr('cy', (d) => {
+					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					return projection(d3.geoCentroid(geobox))[1]
+				})
+				.attr('r', 25)
+				.attr('class', styles.geoboxTrigger)
+				.attr('id', (d) => d.id)
+				.on('mouseover', (_event, d) => {
+					const geoboxOutline = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					// draw the visible geobox
+					d3.select(`.${styles.geobox}.${d.id}`).attr('style', 'opacity: 0.5')
+					// draw the tooltip
+					svg.append('text')
+						.attr('x', () => {
+							return projection(d3.geoCentroid(geoboxOutline))[0]
+						})
+						.attr('y', () => {
+							return projection(d3.geoCentroid(geoboxOutline))[1] - 10
+						})
+						.attr('class', styles.tooltip)
+						.text(d.name)
+				})
+				.on('mouseout', (d) => {
+					d3.select(`.${styles.geobox}.${d.target.id}`).attr('style', 'opacity: 0')
+					svg.selectAll(`.${styles.tooltip}`).remove()
+				})
+				.on('click', (_event, d) => {
+					onChange(d.id)
+				})
+
+			// Draw the geobox center point
+			geoboxGroup
+				.selectAll('circle.point')
+				.data(geoboxSectors)
+				.enter()
+				.append('circle')
+				.attr('cx', (d) => {
+					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					return projection(d3.geoCentroid(geobox))[0]
+				})
+				.attr('cy', (d) => {
+					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					return projection(d3.geoCentroid(geobox))[1]
+				})
+				.attr('r', 5)
+				.attr('class', styles.point)
+		}
+
+		// Draw Line sectors and their mouse triggers
+		if (lineSectors.length > 0) {
+			const lineGroup = svg.append('g')
+
+			// Draw the visible line paths
+			lineGroup
+				.selectAll('path.line')
+				.data(lineSectors)
+				.enter()
+				.append('path')
+				.attr('class', (d) => `${styles.line} ${d.id}`)
+				.attr('d', (d) => path(arcFromCoordinates(d.coordinates[0], d.coordinates[1])))
+
+			// Draw the invisible line triggers
+			lineGroup
+				.selectAll('path.lineTrigger')
+				.data(lineSectors)
+				.enter()
+				.append('path')
+				.attr('class', styles.lineTrigger)
+				.attr('d', (d) => path(arcFromCoordinates(d.coordinates[0], d.coordinates[1])))
+				.on('mouseover', (_event, d) => {
+					// name tooltip
+					const lineName = d3.select('body').append('div').attr('class', styles.lineName).text(d.name)
+					console.log(lineName)
+					svg.on('mousemove', (event) => {
+						lineName.style('left', `${event.clientX + 15}px`).style('top', `${event.clientY - 15}px`)
+					})
+
+					// endpoint tooltips
+					svg.append('text')
+						.attr('x', projection(d.coordinates[0])[0])
+						.attr('y', projection(d.coordinates[0])[1] - 10)
+						.attr('class', styles.tooltip)
+						.text(d.label[0])
+					svg.append('text')
+						.attr('x', projection(d.coordinates[1])[0])
+						.attr('y', projection(d.coordinates[1])[1] - 10)
+						.attr('class', styles.tooltip)
+						.text(d.label[1])
+
+					// highlight the line
+					svg.select(`path.${d.id}`).attr('class', `${styles.lineHover} ${d.id}`)
+				})
+				.on('mouseout', (_event, d) => {
+					svg.selectAll(`path.${d.id}`).attr('class', `${styles.line} ${d.id}`)
+					svg.selectAll(`.${styles.tooltip}`).remove()
+					d3.selectAll(`.${styles.lineName}`).remove()
+					svg.on('mousemove', null)
+				})
+				.on('click', (_event, d) => {
+					console.log(d.id)
+					onChange(d.id)
+				})
+
+			// Draw the line start and end points
+			lineGroup
+				.selectAll('circle.lineEnd')
+				.data(lineSectors)
+				.enter()
+				.append('circle')
+				.attr('cx', (d) => projection(d.coordinates[0])[0])
+				.attr('cy', (d) => projection(d.coordinates[0])[1])
+				.attr('r', 5)
+				.attr('class', styles.lineEnd)
+			lineGroup
+				.selectAll('circle.lineEnd')
+				.data(lineSectors)
+				.enter()
+				.append('circle')
+				.attr('cx', (d) => projection(d.coordinates[1])[0])
+				.attr('cy', (d) => projection(d.coordinates[1])[1])
+				.attr('r', 5)
+				.attr('class', styles.lineEnd)
+		}
 	}, [sectors, onChange, sector, d3config])
 
 	if (!d3config) return <></>
