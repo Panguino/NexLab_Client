@@ -1,3 +1,5 @@
+import { DotColor, DotShape } from '@/data/d3Map/dotStyles'
+
 const XSECT_SECTOR_DRT_BIS = 'drt-bis'
 const XSECT_SECTOR_ABQ_BNA = 'abq-bna'
 const XSECT_SECTOR_CRP_RIW = 'crp-riw'
@@ -14,6 +16,8 @@ export const ALL_CROSS_SECTORS = {
 		name: 'Del Rio, TX to Bismark, ND',
 		label: ['DRT', 'BIS'],
 		type: 'Line',
+		DotShape: DotShape.Circle,
+		DotColor: DotColor.White,
 		coordinates: [
 			[-100.9, 29.37],
 			[-100.76, 46.81],

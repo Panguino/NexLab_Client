@@ -1,3 +1,4 @@
+import { DotColor, DotShape } from '@/data/d3Map/dotStyles'
 import lakesJson from '@/data/d3Map/lakes.json'
 import statesJson from '@/data/d3Map/states.json'
 import mapJson from '@/data/d3Map/world.json'
@@ -17,6 +18,8 @@ export type ISectorSelectorProps = {
 		id: string
 		name: string
 		type: 'Point' | 'Geobox' | 'Line'
+		dotShape: DotShape | null
+		dotColor: DotColor | null
 		coordinates: [number, number] | [[number, number], [number, number]]
 	}[]
 	sector: string
@@ -55,8 +58,13 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 		const statesGroup = svg.append('g')
 		statesGroup.selectAll('path.statePath').data(statesJson.features).enter().append('path').attr('d', path).attr('class', styles.statePath)
 
-		// Filter sectors that are visible in this view of the projection
-		// const filteredSectors = sectors.filter((d) => d3.geoDistance(center, d.coordinates) < Math.PI / 2)
+		// store symbol generator for later use
+		const symbolGenerator = d3.symbol().size(100)
+		// Set default values for dotShape and dotColor within sectors
+		sectors.forEach((sector) => {
+			sector.dotShape = sector.dotShape || DotShape.Circle
+			sector.dotColor = sector.dotColor || DotColor.White
+		})
 
 		// Split the sectors by type
 		const pointSectors = sectors.filter((d) => {
@@ -129,10 +137,13 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				.selectAll('circle.point')
 				.data(pointSectors)
 				.enter()
-				.append('circle')
-				.attr('cx', (d) => projection(d.coordinates)[0])
-				.attr('cy', (d) => projection(d.coordinates)[1])
-				.attr('r', 5)
+				.append('path')
+				.attr('d', (d) => {
+					console.log(d3[d.dotShape], d.dotShape)
+					return symbolGenerator.type(d3[d.dotShape])()
+				})
+				.attr('transform', (d) => `translate(${projection(d.coordinates)})`)
+				.attr('fill', (d) => d.dotColor)
 				.attr('class', styles.point)
 		}
 
@@ -193,20 +204,18 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				})
 
 			// Draw the geobox center point
+			// projection(d3.geoCentroid(geobox))
 			geoboxGroup
 				.selectAll('circle.point')
 				.data(geoboxSectors)
 				.enter()
-				.append('circle')
-				.attr('cx', (d) => {
+				.append('path')
+				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
+				.attr('transform', (d) => {
 					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
-					return projection(d3.geoCentroid(geobox))[0]
+					return `translate(${projection(d3.geoCentroid(geobox))})`
 				})
-				.attr('cy', (d) => {
-					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
-					return projection(d3.geoCentroid(geobox))[1]
-				})
-				.attr('r', 5)
+				.attr('fill', (d) => d.dotColor)
 				.attr('class', styles.point)
 		}
 
@@ -267,23 +276,23 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 
 			// Draw the line start and end points
 			lineGroup
-				.selectAll('circle.lineEnd')
+				.selectAll('.point')
 				.data(lineSectors)
 				.enter()
-				.append('circle')
-				.attr('cx', (d) => projection(d.coordinates[0])[0])
-				.attr('cy', (d) => projection(d.coordinates[0])[1])
-				.attr('r', 5)
-				.attr('class', styles.lineEnd)
+				.append('path')
+				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
+				.attr('transform', (d) => `translate(${projection(d.coordinates[0])})`)
+				.attr('fill', (d) => d.dotColor)
+				.attr('class', styles.point)
 			lineGroup
-				.selectAll('circle.lineEnd')
+				.selectAll('.point')
 				.data(lineSectors)
 				.enter()
-				.append('circle')
-				.attr('cx', (d) => projection(d.coordinates[1])[0])
-				.attr('cy', (d) => projection(d.coordinates[1])[1])
-				.attr('r', 5)
-				.attr('class', styles.lineEnd)
+				.append('path')
+				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
+				.attr('transform', (d) => `translate(${projection(d.coordinates[1])})`)
+				.attr('fill', (d) => d.dotColor)
+				.attr('class', styles.point)
 		}
 	}, [sectors, onChange, sector, d3config])
 
