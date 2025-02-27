@@ -138,7 +138,10 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				.data(pointSectors)
 				.enter()
 				.append('path')
-				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
+				.attr('d', (d) => {
+					console.log(d3[d.dotShape], d.dotShape)
+					return symbolGenerator.type(d3[d.dotShape])()
+				})
 				.attr('transform', (d) => `translate(${projection(d.coordinates)})`)
 				.attr('fill', (d) => d.dotColor)
 				.attr('class', styles.point)

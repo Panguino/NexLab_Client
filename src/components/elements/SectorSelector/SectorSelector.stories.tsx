@@ -25,20 +25,20 @@ const crossSectors = Object.entries(ALL_CROSS_SECTORS).map(([sector, sectorObj])
 const regionOptions = Object.keys(regions).map((region) => {
 	return { value: regions[region].id, label: regions[region].label }
 })
-console.log(regionOptions)
 
-const dotColorOptions = Object.keys(DotColor).map((color) => ({
-	value: DotColor[color as keyof typeof DotColor],
-	label: color,
-}))
+const dotColorOptions = Object.keys(DotColor).map((color) => {
+	return {
+		value: DotColor[color as keyof typeof DotColor],
+		label: color,
+	}
+})
 
-const dotShapeOptions = Object.keys(DotShape).map((shape) => ({
-	value: DotShape[shape as keyof typeof DotShape],
-	label: shape,
-}))
-
-console.log(dotColorOptions.find((color) => color.value === DotColor.White))
-console.log(dotShapeOptions)
+const dotShapeOptions = Object.keys(DotShape).map((shape) => {
+	return {
+		value: DotShape[shape as keyof typeof DotShape],
+		label: shape,
+	}
+})
 
 export default {
 	title: 'Components/SectorSelector',
@@ -87,13 +87,14 @@ const TemplatePlain: StoryFn<typeof SectorSelector> = (args) => {
 const TemplateDotStyles: StoryFn<typeof SectorSelector> = (args) => {
 	const [selectedSector, setSelectedSector] = useState(args.sector)
 	const [mapSectors, setMapSectors] = useState(args.sectors)
-	const [selectedColor, setSelectedColor] = useState('White')
-	const [selectedShape, setSelectedShape] = useState('Circle')
+	const [selectedColor, setSelectedColor] = useState(DotColor.White)
+	const [selectedShape, setSelectedShape] = useState(DotShape.Circle)
 
 	const handleColorChange = (color) => {
 		const updatedSectors = args.sectors.map((sector) => ({
 			...sector,
-			dotColor: DotColor[color as keyof typeof DotColor],
+			dotColor: color,
+			dotShape: selectedShape,
 		}))
 		setMapSectors(updatedSectors)
 		setSelectedColor(color)
@@ -101,7 +102,8 @@ const TemplateDotStyles: StoryFn<typeof SectorSelector> = (args) => {
 	const handleShapeChange = (shape) => {
 		const updatedSectors = args.sectors.map((sector) => ({
 			...sector,
-			dotShape: DotShape[shape as keyof typeof DotShape],
+			dotShape: shape,
+			dotColor: selectedColor,
 		}))
 		setMapSectors(updatedSectors)
 		setSelectedShape(shape)
@@ -111,13 +113,11 @@ const TemplateDotStyles: StoryFn<typeof SectorSelector> = (args) => {
 		<div>
 			<div style={{ display: 'flex', alignItems: 'center', gap: 30 }}>
 				<div style={{ paddingBottom: 10, display: 'table', width: 400 }}>
-					<Select value={DotColor[selectedColor as keyof typeof DotColor]} options={dotColorOptions} onChange={handleColorChange} />
+					<Select value={selectedColor} options={dotColorOptions} onChange={handleColorChange} />
 				</div>
-				<p>Selected Color: {selectedColor}</p>
 				<div style={{ paddingBottom: 10, display: 'table', width: 400 }}>
-					<Select value={DotShape[selectedShape as keyof typeof DotShape]} options={dotShapeOptions} onChange={handleShapeChange} />
+					<Select value={selectedShape} options={dotShapeOptions} onChange={handleShapeChange} />
 				</div>
-				<p>Selected Shape: {selectedShape}</p>
 			</div>
 			<SectorSelector sectors={mapSectors} d3config={args.d3config} sector={selectedSector} onChange={setSelectedSector} />
 		</div>

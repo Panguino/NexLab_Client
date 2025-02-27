@@ -1,12 +1,13 @@
-import * as d3 from 'd3'
 export enum DotShape {
-	Circle = d3.symbolCircle,
-	Cross = d3.symbolCross,
-	Diamond = d3.symbolDiamond,
-	Square = d3.symbolSquare,
-	Triangle = d3.symbolTriangle,
-	Wye = d3.symbolWye,
+	Circle = 'symbolCircle',
+	Cross = 'symbolCross',
+	Diamond = 'symbolDiamond',
+	Square = 'symbolSquare',
+	Star = 'symbolStar',
+	Triangle = 'symbolTriangle',
+	Wye = 'symbolWye',
 }
+
 export enum DotColor {
 	Blue = '#007bff',
 	Green = '#28a745',
