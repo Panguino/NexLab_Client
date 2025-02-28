@@ -5,18 +5,27 @@ import { IGlobalSettingsSlice, createGlobalSettingsSlice } from './globalSetting
 import { IHazardsSlice, createHazardsSlice } from './hazardsSlice'
 import { IMobileMenuSlice, createMobileMenuSlice } from './mobileMenuSlice'
 import { INexradSlice, createNexradSlice } from './nexradSlice'
+import { ISectorSelectorPanelSlice, createSectorSelectorPanelSlice } from './sectorSelectorPanelSlice'
 import { ISlideoutPanelSlice, createSlideoutPanelSlice } from './slideoutPanelSlice'
 import { ISoundingSlice, createSoundingSlice } from './soundingsSlice'
 
 enableMapSet()
 
-export interface IGlobalStore extends IHazardsSlice, ISlideoutPanelSlice, IMobileMenuSlice, IGlobalSettingsSlice, INexradSlice, ISoundingSlice {}
+export interface IGlobalStore
+	extends IHazardsSlice,
+		ISlideoutPanelSlice,
+		ISectorSelectorPanelSlice,
+		IMobileMenuSlice,
+		IGlobalSettingsSlice,
+		INexradSlice,
+		ISoundingSlice {}
 
 export type ZustandStateSlice<T> = StateCreator<IGlobalStore, [], [], T>
 
 const useRootStoreBase = create<IGlobalStore>((...args) => ({
 	...createHazardsSlice(...args),
 	...createSlideoutPanelSlice(...args),
+	...createSectorSelectorPanelSlice(...args),
 	...createMobileMenuSlice(...args),
 	...createGlobalSettingsSlice(...args),
 	...createNexradSlice(...args),
