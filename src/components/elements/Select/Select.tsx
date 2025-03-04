@@ -30,6 +30,7 @@ const Select = ({ value, options, onChange, placeholder = '', optionsEmptyText =
 	}, [])
 
 	useEffect(() => {
+		console.log('value', value, 'options', options)
 		if (value && options) {
 			const foundValue = options.find((option) => option.value === value).value
 			if (foundValue !== value) {

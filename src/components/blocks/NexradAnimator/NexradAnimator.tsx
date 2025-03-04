@@ -19,7 +19,7 @@ interface NexradAnimatorProps {
 }
 
 const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId, productInfo }) => {
-	const [activeTab, setActiveTab] = useState(0)
+	const [activeTab, setActiveTab] = useState(-1)
 	const nexradSite = useRootStore.use.nexradSite()
 	const setNexradSite = useRootStore.use.setNexradSite()
 	const nexradProduct = useRootStore.use.nexradProduct()

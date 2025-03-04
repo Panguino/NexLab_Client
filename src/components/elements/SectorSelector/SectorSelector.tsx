@@ -2,6 +2,7 @@ import { DotColor, DotShape } from '@/data/d3Map/dotStyles'
 import lakesJson from '@/data/d3Map/lakes.json'
 import statesJson from '@/data/d3Map/states.json'
 import mapJson from '@/data/d3Map/world.json'
+import { ISector } from '@/store/sectorSelectorPanelSlice'
 import * as d3 from 'd3'
 import React, { useEffect, useRef } from 'react'
 import styles from './SectorSelector.module.scss'
@@ -14,14 +15,7 @@ export type d3ConfigProps = {
 }
 
 export type ISectorSelectorProps = {
-	sectors: {
-		id: string
-		name: string
-		type: 'Point' | 'Geobox' | 'Line'
-		dotShape: DotShape | null
-		dotColor: DotColor | null
-		coordinates: [number, number] | [[number, number], [number, number]]
-	}[]
+	sectors: ISector[]
 	sector: string
 	onChange: (id: string) => void
 	d3config?: d3ConfigProps
@@ -29,6 +23,8 @@ export type ISectorSelectorProps = {
 
 const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onChange, d3config }) => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
+
+	console.log('SectorSelector', sectors, sector, 'config', d3config)
 
 	useEffect(() => {
 		if (!d3config) return
