@@ -1,3 +1,4 @@
+import { DotColor, DotShape } from '@/data/d3Map/dotStyles'
 import { ALL_SURFACE_PRODUCTS, SURFACE_PRODUCT_RAW } from './products'
 
 const SECTOR_US = 'US'
@@ -16,6 +17,8 @@ const SECTOR_CANADIAN_PRAIRIES = 'canprairies'
 const SECTOR_NORTHWEST_US = 'northwest'
 const SECTOR_SOUTHWEST_US = 'southwest'
 
+const SECTOR_CHI_METRO = 'chi'
+const SECTOR_SF_BAY = 'sfbay'
 const SECTOR_ALABAMA = 'al'
 const SECTOR_ALASKA = 'ak'
 const SECTOR_ARIZONA = 'az'
@@ -206,6 +209,22 @@ export const LARGE_SURFACE_SECTORS = {
 }
 
 export const STATE_SURFACE_SECTORS = {
+	[SECTOR_CHI_METRO]: {
+		name: 'Chicago Metro Area',
+		type: 'Point',
+		dotShape: DotShape.Triangle,
+		dotColor: DotColor.Green,
+		coordinates: [-87.66, 41.87],
+		products: [ALL_SURFACE_PRODUCTS[SURFACE_PRODUCT_RAW]],
+	},
+	[SECTOR_SF_BAY]: {
+		name: 'San Francisco Bay Area',
+		type: 'Point',
+		dotShape: DotShape.Triangle,
+		dotColor: DotColor.Green,
+		coordinates: [-122.53, 37.77],
+		products: [ALL_SURFACE_PRODUCTS[SURFACE_PRODUCT_RAW]],
+	},
 	[SECTOR_ALASKA]: {
 		name: 'Alaska',
 		type: 'Point',
@@ -425,7 +444,7 @@ export const STATE_SURFACE_SECTORS = {
 	[SECTOR_OREGON]: {
 		name: 'Oregon',
 		type: 'Point',
-		coordinates: [-122.67, 45.52],
+		coordinates: [-120.73, 43.77],
 		products: [ALL_SURFACE_PRODUCTS[SURFACE_PRODUCT_RAW]],
 	},
 	[SECTOR_PENNSYLVANIA]: {
@@ -485,7 +504,7 @@ export const STATE_SURFACE_SECTORS = {
 	[SECTOR_WASHINGTON]: {
 		name: 'Washington',
 		type: 'Point',
-		coordinates: [-122.33, 47.61],
+		coordinates: [-120.47, 47.31],
 		products: [ALL_SURFACE_PRODUCTS[SURFACE_PRODUCT_RAW]],
 	},
 	[SECTOR_WISCONSIN]: {

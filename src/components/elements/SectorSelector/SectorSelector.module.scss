@@ -18,9 +18,7 @@
 	stroke: var(--color-white-grey18);
 	stroke-width: 1px;
 }
-.point,
-.lineEnd {
-	fill: white;
+.point {
 	stroke: black;
 	stroke-width: 2px;
 	pointer-events: none;
