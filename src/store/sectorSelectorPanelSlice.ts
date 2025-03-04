@@ -9,8 +9,6 @@ export interface ISector {
 	coordinates: [number, number] | [[number, number], [number, number]]
 	dotShape?: DotShape | null
 	dotColor?: DotColor | null
-	limited?: boolean
-	products?: string[]
 }
 
 export interface ISectorSelectorPanelSlice {
@@ -34,7 +32,7 @@ export const createSectorSelectorPanelSlice: ZustandStateSlice<ISectorSelectorPa
 	sectorSelectorSectors: [],
 	setSectorSelectorSectors: (sectors) => set(() => ({ sectorSelectorSectors: sectors })),
 	sectorSelectorCurrentSector: null,
-	onSectorSelectorChange: () => {},
-	sectorSelectorD3config: null,
+	onSectorSelectorChange: (id) => set(() => ({ sectorSelectorCurrentSector: id })),
+	sectorSelectorD3config: { width: 1000, height: 600, rotate: [0, 0], scale: 1 },
 	setSectorSelectorD3config: (d3config) => set(() => ({ sectorSelectorD3config: d3config })),
 })

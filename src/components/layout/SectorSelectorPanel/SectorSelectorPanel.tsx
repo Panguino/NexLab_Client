@@ -26,8 +26,6 @@ const SectorSelectorPanel = () => {
 		}
 	}, [sectorSelectorPanelIsOpen, closeSectorSelectorPanel])
 
-	console.log('sectorSelectorSectorsOpen', sectorSelectorPanelIsOpen)
-
 	return (
 		<>
 			{sectorSelectorPanelIsOpen && (

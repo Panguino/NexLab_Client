@@ -27,11 +27,17 @@ const NexradSidebarPanel = () => {
 	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const sectorSelectorD3config = useRootStore.use.sectorSelectorD3config()
-
+	const sectorSelectorCurrentSector = useRootStore.use.sectorSelectorCurrentSector()
 	const params = useParams()
 
 	useEffect(() => {
-		console.log(params)
+		// need to find a better way to handle this
+		if (sectorSelectorCurrentSector) {
+			setNexradSite(sectorSelectorCurrentSector)
+		}
+	}, [sectorSelectorCurrentSector, setNexradSite])
+
+	useEffect(() => {
 		const { productId, siteId } = params
 		if (productId && siteId) {
 			setNexradProduct(productId)
@@ -54,7 +60,13 @@ const NexradSidebarPanel = () => {
 		setNexradRegion(regionId)
 		setSectorSelectorD3config(newD3config)
 		openSectorSelectorPanel()
-		setSectorSelectorSectors(region.sites)
+		const selectedSectors = region.sites.map((siteId) => ({
+			id: siteId,
+			name: NEXRAD_SITES[siteId].name,
+			type: NEXRAD_SITES[siteId].type,
+			coordinates: NEXRAD_SITES[siteId].coordinates,
+		}))
+		setSectorSelectorSectors(selectedSectors)
 	}
 
 	const regionOptions = Object.keys(NEXRAD_REGIONS).map((regionId) => {

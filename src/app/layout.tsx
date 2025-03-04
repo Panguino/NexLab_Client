@@ -1,5 +1,4 @@
 import Navigation from '@/components/layout/Navigation/Navigation'
-import SectorSelectorPanel from '@/components/layout/SectorSelectorPanel/SectorSelectorPanel'
 import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
 import Providers from '@/components/providers/Providers/Providers'
 import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
@@ -31,7 +30,6 @@ export default async function RootLayout({ children }) {
 				<div className="all">
 					<NextAuthProvider>
 						<Providers>
-							<SectorSelectorPanel />
 							<SlideoutPanel />
 							<Navigation mobileMenuItems={mobileMenuItems} />
 							{children}
