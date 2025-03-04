@@ -173,7 +173,6 @@ RegionSelection.args = {
 }
 
 export const DotStyles = TemplateDotStyles.bind({})
-
 DotStyles.args = {
 	sectors: pointSectors,
 	sector: '',

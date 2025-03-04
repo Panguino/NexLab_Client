@@ -139,7 +139,6 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				.enter()
 				.append('path')
 				.attr('d', (d) => {
-					console.log(d3[d.dotShape], d.dotShape)
 					return symbolGenerator.type(d3[d.dotShape])()
 				})
 				.attr('transform', (d) => `translate(${projection(d.coordinates)})`)
@@ -243,7 +242,6 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				.on('mouseover', (_event, d) => {
 					// name tooltip
 					const lineName = d3.select('body').append('div').attr('class', styles.lineName).text(d.name)
-					console.log(lineName)
 					svg.on('mousemove', (event) => {
 						lineName.style('left', `${event.clientX + 15}px`).style('top', `${event.clientY - 15}px`)
 					})
@@ -270,7 +268,6 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 					svg.on('mousemove', null)
 				})
 				.on('click', (_event, d) => {
-					console.log(d.id)
 					onChange(d.id)
 				})
 
