@@ -922,3 +922,7 @@ export const ALL_SOUNDING_SITES = {
 	...CANADA_SOUNDING_SITES,
 	...MEXICO_SOUNDING_SITES,
 }
+export const ALL_SOUNDING_SITES_LIST = Object.entries(ALL_SOUNDING_SITES).map(([key, value]) => ({
+	id: key,
+	...value,
+}))

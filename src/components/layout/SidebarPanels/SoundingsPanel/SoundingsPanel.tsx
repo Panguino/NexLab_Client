@@ -9,7 +9,7 @@ import { ALL_SOUNDING_REGIONS, SOUNDING_REGION_CONUS } from '@/data/analysis/sou
 import { ALL_SOUNDING_SITES } from '@/data/analysis/soundings/sites'
 import { useRootStore } from '@/store/useRootStore'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import styles from './SoundingsPanel.module.scss'
@@ -20,35 +20,63 @@ interface soundingsPanelProps {
 
 export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
 	const router = useRouter()
-	const sectorSelectorRef = useRef(null)
 	const soundingSite = useRootStore.use.soundingSite()
+	const setSoundingSite = useRootStore.use.setSoundingSite()
 	const soundingRegion = useRootStore.use.soundingRegion()
 	const setSoundingRegion = useRootStore.use.setSoundingRegion()
 	const soundingProduct = useRootStore.use.soundingProduct()
-	const [sectorSelectorOpen, setSectorSelectorOpen] = useState(false)
+	const setSoundingProduct = useRootStore.use.setSoundingProduct()
+	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
+	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
+	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
+	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
+	const sectorSelectorD3config = useRootStore.use.sectorSelectorD3config()
+	const sectorSelectorCurrentSector = useRootStore.use.sectorSelectorCurrentSector()
+	const params = useParams()
+
+	useEffect(() => {
+		// need to find a better way to handle this
+		if (sectorSelectorCurrentSector) {
+			setSoundingSite(sectorSelectorCurrentSector)
+		}
+	}, [sectorSelectorCurrentSector, setSoundingSite])
+
+	useEffect(() => {
+		const { productId, siteId } = params
+		if (productId && siteId) {
+			setSoundingProduct(productId)
+			setSoundingSite(siteId)
+		}
+	}, [params, setSoundingSite, setSoundingProduct])
+
+	useEffect(() => {
+		closeSectorSelectorPanel()
+		router.push(`/weather-data/analysis/soundings/${soundingProduct}/${soundingSite}`)
+	}, [soundingSite, soundingProduct, closeSectorSelectorPanel, router])
 
 	const [sites, setSites] = useState(ALL_SOUNDING_REGIONS[SOUNDING_REGION_CONUS].sites)
-	const [d3config, setD3config] = useState({
-		width: 800,
-		height: 600,
-		rotate: ALL_SOUNDING_REGIONS[SOUNDING_REGION_CONUS].rotate,
-		scale: ALL_SOUNDING_REGIONS[SOUNDING_REGION_CONUS].scale,
-	})
 
 	const handleRegionChange = (regionId) => {
 		const region = ALL_SOUNDING_REGIONS[regionId]
-		setSoundingRegion(regionId)
-		setSectorSelectorOpen(true)
+		const sites = Object.entries(region.sites).map(([id, site]) => ({ id, ...site })) // code debt - data isnt in the right format
 		const newD3config = {
 			...d3config,
 			rotate: region.rotate,
 			scale: region.scale,
 		}
-		setSites(region.sites)
-		setD3config(newD3config)
+		setSoundingRegion(regionId)
+		setSectorSelectorD3config(newD3config)
+		openSectorSelectorPanel()
+		const selectedSectors = sites.map((siteId) => ({
+			id: siteId,
+			name: ALL_SOUNDING_SITES[siteId].name,
+			type: ALL_SOUNDING_SITES[siteId].type,
+			coordinates: ALL_SOUNDING_SITES[siteId].coordinates,
+		}))
+		setSectorSelectorSectors(selectedSectors)
 	}
 	const handleSiteChange = (site) => {
-		setSectorSelectorOpen(false)
+		closeSectorSelectorPanel()
 		router.push(`/weather-data/analysis/soundings/${soundingRegion}/${soundingProduct}/${site}`)
 	}
 
@@ -68,7 +96,7 @@ export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
 		return { value: regionId, label: ALL_SOUNDING_REGIONS[regionId].label }
 	})
 
-	const sectorArray = Object.keys(sites).map((value) => {
+	const sectorArray = Object.keys(ALL_SOUNDING_SITES).map((value) => {
 		return { id: value, ...ALL_SOUNDING_SITES[value] }
 	})
 	const productsArray = Object.keys(ALL_SOUNDING_SITES[soundingSite].products).map((id) => {

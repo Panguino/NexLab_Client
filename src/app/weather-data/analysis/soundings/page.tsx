@@ -1,10 +1,7 @@
-const Page = () => {
-	return (
-		<div>
-			<h1>Soundings</h1>
-			Content
-		</div>
-	)
+import SoundingAnimator from '@/components/blocks/SoundingAnimator/SoundingAnimator'
+const Page = async (params) => {
+	const { siteId, productId } = params
+	return <SoundingAnimator productId={productId} siteId={siteId} />
 }
 
 export default Page
