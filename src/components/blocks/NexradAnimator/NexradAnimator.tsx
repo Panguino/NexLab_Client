@@ -7,41 +7,29 @@ import { useRootStore } from '@/store/useRootStore'
 import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
 import styles from './NexradAnimator.module.scss'
 
 interface NexradAnimatorProps {
-	// Add any props you need for the component here
-	productId: string
-	siteId: string
 	productInfo: ProductInfoProps
 }
 
-const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productId, siteId, productInfo }) => {
+const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
+	const { productId, siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const nexradSite = useRootStore.use.nexradSite()
-	const setNexradSite = useRootStore.use.setNexradSite()
-	const nexradProduct = useRootStore.use.nexradProduct()
-	const setNexradProduct = useRootStore.use.setNexradProduct()
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
 	const [wrapperRef, { width: width, height: height }] = useDimensions(1)
 	const [nexradData, setNexradData] = useState([])
 
 	useEffect(() => {
-		if (siteId && productId) {
-			setNexradSite(siteId)
-			setNexradProduct(productId)
-		}
-	}, [productId, siteId, setNexradSite, setNexradProduct])
-
-	useEffect(() => {
 		async function getData() {
-			const data = await getNexradData(nexradSite, nexradProduct, nexradNumberOfFrames)
+			const data = await getNexradData(siteId, productId, nexradNumberOfFrames)
 			setNexradData(data)
 		}
 		getData()
-	}, [nexradSite, nexradProduct, nexradNumberOfFrames])
+	}, [siteId, productId, nexradNumberOfFrames])
 
 	return (
 		<div className={styles.nexradAnimatorContainer}>

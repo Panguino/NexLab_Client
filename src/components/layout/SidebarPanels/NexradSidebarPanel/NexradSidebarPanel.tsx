@@ -16,50 +16,27 @@ import styles from './NexradSidebarPanel.module.scss'
 
 const NexradSidebarPanel = () => {
 	const router = useRouter()
-	const nexradSite = useRootStore.use.nexradSite()
-	const setNexradSite = useRootStore.use.setNexradSite()
-	const nexradRegion = useRootStore.use.nexradRegion()
-	const setNexradRegion = useRootStore.use.setNexradRegion()
-	const nexradProduct = useRootStore.use.nexradProduct()
-	const setNexradProduct = useRootStore.use.setNexradProduct()
 	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
 	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
 	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
-	const sectorSelectorD3config = useRootStore.use.sectorSelectorD3config()
-	const sectorSelectorCurrentSector = useRootStore.use.sectorSelectorCurrentSector()
-	const params = useParams()
+	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
+	const { productId, siteId, regionId } = useParams()
 
 	useEffect(() => {
-		// need to find a better way to handle this
-		if (sectorSelectorCurrentSector) {
-			setNexradSite(sectorSelectorCurrentSector)
-		}
-	}, [sectorSelectorCurrentSector, setNexradSite])
+		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
+			closeSectorSelectorPanel()
+			router.push(`/weather-data/nexrad-dual-pol-radar/${productId}/${regionId}/${sectorId}`)
+		})
+	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
 
 	useEffect(() => {
-		const { productId, siteId } = params
-		if (productId && siteId) {
-			setNexradProduct(productId)
-			setNexradSite(siteId)
-		}
-	}, [params, setNexradSite, setNexradProduct])
-
-	useEffect(() => {
-		closeSectorSelectorPanel()
-		router.push(`/weather-data/nexrad-dual-pol-radar/${nexradProduct}/${nexradSite}`)
-	}, [nexradSite, nexradProduct, closeSectorSelectorPanel, router])
-
-	const handleRegionChange = (regionId) => {
-		const region = NEXRAD_REGIONS[regionId]
+		const region = NEXRAD_REGIONS[regionId as string]
 		const newD3config = {
-			...sectorSelectorD3config,
 			rotate: region.rotate,
 			scale: region.scale,
 		}
-		setNexradRegion(regionId)
 		setSectorSelectorD3config(newD3config)
-		openSectorSelectorPanel()
 		const selectedSectors = region.sites.map((siteId) => ({
 			id: siteId,
 			name: NEXRAD_SITES[siteId].name,
@@ -67,12 +44,37 @@ const NexradSidebarPanel = () => {
 			coordinates: NEXRAD_SITES[siteId].coordinates,
 		}))
 		setSectorSelectorSectors(selectedSectors)
+	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors])
+
+	const handleRegionChange = (newRegionId) => {
+		router.push(`/weather-data/nexrad-dual-pol-radar/${productId}/${newRegionId}/${siteId}`)
+		openSectorSelectorPanel()
+
+		/*
+
+		 .replace(
+        {
+          pathname: router.pathname,
+          query: {
+            ...newQuery,
+            stats: newStatsParam,
+            view: e.target.value as string
+          }
+        },
+        undefined,
+        { shallow: true }
+      )
+      .then(() => {
+        mpEventFilterChange('view', e.target.value as string);
+      });
+
+	  */
 	}
 
 	const regionOptions = Object.keys(NEXRAD_REGIONS).map((regionId) => {
 		return { value: regionId, label: NEXRAD_REGIONS[regionId].label }
 	})
-	const productsArray = NEXRAD_SITES[nexradSite].products
+	const productsArray = NEXRAD_SITES[siteId as string].products
 
 	const transformData = (productsArray, allNexradGroups, nexradGroups, nexradProducts, NEXRAD_SITES, nexradSite) => {
 		const transformedData = allNexradGroups.map((groupId) => {
@@ -96,14 +98,14 @@ const NexradSidebarPanel = () => {
 
 		return transformedData
 	}
-	const panelGroupedProducts = transformData(productsArray, ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS, NEXRAD_SITES, nexradSite)
+	const panelGroupedProducts = transformData(productsArray, ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS, NEXRAD_SITES, siteId)
 
 	return (
 		<ScrollArea>
 			<div className={styles.NexradSidebarPanel}>
 				<div className={styles.options}>
-					<Select value={nexradRegion} options={regionOptions} onChange={handleRegionChange} />
-					<Button onClick={openSectorSelectorPanel} label={`Site:  ${nexradSite} - ${NEXRAD_SITES[nexradSite].name}`} />
+					<Select value={regionId} options={regionOptions} onChange={handleRegionChange} />
+					<Button onClick={openSectorSelectorPanel} label={`Site:  ${siteId} - ${NEXRAD_SITES[siteId as string].name}`} />
 				</div>
 				{panelGroupedProducts.map(({ groupId, label, sublabel, columns, products }) => (
 					<SidebarGroup key={groupId} title={label} extraInfo={sublabel && `(${sublabel})`}>
@@ -112,8 +114,8 @@ const NexradSidebarPanel = () => {
 								<SidebarLink
 									key={id}
 									name={label}
-									linkUrl={`/weather-data/nexrad-dual-pol-radar/${id}/${nexradSite}`}
-									active={id === nexradProduct}
+									linkUrl={`/weather-data/nexrad-dual-pol-radar/${id}/${regionId}/${siteId}`}
+									active={id === productId}
 									limited={limited}
 								/>
 							))}

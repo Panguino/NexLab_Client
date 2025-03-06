@@ -16,12 +16,11 @@ export type d3ConfigProps = {
 
 export type ISectorSelectorProps = {
 	sectors: ISector[]
-	sector: string
-	onChange: (id: string) => void
 	d3config?: d3ConfigProps
+	onChange?: (sectorId: string) => void
 }
 
-const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onChange, d3config }) => {
+const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onChange }) => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
 
 	useEffect(() => {
@@ -285,7 +284,7 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				.attr('fill', (d) => d.dotColor)
 				.attr('class', styles.point)
 		}
-	}, [sectors, onChange, sector, d3config])
+	}, [sectors, d3config, onChange])
 
 	if (!d3config) return <></>
 	const { width, height } = d3config

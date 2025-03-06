@@ -17,10 +17,10 @@ export interface ISectorSelectorPanelSlice {
 	closeSectorSelectorPanel: () => void
 	sectorSelectorSectors: ISector[]
 	setSectorSelectorSectors: (sectors: ISector[]) => void
-	sectorSelectorCurrentSector: string | null
-	onSectorSelectorChange: (id: string) => void
 	sectorSelectorD3config: d3ConfigProps
 	setSectorSelectorD3config: (d3config: d3ConfigProps) => void
+	onChangeSectorSelectorSectorHandler: (sectorId: string) => void
+	updateOnChangeSectorSelectorSectorHandler: (newHandler: (sectorId: string) => void) => void
 }
 
 export const createSectorSelectorPanelSlice: ZustandStateSlice<ISectorSelectorPanelSlice> = (set) => ({
@@ -31,8 +31,9 @@ export const createSectorSelectorPanelSlice: ZustandStateSlice<ISectorSelectorPa
 	},
 	sectorSelectorSectors: [],
 	setSectorSelectorSectors: (sectors) => set(() => ({ sectorSelectorSectors: sectors })),
-	sectorSelectorCurrentSector: null,
-	onSectorSelectorChange: (id) => set(() => ({ sectorSelectorCurrentSector: id })),
 	sectorSelectorD3config: { width: 1000, height: 600, rotate: [0, 0], scale: 1 },
-	setSectorSelectorD3config: (d3config) => set(() => ({ sectorSelectorD3config: d3config })),
+	setSectorSelectorD3config: (d3config) =>
+		set(({ sectorSelectorD3config }) => ({ sectorSelectorD3config: { ...sectorSelectorD3config, ...d3config } })),
+	onChangeSectorSelectorSectorHandler: () => {},
+	updateOnChangeSectorSelectorSectorHandler: (newHandler) => set({ onChangeSectorSelectorSectorHandler: newHandler }),
 })

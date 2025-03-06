@@ -9,10 +9,9 @@ const SectorSelectorPanel = () => {
 	const sectorSelectorRef = useRef(null)
 	const sectorSelectorSectors = useRootStore.use.sectorSelectorSectors()
 	const sectorSelectorD3config = useRootStore.use.sectorSelectorD3config()
-	const sectorSelectorCurrentSector = useRootStore.use.sectorSelectorCurrentSector()
-	const onSectorSelectorChange = useRootStore.use.onSectorSelectorChange()
 	const sectorSelectorPanelIsOpen = useRootStore.use.sectorSelectorPanelIsOpen()
 	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
+	const onChangeSectorSelectorSectorHandler = useRootStore.use.onChangeSectorSelectorSectorHandler()
 
 	useEffect(() => {
 		const handleClickOutsideSectorSelector = (event) => {
@@ -33,8 +32,7 @@ const SectorSelectorPanel = () => {
 					<SectorSelector
 						sectors={sectorSelectorSectors}
 						d3config={sectorSelectorD3config}
-						sector={sectorSelectorCurrentSector}
-						onChange={onSectorSelectorChange}
+						onChange={onChangeSectorSelectorSectorHandler}
 					/>
 				</div>
 			)}
