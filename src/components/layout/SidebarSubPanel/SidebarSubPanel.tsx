@@ -23,8 +23,8 @@ const SidebarSubPanel = ({ path, children, activeX, inactiveX }: SidebarSubPanel
 	return (
 		<motion.div
 			className={styles.SidebarSubPanel}
-			animate={{ x: pathname === path ? activeX : inactiveX }}
-			initial={{ x: pathname === path ? activeX : inactiveX }}
+			animate={{ x: pathname.includes(path) ? activeX : inactiveX }}
+			initial={{ x: pathname.includes(path) ? activeX : inactiveX }}
 			transition={{ ...defaultTransition }}
 		>
 			{children}
