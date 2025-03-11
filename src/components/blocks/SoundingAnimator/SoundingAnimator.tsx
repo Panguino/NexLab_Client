@@ -7,41 +7,30 @@ import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData } from '@/util/dataCalls/analysis/query-soundings'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
 import styles from './SoundingAnimator.module.scss'
 
 interface SoundingAnimatorProps {
-	// Add any props you need for the component here
-	productId: string
-	siteId: string
-	// productInfo: ProductInfoProps
+	productInfo: ProductInfoProps
 }
 
-const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productId, siteId }) => {
+const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	// add product info soon
+	const { productId, siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const soundingSite = useRootStore.use.soundingSite()
-	const setSoundingSite = useRootStore.use.setSoundingSite()
-	const soundingProduct = useRootStore.use.soundingProduct()
-	const setSoundingProduct = useRootStore.use.setSoundingProduct()
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
 	const [wrapperRef, { width: width, height: height }] = useDimensions(1)
 	const [soundingData, setSoundingData] = useState([])
 
 	useEffect(() => {
-		if (siteId && productId) {
-			setSoundingSite(siteId)
-			setSoundingProduct(productId)
-		}
-	}, [productId, siteId, setSoundingSite, setSoundingProduct])
-
-	useEffect(() => {
 		async function getData() {
-			const data = await getSoundingData(soundingSite, soundingProduct, soundingNumberOfFrames)
+			const data = await getSoundingData(siteId, productId, soundingNumberOfFrames)
 			setSoundingData(data)
 		}
 		getData()
-	}, [soundingSite, soundingProduct, soundingNumberOfFrames])
+	}, [siteId, productId, soundingNumberOfFrames])
 
 	return (
 		<div className={styles.soundingAnimatorContainer}>
@@ -52,7 +41,7 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productId, siteId }
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-					Product Info TODO
+					<ProductInfo {...productInfo} />
 				</Tab>
 				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
 					Alerts TODO
