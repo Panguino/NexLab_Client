@@ -14,7 +14,7 @@ const AnalysisSidebarPanels = () => {
 
 	return (
 		<div className={styles.AnalysisSidebarPanels}>
-			<SidebarSubPanel path={basepath} activeX="0%" inactiveX="-100%">
+			<SidebarSubPanel matchesPath={basepath} activeX="0%" inactiveX="-100%">
 				<SidebarPanelPad>
 					<SidebarSectionLink name="Surface Maps" linkUrl={`${basepath}/surface-maps`} />
 					<SidebarSectionLink name="Upper Air maps" linkUrl={`${basepath}/upper-air`} />
@@ -24,16 +24,16 @@ const AnalysisSidebarPanels = () => {
 					<SidebarSectionLink name="Cross-Sectional Analysis" linkUrl={`${basepath}/cross-sectional-analysis`} />
 				</SidebarPanelPad>
 			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/surface-maps`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel includesPath={`${basepath}/surface-maps`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="Surface Maps" linkUrl={basepath} />
 			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/upper-air`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel includesPath={`${basepath}/upper-air`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="Upper Air Maps" linkUrl={basepath} />
 			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/soundings`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel includesPath={`${basepath}/soundings`} activeX="0%" inactiveX="100%">
 				<SoundingsPanel basepath={basepath} />
 			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/RAP-mesoanalysis`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel includesPath={`${basepath}/RAP-mesoanalysis`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="RAP Mesoanalysis" linkUrl={basepath} />
 				<SidebarPanelPad>
 					<SidebarGroup title="Select a Product">
@@ -53,7 +53,7 @@ const AnalysisSidebarPanels = () => {
 					</SidebarGroup>
 				</SidebarPanelPad>
 			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/isentropic-maps`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel includesPath={`${basepath}/isentropic-maps`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="Isentropic Maps" linkUrl={basepath} />
 				<SidebarPanelPad>
 					<SidebarGroup title="Select an Isentropic Map">
@@ -67,7 +67,7 @@ const AnalysisSidebarPanels = () => {
 					</SidebarGroup>
 				</SidebarPanelPad>
 			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/cross-sectional-analysis`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel includesPath={`${basepath}/cross-sectional-analysis`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="Cross-Sectional Analysis" linkUrl={basepath} />
 				<SidebarPanelPad>
 					<SidebarGroup title="Select a Cross-Section">

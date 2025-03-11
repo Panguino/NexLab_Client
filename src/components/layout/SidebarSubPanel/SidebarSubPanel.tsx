@@ -12,19 +12,20 @@ const defaultTransition = {
 }
 
 interface SidebarSubPanelProps {
-	path: string
+	includesPath?: string
+	matchesPath?: string
 	children: React.ReactNode
 	activeX: string | number
 	inactiveX: string | number
 }
 
-const SidebarSubPanel = ({ path, children, activeX, inactiveX }: SidebarSubPanelProps) => {
+const SidebarSubPanel = ({ includesPath, matchesPath, children, activeX, inactiveX }: SidebarSubPanelProps) => {
 	const pathname = usePathname()
 	return (
 		<motion.div
 			className={styles.SidebarSubPanel}
-			animate={{ x: pathname.includes(path) ? activeX : inactiveX }}
-			initial={{ x: pathname.includes(path) ? activeX : inactiveX }}
+			animate={{ x: pathname.includes(includesPath) || pathname === matchesPath ? activeX : inactiveX }}
+			initial={{ x: pathname.includes(includesPath) || pathname === matchesPath ? activeX : inactiveX }}
 			transition={{ ...defaultTransition }}
 		>
 			{children}

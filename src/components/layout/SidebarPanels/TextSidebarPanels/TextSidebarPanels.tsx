@@ -14,7 +14,7 @@ const TextSidebarPanels = () => {
 
 	return (
 		<div className={styles.TextSidebarPanels}>
-			<SidebarSubPanel path={basepath} activeX="0%" inactiveX="-100%">
+			<SidebarSubPanel matchesPath={basepath} activeX="0%" inactiveX="-100%">
 				<SidebarPanelPad>
 					<SidebarSectionLink name="NWS WFO" linkUrl={`${basepath}/nws-wfo-national-weather-service-forecast-offices`} />
 					<SidebarSectionLink name="Hazards" linkUrl={`${basepath}/active-weather-hazards`} />
@@ -29,7 +29,7 @@ const TextSidebarPanels = () => {
 					<SidebarSectionLink name="Space" linkUrl={`${basepath}/swpc-space-weather`} />
 				</SidebarPanelPad>
 			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/NWF-WFO`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel matchesPath={`${basepath}/NWF-WFO`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="NWS WFO" linkUrl={basepath} />
 				<SidebarPanelPad>
 					<SidebarGroup title="Sector Selection">
@@ -42,10 +42,10 @@ const TextSidebarPanels = () => {
 					</SidebarGroup>
 				</SidebarPanelPad>
 			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/active-weather-hazards`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel matchesPath={`${basepath}/active-weather-hazards`} activeX="0%" inactiveX="100%">
 				<HazardsPanel basepath={basepath} />
 			</SidebarSubPanel>
-			<SidebarSubPanel path={`${basepath}/analysis-and-forecast`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel matchesPath={`${basepath}/analysis-and-forecast`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="Analysis & Forecast" linkUrl={basepath} />
 				<SidebarPanelPad>
 					<SidebarGroup title="Select Highlights">
