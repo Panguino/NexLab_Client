@@ -34,6 +34,16 @@ import {
 	SOUNDING_PRODUCT_TEXT,
 } from '@/data/analysis/soundings/products'
 
+import {
+	SURFACE_PRODUCT_FRONTS,
+	SURFACE_PRODUCT_MOISTURE_DIVERGENCE,
+	SURFACE_PRODUCT_PDF,
+	SURFACE_PRODUCT_PRESSURE_FALLS,
+	SURFACE_PRODUCT_RAW,
+	SURFACE_PRODUCT_TEMPERATURE_SLP,
+	SURFACE_PRODUCT_THETAE,
+} from '@/data/analysis/surface/products'
+
 export const getSoundingPageIdByProductId = (productId) => {
 	switch (productId) {
 		case SOUNDING_PRODUCT_SKEWT:
@@ -46,6 +56,26 @@ export const getSoundingPageIdByProductId = (productId) => {
 			return 147
 		case SOUNDING_PRODUCT_HODO:
 			return 16
+		default:
+			return null
+	}
+}
+
+export const getSurfacePageIdByProductId = (productId) => {
+	switch (productId) {
+		case SURFACE_PRODUCT_FRONTS:
+			return 76
+		case SURFACE_PRODUCT_PDF:
+		case SURFACE_PRODUCT_RAW:
+			return 75
+		case SURFACE_PRODUCT_MOISTURE_DIVERGENCE:
+			return 77
+		case SURFACE_PRODUCT_THETAE:
+			return 79
+		case SURFACE_PRODUCT_TEMPERATURE_SLP:
+			return 80
+		case SURFACE_PRODUCT_PRESSURE_FALLS:
+			return 78
 		default:
 			return null
 	}
