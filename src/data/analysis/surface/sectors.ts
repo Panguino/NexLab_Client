@@ -527,4 +527,6 @@ export const STATE_SURFACE_SECTORS = {
 	},
 }
 
-export const ALL_SECTORS = [LARGE_SURFACE_SECTORS, STATE_SURFACE_SECTORS]
+export const ALL_SURFACE_SECTORS = { ...LARGE_SURFACE_SECTORS, ...STATE_SURFACE_SECTORS }
+
+// export const ALL_SURFACE_SECTORS = Object.keys(ALL_SECTORS).map((key) => key)

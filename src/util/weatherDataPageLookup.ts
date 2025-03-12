@@ -46,6 +46,8 @@ export const getSoundingPageIdByProductId = (productId) => {
 			return 147
 		case SOUNDING_PRODUCT_HODO:
 			return 16
+		default:
+			return null
 	}
 }
 export const getDataPageIdByProductId = (productId) => {

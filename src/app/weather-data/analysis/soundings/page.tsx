@@ -1,7 +1,8 @@
 const Page = () => {
 	return (
 		<div>
-			<h1>Hi-Res US Fronts</h1>
+			<h1>Soundings Page</h1>
+			Content
 		</div>
 	)
 }
