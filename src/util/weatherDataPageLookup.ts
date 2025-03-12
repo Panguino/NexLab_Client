@@ -26,6 +26,28 @@ import {
 	NEXRAD_PRODUCT_VERTICALLIQUID,
 } from '@/data/nexrad/products'
 
+import {
+	SOUNDING_PRODUCT_HODO,
+	SOUNDING_PRODUCT_SHARPPY,
+	SOUNDING_PRODUCT_SKEWT,
+	SOUNDING_PRODUCT_STUVE,
+	SOUNDING_PRODUCT_TEXT,
+} from '@/data/analysis/soundings/products'
+
+export const getSoundingPageIdByProductId = (productId) => {
+	switch (productId) {
+		case SOUNDING_PRODUCT_SKEWT:
+			return 13
+		case SOUNDING_PRODUCT_STUVE:
+			return 15
+		case SOUNDING_PRODUCT_SHARPPY:
+			return 14
+		case SOUNDING_PRODUCT_TEXT:
+			return 147
+		case SOUNDING_PRODUCT_HODO:
+			return 16
+	}
+}
 export const getDataPageIdByProductId = (productId) => {
 	switch (productId) {
 		case NEXRAD_PRODUCT_BASEREF_0_5:

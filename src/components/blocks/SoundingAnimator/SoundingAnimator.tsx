@@ -21,7 +21,7 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	const { productId, siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
-	const [wrapperRef, { width: width, height: height }] = useDimensions(1)
+	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
 	const [soundingData, setSoundingData] = useState([])
 
 	useEffect(() => {

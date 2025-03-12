@@ -6,7 +6,6 @@ import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader
 import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/SidebarSectionLink'
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
-import SoundingsPanel from '../SoundingsPanel/SoundingsPanel'
 import styles from './AnalysisSidebarPanels.module.scss'
 
 const AnalysisSidebarPanels = () => {
@@ -31,7 +30,7 @@ const AnalysisSidebarPanels = () => {
 				<SidebarSectionHeader name="Upper Air Maps" linkUrl={basepath} />
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/soundings`} activeX="0%" inactiveX="100%">
-				<SoundingsPanel basepath={basepath} />
+				{/* <SoundingsPanel basepath={basepath} /> */}
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/RAP-mesoanalysis`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="RAP Mesoanalysis" linkUrl={basepath} />

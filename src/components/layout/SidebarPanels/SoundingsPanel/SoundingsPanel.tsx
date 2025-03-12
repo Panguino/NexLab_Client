@@ -71,7 +71,7 @@ export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
 					<Button onClick={openSectorSelectorPanel} label={`Site:  ${siteId} - ${ALL_SOUNDING_SITES[siteId as string].name}`} />
 				</div>
 				{productsArray.map(({ id, label }) => (
-					<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/soundings/${regionId}/${productId}/${siteId}`} />
+					<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/soundings/${id}/${regionId}/${siteId}`} />
 				))}
 			</SidebarPanelPad>
 		</div>
