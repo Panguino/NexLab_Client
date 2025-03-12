@@ -19,6 +19,7 @@ interface SurfaceMapsAnimatorProps {
 const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }) => {
 	// add product info soon
 	const { productId, regionId, siteId } = useParams()
+	console.log('log params in animator', productId, regionId, siteId)
 	const [activeTab, setActiveTab] = useState(-1)
 	const surfaceMapsNumberOfFrames = useRootStore.use.surfaceMapsNumberOfFrames()
 	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
@@ -27,6 +28,7 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 	useEffect(() => {
 		async function getData() {
 			const data = await getSurfaceData(regionId, siteId, productId, surfaceMapsNumberOfFrames)
+			console.log('data response in animator', data)
 			setSurfaceMapsData(data)
 		}
 		getData()

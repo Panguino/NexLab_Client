@@ -21,6 +21,6 @@ export const createSurfaceMapsSlice: ZustandStateSlice<ISurfaceMapsSlice> = (set
 	setSurfaceMapsRegion: (regionId: string) => set(() => ({ surfaceMapsRegion: regionId })),
 	surfaceMapsProduct: SECTOR_MIDWEST_US,
 	setSurfaceMapsProduct: (productId: string) => set(() => ({ surfaceMapsProduct: productId })),
-	surfaceMapsNumberOfFrames: 14,
+	surfaceMapsNumberOfFrames: 24,
 	setSurfaceMapsNumberOfFrames: (frames: number) => set(() => ({ surfaceMapsNumberOfFrames: frames })),
 })

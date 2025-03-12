@@ -40,7 +40,7 @@ export const SurfaceMapsPanel = ({ basepath }: SurfaceMapsPanelProps) => {
 			scale: region.scale,
 		}
 		setSectorSelectorD3config(newD3config)
-		const selectedSectors = region.sites.map((siteId) => ({
+		const selectedSectors = Object.entries(region.sites).map(([siteId]) => ({
 			id: siteId,
 			name: ALL_SURFACE_SECTORS[siteId].name,
 			type: ALL_SURFACE_SECTORS[siteId].type,
