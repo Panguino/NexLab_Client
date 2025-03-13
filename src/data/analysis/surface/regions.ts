@@ -3,17 +3,24 @@ import { LARGE_SURFACE_SECTORS, STATE_SURFACE_SECTORS } from './sectors'
 export const REGION_SCALE_LARGE = 'regional'
 export const REGION_SCALE_STATE = 'state'
 
-export const ALL_SURFACE_REGIONS = {
+interface SurfaceMapsRegion {
+	label: string
+	rotate: [number, number]
+	scale: number
+	sites: string[]
+}
+
+export const ALL_SURFACE_REGIONS: { [key: string]: SurfaceMapsRegion } = {
 	[REGION_SCALE_LARGE]: {
-		label: 'Continental U.S.',
+		label: 'Regional Sectors',
 		rotate: [98, -40],
 		scale: 2,
-		sites: LARGE_SURFACE_SECTORS,
+		sites: Object.keys(LARGE_SURFACE_SECTORS).map((key) => key),
 	},
 	[REGION_SCALE_STATE]: {
-		label: 'Continental U.S.',
+		label: 'State & Local Sectors',
 		rotate: [98, -40],
 		scale: 2,
-		sites: STATE_SURFACE_SECTORS,
+		sites: Object.keys(STATE_SURFACE_SECTORS).map((key) => key),
 	},
 }

@@ -35,8 +35,8 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 	}, [productId, regionId, siteId, surfaceMapsNumberOfFrames])
 
 	return (
-		<div className={styles.soundingAnimatorContainer}>
-			<div className={styles.soundingAnimator} ref={wrapperRef}>
+		<div className={styles.surfaceMapsAnimatorContainer}>
+			<div className={styles.surfaceMapsAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
 					<Animator frames={surfaceMapsData} />
 				</div>

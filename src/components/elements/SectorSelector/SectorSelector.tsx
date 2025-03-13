@@ -202,7 +202,9 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 				.data(geoboxSectors)
 				.enter()
 				.append('path')
-				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
+				.attr('d', (d) => {
+					return symbolGenerator.type(d3[d.dotShape])()
+				})
 				.attr('transform', (d) => {
 					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
 					return `translate(${projection(d3.geoCentroid(geobox))})`

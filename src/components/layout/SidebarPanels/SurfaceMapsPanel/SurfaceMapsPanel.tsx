@@ -40,7 +40,7 @@ export const SurfaceMapsPanel = ({ basepath }: SurfaceMapsPanelProps) => {
 			scale: region.scale,
 		}
 		setSectorSelectorD3config(newD3config)
-		const selectedSectors = Object.entries(region.sites).map(([siteId]) => ({
+		const selectedSectors = region.sites.map((siteId) => ({
 			id: siteId,
 			name: ALL_SURFACE_SECTORS[siteId].name,
 			type: ALL_SURFACE_SECTORS[siteId].type,
@@ -68,7 +68,7 @@ export const SurfaceMapsPanel = ({ basepath }: SurfaceMapsPanelProps) => {
 			<SidebarPanelPad>
 				<div className={styles.options}>
 					<Select value={regionId} options={regionOptions} onChange={handleRegionChange} />
-					<Button onClick={openSectorSelectorPanel} label={`Site:  ${siteId} - ${ALL_SURFACE_SECTORS[siteId as string].name}`} />
+					<Button onClick={openSectorSelectorPanel} label={`Sector: ${ALL_SURFACE_SECTORS[siteId as string].name}`} />
 				</div>
 				{productsArray.map(({ id, label }) => (
 					<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/surface-maps/${id}/${regionId}/${siteId}`} />
