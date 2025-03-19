@@ -57,7 +57,6 @@ export const SurfaceMapsPanel = ({ basepath }: SurfaceMapsPanelProps) => {
 	const regionOptions = Object.keys(ALL_SURFACE_REGIONS).map((regionId) => {
 		return { value: regionId, label: ALL_SURFACE_REGIONS[regionId].label }
 	})
-	console.log(regionOptions)
 
 	const productsArray = Object.keys(ALL_SURFACE_SECTORS[siteId as string].products).map((productId) => {
 		return { id: productId, label: ALL_SURFACE_SECTORS[siteId as string].products[productId].label }

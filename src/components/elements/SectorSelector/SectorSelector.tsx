@@ -55,9 +55,6 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 		const symbolGenerator = d3.symbol().size(100)
 		// Set default values for dotShape and dotColor within sectors
 		sectors.forEach((sector) => {
-			if (sector.name === 'Chicago Metro Area') {
-				console.log(sector.dotColor, DotColor.Green)
-			}
 			sector.dotShape = sector.dotShape || DotShape.Circle
 			sector.dotColor = sector.dotColor || DotColor.White
 		})
