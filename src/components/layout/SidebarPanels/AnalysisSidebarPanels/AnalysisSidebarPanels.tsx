@@ -7,7 +7,7 @@ import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/Sid
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
 
-import SurfaceMapsPanel from '../SurfaceMapsPanel/SurfaceMapsPanel'
+import UpperAirPanel from '../UpperAirPanel/UpperAirPanel'
 import styles from './AnalysisSidebarPanels.module.scss'
 
 const AnalysisSidebarPanels = () => {
@@ -26,10 +26,12 @@ const AnalysisSidebarPanels = () => {
 				</SidebarPanelPad>
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/surface-maps`} activeX="0%" inactiveX="100%">
-				<SurfaceMapsPanel basepath={basepath} />
+				<SidebarSectionHeader name="Surface Maps" linkUrl={basepath} />
+				panel created and commented out
+				{/* <SurfaceMapsPanel basepath={basepath} /> */}
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/upper-air`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Upper Air Maps" linkUrl={basepath} />
+				<UpperAirPanel basepath={basepath} />
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/soundings`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="Soundings" linkUrl={basepath} />

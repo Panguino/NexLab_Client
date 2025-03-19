@@ -15,11 +15,11 @@ export interface ISurfaceMapsSlice {
 }
 
 export const createSurfaceMapsSlice: ZustandStateSlice<ISurfaceMapsSlice> = (set) => ({
-	surfaceMapsSite: SURFACE_PRODUCT_RAW,
+	surfaceMapsSite: SECTOR_MIDWEST_US,
 	setSurfaceMapsSite: (siteId: string) => set(() => ({ surfaceMapsSite: siteId })),
 	surfaceMapsRegion: REGION_SCALE_LARGE,
 	setSurfaceMapsRegion: (regionId: string) => set(() => ({ surfaceMapsRegion: regionId })),
-	surfaceMapsProduct: SECTOR_MIDWEST_US,
+	surfaceMapsProduct: SURFACE_PRODUCT_RAW,
 	setSurfaceMapsProduct: (productId: string) => set(() => ({ surfaceMapsProduct: productId })),
 	surfaceMapsNumberOfFrames: 24,
 	setSurfaceMapsNumberOfFrames: (frames: number) => set(() => ({ surfaceMapsNumberOfFrames: frames })),
