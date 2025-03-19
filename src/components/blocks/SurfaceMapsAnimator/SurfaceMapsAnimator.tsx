@@ -28,7 +28,7 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 	useEffect(() => {
 		async function getData() {
 			const data = await getSurfaceData(regionId, siteId, productId, surfaceMapsNumberOfFrames)
-			console.log('data response in animator', data)
+			console.log('in animator', 'data sent', regionId, siteId, productId, surfaceMapsNumberOfFrames, 'data recieved', data)
 			setSurfaceMapsData(data)
 		}
 		getData()

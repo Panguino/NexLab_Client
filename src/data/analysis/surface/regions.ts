@@ -1,7 +1,7 @@
 import { LARGE_SURFACE_SECTORS, STATE_SURFACE_SECTORS } from './sectors'
 
 export const REGION_SCALE_LARGE = 'regional'
-export const REGION_SCALE_STATE = 'state'
+export const REGION_SCALE_STATE = 'states'
 
 interface SurfaceMapsRegion {
 	label: string
