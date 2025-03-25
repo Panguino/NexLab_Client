@@ -7,13 +7,13 @@ import {
 	UPPERAIR_PRODUCTS_925,
 	UPPERAIR_PRODUCTS_CONTOUR,
 } from './products'
-const UPPERAIR_LEVEL_250 = '250'
-const UPPERAIR_LEVEL_300 = '300'
-const UPPERAIR_LEVEL_500 = '500'
-const UPPERAIR_LEVEL_700 = '700'
-const UPPERAIR_LEVEL_850 = '850'
-const UPPERAIR_LEVEL_925 = '925'
-const UPPERAIR_LEVEL_CONTOUR = 'contour'
+export const UPPERAIR_LEVEL_250 = '250'
+export const UPPERAIR_LEVEL_300 = '300'
+export const UPPERAIR_LEVEL_500 = '500'
+export const UPPERAIR_LEVEL_700 = '700'
+export const UPPERAIR_LEVEL_850 = '850'
+export const UPPERAIR_LEVEL_925 = '925'
+export const UPPERAIR_LEVEL_CONTOUR = 'contour'
 
 export const ALL_UPPERAIR_LEVEL_PRODUCTS = {
 	[UPPERAIR_LEVEL_250]: {

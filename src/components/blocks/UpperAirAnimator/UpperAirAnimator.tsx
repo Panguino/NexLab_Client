@@ -17,18 +17,18 @@ interface UpperAirAnimatorProps {
 
 const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 	// add product info soon
-	const { productId, regionId, siteId } = useParams()
+	const { levelId, productId, siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
 	const [upperAirData, setUpperAirData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
-			const data = await getUpperAirData(regionId, siteId, productId)
+			const data = await getUpperAirData(siteId, levelId, productId)
 			setUpperAirData(data)
 		}
 		getData()
-	}, [productId, regionId, siteId])
+	}, [siteId, levelId, productId])
 
 	return (
 		<div className={styles.upperAirAnimatorContainer}>
