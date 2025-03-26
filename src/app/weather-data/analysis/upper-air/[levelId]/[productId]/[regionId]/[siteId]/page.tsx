@@ -1,9 +1,9 @@
 import { getDataPageContent } from '@/apollo/strapi/getDataPageContent'
 import UpperAirAnimator from '@/components/blocks/UpperAirAnimator/UpperAirAnimator'
-import { getSurfacePageIdByProductId } from '@/util/weatherDataPageLookup'
+import { getUpperAirPageIdByProductAndLevelId } from '@/util/weatherDataPageLookup'
 const Page = async ({ params }) => {
 	const { levelId, productId, siteId, regionId } = params
-	const pageId = getSurfacePageIdByProductId(productId)
+	const pageId = getUpperAirPageIdByProductAndLevelId(levelId, productId)
 	const pageData = await getDataPageContent(pageId)
 	console.log('page received...', levelId, productId, siteId, regionId)
 	return (

@@ -17,7 +17,7 @@ export const ALL_UPPERAIR_PRODUCTS = {
 		label: 'Raw Data',
 	},
 	[UPPERAIR_PRODUCT_JET]: {
-		label: 'Jet Stream Analysis',
+		label: 'Jet Stream',
 	},
 	[UPPERAIR_PRODUCT_PDF]: {
 		label: 'PDF',
@@ -29,10 +29,10 @@ export const ALL_UPPERAIR_PRODUCTS = {
 		label: '500mb 12hr Height Change',
 	},
 	[UPPERAIR_PRODUCT_REL_HUMIDITY]: {
-		label: '700mb Relative Humidity',
+		label: 'Relative Humidity',
 	},
 	[UPPERAIR_PRODUCT_DEWPOINT]: {
-		label: '850mb Dewpoint',
+		label: 'Dewpoint',
 	},
 	[UPPERAIR_PRODUCT_THETAE]: {
 		label: '850mb Theta-E',
@@ -47,7 +47,7 @@ export const ALL_UPPERAIR_PRODUCTS = {
 		label: '700-500mb Delta-T',
 	},
 	[UPPERAIR_PRODUCT_PRECIP_WATERS]: {
-		label: 'Precipitable Waters/SFC-400mb Mean Wind',
+		label: 'Prec. Waters/SFC-H4 Mean Wind',
 	},
 	[UPPERAIR_PRODUCT_THICKNESS]: {
 		label: '1000-500mb Thickness',

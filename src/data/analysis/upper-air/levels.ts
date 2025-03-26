@@ -41,7 +41,7 @@ export const ALL_UPPERAIR_LEVEL_PRODUCTS = {
 		products: UPPERAIR_PRODUCTS_925,
 	},
 	[UPPERAIR_LEVEL_CONTOUR]: {
-		label: 'Contour',
+		label: 'Contour/Composites',
 		products: UPPERAIR_PRODUCTS_CONTOUR,
 	},
 }

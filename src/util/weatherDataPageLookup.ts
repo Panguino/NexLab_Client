@@ -44,9 +44,18 @@ import {
 	SURFACE_PRODUCT_THETAE,
 } from '@/data/analysis/surface/products'
 import {
+	UPPERAIR_LEVEL_250,
+	UPPERAIR_LEVEL_300,
+	UPPERAIR_LEVEL_500,
+	UPPERAIR_LEVEL_700,
+	UPPERAIR_LEVEL_850,
+	UPPERAIR_LEVEL_925,
+	UPPERAIR_LEVEL_CONTOUR,
+} from '@/data/analysis/upper-air/levels'
+import {
 	UPPERAIR_PRODUCT_CAPE,
-	UPPERAIR_PRODUCT_DELTAZ,
 	UPPERAIR_PRODUCT_DELTAT,
+	UPPERAIR_PRODUCT_DELTAZ,
 	UPPERAIR_PRODUCT_DEWPOINT,
 	UPPERAIR_PRODUCT_JET,
 	UPPERAIR_PRODUCT_PDF,
@@ -58,15 +67,6 @@ import {
 	UPPERAIR_PRODUCT_THICKNESS,
 	UPPERAIR_PRODUCT_VORTICITY,
 } from '@/data/analysis/upper-air/products'
-import {
-	UPPERAIR_LEVEL_250,
-	UPPERAIR_LEVEL_300,
-	UPPERAIR_LEVEL_500,
-	UPPERAIR_LEVEL_700,
-	UPPERAIR_LEVEL_850,
-	UPPERAIR_LEVEL_925,
-	UPPERAIR_LEVEL_CONTOUR,
-} from '@/data/analysis/upper-air/levels'
 
 export const getSoundingPageIdByProductId = (productId) => {
 	switch (productId) {
@@ -114,52 +114,85 @@ export const getUpperAirPageIdByProductAndLevelId = (levelId, productId) => {
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
 					return 136
+				default:
+					return 136
 			}
-        case UPPERAIR_LEVEL_300:
+		case UPPERAIR_LEVEL_300:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_JET:
 					return 69
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
 					return 137
+				default:
+					return 137
 			}
-        case UPPERAIR_LEVEL_500:
+		case UPPERAIR_LEVEL_500:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_JET:
 					return 70
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
+					return 148
+				default:
+					return 148
 			}
-        case UPPERAIR_LEVEL_700:
+		case UPPERAIR_LEVEL_700:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_JET:
+					return 143
 				case UPPERAIR_PRODUCT_RAW:
-					case UPPERAIR_PRODUCT_PDF:
+				case UPPERAIR_PRODUCT_PDF:
+					return 139
 				case UPPERAIR_PRODUCT_REL_HUMIDITY:
+					return 84
+				default:
+					return 139
 			}
-        case UPPERAIR_LEVEL_850:
+		case UPPERAIR_LEVEL_850:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_JET:
+					return 144
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
+					return 140
 				case UPPERAIR_PRODUCT_DEWPOINT:
+					return 85
+				default:
+					return 140
 			}
-        case UPPERAIR_LEVEL_925:
+		case UPPERAIR_LEVEL_925:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
+					return 141
+				default:
+					return 141
 			}
-        case UPPERAIR_LEVEL_CONTOUR:
+		case UPPERAIR_LEVEL_CONTOUR:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_CAPE:
+					return 87
 				case UPPERAIR_PRODUCT_DELTAT:
+					return 89
 				case UPPERAIR_PRODUCT_DELTAZ:
+					return 83
 				case UPPERAIR_PRODUCT_PRECIP_WATERS:
+					return 90
 				case UPPERAIR_PRODUCT_SHEAR:
+					return 88
 				case UPPERAIR_PRODUCT_THETAE:
+					return 86
 				case UPPERAIR_PRODUCT_THICKNESS:
+					return 91
 				case UPPERAIR_PRODUCT_VORTICITY:
+					return 82
+				default:
+					return 83
 			}
+		default:
+			return null
+	}
 }
 export const getDataPageIdByProductId = (productId) => {
 	switch (productId) {
