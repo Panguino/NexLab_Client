@@ -1,16 +1,14 @@
 'use client'
 
-import { Button } from '@/components/elements/Button/Button'
 import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { ALL_UPPERAIR_PRODUCTS } from '@/data/analysis/upper-air/products'
-import { ALL_UPPERAIR_REGIONS } from '@/data/analysis/upper-air/regions'
 import { ALL_UPPERAIR_SECTORS } from '@/data/analysis/upper-air/sectors'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect } from 'react'
 
+import Select from '@/components/elements/Select/Select'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import styles from './UpperAirPanel.module.scss'
@@ -21,35 +19,17 @@ interface UpperAirPanelProps {
 
 export const UpperAirPanel = ({ basepath }: UpperAirPanelProps) => {
 	const router = useRouter()
-	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
-	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
-	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
-	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
-	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
+	const setUpperAirSite = useRootStore.use.setUpperAirSite()
 	const { levelId, productId, siteId, regionId } = useParams()
 
-	useEffect(() => {
-		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
-			closeSectorSelectorPanel()
-			router.push(`/weather-data/analysis/upper-air/${levelId}/${productId}/${regionId}/${sectorId}`)
-		})
-	}, [levelId, productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
+	const handleSectorChange = (newSectorId) => {
+		router.push(`/weather-data/analysis/upper-air/${levelId}/${productId}/${regionId}/${newSectorId}`)
+		setUpperAirSite(newSectorId)
+	}
 
-	useEffect(() => {
-		const region = ALL_UPPERAIR_REGIONS[regionId as string]
-		const newD3config = {
-			rotate: region.rotate,
-			scale: region.scale,
-		}
-		setSectorSelectorD3config(newD3config)
-		const selectedSectors = region.sites.map((siteId) => ({
-			id: siteId,
-			name: ALL_UPPERAIR_SECTORS[siteId].name,
-			type: ALL_UPPERAIR_SECTORS[siteId].type,
-			coordinates: ALL_UPPERAIR_SECTORS[siteId].coordinates,
-		}))
-		setSectorSelectorSectors(selectedSectors)
-	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors])
+	const sectorOptions = Object.keys(ALL_UPPERAIR_SECTORS).map((sectorId) => {
+		return { value: sectorId, label: ALL_UPPERAIR_SECTORS[sectorId].name }
+	})
 
 	const productsArray = Object.keys(ALL_UPPERAIR_SECTORS[siteId as string].levels).map((levelId) => {
 		const thisLevel = ALL_UPPERAIR_SECTORS[siteId as string].levels[levelId]
@@ -69,7 +49,7 @@ export const UpperAirPanel = ({ basepath }: UpperAirPanelProps) => {
 			<SidebarSectionHeader name="Upper Air Maps" linkUrl={`${basepath}`} />
 			<SidebarPanelPad>
 				<div className={styles.options}>
-					<Button onClick={openSectorSelectorPanel} label={`Sector: ${ALL_UPPERAIR_SECTORS[siteId as string].name}`} />
+					<Select value={siteId} options={sectorOptions} onChange={handleSectorChange} />
 				</div>
 				{productsArray.map(({ levelId, label, columns, products }) => (
 					<SidebarGroup key={levelId} title={label}>
