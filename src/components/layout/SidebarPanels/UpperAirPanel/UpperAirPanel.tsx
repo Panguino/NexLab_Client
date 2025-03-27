@@ -1,6 +1,7 @@
 'use client'
 
 import { Button } from '@/components/elements/Button/Button'
+import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { ALL_UPPERAIR_PRODUCTS } from '@/data/analysis/upper-air/products'
@@ -51,11 +52,12 @@ export const UpperAirPanel = ({ basepath }: UpperAirPanelProps) => {
 	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors])
 
 	const productsArray = Object.keys(ALL_UPPERAIR_SECTORS[siteId as string].levels).map((levelId) => {
-		const thisLevelProducts = ALL_UPPERAIR_SECTORS[siteId as string].levels[levelId].products
+		const thisLevel = ALL_UPPERAIR_SECTORS[siteId as string].levels[levelId]
 		return {
 			levelId: levelId,
-			label: ALL_UPPERAIR_SECTORS[siteId as string].levels[levelId].label,
-			products: thisLevelProducts.map((productId) => ({
+			label: thisLevel.label,
+			columns: thisLevel.columns,
+			products: thisLevel.products.map((productId) => ({
 				productId: productId,
 				label: ALL_UPPERAIR_PRODUCTS[productId].label,
 			})),
@@ -69,15 +71,17 @@ export const UpperAirPanel = ({ basepath }: UpperAirPanelProps) => {
 				<div className={styles.options}>
 					<Button onClick={openSectorSelectorPanel} label={`Sector: ${ALL_UPPERAIR_SECTORS[siteId as string].name}`} />
 				</div>
-				{productsArray.map(({ levelId, label, products }) => (
+				{productsArray.map(({ levelId, label, columns, products }) => (
 					<SidebarGroup key={levelId} title={label}>
-						{products.map(({ productId, label }) => (
-							<SidebarLink
-								key={productId}
-								name={label}
-								linkUrl={`/weather-data/analysis/upper-air/${levelId}/${productId}/${regionId}/${siteId}`}
-							/>
-						))}
+						<SidebarGrid columns={columns}>
+							{products.map(({ productId, label }) => (
+								<SidebarLink
+									key={productId}
+									name={label}
+									linkUrl={`/weather-data/analysis/upper-air/${levelId}/${productId}/${regionId}/${siteId}`}
+								/>
+							))}
+						</SidebarGrid>
 					</SidebarGroup>
 				))}
 			</SidebarPanelPad>
