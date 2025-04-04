@@ -15,7 +15,7 @@ export const CurrentValue = ({ label, value, unit, specialUnit1, specialUnit2 }:
 			<div className={styles.valueContainer}>
 				<div className={styles.value}>
 					{value}
-					{unit && <sup>{unit}</sup>}
+					{unit && <sup>&deg;{unit}</sup>}
 				</div>
 				{(specialUnit1 || specialUnit2) && (
 					<div className={styles.specialUnit}>

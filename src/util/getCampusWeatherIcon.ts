@@ -422,7 +422,7 @@ const iconLookupAPI = {
 
 const convertAPIiconName = (icon_input, cloud_coverage_input = null) => {
 	if (icon_input === null) {
-		return '/temp-icons/unknown.svg'
+		return 'unknown'
 	} else {
 		const icon_parameters = icon_input.replace('https://api.weather.gov/icons/land/', '').replace('?size=medium', '').split('/')
 		const time_of_day = icon_parameters[0] // aka dayNight

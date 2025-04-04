@@ -33,10 +33,12 @@
 		flex-flow: row nowrap;
 		justify-content: space-between;
 		align-items: stretch;
-		.icon {
-			flex: 2 2;
-			width: 40%;
-			height: 150px;
+		svg {
+			width: 85px;
+			height: 85px;
+			path {
+				fill: var(--color-grey18-grey2);
+			}
 		}
 		.temp {
 			flex: 1 1;

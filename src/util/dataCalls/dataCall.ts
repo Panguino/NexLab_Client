@@ -6,7 +6,7 @@ export const getData = async (url) => {
 		const data_res = await fetch(url, {
 			method: 'GET',
 			headers: {
-				Origin: window.location.origin, // helpful for avoiding CORS errors
+				// Origin: window.location.origin, // helpful for avoiding CORS errors
 				// user agent not allowed - investigate later
 				// 'User-Agent': 'College of DuPage - Meteorology: Campus Weather (wxstaff@weather.cod.edu)',
 				Accept: 'application/ld+json',

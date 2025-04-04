@@ -1,9 +1,14 @@
+'use client'
 import { Button } from '@/components/elements/Button/Button'
+import { useRootStore } from '@/store/useRootStore'
+import { getWeatherIconComponent } from '@/util/getCampusWeatherIcon'
 import { CurrentValue } from '../CampusWeatherDetail/CurrentConditions/CurrentValue/CurrentValue'
 import { ForecastTile } from '../CampusWeatherDetail/ForecastTiles/ForecastTile/ForecastTile'
 import styles from './CampusWidget.module.scss'
 
 export const CampusWidget = ({ campusDetails, weatherData }) => {
+	const temperatureUnit = useRootStore.use.temperatureUnit()
+	const Icon = getWeatherIconComponent(weatherData.conditions.icon)
 	return (
 		<div className={styles.widgetContainer}>
 			<div className={styles.campusTitle}>
@@ -11,11 +16,14 @@ export const CampusWidget = ({ campusDetails, weatherData }) => {
 				{campusDetails.attributes.Name}
 			</div>
 			<div className={styles.conditionsContainer}>
-				<img src={weatherData.conditions.icon} className={styles.icon} />
-				<div className={styles.temp}>{weatherData.conditions.temp}</div>
+				<Icon />
+				<div className={styles.temp}>
+					{weatherData.conditions.temp}
+					<sup>&deg;{temperatureUnit}</sup>
+				</div>
 				<div className={styles.subValuesContainer}>
 					<div className={styles.feels}>
-						<CurrentValue value={weatherData.conditions.feels} label="Feels Like" />
+						<CurrentValue value={weatherData.conditions.feels} unit={temperatureUnit} label="Feels Like" />
 					</div>
 					<div className={styles.humidity}>
 						<CurrentValue value={weatherData.conditions.humidity} label="Humidity" />

@@ -59,7 +59,7 @@ const Page = async () => {
 			const forecastTileData = getForcastTileDataFromForecastData(forecastData.periods, 'small')
 			const widgetConditions = {
 				temp: current_conditions.temperature,
-				feels: current_conditions.apparentTemperature,
+				feels: current_conditions.feelsLikeTemperature,
 				humidity: current_conditions.relativeHumidity,
 				icon: current_conditions.icon,
 			}
