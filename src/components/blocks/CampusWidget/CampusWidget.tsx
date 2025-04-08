@@ -19,14 +19,14 @@ export const CampusWidget = ({ campusDetails, weatherData }) => {
 				<Icon />
 				<div className={styles.temp}>
 					{weatherData.conditions.temp}
-					<sup>&deg;{temperatureUnit}</sup>
+					<sup>{temperatureUnit}</sup>
 				</div>
 				<div className={styles.subValuesContainer}>
 					<div className={styles.feels}>
 						<CurrentValue value={weatherData.conditions.feels} unit={temperatureUnit} label="Feels Like" />
 					</div>
 					<div className={styles.humidity}>
-						<CurrentValue value={weatherData.conditions.humidity} label="Humidity" />
+						<CurrentValue value={weatherData.conditions.humidity} unit="%" label="Humidity" />
 					</div>
 				</div>
 			</div>

@@ -35,7 +35,7 @@ const ForecastTileInfo = ({ title, icon, temp, wind, tempType }: IForecastTileIn
 				<div className={styles.tempType}>{tempType}</div>
 				<div className={styles.tempValue}>
 					{temp}
-					<sup>&deg;{temperatureUnit}</sup>
+					<sup>{temperatureUnit}</sup>
 				</div>
 			</div>
 			{wind && (

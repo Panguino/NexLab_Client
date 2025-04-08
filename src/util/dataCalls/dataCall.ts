@@ -22,7 +22,7 @@ export const getData = async (url) => {
 
 		return data_files
 	} catch (error) {
-		console.error('Error fetching Nexrad data:', error)
+		console.error('Error fetching data:', error)
 		throw error
 	}
 }
