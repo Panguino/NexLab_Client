@@ -85,6 +85,16 @@ import {
 	RAPMESO_PRODUCT_WATER_VAPOR_VORTICITY,
 } from '@/data/analysis/rap-mesoanalysis/products'
 
+import {
+	ISENTROPIC_PRODUCT_280K,
+	ISENTROPIC_PRODUCT_285K,
+	ISENTROPIC_PRODUCT_290K,
+	ISENTROPIC_PRODUCT_295K,
+	ISENTROPIC_PRODUCT_300K,
+	ISENTROPIC_PRODUCT_305K,
+	ISENTROPIC_PRODUCT_310K,
+} from '@/data/analysis/isentropic/products'
+
 export const getSoundingPageIdByProductId = (productId) => {
 	switch (productId) {
 		case SOUNDING_PRODUCT_SKEWT:
@@ -241,6 +251,21 @@ export const getRAPMesoPageIdByProductId = (productId) => {
 			return 105
 		case RAPMESO_PRODUCT_WATER_VAPOR_VORTICITY:
 			return 67
+		default:
+			return null
+	}
+}
+
+export const getIsentropicPageIdByProductId = (productId) => {
+	switch (productId) {
+		case ISENTROPIC_PRODUCT_280K:
+		case ISENTROPIC_PRODUCT_285K:
+		case ISENTROPIC_PRODUCT_290K:
+		case ISENTROPIC_PRODUCT_295K:
+		case ISENTROPIC_PRODUCT_300K:
+		case ISENTROPIC_PRODUCT_305K:
+		case ISENTROPIC_PRODUCT_310K:
+			return 106
 		default:
 			return null
 	}
