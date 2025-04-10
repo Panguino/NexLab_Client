@@ -14,7 +14,7 @@ export const ForecastTiles = ({ tileData }) => {
 	useEffect(() => {
 		if (galleryRef.current) {
 			const galleryWidth = galleryRef.current.offsetWidth
-			const totalImagesWidth = tileData.length * (200 + 10)
+			const totalImagesWidth = tileData.length * (240 + 10)
 			const constraints = { left: -(totalImagesWidth - galleryWidth), right: 0 }
 			setDragConstraints(constraints)
 

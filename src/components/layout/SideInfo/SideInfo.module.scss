@@ -1,6 +1,21 @@
 .SideInfo {
-	width: 350px;
-	color: var(--color-grey18-grey2);
-	background-color: var(--color-grey2-grey18);
-	padding: 10px 20px 30px 20px;
+  width: 350px;
+  color: var(--color-grey18-grey2);
+  background-color: var(--color-grey2-grey18);
+}
+.sideInfoContent {
+  padding: 20px;
+  p {
+    line-height: 19px;
+    font-size: 15px;
+  }
+  ul {
+    padding: 0;
+    margin: 0;
+    li {
+      font-size: 14px;
+      margin: 10px 20px;
+      padding: 0;
+    }
+  }
 }
