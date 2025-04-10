@@ -31,7 +31,7 @@ const Select = ({ value, options, onChange, placeholder = '', optionsEmptyText =
 
 	useEffect(() => {
 		if (value && options) {
-			const foundValue = options.find((option) => option.value === value).value
+			const foundValue = options.find((option) => option.value === value)?.value
 			if (foundValue !== value) {
 				onChange(foundValue)
 			}

@@ -108,7 +108,7 @@ export const getSoundingPageIdByProductId = (productId) => {
 		case SOUNDING_PRODUCT_HODO:
 			return 16
 		default:
-			return null
+			return 13
 	}
 }
 

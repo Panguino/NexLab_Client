@@ -4,6 +4,7 @@ export const SOUNDING_REGION_CONUS = 'conus'
 export const SOUNDING_REGION_ALASKA = 'ak'
 export const SOUNDING_REGION_CANADA = 'can'
 export const SOUNDING_REGION_MEXICO = 'mex'
+export const SOUNDING_REGION_DEFAULT = SOUNDING_REGION_CONUS
 
 interface SoundingRegion {
 	label: string

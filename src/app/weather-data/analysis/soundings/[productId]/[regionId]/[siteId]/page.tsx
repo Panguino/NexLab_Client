@@ -5,7 +5,6 @@ const Page = async ({ params }) => {
 	const { productId, siteId, regionId } = params
 	const pageId = getSoundingPageIdByProductId(productId)
 	const pageData = await getDataPageContent(pageId)
-	// const pageData = await getDataPageContent(13)
 	console.log(productId, siteId, regionId)
 	return (
 		<SoundingAnimator
