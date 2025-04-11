@@ -92,4 +92,10 @@
       }
     }
   }
+
+  &.small {
+    .content {
+      background-color: var(--color-grey0-grey17);
+    }
+  }
 }

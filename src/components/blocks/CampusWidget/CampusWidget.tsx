@@ -1,9 +1,8 @@
 'use client'
-import { Button } from '@/components/elements/Button/Button'
+import { ForecastTile } from '@/components/elements/ForecastTile/ForecastTile'
 import { useRootStore } from '@/store/useRootStore'
 import { getWeatherIconComponent } from '@/util/getCampusWeatherIcon'
 import { CurrentValue } from '../CampusWeatherDetail/CurrentConditions/CurrentValue/CurrentValue'
-import { ForecastTile } from '../CampusWeatherDetail/ForecastTiles/ForecastTile/ForecastTile'
 import styles from './CampusWidget.module.scss'
 
 export const CampusWidget = ({ campusDetails, weatherData }) => {
@@ -12,8 +11,8 @@ export const CampusWidget = ({ campusDetails, weatherData }) => {
 	return (
 		<div className={styles.widgetContainer}>
 			<div className={styles.campusTitle}>
-				<img src={campusDetails.attributes.Logo.data.attributes.url} alt={campusDetails.attributes.Name} />
 				{campusDetails.attributes.Name}
+				<img src={campusDetails.attributes.Logo.data.attributes.url} alt={campusDetails.attributes.Name} />
 			</div>
 			<div className={styles.conditionsContainer}>
 				<Icon />
@@ -44,7 +43,9 @@ export const CampusWidget = ({ campusDetails, weatherData }) => {
 				))}
 			</div>
 			<div className={styles.buttonContainer}>
-				<Button label="View Weather" link={`/campus-weather/${campusDetails.id}`} target="_self" />
+				<a href={`/campus-weather/${campusDetails.id}`} target="_self">
+					More Details
+				</a>
 			</div>
 		</div>
 	)

@@ -1,7 +1,7 @@
 'use client'
 import { motion, useAnimation, useMotionValue } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { ForecastTile } from './ForecastTile/ForecastTile'
+import { ForecastTile } from '../../../elements/ForecastTile/ForecastTile'
 import styles from './ForecastTiles.module.scss'
 
 export const ForecastTiles = ({ tileData }) => {

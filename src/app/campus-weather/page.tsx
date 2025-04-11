@@ -100,6 +100,7 @@ const Page = async () => {
 					<WidgetWrapper>
 						{campuses.map((campus) => {
 							const weatherData = campusWeather.find((weather) => weather.id === campus.id)
+							console.log(weatherData)
 							return <CampusWidget key={campus.id} campusDetails={campus} weatherData={weatherData} />
 						})}
 					</WidgetWrapper>
