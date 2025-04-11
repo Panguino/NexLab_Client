@@ -1,7 +1,7 @@
 'use client'
 import { motion, useAnimation, useMotionValue } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import { ForecastTile } from './ForecastTile/ForecastTile'
+import { ForecastTile } from '../../../elements/ForecastTile/ForecastTile'
 import styles from './ForecastTiles.module.scss'
 
 export const ForecastTiles = ({ tileData }) => {
@@ -14,7 +14,7 @@ export const ForecastTiles = ({ tileData }) => {
 	useEffect(() => {
 		if (galleryRef.current) {
 			const galleryWidth = galleryRef.current.offsetWidth
-			const totalImagesWidth = tileData.length * (200 + 10)
+			const totalImagesWidth = tileData.length * (240 + 10)
 			const constraints = { left: -(totalImagesWidth - galleryWidth), right: 0 }
 			setDragConstraints(constraints)
 

@@ -1,6 +1,6 @@
 .ForecastTile {
-  width: 220px;
-  min-width: 220px;
+  width: 100%;
+  min-width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -41,8 +41,8 @@
         text-transform: uppercase;
       }
       svg {
-        width: 85px;
-        height: 85px;
+        width: 65px;
+        height: 65px;
         path {
           fill: var(--color-grey18-grey2);
         }
@@ -61,7 +61,7 @@
           color: var(--color-grey15-grey5);
         }
         .tempValue {
-          font-size: 27px;
+          font-size: 25px;
           font-weight: 600;
           sup {
             font-size: 12px;
@@ -90,6 +90,12 @@
           }
         }
       }
+    }
+  }
+
+  &.small {
+    .content {
+      background-color: var(--color-grey0-grey17);
     }
   }
 }
