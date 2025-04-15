@@ -26,35 +26,35 @@ export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 
-	const { productId: paramProductId, siteId: paramSiteId, regionId: paramRegionId } = useParams()
-	const siteId = paramSiteId ?? SOUNDING_SITE_DEFAULT
-	const regionId = paramRegionId ?? SOUNDING_REGION_DEFAULT
-	const productId = paramProductId ?? SOUNDING_PRODUCT_DEFAULT
+	const { productSoundingId: paramProductId, siteSoundingId: paramSiteId, regionSoundingId: paramRegionId } = useParams()
+	const siteSoundingId = paramSiteId ?? SOUNDING_SITE_DEFAULT
+	const regionSoundingId = paramRegionId ?? SOUNDING_REGION_DEFAULT
+	const productSoundingId = paramProductId ?? SOUNDING_PRODUCT_DEFAULT
 
 	useEffect(() => {
 		// need to debug why this doesn't work
-		console.log('region?', ALL_SOUNDING_REGIONS[regionId as string], !ALL_SOUNDING_REGIONS[regionId as string])
+		console.log('region?', ALL_SOUNDING_REGIONS[regionSoundingId as string], !ALL_SOUNDING_REGIONS[regionSoundingId as string])
 		if (
-			!ALL_SOUNDING_SITES[siteId as string] ||
-			!ALL_SOUNDING_REGIONS[regionId as string] ||
-			!ALL_SOUNDING_SITES[siteId as string].products[productId as string]
+			!ALL_SOUNDING_SITES[siteSoundingId as string] ||
+			!ALL_SOUNDING_REGIONS[regionSoundingId as string] ||
+			!ALL_SOUNDING_SITES[siteSoundingId as string].products[productSoundingId as string]
 		) {
 			console.log('pushing to default route')
 			router.push(`/weather-data/analysis/soundings/${SOUNDING_PRODUCT_DEFAULT}/${SOUNDING_REGION_DEFAULT}/${SOUNDING_SITE_DEFAULT}`)
 		}
-	}, [siteId, regionId, productId, router])
+	}, [siteSoundingId, regionSoundingId, productSoundingId, router])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 			closeSectorSelectorPanel()
-			router.push(`/weather-data/analysis/soundings/${productId}/${regionId}/${sectorId}`)
+			router.push(`/weather-data/analysis/soundings/${productSoundingId}/${regionSoundingId}/${sectorId}`)
 		})
-	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
+	}, [productSoundingId, regionSoundingId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
 
 	useEffect(() => {
 		const region =
-			regionId && ALL_SOUNDING_REGIONS[regionId as string]
-				? ALL_SOUNDING_REGIONS[regionId as string]
+			regionSoundingId && ALL_SOUNDING_REGIONS[regionSoundingId as string]
+				? ALL_SOUNDING_REGIONS[regionSoundingId as string]
 				: ALL_SOUNDING_REGIONS[SOUNDING_REGION_DEFAULT]
 		const newD3config = {
 			rotate: region.rotate,
@@ -68,10 +68,11 @@ export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
 			coordinates: ALL_SOUNDING_SITES[siteId].coordinates,
 		}))
 		setSectorSelectorSectors(selectedSectors)
-	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors])
+	}, [regionSoundingId, setSectorSelectorD3config, setSectorSelectorSectors])
 
 	const handleRegionChange = (newRegionId) => {
-		router.push(`/weather-data/analysis/soundings/${productId}/${newRegionId}/${siteId}`)
+		console.log('region changed')
+		router.push(`/weather-data/analysis/soundings/${productSoundingId}/${newRegionId}/${siteSoundingId}`)
 		openSectorSelectorPanel()
 	}
 
@@ -82,13 +83,13 @@ export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
 	}, [])
 
 	const productsArray = useMemo(() => {
-		if (siteId && ALL_SOUNDING_SITES[siteId as string]) {
-			return Object.keys(ALL_SOUNDING_SITES[siteId as string].products).map((productId) => {
-				return { id: productId, label: ALL_SOUNDING_SITES[siteId as string].products[productId].label }
+		if (siteSoundingId && ALL_SOUNDING_SITES[siteSoundingId as string]) {
+			return Object.keys(ALL_SOUNDING_SITES[siteSoundingId as string].products).map((productId) => {
+				return { id: productId, label: ALL_SOUNDING_SITES[siteSoundingId as string].products[productId].label }
 			})
 		}
 		return []
-	}, [siteId])
+	}, [siteSoundingId])
 
 	const getSelectorLabel = (siteId) => {
 		if (siteId && ALL_SOUNDING_SITES[siteId as string]) {
@@ -103,11 +104,11 @@ export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
 			<SidebarSectionHeader name="Soundings" linkUrl={`${basepath}`} />
 			<SidebarPanelPad>
 				<div className={styles.options}>
-					<Select value={regionId} options={regionOptions} onChange={handleRegionChange} />
-					<Button onClick={openSectorSelectorPanel} label={getSelectorLabel(siteId)} />
+					<Select value={regionSoundingId} options={regionOptions} onChange={handleRegionChange} />
+					<Button onClick={openSectorSelectorPanel} label={getSelectorLabel(siteSoundingId)} />
 				</div>
 				{productsArray.map(({ id, label }) => (
-					<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/soundings/${id}/${regionId}/${siteId}`} />
+					<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/soundings/${id}/${regionSoundingId}/${siteSoundingId}`} />
 				))}
 			</SidebarPanelPad>
 		</div>
