@@ -160,9 +160,9 @@ export const getUpperAirPageIdByProductAndLevelId = (levelId, productId) => {
 					return 70
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
-					return 148
+					return 150
 				default:
-					return 148
+					return 150
 			}
 		case UPPERAIR_LEVEL_700:
 			switch (productId) {
@@ -218,7 +218,7 @@ export const getUpperAirPageIdByProductAndLevelId = (levelId, productId) => {
 					return 83
 			}
 		default:
-			return null
+			return 150
 	}
 }
 export const getRAPMesoPageIdByProductId = (productId) => {

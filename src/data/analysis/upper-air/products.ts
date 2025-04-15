@@ -11,6 +11,7 @@ export const UPPERAIR_PRODUCT_SHEAR = 'shear'
 export const UPPERAIR_PRODUCT_DELTAT = 'deltat'
 export const UPPERAIR_PRODUCT_PRECIP_WATERS = 'pwat'
 export const UPPERAIR_PRODUCT_THICKNESS = 'thick'
+export const UPPERAIR_PRODUCT_DEFAULT = UPPERAIR_PRODUCT_RAW
 
 export const ALL_UPPERAIR_PRODUCTS = {
 	[UPPERAIR_PRODUCT_RAW]: {

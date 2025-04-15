@@ -1,6 +1,7 @@
 import { ALL_UPPERAIR_SECTORS } from './sectors'
 
 export const UPPERAIR_REGION_CONUS = 'northAmerica'
+export const UPPERAIR_REGION_DEFAULT = UPPERAIR_REGION_CONUS
 
 interface UpperAirRegion {
 	label: string

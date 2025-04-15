@@ -3,9 +3,10 @@ import UpperAirAnimator from '@/components/blocks/UpperAirAnimator/UpperAirAnima
 import { getUpperAirPageIdByProductAndLevelId } from '@/util/weatherDataPageLookup'
 const Page = async ({ params }) => {
 	const { levelId, productId, siteId, regionId } = params
-	const pageId = getUpperAirPageIdByProductAndLevelId(levelId, productId)
-	const pageData = await getDataPageContent(pageId)
 	console.log('page received...', levelId, productId, siteId, regionId)
+	const pageId = getUpperAirPageIdByProductAndLevelId(levelId, productId)
+	console.log('pageId', pageId)
+	const pageData = await getDataPageContent(pageId)
 	return (
 		<UpperAirAnimator
 			productInfo={{

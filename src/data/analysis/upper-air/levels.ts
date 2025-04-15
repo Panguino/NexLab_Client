@@ -14,6 +14,7 @@ export const UPPERAIR_LEVEL_700 = '700'
 export const UPPERAIR_LEVEL_850 = '850'
 export const UPPERAIR_LEVEL_925 = '925'
 export const UPPERAIR_LEVEL_CONTOUR = 'contour'
+export const UPPERAIR_LEVEL_DEFAULT = UPPERAIR_LEVEL_500
 
 export const ALL_UPPERAIR_LEVEL_PRODUCTS = {
 	[UPPERAIR_LEVEL_250]: {

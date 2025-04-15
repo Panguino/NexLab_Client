@@ -8,6 +8,7 @@ import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
 import IsentropicPanel from '../IsentropicPanel/IsentropicPanel'
 import RAPMesoPanel from '../RAPMesoPanel/RAPMesoPanel'
 import SoundingsPanel from '../SoundingsPanel/SoundingsPanel'
+import UpperAirPanel from '../UpperAirPanel/UpperAirPanel'
 import styles from './AnalysisSidebarPanels.module.scss'
 
 const AnalysisSidebarPanels = () => {
@@ -31,9 +32,7 @@ const AnalysisSidebarPanels = () => {
 				{/* <SurfaceMapsPanel basepath={basepath} /> */}
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/upper-air`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Upper Air Maps" linkUrl={basepath} />
-				panel created and commented out
-				{/* <UpperAirPanel basepath={basepath} /> */}
+				<UpperAirPanel basepath={basepath} />
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/soundings`} activeX="0%" inactiveX="100%">
 				<SoundingsPanel basepath={basepath} />
