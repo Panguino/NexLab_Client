@@ -1,18 +1,23 @@
 'use client'
 
-import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/SidebarSectionLink'
+import { usePathname } from 'next/navigation' // Import useRouter for path detection
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
 
 import IsentropicPanel from '../IsentropicPanel/IsentropicPanel'
 import RAPMesoPanel from '../RAPMesoPanel/RAPMesoPanel'
 import SoundingsPanel from '../SoundingsPanel/SoundingsPanel'
+import SurfaceMapsPanel from '../SurfaceMapsPanel/SurfaceMapsPanel'
 import UpperAirPanel from '../UpperAirPanel/UpperAirPanel'
 import styles from './AnalysisSidebarPanels.module.scss'
 
 const AnalysisSidebarPanels = () => {
+	const currentPath = usePathname()
 	const basepath = '/weather-data/analysis'
+
+	// Helper function to check if a panel is active
+	const isActive = (path: string) => currentPath === path || currentPath.startsWith(path)
 
 	return (
 		<div className={styles.AnalysisSidebarPanels}>
@@ -27,15 +32,13 @@ const AnalysisSidebarPanels = () => {
 				</SidebarPanelPad>
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/surface-maps`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Surface Maps" linkUrl={basepath} />
-				panel created and commented out
-				{/* <SurfaceMapsPanel basepath={basepath} /> */}
+				<SurfaceMapsPanel basepath={basepath} isActive={isActive(`${basepath}/surface-maps`)} />
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/upper-air`} activeX="0%" inactiveX="100%">
-				<UpperAirPanel basepath={basepath} />
+				<UpperAirPanel basepath={basepath} isActive={isActive(`${basepath}/upper-air`)} />
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/soundings`} activeX="0%" inactiveX="100%">
-				<SoundingsPanel basepath={basepath} />
+				<SoundingsPanel basepath={basepath} isActive={isActive(`${basepath}/soundings`)} />
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/RAP-mesoanalysis`} activeX="0%" inactiveX="100%">
 				<RAPMesoPanel basepath={basepath} />

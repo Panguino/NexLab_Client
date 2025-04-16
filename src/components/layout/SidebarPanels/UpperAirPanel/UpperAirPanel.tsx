@@ -12,15 +12,16 @@ import Select from '@/components/elements/Select/Select'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { UPPERAIR_LEVEL_DEFAULT } from '@/data/analysis/upper-air/levels'
-import { UPPERAIR_REGION_DEFAULT } from '@/data/analysis/upper-air/regions'
+import { ALL_UPPERAIR_REGIONS, UPPERAIR_REGION_DEFAULT } from '@/data/analysis/upper-air/regions'
 import { useEffect, useMemo } from 'react'
 import styles from './UpperAirPanel.module.scss'
 
 interface UpperAirPanelProps {
 	basepath: string
+	isActive?: boolean
 }
 
-export const UpperAirPanel = ({ basepath }: UpperAirPanelProps) => {
+export const UpperAirPanel = ({ basepath, isActive }: UpperAirPanelProps) => {
 	const router = useRouter()
 	const setUpperAirSite = useRootStore.use.setUpperAirSite()
 	const { levelUpperId: paramLevelId, productUpperId: paramProductId, siteUpperId: paramSiteId, regionUpperId: paramRegionId } = useParams()
@@ -31,17 +32,21 @@ export const UpperAirPanel = ({ basepath }: UpperAirPanelProps) => {
 
 	useEffect(() => {
 		if (
-			!ALL_UPPERAIR_SECTORS[siteUpperId as string] ||
-			!ALL_UPPERAIR_SECTORS[siteUpperId as string].levels[levelUpperId as string] ||
-			!ALL_UPPERAIR_SECTORS[siteUpperId as string].levels[levelUpperId as string].products[productUpperId as string]
+			isActive &&
+			(!ALL_UPPERAIR_REGIONS[regionUpperId as string] ||
+				!ALL_UPPERAIR_SECTORS[siteUpperId as string] ||
+				!ALL_UPPERAIR_SECTORS[siteUpperId as string].levels[levelUpperId as string] ||
+				!ALL_UPPERAIR_SECTORS[siteUpperId as string].levels[levelUpperId as string].products[productUpperId as string])
 		) {
+			console.log('upper air route attempt from undefined parms')
 			router.push(
 				`/weather-data/analysis/upper-air/${UPPERAIR_LEVEL_DEFAULT}/${UPPERAIR_PRODUCT_DEFAULT}/${UPPERAIR_REGION_DEFAULT}/${UPPERAIR_SECTOR_DEFAULT}`,
 			)
 		}
-	}, [siteUpperId, levelUpperId, productUpperId, router])
+	}, [siteUpperId, regionUpperId, levelUpperId, productUpperId, router, isActive])
 
 	const handleSectorChange = (newSectorId) => {
+		console.log('upper air route attempt from sector change')
 		router.push(`/weather-data/analysis/upper-air/${levelUpperId}/${productUpperId}/${regionUpperId}/${newSectorId}`)
 		setUpperAirSite(newSectorId)
 	}

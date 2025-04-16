@@ -128,7 +128,7 @@ export const getSurfacePageIdByProductId = (productId) => {
 		case SURFACE_PRODUCT_PRESSURE_FALLS:
 			return 78
 		default:
-			return null
+			return 75
 	}
 }
 

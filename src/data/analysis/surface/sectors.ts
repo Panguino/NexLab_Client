@@ -70,6 +70,8 @@ export const SECTOR_WISCONSIN = 'wi'
 export const SECTOR_WEST_VIRGINIA = 'wv'
 export const SECTOR_WYOMING = 'wy'
 
+export const SURFACE_SECTOR_DEFAULT = SECTOR_US
+
 export const LARGE_SURFACE_SECTORS = {
 	[SECTOR_US]: {
 		name: 'United States',

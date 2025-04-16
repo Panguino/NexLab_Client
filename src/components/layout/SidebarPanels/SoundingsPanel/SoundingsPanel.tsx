@@ -16,9 +16,10 @@ import styles from './SoundingsPanel.module.scss'
 
 interface soundingsPanelProps {
 	basepath: string
+	isActive: boolean
 }
 
-export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
+export const SoundingsPanel = ({ basepath, isActive }: soundingsPanelProps) => {
 	const router = useRouter()
 	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
 	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
@@ -35,14 +36,15 @@ export const SoundingsPanel = ({ basepath }: soundingsPanelProps) => {
 		// need to debug why this doesn't work
 		console.log('region?', ALL_SOUNDING_REGIONS[regionSoundingId as string], !ALL_SOUNDING_REGIONS[regionSoundingId as string])
 		if (
-			!ALL_SOUNDING_SITES[siteSoundingId as string] ||
-			!ALL_SOUNDING_REGIONS[regionSoundingId as string] ||
-			!ALL_SOUNDING_SITES[siteSoundingId as string].products[productSoundingId as string]
+			isActive &&
+			(!ALL_SOUNDING_SITES[siteSoundingId as string] ||
+				!ALL_SOUNDING_REGIONS[regionSoundingId as string] ||
+				!ALL_SOUNDING_SITES[siteSoundingId as string].products[productSoundingId as string])
 		) {
-			console.log('pushing to default route')
+			console.log('soundings route attempt from undefined parms')
 			router.push(`/weather-data/analysis/soundings/${SOUNDING_PRODUCT_DEFAULT}/${SOUNDING_REGION_DEFAULT}/${SOUNDING_SITE_DEFAULT}`)
 		}
-	}, [siteSoundingId, regionSoundingId, productSoundingId, router])
+	}, [siteSoundingId, regionSoundingId, productSoundingId, router, isActive])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
