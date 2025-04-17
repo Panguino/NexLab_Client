@@ -32,13 +32,14 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	const productId = paramProductId ?? SURFACE_PRODUCT_DEFAULT
 
 	useEffect(() => {
-		if (
-			isActive &&
-			(!ALL_SURFACE_SECTORS[paramSiteId as string] ||
-				!ALL_SURFACE_REGIONS[paramRegionId as string] ||
-				!ALL_SURFACE_SECTORS[paramSiteId as string].products[paramProductId as string])
-		) {
-			router.push(`/weather-data/analysis/surface-maps/${SURFACE_PRODUCT_DEFAULT}/${SURFACE_REGION_DEFAULT}/${SURFACE_SECTOR_DEFAULT}`)
+		if (isActive) {
+			if (!ALL_SURFACE_REGIONS[paramRegionId as string] || !ALL_SURFACE_SECTORS[paramSiteId as string]) {
+				// needs testing first, if bad make no assumptions, use default values
+				router.push(`/weather-data/analysis/surface-maps/${SURFACE_PRODUCT_DEFAULT}/${SURFACE_REGION_DEFAULT}/${SURFACE_SECTOR_DEFAULT}`)
+			} else if (!ALL_SURFACE_SECTORS[paramSiteId as string].products[paramProductId as string]) {
+				// both site and region have to be valid to get here, but if product is bad, use default values
+				router.push(`/weather-data/analysis/surface-maps/${SURFACE_PRODUCT_DEFAULT}/${paramRegionId}/${paramSiteId}`)
+			}
 		}
 	}, [paramProductId, paramRegionId, paramSiteId, router, isActive])
 
