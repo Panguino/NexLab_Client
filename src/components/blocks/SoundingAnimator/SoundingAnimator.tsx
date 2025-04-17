@@ -17,8 +17,7 @@ interface SoundingAnimatorProps {
 }
 
 const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
-	// add product info soon
-	const { productId, siteId } = useParams()
+	const { soundingProductId: productId, soundingSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
 	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)

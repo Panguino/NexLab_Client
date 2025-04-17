@@ -1,14 +1,12 @@
 import { getDataPageContent } from '@/apollo/strapi/getDataPageContent'
-import IsentropicAnimator from '@/components/blocks/IsentropicAnimator/IsentropicAnimator'
-import { getIsentropicPageIdByProductId } from '@/util/weatherDataPageLookup'
+import SurfaceMapsAnimator from '@/components/blocks/SurfaceMapsAnimator/SurfaceMapsAnimator'
+import { getSurfacePageIdByProductId } from '@/util/weatherDataPageLookup'
 const Page = async ({ params }) => {
-	const { productId } = params
-	const pageId = getIsentropicPageIdByProductId(productId)
+	const { surfaceProductId } = params
+	const pageId = getSurfacePageIdByProductId(surfaceProductId)
 	const pageData = await getDataPageContent(pageId)
-	// const pageData = await getDataPageContent(13)
-	console.log(productId)
 	return (
-		<IsentropicAnimator
+		<SurfaceMapsAnimator
 			productInfo={{
 				info: pageData.productInfo || pageData.SEO.metaTitle,
 				image: pageData.ProductImage?.data?.attributes?.url || pageData.SEO.metaImage?.data?.attributes?.url,

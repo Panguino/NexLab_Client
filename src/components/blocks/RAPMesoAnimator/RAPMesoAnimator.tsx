@@ -16,8 +16,7 @@ interface RAPMesoAnimatorProps {
 }
 
 const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
-	// add product info soon
-	const { productId } = useParams()
+	const { rapmesoProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
 	const [RAPMesoData, setRAPMesoData] = useState([])

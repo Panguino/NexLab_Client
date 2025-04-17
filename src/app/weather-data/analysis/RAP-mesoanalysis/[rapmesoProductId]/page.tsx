@@ -1,13 +1,12 @@
 import { getDataPageContent } from '@/apollo/strapi/getDataPageContent'
-import SoundingAnimator from '@/components/blocks/SoundingAnimator/SoundingAnimator'
-import { getSoundingPageIdByProductId } from '@/util/weatherDataPageLookup'
+import RAPMesoAnimator from '@/components/blocks/RAPMesoAnimator/RAPMesoAnimator'
+import { getRAPMesoPageIdByProductId } from '@/util/weatherDataPageLookup'
 const Page = async ({ params }) => {
-	const { productId, siteId, regionId } = params
-	const pageId = getSoundingPageIdByProductId(productId)
+	const { rapmesoProductId } = params
+	const pageId = getRAPMesoPageIdByProductId(rapmesoProductId)
 	const pageData = await getDataPageContent(pageId)
-	console.log(productId, siteId, regionId)
 	return (
-		<SoundingAnimator
+		<RAPMesoAnimator
 			productInfo={{
 				info: pageData.productInfo || pageData.SEO.metaTitle,
 				image: pageData.ProductImage?.data?.attributes?.url || pageData.SEO.metaImage?.data?.attributes?.url,

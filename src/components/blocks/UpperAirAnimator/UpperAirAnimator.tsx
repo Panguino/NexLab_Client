@@ -16,8 +16,7 @@ interface UpperAirAnimatorProps {
 }
 
 const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
-	// add product info soon
-	const { levelId, productId, siteId } = useParams()
+	const { upperairLevelId: levelId, upperairProductId: productId, upperairSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
 	const [upperAirData, setUpperAirData] = useState([])

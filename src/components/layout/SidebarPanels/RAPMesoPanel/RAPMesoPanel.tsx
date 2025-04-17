@@ -18,7 +18,7 @@ export const RAPMesoPanel = ({ basepath }: RAPMesoPanelProps) => {
 
 	return (
 		<div className={styles.RAPMesoPanel}>
-			<SidebarSectionHeader name="RAPMeso" linkUrl={`${basepath}`} />
+			<SidebarSectionHeader name="RAP Mesoanalysis" linkUrl={`${basepath}`} />
 			<SidebarPanelPad>
 				<SidebarGroup title="Select a Product">
 					<SidebarPanelPad>

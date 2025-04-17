@@ -16,8 +16,7 @@ interface IsentropicAnimatorProps {
 }
 
 const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) => {
-	// add product info soon
-	const { productId } = useParams()
+	const { isentropicProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
 	const [IsentropicData, setIsentropicData] = useState([])

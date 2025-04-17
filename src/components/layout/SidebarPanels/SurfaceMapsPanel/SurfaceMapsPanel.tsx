@@ -26,32 +26,34 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
-	const { productSurfaceId: paramProductId, siteSurfaceId: paramSiteId, regionSurfaceId: paramRegionId } = useParams()
-	const siteSurfaceId = paramSiteId ?? SURFACE_SECTOR_DEFAULT
-	const regionSurfaceId = paramRegionId ?? SURFACE_REGION_DEFAULT
-	const productSurfaceId = paramProductId ?? SURFACE_PRODUCT_DEFAULT
+	const { surfaceProductId: paramProductId, surfaceSiteId: paramSiteId, surfaceRegionId: paramRegionId } = useParams()
+	const siteId = paramSiteId ?? SURFACE_SECTOR_DEFAULT
+	const regionId = paramRegionId ?? SURFACE_REGION_DEFAULT
+	const productId = paramProductId ?? SURFACE_PRODUCT_DEFAULT
 
 	useEffect(() => {
 		if (
 			isActive &&
-			(!ALL_SURFACE_SECTORS[siteSurfaceId as string] ||
-				!ALL_SURFACE_REGIONS[regionSurfaceId as string] ||
-				!ALL_SURFACE_SECTORS[siteSurfaceId as string].products[productSurfaceId as string])
+			(!ALL_SURFACE_SECTORS[paramSiteId as string] ||
+				!ALL_SURFACE_REGIONS[paramRegionId as string] ||
+				!ALL_SURFACE_SECTORS[paramSiteId as string].products[paramProductId as string])
 		) {
-			console.log('surface route attempt from undefined parms')
 			router.push(`/weather-data/analysis/surface-maps/${SURFACE_PRODUCT_DEFAULT}/${SURFACE_REGION_DEFAULT}/${SURFACE_SECTOR_DEFAULT}`)
 		}
-	}, [siteSurfaceId, regionSurfaceId, productSurfaceId, router, isActive])
+	}, [paramProductId, paramRegionId, paramSiteId, router, isActive])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 			closeSectorSelectorPanel()
-			router.push(`/weather-data/analysis/surface-maps/${productSurfaceId}/${regionSurfaceId}/${sectorId}`)
+			router.push(`/weather-data/analysis/surface-maps/${productId}/${regionId}/${sectorId}`)
 		})
-	}, [productSurfaceId, regionSurfaceId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
+	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
 
 	useEffect(() => {
-		const region = ALL_SURFACE_REGIONS[regionSurfaceId as string]
+		const region =
+			regionId && ALL_SURFACE_REGIONS[regionId as string]
+				? ALL_SURFACE_REGIONS[regionId as string]
+				: ALL_SURFACE_REGIONS[SURFACE_REGION_DEFAULT]
 		const newD3config = {
 			rotate: region.rotate,
 			scale: region.scale,
@@ -64,10 +66,10 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 			coordinates: ALL_SURFACE_SECTORS[siteId].coordinates,
 		}))
 		setSectorSelectorSectors(selectedSectors)
-	}, [regionSurfaceId, setSectorSelectorD3config, setSectorSelectorSectors])
+	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors])
 
 	const handleRegionChange = (newRegionId) => {
-		router.push(`/weather-data/analysis/surface-maps/${productSurfaceId}/${newRegionId}/${siteSurfaceId}`)
+		router.push(`/weather-data/analysis/surface-maps/${productId}/${newRegionId}/${siteId}`)
 		openSectorSelectorPanel()
 	}
 
@@ -78,19 +80,19 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	}, [])
 
 	const productsArray = useMemo(() => {
-		if (siteSurfaceId && ALL_SURFACE_SECTORS[siteSurfaceId as string]) {
-			return Object.keys(ALL_SURFACE_SECTORS[siteSurfaceId as string].products).map((productId) => {
-				return { id: productId, label: ALL_SURFACE_SECTORS[siteSurfaceId as string].products[productId].label }
+		if (siteId && ALL_SURFACE_SECTORS[siteId as string]) {
+			return Object.keys(ALL_SURFACE_SECTORS[siteId as string].products).map((productId) => {
+				return { id: productId, label: ALL_SURFACE_SECTORS[siteId as string].products[productId].label }
 			})
 		}
 		return []
-	}, [siteSurfaceId])
+	}, [siteId])
 
 	const getSelectorLabel = (siteId) => {
 		if (siteId && ALL_SURFACE_SECTORS[siteId as string]) {
-			return `Site:  ${siteId} - ${ALL_SURFACE_SECTORS[siteId as string].name}`
+			return `Sector: ${ALL_SURFACE_SECTORS[siteId as string].name}`
 		} else {
-			return 'Select Site'
+			return 'Select Sector'
 		}
 	}
 
@@ -99,11 +101,11 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 			<SidebarSectionHeader name="Surface Maps" linkUrl={`${basepath}`} />
 			<SidebarPanelPad>
 				<div className={styles.options}>
-					<Select value={regionSurfaceId} options={regionOptions} onChange={handleRegionChange} />
-					<Button onClick={openSectorSelectorPanel} label={getSelectorLabel(siteSurfaceId)} />
+					<Select value={regionId} options={regionOptions} onChange={handleRegionChange} />
+					<Button onClick={openSectorSelectorPanel} label={getSelectorLabel(siteId)} />
 				</div>
 				{productsArray.map(({ id, label }) => (
-					<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/surface-maps/${id}/${regionSurfaceId}/${siteSurfaceId}`} />
+					<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/surface-maps/${id}/${regionId}/${siteId}`} />
 				))}
 			</SidebarPanelPad>
 		</div>

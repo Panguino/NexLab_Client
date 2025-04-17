@@ -24,30 +24,33 @@ interface UpperAirPanelProps {
 export const UpperAirPanel = ({ basepath, isActive }: UpperAirPanelProps) => {
 	const router = useRouter()
 	const setUpperAirSite = useRootStore.use.setUpperAirSite()
-	const { levelUpperId: paramLevelId, productUpperId: paramProductId, siteUpperId: paramSiteId, regionUpperId: paramRegionId } = useParams()
-	const siteUpperId = paramSiteId ?? UPPERAIR_SECTOR_DEFAULT
-	const regionUpperId = paramRegionId ?? UPPERAIR_REGION_DEFAULT
-	const levelUpperId = paramLevelId ?? UPPERAIR_LEVEL_DEFAULT
-	const productUpperId = paramProductId ?? UPPERAIR_PRODUCT_DEFAULT
+	const {
+		upperairLevelId: paramLevelId,
+		upperairProductId: paramProductId,
+		upperairSiteId: paramSiteId,
+		upperairRegionId: paramRegionId,
+	} = useParams()
+	const siteId = paramSiteId ?? UPPERAIR_SECTOR_DEFAULT
+	const regionId = paramRegionId ?? UPPERAIR_REGION_DEFAULT
+	const levelId = paramLevelId ?? UPPERAIR_LEVEL_DEFAULT
+	const productId = paramProductId ?? UPPERAIR_PRODUCT_DEFAULT
 
 	useEffect(() => {
 		if (
 			isActive &&
-			(!ALL_UPPERAIR_REGIONS[regionUpperId as string] ||
-				!ALL_UPPERAIR_SECTORS[siteUpperId as string] ||
-				!ALL_UPPERAIR_SECTORS[siteUpperId as string].levels[levelUpperId as string] ||
-				!ALL_UPPERAIR_SECTORS[siteUpperId as string].levels[levelUpperId as string].products[productUpperId as string])
+			(!ALL_UPPERAIR_REGIONS[paramRegionId as string] ||
+				!ALL_UPPERAIR_SECTORS[paramSiteId as string] ||
+				!ALL_UPPERAIR_SECTORS[paramSiteId as string].levels[paramLevelId as string] ||
+				!ALL_UPPERAIR_SECTORS[paramSiteId as string].levels[paramLevelId as string].products.includes(paramProductId as string))
 		) {
-			console.log('upper air route attempt from undefined parms')
 			router.push(
 				`/weather-data/analysis/upper-air/${UPPERAIR_LEVEL_DEFAULT}/${UPPERAIR_PRODUCT_DEFAULT}/${UPPERAIR_REGION_DEFAULT}/${UPPERAIR_SECTOR_DEFAULT}`,
 			)
 		}
-	}, [siteUpperId, regionUpperId, levelUpperId, productUpperId, router, isActive])
+	}, [paramLevelId, paramProductId, paramRegionId, paramSiteId, router, isActive])
 
 	const handleSectorChange = (newSectorId) => {
-		console.log('upper air route attempt from sector change')
-		router.push(`/weather-data/analysis/upper-air/${levelUpperId}/${productUpperId}/${regionUpperId}/${newSectorId}`)
+		router.push(`/weather-data/analysis/upper-air/${levelId}/${productId}/${regionId}/${newSectorId}`)
 		setUpperAirSite(newSectorId)
 	}
 
@@ -58,9 +61,9 @@ export const UpperAirPanel = ({ basepath, isActive }: UpperAirPanelProps) => {
 	}, [])
 
 	const productsArray = useMemo(() => {
-		if (ALL_UPPERAIR_SECTORS[siteUpperId as string]) {
-			return Object.keys(ALL_UPPERAIR_SECTORS[siteUpperId as string].levels).map((levelId) => {
-				const thisLevel = ALL_UPPERAIR_SECTORS[siteUpperId as string].levels[levelId]
+		if (ALL_UPPERAIR_SECTORS[siteId as string]) {
+			return Object.keys(ALL_UPPERAIR_SECTORS[siteId as string].levels).map((levelId) => {
+				const thisLevel = ALL_UPPERAIR_SECTORS[siteId as string].levels[levelId]
 				return {
 					levelId: levelId,
 					label: thisLevel.label,
@@ -73,13 +76,13 @@ export const UpperAirPanel = ({ basepath, isActive }: UpperAirPanelProps) => {
 			})
 		}
 		return []
-	}, [siteUpperId])
+	}, [siteId])
 	return (
 		<div className={styles.UpperAirPanel}>
 			<SidebarSectionHeader name="Upper Air Maps" linkUrl={`${basepath}`} />
 			<SidebarPanelPad>
 				<div className={styles.options}>
-					<Select value={siteUpperId} options={sectorOptions} onChange={handleSectorChange} />
+					<Select value={siteId} options={sectorOptions} onChange={handleSectorChange} />
 				</div>
 				{productsArray.map(({ levelId, label, columns, products }) => (
 					<SidebarGroup key={levelId} title={label}>
@@ -88,7 +91,7 @@ export const UpperAirPanel = ({ basepath, isActive }: UpperAirPanelProps) => {
 								<SidebarLink
 									key={productId}
 									name={label}
-									linkUrl={`/weather-data/analysis/upper-air/${levelId}/${productId}/${regionUpperId}/${siteUpperId}`}
+									linkUrl={`/weather-data/analysis/upper-air/${levelId}/${productId}/${regionId}/${siteId}`}
 								/>
 							))}
 						</SidebarGrid>
