@@ -1,81 +1,100 @@
 .widgetContainer {
-	display: flex;
-	flex-flow: column nowrap;
-	flex: 1 1 25%;
-	max-width: 350px;
-	border-radius: 20px;
-	overflow: hidden;
-	background-color: var(--color-grey1-grey8);
-	box-sizing: border-box;
-	min-width: 300px;
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1 1 25%;
+  max-width: 370px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: var(--color-white-grey19);
+  box-sizing: border-box;
+  min-width: 300px;
+  box-shadow: 0px 1px 3px 0px rgba(10, 13, 18, 0.1), 0px 1px 2px -1px rgba(10, 13, 18, 0.1);
 
-	.campusTitle {
-		display: flex;
-		background-color: var(--color-grey15);
-		color: white;
-		margin: 0;
-		font-size: 14px;
-		height: 50px;
-		align-items: center;
-		justify-content: space-between;
-		padding: 30px 10px;
-		text-align: right;
-		img {
-			width: 50px;
-			border-radius: 25px;
-			overflow: hidden;
-			vertical-align: middle;
-			background-color: var(--color-grey5);
-		}
-	}
-	.conditionsContainer {
-		display: flex;
-		flex-flow: row nowrap;
-		justify-content: space-between;
-		align-items: stretch;
-		.icon {
-			flex: 2 2;
-			width: 40%;
-			height: 150px;
-		}
-		.temp {
-			flex: 1 1;
-			font-size: 28px;
-			font-weight: bold;
-			width: 30%;
-			text-align: center;
-			align-self: center;
-		}
-		.subValuesContainer {
-			flex: 2 2;
-			width: 30%;
-			display: flex;
-			flex-flow: column nowrap;
-			justify-content: center;
-			align-items: stretch;
-			.feels,
-			.humidity {
-				flex: 1 1;
-				width: 100%;
-				height: 75px;
-			}
-		}
-	}
-	.forecastContainer {
-		display: flex;
-		flex-flow: row nowrap;
-		justify-content: space-around;
-		align-items: stretch;
-		gap: 10px;
-		.tileContainer {
-			flex: 1 1 50%;
-			width: calc(50% - 20px);
-		}
-	}
-	.buttonContainer {
-		text-align: center;
-		width: fit-content;
-		padding: 10px;
-		margin: 0 auto;
-	}
+  .campusTitle {
+    display: flex;
+    background-color: var(--color-white-grey19);
+    color: var(--color-blue7-grey2);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 150%;
+    height: 50px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 30px 20px;
+    border-bottom: 1px solid var(--color-grey2-grey17);
+    img {
+      width: 45px;
+      overflow: hidden;
+      vertical-align: middle;
+    }
+  }
+  .conditionsContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 30px 0;
+    svg {
+      width: 100px;
+      height: 100px;
+      path {
+        fill: var(--color-grey17-grey2);
+      }
+    }
+    .temp {
+      font-size: 65px;
+      font-weight: bold;
+      text-align: center;
+      align-self: center;
+      color: var(--color-grey17-grey2);
+      sup {
+        font-size: 30px;
+      }
+    }
+    .subValuesContainer {
+      padding: 0 30px;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: stretch;
+      .feels,
+      .humidity {
+        flex: 1 1;
+        width: 100%;
+        height: 75px;
+      }
+    }
+  }
+  .forecastContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-around;
+    align-items: stretch;
+    gap: 10px;
+    padding: 0 10px 15px;
+    .tileContainer {
+      flex: 1 1 50%;
+      width: calc(50% - 20px);
+    }
+  }
+  .buttonContainer {
+    text-align: center;
+    width: fit-content;
+    width: 100%;
+    border-top: 1px solid var(--color-grey2-grey17);
+    a {
+      display: block;
+      padding: 15px 0;
+      text-decoration: none;
+      font-weight: 600;
+      color: var(--color-blue6-grey2);
+      transition: var(--themeChange);
+      &:hover {
+        background-color: var(--color-blue5);
+        color: var(--color-white);
+      }
+    }
+  }
 }

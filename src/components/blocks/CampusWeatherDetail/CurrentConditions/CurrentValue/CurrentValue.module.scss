@@ -8,24 +8,24 @@
   gap: 2px;
   .label {
     text-align: center;
-    font-size: 10px;
+    font-size: 11px;
     font-style: normal;
-    font-weight: 600;
-    line-height: 18px;
-    color: var(--color-grey16-grey4);
+    font-weight: 500;
+    line-height: 16px;
+    color: var(--color-grey12-grey2);
     transition: var(--themeChange);
   }
   .valueContainer {
     display: flex;
     gap: 5px;
     align-items: center;
-    color: var(--color-grey18-grey2);
+    color: var(--color-grey16-grey2);
     transition: var(--themeChange);
     .value {
       font-size: 24px;
       font-style: normal;
       font-weight: 600;
-      font-size: 24px;
+      font-size: 28px;
       sup {
         padding-top: 4px;
         display: inline-block;

@@ -36,12 +36,12 @@ export const CurrentConditions = ({
 				<Icon />
 				<span>
 					{temperature}
-					<sup>&deg;{temperatureUnit}</sup>
+					<sup>{temperatureUnit}</sup>
 				</span>
 			</div>
 			<div className={styles.detailsGrid}>
-				<CurrentValue label="Feels Like" value={feelsLikeTemperature} unit={`\u00B0${temperatureUnit}`} />
-				<CurrentValue label="Dew Point" value={dewpoint} unit={`\u00B0${temperatureUnit}`} />
+				<CurrentValue label="Feels Like" value={feelsLikeTemperature} unit={temperatureUnit} />
+				<CurrentValue label="Dew Point" value={dewpoint} unit={temperatureUnit} />
 				<CurrentValue label="Humidity" value={relativeHumidity} unit="%" />
 				<CurrentValue label="Wind" value={windSpeed} specialUnit1="MPH" specialUnit2={windDirection} />
 			</div>

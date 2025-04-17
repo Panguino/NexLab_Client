@@ -7,7 +7,7 @@ import styles from './ForecastTile.module.scss'
 type ForecastTileDisplayPane = {
 	icon: string
 	temp: string
-	wind: string
+	wind?: string
 }
 
 export interface IForecastTile {
@@ -35,7 +35,7 @@ const ForecastTileInfo = ({ title, icon, temp, wind, tempType }: IForecastTileIn
 				<div className={styles.tempType}>{tempType}</div>
 				<div className={styles.tempValue}>
 					{temp}
-					<sup>&deg;{temperatureUnit}</sup>
+					<sup>{temperatureUnit}</sup>
 				</div>
 			</div>
 			{wind && (
@@ -51,13 +51,23 @@ const ForecastTileInfo = ({ title, icon, temp, wind, tempType }: IForecastTileIn
 	)
 }
 
-export const ForecastTile = ({ title, dayData, nightData }: IForecastTile) => {
+export const ForecastTile = ({ title, dayData, nightData, size }: IForecastTile) => {
+	const removeWind = (data: any) => {
+		if (!data) return null
+		const dataCopy = { ...data }
+		delete dataCopy.wind
+		return dataCopy
+	}
+
+	const processedDayData = size === 'small' ? removeWind(dayData) : dayData
+	const processedNightData = size === 'small' ? removeWind(nightData) : nightData
+
 	return (
-		<div className={styles.ForecastTile}>
+		<div className={`${styles.ForecastTile} ${size === 'small' ? styles.small : ''}`}>
 			<h2>{title}</h2>
 			<div className={styles.content}>
-				<div className={styles.info}>{dayData && <ForecastTileInfo tempType="H" title="Day" {...dayData} />}</div>
-				<div className={styles.info}>{nightData && <ForecastTileInfo tempType="L" title="Night" {...nightData} />}</div>
+				<div className={styles.info}>{processedDayData && <ForecastTileInfo tempType="H" title="Day" {...processedDayData} />}</div>
+				<div className={styles.info}>{processedNightData && <ForecastTileInfo tempType="L" title="Night" {...processedNightData} />}</div>
 			</div>
 		</div>
 	)
