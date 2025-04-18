@@ -5,7 +5,6 @@ import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { ALL_UPPERAIR_PRODUCTS, UPPERAIR_PRODUCT_DEFAULT } from '@/data/analysis/upper-air/products'
 import { ALL_UPPERAIR_SECTORS, UPPERAIR_SECTOR_DEFAULT } from '@/data/analysis/upper-air/sectors'
-import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
 
 import Select from '@/components/elements/Select/Select'
@@ -23,7 +22,6 @@ interface UpperAirPanelProps {
 
 export const UpperAirPanel = ({ basepath, isActive }: UpperAirPanelProps) => {
 	const router = useRouter()
-	const setUpperAirSite = useRootStore.use.setUpperAirSite()
 	const {
 		upperairLevelId: paramLevelId,
 		upperairProductId: paramProductId,
@@ -51,7 +49,6 @@ export const UpperAirPanel = ({ basepath, isActive }: UpperAirPanelProps) => {
 
 	const handleSectorChange = (newSectorId) => {
 		router.push(`/weather-data/analysis/upper-air/${levelId}/${productId}/${regionId}/${newSectorId}`)
-		setUpperAirSite(newSectorId)
 	}
 
 	const sectorOptions = useMemo(() => {
