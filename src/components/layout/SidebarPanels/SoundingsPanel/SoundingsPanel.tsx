@@ -51,23 +51,25 @@ export const SoundingsPanel = ({ basepath, isActive }: soundingsPanelProps) => {
 	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
 
 	useEffect(() => {
-		const region =
-			regionId && ALL_SOUNDING_REGIONS[regionId as string]
-				? ALL_SOUNDING_REGIONS[regionId as string]
-				: ALL_SOUNDING_REGIONS[SOUNDING_REGION_DEFAULT]
-		const newD3config = {
-			rotate: region.rotate,
-			scale: region.scale,
+		if (isActive) {
+			const region =
+				regionId && ALL_SOUNDING_REGIONS[regionId as string]
+					? ALL_SOUNDING_REGIONS[regionId as string]
+					: ALL_SOUNDING_REGIONS[SOUNDING_REGION_DEFAULT]
+			const newD3config = {
+				rotate: region.rotate,
+				scale: region.scale,
+			}
+			setSectorSelectorD3config(newD3config)
+			const selectedSectors = region.sites.map((siteId) => ({
+				id: siteId,
+				name: ALL_SOUNDING_SITES[siteId].name,
+				type: ALL_SOUNDING_SITES[siteId].type,
+				coordinates: ALL_SOUNDING_SITES[siteId].coordinates,
+			}))
+			setSectorSelectorSectors(selectedSectors)
 		}
-		setSectorSelectorD3config(newD3config)
-		const selectedSectors = region.sites.map((siteId) => ({
-			id: siteId,
-			name: ALL_SOUNDING_SITES[siteId].name,
-			type: ALL_SOUNDING_SITES[siteId].type,
-			coordinates: ALL_SOUNDING_SITES[siteId].coordinates,
-		}))
-		setSectorSelectorSectors(selectedSectors)
-	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors])
+	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors, isActive])
 
 	const handleRegionChange = (newRegionId) => {
 		router.push(`/weather-data/analysis/soundings/${productId}/${newRegionId}/${siteId}`)
