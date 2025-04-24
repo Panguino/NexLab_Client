@@ -2,6 +2,7 @@ import { DotColor, DotShape } from '@/data/d3Map/dotStyles'
 import lakesJson from '@/data/d3Map/lakes.json'
 import statesJson from '@/data/d3Map/states.json'
 import mapJson from '@/data/d3Map/world.json'
+import { ISector } from '@/store/sectorSelectorPanelSlice'
 import * as d3 from 'd3'
 import React, { useEffect, useRef } from 'react'
 import styles from './SectorSelector.module.scss'
@@ -14,20 +15,12 @@ export type d3ConfigProps = {
 }
 
 export type ISectorSelectorProps = {
-	sectors: {
-		id: string
-		name: string
-		type: 'Point' | 'Geobox' | 'Line'
-		dotShape: DotShape | null
-		dotColor: DotColor | null
-		coordinates: [number, number] | [[number, number], [number, number]]
-	}[]
-	sector: string
-	onChange: (id: string) => void
+	sectors: ISector[]
 	d3config?: d3ConfigProps
+	onChange?: (sectorId: string) => void
 }
 
-const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onChange, d3config }) => {
+const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onChange }) => {
 	const svgRef = useRef<SVGSVGElement | null>(null)
 
 	useEffect(() => {
@@ -209,7 +202,9 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				.data(geoboxSectors)
 				.enter()
 				.append('path')
-				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
+				.attr('d', (d) => {
+					return symbolGenerator.type(d3[d.dotShape])()
+				})
 				.attr('transform', (d) => {
 					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
 					return `translate(${projection(d3.geoCentroid(geobox))})`
@@ -291,7 +286,7 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, sector, onCha
 				.attr('fill', (d) => d.dotColor)
 				.attr('class', styles.point)
 		}
-	}, [sectors, onChange, sector, d3config])
+	}, [sectors, d3config, onChange])
 
 	if (!d3config) return <></>
 	const { width, height } = d3config

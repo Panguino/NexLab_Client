@@ -1,0 +1,31 @@
+export const ISENTROPIC_PRODUCT_280K = '280K'
+export const ISENTROPIC_PRODUCT_285K = '285K'
+export const ISENTROPIC_PRODUCT_290K = '290K'
+export const ISENTROPIC_PRODUCT_295K = '295K'
+export const ISENTROPIC_PRODUCT_300K = '300K'
+export const ISENTROPIC_PRODUCT_305K = '305K'
+export const ISENTROPIC_PRODUCT_310K = '310K'
+
+export const ALL_ISENTROPIC_PRODUCTS = {
+	[ISENTROPIC_PRODUCT_280K]: {
+		label: '280K',
+	},
+	[ISENTROPIC_PRODUCT_285K]: {
+		label: '285K',
+	},
+	[ISENTROPIC_PRODUCT_290K]: {
+		label: '290K',
+	},
+	[ISENTROPIC_PRODUCT_295K]: {
+		label: '295K',
+	},
+	[ISENTROPIC_PRODUCT_300K]: {
+		label: '300K',
+	},
+	[ISENTROPIC_PRODUCT_305K]: {
+		label: '305K',
+	},
+	[ISENTROPIC_PRODUCT_310K]: {
+		label: '310K',
+	},
+}

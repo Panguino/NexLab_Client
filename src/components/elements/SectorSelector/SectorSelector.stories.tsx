@@ -50,7 +50,8 @@ export default {
 }
 
 const TemplateSelect: StoryFn<typeof SectorSelector> = (args) => {
-	const [selectedSector, setSelectedSector] = useState(args.sector)
+	const [selectedSector, setSelectedSector] = useState('')
+	console.log('sector selected:', selectedSector)
 	const [selectedRegion, setSelectedRegion] = useState('CONUS')
 	const [d3config, setD3config] = useState(args.d3config)
 
@@ -73,19 +74,20 @@ const TemplateSelect: StoryFn<typeof SectorSelector> = (args) => {
 				</div>
 				<p>Selected Sector: {selectedSector}</p>
 			</div>
-			<SectorSelector sectors={args.sectors} d3config={d3config} sector={selectedSector} onChange={setSelectedSector} />
+			<SectorSelector sectors={args.sectors} d3config={d3config} onChange={setSelectedSector} />
 		</div>
 	)
 }
 
 const TemplatePlain: StoryFn<typeof SectorSelector> = (args) => {
-	const [selectedSector, setSelectedSector] = useState(args.sector)
-
-	return <SectorSelector {...args} sector={selectedSector} onChange={setSelectedSector} />
+	const [selectedSector, setSelectedSector] = useState('')
+	console.log('sector selected:', selectedSector)
+	return <SectorSelector {...args} onChange={setSelectedSector} />
 }
 
 const TemplateDotStyles: StoryFn<typeof SectorSelector> = (args) => {
-	const [selectedSector, setSelectedSector] = useState(args.sector)
+	const [selectedSector, setSelectedSector] = useState('')
+	console.log('sector selected:', selectedSector)
 	const [mapSectors, setMapSectors] = useState(args.sectors)
 	const [selectedColor, setSelectedColor] = useState(DotColor.White)
 	const [selectedShape, setSelectedShape] = useState(DotShape.Circle)
@@ -119,7 +121,7 @@ const TemplateDotStyles: StoryFn<typeof SectorSelector> = (args) => {
 					<Select value={selectedShape} options={dotShapeOptions} onChange={handleShapeChange} />
 				</div>
 			</div>
-			<SectorSelector sectors={mapSectors} d3config={args.d3config} sector={selectedSector} onChange={setSelectedSector} />
+			<SectorSelector sectors={mapSectors} d3config={args.d3config} onChange={setSelectedSector} />
 		</div>
 	)
 }
@@ -127,7 +129,6 @@ const TemplateDotStyles: StoryFn<typeof SectorSelector> = (args) => {
 export const Default = TemplatePlain.bind({})
 Default.args = {
 	sectors: pointSectors,
-	sector: '',
 	d3config: {
 		width: 1000,
 		height: 600,
@@ -139,7 +140,6 @@ Default.args = {
 export const GeoboxSectors = TemplateSelect.bind({})
 GeoboxSectors.args = {
 	sectors: geoboxSectors,
-	sector: '',
 	d3config: {
 		width: 1000,
 		height: 600,
@@ -151,7 +151,6 @@ GeoboxSectors.args = {
 export const CrossSectors = TemplateSelect.bind({})
 CrossSectors.args = {
 	sectors: crossSectors,
-	sector: '',
 	d3config: {
 		width: 1000,
 		height: 600,
@@ -163,7 +162,6 @@ CrossSectors.args = {
 export const RegionSelection = TemplateSelect.bind({})
 RegionSelection.args = {
 	sectors: pointSectors,
-	sector: '',
 	d3config: {
 		width: 1000,
 		height: 600,
@@ -175,7 +173,6 @@ RegionSelection.args = {
 export const DotStyles = TemplateDotStyles.bind({})
 DotStyles.args = {
 	sectors: pointSectors,
-	sector: '',
 	d3config: {
 		width: 1000,
 		height: 600,
