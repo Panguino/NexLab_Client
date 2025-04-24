@@ -1,6 +1,7 @@
 import { getData } from '../dataCall'
 
 const parmsExceptionTest = (level, product) => {
+	// TODO: see monday 8994171800
 	if (level === '500' && product === 'vort') {
 		return { level: 'contour', product: 'vort' }
 	} else if (level === '500' && product === 'deltaz') {

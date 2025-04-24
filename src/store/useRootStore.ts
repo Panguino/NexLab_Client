@@ -1,5 +1,6 @@
 import { enableMapSet } from 'immer'
 import { StateCreator, create } from 'zustand'
+import { IAnalysisSlice, createAnalysisSlice } from './analysisSlice'
 import createSelectors from './createSelectors'
 import { IGlobalSettingsSlice, createGlobalSettingsSlice } from './globalSettingsSlice'
 import { IHazardsSlice, createHazardsSlice } from './hazardsSlice'
@@ -7,9 +8,6 @@ import { IMobileMenuSlice, createMobileMenuSlice } from './mobileMenuSlice'
 import { INexradSlice, createNexradSlice } from './nexradSlice'
 import { ISectorSelectorPanelSlice, createSectorSelectorPanelSlice } from './sectorSelectorPanelSlice'
 import { ISlideoutPanelSlice, createSlideoutPanelSlice } from './slideoutPanelSlice'
-import { ISoundingSlice, createSoundingSlice } from './soundingsSlice'
-import { ISurfaceMapsSlice, createSurfaceMapsSlice } from './surfaceMapsSlice'
-import { IUpperAirSlice, createUpperAirSlice } from './upperAirSlice'
 
 enableMapSet()
 
@@ -20,9 +18,7 @@ export interface IGlobalStore
 		IMobileMenuSlice,
 		IGlobalSettingsSlice,
 		INexradSlice,
-		ISoundingSlice,
-		ISurfaceMapsSlice,
-		IUpperAirSlice {}
+		IAnalysisSlice {}
 
 export type ZustandStateSlice<T> = StateCreator<IGlobalStore, [], [], T>
 
@@ -33,9 +29,7 @@ const useRootStoreBase = create<IGlobalStore>((...args) => ({
 	...createMobileMenuSlice(...args),
 	...createGlobalSettingsSlice(...args),
 	...createNexradSlice(...args),
-	...createSoundingSlice(...args),
-	...createSurfaceMapsSlice(...args),
-	...createUpperAirSlice(...args),
+	...createAnalysisSlice(...args),
 }))
 
 export const useRootStore = createSelectors(useRootStoreBase as any)

@@ -44,11 +44,13 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	}, [paramProductId, paramRegionId, paramSiteId, router, isActive])
 
 	useEffect(() => {
-		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
-			closeSectorSelectorPanel()
-			router.push(`/weather-data/analysis/surface-maps/${productId}/${regionId}/${sectorId}`)
-		})
-	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
+		if (isActive) {
+			updateOnChangeSectorSelectorSectorHandler((sectorId) => {
+				closeSectorSelectorPanel()
+				router.push(`/weather-data/analysis/surface-maps/${productId}/${regionId}/${sectorId}`)
+			})
+		}
+	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler, isActive])
 
 	useEffect(() => {
 		if (isActive) {
