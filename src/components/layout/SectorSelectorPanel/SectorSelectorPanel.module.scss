@@ -1,0 +1,8 @@
+.sectorSelectorPanel {
+  position: absolute;
+  top: 106px;
+  left: 300px;
+  width: calc(80% - 300px);
+  height: calc(80% - 106px);
+  z-index: 30;
+}

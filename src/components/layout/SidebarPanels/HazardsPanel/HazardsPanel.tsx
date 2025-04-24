@@ -1,14 +1,19 @@
 'use client'
-import React from 'react'
-import styles from './HazardsPanel.module.scss'
+import AutoRefreshToggler from '@/components/elements/AutoRefreshToggler/AutoRefreshToggler'
+import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
-import ColorSquare from './ColorSquare/ColorSquare'
+import { HAZARD_COLORS, HAZARD_LEVELS, HAZARD_LEVEL_NAMES, HAZARD_TYPES, HAZARD_TYPE_NAMES } from '@/data/hazardMapVars'
 import { useRootStore } from '@/store/useRootStore'
-import { HAZARD_LEVELS, HAZARD_LEVEL_NAMES, HAZARD_TYPES, HAZARD_TYPE_NAMES, HAZARD_COLORS } from '@/data/hazardMapVars'
-import Select from '@/components/elements/Select/Select'
+import React from 'react'
+import ColorSquare from './ColorSquare/ColorSquare'
+import styles from './HazardsPanel.module.scss'
 
-const HazardsPanel = ({ basepath }) => {
+interface hazardsPanelProps {
+	basepath: string
+}
+
+const HazardsPanel = ({ basepath }: hazardsPanelProps) => {
 	const hazardTotals = useRootStore.use.hazardTotals()
 	const selectedRegion = useRootStore.use.selectedRegion()
 	const setSelectedRegion = useRootStore.use.setSelectedRegion()
@@ -24,7 +29,8 @@ const HazardsPanel = ({ basepath }) => {
 	const activeHazards = useRootStore.use.activeHazards()
 	const addActiveHazard = useRootStore.use.addActiveHazard()
 	const removeActiveHazard = useRootStore.use.removeActiveHazard()
-	const isHazardActive = useRootStore.use.isHazardActive()
+	const anyActiveOrToggledHazards = useRootStore.use.anyActiveOrToggledHazards()
+	const isHazardVisible = useRootStore.use.isHazardVisible()
 	// needs to re-render when these things change.
 	activeHazards
 	activeHazardLevels
@@ -44,7 +50,7 @@ const HazardsPanel = ({ basepath }) => {
 
 	const views = [
 		{ value: 'map', label: 'Map' },
-		{ value: 'table', label: 'Table' }
+		{ value: 'table', label: 'Table' },
 	]
 	const regions = [
 		{ value: 'conus', label: 'Continental US' },
@@ -52,7 +58,7 @@ const HazardsPanel = ({ basepath }) => {
 		{ value: 'hi', label: 'Hawaii' },
 		{ value: 'gum', label: 'Guam' },
 		{ value: 'pr', label: 'Puerto Rico' },
-		{ value: 'sam', label: 'American Samoa' }
+		{ value: 'sam', label: 'American Samoa' },
 	]
 
 	return (
@@ -108,7 +114,7 @@ const HazardsPanel = ({ basepath }) => {
 							{HAZARD_LEVELS.map((hazardLevelId, index) => {
 								const hazardId = `${hazardTypeId} ${hazardLevelId}`
 								const hasAlerts = hazardTotals[hazardId] > 0 ? true : false
-								const hovered = isHazardActive(hazardTypeId, hazardLevelId)
+								const hovered = isHazardVisible(hazardTypeId, hazardLevelId) || anyActiveOrToggledHazards()
 								const toggled = isHazardToggled(hazardTypeId, hazardLevelId)
 								const color = HAZARD_COLORS[hazardTypeId][hazardLevelId]
 								return (
@@ -144,6 +150,7 @@ const HazardsPanel = ({ basepath }) => {
 						</React.Fragment>
 					))}
 				</div>
+				<AutoRefreshToggler />
 			</SidebarPanelPad>
 		</>
 	)

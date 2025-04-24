@@ -1,0 +1,49 @@
+.currentConditions {
+  padding: 17px 35px;
+  background-color: var(--color-white-grey18);
+  transition: background-color var(--themeChange);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 23px;
+
+  .logo {
+    width: 216px;
+  }
+  .mainTemp {
+    border: 1px solid var(--color-grey5-grey15);
+    padding: 10px 50px;
+
+    svg {
+      width: 85px;
+      height: 85px;
+      path {
+        fill: var(--color-grey18-grey2);
+      }
+    }
+    span {
+      margin-top: -11px;
+      display: block;
+      text-align: center;
+      font-size: 38px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 47px;
+      letter-spacing: 1.259px;
+      color: var(--color-grey18-grey2);
+      transition: color var(--themeChange);
+      sup {
+        font-size: 19px;
+      }
+    }
+  }
+  .detailsGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, auto);
+    column-gap: 37px;
+    row-gap: 12px;
+    width: auto;
+  }
+}

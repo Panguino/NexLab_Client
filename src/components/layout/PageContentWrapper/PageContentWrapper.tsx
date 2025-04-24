@@ -1,11 +1,14 @@
 'use client'
-
-import styles from './PageContentWrapper.module.scss'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import styles from './PageContentWrapper.module.scss'
 
-const PageContentWrapper = ({ children }) => {
+interface PageContentWrapperProps {
+	children: React.ReactNode
+}
+
+const PageContentWrapper = ({ children }: PageContentWrapperProps) => {
 	return (
-		<div>
+		<div className={styles.PageContentWrapperContainer}>
 			<ScrollArea>
 				<div className={styles.PageContentWrapper}>{children}</div>
 			</ScrollArea>

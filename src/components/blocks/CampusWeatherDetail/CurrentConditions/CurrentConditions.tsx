@@ -1,0 +1,50 @@
+'use client'
+
+import { useRootStore } from '@/store/useRootStore'
+import { WindDirection } from '@/types/WindDirection'
+import { getWeatherIconComponent } from '@/util/getCampusWeatherIcon'
+import styles from './CurrentConditions.module.scss'
+import { CurrentValue } from './CurrentValue/CurrentValue'
+
+interface ICurrentConditionsProps {
+	logo: string
+	temperature: number
+	dewpoint: number
+	feelsLikeTemperature: number
+	relativeHumidity: number
+	windSpeed: number
+	windDirection: WindDirection
+	icon: string
+}
+
+export const CurrentConditions = ({
+	logo,
+	temperature,
+	dewpoint,
+	feelsLikeTemperature,
+	relativeHumidity,
+	windSpeed,
+	windDirection,
+	icon,
+}: ICurrentConditionsProps) => {
+	const temperatureUnit = useRootStore.use.temperatureUnit()
+	const Icon = getWeatherIconComponent(icon)
+	return (
+		<div className={styles.currentConditions}>
+			<img src={logo} className={styles.logo} alt="" />
+			<div className={styles.mainTemp}>
+				<Icon />
+				<span>
+					{temperature}
+					<sup>{temperatureUnit}</sup>
+				</span>
+			</div>
+			<div className={styles.detailsGrid}>
+				<CurrentValue label="Feels Like" value={feelsLikeTemperature} unit={temperatureUnit} />
+				<CurrentValue label="Dew Point" value={dewpoint} unit={temperatureUnit} />
+				<CurrentValue label="Humidity" value={relativeHumidity} unit="%" />
+				<CurrentValue label="Wind" value={windSpeed} specialUnit1="MPH" specialUnit2={windDirection} />
+			</div>
+		</div>
+	)
+}

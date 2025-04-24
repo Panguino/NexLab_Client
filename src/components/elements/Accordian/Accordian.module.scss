@@ -1,0 +1,27 @@
+.accordian {
+  position: relative;
+  margin-bottom: 10px;
+}
+.title {
+  background: var(--color-grey1-grey16);
+  padding: 8px 13px;
+  color: var(--color-grey18-grey2);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  &.variant-line {
+    background: transparent;
+    border-top: 1px solid var(--color-grey4-grey16);
+    border-radius: 0px;
+  }
+}
+.content {
+  position: relative;
+  overflow: hidden;
+}

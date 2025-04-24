@@ -1,14 +1,35 @@
-import { create } from 'zustand'
 import { enableMapSet } from 'immer'
+import { StateCreator, create } from 'zustand'
+import { IAnalysisSlice, createAnalysisSlice } from './analysisSlice'
 import createSelectors from './createSelectors'
-import { createHazardsSlice } from './hazardsSlice'
-import { createSlideoutPanelSlice } from './slideoutPanelSlice'
+import { IGlobalSettingsSlice, createGlobalSettingsSlice } from './globalSettingsSlice'
+import { IHazardsSlice, createHazardsSlice } from './hazardsSlice'
+import { IMobileMenuSlice, createMobileMenuSlice } from './mobileMenuSlice'
+import { INexradSlice, createNexradSlice } from './nexradSlice'
+import { ISectorSelectorPanelSlice, createSectorSelectorPanelSlice } from './sectorSelectorPanelSlice'
+import { ISlideoutPanelSlice, createSlideoutPanelSlice } from './slideoutPanelSlice'
 
 enableMapSet()
 
-const useRootStoreBase = create((set, get) => ({
-	...createHazardsSlice(set, get),
-	...createSlideoutPanelSlice(set, get)
+export interface IGlobalStore
+	extends IHazardsSlice,
+		ISlideoutPanelSlice,
+		ISectorSelectorPanelSlice,
+		IMobileMenuSlice,
+		IGlobalSettingsSlice,
+		INexradSlice,
+		IAnalysisSlice {}
+
+export type ZustandStateSlice<T> = StateCreator<IGlobalStore, [], [], T>
+
+const useRootStoreBase = create<IGlobalStore>((...args) => ({
+	...createHazardsSlice(...args),
+	...createSlideoutPanelSlice(...args),
+	...createSectorSelectorPanelSlice(...args),
+	...createMobileMenuSlice(...args),
+	...createGlobalSettingsSlice(...args),
+	...createNexradSlice(...args),
+	...createAnalysisSlice(...args),
 }))
 
 export const useRootStore = createSelectors(useRootStoreBase as any)

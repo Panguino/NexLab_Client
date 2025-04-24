@@ -1,7 +1,7 @@
 import { DashboardSettings } from '@/components/blocks/DashboardSettings/DashboardSettings'
+import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
-import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
 
 const Page = async () => {
 	const session = await getServerSession()

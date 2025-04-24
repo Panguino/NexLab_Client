@@ -1,7 +1,7 @@
 'use client'
-import styles from './DarkmodeToggler.module.scss'
-import { useTheme } from 'next-themes'
 import { motion } from 'framer-motion'
+import { useTheme } from 'next-themes'
+import styles from './DarkmodeToggler.module.scss'
 
 const DarkmodeToggler = () => {
 	const { theme, setTheme } = useTheme()

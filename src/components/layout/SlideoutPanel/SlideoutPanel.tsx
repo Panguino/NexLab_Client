@@ -2,13 +2,13 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
-import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT, SEARCH_RESULTS_SLIDEOUT } from '@/config/vars'
-import styles from './SlideoutPanel.module.scss'
-import { useRootStore } from '@/store/useRootStore'
 import HazardsDetailPanel from '@/components/blocks/Hazards/HazardsMap/HazardsDetailPanel/HazardsDetailPanel'
-import CloseX from '@/components/elements/icons/CloseX/CloseX'
 import { Meilisearch } from '@/components/blocks/Meilisearch/Meilisearch'
+import CloseX from '@/components/elements/icons/CloseX/CloseX'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT, SEARCH_RESULTS_SLIDEOUT } from '@/data/vars'
+import { useRootStore } from '@/store/useRootStore'
 import { usePathname } from 'next/navigation'
+import styles from './SlideoutPanel.module.scss'
 
 const SlideoutPanel = () => {
 	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
@@ -25,8 +25,7 @@ const SlideoutPanel = () => {
 		closeSlideoutPanel()
 	}, [pathname, closeSlideoutPanel])
 
-	const getPanelType = (type) => {
-		//console.log('opening slideoutpannel', type)
+	const getPanelType = (type: string) => {
 		switch (type) {
 			case DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT:
 				return <HazardsDetailPanel />
@@ -40,7 +39,7 @@ const SlideoutPanel = () => {
 	return (
 		<div className={styles.SlideoutPanel}>
 			<div className={styles.PanelWrapper} style={{ paddingTop: pathname !== '/' ? '106px' : '69px' }}>
-				<motion.div className={styles.OverflowPanel} animate={{ opacity: hovering ? 1 : 0 }} />
+				<motion.div className={styles.OverflowPanel} animate={{ opacity: slideoutPanelIsOpen && hovering ? 1 : 0 }} />
 				<motion.div
 					className={styles.Panel}
 					animate={{ x: slideoutPanelIsOpen ? '0%' : '100%', transition: { ease: 'backOut', duration: 0.35 } }}

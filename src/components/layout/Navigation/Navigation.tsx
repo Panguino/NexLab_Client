@@ -1,15 +1,20 @@
-import Link from 'next/link'
-import styles from './Navigation.module.scss'
-import { getServerSession } from 'next-auth'
-import LogStatus from '@/components/elements/LogStatus/LogStatus'
+'use client'
+import AuthMenuStatusInfo from '@/components/elements/AuthMenuStatusInfo/AuthMenuStatusInfo'
 import DarkmodeToggler from '@/components/elements/DarkmodeToggler/DarkmodeToggler'
-import SearchIcon from '@/components/elements/SearchIcon/SearchIcon'
+import HamburgerMenuIcon from '@/components/elements/HamburgerMenuIcon/HamburgerMenuIcon'
+import SearchIcon from '@/components/elements/icons/SearchIcon/SearchIcon'
+import { useRootStore } from '@/store/useRootStore'
+import Link from 'next/link'
+import MobileMenu from '../MobileMenu/MobileMenu'
+import styles from './Navigation.module.scss'
 
-const Navigation = async () => {
-	const session = await getServerSession()
+const Navigation = ({ mobileMenuItems }) => {
+	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
+	const hideNavigation = hazardMapFullScreen
+
 	return (
 		<>
-			<div className={`Navigation ${styles.Navigation}`}>
+			<div className={`Navigation ${styles.Navigation} ${hideNavigation ? styles.hide : ''}`}>
 				<Link href="/">
 					<div className={styles.Logo}>
 						<img src="/img/logo-cloud-filled.svg" />
@@ -23,29 +28,27 @@ const Navigation = async () => {
 					<Link href="/academics/">
 						<div className={styles.NavItem}>Academics</div>
 					</Link>
-					<Link href="/chasing/">
+					<Link href="/storm-chasing/">
 						<div className={styles.NavItem}>Storm Chasing</div>
 					</Link>
-					<Link href="/localwx/">
+					<Link href="/campus-weather/">
 						<div className={styles.NavItem}>Local Weather</div>
 					</Link>
-					<Link href="/faqs/">
-						<div className={styles.NavItem}>FAQs</div>
+					<Link href="/donate/">
+						<div className={styles.NavItem}>Donate</div>
 					</Link>
 				</div>
 				<div className={styles.NavItems}>
 					<SearchIcon />
 					<DarkmodeToggler />
-					{session?.user?.email ? (
-						<LogStatus email={session?.user?.email} />
-					) : (
-						<Link href="/login/">
-							<div className={styles.NavItemButton}>Login</div>
-						</Link>
-					)}
+					<AuthMenuStatusInfo />
 				</div>
+				<HamburgerMenuIcon />
 			</div>
-			<div className={`NavigationSpacer ${styles.Spacer}`} />
+			<div className={`NavigationSpacer ${styles.Spacer} ${hideNavigation ? styles.hide : ''}`} />
+			<MobileMenu navItems={mobileMenuItems}>
+				<div className={`NavigationSpacer ${styles.Spacer}`} />
+			</MobileMenu>
 		</>
 	)
 }

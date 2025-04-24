@@ -3,8 +3,7 @@ const prettierConfig = require('./.prettierrc.js')
 module.exports = {
 	icon: true,
 	svgProps: {
-		focusable: 'false'
+		focusable: 'false',
 	},
 	prettierConfig: prettierConfig,
-	typescript: true
 }

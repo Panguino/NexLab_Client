@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import styles from './Select.module.scss'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import styles from './Select.module.scss'
 
-const Select = ({ value, options, onChange, placeholder, optionsEmptyText = 'No options' }) => {
+const Select = ({ value, options, onChange, placeholder = '', optionsEmptyText = 'No options' }) => {
 	const [open, setOpen] = useState(false)
 	const wrapperRef = useRef(null)
 
@@ -31,8 +31,8 @@ const Select = ({ value, options, onChange, placeholder, optionsEmptyText = 'No 
 
 	useEffect(() => {
 		if (value && options) {
-			const foundValue = options.find((option) => option.value === value).value
-			if (foundValue) {
+			const foundValue = options.find((option) => option.value === value)?.value
+			if (foundValue !== value) {
 				onChange(foundValue)
 			}
 		}
@@ -44,7 +44,7 @@ const Select = ({ value, options, onChange, placeholder, optionsEmptyText = 'No 
 		<div className={styles.wrapper}>
 			<div className={styles.select} ref={wrapperRef} onClick={() => setOpen((prevOpen) => !prevOpen)}>
 				{!foundValue && placeholder && <label>{placeholder}</label>}
-				{foundValue.label && <div className={styles.value}>{foundValue.label}</div>}
+				{foundValue && foundValue.label && <div className={styles.value}>{foundValue.label}</div>}
 
 				<motion.div className={styles.arrow} animate={{ transform: `${open ? 'rotate(180deg)' : 'rotate(0deg)'}` }}>
 					<FontAwesomeIcon icon={faChevronDown} />

@@ -1,8 +1,10 @@
 import Navigation from '@/components/layout/Navigation/Navigation'
-import '@/styles/global.scss'
+import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
 import Providers from '@/components/providers/Providers/Providers'
 import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
-import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
+import { mobileMenuItems } from '@/data/mobileMenuItems'
+import '@/styles/global.scss'
+import { Viewport } from 'next'
 
 export default async function RootLayout({ children }) {
 	return (
@@ -14,6 +16,13 @@ export default async function RootLayout({ children }) {
 					href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@200;400;600;700;900&display=swap"
 					rel="stylesheet"
 				/>
+				<link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png" />
+				<link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png" />
+				<link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png" />
+				<link rel="manifest" href="/img/favicon/site.webmanifest" />
+				<link rel="mask-icon" href="/img/favicon/safari-pinned-tab.svg" color="#5bbad5" />
+				<meta name="msapplication-TileColor" content="#2b5797" />
+				<meta name="theme-color" content="#ffffff"></meta>
 				<meta name="referrer" content="strict-origin-when-cross-origin" />
 				<title>NexLab</title>
 			</head>
@@ -22,7 +31,7 @@ export default async function RootLayout({ children }) {
 					<NextAuthProvider>
 						<Providers>
 							<SlideoutPanel />
-							<Navigation />
+							<Navigation mobileMenuItems={mobileMenuItems} />
 							{children}
 						</Providers>
 					</NextAuthProvider>
@@ -30,4 +39,11 @@ export default async function RootLayout({ children }) {
 			</body>
 		</html>
 	)
+}
+export const dynamic = 'force-dynamic'
+export const viewport: Viewport = {
+	initialScale: 1,
+	width: 'device-width',
+	maximumScale: 1,
+	userScalable: false,
 }

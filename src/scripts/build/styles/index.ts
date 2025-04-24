@@ -3,32 +3,29 @@ const fs = require('fs')
 const path = require('path')
 
 function isOdd(num) {
-	return num % 2
+	return num % 2 === 1
 }
 
 sassExtract
 	.render({
-		file: 'src/styles/global.scss'
+		file: 'src/styles/global.scss',
 	})
 	.then((rendered) => {
-		//console.log(rendered.vars.global.$themes)
-		let colors = []
+		const colors = []
 		let stripped = rendered.vars.global.$themes.declarations[0].expression.split('"')
 		stripped = stripped.slice(1)
-		//console.log(stripped)
 		stripped.map((value, index) => {
 			if (!isOdd(index)) {
 				colors.push({ color: value, value: stripped[index + 1].split(',')[0].split(' ')[1] })
 			}
 		})
-		let colorVars = []
-		// console.log(colors);
-		colors.map((value1, index1) => {
-			colors.map((value2, index2) => {
+		const colorVars = []
+		colors.map((value1) => {
+			colors.map((value2) => {
 				colorVars.push({
 					name: `--color-${value1.color}-${value2.color}`,
 					value1: value1.value,
-					value2: value2.value
+					value2: value2.value,
 				})
 			})
 		})
@@ -48,12 +45,11 @@ sassExtract
 				outputCss += css
 			})
 
-		// console.log(outputCss)
 		// fs.writeFileSync(outputPath, outputCss);
 
 		//count how many times each color is used
-		let inactiveColors = colorVars.filter((colorVar) => {
-			let matches = outputCss.match(new RegExp(`${colorVar.name}(:|\\))`, 'g'))
+		const inactiveColors = colorVars.filter((colorVar) => {
+			const matches = outputCss.match(new RegExp(`${colorVar.name}(:|\\))`, 'g'))
 			return matches && matches.length <= 2
 		})
 		console.log('inactive colorVars:', inactiveColors.length)
@@ -70,7 +66,6 @@ sassExtract
 
 			// Check if the file contains the `--color-vars-ref` variable
 			if (cssContent.includes('--color-vars-ref')) {
-				//console.log(`The file ${file} contains the --color-vars-ref variable.`)
 				rootCssFile = file
 			}
 		}

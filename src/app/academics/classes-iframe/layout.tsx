@@ -1,12 +1,11 @@
 'use client'
-import { useEffect, useState } from 'react'
-
-import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavigation'
-import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
+import { getCourseCategories } from '@/apollo/strapi/getCourseCategories'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
-import { getCourseCategories } from '@/apollo/getCourseCategories'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavigation'
+import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
+import { useEffect, useState } from 'react'
 
 export default function Layout({ children }) {
 	const [courseCategories, setCourseCategories] = useState([])
@@ -32,7 +31,6 @@ export default function Layout({ children }) {
 						{courseCategories.map((courseCategory, index) => {
 							const { Name, courses } = courseCategory.attributes
 							const coursesData = courses.data
-							// only return category if it has courses inside it
 							if (coursesData.length > 0) {
 								return (
 									<SidebarGroup key={index} title={Name}>
@@ -49,6 +47,7 @@ export default function Layout({ children }) {
 									</SidebarGroup>
 								)
 							}
+							return null
 						})}
 					</div>
 				</ScrollArea>

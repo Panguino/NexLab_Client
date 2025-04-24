@@ -1,7 +1,7 @@
-import styles from './HazardsDetailPanel.module.scss'
 import { useRootStore } from '@/store/useRootStore'
-import HazardsDetailAccordian from './HazardsDetailAccordian/HazardsDetailAccordian'
 import { getTitleFromFeature } from '@/util/hazardMapUtils'
+import HazardsDetailAccordian from './HazardsDetailAccordian/HazardsDetailAccordian'
+import styles from './HazardsDetailPanel.module.scss'
 
 const HazardsDetailPanel = () => {
 	const selectedCounty = useRootStore.use.selectedCounty()
@@ -18,7 +18,6 @@ const HazardsDetailPanel = () => {
 					<h1>{getTitleFromFeature(county.properties)}</h1>
 					{county.alerts &&
 						county.alerts.map((alert, index) => {
-							//console.log('alert', alert)
 							return (
 								<HazardsDetailAccordian
 									key={index}

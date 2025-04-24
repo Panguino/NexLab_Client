@@ -1,10 +1,9 @@
 'use client'
-import { motion } from 'framer-motion'
-
-import { useRootStore } from '@/store/useRootStore'
-import styles from './HazardsTooltip.module.scss'
 import useMousePosition from '@/hooks/useMousePosition'
+import { useRootStore } from '@/store/useRootStore'
 import { flattenAlerts, getTitleFromFeature } from '@/util/hazardMapUtils'
+import { motion } from 'framer-motion'
+import styles from './HazardsTooltip.module.scss'
 
 const HazardsTooltip = () => {
 	const tooltipContent = useRootStore.use.tooltipContent()
@@ -16,7 +15,6 @@ const HazardsTooltip = () => {
 			<h4>{getTitleFromFeature(tooltipContent.properties)}</h4>
 			{tooltipContent.alerts &&
 				flattenAlerts(tooltipContent.alerts).map(({ color, name, event }, index) => {
-					//console.log(alert)
 					return (
 						<div key={index} className={styles.alert}>
 							<div className={styles.color} style={{ backgroundColor: color }} />

@@ -1,3 +1,4 @@
+import SectorSelectorPanel from '@/components/layout/SectorSelectorPanel/SectorSelectorPanel'
 import SubNavigation from '@/components/layout/SubNavigation/SubNavigation'
 import SubNavigationItem from '@/components/layout/SubNavigation/SubNavigationItem/SubNavigationItem'
 
@@ -6,12 +7,12 @@ export default function Layout({ children }) {
 		<>
 			<SubNavigation>
 				<SubNavigationItem name="Analysis" link="/weather-data/analysis/" />
-				<SubNavigationItem name="Satellite & Radar" link="/weather-data/satrad/" />
-				<SubNavigationItem name="Nexrad Radar" link="/weather-data/nexrad/" />
-				<SubNavigationItem name="Numerical Models" link="/weather-data/forecast/" />
-				<SubNavigationItem name="Text Products" link="/weather-data/text/" />
-				<SubNavigationItem name="Resources" link="/weather-data/resources/" />
+				<SubNavigationItem name="Satellite & Radar" link="/weather-data/satellite-mosaic-radar/" />
+				<SubNavigationItem name="NEXRAD Dual-Pol" link="/weather-data/nexrad-dual-pol-radar/N0B/LOT" />
+				<SubNavigationItem name="Numerical Models" link="/weather-data/forecast-models/" />
+				<SubNavigationItem name="Text Products" link="/weather-data/text-hazards-outlooks/" />
 			</SubNavigation>
+			<SectorSelectorPanel />
 			{children}
 		</>
 	)

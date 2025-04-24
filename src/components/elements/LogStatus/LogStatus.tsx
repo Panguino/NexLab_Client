@@ -1,7 +1,7 @@
 'use client'
-import styles from './LogStatus.module.scss'
 import { signOut } from 'next-auth/react'
 import Gravitar from 'react-gravatar'
+import styles from './LogStatus.module.scss'
 
 const LogStatus = ({ email }) => {
 	return (
