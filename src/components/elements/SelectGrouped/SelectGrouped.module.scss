@@ -21,7 +21,6 @@
     color: var(--color-grey3);
     position: absolute;
     left: 5px;
-    top: 6px;
     transform: translate(11px, 9px);
     transition: all linear 0.12s;
     z-index: 0;
@@ -31,26 +30,27 @@
   color: var(--color-grey4-grey3);
   transition: color var(--themeChange);
   font-size: 16px;
-  height: 35px;
+  height: 39px;
   width: 100%;
-  padding: 16px;
+  padding: 0px 16px;
   display: flex;
   align-content: center;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  line-height: 12px;
   b {
-    color: var(--color-grey8);
+    color: var(--color-white);
     font-weight: 500;
-    font-size: 10px;
-    line-height: 10px;
-    padding-top: 3px;
     text-transform: uppercase;
+  }
+  > span {
+    font-weight: 200;
+    color: var(--color-grey8);
   }
   > div {
     font-weight: 400;
-    font-size: 14px;
     color: var(--color-grey4);
-    padding-left: 10px;
   }
 }
 
@@ -80,23 +80,23 @@
 .group {
   display: flex;
   flex-wrap: wrap;
+  padding: 8px 0;
+  border-top: 1px solid var(--color-grey18);
 }
 .groupLabel {
   font-size: 10px;
-  color: var(--color-grey8);
+  color: var(--color-white);
   padding: 5px 10px;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  border-top: 1px solid var(--color-grey18);
   width: 100%;
 }
 .option {
-  padding: 10px;
+  padding: 8px 15px;
   transition: all 0.2s ease-out;
-  font-size: 14px;
-  width: 50%;
-  color: var(--color-grey3);
+  font-size: 12px;
+  color: var(--color-grey8);
 
   &:hover {
     background-color: var(--color-blue3);

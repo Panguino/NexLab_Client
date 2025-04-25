@@ -16,7 +16,7 @@ const meta: Meta<typeof SelectGrouped> = {
 	decorators: [
 		(Story) => (
 			<Providers>
-				<div style={{ maxWidth: 300 }}>{Story()}</div>
+				<div style={{ maxWidth: 260 }}>{Story()}</div>
 			</Providers>
 		),
 	],

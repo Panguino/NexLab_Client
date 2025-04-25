@@ -86,6 +86,7 @@ const SelectGrouped: React.FC<SelectGroupedProps> = ({
 				{foundValue && foundValue.group && foundValue.option ? (
 					<div className={styles.selectedValue}>
 						<b>{foundValue.group}</b>
+						<span>|</span>
 						<div>{foundValue.option}</div>
 					</div>
 				) : (
