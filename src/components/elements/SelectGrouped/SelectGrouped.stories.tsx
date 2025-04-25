@@ -41,32 +41,83 @@ const TemplateFactory = () => {
 	return Template
 }
 
-export const Simple = TemplateFactory()
+export const Simple: any = TemplateFactory()
 Simple.args = {
 	options: [
 		{
-			label: 'Group 1',
+			label: 'Eastern Hemisphere',
 			options: [
 				{
-					label: 'Option 1',
-					value: 1,
+					label: 'Global',
+					value: 'EH-global',
 				},
 				{
-					label: 'Option 2',
-					value: 2,
+					label: 'Regional',
+					value: 'EH-regional',
 				},
 			],
 		},
 		{
-			label: 'Group 2',
+			label: 'Western Hemisphere',
 			options: [
 				{
-					label: 'Option 3',
-					value: 3,
+					label: 'Global',
+					value: 'WH-global',
 				},
 				{
-					label: 'Option 4',
-					value: 4,
+					label: 'Regional',
+					value: 'WH-regional',
+				},
+			],
+		},
+		{
+			label: 'North America',
+			options: [
+				{
+					label: 'Regional',
+					value: 'NA-regional',
+				},
+				{
+					label: 'Subregional',
+					value: 'NA-subregional',
+				},
+				{
+					label: 'Local',
+					value: 'NA-local',
+				},
+			],
+		},
+		{
+			label: 'Alaska',
+			options: [
+				{
+					label: 'Regional',
+					value: 'AL-regional',
+				},
+				{
+					label: 'Subregional',
+					value: 'AL-subregional',
+				},
+				{
+					label: 'Local',
+					value: 'AL-local',
+				},
+			],
+		},
+		{
+			label: 'Hawaii',
+			options: [
+				{
+					label: 'Regional',
+					value: 'HA-regional',
+				},
+				{
+					label: 'Subregional',
+					value: 'HA-subregional',
+				},
+				{
+					label: 'Local',
+					value: 'HA-local',
 				},
 			],
 		},

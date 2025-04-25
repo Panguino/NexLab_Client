@@ -12,16 +12,33 @@ interface GroupOption {
 }
 
 interface SelectGroupedProps {
-	value: string | number | null // Adjust based on your use case
-	options: GroupOption[] // Array of options with label and value
-	onChange: (value: string | number | null) => void // Function to handle changes
-	placeholder?: string // Optional placeholder
-	optionsEmptyText?: string // Optional text when no options are available
+	value: string | number | null
+	options: GroupOption[]
+	onChange: (value: string | number | null) => void
+	placeholder?: string
+	optionsEmptyText?: string
 }
 
-const SelectGrouped: React.FC<SelectGroupedProps> = ({ value, options, onChange, placeholder = '', optionsEmptyText = 'No options' }) => {
+const SelectGrouped: React.FC<SelectGroupedProps> = ({
+	value,
+	options,
+	onChange,
+	placeholder = 'Select Option',
+	optionsEmptyText = 'No options',
+}) => {
 	const [open, setOpen] = useState(false)
+	const [simplifiedOptions, setSimplifiedOptions] = useState<Option[]>([])
 	const wrapperRef = useRef(null)
+
+	useEffect(() => {
+		const newOptions = []
+		options.forEach((group) => {
+			group.options.map((option) => {
+				newOptions.push(option)
+			})
+		})
+		setSimplifiedOptions(newOptions)
+	}, [options])
 
 	const handleClickOutside = (event) => {
 		if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -31,7 +48,7 @@ const SelectGrouped: React.FC<SelectGroupedProps> = ({ value, options, onChange,
 
 	const optionSelected = (event, selectedOption) => {
 		event.stopPropagation()
-		const selection = options.find((option) => option.value === selectedOption.value).value
+		const selection = simplifiedOptions.find((option) => option.value === selectedOption.value).value
 		onChange(selection)
 		setOpen(false)
 	}
@@ -44,21 +61,36 @@ const SelectGrouped: React.FC<SelectGroupedProps> = ({ value, options, onChange,
 	}, [])
 
 	useEffect(() => {
-		if (value && options) {
-			const foundValue = options.find((option) => option.value === value)?.value
+		if (value && simplifiedOptions) {
+			const foundValue = simplifiedOptions.find((option) => option.value === value)?.value
 			if (foundValue !== value) {
 				onChange(foundValue)
 			}
 		}
-	}, [value, options, onChange])
+	}, [value, simplifiedOptions, onChange])
 
-	const foundValue = options.find((option) => option.value === value)
+	const foundValue: any = options.reduce((result, group) => {
+		if (result) return result // If already found, skip further iterations
+		const option = group.options.find((opt) => opt.value === value)
+		if (option) {
+			return { group: group.label, option: option.label }
+		}
+		return null
+	}, null)
+
+	console.log('foundValue', foundValue)
 
 	return (
 		<div className={styles.SelectGrouped}>
 			<div className={styles.select} ref={wrapperRef} onClick={() => setOpen((prevOpen) => !prevOpen)}>
-				{!foundValue && placeholder && <label>{placeholder}</label>}
-				{foundValue && foundValue.label && <div className={styles.value}>{foundValue.label}</div>}
+				{foundValue && foundValue.group && foundValue.option ? (
+					<div className={styles.selectedValue}>
+						<b>{foundValue.group}</b>
+						<div>{foundValue.option}</div>
+					</div>
+				) : (
+					placeholder && <label>{placeholder}</label>
+				)}
 
 				<motion.div className={styles.arrow} animate={{ transform: `${open ? 'rotate(180deg)' : 'rotate(0deg)'}` }}>
 					<FontAwesomeIcon icon={faChevronDown} />
@@ -67,9 +99,14 @@ const SelectGrouped: React.FC<SelectGroupedProps> = ({ value, options, onChange,
 					(options.length ? (
 						<div className={styles.options}>
 							<ScrollArea>
-								{options.map((option, index) => (
-									<div className={styles.option} key={index} onClick={(event) => optionSelected(event, option)}>
-										{option.label}
+								{options.map(({ options: group, label }, index) => (
+									<div className={styles.group} key={index}>
+										<div className={styles.groupLabel}>{label}</div>
+										{group.map((option, index) => (
+											<div className={styles.option} key={index} onClick={(event) => optionSelected(event, option)}>
+												{option.label}
+											</div>
+										))}
 									</div>
 								))}
 							</ScrollArea>

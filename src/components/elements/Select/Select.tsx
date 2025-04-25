@@ -7,13 +7,13 @@ import styles from './Select.module.scss'
 
 export interface Option {
 	label: string
-	value: string | number
+	value: any
 }
 
 interface SelectProps {
 	value: string | number | null
 	options: Option[]
-	onChange: (value: string | number | null) => void
+	onChange: (value: any) => void
 	placeholder?: string
 	optionsEmptyText?: string
 }
