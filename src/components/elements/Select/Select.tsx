@@ -11,7 +11,7 @@ export interface Option {
 }
 
 interface SelectProps {
-	value: string | number | null
+	value: any
 	options: Option[]
 	onChange: (value: any) => void
 	placeholder?: string
