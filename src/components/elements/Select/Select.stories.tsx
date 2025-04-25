@@ -41,7 +41,7 @@ const TemplateFactory = () => {
 	return Template
 }
 
-export const Simple = TemplateFactory()
+export const Simple: any = TemplateFactory()
 Simple.args = {
 	options: [
 		{
