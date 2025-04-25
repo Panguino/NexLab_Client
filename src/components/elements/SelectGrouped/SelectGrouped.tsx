@@ -3,22 +3,23 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import styles from './Select.module.scss'
+import { Option } from '../Select/Select'
+import styles from './SelectGrouped.module.scss'
 
-export interface Option {
+interface GroupOption {
 	label: string
-	value: string | number
-}
-
-interface SelectProps {
-	value: string | number | null
 	options: Option[]
-	onChange: (value: string | number | null) => void
-	placeholder?: string
-	optionsEmptyText?: string
 }
 
-const Select: React.FC<SelectProps> = ({ value, options, onChange, placeholder = '', optionsEmptyText = 'No options' }) => {
+interface SelectGroupedProps {
+	value: string | number | null // Adjust based on your use case
+	options: GroupOption[] // Array of options with label and value
+	onChange: (value: string | number | null) => void // Function to handle changes
+	placeholder?: string // Optional placeholder
+	optionsEmptyText?: string // Optional text when no options are available
+}
+
+const SelectGrouped: React.FC<SelectGroupedProps> = ({ value, options, onChange, placeholder = '', optionsEmptyText = 'No options' }) => {
 	const [open, setOpen] = useState(false)
 	const wrapperRef = useRef(null)
 
@@ -54,7 +55,7 @@ const Select: React.FC<SelectProps> = ({ value, options, onChange, placeholder =
 	const foundValue = options.find((option) => option.value === value)
 
 	return (
-		<div className={styles.wrapper}>
+		<div className={styles.SelectGrouped}>
 			<div className={styles.select} ref={wrapperRef} onClick={() => setOpen((prevOpen) => !prevOpen)}>
 				{!foundValue && placeholder && <label>{placeholder}</label>}
 				{foundValue && foundValue.label && <div className={styles.value}>{foundValue.label}</div>}
@@ -83,4 +84,4 @@ const Select: React.FC<SelectProps> = ({ value, options, onChange, placeholder =
 	)
 }
 
-export default Select
+export default SelectGrouped
