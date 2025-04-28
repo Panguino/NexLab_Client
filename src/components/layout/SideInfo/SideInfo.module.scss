@@ -1,6 +1,33 @@
 .SideInfo {
-	width: 350px;
-	color: var(--color-grey18-grey2);
-	background-color: var(--color-grey2-grey18);
-	padding: 10px 20px 30px 20px;
+  width: 350px;
+  color: var(--color-grey4-grey2);
+  background-color: var(--color-blue7-grey18);
+}
+.sideInfoContent {
+  padding: 20px;
+  h2 {
+    font-family: var(--font-secondary);
+    color: var(--color-white-grey2);
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    margin: 0;
+  }
+  p {
+    color: var(--color-grey4-grey2);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  ul {
+    padding: 0;
+    margin: 0 0 30px;
+    li {
+      font-size: 14px;
+      margin: 10px 20px;
+      padding: 0;
+    }
+  }
 }

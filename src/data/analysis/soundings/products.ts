@@ -1,23 +1,24 @@
-const PRODUCT_SKEWT = 'skewt'
-const PRODUCT_STUVE = 'stuve'
-const PRODUCT_SHARPPY = 'sharppy'
-const PRODUCT_TEXT = 'text'
-const PRODUCT_HODO = 'hodo'
+export const SOUNDING_PRODUCT_SKEWT = 'skewt'
+export const SOUNDING_PRODUCT_STUVE = 'stuve'
+export const SOUNDING_PRODUCT_SHARPPY = 'sharppy'
+export const SOUNDING_PRODUCT_TEXT = 'text'
+export const SOUNDING_PRODUCT_HODO = 'hodo'
+export const SOUNDING_PRODUCT_DEFAULT = SOUNDING_PRODUCT_SKEWT
 
 export const ALL_SOUNDING_PRODUCTS = {
-	[PRODUCT_SKEWT]: {
+	[SOUNDING_PRODUCT_SKEWT]: {
 		label: 'Skew-T Diagram',
 	},
-	[PRODUCT_STUVE]: {
+	[SOUNDING_PRODUCT_STUVE]: {
 		label: 'STUVE Diagram',
 	},
-	[PRODUCT_SHARPPY]: {
+	[SOUNDING_PRODUCT_SHARPPY]: {
 		label: 'SharpPy Sounding Analysis',
 	},
-	[PRODUCT_TEXT]: {
+	[SOUNDING_PRODUCT_TEXT]: {
 		label: 'Sounding Text',
 	},
-	[PRODUCT_HODO]: {
+	[SOUNDING_PRODUCT_HODO]: {
 		label: 'Hodograph',
 	},
 }

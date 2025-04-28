@@ -1,4 +1,4 @@
-import { IForecastTile } from '@/components/blocks/CampusWeatherDetail/ForecastTiles/ForecastTile/ForecastTile'
+import { IForecastTile } from '@/components/elements/ForecastTile/ForecastTile'
 import { celsiusToFahrenheit, getCompassDirection, kphToMph } from '@/util/unitConversion'
 import { convertIconName } from './getCampusWeatherIcon'
 

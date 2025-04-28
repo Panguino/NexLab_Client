@@ -1,33 +1,41 @@
 import { ALASKA_SOUNDING_SITES, CANADA_SOUNDING_SITES, CONUS_SOUNDING_SITES, MEXICO_SOUNDING_SITES } from './sites'
 
-const REGION_CONUS = 'conus'
-const REGION_ALASKA = 'ak'
-const REGION_CANADA = 'can'
-const REGION_MEXICO = 'mex'
+export const SOUNDING_REGION_CONUS = 'conus'
+export const SOUNDING_REGION_ALASKA = 'ak'
+export const SOUNDING_REGION_CANADA = 'can'
+export const SOUNDING_REGION_MEXICO = 'mex'
+export const SOUNDING_REGION_DEFAULT = SOUNDING_REGION_CONUS
 
-export const ALL_SOUNDING_REGIONS = {
-	[REGION_CONUS]: {
+interface SoundingRegion {
+	label: string
+	rotate: [number, number]
+	scale: number
+	sites: string[]
+}
+
+export const ALL_SOUNDING_REGIONS: { [key: string]: SoundingRegion } = {
+	[SOUNDING_REGION_CONUS]: {
 		label: 'Continental U.S.',
 		rotate: [98, -40],
 		scale: 2,
-		sites: CONUS_SOUNDING_SITES,
+		sites: Object.keys(CONUS_SOUNDING_SITES).map((key) => key),
 	},
-	[REGION_ALASKA]: {
+	[SOUNDING_REGION_ALASKA]: {
 		label: 'Alaska',
 		rotate: [153, -63],
 		scale: 3,
-		sites: ALASKA_SOUNDING_SITES,
+		sites: Object.keys(ALASKA_SOUNDING_SITES).map((key) => key),
 	},
-	[REGION_CANADA]: {
+	[SOUNDING_REGION_CANADA]: {
 		label: 'Canada',
-		rotate: [-100.88, 60.02],
+		rotate: [100.88, -60.02],
 		scale: 2,
-		sites: CANADA_SOUNDING_SITES,
+		sites: Object.keys(CANADA_SOUNDING_SITES).map((key) => key),
 	},
-	[REGION_MEXICO]: {
+	[SOUNDING_REGION_MEXICO]: {
 		label: 'Mexico & Caribbean',
-		rotate: [-87.78, 22.92],
+		rotate: [87.78, -22.92],
 		scale: 2,
-		sites: MEXICO_SOUNDING_SITES,
+		sites: Object.keys(MEXICO_SOUNDING_SITES).map((key) => key),
 	},
 }
