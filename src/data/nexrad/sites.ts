@@ -205,6 +205,8 @@ export const SITE_VTX = 'VTX'
 export const SITE_VWX = 'VWX'
 export const SITE_YUX = 'YUX'
 
+export const DEFAULT_NEXRAD_SITE = SITE_LOT
+
 export const NEXRAD_SITES = {
 	[SITE_ABC]: {
 		name: 'Bethel',

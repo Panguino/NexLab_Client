@@ -13,7 +13,7 @@ const NexradAnimatorSettings = () => {
 		<div className={styles.NexradAnimatorSettings}>
 			<p>Number Of Frames (1-200)</p>
 			<RangeInput minValue={1} maxValue={200} value={nexradNumberOfFrames} onChange={(value) => setNexradNumberOfFrames(value)} />
-			<p>Animation Speed</p>
+			<p>Animation Speed (slow/fast)</p>
 			<RangeInput minValue={0.01} maxValue={1} value={nexradFrameRate} unitStep={0.01} onChange={(value) => setNexradFrameRate(value)} />
 		</div>
 	)

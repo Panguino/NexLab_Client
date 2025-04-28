@@ -19,9 +19,10 @@ interface NexradAnimatorProps {
 }
 
 const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
-	const { productId, siteId } = useParams()
+	const { nexradProductId: productId, nexradSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
+	const nexradFrameRate = useRootStore.use.nexradFrameRate()
 	const [wrapperRef, { width: width, height: height }] = useDimensions(1)
 	const [nexradData, setNexradData] = useState([])
 

@@ -6,6 +6,8 @@ export const NEXRAD_REGION_HAWAII_ID = 'HAWAII'
 export const NEXRAD_REGION_PUERTO_ID = 'PUERTO'
 export const NEXRAD_REGION_GUAM_ID = 'GUAM'
 
+export const DEFAULT_NEXRAD_REGION = NEXRAD_REGION_CONUS_ID
+
 interface NexradRegion {
 	label: string
 	rotate: [number, number]

@@ -3,6 +3,8 @@ import { ZustandStateSlice } from './useRootStore'
 export interface INexradSlice {
 	nexradNumberOfFrames: number
 	setNexradNumberOfFrames: (frames: number) => void
+	nexradFrameRate: number
+	setNexradFrameRate: (frameRate: number) => void
 }
 
 export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
