@@ -34,6 +34,8 @@ export const NEXRAD_PRODUCT_GROUP_SPECIFIC_DIFFERENTIAL_PHASE = 'Specific Differ
 export const NEXRAD_PRODUCT_GROUP_DIFFERENTIAL_REFLECTIVITY = 'Differential Reflectivity'
 export const NEXRAD_PRODUCT_GROUP_OTHER_PRODUCTS = 'Other Products'
 
+export const DEFAULT_NEXRAD_PRODUCT = NEXRAD_PRODUCT_BASEREF_0_5
+
 export const NEXRAD_GROUPS = {
 	[NEXRAD_PRODUCT_GROUP_BASE_REFLECTIVITY]: {
 		label: 'Base Reflectivity',
