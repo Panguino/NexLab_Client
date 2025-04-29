@@ -5,7 +5,20 @@ import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import styles from './Select.module.scss'
 
-const Select = ({ value, options, onChange, placeholder = '', optionsEmptyText = 'No options' }) => {
+export interface Option {
+	label: string
+	value: any
+}
+
+interface SelectProps {
+	value: any
+	options: Option[]
+	onChange: (value: any) => void
+	placeholder?: string
+	optionsEmptyText?: string
+}
+
+const Select: React.FC<SelectProps> = ({ value, options, onChange, placeholder = '', optionsEmptyText = 'No options' }) => {
 	const [open, setOpen] = useState(false)
 	const wrapperRef = useRef(null)
 
