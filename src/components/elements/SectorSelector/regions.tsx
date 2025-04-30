@@ -5,6 +5,12 @@ export const regions = {
 		rotate: [98, -40],
 		scale: 2,
 	},
+	NAMER: {
+		label: 'North America',
+		id: 'NAMER',
+		rotate: [98, -40],
+		scale: 1.25,
+	},
 	ALASKA: {
 		label: 'Alaska',
 		id: 'ALASKA',
