@@ -10,8 +10,8 @@ import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import NexradAnimatorSettings from '../_animatorSettingPanels/NexradAnimatorSettings/NexradAnimatorSettings'
-import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
+import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
+import NexradAnimatorSettings from '../../_animatorSettingPanels/NexradAnimatorSettings/NexradAnimatorSettings'
 import styles from './NexradAnimator.module.scss'
 
 interface NexradAnimatorProps {

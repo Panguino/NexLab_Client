@@ -1,5 +1,5 @@
 import { getDataPageContent } from '@/apollo/strapi/getDataPageContent'
-import NexradAnimator from '@/components/blocks/NexradAnimator/NexradAnimator'
+import NexradAnimator from '@/components/blocks/_animators/NexradAnimator/NexradAnimator'
 import { getDataPageIdByProductId } from '@/util/weatherDataPageLookup'
 
 const Page = async ({ params }) => {
