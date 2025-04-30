@@ -3,37 +3,37 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import useDimensions from '@/hooks/useDimensions'
-import { getIsentropicData } from '@/util/dataCalls/analysis/query-isentropic'
+import { getUpperAirData } from '@/util/dataCalls/analysis/query-upper-air'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
-import styles from './IsentropicAnimator.module.scss'
+import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
+import styles from './UpperAirAnimator.module.scss'
 
-interface IsentropicAnimatorProps {
+interface UpperAirAnimatorProps {
 	productInfo: ProductInfoProps
 }
 
-const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) => {
-	const { isentropicProductId: productId } = useParams()
+const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
+	const { upperairLevelId: levelId, upperairProductId: productId, upperairSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
-	const [IsentropicData, setIsentropicData] = useState([])
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(8 / 6, true)
+	const [upperAirData, setUpperAirData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
-			const data = await getIsentropicData(productId)
-			setIsentropicData(data)
+			const data = await getUpperAirData(siteId, levelId, productId)
+			setUpperAirData(data)
 		}
 		getData()
-	}, [productId])
+	}, [siteId, levelId, productId])
 
 	return (
-		<div className={styles.IsentropicAnimatorContainer}>
-			<div className={styles.IsentropicAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
-					<Animator frames={IsentropicData} />
+		<div className={styles.upperAirAnimatorContainer}>
+			<div className={styles.upperAirAnimator} ref={wrapperRef}>
+				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
+					<Animator frames={upperAirData} ratio={8 / 6} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
@@ -54,4 +54,4 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 	)
 }
 
-export default IsentropicAnimator
+export default UpperAirAnimator

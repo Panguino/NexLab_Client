@@ -1,5 +1,5 @@
 import { getDataPageContent } from '@/apollo/strapi/getDataPageContent'
-import SoundingAnimator from '@/components/blocks/SoundingAnimator/SoundingAnimator'
+import SoundingAnimator from '@/components/blocks/_animators/SoundingAnimator/SoundingAnimator'
 import { getSoundingPageIdByProductId } from '@/util/weatherDataPageLookup'
 const Page = async ({ params }) => {
 	const { soundingProductId } = params

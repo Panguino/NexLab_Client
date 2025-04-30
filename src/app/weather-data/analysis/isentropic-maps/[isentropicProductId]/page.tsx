@@ -1,5 +1,5 @@
 import { getDataPageContent } from '@/apollo/strapi/getDataPageContent'
-import IsentropicAnimator from '@/components/blocks/IsentropicAnimator/IsentropicAnimator'
+import IsentropicAnimator from '@/components/blocks/_animators/IsentropicAnimator/IsentropicAnimator'
 import { getIsentropicPageIdByProductId } from '@/util/weatherDataPageLookup'
 const Page = async ({ params }) => {
 	const { isentropicProductId } = params

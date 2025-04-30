@@ -3,37 +3,39 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import useDimensions from '@/hooks/useDimensions'
-import { getRapMesoData } from '@/util/dataCalls/analysis/query-rap-mesoanalysis'
+import { useRootStore } from '@/store/useRootStore'
+import { getSoundingData } from '@/util/dataCalls/analysis/query-soundings'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
-import styles from './RAPMesoAnimator.module.scss'
+import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
+import styles from './SoundingAnimator.module.scss'
 
-interface RAPMesoAnimatorProps {
+interface SoundingAnimatorProps {
 	productInfo: ProductInfoProps
 }
 
-const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
-	const { rapmesoProductId: productId } = useParams()
+const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
+	const { soundingProductId: productId, soundingSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
-	const [RAPMesoData, setRAPMesoData] = useState([])
+	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(8 / 6, true)
+	const [soundingData, setSoundingData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
-			const data = await getRapMesoData(productId)
-			setRAPMesoData(data)
+			const data = await getSoundingData(siteId, productId, soundingNumberOfFrames)
+			setSoundingData(data)
 		}
 		getData()
-	}, [productId])
+	}, [siteId, productId, soundingNumberOfFrames])
 
 	return (
-		<div className={styles.RAPMesoAnimatorContainer}>
-			<div className={styles.RAPMesoAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
-					<Animator frames={RAPMesoData} />
+		<div className={styles.soundingAnimatorContainer}>
+			<div className={styles.soundingAnimator} ref={wrapperRef}>
+				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
+					<Animator frames={soundingData} ratio={8 / 6} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
@@ -54,4 +56,4 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 	)
 }
 
-export default RAPMesoAnimator
+export default SoundingAnimator

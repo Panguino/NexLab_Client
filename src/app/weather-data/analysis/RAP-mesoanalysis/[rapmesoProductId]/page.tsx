@@ -1,5 +1,5 @@
 import { getDataPageContent } from '@/apollo/strapi/getDataPageContent'
-import RAPMesoAnimator from '@/components/blocks/RAPMesoAnimator/RAPMesoAnimator'
+import RAPMesoAnimator from '@/components/blocks/_animators/RAPMesoAnimator/RAPMesoAnimator'
 import { getRAPMesoPageIdByProductId } from '@/util/weatherDataPageLookup'
 const Page = async ({ params }) => {
 	const { rapmesoProductId } = params
