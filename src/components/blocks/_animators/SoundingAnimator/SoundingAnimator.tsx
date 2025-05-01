@@ -20,13 +20,15 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	const { soundingProductId: productId, soundingSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(8 / 6, true)
+	const [ratio, setRatio] = useState(1)
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [soundingData, setSoundingData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
 			const data = await getSoundingData(siteId, productId, soundingNumberOfFrames)
-			setSoundingData(data)
+			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setSoundingData(data.frames)
 		}
 		getData()
 	}, [siteId, productId, soundingNumberOfFrames])
@@ -35,7 +37,7 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 		<div className={styles.soundingAnimatorContainer}>
 			<div className={styles.soundingAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={soundingData} ratio={8 / 6} />
+					<Animator frames={soundingData} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

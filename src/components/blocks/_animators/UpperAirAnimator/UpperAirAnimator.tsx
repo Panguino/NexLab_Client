@@ -18,13 +18,15 @@ interface UpperAirAnimatorProps {
 const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 	const { upperairLevelId: levelId, upperairProductId: productId, upperairSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(8 / 6, true)
+	const [ratio, setRatio] = useState(1)
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [upperAirData, setUpperAirData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
 			const data = await getUpperAirData(siteId, levelId, productId)
-			setUpperAirData(data)
+			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setUpperAirData(data.frames)
 		}
 		getData()
 	}, [siteId, levelId, productId])
@@ -33,7 +35,7 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 		<div className={styles.upperAirAnimatorContainer}>
 			<div className={styles.upperAirAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={upperAirData} ratio={8 / 6} />
+					<Animator frames={upperAirData} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

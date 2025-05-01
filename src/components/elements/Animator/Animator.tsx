@@ -134,7 +134,7 @@ export const Animator = ({
 							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
 						>
 							<AnimatorImageMachine
-								frames={frames}
+								frames={frames || []}
 								currentFrame={currentFrame}
 								loadedFrames={loadedFrames}
 								setLoadedFrames={setLoadedFrames}
