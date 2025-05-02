@@ -7,7 +7,7 @@ import SidebarWrapper from '@/components/layout/SidebarWrapper/SidebarWrapper'
 
 export default async function Layout({ children }) {
 	const campusLinks = await getCampusLinks()
-
+	console.log('campusLinks', campusLinks)
 	return (
 		<SidebarWrapper>
 			<SidebarNavigation>

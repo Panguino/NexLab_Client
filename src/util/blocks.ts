@@ -18,9 +18,9 @@ const convertTripData = (TripsData) => {
 	})
 }
 const convertDegreeData = (degreesData) => {
-	return degreesData.data.map((degree) => {
+	return degreesData.map((degree) => {
 		console.log('degree', degree)
-		const { Title, Buttons, Description, Schools } = degree.attributes
+		const { Title, Buttons, Description, Schools } = degree
 		return {
 			title: Title,
 			body: Description,
@@ -49,7 +49,7 @@ export const convertStrapiBlocksData = (blocksData) => {
 					heading: blockData.heading,
 					body: blockData.body,
 					buttons: blockData.Buttons.map((buttonData) => convertButton(buttonData)),
-					image: blockData.Image?.data?.attributes?.url || null,
+					image: blockData.Image?.url || null,
 				}
 			case 'ComponentBlocksInfoWithCloudImage':
 				return {
@@ -58,20 +58,20 @@ export const convertStrapiBlocksData = (blocksData) => {
 					heading: blockData.heading,
 					body: blockData.body,
 					buttons: blockData.Buttons.map((buttonData) => convertButton(buttonData)),
-					image: blockData.Image?.data?.attributes?.url || null,
+					image: blockData.Image?.url || null,
 				}
 			case 'ComponentBlocksTwoPanelIconInfo':
 				return {
 					type: 'TwoPanelIconInfo',
 					panels: blockData.iconInfoPanel.map((panel) => {
 						return {
-							icon: panel.Icon?.data?.attributes?.url || null,
+							icon: panel.Icon?.url || null,
 							heading: panel.heading,
 							body: panel.body,
 							buttonLabel: panel.buttonLabel,
 							buttonUrl: panel.buttonUrl,
 							buttonTarget: panel.ButtonTarget,
-							backgroundImage: panel.backgroundImage?.data?.attributes?.url || null,
+							backgroundImage: panel.backgroundImage?.url || null,
 						}
 					}),
 				}

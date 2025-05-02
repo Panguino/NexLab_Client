@@ -47,7 +47,7 @@ const Page = async ({ params }: NextPageProps) => {
 		<ScrollArea removeDisplayTable>
 			<div style={{ padding: 30 }}>
 				<CampusWeatherDetail>
-					<CampusOverview campusImage={campusData.banner} currentConditions={currentConditions} radarImageSequence={radarData} />
+					<CampusOverview campusImage={campusData.banner} currentConditions={currentConditions} radarImageSequence={radarData.frames} />
 					<ForecastTiles tileData={tileData} />
 					<TextForecastPanel forecastData={textForecastPanelData} />
 				</CampusWeatherDetail>

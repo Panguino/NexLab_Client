@@ -9,7 +9,7 @@ const Page = async ({ params }) => {
 		<UpperAirAnimator
 			productInfo={{
 				info: pageData.productInfo || pageData.SEO.metaTitle,
-				image: pageData.ProductImage?.data?.attributes?.url || pageData.SEO.metaImage?.data?.attributes?.url,
+				image: pageData.ProductImage?.url || pageData.SEO.metaImage?.url,
 				description: pageData.productDescription || pageData.SEO.metaDescription,
 			}}
 		/>

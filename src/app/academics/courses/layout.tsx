@@ -23,15 +23,13 @@ export default function Layout({ children }) {
 				<ScrollArea>
 					<div style={{ padding: '10px 20px 30px 20px' }}>
 						{courseCategories.map((courseCategory, index) => {
-							const { Name, courses } = courseCategory.attributes
-							const coursesData = courses.data
+							const { Name, courses } = courseCategory
 							// only return category if it has courses inside it
-							if (coursesData.length > 0) {
+							if (courses.length > 0) {
 								return (
 									<SidebarGroup key={index} title={Name}>
-										{coursesData.map((course, index) => {
-											const { CourseID } = course.attributes
-											return <SidebarLink key={index} linkUrl={`/academics/courses/${course.id}`} name={`Earth ${CourseID}`} />
+										{courses.map(({ CourseID, documentId }, index) => {
+											return <SidebarLink key={index} linkUrl={`/academics/courses/${documentId}`} name={`Earth ${CourseID}`} />
 										})}
 									</SidebarGroup>
 								)

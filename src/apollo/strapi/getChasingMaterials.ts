@@ -8,44 +8,32 @@ export const getChasingMaterials = async () => {
 		query: gql`
 			query {
 				stormChasingMaterialsPage {
-					data {
-						attributes {
-							Title
-							body
-							leftGroupTitle
-							leftGroupMaterials {
-								id
-								Name
-								Materials {
-									id
-									Name
-									File {
-										data {
-											attributes {
-												url
-											}
-										}
-									}
-									Link
-								}
+					Title
+					body
+					leftGroupTitle
+					leftGroupMaterials {
+						id
+						Name
+						Materials {
+							id
+							Name
+							File {
+								url
 							}
-							rightGroupTitle
-							rightGroupMaterials {
-								id
-								Name
-								Materials {
-									id
-									Name
-									File {
-										data {
-											attributes {
-												url
-											}
-										}
-									}
-									Link
-								}
+							Link
+						}
+					}
+					rightGroupTitle
+					rightGroupMaterials {
+						id
+						Name
+						Materials {
+							id
+							Name
+							File {
+								url
 							}
+							Link
 						}
 					}
 				}
@@ -53,5 +41,5 @@ export const getChasingMaterials = async () => {
 		`,
 	})
 
-	return convertStrapiChasingMaterialsData(getChasingMaterialsResponse.data.stormChasingMaterialsPage.data)
+	return convertStrapiChasingMaterialsData(getChasingMaterialsResponse.data.stormChasingMaterialsPage)
 }

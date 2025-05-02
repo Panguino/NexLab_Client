@@ -19,36 +19,26 @@ const Page = async () => {
 		query: gql`
 			query {
 				campuses {
-					data {
-						id
-						attributes {
-							Name
-							Latitude
-							Longitude
-							Logo {
-								data {
-									id
-									attributes {
-										url
-									}
-								}
-							}
-							uniqueWeatherConditions
-						}
+					documentId
+					Name
+					Longitude
+					Latitude
+					Logo {
+						url
 					}
+					uniqueWeatherConditions
 				}
 			}
 		`,
 	})
-	// console.log(response.data.campuses.data)
-	const campuses = response.data.campuses.data
+	const campuses = response.data.campuses
 	let campusWeather = []
 
 	const fetchSources = async () => {
-		const source_promises = campuses.map(async (campus) => {
-			const campusAPIdata = await getAPIdataFromLocation(campus.attributes.Latitude, campus.attributes.Longitude)
+		const source_promises = campuses.map(async ({ Latitude, Longitude, uniqueWeatherConditions, documentId: id }) => {
+			const campusAPIdata = await getAPIdataFromLocation(Latitude, Longitude)
 			let current_conditions = null
-			if (campus.attributes.uniqueWeatherConditions === true) {
+			if (uniqueWeatherConditions === true) {
 				// cod
 				current_conditions = await getCODweatherConditions()
 			} else {
@@ -63,7 +53,7 @@ const Page = async () => {
 				humidity: current_conditions.relativeHumidity,
 				icon: current_conditions.icon,
 			}
-			return { id: campus.id, conditions: widgetConditions, forecast: forecastTileData.slice(0, 2) }
+			return { id: id, conditions: widgetConditions, forecast: forecastTileData.slice(0, 2) }
 		})
 
 		campusWeather = await Promise.all(source_promises)
@@ -99,9 +89,8 @@ const Page = async () => {
 				<ScrollArea>
 					<WidgetWrapper>
 						{campuses.map((campus) => {
-							const weatherData = campusWeather.find((weather) => weather.id === campus.id)
-							console.log(weatherData)
-							return <CampusWidget key={campus.id} campusDetails={campus} weatherData={weatherData} />
+							const weatherData = campusWeather.find((weather) => weather.id === campus.documentId)
+							return <CampusWidget key={campus.documentId} campusDetails={campus} weatherData={weatherData} />
 						})}
 					</WidgetWrapper>
 					<Footer />

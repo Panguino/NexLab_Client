@@ -10,7 +10,7 @@ const Page = async () => {
 
 	return (
 		<ScrollArea>
-			<FAQs title={faqOverview.attributes.Title} body={faqOverview.attributes.Body} faqs={faqs} />
+			<FAQs title={faqOverview.Title} body={faqOverview.Body} faqs={faqs} />
 			<Footer />
 		</ScrollArea>
 	)
