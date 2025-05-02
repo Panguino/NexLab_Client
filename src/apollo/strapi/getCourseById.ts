@@ -6,30 +6,22 @@ export const getCourseById = async (id: string) => {
 	const courseResponse = await getClient().query({
 		query: gql`
 			query getCourseById{
-				course(id: ${id}) {
-					data {
+				course(documentId: "${id}") {
+					documentId						
+					Title
+					CourseID
+					Description
+					MaterialGroup {
 						id
-						attributes {							
-							Title
-							CourseID
-							Description
-							MaterialGroup {
-								id
-								Name
-								Materials {
-									id
-									Name
-									Link
-									File {
-										data {
-											attributes {
-												url
-												size
-												ext
-											}
-										}
-									}
-								}
+						Name
+						Materials {
+							id
+							Name
+							Link
+							File {
+								url
+								size
+								ext
 							}
 						}
 					}
@@ -37,5 +29,5 @@ export const getCourseById = async (id: string) => {
 			}
 		`,
 	})
-	return courseResponse.data.course.data.attributes
+	return courseResponse.data.course
 }

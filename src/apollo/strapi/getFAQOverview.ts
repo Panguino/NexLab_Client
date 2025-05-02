@@ -7,16 +7,12 @@ export const getFAQOverview = async () => {
 		query: gql`
 			query {
 				faqOverview {
-					data {
-						attributes {
-							Title
-							Body
-						}
-					}
+					Title
+					Body
 				}
 			}
 		`,
 	})
 
-	return getFAQOverviewResponse.data.faqOverview.data
+	return getFAQOverviewResponse.data.faqOverview
 }

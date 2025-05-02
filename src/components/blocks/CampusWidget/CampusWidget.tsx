@@ -11,8 +11,8 @@ export const CampusWidget = ({ campusDetails, weatherData }) => {
 	return (
 		<div className={styles.widgetContainer}>
 			<div className={styles.campusTitle}>
-				{campusDetails.attributes.Name}
-				<img src={campusDetails.attributes.Logo.data.attributes.url} alt={campusDetails.attributes.Name} />
+				{campusDetails.Name}
+				<img src={campusDetails.Logo.url} alt={campusDetails.Name} />
 			</div>
 			<div className={styles.conditionsContainer}>
 				<Icon />
@@ -43,7 +43,7 @@ export const CampusWidget = ({ campusDetails, weatherData }) => {
 				))}
 			</div>
 			<div className={styles.buttonContainer}>
-				<a href={`/campus-weather/${campusDetails.id}`} target="_self">
+				<a href={`/campus-weather/${campusDetails.documentId}`} target="_self">
 					More Details
 				</a>
 			</div>
