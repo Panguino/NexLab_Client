@@ -7,23 +7,20 @@ export const getCampusLinks = async () => {
 		query: gql`
 			query {
 				campusweatherLink {
-					data {
-						attributes {
-							LinkGroup {
-								id
-								Heading
-								Links {
-									id
-									text
-									url
-									target
-								}
-							}
+					LinkGroup {
+						id
+						Heading
+						Links {
+							id
+							target
+							text
+							url
 						}
 					}
 				}
 			}
 		`,
 	})
-	return campusLinksResponse.data.campusweatherLink.data.attributes.LinkGroup
+	console.log(campusLinksResponse)
+	return campusLinksResponse.data.campusweatherLink.LinkGroup
 }

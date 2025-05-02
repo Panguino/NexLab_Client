@@ -7,23 +7,15 @@ export const getCourseCategories = async () => {
 		query: gql`
 			query getCourseCategories {
 				courseCategories {
-					data {
-						id
-						attributes {
-							Name
-							courses {
-								data {
-									id
-									attributes {
-										CourseID
-									}
-								}
-							}
-						}
+					documentId
+					Name
+					courses {
+						documentId
+						CourseID
 					}
 				}
 			}
 		`,
 	})
-	return response.data.courseCategories.data
+	return response.data.courseCategories
 }

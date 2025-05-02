@@ -6,49 +6,33 @@ export const getDataPageContent = async (id) => {
 	const getDataPageContentResponse = await getClient().query({
 		query: gql`
 			query {
-				page(id: "${id}") {
-					data {
-                        attributes {
-                            SEO {
-                                metaTitle
-                                metaDescription
-                                metaImage {
-                                    data {
-                                        attributes {
-                                            url
-                                        }
-                                    }
-                                }
-                                metaSocial {
-                                    id
-                                    socialNetwork
-                                    title
-                                    description
-                                    image {
-                                        data {
-                                            attributes {
-                                                url
-                                            }
-                                        }
-                                    }
-                                }
-                                keywords
-                                metaRobots
-                            }
-                            productInfo
-                            ProductImage {
-                                data {
-                                    attributes {
-                                        url
-                                    }
-                                }
-                            }
-                            productDescription
+				page(documentId: "${id}") {
+                    SEO {
+                        metaTitle
+                        metaDescription
+                        metaImage {
+                            url
                         }
-					}
+                        metaSocial {
+                            id
+                            socialNetwork
+                            title
+                            description
+                            image {
+                                url
+                            }
+                        }
+                        keywords
+                        metaRobots
+                    }
+                    productInfo
+                    ProductImage {
+                        url
+                    }
+                    productDescription
 				}
 			}
 		`,
 	})
-	return getDataPageContentResponse.data.page.data.attributes
+	return getDataPageContentResponse.data.page
 }

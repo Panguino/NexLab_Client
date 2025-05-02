@@ -1,10 +1,10 @@
 export const convertStrapiChasingMaterialsData = (data) => {
 	return {
-		title: data.attributes.Title,
-		body: data.attributes.body,
-		leftGroupTitle: data.attributes.leftGroupTitle,
-		rightGroupTitle: data.attributes.rightGroupTitle,
-		leftGroupMaterials: data.attributes.leftGroupMaterials.map((material) => {
+		title: data.Title,
+		body: data.body,
+		leftGroupTitle: data.leftGroupTitle,
+		rightGroupTitle: data.rightGroupTitle,
+		leftGroupMaterials: data.leftGroupMaterials.map((material) => {
 			return {
 				id: material.id,
 				name: material.Name,
@@ -12,13 +12,13 @@ export const convertStrapiChasingMaterialsData = (data) => {
 					return {
 						id: material.id,
 						name: material.Name,
-						file: material.File?.data?.attributes?.url || '',
+						file: material.File?.url || '',
 						link: material.Link,
 					}
 				}),
 			}
 		}),
-		rightGroupMaterials: data.attributes.rightGroupMaterials.map((material) => {
+		rightGroupMaterials: data.rightGroupMaterials.map((material) => {
 			return {
 				id: material.id,
 				name: material.Name,
@@ -26,7 +26,7 @@ export const convertStrapiChasingMaterialsData = (data) => {
 					return {
 						id: material.id,
 						name: material.Name,
-						file: material.File?.data?.attributes?.url || '',
+						file: material.File?.url || '',
 						link: material.Link,
 					}
 				}),

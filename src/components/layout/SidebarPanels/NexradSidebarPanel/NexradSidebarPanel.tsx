@@ -5,9 +5,9 @@ import Select from '@/components/elements/Select/Select'
 import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
-import { ALL_NEXRAD_GROUPS, NEXRAD_GROUPS, NEXRAD_PRODUCTS } from '@/data/nexrad/products'
-import { NEXRAD_REGIONS } from '@/data/nexrad/regions'
-import { NEXRAD_SITES } from '@/data/nexrad/sites'
+import { ALL_NEXRAD_GROUPS, DEFAULT_NEXRAD_PRODUCT, NEXRAD_GROUPS, NEXRAD_PRODUCTS } from '@/data/nexrad/products'
+import { DEFAULT_NEXRAD_REGION, NEXRAD_REGIONS } from '@/data/nexrad/regions'
+import { DEFAULT_NEXRAD_SITE, NEXRAD_SITES } from '@/data/nexrad/sites'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -21,7 +21,16 @@ const NexradSidebarPanel = () => {
 	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
-	const { productId, siteId, regionId } = useParams()
+	const { nexradProductId: productId, nexradSiteId: siteId, nexradRegionId: regionId } = useParams()
+
+	useEffect(() => {
+		if (!NEXRAD_PRODUCTS[productId as string] || !NEXRAD_REGIONS[regionId as string] || !NEXRAD_SITES[siteId as string]) {
+			console.log('Invalid productId:', NEXRAD_PRODUCTS[productId as string])
+			console.log('Invalid regionId:', NEXRAD_REGIONS[regionId as string])
+			console.log('Invalid siteId:', NEXRAD_SITES[siteId as string])
+			router.push(`/weather-data/nexrad-dual-pol-radar/${DEFAULT_NEXRAD_PRODUCT}/${DEFAULT_NEXRAD_REGION}/${DEFAULT_NEXRAD_SITE}`)
+		}
+	}, [productId, regionId, siteId, router])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
@@ -31,6 +40,7 @@ const NexradSidebarPanel = () => {
 	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
 
 	useEffect(() => {
+		if (!regionId) return
 		const region = NEXRAD_REGIONS[regionId as string]
 		const newD3config = {
 			rotate: region.rotate,
@@ -49,34 +59,15 @@ const NexradSidebarPanel = () => {
 	const handleRegionChange = (newRegionId) => {
 		router.push(`/weather-data/nexrad-dual-pol-radar/${productId}/${newRegionId}/${siteId}`)
 		openSectorSelectorPanel()
-
-		/*
-
-		 .replace(
-        {
-          pathname: router.pathname,
-          query: {
-            ...newQuery,
-            stats: newStatsParam,
-            view: e.target.value as string
-          }
-        },
-        undefined,
-        { shallow: true }
-      )
-      .then(() => {
-        mpEventFilterChange('view', e.target.value as string);
-      });
-
-	  */
 	}
 
 	const regionOptions = Object.keys(NEXRAD_REGIONS).map((regionId) => {
 		return { value: regionId, label: NEXRAD_REGIONS[regionId].label }
 	})
-	const productsArray = NEXRAD_SITES[siteId as string].products
+	const productsArray = NEXRAD_SITES[siteId as string]?.products
 
 	const transformData = (productsArray, allNexradGroups, nexradGroups, nexradProducts, NEXRAD_SITES, nexradSite) => {
+		if (!productsArray) return []
 		const transformedData = allNexradGroups.map((groupId) => {
 			const group = nexradGroups[groupId]
 			const products = productsArray
@@ -105,7 +96,7 @@ const NexradSidebarPanel = () => {
 			<div className={styles.NexradSidebarPanel}>
 				<div className={styles.options}>
 					<Select value={regionId} options={regionOptions} onChange={handleRegionChange} />
-					<Button onClick={openSectorSelectorPanel} label={`Site:  ${siteId} - ${NEXRAD_SITES[siteId as string].name}`} />
+					<Button onClick={openSectorSelectorPanel} label={`Site:  ${siteId} - ${NEXRAD_SITES[siteId as string]?.name}`} />
 				</div>
 				{panelGroupedProducts.map(({ groupId, label, sublabel, columns, products }) => (
 					<SidebarGroup key={groupId} title={label} extraInfo={sublabel && `(${sublabel})`}>

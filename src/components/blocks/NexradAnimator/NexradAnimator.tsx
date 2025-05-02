@@ -1,6 +1,7 @@
 'use client'
 
 import { Animator } from '@/components/elements/Animator/Animator'
+import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
@@ -9,6 +10,7 @@ import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+import NexradAnimatorSettings from '../_animatorSettingPanels/NexradAnimatorSettings/NexradAnimatorSettings'
 import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
 import styles from './NexradAnimator.module.scss'
 
@@ -17,9 +19,10 @@ interface NexradAnimatorProps {
 }
 
 const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
-	const { productId, siteId } = useParams()
+	const { nexradProductId: productId, nexradSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
+	const nexradFrameRate = useRootStore.use.nexradFrameRate()
 	const [wrapperRef, { width: width, height: height }] = useDimensions(1)
 	const [nexradData, setNexradData] = useState([])
 
@@ -35,7 +38,15 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 		<div className={styles.nexradAnimatorContainer}>
 			<div className={styles.nexradAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
-					<Animator frames={nexradData} />
+					<Animator
+						frames={nexradData}
+						interval={nexradFrameRate}
+						settingsComponent={
+							<AnimatorSettings title="Settings">
+								<NexradAnimatorSettings />
+							</AnimatorSettings>
+						}
+					/>
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

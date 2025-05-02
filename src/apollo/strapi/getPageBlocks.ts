@@ -7,117 +7,105 @@ export const getPageBlocks = async (id) => {
 	const getPageBlocksResponse = await getClient().query({
 		query: gql`
 			query {
-				page(id: "${id}") {
-					data {
-                        attributes {
-                            Blocks {
-                                ... on ComponentBlocksPageHeading {
-                                    heading
-                                    body
-                                    Buttons {
-                                        Label
+				page(documentId: "${id}") {
+                    Blocks {
+                        ... on ComponentBlocksPageHeading {
+                            heading
+                            body
+                            Buttons {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
+                            Image {
+                                url
+                            }
+                        }
+                        ... on ComponentBlocksInfoWithCloudImage {
+                            smallHeading
+                            heading
+                            body
+                            Buttons {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
+                            Image {
+                                url
+                            }
+                        }
+                        ... on ComponentBlocksTwoPanelIconInfo {
+                            iconInfoPanel {
+                                Icon {
+                                    url
+                                }
+                                heading
+                                body
+                                buttonLabel
+                                buttonUrl
+                                ButtonTarget
+                                backgroundImage {
+                                    url
+                                }
+                            }
+                        }
+                        ... on ComponentBlocksStormChasingSchedule {
+                            heading
+                            body
+                            Button {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
+                            Trips {
+                                startDate
+                                endDate
+                                Status
+                                Instructor
+                                Assistant
+                            }
+                        }
+                        ... on ComponentBlocksRichText {
+                            body
+                        }
+                        ... on ComponentBlocksDegree {
+                            degrees {
+                                Title
+                                Description
+                                Buttons {
+                                    Label
+                                    Link
+                                    Style
+                                    target
+                                }
+                                Schools {
+                                    SchoolList
+                                    SchoolLinks {
+                                        School
                                         Link
-                                        Style
-                                        target
-                                    }
-                                    Image {
-                                        data {
-                                            attributes {
-                                                url
-                                            }
-                                        }
-                                    }
-                                }
-                                ... on ComponentBlocksInfoWithCloudImage {
-                                    smallHeading
-                                    heading
-                                    body
-                                    Buttons {
-                                        Label
-                                        Link
-                                        Style
-                                        target
-                                    }
-                                    Image {
-                                        data {
-                                            attributes {
-                                                url
-                                            }
-                                        }
-                                    }
-                                }
-                                ... on ComponentBlocksTwoPanelIconInfo {
-                                    iconInfoPanel {
-                                        Icon {
-                                            data {
-                                                attributes {
-                                                    url
-                                                }
-                                            }
-                                        }
-                                        heading
-                                        body
-                                        buttonLabel
-                                        buttonUrl
-                                        ButtonTarget
-                                        backgroundImage {
-                                            data {
-                                                attributes {
-                                                    url
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                ... on ComponentBlocksStormChasingSchedule {
-                                    heading
-                                    body
-                                    Button {
-                                        Label
-                                        Link
-                                        Style
-                                        target
-                                    }
-                                    Trips {
-                                        startDate
-                                        endDate
-                                        Status
-                                        Instructor
-                                        Assistant
-                                    }
-                                }
-                                ... on ComponentBlocksRichText {
-                                    body
-                                }
-                                ... on ComponentBlocksDegree {
-                                    degrees {
-                                        data { 
-                                            attributes {
-                                                Title
-                                                Description
-                                                Buttons {
-                                                    Label
-                                                    Link
-                                                    Style
-                                                    target
-                                                }
-                                                Schools {
-                                                    SchoolList
-                                                    SchoolLinks {
-                                                        School
-                                                        Link
-                                                    }
-                                                }
-                                            }
-                                        }
                                     }
                                 }
                             }
+                        }
+                        ... on ComponentBlocksVideo {
+                            id
+                            Name
+                        }
+                        ... on ComponentBlocksStaff {
+                            id
+                            Name
+                        }
+                        ... on ComponentBlocksGallery {
+                            id
+                            Name
                         }
 					}
 				}
 			}
 		`,
 	})
-	return convertStrapiBlocksData(getPageBlocksResponse.data.page.data.attributes.Blocks)
+	return convertStrapiBlocksData(getPageBlocksResponse.data.page.Blocks)
 }
