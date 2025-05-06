@@ -12,7 +12,6 @@ export const PageBlocks = ({ blocks }) => {
 	return (
 		<ScrollArea>
 			{blocks.map((block, index) => {
-				console.log(block?.type, block)
 				switch (block?.type) {
 					case 'PageHeading':
 						return <PageHeading key={index} {...block} />

@@ -3,7 +3,6 @@ import styles from './StaffGrid.module.scss'
 
 export const StaffGrid = async () => {
 	const staff = await getStaff()
-	console.log(staff)
 	return (
 		<div className={styles.StaffGrid}>
 			<div className={styles.StaffWrapper}>
