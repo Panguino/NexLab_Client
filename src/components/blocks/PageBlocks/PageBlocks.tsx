@@ -4,6 +4,7 @@ import { Footer } from './Footer/Footer'
 import { InfoWithCloud } from './InfoWithCloud/InfoWithCloud'
 import { PageHeading } from './PageHeading/PageHeading'
 import { RichTextPageBlock } from './RichTextPageBlock/RichTextPageBlock'
+import { StaffGrid } from './StaffGrid/StaffGrid'
 import { StormChasingSchedule } from './StormChasingSchedule/StormChasingSchedule'
 import { TwoPanelIconInfo } from './TwoPanelIconInfo/TwoPanelIconInfo'
 
@@ -11,7 +12,8 @@ export const PageBlocks = ({ blocks }) => {
 	return (
 		<ScrollArea>
 			{blocks.map((block, index) => {
-				switch (block.type) {
+				console.log(block?.type, block)
+				switch (block?.type) {
 					case 'PageHeading':
 						return <PageHeading key={index} {...block} />
 					case 'InfoWithCloudImage':
@@ -24,6 +26,8 @@ export const PageBlocks = ({ blocks }) => {
 						return <RichTextPageBlock key={index} {...block} />
 					case 'Degrees':
 						return <Degrees key={index} {...block} />
+					case 'Staff':
+						return <StaffGrid key={index} {...block} />
 					default:
 						return null
 				}

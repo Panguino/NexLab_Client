@@ -93,6 +93,11 @@ export const convertStrapiBlocksData = (blocksData) => {
 					type: 'Degrees',
 					degrees: convertDegreeData(blockData.degrees),
 				}
+			case 'ComponentBlocksStaff':
+				return {
+					type: 'Staff',
+					staff: [],
+				}
 			default:
 				return null
 		}
