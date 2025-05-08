@@ -3,45 +3,33 @@ import { getClient } from '@/apollo/apollo-client'
 import { gql } from '@apollo/client'
 
 export const getCampusById = async (id: string) => {
+	console.log('getCampusById', id)
 	const campusResponse = await getClient().query({
 		query: gql`
 			query {
-                campus(id: ${id}) {
-                    data {
-                        id
-                        attributes {							
-                            Name
-                            Latitude
-                            Longitude
-                            banner {
-                                data {
-                                    id
-                                    attributes {
-                                        url
-                                    }
-                                }
-                            }
-                            Logo {
-                                data {
-                                    attributes {
-                                        url
-                                    }
-                                }
-                            }
-							uniqueWeatherConditions
-                        }
+                campus(documentId: "${id}") {
+                    Name
+                    Longitude
+                    Latitude
+                    Logo {
+                        url
                     }
+                    banner {
+                        documentId
+                        url
+                    }
+                    uniqueWeatherConditions
                 }
             }
 		`,
 	})
-	const { Name, Latitude, Longitude, banner, Logo, uniqueWeatherConditions } = campusResponse.data.campus.data.attributes
+	const { Name, Latitude, Longitude, banner, Logo, uniqueWeatherConditions } = campusResponse.data.campus
 	return {
 		name: Name,
 		latitude: Latitude,
 		longitude: Longitude,
-		banner: banner?.data?.attributes?.url,
-		logo: Logo?.data?.attributes?.url,
+		banner: banner?.url,
+		logo: Logo?.url,
 		uniqueWeatherConditions: uniqueWeatherConditions,
 	}
 }

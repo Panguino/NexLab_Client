@@ -1,9 +1,9 @@
 export const convertStrapiFAQsData = (data) => {
 	return data.map((faq) => {
 		return {
-			id: faq.id,
-			question: faq.attributes.Question,
-			answer: faq.attributes.Answer,
+			id: faq.documentId,
+			question: faq.Question,
+			answer: faq.Answer,
 		}
 	})
 }

@@ -7,16 +7,12 @@ export const getFooterContent = async () => {
 		query: gql`
 			query {
 				footer {
-					data {
-						attributes {
-							Group {
-								Heading
-								Links {
-									text
-									url
-									target
-								}
-							}
+					Group {
+						Heading
+						Links {
+							text
+							target
+							url
 						}
 					}
 				}
@@ -24,5 +20,5 @@ export const getFooterContent = async () => {
 		`,
 	})
 
-	return getFooterContentResponse.data.footer.data.attributes
+	return getFooterContentResponse.data.footer
 }

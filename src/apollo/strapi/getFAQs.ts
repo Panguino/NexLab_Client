@@ -8,17 +8,13 @@ export const getFAQs = async () => {
 		query: gql`
 			query {
 				faqs(pagination: { limit: 1000 }) {
-					data {
-						id
-						attributes {
-							Question
-							Answer
-						}
-					}
+					documentId
+					Question
+					Answer
 				}
 			}
 		`,
 	})
 
-	return convertStrapiFAQsData(getFAQsResponse.data.faqs.data)
+	return convertStrapiFAQsData(getFAQsResponse.data.faqs)
 }

@@ -98,37 +98,37 @@ import {
 export const getSoundingPageIdByProductId = (productId) => {
 	switch (productId) {
 		case SOUNDING_PRODUCT_SKEWT:
-			return 13
+			return 'szsq375utkd9vmknxj1x20ac'
 		case SOUNDING_PRODUCT_STUVE:
-			return 15
+			return 'qx7bwdb4yro7il9r5c7ufgox'
 		case SOUNDING_PRODUCT_SHARPPY:
-			return 14
+			return 'ubxtb57kq5h7vekyashq3uzg'
 		case SOUNDING_PRODUCT_TEXT:
-			return 147
+			return 'ufhc3gx1d0b6k2l7qr8v6k8g'
 		case SOUNDING_PRODUCT_HODO:
-			return 16
+			return 'xca58ctwtdk5kpektzcjz4r5'
 		default:
-			return 13
+			return 'szsq375utkd9vmknxj1x20ac'
 	}
 }
 
 export const getSurfacePageIdByProductId = (productId) => {
 	switch (productId) {
 		case SURFACE_PRODUCT_FRONTS:
-			return 76
+			return 't52fc68wfm1ohits44iaf2sm'
 		case SURFACE_PRODUCT_PDF:
 		case SURFACE_PRODUCT_RAW:
-			return 75
+			return 's41iq68p80qpozuehzjkw3a6'
 		case SURFACE_PRODUCT_MOISTURE_DIVERGENCE:
-			return 77
+			return 'shsybv8vs1r0mall77b5m0o2'
 		case SURFACE_PRODUCT_THETAE:
-			return 79
+			return 'vwutltlwj2rzrgivi19nxrzk'
 		case SURFACE_PRODUCT_TEMPERATURE_SLP:
-			return 80
+			return 'a9pivjdd4m2ws7lnjhp0dkbo'
 		case SURFACE_PRODUCT_PRESSURE_FALLS:
-			return 78
+			return 'le8nv6pt9ji27h0w1buxm21b'
 		default:
-			return 75
+			return 's41iq68p80qpozuehzjkw3a6'
 	}
 }
 
@@ -137,85 +137,85 @@ export const getUpperAirPageIdByProductAndLevelId = (levelId, productId) => {
 		case UPPERAIR_LEVEL_250:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_JET:
-					return 142
+					return 'kuyro3adv1abctt7gkordvnb'
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
-					return 136
+					return 'srjbgtfr21tlwitmn5p81oxn'
 				default:
-					return 136
+					return 'srjbgtfr21tlwitmn5p81oxn'
 			}
 		case UPPERAIR_LEVEL_300:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_JET:
-					return 69
+					return 'hhkj62zotjzz3207xy7u06ut'
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
-					return 137
+					return 'kosth71yfcp5oy3333bjzze7'
 				default:
-					return 137
+					return 'kosth71yfcp5oy3333bjzze7'
 			}
 		case UPPERAIR_LEVEL_500:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_JET:
-					return 70
+					return 'jg9s5bxrhcz0eb8gqusxdpxq'
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
-					return 150
+					return 'wzrh3uy7kfldg3wrszv7yo0k'
 				default:
-					return 150
+					return 'wzrh3uy7kfldg3wrszv7yo0k'
 			}
 		case UPPERAIR_LEVEL_700:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_JET:
-					return 143
+					return 'g014dsc18w5irrln828c1v9h'
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
-					return 139
+					return 'y6tr8f1pee1ylohsydde0tu7'
 				case UPPERAIR_PRODUCT_REL_HUMIDITY:
-					return 84
+					return 'f43iv3rpu0612li6ftiixweo'
 				default:
-					return 139
+					return 'y6tr8f1pee1ylohsydde0tu7'
 			}
 		case UPPERAIR_LEVEL_850:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_JET:
-					return 144
+					return 'h36ws1nhe9qi2yb1ml43zut8'
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
-					return 140
+					return 'dsyudaqo00c7d1nangavsaqj'
 				case UPPERAIR_PRODUCT_DEWPOINT:
-					return 85
+					return 'rp7pybkbx4gi5yhelc2cewma'
 				default:
-					return 140
+					return 'dsyudaqo00c7d1nangavsaqj'
 			}
 		case UPPERAIR_LEVEL_925:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_RAW:
 				case UPPERAIR_PRODUCT_PDF:
-					return 141
+					return 'av0qug2cssvtl8a9e2692f20'
 				default:
-					return 141
+					return 'av0qug2cssvtl8a9e2692f20'
 			}
 		case UPPERAIR_LEVEL_CONTOUR:
 			switch (productId) {
 				case UPPERAIR_PRODUCT_CAPE:
-					return 87
+					return 'dhvy5ryv6rf6gwh2fa2tp2zr'
 				case UPPERAIR_PRODUCT_DELTAT:
-					return 89
+					return 'e5c6hr5p68hq20neiyb1jldw'
 				case UPPERAIR_PRODUCT_DELTAZ:
-					return 83
+					return 'skjt78vj9kpmn518488puxax'
 				case UPPERAIR_PRODUCT_PRECIP_WATERS:
-					return 90
+					return 'qy6t8ai6b0l4dqsb15ts9uvb'
 				case UPPERAIR_PRODUCT_SHEAR:
-					return 88
+					return 'jd2cncsx29psjmcrfaq5niar'
 				case UPPERAIR_PRODUCT_THETAE:
-					return 86
+					return 'sauqhw63zepk29sjle4sq385'
 				case UPPERAIR_PRODUCT_THICKNESS:
-					return 91
+					return 'milyqjgne96f8r48uosdgf38'
 				case UPPERAIR_PRODUCT_VORTICITY:
-					return 82
+					return 'e2sqbilm6xs2rd55b9jgp701'
 				default:
-					return 83
+					return 'skjt78vj9kpmn518488puxax'
 			}
 		default:
 			return 150
@@ -224,33 +224,33 @@ export const getUpperAirPageIdByProductAndLevelId = (levelId, productId) => {
 export const getRAPMesoPageIdByProductId = (productId) => {
 	switch (productId) {
 		case RAPMESO_PRODUCT_300_DIVERGENCE:
-			return 68
+			return 'd3o6qqme6ttnfcf8s7v26a7p'
 		case RAPMESO_PRODUCT_300_JET_ANALYSIS:
-			return 69
+			return 'hhkj62zotjzz3207xy7u06ut'
 		case RAPMESO_PRODUCT_500_JET_ANALYSIS:
-			return 70
+			return 'f4bjlu9up2ux6497v9nizglm'
 		case RAPMESO_PRODUCT_500_VORTICITY_ADVECTION:
-			return 97
+			return 'cn99w3hiazusz7e82rrwv4jz'
 		case RAPMESO_PRODUCT_700_RELATIVE_HUMIDITY:
-			return 98
+			return 'prder81cu0ehlgvf5a0jaaso'
 		case RAPMESO_PRODUCT_700_VORTICITY_ADVECTION:
-			return 149
+			return 'xi9b6cjic1nsiryzpo52je93'
 		case RAPMESO_PRODUCT_700_FRONTOGENESIS:
-			return 99
+			return 'lwt4tsnm0eymqtl3y4uzmft4'
 		case RAPMESO_PRODUCT_850_MOISTURE_ADVECTION:
-			return 101
+			return 'vy0s0ob17shsb5myhxu36x4g'
 		case RAPMESO_PRODUCT_850_TEMPERATURE_ADVECTION:
-			return 102
+			return 'h4vfgqller01btsp8lv37tso'
 		case RAPMESO_PRODUCT_850_JET_ANALYSIS:
-			return 100
+			return 'ito3ttus09enow6cncza40vo'
 		case RAPMESO_PRODUCT_500_850_CROSSOVER:
-			return 103
+			return 'qqks9ors4r6456kerkw3i6rj'
 		case RAPMESO_PRODUCT_500_700_AVG_QV_DIVERGENCE:
-			return 104
+			return 'atgtgqzulsr5jktr8x9trisn'
 		case RAPMESO_PRODUCT_TRENBERTH_FORCING:
-			return 105
+			return 'gzob83wsp627ozbkhbsd1q6s'
 		case RAPMESO_PRODUCT_WATER_VAPOR_VORTICITY:
-			return 67
+			return 'pza8a17l52kkkk7do8hwvb2l'
 		default:
 			return null
 	}
@@ -265,7 +265,7 @@ export const getIsentropicPageIdByProductId = (productId) => {
 		case ISENTROPIC_PRODUCT_300K:
 		case ISENTROPIC_PRODUCT_305K:
 		case ISENTROPIC_PRODUCT_310K:
-			return 106
+			return 'k1a6i3xb57qvic8pznyvwfek'
 		default:
 			return null
 	}
@@ -277,37 +277,37 @@ export const getDataPageIdByProductId = (productId) => {
 		case NEXRAD_PRODUCT_BASEREF_1_5:
 		case NEXRAD_PRODUCT_BASEREF_2_5:
 		case NEXRAD_PRODUCT_BASEREF_3_5:
-			return 17
+			return 'madsqvy1wcu70wrau95ixukw'
 		case NEXRAD_PRODUCT_BASEVEL_0_5:
 		case NEXRAD_PRODUCT_BASEVEL_1_5:
 		case NEXRAD_PRODUCT_BASEVEL_2_5:
 		case NEXRAD_PRODUCT_BASEVEL_3_5:
-			return 18
+			return 'sm1z7elh67o5j9hpid09lucj'
 		case NEXRAD_PRODUCT_COEFFICIENT_0_5:
 		case NEXRAD_PRODUCT_COEFFICIENT_1_5:
 		case NEXRAD_PRODUCT_COEFFICIENT_2_5:
 		case NEXRAD_PRODUCT_COEFFICIENT_3_5:
-			return 21
+			return 'wncte0rjcpnmo9a5mw0btdq9'
 		case NEXRAD_PRODUCT_PHASE_0_5:
 		case NEXRAD_PRODUCT_PHASE_1_5:
 		case NEXRAD_PRODUCT_PHASE_2_5:
 		case NEXRAD_PRODUCT_PHASE_3_5:
-			return 58
+			return 'xkmtoie008552fm3v46t6ofb'
 		case NEXRAD_PRODUCT_DIGITALREF_0_5:
 		case NEXRAD_PRODUCT_DIGITALREF_1_5:
 		case NEXRAD_PRODUCT_DIGITALREF_2_5:
 		case NEXRAD_PRODUCT_DIGITALREF_3_5:
-			return 20
+			return 'r7gpapkra8c5hy7ogu0bjzmw'
 		case NEXRAD_PRODUCT_STORMVEL_0_5:
-			return 19
+			return 'a8ymcpx4lzjm3l3adnzmoyvw'
 		case NEXRAD_PRODUCT_VADPROFILE:
-			return 63
+			return 'yqd60k7a0grb3lj17ka1m99l'
 		case NEXRAD_PRODUCT_ECHOTOPS:
-			return 62
+			return 'qigya1q9faez19ct2y2b7lbr'
 		case NEXRAD_PRODUCT_VERTICALLIQUID:
-			return 61
+			return 'l2gaezucx9ybw0myoc8401qv'
 		case NEXRAD_PRODUCT_HYDROCLASS:
-			return 64
+			return 'w47kninu5whnciy9kmdt6iot'
 		default:
 			return null
 	}

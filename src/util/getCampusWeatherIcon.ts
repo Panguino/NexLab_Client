@@ -486,7 +486,6 @@ const convertCODiconName = (icon_input, cloud_coverage_input, dayNight) => {
 	} else {
 		icon = 'unknown'
 	}
-	console.log('icon', icon)
 	return icon
 }
 export const convertIconName = (icon_input, cloud_coverage_input, dayNight, dataSource) => {
