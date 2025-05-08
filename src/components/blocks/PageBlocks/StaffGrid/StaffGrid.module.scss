@@ -1,0 +1,43 @@
+.StaffGrid {
+  position: relative;
+  max-width: 1200px;
+  width: 100%;
+  padding: 90px 30px;
+  margin: 0 auto;
+}
+.StaffWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.StaffMember {
+  position: relative;
+  max-width: 270px;
+  h2 {
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 600;
+    margin: 0;
+    padding: 20px 0 6px;
+  }
+  h3 {
+    font-size: 15px;
+    line-height: 17px;
+    font-weight: 400;
+    text-transform: none;
+    font-family: var(--primary-font);
+    color: var(--color-blue5-blue4);
+    margin: 0;
+    padding: 0;
+  }
+  p {
+    font-size: 15px;
+    line-height: 20px;
+  }
+}
+.photo {
+  img {
+    width: 100%;
+  }
+}
