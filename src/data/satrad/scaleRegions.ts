@@ -1,4 +1,8 @@
-import { SATRAD_SECTORS_GLOBAL_GOES_EAST } from './sectors'
+import { SATRAD_SECTORS_CONTINENTAL_GOES_EAST, SATRAD_SECTORS_CONTINENTAL_GOES_WEST } from './sectorsContinental'
+import { SATRAD_SECTORS_GLOBAL_GOES_EAST, SATRAD_SECTORS_GLOBAL_GOES_WEST } from './sectorsGlobal'
+import { SATRAD_SECTORS_LOCAL_ALASKA, SATRAD_SECTORS_LOCAL_HAWAII, SATRAD_SECTORS_LOCAL_NAMER } from './sectorsLocal'
+import { SATRAD_SECTORS_REGIONAL_ALASKA, SATRAD_SECTORS_REGIONAL_HAWAII, SATRAD_SECTORS_REGIONAL_NAMER } from './sectorsRegional'
+import { SATRAD_SECTORS_SUBREGIONAL_ALASKA, SATRAD_SECTORS_SUBREGIONAL_HAWAII, SATRAD_SECTORS_SUBREGIONAL_NAMER } from './sectorsSubregional'
 
 const SATRAD_SCALE_GLOBAL_ID = 'global'
 const SATRAD_SCALE_CONTINENTAL_ID = 'continental'
@@ -58,61 +62,61 @@ export const SATRAD_SCALE_REGIONS = {
 	[SATRAD_SCALE_REGION_GLOBAL_WEST_ID]: {
 		label: 'Global - GOES West',
 		...mapRegions[SATRAD_REGION_GOES_WEST_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_GLOBAL_GOES_WEST,
 	},
 	[SATRAD_SCALE_REGION_CONTINENTAL_EAST_ID]: {
 		label: 'Continental - GOES East',
 		...mapRegions[SATRAD_REGION_GOES_EAST_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_CONTINENTAL_GOES_EAST,
 	},
 	[SATRAD_SCALE_REGION_CONTINENTAL_WEST_ID]: {
 		label: 'Continental - GOES West',
 		...mapRegions[SATRAD_REGION_GOES_WEST_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_CONTINENTAL_GOES_WEST,
 	},
 	[SATRAD_SCALE_REGION_REGIONAL_NAMER_ID]: {
 		label: 'Regional - North America',
 		...mapRegions[SATRAD_REGION_NAMER_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_REGIONAL_NAMER,
 	},
 	[SATRAD_SCALE_REGION_REGIONAL_ALASKA_ID]: {
 		label: 'Regional - Alaska',
 		...mapRegions[SATRAD_REGION_ALASKA_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_REGIONAL_ALASKA,
 	},
 	[SATRAD_SCALE_REGION_REGIONAL_HAWAII_ID]: {
 		label: 'Regional - Hawaii',
 		...mapRegions[SATRAD_REGION_HAWAII_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_REGIONAL_HAWAII,
 	},
 	[SATRAD_SCALE_REGION_SUBREGIONAL_NAMER_ID]: {
 		label: 'Subregional - North America',
 		...mapRegions[SATRAD_REGION_NAMER_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_SUBREGIONAL_NAMER,
 	},
 	[SATRAD_SCALE_REGION_SUBREGIONAL_ALASKA_ID]: {
 		label: 'Subregional - Alaska',
 		...mapRegions[SATRAD_REGION_ALASKA_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_SUBREGIONAL_ALASKA,
 	},
 	[SATRAD_SCALE_REGION_SUBREGIONAL_HAWAII_ID]: {
 		label: 'Subregional - Hawaii',
 		...mapRegions[SATRAD_REGION_HAWAII_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_SUBREGIONAL_HAWAII,
 	},
 	[SATRAD_SCALE_REGION_LOCAL_NAMER_ID]: {
 		label: 'Local - North America',
 		...mapRegions[SATRAD_REGION_NAMER_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_LOCAL_NAMER,
 	},
 	[SATRAD_SCALE_REGION_LOCAL_ALASKA_ID]: {
 		label: 'Local - Alaska',
 		...mapRegions[SATRAD_REGION_ALASKA_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_LOCAL_ALASKA,
 	},
 	[SATRAD_SCALE_REGION_LOCAL_HAWAII_ID]: {
 		label: 'Local - Hawaii',
 		...mapRegions[SATRAD_REGION_HAWAII_ID],
-		sectors: [],
+		sectors: SATRAD_SECTORS_LOCAL_HAWAII,
 	},
 }

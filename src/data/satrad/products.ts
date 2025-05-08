@@ -24,8 +24,6 @@ const SATRAD_PRODUCT_SIMPLE_WATER_VAPOR_ID = 'simplewv'
 const SATRAD_PRODUCT_INFRARED_SANDWICH_ID = 'sandwich'
 const SATRAD_PRODUCT_COMPOSITE_RADAR_ID = 'comp_radar'
 
-// need to break these into groups similar to nexrad
-
 export const SATRAD_PRODUCTS = {
 	[SATRAD_PRODUCT_ABI_01_ID]: {
 		name: '01: Visible (blue)',
