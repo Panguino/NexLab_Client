@@ -41,7 +41,6 @@ const convertDegreeData = (degreesData) => {
 }
 export const convertStrapiBlocksData = (blocksData) => {
 	const blocks = blocksData.map((blockData) => {
-		console.log(blockData)
 		switch (blockData.__typename) {
 			case 'ComponentBlocksPageHeading':
 				return {
@@ -92,6 +91,10 @@ export const convertStrapiBlocksData = (blocksData) => {
 				return {
 					type: 'Degrees',
 					degrees: convertDegreeData(blockData.degrees),
+				}
+			case 'ComponentBlocksStaff':
+				return {
+					type: 'Staff',
 				}
 			default:
 				return null
