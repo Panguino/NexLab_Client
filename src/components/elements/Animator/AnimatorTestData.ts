@@ -200,3 +200,21 @@ export const testFrames = [
 	'https://climate.cod.edu/storybook/nexrad/GRB.N0B.20241125.1935.gif',
 	'https://climate.cod.edu/storybook/nexrad/GRB.N0B.20241125.1942.gif',
 ]
+
+export const testFrames8x6 = [
+	'https://weather.cod.edu/assets/bannerwave/dimensions/8x6/1.png',
+	'https://weather.cod.edu/assets/bannerwave/dimensions/8x6/2.png',
+	'https://weather.cod.edu/assets/bannerwave/dimensions/8x6/3.png',
+	'https://weather.cod.edu/assets/bannerwave/dimensions/8x6/4.png',
+	'https://weather.cod.edu/assets/bannerwave/dimensions/8x6/5.png',
+	'https://weather.cod.edu/assets/bannerwave/dimensions/8x6/6.png',
+]
+
+export const testFrames16x9 = [
+	'https://weather.cod.edu/assets/bannerwave/dimensions/16x9/1.jpg',
+	'https://weather.cod.edu/assets/bannerwave/dimensions/16x9/2.jpg',
+	'https://weather.cod.edu/assets/bannerwave/dimensions/16x9/3.jpg',
+	'https://weather.cod.edu/assets/bannerwave/dimensions/16x9/4.jpg',
+	'https://weather.cod.edu/assets/bannerwave/dimensions/16x9/5.jpg',
+	'https://weather.cod.edu/assets/bannerwave/dimensions/16x9/6.jpg',
+]

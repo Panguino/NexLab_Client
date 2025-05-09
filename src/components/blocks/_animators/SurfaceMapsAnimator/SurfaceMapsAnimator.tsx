@@ -9,7 +9,7 @@ import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
+import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import styles from './SurfaceMapsAnimator.module.scss'
 
 interface SurfaceMapsAnimatorProps {
@@ -20,13 +20,15 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 	const { surfaceProductId: productId, surfaceRegionId: regionId, surfaceSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const surfaceMapsNumberOfFrames = useRootStore.use.surfaceMapsNumberOfFrames()
-	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
+	const [ratio, setRatio] = useState(1)
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [surfaceMapsData, setSurfaceMapsData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
 			const data = await getSurfaceData(regionId, siteId, productId, surfaceMapsNumberOfFrames)
-			setSurfaceMapsData(data)
+			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setSurfaceMapsData(data.frames)
 		}
 		getData()
 	}, [productId, regionId, siteId, surfaceMapsNumberOfFrames])
@@ -34,8 +36,8 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 	return (
 		<div className={styles.surfaceMapsAnimatorContainer}>
 			<div className={styles.surfaceMapsAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
-					<Animator frames={surfaceMapsData} />
+				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
+					<Animator frames={surfaceMapsData} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

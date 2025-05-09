@@ -3,39 +3,39 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import useDimensions from '@/hooks/useDimensions'
-import { useRootStore } from '@/store/useRootStore'
-import { getSoundingData } from '@/util/dataCalls/analysis/query-soundings'
+import { getUpperAirData } from '@/util/dataCalls/analysis/query-upper-air'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
-import styles from './SoundingAnimator.module.scss'
+import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
+import styles from './UpperAirAnimator.module.scss'
 
-interface SoundingAnimatorProps {
+interface UpperAirAnimatorProps {
 	productInfo: ProductInfoProps
 }
 
-const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
-	const { soundingProductId: productId, soundingSiteId: siteId } = useParams()
+const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
+	const { upperairLevelId: levelId, upperairProductId: productId, upperairSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
-	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
-	const [soundingData, setSoundingData] = useState([])
+	const [ratio, setRatio] = useState(1)
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
+	const [upperAirData, setUpperAirData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
-			const data = await getSoundingData(siteId, productId, soundingNumberOfFrames)
-			setSoundingData(data)
+			const data = await getUpperAirData(siteId, levelId, productId)
+			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setUpperAirData(data.frames)
 		}
 		getData()
-	}, [siteId, productId, soundingNumberOfFrames])
+	}, [siteId, levelId, productId])
 
 	return (
-		<div className={styles.soundingAnimatorContainer}>
-			<div className={styles.soundingAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
-					<Animator frames={soundingData} />
+		<div className={styles.upperAirAnimatorContainer}>
+			<div className={styles.upperAirAnimator} ref={wrapperRef}>
+				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
+					<Animator frames={upperAirData} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
@@ -56,4 +56,4 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	)
 }
 
-export default SoundingAnimator
+export default UpperAirAnimator

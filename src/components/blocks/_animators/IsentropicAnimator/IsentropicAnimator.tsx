@@ -8,7 +8,7 @@ import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
+import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import styles from './IsentropicAnimator.module.scss'
 
 interface IsentropicAnimatorProps {
@@ -18,13 +18,15 @@ interface IsentropicAnimatorProps {
 const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) => {
 	const { isentropicProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
+	const [ratio, setRatio] = useState(1)
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [IsentropicData, setIsentropicData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
 			const data = await getIsentropicData(productId)
-			setIsentropicData(data)
+			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setIsentropicData(data.frames)
 		}
 		getData()
 	}, [productId])
@@ -32,8 +34,8 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 	return (
 		<div className={styles.IsentropicAnimatorContainer}>
 			<div className={styles.IsentropicAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
-					<Animator frames={IsentropicData} />
+				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
+					<Animator frames={IsentropicData} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

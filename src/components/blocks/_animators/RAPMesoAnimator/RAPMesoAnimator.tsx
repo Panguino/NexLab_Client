@@ -3,37 +3,39 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import useDimensions from '@/hooks/useDimensions'
-import { getUpperAirData } from '@/util/dataCalls/analysis/query-upper-air'
+import { getRapMesoData } from '@/util/dataCalls/analysis/query-rap-mesoanalysis'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
-import ProductInfo, { ProductInfoProps } from '../ProductInfo/ProductInfo'
-import styles from './UpperAirAnimator.module.scss'
+import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
+import styles from './RAPMesoAnimator.module.scss'
 
-interface UpperAirAnimatorProps {
+interface RAPMesoAnimatorProps {
 	productInfo: ProductInfoProps
 }
 
-const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
-	const { upperairLevelId: levelId, upperairProductId: productId, upperairSiteId: siteId } = useParams()
+const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
+	const { rapmesoProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [wrapperRef, { width: width, height: height }] = useDimensions(8 / 6)
-	const [upperAirData, setUpperAirData] = useState([])
+	const [ratio, setRatio] = useState(1)
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
+	const [RAPMesoData, setRAPMesoData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
-			const data = await getUpperAirData(siteId, levelId, productId)
-			setUpperAirData(data)
+			const data = await getRapMesoData(productId)
+			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setRAPMesoData(data.frames)
 		}
 		getData()
-	}, [siteId, levelId, productId])
+	}, [productId])
 
 	return (
-		<div className={styles.upperAirAnimatorContainer}>
-			<div className={styles.upperAirAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
-					<Animator frames={upperAirData} />
+		<div className={styles.RAPMesoAnimatorContainer}>
+			<div className={styles.RAPMesoAnimator} ref={wrapperRef}>
+				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
+					<Animator frames={RAPMesoData} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
@@ -54,4 +56,4 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 	)
 }
 
-export default UpperAirAnimator
+export default RAPMesoAnimator
