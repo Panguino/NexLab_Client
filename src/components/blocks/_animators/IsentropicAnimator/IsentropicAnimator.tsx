@@ -18,13 +18,15 @@ interface IsentropicAnimatorProps {
 const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) => {
 	const { isentropicProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(8 / 6, true)
+	const [ratio, setRatio] = useState(1)
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [IsentropicData, setIsentropicData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
 			const data = await getIsentropicData(productId)
-			setIsentropicData(data)
+			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setIsentropicData(data.frames)
 		}
 		getData()
 	}, [productId])
@@ -33,7 +35,7 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 		<div className={styles.IsentropicAnimatorContainer}>
 			<div className={styles.IsentropicAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={IsentropicData} ratio={8 / 6} />
+					<Animator frames={IsentropicData} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

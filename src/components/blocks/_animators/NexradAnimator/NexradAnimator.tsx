@@ -23,13 +23,15 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	const [activeTab, setActiveTab] = useState(-1)
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
 	const nexradFrameRate = useRootStore.use.nexradFrameRate()
-	const [wrapperRef, { width: width, height: height }] = useDimensions(1)
+	const [ratio, setRatio] = useState(1)
+	const [wrapperRef, { width, height }] = useDimensions(ratio, true)
 	const [nexradData, setNexradData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
 			const data = await getNexradData(siteId, productId, nexradNumberOfFrames)
-			setNexradData(data)
+			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setNexradData(data.frames)
 		}
 		getData()
 	}, [siteId, productId, nexradNumberOfFrames])
@@ -40,6 +42,7 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
 					<Animator
 						frames={nexradData}
+						ratio={ratio}
 						interval={nexradFrameRate}
 						settingsComponent={
 							<AnimatorSettings title="Settings">

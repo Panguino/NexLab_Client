@@ -18,13 +18,15 @@ interface RAPMesoAnimatorProps {
 const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 	const { rapmesoProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(8 / 6, true)
+	const [ratio, setRatio] = useState(1)
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [RAPMesoData, setRAPMesoData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
 			const data = await getRapMesoData(productId)
-			setRAPMesoData(data)
+			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setRAPMesoData(data.frames)
 		}
 		getData()
 	}, [productId])
@@ -33,7 +35,7 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 		<div className={styles.RAPMesoAnimatorContainer}>
 			<div className={styles.RAPMesoAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={RAPMesoData} ratio={8 / 6} />
+					<Animator frames={RAPMesoData} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
