@@ -26,78 +26,128 @@ const SATRAD_PRODUCT_COMPOSITE_RADAR_ID = 'comp_radar'
 
 export const SATRAD_PRODUCTS = {
 	[SATRAD_PRODUCT_ABI_01_ID]: {
-		name: '01: Visible (blue)',
+		label: '01: Visible (blue)',
 	},
 	[SATRAD_PRODUCT_ABI_02_ID]: {
-		name: '02: Visible (red)',
+		label: '02: Visible (red)',
 	},
 	[SATRAD_PRODUCT_ABI_03_ID]: {
-		name: '03: Veggie (green)',
+		label: '03: Veggie (green)',
 	},
 	[SATRAD_PRODUCT_ABI_04_ID]: {
-		name: '04: Cirrus (Near IR)',
+		label: '04: Cirrus (Near IR)',
 	},
 	[SATRAD_PRODUCT_ABI_05_ID]: {
-		name: '05: Snow/Ice (Near IR)',
+		label: '05: Snow/Ice (Near IR)',
 	},
 	[SATRAD_PRODUCT_ABI_06_ID]: {
-		name: '06: Particle Size (Near IR)',
+		label: '06: Particle Size (Near IR)',
 	},
 	[SATRAD_PRODUCT_ABI_07_ID]: {
-		name: '07: Shortwave IR',
+		label: '07: Shortwave IR',
 	},
 	[SATRAD_PRODUCT_ABI_08_ID]: {
-		name: '08: Upper-Level Water Vapor',
+		label: '08: Upper-Level Water Vapor',
 	},
 	[SATRAD_PRODUCT_ABI_09_ID]: {
-		name: '09: Mid-Level Water Vapor',
+		label: '09: Mid-Level Water Vapor',
 	},
 	[SATRAD_PRODUCT_ABI_10_ID]: {
-		name: '10: Low-Level Water Vapor',
+		label: '10: Low-Level Water Vapor',
 	},
 	[SATRAD_PRODUCT_ABI_11_ID]: {
-		name: '11: Cloud Top Phase',
+		label: '11: Cloud Top Phase',
 	},
 	[SATRAD_PRODUCT_ABI_12_ID]: {
-		name: '12: Ozone',
+		label: '12: Ozone',
 	},
 	[SATRAD_PRODUCT_ABI_13_ID]: {
-		name: '13: Longwave IR (Clean)',
+		label: '13: Longwave IR (Clean)',
 	},
 	[SATRAD_PRODUCT_ABI_14_ID]: {
-		name: '14: Longwave IR',
+		label: '14: Longwave IR',
 	},
 	[SATRAD_PRODUCT_ABI_15_ID]: {
-		name: '15: Longwave IR (Dirty)',
+		label: '15: Longwave IR (Dirty)',
 	},
 	[SATRAD_PRODUCT_ABI_16_ID]: {
-		name: '16: Carbon Dioxide',
+		label: '16: Carbon Dioxide',
 	},
 	[SATRAD_PRODUCT_TRUE_COLOR_ID]: {
-		name: 'True Color',
+		label: 'True Color',
 	},
 	[SATRAD_PRODUCT_NATURAL_COLOR_ID]: {
-		name: 'Natural Color',
+		label: 'Natural Color',
 	},
 	[SATRAD_PRODUCT_NATURAL_COLOR_FIRE_ID]: {
-		name: 'Natural Color (Fire)',
+		label: 'Natural Color (Fire)',
 	},
 	[SATRAD_PRODUCT_AIRMASS_ID]: {
-		name: 'Airmass',
+		label: 'Airmass',
 	},
 	[SATRAD_PRODUCT_NIGHT_TIME_MICRO_ID]: {
-		name: 'Night Microphysics',
+		label: 'Night Microphysics',
 	},
 	[SATRAD_PRODUCT_DAY_CLOUD_PHASE_ID]: {
-		name: 'Day Cloud Phase',
+		label: 'Day Cloud Phase',
 	},
 	[SATRAD_PRODUCT_SIMPLE_WATER_VAPOR_ID]: {
-		name: 'Simple Water Vapor',
+		label: 'Simple Water Vapor',
 	},
 	[SATRAD_PRODUCT_INFRARED_SANDWICH_ID]: {
-		name: 'Infrared Sandwich',
+		label: 'Infrared Sandwich',
 	},
 	[SATRAD_PRODUCT_COMPOSITE_RADAR_ID]: {
-		name: 'Composite Radar',
+		label: 'Composite Radar',
+	},
+}
+
+export const SATRAD_PRODUCT_GROUP_ABI = 'ABI'
+export const SATRAD_PRODUCT_GROUP_RADAR = 'Radar'
+export const SATRAD_PRODUCT_GROUP_RGB = 'RGB'
+
+export const ALL_SATRAD_GROUPS = [SATRAD_PRODUCT_GROUP_ABI, SATRAD_PRODUCT_GROUP_RADAR, SATRAD_PRODUCT_GROUP_RGB]
+
+export const SATRAD_GROUPS = {
+	[SATRAD_PRODUCT_GROUP_ABI]: {
+		label: 'ABI Bands',
+		columns: 2,
+		products: [
+			SATRAD_PRODUCT_ABI_01_ID,
+			SATRAD_PRODUCT_ABI_02_ID,
+			SATRAD_PRODUCT_ABI_03_ID,
+			SATRAD_PRODUCT_ABI_04_ID,
+			SATRAD_PRODUCT_ABI_05_ID,
+			SATRAD_PRODUCT_ABI_06_ID,
+			SATRAD_PRODUCT_ABI_07_ID,
+			SATRAD_PRODUCT_ABI_08_ID,
+			SATRAD_PRODUCT_ABI_09_ID,
+			SATRAD_PRODUCT_ABI_10_ID,
+			SATRAD_PRODUCT_ABI_11_ID,
+			SATRAD_PRODUCT_ABI_12_ID,
+			SATRAD_PRODUCT_ABI_13_ID,
+			SATRAD_PRODUCT_ABI_14_ID,
+			SATRAD_PRODUCT_ABI_15_ID,
+			SATRAD_PRODUCT_ABI_16_ID,
+		],
+	},
+	[SATRAD_PRODUCT_GROUP_RADAR]: {
+		label: 'Composite Radar',
+		columns: 2,
+		products: [SATRAD_PRODUCT_COMPOSITE_RADAR_ID],
+	},
+	[SATRAD_PRODUCT_GROUP_RGB]: {
+		label: 'RGB Color Products',
+		columns: 2,
+		products: [
+			SATRAD_PRODUCT_TRUE_COLOR_ID,
+			SATRAD_PRODUCT_NATURAL_COLOR_ID,
+			SATRAD_PRODUCT_NATURAL_COLOR_FIRE_ID,
+			SATRAD_PRODUCT_AIRMASS_ID,
+			SATRAD_PRODUCT_NIGHT_TIME_MICRO_ID,
+			SATRAD_PRODUCT_DAY_CLOUD_PHASE_ID,
+			SATRAD_PRODUCT_SIMPLE_WATER_VAPOR_ID,
+			SATRAD_PRODUCT_INFRARED_SANDWICH_ID,
+		],
 	},
 }
