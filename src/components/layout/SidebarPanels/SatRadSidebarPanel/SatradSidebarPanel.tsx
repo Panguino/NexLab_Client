@@ -61,7 +61,12 @@ const SatradSidebarPanel = () => {
 						<SidebarGroup key={groupId} title={label}>
 							<SidebarGrid columns={columns}>
 								{products.map(({ id, label }) => (
-									<SidebarLink key={id} name={label} linkUrl={`${productId}-${regionId}-${sectorId}`} active={id === productId} />
+									<SidebarLink
+										key={id}
+										name={label}
+										linkUrl={`/weather-data/satellite-mosaic-radar/${id}/${regionId}/${sectorId}`}
+										active={id === productId}
+									/>
 								))}
 							</SidebarGrid>
 						</SidebarGroup>

@@ -1,6 +1,5 @@
-const ALL_SATRAD_PRODUCTS = [] // Placeholder for all products
-const ALL_SATRAD_STATIC_OVERLAYS = [] // Placeholder for all static overlays
-const ALL_SATRAD_DYNAMIC_OVERLAYS = [] // Placeholder for all dynamic overlays
+import { ALL_SATRAD_DYNAMIC_OVERLAYS, ALL_SATRAD_STATIC_OVERLAYS } from './overlays'
+import { SATRAD_PRODUCTS } from './products'
 
 const local_latitude_modifier = 1
 const local_longitude_modifier = 1
@@ -130,7 +129,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[86.0 + local_longitude_modifier, 33.6 - local_latitude_modifier],
 			[86.0 - local_longitude_modifier, 33.6 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_ARIZONA_ID]: {
@@ -140,7 +139,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-114.0 + local_longitude_modifier, 35.2 - local_latitude_modifier],
 			[-114.0 - local_longitude_modifier, 35.2 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_ARKANSAS_ID]: {
@@ -150,7 +149,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-92.4 + local_longitude_modifier, 34.7 - local_latitude_modifier],
 			[-92.4 - local_longitude_modifier, 34.7 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_AUSTIN_ID]: {
@@ -160,7 +159,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-97.74 + local_longitude_modifier, 30.27 - local_latitude_modifier],
 			[-97.74 - local_longitude_modifier, 30.27 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_BAHAMAS_ID]: {
@@ -170,7 +169,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-76.8 + local_longitude_modifier, 24.8 - local_latitude_modifier],
 			[-76.8 - local_longitude_modifier, 24.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_BEATRICE_ID]: {
@@ -180,7 +179,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-96.75 + local_longitude_modifier, 40.26 - local_latitude_modifier],
 			[-96.75 - local_longitude_modifier, 40.26 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_BERMUDA_ID]: {
@@ -190,7 +189,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-64.7 + local_longitude_modifier, 32.3 - local_latitude_modifier],
 			[-64.7 - local_longitude_modifier, 32.3 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_BLACK_HILLS_ID]: {
@@ -200,7 +199,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-103.9 + local_longitude_modifier, 43.7 - local_latitude_modifier],
 			[-103.9 - local_longitude_modifier, 43.7 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_BRANDON_ID]: {
@@ -210,7 +209,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-101.0 + local_longitude_modifier, 50.0 - local_latitude_modifier],
 			[-101.0 - local_longitude_modifier, 50.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_BROWNSVILLE_ID]: {
@@ -220,7 +219,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-95.3 + local_longitude_modifier, 25.3 - local_latitude_modifier],
 			[-95.3 - local_longitude_modifier, 25.3 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_CABO_ID]: {
@@ -230,7 +229,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-109.5 + local_longitude_modifier, 23.2 - local_latitude_modifier],
 			[-109.5 - local_longitude_modifier, 23.2 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_CALGARY_ID]: {
@@ -240,7 +239,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-113.0 + local_longitude_modifier, 50.5 - local_latitude_modifier],
 			[-113.0 - local_longitude_modifier, 50.5 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_CAMPECHE_ID]: {
@@ -250,7 +249,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-90.0 + local_longitude_modifier, 20.8 - local_latitude_modifier],
 			[-90.0 - local_longitude_modifier, 20.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_CAROLINA_ID]: {
@@ -260,7 +259,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-81.7 + local_longitude_modifier, 34.8 - local_latitude_modifier],
 			[-81.7 - local_longitude_modifier, 34.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_CAYMAN_ID]: {
@@ -270,7 +269,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-80.0 + local_longitude_modifier, 20.75 - local_latitude_modifier],
 			[-80.0 - local_longitude_modifier, 20.75 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_CEN_CALIFORNIA_ID]: {
@@ -280,7 +279,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-120.0 + local_longitude_modifier, 35.0 - local_latitude_modifier],
 			[-120.0 - local_longitude_modifier, 35.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_CEN_TEXAS_ID]: {
@@ -290,7 +289,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-100.6 + local_longitude_modifier, 32.2 - local_latitude_modifier],
 			[-100.6 - local_longitude_modifier, 32.2 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_CHIHUAHUA_ID]: {
@@ -300,7 +299,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-106.3 + local_longitude_modifier, 29.9 - local_latitude_modifier],
 			[-106.3 - local_longitude_modifier, 29.9 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_CLOVIS_ID]: {
@@ -310,7 +309,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-102.9 + local_longitude_modifier, 34.6 - local_latitude_modifier],
 			[-102.9 - local_longitude_modifier, 34.6 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_COLORADO_ID]: {
@@ -320,7 +319,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-105.6 + local_longitude_modifier, 39.8 - local_latitude_modifier],
 			[-105.6 - local_longitude_modifier, 39.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_COZUMEL_ID]: {
@@ -330,7 +329,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-85.9 + local_longitude_modifier, 20.4 - local_latitude_modifier],
 			[-85.9 - local_longitude_modifier, 20.4 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_E_WASHINGTON_ID]: {
@@ -340,7 +339,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-118.0 + local_longitude_modifier, 46.0 - local_latitude_modifier],
 			[-118.0 - local_longitude_modifier, 46.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_FL_PANHANDLE_ID]: {
@@ -350,7 +349,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-84.9 + local_longitude_modifier, 30.0 - local_latitude_modifier],
 			[-84.9 - local_longitude_modifier, 30.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_FARGO_ID]: {
@@ -360,7 +359,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-96.8 + local_longitude_modifier, 46.86 - local_latitude_modifier],
 			[-96.8 - local_longitude_modifier, 46.86 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_FOUR_CORNERS_ID]: {
@@ -370,7 +369,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-109.0 + local_longitude_modifier, 37.0 - local_latitude_modifier],
 			[-109.0 - local_longitude_modifier, 37.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_GEORGIA_ID]: {
@@ -380,7 +379,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-83.1 + local_longitude_modifier, 32.67 - local_latitude_modifier],
 			[-83.1 - local_longitude_modifier, 32.67 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_GRAND_FORKS_ID]: {
@@ -390,7 +389,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-97.15 + local_longitude_modifier, 48.44 - local_latitude_modifier],
 			[-97.15 - local_longitude_modifier, 48.44 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_GULF_STREAM_ID]: {
@@ -400,7 +399,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-77.8 + local_longitude_modifier, 27.8 - local_latitude_modifier],
 			[-77.8 - local_longitude_modifier, 27.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_HATTERAS_ID]: {
@@ -410,7 +409,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-75.0 + local_longitude_modifier, 35.22 - local_latitude_modifier],
 			[-75.0 - local_longitude_modifier, 35.22 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_HAVANA_ID]: {
@@ -420,7 +419,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-82.3 + local_longitude_modifier, 23.3 - local_latitude_modifier],
 			[-82.3 - local_longitude_modifier, 23.3 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_HISPANIOLA_ID]: {
@@ -430,7 +429,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-71.0 + local_longitude_modifier, 19.0 - local_latitude_modifier],
 			[-71.0 - local_longitude_modifier, 19.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_HOUSTON_ID]: {
@@ -440,7 +439,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-95.1 + local_longitude_modifier, 28.8 - local_latitude_modifier],
 			[-95.1 - local_longitude_modifier, 28.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_INDIANA_ID]: {
@@ -450,7 +449,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-86.41 + local_longitude_modifier, 40.17 - local_latitude_modifier],
 			[-86.41 - local_longitude_modifier, 40.17 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_IOWA_ID]: {
@@ -460,7 +459,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-93.7 + local_longitude_modifier, 42.0 - local_latitude_modifier],
 			[-93.7 - local_longitude_modifier, 42.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_JACKSONVILLE_ID]: {
@@ -470,7 +469,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-80.7 + local_longitude_modifier, 29.9 - local_latitude_modifier],
 			[-80.7 - local_longitude_modifier, 29.9 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_JAMAICA_ID]: {
@@ -480,7 +479,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-76.9 + local_longitude_modifier, 19.3 - local_latitude_modifier],
 			[-76.9 - local_longitude_modifier, 19.3 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_KANSAS_ID]: {
@@ -490,7 +489,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-98.2 + local_longitude_modifier, 38.4 - local_latitude_modifier],
 			[-98.2 - local_longitude_modifier, 38.4 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_KELWONA_ID]: {
@@ -500,7 +499,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-120.0 + local_longitude_modifier, 50.0 - local_latitude_modifier],
 			[-120.0 - local_longitude_modifier, 50.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_KENTUCKY_ID]: {
@@ -510,7 +509,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-85.65 + local_longitude_modifier, 37.45 - local_latitude_modifier],
 			[-85.65 - local_longitude_modifier, 37.45 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_LAKE_ERIE_ID]: {
@@ -520,7 +519,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-81.04 + local_longitude_modifier, 42.08 - local_latitude_modifier],
 			[-81.04 - local_longitude_modifier, 42.08 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_LAKE_HURON_ID]: {
@@ -530,7 +529,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-82.07 + local_longitude_modifier, 44.53 - local_latitude_modifier],
 			[-82.07 - local_longitude_modifier, 44.53 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_LAKE_ONTARIO_ID]: {
@@ -540,7 +539,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-77.0 + local_longitude_modifier, 43.0 - local_latitude_modifier],
 			[-77.0 - local_longitude_modifier, 43.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_LAKE_SUPERIOR_ID]: {
@@ -550,7 +549,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-88.0 + local_longitude_modifier, 47.8 - local_latitude_modifier],
 			[-88.0 - local_longitude_modifier, 47.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_LAWRENCE_ID]: {
@@ -560,7 +559,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-95.25 + local_longitude_modifier, 38.97 - local_latitude_modifier],
 			[-95.25 - local_longitude_modifier, 38.97 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_MADISON_ID]: {
@@ -570,7 +569,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-89.5 + local_longitude_modifier, 43.07 - local_latitude_modifier],
 			[-89.5 - local_longitude_modifier, 43.07 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_MICHIGAN_ID]: {
@@ -580,7 +579,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-86.1 + local_longitude_modifier, 42.9 - local_latitude_modifier],
 			[-86.1 - local_longitude_modifier, 42.9 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_MID_BAJA_ID]: {
@@ -590,7 +589,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-113.2 + local_longitude_modifier, 26.7 - local_latitude_modifier],
 			[-113.2 - local_longitude_modifier, 26.7 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_MISSISSIPPI_ID]: {
@@ -600,7 +599,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-89.5 + local_longitude_modifier, 31.7 - local_latitude_modifier],
 			[-89.5 - local_longitude_modifier, 31.7 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_MITTEN_CI_ID]: {
@@ -610,7 +609,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-86.1 + local_longitude_modifier, 42.9 - local_latitude_modifier],
 			[-86.1 - local_longitude_modifier, 42.9 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_MONTREAL_ID]: {
@@ -620,7 +619,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-73.66 + local_longitude_modifier, 45.54 - local_latitude_modifier],
 			[-73.66 - local_longitude_modifier, 45.54 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NC_VA_ID]: {
@@ -630,7 +629,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-78.36 + local_longitude_modifier, 36.45 - local_latitude_modifier],
 			[-78.36 - local_longitude_modifier, 36.45 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NE_COLORADO_ID]: {
@@ -640,7 +639,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-103.0 + local_longitude_modifier, 41.0 - local_latitude_modifier],
 			[-103.0 - local_longitude_modifier, 41.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NE_MONTANA_ID]: {
@@ -650,7 +649,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-106.8 + local_longitude_modifier, 48.0 - local_latitude_modifier],
 			[-106.8 - local_longitude_modifier, 48.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NE_OREGON_ID]: {
@@ -660,7 +659,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-117.85 + local_longitude_modifier, 45.5 - local_latitude_modifier],
 			[-117.85 - local_longitude_modifier, 45.5 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NE_TEXAS_ID]: {
@@ -670,7 +669,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-95.0 + local_longitude_modifier, 33.0 - local_latitude_modifier],
 			[-95.0 - local_longitude_modifier, 33.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_N_CALIFORNIA_ID]: {
@@ -680,7 +679,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-121.6 + local_longitude_modifier, 40.5 - local_latitude_modifier],
 			[-121.6 - local_longitude_modifier, 40.5 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_N_DAKOTA_ID]: {
@@ -690,7 +689,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-100.4 + local_longitude_modifier, 49.0 - local_latitude_modifier],
 			[-100.4 - local_longitude_modifier, 49.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_N_ILLINOIS_ID]: {
@@ -700,7 +699,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-88.75 + local_longitude_modifier, 42.0 - local_latitude_modifier],
 			[-88.75 - local_longitude_modifier, 42.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_N_LOUISIANA_ID]: {
@@ -710,7 +709,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-92.45 + local_longitude_modifier, 32.13 - local_latitude_modifier],
 			[-92.45 - local_longitude_modifier, 32.13 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_N_MINNESOTA_ID]: {
@@ -720,7 +719,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-93.6 + local_longitude_modifier, 48.12 - local_latitude_modifier],
 			[-93.6 - local_longitude_modifier, 48.12 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_N_MISSISSIPPI_ID]: {
@@ -730,7 +729,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-89.56 + local_longitude_modifier, 33.94 - local_latitude_modifier],
 			[-89.56 - local_longitude_modifier, 33.94 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_N_NEW_MEXICO_ID]: {
@@ -740,7 +739,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-106.0 + local_longitude_modifier, 35.6 - local_latitude_modifier],
 			[-106.0 - local_longitude_modifier, 35.6 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NEBRASKA_ID]: {
@@ -750,7 +749,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-99.68 + local_longitude_modifier, 41.3 - local_latitude_modifier],
 			[-99.68 - local_longitude_modifier, 41.3 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NEVADA_ID]: {
@@ -760,7 +759,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-116.3 + local_longitude_modifier, 39.4 - local_latitude_modifier],
 			[-116.3 - local_longitude_modifier, 39.4 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NEW_BRUNSWICK_ID]: {
@@ -770,7 +769,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-66.1 + local_longitude_modifier, 46.33 - local_latitude_modifier],
 			[-66.1 - local_longitude_modifier, 46.33 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NEW_JERSEY_ID]: {
@@ -780,7 +779,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-74.34 + local_longitude_modifier, 40.22 - local_latitude_modifier],
 			[-74.34 - local_longitude_modifier, 40.22 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NEW_ORLEANS_ID]: {
@@ -790,7 +789,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-90.0 + local_longitude_modifier, 29.3 - local_latitude_modifier],
 			[-90.0 - local_longitude_modifier, 29.3 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NEWFOUNDLAND_ID]: {
@@ -800,7 +799,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-57.75 + local_longitude_modifier, 47.17 - local_latitude_modifier],
 			[-57.75 - local_longitude_modifier, 47.17 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NOVA_SCOTIA_ID]: {
@@ -810,7 +809,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-62.2 + local_longitude_modifier, 44.65 - local_latitude_modifier],
 			[-62.2 - local_longitude_modifier, 44.65 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NUEVO_LEON_ID]: {
@@ -820,7 +819,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-99.6 + local_longitude_modifier, 25.77 - local_latitude_modifier],
 			[-99.6 - local_longitude_modifier, 25.77 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_OHIO_ID]: {
@@ -830,7 +829,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-82.5 + local_longitude_modifier, 40.2 - local_latitude_modifier],
 			[-82.5 - local_longitude_modifier, 40.2 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_OKLAHOMA_ID]: {
@@ -840,7 +839,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-97.0 + local_longitude_modifier, 35.4 - local_latitude_modifier],
 			[-97.0 - local_longitude_modifier, 35.4 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_ORLANDO_ID]: {
@@ -850,7 +849,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-82.46 + local_longitude_modifier, 28.0 - local_latitude_modifier],
 			[-82.46 - local_longitude_modifier, 28.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_PHOENIX_ID]: {
@@ -860,7 +859,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-111.92 + local_longitude_modifier, 33.59 - local_latitude_modifier],
 			[-111.92 - local_longitude_modifier, 33.59 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_PORTLAND_ID]: {
@@ -870,7 +869,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-122.7 + local_longitude_modifier, 45.5 - local_latitude_modifier],
 			[-122.7 - local_longitude_modifier, 45.5 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_PUERTO_RICO_ID]: {
@@ -880,7 +879,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-66.11 + local_longitude_modifier, 18.22 - local_latitude_modifier],
 			[-66.11 - local_longitude_modifier, 18.22 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_REGINA_ID]: {
@@ -890,7 +889,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-104.6 + local_longitude_modifier, 50.45 - local_latitude_modifier],
 			[-104.6 - local_longitude_modifier, 50.45 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_RHODE_ISLAND_ID]: {
@@ -900,7 +899,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-71.05 + local_longitude_modifier, 41.86 - local_latitude_modifier],
 			[-71.05 - local_longitude_modifier, 41.86 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SE_COAST_ID]: {
@@ -910,7 +909,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-78.5 + local_longitude_modifier, 31.9 - local_latitude_modifier],
 			[-78.5 - local_longitude_modifier, 31.9 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SE_COLORADO_ID]: {
@@ -920,7 +919,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-103.2 + local_longitude_modifier, 38.1 - local_latitude_modifier],
 			[-103.2 - local_longitude_modifier, 38.1 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SE_MONTANA_ID]: {
@@ -930,7 +929,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-106.8 + local_longitude_modifier, 45.7 - local_latitude_modifier],
 			[-106.8 - local_longitude_modifier, 45.7 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SE_ONTARIO_ID]: {
@@ -940,7 +939,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-80.0 + local_longitude_modifier, 43.4 - local_latitude_modifier],
 			[-80.0 - local_longitude_modifier, 43.4 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SW_MISSOURI_ID]: {
@@ -950,7 +949,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-93.2 + local_longitude_modifier, 37.8 - local_latitude_modifier],
 			[-93.2 - local_longitude_modifier, 37.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SW_TEXAS_ID]: {
@@ -960,7 +959,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-102.9 + local_longitude_modifier, 30.65 - local_latitude_modifier],
 			[-102.9 - local_longitude_modifier, 30.65 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SW_UTAH_ID]: {
@@ -970,7 +969,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-113.2 + local_longitude_modifier, 37.2 - local_latitude_modifier],
 			[-113.2 - local_longitude_modifier, 37.2 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_S_CALIFORNIA_ID]: {
@@ -980,7 +979,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-117.5 + local_longitude_modifier, 33.3 - local_latitude_modifier],
 			[-117.5 - local_longitude_modifier, 33.3 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_S_DAKOTA_ID]: {
@@ -990,7 +989,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-100.0 + local_longitude_modifier, 44.25 - local_latitude_modifier],
 			[-100.0 - local_longitude_modifier, 44.25 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_S_FLORIDA_ID]: {
@@ -1000,7 +999,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-81.09 + local_longitude_modifier, 24.8 - local_latitude_modifier],
 			[-81.09 - local_longitude_modifier, 24.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_S_IDAHO_ID]: {
@@ -1010,7 +1009,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-114.0 + local_longitude_modifier, 43.4 - local_latitude_modifier],
 			[-114.0 - local_longitude_modifier, 43.4 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_S_ILLINOIS_ID]: {
@@ -1020,7 +1019,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-89.25 + local_longitude_modifier, 37.84 - local_latitude_modifier],
 			[-89.25 - local_longitude_modifier, 37.84 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_S_MAINE_ID]: {
@@ -1030,7 +1029,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-69.0 + local_longitude_modifier, 43.75 - local_latitude_modifier],
 			[-69.0 - local_longitude_modifier, 43.75 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_S_MINNESOTA_ID]: {
@@ -1040,7 +1039,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-94.3 + local_longitude_modifier, 45.1 - local_latitude_modifier],
 			[-94.3 - local_longitude_modifier, 45.1 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_S_OREGON_ID]: {
@@ -1050,7 +1049,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-121.2 + local_longitude_modifier, 43.0 - local_latitude_modifier],
 			[-121.2 - local_longitude_modifier, 43.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SALT_LAKE_ID]: {
@@ -1060,7 +1059,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-110.9 + local_longitude_modifier, 40.7 - local_latitude_modifier],
 			[-110.9 - local_longitude_modifier, 40.7 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SEATTLE_ID]: {
@@ -1070,7 +1069,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-122.6 + local_longitude_modifier, 48.4 - local_latitude_modifier],
 			[-122.6 - local_longitude_modifier, 48.4 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SERRANIAS_DEL_BURRO_ID]: {
@@ -1080,7 +1079,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-101.0 + local_longitude_modifier, 27.9 - local_latitude_modifier],
 			[-101.0 - local_longitude_modifier, 27.9 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SONORA_ID]: {
@@ -1090,7 +1089,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-112.2 + local_longitude_modifier, 30.6 - local_latitude_modifier],
 			[-112.2 - local_longitude_modifier, 30.6 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SOUX_FALLS_ID]: {
@@ -1100,7 +1099,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-96.73 + local_longitude_modifier, 43.53 - local_latitude_modifier],
 			[-96.73 - local_longitude_modifier, 43.53 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_TAHOE_ID]: {
@@ -1110,7 +1109,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-120.3 + local_longitude_modifier, 38.2 - local_latitude_modifier],
 			[-120.3 - local_longitude_modifier, 38.2 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_TENNESSEE_ID]: {
@@ -1120,7 +1119,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-86.02 + local_longitude_modifier, 35.6 - local_latitude_modifier],
 			[-86.02 - local_longitude_modifier, 35.6 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_TRI_STATE_ID]: {
@@ -1130,7 +1129,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-91.4 + local_longitude_modifier, 40.06 - local_latitude_modifier],
 			[-91.4 - local_longitude_modifier, 40.06 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_TURKS_AND_CAICOS_ID]: {
@@ -1140,7 +1139,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-72.7 + local_longitude_modifier, 21.8 - local_latitude_modifier],
 			[-72.7 - local_longitude_modifier, 21.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_UP_ID]: {
@@ -1150,7 +1149,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-87.2 + local_longitude_modifier, 46.0 - local_latitude_modifier],
 			[-87.2 - local_longitude_modifier, 46.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_VERMONT_ID]: {
@@ -1160,7 +1159,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-72.74 + local_longitude_modifier, 43.92 - local_latitude_modifier],
 			[-72.74 - local_longitude_modifier, 43.92 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_VIRGINIA_ID]: {
@@ -1170,7 +1169,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-76.8 + local_longitude_modifier, 38.8 - local_latitude_modifier],
 			[-76.8 - local_longitude_modifier, 38.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_W_MONTANA_ID]: {
@@ -1180,7 +1179,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-113.2 + local_longitude_modifier, 47.8 - local_latitude_modifier],
 			[-113.2 - local_longitude_modifier, 47.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_W_VIRGINIA_ID]: {
@@ -1190,7 +1189,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-80.45 + local_longitude_modifier, 38.71 - local_latitude_modifier],
 			[-80.45 - local_longitude_modifier, 38.71 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_WHITE_SANDS_ID]: {
@@ -1200,7 +1199,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-106.3 + local_longitude_modifier, 32.5 - local_latitude_modifier],
 			[-106.3 - local_longitude_modifier, 32.5 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_WICHITA_FALLS_ID]: {
@@ -1210,7 +1209,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-98.48 + local_longitude_modifier, 33.91 - local_latitude_modifier],
 			[-98.48 - local_longitude_modifier, 33.91 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_WINNIPEG_ID]: {
@@ -1220,7 +1219,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-96.4 + local_longitude_modifier, 50.0 - local_latitude_modifier],
 			[-96.4 - local_longitude_modifier, 50.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_WISCONSIN_ID]: {
@@ -1230,7 +1229,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-89.52 + local_longitude_modifier, 45.1 - local_latitude_modifier],
 			[-89.52 - local_longitude_modifier, 45.1 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_WYOMING_ID]: {
@@ -1240,7 +1239,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-107.0 + local_longitude_modifier, 42.5 - local_latitude_modifier],
 			[-107.0 - local_longitude_modifier, 42.5 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_YELLOWSTONE_ID]: {
@@ -1250,7 +1249,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-112.0 + local_longitude_modifier, 45.0 - local_latitude_modifier],
 			[-112.0 - local_longitude_modifier, 45.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_YUCATAN_ID]: {
@@ -1260,7 +1259,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-90.0 + local_longitude_modifier, 20.8 - local_latitude_modifier],
 			[-90.0 - local_longitude_modifier, 20.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_CA_ST_JOHNS_ID]: {
@@ -1270,7 +1269,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 			[-52.71 + local_longitude_modifier, 47.0 - local_latitude_modifier],
 			[-52.71 - local_longitude_modifier, 47.0 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 }
@@ -1296,7 +1295,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-149.9 + local_longitude_modifier, 61.2 - local_latitude_modifier],
 			[-149.9 - local_longitude_modifier, 61.2 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_BETHEL_ID]: {
@@ -1306,7 +1305,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-161.77 + local_longitude_modifier, 60.8 - local_latitude_modifier],
 			[-161.77 - local_longitude_modifier, 60.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_COLD_BAY_ID]: {
@@ -1316,7 +1315,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-162.71 + local_longitude_modifier, 55.2 - local_latitude_modifier],
 			[-162.71 - local_longitude_modifier, 55.2 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_DUTCH_HARBOR_ID]: {
@@ -1326,7 +1325,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-166.55 + local_longitude_modifier, 53.9 - local_latitude_modifier],
 			[-166.55 - local_longitude_modifier, 53.9 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_FAIRBANKS_ID]: {
@@ -1336,7 +1335,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-147.7 + local_longitude_modifier, 64.8 - local_latitude_modifier],
 			[-147.7 - local_longitude_modifier, 64.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_JUNEAU_ID]: {
@@ -1346,7 +1345,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-134.2 + local_longitude_modifier, 58.15 - local_latitude_modifier],
 			[-134.2 - local_longitude_modifier, 58.15 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_KING_SALMON_ID]: {
@@ -1356,7 +1355,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-156.66 + local_longitude_modifier, 58.7 - local_latitude_modifier],
 			[-156.66 - local_longitude_modifier, 58.7 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_NOME_ID]: {
@@ -1366,7 +1365,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-165.41 + local_longitude_modifier, 64.5 - local_latitude_modifier],
 			[-165.41 - local_longitude_modifier, 64.5 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_SAINT_PAUL_ID]: {
@@ -1376,7 +1375,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-160.15 + local_longitude_modifier, 58.8 - local_latitude_modifier],
 			[-160.15 - local_longitude_modifier, 58.8 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_YAKUTAT_ID]: {
@@ -1386,7 +1385,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-139.88 + local_longitude_modifier, 59.85 - local_latitude_modifier],
 			[-139.88 - local_longitude_modifier, 59.85 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_UNALAKLEET_ID]: {
@@ -1396,7 +1395,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-160.79 + local_longitude_modifier, 63.89 - local_latitude_modifier],
 			[-160.79 - local_longitude_modifier, 63.89 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_UTQIAGVIK_ID]: {
@@ -1406,7 +1405,7 @@ export const SATRAD_SECTORS_LOCAL_ALASKA = {
 			[-156.79 + local_longitude_modifier, 71.3 - local_latitude_modifier],
 			[-156.79 - local_longitude_modifier, 71.3 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 }
@@ -1423,7 +1422,7 @@ export const SATRAD_SECTORS_LOCAL_HAWAII = {
 			[-155.5 + local_longitude_modifier, 19.65 - local_latitude_modifier],
 			[-155.5 - local_longitude_modifier, 19.65 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_HI_CEN_ISL_ID]: {
@@ -1433,7 +1432,7 @@ export const SATRAD_SECTORS_LOCAL_HAWAII = {
 			[-156.6 + local_longitude_modifier, 20.9 - local_latitude_modifier],
 			[-156.6 - local_longitude_modifier, 20.9 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_LOCAL_HI_WRN_ISL_ID]: {
@@ -1443,7 +1442,7 @@ export const SATRAD_SECTORS_LOCAL_HAWAII = {
 			[-158.9 + local_longitude_modifier, 21.9 - local_latitude_modifier],
 			[-158.9 - local_longitude_modifier, 21.9 + local_latitude_modifier],
 		],
-		products: ALL_SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS,
 		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 }
