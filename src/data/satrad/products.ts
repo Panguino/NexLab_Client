@@ -24,81 +24,108 @@ const SATRAD_PRODUCT_SIMPLE_WATER_VAPOR_ID = 'simplewv'
 const SATRAD_PRODUCT_INFRARED_SANDWICH_ID = 'sandwich'
 const SATRAD_PRODUCT_COMPOSITE_RADAR_ID = 'comp_radar'
 
+export const DEFAULT_SATRAD_PRODUCT = SATRAD_PRODUCT_ABI_02_ID
+
 export const SATRAD_PRODUCTS = {
 	[SATRAD_PRODUCT_ABI_01_ID]: {
 		label: '01: Visible (blue)',
+		shortLabel: '01: Visible (blue)',
 	},
 	[SATRAD_PRODUCT_ABI_02_ID]: {
 		label: '02: Visible (red)',
+		shortLabel: '02: Visible (red)',
 	},
 	[SATRAD_PRODUCT_ABI_03_ID]: {
 		label: '03: Veggie (green)',
+		shortLabel: '03: Veggie',
 	},
 	[SATRAD_PRODUCT_ABI_04_ID]: {
 		label: '04: Cirrus (Near IR)',
+		shortLabel: '04: Cirrus',
 	},
 	[SATRAD_PRODUCT_ABI_05_ID]: {
 		label: '05: Snow/Ice (Near IR)',
+		shortLabel: '05: Snow/Ice',
 	},
 	[SATRAD_PRODUCT_ABI_06_ID]: {
 		label: '06: Particle Size (Near IR)',
+		shortLabel: '06: Particle Size',
 	},
 	[SATRAD_PRODUCT_ABI_07_ID]: {
 		label: '07: Shortwave IR',
+		shortLabel: '07: Shortwave IR',
 	},
 	[SATRAD_PRODUCT_ABI_08_ID]: {
 		label: '08: Upper-Level Water Vapor',
+		shortLabel: '08: UL H20 Vapor',
 	},
 	[SATRAD_PRODUCT_ABI_09_ID]: {
 		label: '09: Mid-Level Water Vapor',
+		shortLabel: '09: ML H20 Vapor',
 	},
 	[SATRAD_PRODUCT_ABI_10_ID]: {
 		label: '10: Low-Level Water Vapor',
+		shortLabel: '10: LL H20 Vapor',
 	},
 	[SATRAD_PRODUCT_ABI_11_ID]: {
 		label: '11: Cloud Top Phase',
+		shortLabel: '11: CLD Top Phase',
 	},
 	[SATRAD_PRODUCT_ABI_12_ID]: {
 		label: '12: Ozone',
+		shortLabel: '12: Ozone',
 	},
 	[SATRAD_PRODUCT_ABI_13_ID]: {
 		label: '13: Longwave IR (Clean)',
+		shortLabel: '13: LWIR (Clean)',
 	},
 	[SATRAD_PRODUCT_ABI_14_ID]: {
 		label: '14: Longwave IR',
+		shortLabel: '14: Longwave IR',
 	},
 	[SATRAD_PRODUCT_ABI_15_ID]: {
 		label: '15: Longwave IR (Dirty)',
+		shortLabel: '15: LWIR (Dirty)',
 	},
 	[SATRAD_PRODUCT_ABI_16_ID]: {
 		label: '16: Carbon Dioxide',
+		shortLabel: '16: Carbon Dioxide',
 	},
 	[SATRAD_PRODUCT_TRUE_COLOR_ID]: {
 		label: 'True Color',
+		shortLabel: 'True Color',
 	},
 	[SATRAD_PRODUCT_NATURAL_COLOR_ID]: {
 		label: 'Natural Color',
+		shortLabel: 'Natural Color',
 	},
 	[SATRAD_PRODUCT_NATURAL_COLOR_FIRE_ID]: {
 		label: 'Natural Color (Fire)',
+		shortLabel: 'Nat. Color (Fire)',
 	},
 	[SATRAD_PRODUCT_AIRMASS_ID]: {
 		label: 'Airmass',
+		shortLabel: 'Airmass',
 	},
 	[SATRAD_PRODUCT_NIGHT_TIME_MICRO_ID]: {
-		label: 'Night Microphysics',
+		label: 'Night-time Microphysics',
+		shortLabel: 'NT Microphysics',
 	},
 	[SATRAD_PRODUCT_DAY_CLOUD_PHASE_ID]: {
 		label: 'Day Cloud Phase',
+		shortLabel: 'Day Cloud Phase',
 	},
 	[SATRAD_PRODUCT_SIMPLE_WATER_VAPOR_ID]: {
 		label: 'Simple Water Vapor',
+		shortLabel: 'Simple WV',
 	},
 	[SATRAD_PRODUCT_INFRARED_SANDWICH_ID]: {
 		label: 'Infrared Sandwich',
+		shortLabel: 'Infrared Sandwich',
 	},
 	[SATRAD_PRODUCT_COMPOSITE_RADAR_ID]: {
 		label: 'Composite Radar',
+		shortLabel: 'Composite Radar',
 	},
 }
 

@@ -3,25 +3,35 @@
 import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
-import { ALL_SATRAD_GROUPS, SATRAD_GROUPS, SATRAD_PRODUCTS } from '@/data/satrad/products'
+import { ALL_SATRAD_GROUPS, DEFAULT_SATRAD_PRODUCT, SATRAD_GROUPS, SATRAD_PRODUCTS } from '@/data/satrad/products'
+import { DEFAULT_SATRAD_REGION } from '@/data/satrad/scaleRegions'
+import { DEFAULT_SATRAD_SECTOR } from '@/data/satrad/sectorsContinental'
+import { useParams, useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
+import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import styles from './SatradSidebarPanel.module.scss'
 
 const SatradSidebarPanel = () => {
-	// const router = useRouter()
+	const router = useRouter()
 	// const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
 	// const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
 	// const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	// const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	// const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
-	// const { nexradProductId: productId, nexradSiteId: siteId, nexradRegionId: regionId } = useParams()
+	const { satradProductId: productId, satradSectorId: sectorId, satradRegionId: regionId } = useParams()
 
-	const productsArray = Object.entries(SATRAD_PRODUCTS).map(([key, value]) => {
-		return {
-			id: key,
-			label: value.label,
-		}
-	})
+	useEffect(() => {
+		// if (!NEXRAD_PRODUCTS[productId as string] || !NEXRAD_REGIONS[regionId as string] || !NEXRAD_SITES[siteId as string]) {
+		// 	console.log('Invalid productId:', NEXRAD_PRODUCTS[productId as string])
+		// 	console.log('Invalid regionId:', NEXRAD_REGIONS[regionId as string])
+		// 	console.log('Invalid siteId:', NEXRAD_SITES[siteId as string])
+		// 	router.push(`/weather-data/nexrad-dual-pol-radar/${DEFAULT_NEXRAD_PRODUCT}/${DEFAULT_NEXRAD_REGION}/${DEFAULT_NEXRAD_SITE}`)
+		// }
+		router.push(`/weather-data/satellite-mosaic-radar/${DEFAULT_SATRAD_PRODUCT}/${DEFAULT_SATRAD_REGION}/${DEFAULT_SATRAD_SECTOR}`)
+	}, [productId, regionId, sectorId, router])
+
+	const productsArray = Object.keys(SATRAD_PRODUCTS).sort((a, b) => parseInt(a, 10) - parseInt(b, 10)) // Sort prevents the array from being reordered
 
 	const transformData = (productsArray, allSatradGroups, satradGroups, satradProducts) => {
 		if (!productsArray) return []
@@ -31,7 +41,7 @@ const SatradSidebarPanel = () => {
 				.filter((productId) => group.products.includes(productId))
 				.map((productId) => ({
 					id: productId,
-					label: satradProducts[productId].label,
+					label: satradProducts[productId].shortLabel,
 				}))
 
 			return {
@@ -48,17 +58,19 @@ const SatradSidebarPanel = () => {
 
 	return (
 		<ScrollArea>
-			<div className={styles.SatradSidebarPanel}>
-				{panelGroupedProducts.map(({ groupId, label, columns, products }) => (
-					<SidebarGroup key={groupId} title={label}>
-						<SidebarGrid columns={columns}>
-							{products.map(({ id, label }) => (
-								<SidebarLink key={id} name={label} linkUrl="" />
-							))}
-						</SidebarGrid>
-					</SidebarGroup>
-				))}
-			</div>
+			<SidebarPanelPad>
+				<div className={styles.SatradSidebarPanel}>
+					{panelGroupedProducts.map(({ groupId, label, columns, products }) => (
+						<SidebarGroup key={groupId} title={label}>
+							<SidebarGrid columns={columns}>
+								{products.map(({ id, label }) => (
+									<SidebarLink key={id} name={label} linkUrl={`${productId}-${regionId}-${sectorId}`} active={id === productId} />
+								))}
+							</SidebarGrid>
+						</SidebarGroup>
+					))}
+				</div>
+			</SidebarPanelPad>
 		</ScrollArea>
 	)
 }

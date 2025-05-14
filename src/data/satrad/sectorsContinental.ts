@@ -11,6 +11,8 @@ const SATRAD_SECTOR_CONTINENTAL_ARGENTINA_ID = 'argentina'
 const SATRAD_SECTOR_CONTINENTAL_BRAZIL_ID = 'brazil'
 const SATRAD_SECTOR_CONTINENTAL_ENSO_ID = 'enso'
 
+export const DEFAULT_SATRAD_SECTOR = SATRAD_SECTOR_CONTINENTAL_GOES_EAST_CONUS_ID
+
 const continental_latitude_modifier = 3
 const continental_longitude_modifier = 3
 
