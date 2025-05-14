@@ -22,13 +22,10 @@ const SatradSidebarPanel = () => {
 	const { satradProductId: productId, satradSectorId: sectorId, satradRegionId: regionId } = useParams()
 
 	useEffect(() => {
-		// if (!NEXRAD_PRODUCTS[productId as string] || !NEXRAD_REGIONS[regionId as string] || !NEXRAD_SITES[siteId as string]) {
-		// 	console.log('Invalid productId:', NEXRAD_PRODUCTS[productId as string])
-		// 	console.log('Invalid regionId:', NEXRAD_REGIONS[regionId as string])
-		// 	console.log('Invalid siteId:', NEXRAD_SITES[siteId as string])
-		// 	router.push(`/weather-data/nexrad-dual-pol-radar/${DEFAULT_NEXRAD_PRODUCT}/${DEFAULT_NEXRAD_REGION}/${DEFAULT_NEXRAD_SITE}`)
-		// }
-		router.push(`/weather-data/satellite-mosaic-radar/${DEFAULT_SATRAD_PRODUCT}/${DEFAULT_SATRAD_REGION}/${DEFAULT_SATRAD_SECTOR}`)
+		if (!SATRAD_PRODUCTS[productId as string]) {
+			console.log('Invalid productId:', SATRAD_PRODUCTS[productId as string])
+			router.push(`/weather-data/satellite-mosaic-radar/${DEFAULT_SATRAD_PRODUCT}/${DEFAULT_SATRAD_REGION}/${DEFAULT_SATRAD_SECTOR}`)
+		}
 	}, [productId, regionId, sectorId, router])
 
 	const productsArray = Object.keys(SATRAD_PRODUCTS).sort((a, b) => parseInt(a, 10) - parseInt(b, 10)) // Sort prevents the array from being reordered
