@@ -1,4 +1,3 @@
-import { ALL_SATRAD_DYNAMIC_OVERLAYS, ALL_SATRAD_STATIC_OVERLAYS } from './overlays'
 import { SATRAD_PRODUCTS } from './products'
 
 // Sub-regional Sectors
@@ -78,7 +77,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-74.9 - subregional_longitude_modifier, 23.7 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_BAJA_ID]: {
 		name: 'Baja',
@@ -88,7 +86,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-111.6 - subregional_longitude_modifier, 29.4 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_BERMUDA_ID]: {
 		name: 'Bermuda',
@@ -98,7 +95,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-70.7 - subregional_longitude_modifier, 32.7 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_BIG_BEND_ID]: {
 		name: 'Big Bend',
@@ -108,7 +104,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-101.7 - subregional_longitude_modifier, 28.4 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_BOOTHEEL_ID]: {
 		name: 'Bootheel',
@@ -118,7 +113,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-89.1 - subregional_longitude_modifier, 36.45 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CO_KS_PANHAN_ID]: {
 		name: 'CO_KS_PanHandle',
@@ -128,7 +122,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-101.0 - subregional_longitude_modifier, 37.5 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CALIGULF_ID]: {
 		name: 'Cali_Gulf',
@@ -138,7 +131,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-107.7 - subregional_longitude_modifier, 22.9 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CAROLINAS_ID]: {
 		name: 'Carolinas',
@@ -148,7 +140,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-78.7 - subregional_longitude_modifier, 33.9 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CENPLAINS_ID]: {
 		name: 'Cen_Plains',
@@ -158,7 +149,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-99.0 - subregional_longitude_modifier, 40.6 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CENROCKIES_ID]: {
 		name: 'Cen_Rockies',
@@ -168,7 +158,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-109.0 - subregional_longitude_modifier, 40.45 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CUBA_ID]: {
 		name: 'Cuba',
@@ -178,7 +167,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-79.3 - subregional_longitude_modifier, 21.5 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_DESERTSW_ID]: {
 		name: 'Desert_SW',
@@ -188,7 +176,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-108.0 - subregional_longitude_modifier, 34.4 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_DIXIE_ID]: {
 		name: 'Dixie',
@@ -198,7 +185,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-88.0 - subregional_longitude_modifier, 32.3 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_DURANGO_ID]: {
 		name: 'Durango',
@@ -208,7 +194,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-107.88 - subregional_longitude_modifier, 37.28 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_E_ANTILLES_ID]: {
 		name: 'E_Antilles',
@@ -218,7 +203,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-67.3 - subregional_longitude_modifier, 19.6 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_E_CARIBBEAN_ID]: {
 		name: 'E_Caribbean',
@@ -228,7 +212,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-66.3 - subregional_longitude_modifier, 13.2 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_E_GULF_COAST_ID]: {
 		name: 'E_Gulf_Coast',
@@ -238,7 +221,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-86.1 - subregional_longitude_modifier, 27.8 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_FLORIDA_ID]: {
 		name: 'Florida',
@@ -248,7 +230,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-80.7 - subregional_longitude_modifier, 27.8 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_GREATERANTILLES_ID]: {
 		name: 'Greater Antilles',
@@ -258,7 +239,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-73.2 - subregional_longitude_modifier, 18.4 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_IL_ID]: {
 		name: 'Illinois',
@@ -268,7 +248,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-88.8 - subregional_longitude_modifier, 41.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_MI_ID]: {
 		name: 'Michigan',
@@ -278,7 +257,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-84.1 - subregional_longitude_modifier, 44.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_MEXICOCITY_ID]: {
 		name: 'Mexico City',
@@ -288,7 +266,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-100.0 - subregional_longitude_modifier, 18.2 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_MIDATLANTIC_ID]: {
 		name: 'Mid Atlantic',
@@ -298,7 +275,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-75.9 - subregional_longitude_modifier, 40.3 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_NE_WY_ID]: {
 		name: 'NE_WY',
@@ -308,7 +284,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-104.7 - subregional_longitude_modifier, 43.9 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_N_IOWA_ID]: {
 		name: 'N_Iowa',
@@ -318,7 +293,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-94.0 - subregional_longitude_modifier, 43.2 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_N_NEVADA_ID]: {
 		name: 'N_Nevada',
@@ -328,7 +302,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-118.4 - subregional_longitude_modifier, 41.2 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_N_PLAINS_ID]: {
 		name: 'N_Plains',
@@ -338,7 +311,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-98.5 - subregional_longitude_modifier, 46.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_N_ROCKIES_ID]: {
 		name: 'N_Rockies',
@@ -348,7 +320,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-109.0 - subregional_longitude_modifier, 46.5 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_N_TIER_ID]: {
 		name: 'Upper Peninsula',
@@ -358,7 +329,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-88.4 - subregional_longitude_modifier, 46.1 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_OH_RV_ID]: {
 		name: 'Ohio River Valley',
@@ -368,7 +338,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-84.95 - subregional_longitude_modifier, 38.63 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_NEW_ENGLAND_ID]: {
 		name: 'New England',
@@ -378,7 +347,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-73.0 - subregional_longitude_modifier, 42.5 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_NRN_MO_ID]: {
 		name: 'Northern Missouri',
@@ -388,7 +356,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-93.0 - subregional_longitude_modifier, 40.5 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_OREGON_ID]: {
 		name: 'Oregon',
@@ -398,7 +365,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-122.22 - subregional_longitude_modifier, 43.54 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_QUEBEC_ID]: {
 		name: 'Quebec',
@@ -408,7 +374,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-75.5 - subregional_longitude_modifier, 45.7 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_PACNW_ID]: {
 		name: 'Pacific Northwest',
@@ -418,7 +383,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-120.4 - subregional_longitude_modifier, 47.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_S_BRITISH_COLUMBIA_ID]: {
 		name: 'S_British_Columbia',
@@ -428,7 +392,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-119.8 - subregional_longitude_modifier, 50.3 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_S_PANHANDLE_ID]: {
 		name: 'S_Panhandle',
@@ -438,7 +401,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-101.0 - subregional_longitude_modifier, 34.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_S_PLAINS_ID]: {
 		name: 'S_Plains',
@@ -448,7 +410,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-97.5 - subregional_longitude_modifier, 36.26 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_S_SASKATCHEWAN_ID]: {
 		name: 'S_Saskatchewan',
@@ -458,7 +419,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-106.2 - subregional_longitude_modifier, 49.6 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_SANFRAN_ID]: {
 		name: 'San Francisco',
@@ -468,7 +428,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-122.15 - subregional_longitude_modifier, 38.53 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_SIERRA_ID]: {
 		name: 'Sierra',
@@ -478,7 +437,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-115.0 - subregional_longitude_modifier, 36.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_ST_LAWRENCE_ID]: {
 		name: 'St. Lawrence',
@@ -488,7 +446,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-63.4 - subregional_longitude_modifier, 45.6 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_TEXAS_ID]: {
 		name: 'Texas',
@@ -498,7 +455,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-98.5 - subregional_longitude_modifier, 31.3 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_VANDENBERG_ID]: {
 		name: 'Vandenberg',
@@ -508,7 +464,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-120.6 - subregional_longitude_modifier, 34.7 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_VIRGINIAS_ID]: {
 		name: 'Virginias',
@@ -518,7 +473,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-77.0 - subregional_longitude_modifier, 37.3 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_W_CARIBBEAN_ID]: {
 		name: 'W_Caribbean',
@@ -528,7 +482,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-81.5 - subregional_longitude_modifier, 18.6 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_W_GULF_COAST_ID]: {
 		name: 'W_Gulf_Coast',
@@ -538,7 +491,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-97.5 - subregional_longitude_modifier, 30.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_YELLOWSTONE_ID]: {
 		name: 'Yellowstone',
@@ -548,7 +500,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-110.0 - subregional_longitude_modifier, 44.5 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_YUCATAN_ID]: {
 		name: 'Yucatan',
@@ -558,7 +509,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-89.2 - subregional_longitude_modifier, 21.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_CENTRAL_QUEBEC_ID]: {
 		name: 'CA_Central_Quebec',
@@ -568,7 +518,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-75.0 - subregional_longitude_modifier, 50.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_EDMONTON_ID]: {
 		name: 'CA_Edmonton',
@@ -578,7 +527,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-114.0 - subregional_longitude_modifier, 53.5 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_ERN_NEWFOUNDLAND_ID]: {
 		name: 'CA_Eastern_Newfoundland',
@@ -588,7 +536,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-52.71 - subregional_longitude_modifier, 48.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_GULF_STLAWRENCE_ID]: {
 		name: 'CA_Gulf_St_Lawrence',
@@ -598,7 +545,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-60.4 - subregional_longitude_modifier, 49.6 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_N_ALBERTA_ID]: {
 		name: 'CA_N_Alberta',
@@ -608,7 +554,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-115.0 - subregional_longitude_modifier, 57.5 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_N_BRITISH_COLUMBIA_ID]: {
 		name: 'CA_N_British_Columbia',
@@ -618,7 +563,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-128.0 - subregional_longitude_modifier, 58.2 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_N_MANITOBA_SASKACHEWAN_ID]: {
 		name: 'CA_N_Manitoba_Saskatchewan',
@@ -628,7 +572,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-101.2 - subregional_longitude_modifier, 57.4 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_N_ONTARIO_ID]: {
 		name: 'CA_N_Ontario',
@@ -638,7 +581,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-87.0 - subregional_longitude_modifier, 55.8 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_N_QUEBEC_ID]: {
 		name: 'CA_N_Quebec',
@@ -648,7 +590,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-75.5 - subregional_longitude_modifier, 55.6 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_NEWFOUNDLAND_ID]: {
 		name: 'CA_Newfoundland',
@@ -658,7 +599,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-61.0 - subregional_longitude_modifier, 54.2 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_S_BRITISH_COLUMBIA_ID]: {
 		name: 'CA_S_British_Columbia',
@@ -668,7 +608,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-124.0 - subregional_longitude_modifier, 54.3 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_S_MANITOBA_SASKACHEWAN_ID]: {
 		name: 'CA_S_Manitoba_Saskatchewan',
@@ -678,7 +617,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-101.6 - subregional_longitude_modifier, 51.9 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_S_ONTARIO_ID]: {
 		name: 'CA_S_Ontario',
@@ -688,7 +626,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-87.0 - subregional_longitude_modifier, 50.3 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_UNGAVA_ID]: {
 		name: 'CA_Ungava',
@@ -698,7 +635,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-66.0 - subregional_longitude_modifier, 58.0 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 }
 
@@ -719,7 +655,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 			[-162.88 - subregional_longitude_modifier, 64.06 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_ANCHORAGESUB_ID]: {
 		name: 'Anchorage Sub',
@@ -729,7 +664,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 			[-149.9 - subregional_longitude_modifier, 61.2 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_NWALASKA_ID]: {
 		name: 'NW Alaska',
@@ -739,7 +673,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 			[-155.41 - subregional_longitude_modifier, 68.75 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_JUNEAUSUB_ID]: {
 		name: 'Juneau Sub',
@@ -749,7 +682,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 			[-134.2 - subregional_longitude_modifier, 58.15 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_FAIRBANKS_ID]: {
 		name: 'Fairbanks',
@@ -759,7 +691,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 			[-147.75 - subregional_longitude_modifier, 64.75 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_BRISTOLBAY_ID]: {
 		name: 'Bristol Bay',
@@ -769,7 +700,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 			[-160.0 - subregional_longitude_modifier, 56.96 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_UNALASKA_ID]: {
 		name: 'Unalaska',
@@ -779,7 +709,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 			[-166.53 - subregional_longitude_modifier, 53.87 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 }
 
@@ -794,6 +723,5 @@ export const SATRAD_SECTORS_SUBREGIONAL_HAWAII = {
 			[-156.1 - subregional_longitude_modifier, 20.5 + subregional_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 }

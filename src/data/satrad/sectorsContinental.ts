@@ -1,4 +1,3 @@
-import { ALL_SATRAD_DYNAMIC_OVERLAYS, ALL_SATRAD_STATIC_OVERLAYS } from './overlays'
 import { SATRAD_PRODUCTS } from './products'
 
 // Continental Sectors
@@ -10,6 +9,8 @@ const SATRAD_SECTOR_CONTINENTAL_ALASKA_ID = 'Alaska'
 const SATRAD_SECTOR_CONTINENTAL_ARGENTINA_ID = 'argentina'
 const SATRAD_SECTOR_CONTINENTAL_BRAZIL_ID = 'brazil'
 const SATRAD_SECTOR_CONTINENTAL_ENSO_ID = 'enso'
+
+export const DEFAULT_SATRAD_SECTOR = SATRAD_SECTOR_CONTINENTAL_GOES_EAST_CONUS_ID
 
 const continental_latitude_modifier = 3
 const continental_longitude_modifier = 3
@@ -23,7 +24,6 @@ export const SATRAD_SECTORS_CONTINENTAL_GOES_EAST = {
 			[-92.0 - continental_longitude_modifier, 38.3 + continental_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_CONTINENTAL_GOES_EAST_CONUS_SOUTH_ID]: {
 		name: 'CONUS South',
@@ -33,7 +33,6 @@ export const SATRAD_SECTORS_CONTINENTAL_GOES_EAST = {
 			[-91.9 - continental_longitude_modifier, 30.0 + continental_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_CONTINENTAL_ARGENTINA_ID]: {
 		name: 'Argentina',
@@ -43,7 +42,6 @@ export const SATRAD_SECTORS_CONTINENTAL_GOES_EAST = {
 			[-66.0 - continental_longitude_modifier, -39.0 + continental_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_CONTINENTAL_BRAZIL_ID]: {
 		name: 'Brazil',
@@ -53,7 +51,6 @@ export const SATRAD_SECTORS_CONTINENTAL_GOES_EAST = {
 			[-57.0 - continental_longitude_modifier, -14.6 + continental_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_CONTINENTAL_ENSO_ID]: {
 		name: 'ENSO',
@@ -63,7 +60,6 @@ export const SATRAD_SECTORS_CONTINENTAL_GOES_EAST = {
 			[-110.0 - continental_longitude_modifier, 0.0 + continental_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 }
 export const SATRAD_SECTORS_CONTINENTAL_GOES_WEST = {
@@ -75,7 +71,6 @@ export const SATRAD_SECTORS_CONTINENTAL_GOES_WEST = {
 			[-136.0 - continental_longitude_modifier, 38.8 + continental_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_CONTINENTAL_GOES_WEST_CONUS_SOUTH_ID]: {
 		name: 'CONUS West South',
@@ -85,7 +80,6 @@ export const SATRAD_SECTORS_CONTINENTAL_GOES_WEST = {
 			[-135.9 - continental_longitude_modifier, 29.8 + continental_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_CONTINENTAL_ALASKA_ID]: {
 		name: 'Alaska',
@@ -95,6 +89,5 @@ export const SATRAD_SECTORS_CONTINENTAL_GOES_WEST = {
 			[-156.0 - continental_longitude_modifier, 62.0 + continental_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 }

@@ -1,4 +1,3 @@
-import { ALL_SATRAD_DYNAMIC_OVERLAYS, ALL_SATRAD_STATIC_OVERLAYS } from './overlays'
 import { SATRAD_PRODUCTS } from './products'
 
 // Global Sectors
@@ -38,7 +37,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-24.0 - global_longitude_modifier, 16.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_EAST_EQUATORIAL_ID]: {
 		name: 'GOES East Equatorial',
@@ -48,7 +46,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-75.0 - global_longitude_modifier, 0.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_EAST_FULL_DISK_ID]: {
 		name: 'GOES East Full Disk',
@@ -58,7 +55,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-75.0 - global_longitude_modifier, 0.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_EAST_FULL_DISK_LARGE_ID]: {
 		name: 'GOES East Full Disk Large',
@@ -68,7 +64,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-75.0 - global_longitude_modifier, 0.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_EAST_HALF_DISK_NORTH_ID]: {
 		name: 'GOES East Half Disk North',
@@ -78,7 +73,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-75.0 - global_longitude_modifier, 25.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_EAST_HALF_DISK_SOUTH_ID]: {
 		name: 'GOES East Half Disk South',
@@ -88,7 +82,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-75.0 - global_longitude_modifier, -25.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_EAST_NORTHERN_HEMISPHERE_ID]: {
 		name: 'GOES East Northern Hemisphere',
@@ -98,7 +91,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-75.0 - global_longitude_modifier, 50.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_EAST_SOUTHERN_HEMISPHERE_ID]: {
 		name: 'GOES East Southern Hemisphere',
@@ -108,7 +100,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-75.0 - global_longitude_modifier, -50.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_ATLANTIC_ID]: {
 		name: 'Atlantic',
@@ -118,7 +109,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-55.0 - global_longitude_modifier, 24 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_SOUTH_ATLANTIC_ID]: {
 		name: 'South Atlantic',
@@ -128,7 +118,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-45.0 - global_longitude_modifier, -14.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_NORTH_AMERICA_ID]: {
 		name: 'North America',
@@ -138,7 +127,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-96.0 - global_longitude_modifier, 41.5 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_SOUTH_AMERICA_ID]: {
 		name: 'South America',
@@ -148,7 +136,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-60.0 - global_longitude_modifier, -27.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_EAST_SOUTH_PACIFIC_ID]: {
 		name: 'GOES East South Pacific',
@@ -158,7 +145,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_EAST = {
 			[-115.0 - global_longitude_modifier, -30.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 }
 
@@ -171,7 +157,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_WEST = {
 			[-135.0 - global_longitude_modifier, 0.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_WEST_FULL_DISK_ID]: {
 		name: 'GOES West Full Disk',
@@ -181,7 +166,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_WEST = {
 			[-135.0 - global_longitude_modifier, 0.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_WEST_FULL_DISK_LARGE_ID]: {
 		name: 'GOES West Full Disk Large',
@@ -191,7 +175,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_WEST = {
 			[-135.0 - global_longitude_modifier, 0.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_WEST_HALF_DISK_NORTH_ID]: {
 		name: 'GOES West Half Disk North',
@@ -201,7 +184,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_WEST = {
 			[-135.0 - global_longitude_modifier, 25.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_WEST_HALF_DISK_SOUTH_ID]: {
 		name: 'GOES West Half Disk South',
@@ -211,7 +193,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_WEST = {
 			[-135.0 - global_longitude_modifier, -25.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_WEST_NORTHERN_HEMISPHERE_ID]: {
 		name: 'GOES West Northern Hemisphere',
@@ -221,7 +202,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_WEST = {
 			[-135.0 - global_longitude_modifier, 50.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_WEST_SOUTHERN_HEMISPHERE_ID]: {
 		name: 'GOES West Southern Hemisphere',
@@ -231,7 +211,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_WEST = {
 			[-135.0 - global_longitude_modifier, -50.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_WEST_NORTH_PACIFIC_ID]: {
 		name: 'GOES West North Pacific',
@@ -241,7 +220,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_WEST = {
 			[-170.0 - global_longitude_modifier, 30.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_WEST_NORTH_PACIFIC_LARGE_ID]: {
 		name: 'GOES West North Pacific Large',
@@ -251,7 +229,6 @@ export const SATRAD_SECTORS_GLOBAL_GOES_WEST = {
 			[-170.0 - global_longitude_modifier, 30.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 	[SATRAD_SECTOR_GLOBAL_GOES_WEST_SOUTHWEST_PACIFIC_ID]: {
 		name: 'GOES West South Pacific',
@@ -261,6 +238,5 @@ export const SATRAD_SECTORS_GLOBAL_GOES_WEST = {
 			[-170.0 - global_longitude_modifier, -30.0 + global_latitude_modifier],
 		],
 		products: SATRAD_PRODUCTS,
-		overlays: [...ALL_SATRAD_STATIC_OVERLAYS, ...ALL_SATRAD_DYNAMIC_OVERLAYS],
 	},
 }
