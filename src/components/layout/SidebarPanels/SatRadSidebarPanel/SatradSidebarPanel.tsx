@@ -34,31 +34,7 @@ const SatradSidebarPanel = () => {
 		}
 	}, [productId, regionId, sectorId, router])
 
-	const productsArray = Object.keys(SATRAD_PRODUCTS).sort((a, b) => parseInt(a, 10) - parseInt(b, 10)) // Sort prevents the array from being reordered
-
-	const transformData = (productsArray, allSatradGroups, satradGroups, satradProducts) => {
-		if (!productsArray) return []
-		const transformedData = allSatradGroups.map((groupId) => {
-			const group = satradGroups[groupId]
-			const products = productsArray
-				.filter((productId) => group.products.includes(productId))
-				.map((productId) => ({
-					id: productId,
-					label: satradProducts[productId].shortLabel,
-				}))
-
-			return {
-				groupId,
-				label: group.label,
-				columns: group.columns,
-				products,
-			}
-		})
-
-		return transformedData
-	}
 	const handleRegionChange = (newRegionId) => {
-		console.log('newRegionId', newRegionId)
 		router.push(`/weather-data/satellite-mosaic-radar/${productId}/${newRegionId}/${sectorId}`)
 		openSectorSelectorPanel()
 	}
@@ -86,6 +62,33 @@ const SatradSidebarPanel = () => {
 		}))
 		setSectorSelectorSectors(selectedSectors)
 	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors])
+
+	const productsArray =
+		sectorId !== undefined
+			? Object.keys(ALL_SATRAD_SECTORS[sectorId as string].products).sort((a, b) => parseInt(a, 10) - parseInt(b, 10))
+			: false
+
+	const transformData = (productsArray, allSatradGroups, satradGroups, satradProducts) => {
+		if (!productsArray) return []
+		const transformedData = allSatradGroups.map((groupId) => {
+			const group = satradGroups[groupId]
+			const products = productsArray
+				.filter((productId) => group.products.includes(productId))
+				.map((productId) => ({
+					id: productId,
+					label: satradProducts[productId].shortLabel,
+				}))
+
+			return {
+				groupId,
+				label: group.label,
+				columns: group.columns,
+				products,
+			}
+		})
+
+		return transformedData
+	}
 	const panelGroupedProducts = transformData(productsArray, ALL_SATRAD_GROUPS, SATRAD_GROUPS, SATRAD_PRODUCTS)
 
 	return (
