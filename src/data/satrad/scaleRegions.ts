@@ -60,57 +60,137 @@ export const SATRAD_REGIONS = {
 	},
 }
 
+export const SATRAD_MAP_OPTIONS = [
+	{
+		label: SATRAD_REGIONS[SATRAD_REGION_GOES_EAST_ID].label,
+		options: [
+			{
+				label: 'Global',
+				value: SATRAD_SCALE_REGION_GLOBAL_EAST_ID,
+			},
+			{
+				label: 'Continental',
+				value: SATRAD_SCALE_REGION_CONTINENTAL_EAST_ID,
+			},
+		],
+	},
+	{
+		label: SATRAD_REGIONS[SATRAD_REGION_GOES_WEST_ID].label,
+		options: [
+			{
+				label: 'Global',
+				value: SATRAD_SCALE_REGION_GLOBAL_WEST_ID,
+			},
+			{
+				label: 'Continental',
+				value: SATRAD_SCALE_REGION_CONTINENTAL_WEST_ID,
+			},
+		],
+	},
+	{
+		label: SATRAD_REGIONS[SATRAD_REGION_NAMER_ID].label,
+		options: [
+			{
+				label: 'Regional',
+				value: SATRAD_SCALE_REGION_REGIONAL_NAMER_ID,
+			},
+			{
+				label: 'Subregional',
+				value: SATRAD_SCALE_REGION_SUBREGIONAL_NAMER_ID,
+			},
+			{
+				label: 'Local',
+				value: SATRAD_SCALE_REGION_LOCAL_NAMER_ID,
+			},
+		],
+	},
+	{
+		label: SATRAD_REGIONS[SATRAD_REGION_ALASKA_ID].label,
+		options: [
+			{
+				label: 'Regional',
+				value: SATRAD_SCALE_REGION_REGIONAL_ALASKA_ID,
+			},
+			{
+				label: 'Subregional',
+				value: SATRAD_SCALE_REGION_SUBREGIONAL_ALASKA_ID,
+			},
+			{
+				label: 'Local',
+				value: SATRAD_SCALE_REGION_LOCAL_ALASKA_ID,
+			},
+		],
+	},
+	{
+		label: SATRAD_REGIONS[SATRAD_REGION_HAWAII_ID].label,
+		options: [
+			{
+				label: 'Regional',
+				value: SATRAD_SCALE_REGION_REGIONAL_HAWAII_ID,
+			},
+			{
+				label: 'Subregional',
+				value: SATRAD_SCALE_REGION_SUBREGIONAL_HAWAII_ID,
+			},
+			{
+				label: 'Local',
+				value: SATRAD_SCALE_REGION_LOCAL_HAWAII_ID,
+			},
+		],
+	},
+]
+
 export const SATRAD_SCALE_REGIONS = {
 	[SATRAD_SCALE_REGION_GLOBAL_EAST_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_GOES_EAST_ID],
-		sectors: SATRAD_SECTORS_GLOBAL_GOES_EAST, // this needs to be an array of ids, then use the id to select this
+		sectors: Object.keys(SATRAD_SECTORS_GLOBAL_GOES_EAST).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_GLOBAL_WEST_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_GOES_WEST_ID],
-		sectors: SATRAD_SECTORS_GLOBAL_GOES_WEST,
+		sectors: Object.keys(SATRAD_SECTORS_GLOBAL_GOES_WEST).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_CONTINENTAL_EAST_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_GOES_EAST_ID],
-		sectors: SATRAD_SECTORS_CONTINENTAL_GOES_EAST,
+		sectors: Object.keys(SATRAD_SECTORS_CONTINENTAL_GOES_EAST).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_CONTINENTAL_WEST_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_GOES_WEST_ID],
-		sectors: SATRAD_SECTORS_CONTINENTAL_GOES_WEST,
+		sectors: Object.keys(SATRAD_SECTORS_CONTINENTAL_GOES_WEST).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_REGIONAL_NAMER_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_NAMER_ID],
-		sectors: SATRAD_SECTORS_REGIONAL_NAMER,
+		sectors: Object.keys(SATRAD_SECTORS_REGIONAL_NAMER).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_REGIONAL_ALASKA_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_ALASKA_ID],
-		sectors: SATRAD_SECTORS_REGIONAL_ALASKA,
+		sectors: Object.keys(SATRAD_SECTORS_REGIONAL_ALASKA).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_REGIONAL_HAWAII_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_HAWAII_ID],
-		sectors: SATRAD_SECTORS_REGIONAL_HAWAII,
+		sectors: Object.keys(SATRAD_SECTORS_REGIONAL_HAWAII).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_SUBREGIONAL_NAMER_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_NAMER_ID],
-		sectors: SATRAD_SECTORS_SUBREGIONAL_NAMER,
+		sectors: Object.keys(SATRAD_SECTORS_SUBREGIONAL_NAMER).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_SUBREGIONAL_ALASKA_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_ALASKA_ID],
-		sectors: SATRAD_SECTORS_SUBREGIONAL_ALASKA,
+		sectors: Object.keys(SATRAD_SECTORS_SUBREGIONAL_ALASKA).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_SUBREGIONAL_HAWAII_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_HAWAII_ID],
-		sectors: SATRAD_SECTORS_SUBREGIONAL_HAWAII,
+		sectors: Object.keys(SATRAD_SECTORS_SUBREGIONAL_HAWAII).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_LOCAL_NAMER_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_NAMER_ID],
-		sectors: SATRAD_SECTORS_LOCAL_NAMER,
+		sectors: Object.keys(SATRAD_SECTORS_LOCAL_NAMER).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_LOCAL_ALASKA_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_ALASKA_ID],
-		sectors: SATRAD_SECTORS_LOCAL_ALASKA,
+		sectors: Object.keys(SATRAD_SECTORS_LOCAL_ALASKA).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_LOCAL_HAWAII_ID]: {
 		region: SATRAD_REGIONS[SATRAD_REGION_HAWAII_ID],
-		sectors: SATRAD_SECTORS_LOCAL_HAWAII,
+		sectors: Object.keys(SATRAD_SECTORS_LOCAL_HAWAII).map((sectorId) => sectorId),
 	},
 }

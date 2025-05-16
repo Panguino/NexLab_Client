@@ -1,33 +1,13 @@
 'use client'
 
+import { Button } from '@/components/elements/Button/Button'
 import SelectGrouped from '@/components/elements/SelectGrouped/SelectGrouped'
 import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { ALL_SATRAD_GROUPS, DEFAULT_SATRAD_PRODUCT, SATRAD_GROUPS, SATRAD_PRODUCTS } from '@/data/satrad/products'
-import {
-	DEFAULT_SATRAD_REGION,
-	SATRAD_REGION_ALASKA_ID,
-	SATRAD_REGION_GOES_EAST_ID,
-	SATRAD_REGION_GOES_WEST_ID,
-	SATRAD_REGION_HAWAII_ID,
-	SATRAD_REGION_NAMER_ID,
-	SATRAD_REGIONS,
-	SATRAD_SCALE_REGION_CONTINENTAL_EAST_ID,
-	SATRAD_SCALE_REGION_CONTINENTAL_WEST_ID,
-	SATRAD_SCALE_REGION_GLOBAL_EAST_ID,
-	SATRAD_SCALE_REGION_GLOBAL_WEST_ID,
-	SATRAD_SCALE_REGION_LOCAL_ALASKA_ID,
-	SATRAD_SCALE_REGION_LOCAL_HAWAII_ID,
-	SATRAD_SCALE_REGION_LOCAL_NAMER_ID,
-	SATRAD_SCALE_REGION_REGIONAL_ALASKA_ID,
-	SATRAD_SCALE_REGION_REGIONAL_HAWAII_ID,
-	SATRAD_SCALE_REGION_REGIONAL_NAMER_ID,
-	SATRAD_SCALE_REGION_SUBREGIONAL_ALASKA_ID,
-	SATRAD_SCALE_REGION_SUBREGIONAL_HAWAII_ID,
-	SATRAD_SCALE_REGION_SUBREGIONAL_NAMER_ID,
-	SATRAD_SCALE_REGIONS,
-} from '@/data/satrad/scaleRegions'
+import { DEFAULT_SATRAD_REGION, SATRAD_MAP_OPTIONS, SATRAD_SCALE_REGIONS } from '@/data/satrad/scaleRegions'
+import { ALL_SATRAD_SECTORS } from '@/data/satrad/sectors'
 import { DEFAULT_SATRAD_SECTOR } from '@/data/satrad/sectorsContinental'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
@@ -46,8 +26,10 @@ const SatradSidebarPanel = () => {
 	const { satradProductId: productId, satradSectorId: sectorId, satradRegionId: regionId } = useParams()
 
 	useEffect(() => {
-		if (!SATRAD_PRODUCTS[productId as string]) {
+		if (!SATRAD_PRODUCTS[productId as string] || !SATRAD_SCALE_REGIONS[regionId as string] || !ALL_SATRAD_SECTORS[sectorId as string]) {
 			console.log('Invalid productId:', SATRAD_PRODUCTS[productId as string])
+			console.log('Invalid regionId:', SATRAD_SCALE_REGIONS[regionId as string])
+			console.log('Invalid sectorId:', ALL_SATRAD_SECTORS[sectorId as string])
 			router.push(`/weather-data/satellite-mosaic-radar/${DEFAULT_SATRAD_PRODUCT}/${DEFAULT_SATRAD_REGION}/${DEFAULT_SATRAD_SECTOR}`)
 		}
 	}, [productId, regionId, sectorId, router])
@@ -81,85 +63,12 @@ const SatradSidebarPanel = () => {
 		openSectorSelectorPanel()
 	}
 
-	const regionOptions = [
-		{
-			label: SATRAD_REGIONS[SATRAD_REGION_GOES_EAST_ID].label,
-			options: [
-				{
-					label: 'Global',
-					value: SATRAD_SCALE_REGION_GLOBAL_EAST_ID,
-				},
-				{
-					label: 'Continental',
-					value: SATRAD_SCALE_REGION_CONTINENTAL_EAST_ID,
-				},
-			],
-		},
-		{
-			label: SATRAD_REGIONS[SATRAD_REGION_GOES_WEST_ID].label,
-			options: [
-				{
-					label: 'Global',
-					value: SATRAD_SCALE_REGION_GLOBAL_WEST_ID,
-				},
-				{
-					label: 'Continental',
-					value: SATRAD_SCALE_REGION_CONTINENTAL_WEST_ID,
-				},
-			],
-		},
-		{
-			label: SATRAD_REGIONS[SATRAD_REGION_NAMER_ID].label,
-			options: [
-				{
-					label: 'Regional',
-					value: SATRAD_SCALE_REGION_REGIONAL_NAMER_ID,
-				},
-				{
-					label: 'Subregional',
-					value: SATRAD_SCALE_REGION_SUBREGIONAL_NAMER_ID,
-				},
-				{
-					label: 'Local',
-					value: SATRAD_SCALE_REGION_LOCAL_NAMER_ID,
-				},
-			],
-		},
-		{
-			label: SATRAD_REGIONS[SATRAD_REGION_ALASKA_ID].label,
-			options: [
-				{
-					label: 'Regional',
-					value: SATRAD_SCALE_REGION_REGIONAL_ALASKA_ID,
-				},
-				{
-					label: 'Subregional',
-					value: SATRAD_SCALE_REGION_SUBREGIONAL_ALASKA_ID,
-				},
-				{
-					label: 'Local',
-					value: SATRAD_SCALE_REGION_LOCAL_ALASKA_ID,
-				},
-			],
-		},
-		{
-			label: SATRAD_REGIONS[SATRAD_REGION_HAWAII_ID].label,
-			options: [
-				{
-					label: 'Regional',
-					value: SATRAD_SCALE_REGION_REGIONAL_HAWAII_ID,
-				},
-				{
-					label: 'Subregional',
-					value: SATRAD_SCALE_REGION_SUBREGIONAL_HAWAII_ID,
-				},
-				{
-					label: 'Local',
-					value: SATRAD_SCALE_REGION_LOCAL_HAWAII_ID,
-				},
-			],
-		},
-	]
+	useEffect(() => {
+		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
+			closeSectorSelectorPanel()
+			router.push(`/weather-data/satellite-mosaic-radar/${productId}/${regionId}/${sectorId}`)
+		})
+	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
 
 	useEffect(() => {
 		if (!regionId) return
@@ -169,11 +78,11 @@ const SatradSidebarPanel = () => {
 			scale: region.scale,
 		}
 		setSectorSelectorD3config(newD3config)
-		const selectedSectors = region.sectors.map((sectorId) => ({
+		const selectedSectors = SATRAD_SCALE_REGIONS[regionId as string].sectors.map((sectorId) => ({
 			id: sectorId,
-			name: SATRAD_SITES[sectorId].name,
-			type: SATRAD_SITES[sectorId].type,
-			coordinates: SATRAD_SITES[sectorId].coordinates,
+			name: ALL_SATRAD_SECTORS[sectorId].name,
+			type: ALL_SATRAD_SECTORS[sectorId].type,
+			coordinates: ALL_SATRAD_SECTORS[sectorId].coordinates,
 		}))
 		setSectorSelectorSectors(selectedSectors)
 	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors])
@@ -184,8 +93,13 @@ const SatradSidebarPanel = () => {
 			<SidebarPanelPad>
 				<div className={styles.SatradSidebarPanel}>
 					<div className={styles.options}>
-						<SelectGrouped onChange={handleRegionChange} value={regionId as string} options={regionOptions} placeholder="Select Region" />
-						{/* <Button onClick={openSectorSelectorPanel} label={`Sector:  ${sectorId} - ${NEXRAD_SITES[sectorId as string]?.name}`} /> */}
+						<SelectGrouped
+							onChange={handleRegionChange}
+							value={regionId as string}
+							options={SATRAD_MAP_OPTIONS}
+							placeholder="Select Region"
+						/>
+						<Button onClick={openSectorSelectorPanel} label={`Sector: ${ALL_SATRAD_SECTORS[sectorId as string]?.name}`} />
 					</div>
 					{panelGroupedProducts.map(({ groupId, label, columns, products }) => (
 						<SidebarGroup key={groupId} title={label}>
