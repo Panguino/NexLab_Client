@@ -218,3 +218,22 @@ export const testFrames16x9 = [
 	'https://weather.cod.edu/assets/bannerwave/dimensions/16x9/5.jpg',
 	'https://weather.cod.edu/assets/bannerwave/dimensions/16x9/6.jpg',
 ]
+
+export const testDataWithOverlays = {
+	// matching as closely as possible to this reference: https://weather.cod.edu/datapoints/satrad/get-files.php?parms=regional-midwest-truecolor-6-1
+	files: [
+		'https://weather.cod.edu/assets/bannerwave/storybook/overlays/base01.jpg',
+		'https://weather.cod.edu/assets/bannerwave/storybook/overlays/base02.jpg',
+		'https://weather.cod.edu/assets/bannerwave/storybook/overlays/base03.jpg',
+	],
+	overlays: {
+		static: { map: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/static.png' },
+		dynamic: {
+			plot: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/dynamic01.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/dynamic02.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/dynamic03.gif',
+			],
+		},
+	},
+}
