@@ -97,6 +97,33 @@ import {
 	ISENTROPIC_PRODUCT_305K,
 	ISENTROPIC_PRODUCT_310K,
 } from '@/data/analysis/isentropic/products'
+import {
+	SATRAD_PRODUCT_ABI_01_ID,
+	SATRAD_PRODUCT_ABI_02_ID,
+	SATRAD_PRODUCT_ABI_03_ID,
+	SATRAD_PRODUCT_ABI_04_ID,
+	SATRAD_PRODUCT_ABI_05_ID,
+	SATRAD_PRODUCT_ABI_06_ID,
+	SATRAD_PRODUCT_ABI_07_ID,
+	SATRAD_PRODUCT_ABI_08_ID,
+	SATRAD_PRODUCT_ABI_09_ID,
+	SATRAD_PRODUCT_ABI_10_ID,
+	SATRAD_PRODUCT_ABI_11_ID,
+	SATRAD_PRODUCT_ABI_12_ID,
+	SATRAD_PRODUCT_ABI_13_ID,
+	SATRAD_PRODUCT_ABI_14_ID,
+	SATRAD_PRODUCT_ABI_15_ID,
+	SATRAD_PRODUCT_ABI_16_ID,
+	SATRAD_PRODUCT_AIRMASS_ID,
+	SATRAD_PRODUCT_COMPOSITE_RADAR_ID,
+	SATRAD_PRODUCT_DAY_CLOUD_PHASE_ID,
+	SATRAD_PRODUCT_INFRARED_SANDWICH_ID,
+	SATRAD_PRODUCT_NATURAL_COLOR_FIRE_ID,
+	SATRAD_PRODUCT_NATURAL_COLOR_ID,
+	SATRAD_PRODUCT_NIGHT_TIME_MICRO_ID,
+	SATRAD_PRODUCT_SIMPLE_WATER_VAPOR_ID,
+	SATRAD_PRODUCT_TRUE_COLOR_ID,
+} from '@/data/satrad/products'
 
 export const getSoundingPageIdByProductId = (productId) => {
 	switch (productId) {
@@ -276,7 +303,62 @@ export const getIsentropicPageIdByProductId = (productId) => {
 			return null
 	}
 }
-
+export const getSatradPageIdByProductId = (productId) => {
+	switch (productId) {
+		case SATRAD_PRODUCT_ABI_01_ID:
+			return 'p0g6w9xubgheaxtardasb17v'
+		case SATRAD_PRODUCT_ABI_02_ID:
+			return 'ty4nqcz1xcrlhs0kcmc2lgus'
+		case SATRAD_PRODUCT_ABI_03_ID:
+			return 'oug5xcu1i2p8lh72s81wxfuo'
+		case SATRAD_PRODUCT_ABI_04_ID:
+			return 'wn9wjgbdlnkjz7nncnr5p7z8'
+		case SATRAD_PRODUCT_ABI_05_ID:
+			return 'g44ozxzgbped2zil4yi41b1u'
+		case SATRAD_PRODUCT_ABI_06_ID:
+			return 'awmvobi8jzqug2azg4dsmvrj'
+		case SATRAD_PRODUCT_ABI_07_ID:
+			return 'mu2xxmx79pwvc5ny7cg3f7o5'
+		case SATRAD_PRODUCT_ABI_08_ID:
+			return 'u9a42gu0yhf6gma7siof6zbr'
+		case SATRAD_PRODUCT_ABI_09_ID:
+			return 'wmm86k6cj9ua610h6ezmvimo'
+		case SATRAD_PRODUCT_ABI_10_ID:
+			return 'nj7wxlkhjwpfy5h3ysmb7m4r'
+		case SATRAD_PRODUCT_ABI_11_ID:
+			return 'gksztyz94u6lqb7g8ii1xdtm'
+		case SATRAD_PRODUCT_ABI_12_ID:
+			return 'ccnj80l1br26mhj87pmd8osk'
+		case SATRAD_PRODUCT_ABI_13_ID:
+			return 'eidxrxpj4g79x098171rcj9z'
+		case SATRAD_PRODUCT_ABI_14_ID:
+			return 'g0xcxsy95krb5gramnejlyle'
+		case SATRAD_PRODUCT_ABI_15_ID:
+			return 'mydcssx31q6w7hqxeu2ziowr'
+		case SATRAD_PRODUCT_ABI_16_ID:
+			return 'r3bujemrqh8s7ecengiyzqaf'
+		case SATRAD_PRODUCT_COMPOSITE_RADAR_ID:
+			return 'f2b5vorlucy4g3d6rzzyf7b0'
+		case SATRAD_PRODUCT_TRUE_COLOR_ID:
+			return 'pkrpfedwtygnb0kf6svz66dm'
+		case SATRAD_PRODUCT_NATURAL_COLOR_ID:
+			return 'dgjvtojzg6vdcwo44jb5aevj'
+		case SATRAD_PRODUCT_NATURAL_COLOR_FIRE_ID:
+			return 'rk75qczmfqw6jg4vttb4zozg'
+		case SATRAD_PRODUCT_AIRMASS_ID:
+			return 'wazigveateomdajcpwoh4ecr'
+		case SATRAD_PRODUCT_NIGHT_TIME_MICRO_ID:
+			return 'c8bfekzmmohjop9buoqf1ks8'
+		case SATRAD_PRODUCT_DAY_CLOUD_PHASE_ID:
+			return 'lkv54grh1ds527j4akpdjohu'
+		case SATRAD_PRODUCT_SIMPLE_WATER_VAPOR_ID:
+			return 'ok0o4yy8yxx5mqjz0yz1j32a'
+		case SATRAD_PRODUCT_INFRARED_SANDWICH_ID:
+			return 'tye8trp9s4v8in6pgxyqfg58'
+		default:
+			return null
+	}
+}
 export const getDataPageIdByProductId = (productId) => {
 	switch (productId) {
 		case NEXRAD_PRODUCT_BASEREF_0_5:
