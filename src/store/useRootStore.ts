@@ -6,6 +6,7 @@ import { IGlobalSettingsSlice, createGlobalSettingsSlice } from './globalSetting
 import { IHazardsSlice, createHazardsSlice } from './hazardsSlice'
 import { IMobileMenuSlice, createMobileMenuSlice } from './mobileMenuSlice'
 import { INexradSlice, createNexradSlice } from './nexradSlice'
+import { ISatradSlice, createSatradSlice } from './satradSlice'
 import { ISectorSelectorPanelSlice, createSectorSelectorPanelSlice } from './sectorSelectorPanelSlice'
 import { ISlideoutPanelSlice, createSlideoutPanelSlice } from './slideoutPanelSlice'
 
@@ -18,6 +19,7 @@ export interface IGlobalStore
 		IMobileMenuSlice,
 		IGlobalSettingsSlice,
 		INexradSlice,
+		ISatradSlice,
 		IAnalysisSlice {}
 
 export type ZustandStateSlice<T> = StateCreator<IGlobalStore, [], [], T>
@@ -29,6 +31,7 @@ const useRootStoreBase = create<IGlobalStore>((...args) => ({
 	...createMobileMenuSlice(...args),
 	...createGlobalSettingsSlice(...args),
 	...createNexradSlice(...args),
+	...createSatradSlice(...args),
 	...createAnalysisSlice(...args),
 }))
 
