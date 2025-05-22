@@ -1,8 +1,9 @@
 'use client'
+import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
 import { faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import BasicPlaybackControls, { LoopMethod } from '../BasicPlaybackControls/BasicPlaybackControls'
 import Scrubber from '../Scrubber/Scrubber'
@@ -126,16 +127,18 @@ export const Animator = ({
 		}
 	}, [])
 
-	const allOverlayImages = {
-		...Object.keys(overlays.static).reduce((acc, key) => {
-			acc[key] = [overlays.static[key]]
-			return acc
-		}, {}),
-		...Object.keys(overlays.dynamic).reduce((acc, key) => {
-			acc[key] = overlays.dynamic[key]
-			return acc
-		}, {}),
-	}
+	const allOverlayImages = useMemo(() => {
+		return {
+			...Object.keys(overlays.static).reduce((acc, key) => {
+				acc[key] = [overlays.static[key]]
+				return acc
+			}, {}),
+			...Object.keys(overlays.dynamic).reduce((acc, key) => {
+				acc[key] = overlays.dynamic[key]
+				return acc
+			}, {}),
+		}
+	}, [overlays.static, overlays.dynamic])
 
 	return (
 		<div ref={animatorRef} className={styles.animator} style={{ height: height || '100%', width: width || '100%' }}>
@@ -155,10 +158,18 @@ export const Animator = ({
 								currentFrame={currentFrame}
 								loadedFrames={loadedFrames}
 								setLoadedFrames={setLoadedFrames}
+								baseOpacity={activeOverlays.includes('data') ? 1 : 0}
 							/>
 							{activeOverlays.map((overlay, index) => {
 								if (overlay === 'data') return null
-								return <AnimatorImageMachine key={index} frames={allOverlayImages[overlay] || []} currentFrame={currentFrame} />
+								return (
+									<AnimatorImageMachine
+										key={index}
+										baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
+										frames={allOverlayImages[overlay] || []}
+										currentFrame={currentFrame}
+									/>
+								)
 							})}
 						</TransformComponent>
 						{!hideZoomControls && (
