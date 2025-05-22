@@ -219,7 +219,7 @@ export const SATRAD_OVERLAYS = {
 	},
 	[SATRAD_OVERLAY_DYNAMIC_RADAR_ID]: {
 		name: 'Composite Radar',
-		opacity: 1,
+		opacity: 0.66,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SCP_ID]: {
 		name: 'Supercell Composite',
@@ -251,7 +251,7 @@ export const SATRAD_OVERLAYS = {
 	},
 	[SATRAD_OVERLAY_DYNAMIC_WW_ID]: {
 		name: 'Watches & Warnings',
-		opacity: 1,
+		opacity: 0.75,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_H5ANA_ID]: {
 		name: '500mb RAP Analysis',
@@ -275,15 +275,15 @@ export const SATRAD_OVERLAYS = {
 	},
 	[SATRAD_OVERLAY_DYNAMIC_ACHA_ID]: {
 		name: 'Cloud Top Height',
-		opacity: 1,
+		opacity: 0.66,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_ACHT_ID]: {
 		name: 'Cloud Top Temperature',
-		opacity: 1,
+		opacity: 0.33,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_ACTP_ID]: {
 		name: 'Cloud Top Phase',
-		opacity: 1,
+		opacity: 0.66,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_ADP_DUST_ID]: {
 		name: 'Aerosol - Dust',
@@ -295,7 +295,7 @@ export const SATRAD_OVERLAYS = {
 	},
 	[SATRAD_OVERLAY_DYNAMIC_DSI_CAPE_ID]: {
 		name: 'CAPE',
-		opacity: 1,
+		opacity: 0.5,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_LST_ID]: {
 		name: 'Land Surface Temperature',
@@ -303,7 +303,7 @@ export const SATRAD_OVERLAYS = {
 	},
 	[SATRAD_OVERLAY_DYNAMIC_RRQPE_ID]: {
 		name: 'Rainfall Rate',
-		opacity: 1,
+		opacity: 0.66,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SST_ID]: {
 		name: 'Sea Surface Temperature',
@@ -311,7 +311,7 @@ export const SATRAD_OVERLAYS = {
 	},
 	[SATRAD_OVERLAY_DYNAMIC_TPW_ID]: {
 		name: 'Total Precipitable Water',
-		opacity: 1,
+		opacity: 0.5,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY1_CAT_ID]: {
 		name: 'SPC Day 1 Outlook',
