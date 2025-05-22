@@ -1,10 +1,14 @@
 'use client'
-
 import { ALL_SATRAD_OVERLAY_GROUPS, SATRAD_OVERLAYS } from '@/data/satrad/overlays'
-import { useEffect } from 'react'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import styles from './OverlayPanel.module.scss'
 
 export const OverlayPanel = ({ onClose, overlays, activeOverlays, setActiveOverlays }) => {
+	const [groupOpen, setGroupOpen] = useState('maps')
+
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if ((event.target as HTMLElement).closest(`.${styles.OverlayPanel}`) === null) {
@@ -32,23 +36,44 @@ export const OverlayPanel = ({ onClose, overlays, activeOverlays, setActiveOverl
 
 	return (
 		<div className={styles.OverlayPanel}>
-			<div className={styles.overlayItem} onClick={() => handleOverlayClick('data')}>
-				Base Data Layer {activeOverlays.includes('data') ? '✓' : ''}
+			<div
+				className={`${styles.overlayItem} ${styles.firstItem} ${activeOverlays.includes('data') ? styles.active : null}`}
+				onClick={() => handleOverlayClick('data')}
+			>
+				Base Data Layer
 			</div>
 			{Object.entries(ALL_SATRAD_OVERLAY_GROUPS).map(([key, { name, overlays }]) => {
+				const open = groupOpen === key
 				return (
 					<div key={key} className={styles.overlayGroup}>
-						<div>{name}</div>
-						{overlays.map((overlayId, index) => {
-							if (!flattenedOverlays.includes(overlayId)) {
-								return null
-							}
-							return (
-								<div key={index} className={styles.overlayItem} onClick={() => handleOverlayClick(overlayId)}>
-									{SATRAD_OVERLAYS[overlayId].name} {activeOverlays.includes(overlayId) ? '✓' : ''}
-								</div>
-							)
-						})}
+						<div
+							className={styles.overlayGroupTitle}
+							onClick={() => {
+								setGroupOpen(key)
+							}}
+						>
+							{name}
+							<motion.div animate={{ transform: `${open ? 'rotate(0deg)' : 'rotate(180deg)'}` }}>
+								<FontAwesomeIcon icon={faChevronDown} />
+							</motion.div>
+						</div>
+						<motion.div animate={{ height: open ? 'auto' : 0 }} className={styles.overlayItems}>
+							{overlays.map((overlayId, index) => {
+								if (!flattenedOverlays.includes(overlayId)) {
+									return null
+								}
+								const isActive = activeOverlays.includes(overlayId)
+								return (
+									<div
+										key={index}
+										className={`${styles.overlayItem} ${isActive ? styles.active : null}`}
+										onClick={() => handleOverlayClick(overlayId)}
+									>
+										{SATRAD_OVERLAYS[overlayId].name}
+									</div>
+								)
+							})}
+						</motion.div>
 					</div>
 				)
 			})}

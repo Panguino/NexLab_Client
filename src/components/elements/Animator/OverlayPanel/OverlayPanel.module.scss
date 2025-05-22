@@ -6,15 +6,39 @@
   text-align: left;
   border-radius: 4px;
   background-color: var(--color-grey17);
-  padding: 4px;
-  color: var(--color-grey5);
+  color: var(--color-grey7);
 }
 .overlayGroup {
   font-weight: bold;
   font-size: 12px;
 }
+.overlayGroupTitle {
+  border-top: 1px solid var(--color-grey15);
+  padding: 4px 10px 4px;
+  color: var(--color-grey1);
+  display: flex;
+  justify-content: space-between;
+  &:hover {
+    color: var(--color-white);
+  }
+}
+.overlayItems {
+  overflow: hidden;
+}
 .overlayItem {
   font-weight: normal;
-  font-size: 11px;
-  padding-left: 10px;
+  font-size: 12px;
+  padding: 1px 14px;
+  transition: 0.2s ease-in-out;
+  &:hover {
+    background-color: var(--color-grey14);
+    color: var(--color-white);
+  }
+  &.active {
+    background-color: var(--color-blue5);
+    color: var(--color-white);
+  }
+}
+.firstItem {
+  padding: 4px 14px;
 }
