@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import styles from './OverlayPanel.module.scss'
 
-export const OverlayPanel = ({ onClose, overlays, activeOverlays, setActiveOverlays }) => {
+export const OverlayPanel = ({ onClose, overlays, activeOverlays, setActiveOverlays, open }) => {
 	const [groupOpen, setGroupOpen] = useState('maps')
 
 	useEffect(() => {
@@ -35,7 +35,7 @@ export const OverlayPanel = ({ onClose, overlays, activeOverlays, setActiveOverl
 	}
 
 	return (
-		<div className={styles.OverlayPanel}>
+		<div className={styles.OverlayPanel} style={{ opacity: open ? 1 : 0, pointerEvents: open ? 'all' : 'none' }}>
 			<div
 				className={`${styles.overlayItem} ${styles.firstItem} ${activeOverlays.includes('data') ? styles.active : null}`}
 				onClick={() => handleOverlayClick('data')}

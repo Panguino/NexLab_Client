@@ -191,14 +191,13 @@ export const Animator = ({
 								{overlays && (
 									<button onClick={() => setOverlayPanelOpen(true)}>
 										<FontAwesomeIcon icon={faLayerGroup} />
-										{overlayPanelOpen && (
-											<OverlayPanel
-												activeOverlays={activeOverlays}
-												setActiveOverlays={setActiveOverlays}
-												overlays={overlays}
-												onClose={() => setOverlayPanelOpen(false)}
-											/>
-										)}
+										<OverlayPanel
+											activeOverlays={activeOverlays}
+											setActiveOverlays={setActiveOverlays}
+											overlays={overlays}
+											onClose={() => setOverlayPanelOpen(false)}
+											open={overlayPanelOpen}
+										/>
 									</button>
 								)}
 							</div>
