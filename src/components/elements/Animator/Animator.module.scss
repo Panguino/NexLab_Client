@@ -47,3 +47,12 @@
     }
   }
 }
+.animatorImagesContainer {
+  position: relative;
+  & > div {
+    position: absolute;
+  }
+  & > div:nth-child(1) {
+    position: relative;
+  }
+}

@@ -5,13 +5,25 @@ import styles from './AnimatorImageMachine.module.scss'
 
 interface IAnimatorImageMachineProps {
 	frames: string[]
-	loadedFrames: any[]
-	setLoadedFrames: (frames: any[]) => void
 	currentFrame: number
+	loadedFrames?: any[]
+	setLoadedFrames?: (frames: any[]) => void
 }
 
-export const AnimatorImageMachine = ({ frames, currentFrame, loadedFrames, setLoadedFrames }: IAnimatorImageMachineProps) => {
+export const AnimatorImageMachine = ({
+	frames,
+	currentFrame,
+	loadedFrames: externalLoadedFrames,
+	setLoadedFrames: externalSetLoadedFrames,
+}: IAnimatorImageMachineProps) => {
 	const [isLoading, setIsLoading] = useState(true)
+	const [localLoadedFrames, setLocalLoadedFrames] = useState<number[]>([])
+
+	const loadedFrames = externalLoadedFrames ?? localLoadedFrames
+	const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
+
+	console.log(frames)
+
 	useEffect(() => {
 		if (frames && frames.length === 0) {
 			setIsLoading(false)
@@ -57,7 +69,15 @@ export const AnimatorImageMachine = ({ frames, currentFrame, loadedFrames, setLo
 				<LoadingPanel size={0.35} hideText />
 			) : (
 				loadedFrames.length > 0 &&
-				loadedFrames.map((frame, index) => <img key={index} src={frame.src} style={{ opacity: index === currentFrame ? 1 : 0 }} />)
+				loadedFrames.map((frame, index) => (
+					<img
+						key={index}
+						src={frame.src}
+						style={{
+							opacity: index === (currentFrame >= loadedFrames.length ? 0 : currentFrame) ? 1 : 0,
+						}}
+					/>
+				))
 			)}
 		</div>
 	)

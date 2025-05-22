@@ -38,7 +38,7 @@ export const Animator = ({
 	settingsComponent = null,
 }: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
-	const [activeOverlays, setActiveOverlays] = useState(['data'])
+	const [activeOverlays, setActiveOverlays] = useState(['data', 'map'])
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
@@ -126,6 +126,17 @@ export const Animator = ({
 		}
 	}, [])
 
+	const allOverlayImages = {
+		...Object.keys(overlays.static).reduce((acc, key) => {
+			acc[key] = [overlays.static[key]]
+			return acc
+		}, {}),
+		...Object.keys(overlays.dynamic).reduce((acc, key) => {
+			acc[key] = overlays.dynamic[key]
+			return acc
+		}, {}),
+	}
+
 	return (
 		<div ref={animatorRef} className={styles.animator} style={{ height: height || '100%', width: width || '100%' }}>
 			<TransformWrapper ref={transformRef} disablePadding centerOnInit doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }}>
@@ -136,6 +147,7 @@ export const Animator = ({
 								width: _width,
 								height: _height,
 							}}
+							contentClass={styles.animatorImagesContainer}
 							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
 						>
 							<AnimatorImageMachine
@@ -144,6 +156,10 @@ export const Animator = ({
 								loadedFrames={loadedFrames}
 								setLoadedFrames={setLoadedFrames}
 							/>
+							{activeOverlays.map((overlay, index) => {
+								if (overlay === 'data') return null
+								return <AnimatorImageMachine key={index} frames={allOverlayImages[overlay] || []} currentFrame={currentFrame} />
+							})}
 						</TransformComponent>
 						{!hideZoomControls && (
 							<div className={styles.zoomControls}>

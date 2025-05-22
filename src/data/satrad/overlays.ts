@@ -139,165 +139,219 @@ export const ALL_SATRAD_OVERLAY_GROUPS = {
 export const SATRAD_OVERLAYS = {
 	[SATRAD_OVERLAY_STATIC_MAP_ID]: {
 		name: 'Political & State Borders',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_STATIC_LATLON_ID]: {
 		name: 'Latitude and Longitude',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_STATIC_RIVERS_ID]: {
 		name: 'Rivers',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_STATIC_COUNTIES_ID]: {
 		name: 'Counties',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_STATIC_US_HIGHWAYS_ID]: {
 		name: 'U.S. Highways',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_STATIC_US_INTERSTATES_ID]: {
 		name: 'U.S. Interstates',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_STATIC_US_STATE_ROAD_ID]: {
 		name: 'U.S. State Routes',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_STATIC_STATION_IDS_ID]: {
 		name: 'Station I.D.s',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_STATIC_COUNTY_WARNING_AREA_ID]: {
 		name: 'CWA Outlines',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_STATIC_RANGES_ID]: {
 		name: 'Ranges',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_STATIC_ARTCC_ID]: {
 		name: 'ARTCC Zones',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_CAPE_ID]: {
 		name: 'CAPE',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_CIN_ID]: {
 		name: 'CINH',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_DEW_ID]: {
 		name: 'Dewpoint',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_DVG_ID]: {
 		name: 'Mass Divergence',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_GUSTS_ID]: {
 		name: 'Wind Gusts',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_MSLP_ID]: {
 		name: 'Mean Sea Level Pressure',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_PFALLS_ID]: {
 		name: 'Pressure Falls',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_PLOT_ID]: {
 		name: 'Station Plots',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_WSYM_ID]: {
 		name: 'Present Weather',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_RADAR_ID]: {
 		name: 'Composite Radar',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SCP_ID]: {
 		name: 'Supercell Composite',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_STREAMLINES_ID]: {
 		name: 'Streamlines',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_TEMP_ID]: {
 		name: 'Temperature',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_THETAE_ID]: {
 		name: 'Theta-E',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_THETA_ID]: {
 		name: 'Theta',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_VORT_ID]: {
 		name: 'Vorticity',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_WINDV_ID]: {
 		name: 'Wind Vectors',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_WW_ID]: {
 		name: 'Watches & Warnings',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_H5ANA_ID]: {
 		name: '500mb RAP Analysis',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_GLM_FLASH_ID]: {
 		name: 'GLM Flashes',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_GLM_FED_ID]: {
 		name: 'GLM Flash Extent Density',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_GLM_TOE_ID]: {
 		name: 'GLM Total Optical Energy',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_GLM_MFA_ID]: {
 		name: 'GLM Minimum Flash Area',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_ACHA_ID]: {
 		name: 'Cloud Top Height',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_ACHT_ID]: {
 		name: 'Cloud Top Temperature',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_ACTP_ID]: {
 		name: 'Cloud Top Phase',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_ADP_DUST_ID]: {
 		name: 'Aerosol - Dust',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_ADP_SMOKE_ID]: {
 		name: 'Aerosol - Smoke',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_DSI_CAPE_ID]: {
 		name: 'CAPE',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_LST_ID]: {
 		name: 'Land Surface Temperature',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_RRQPE_ID]: {
 		name: 'Rainfall Rate',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SST_ID]: {
 		name: 'Sea Surface Temperature',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_TPW_ID]: {
 		name: 'Total Precipitable Water',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY1_CAT_ID]: {
 		name: 'SPC Day 1 Outlook',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY1_TOR_ID]: {
 		name: 'SPC Day 1 Tor Probs',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY1_HAIL_ID]: {
 		name: 'SPC Day 1 Hail Probs',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY1_WIND_ID]: {
 		name: 'SPC Day 1 Wind Probs',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY2_CAT_ID]: {
 		name: 'SPC Day 2 Outlook',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY2_TOR_ID]: {
 		name: 'SPC Day 2 Tor Probs',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY2_HAIL_ID]: {
 		name: 'SPC Day 2 Hail Probs',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY2_WIND_ID]: {
 		name: 'SPC Day 2 Wind Probs',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY3_CAT_ID]: {
 		name: 'SPC Day 3 Outlook',
+		opacity: 1,
 	},
 	[SATRAD_OVERLAY_DYNAMIC_SPC_DAY3_PROB_ID]: {
 		name: 'SPC Day 3 Severe Probs',
+		opacity: 1,
 	},
 }
 
