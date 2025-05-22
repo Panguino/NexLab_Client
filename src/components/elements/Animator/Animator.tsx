@@ -1,6 +1,6 @@
 'use client'
 import useDimensions from '@/hooks/useDimensions'
-import { faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
@@ -8,11 +8,13 @@ import BasicPlaybackControls, { LoopMethod } from '../BasicPlaybackControls/Basi
 import Scrubber from '../Scrubber/Scrubber'
 import styles from './Animator.module.scss'
 import { AnimatorImageMachine } from './AnimatorImageMachine/AnimatorImageMachine'
+import { OverlayPanel } from './OverlayPanel/OverylayPanel'
 
 type direction = 1 | -1
 
 interface IAnimatorProps {
 	frames: string[]
+	overlays?: { static: object; dynamic: object }
 	ratio?: number
 	height?: number
 	width?: number
@@ -25,6 +27,7 @@ interface IAnimatorProps {
 
 export const Animator = ({
 	frames,
+	overlays,
 	ratio = 1,
 	height,
 	width,
@@ -35,6 +38,8 @@ export const Animator = ({
 	settingsComponent = null,
 }: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
+	const [activeOverlays, setActiveOverlays] = useState(['data'])
+	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
 	const [playDirection, setPlayDirection] = useState<direction>(1)
@@ -155,6 +160,19 @@ export const Animator = ({
 								>
 									<FontAwesomeIcon icon={faUndo} />
 								</button>
+								{overlays && (
+									<button onClick={() => setOverlayPanelOpen(true)}>
+										<FontAwesomeIcon icon={faLayerGroup} />
+										{overlayPanelOpen && (
+											<OverlayPanel
+												activeOverlays={activeOverlays}
+												setActiveOverlays={setActiveOverlays}
+												overlays={overlays}
+												onClose={() => setOverlayPanelOpen(false)}
+											/>
+										)}
+									</button>
+								)}
 							</div>
 						)}
 					</>
