@@ -166,6 +166,7 @@ export const Animator = ({
 									<AnimatorImageMachine
 										key={index}
 										baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
+										zIndex={SATRAD_OVERLAYS[overlay].zIndex}
 										frames={allOverlayImages[overlay] || []}
 										currentFrame={currentFrame}
 									/>

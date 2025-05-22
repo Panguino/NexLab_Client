@@ -9,6 +9,7 @@ interface IAnimatorImageMachineProps {
 	loadedFrames?: any[]
 	setLoadedFrames?: (frames: any[]) => void
 	baseOpacity?: number
+	zIndex?: number
 }
 
 export const AnimatorImageMachine = ({
@@ -17,6 +18,7 @@ export const AnimatorImageMachine = ({
 	loadedFrames: externalLoadedFrames,
 	setLoadedFrames: externalSetLoadedFrames,
 	baseOpacity = 1,
+	zIndex = 30,
 }: IAnimatorImageMachineProps) => {
 	const [isLoading, setIsLoading] = useState(true)
 	const [localLoadedFrames, setLocalLoadedFrames] = useState<number[]>([])
@@ -73,7 +75,7 @@ export const AnimatorImageMachine = ({
 	}
 
 	return (
-		<div className={styles.animatorImageMachine}>
+		<div className={styles.animatorImageMachine} style={{ zIndex: zIndex }}>
 			{isLoading ? (
 				<LoadingPanel size={0.35} hideText />
 			) : (
