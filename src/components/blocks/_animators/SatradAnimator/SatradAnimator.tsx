@@ -27,6 +27,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	const [ratio, setRatio] = useState(1)
 	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [satradData, setSatradData] = useState([])
+	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
 
 	useEffect(() => {
 		async function getData() {
@@ -35,6 +36,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 			const data = await getSatradData(scaleId, sectorId, productId, satradNumberOfFrames, satradFrameStep)
 			setRatio(data.imageInfo.width / data.imageInfo.height)
 			setSatradData(data.frames)
+			setSatradOverlays(data.overlays)
 		}
 		getData()
 	}, [sectorId, productId, regionId, satradNumberOfFrames, satradFrameStep])
@@ -47,6 +49,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 						frames={satradData}
 						ratio={ratio}
 						interval={satradFrameRate}
+						overlays={satradOverlays}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<SatradAnimatorSettings />
