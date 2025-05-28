@@ -1,7 +1,7 @@
 import Providers from '@/components/providers/Providers/Providers'
 import { Meta, StoryFn } from '@storybook/react'
 import { Animator } from './Animator'
-import { testFrames } from './AnimatorTestData'
+import { testDataWithOverlays, testFrames, testFrames16x9, testFrames8x6 } from './AnimatorTestData'
 
 const meta: Meta<typeof Animator> = {
 	title: 'Components/Animator/Animator',
@@ -53,11 +53,17 @@ responsiveSize.args = {
 	interval: 0.25,
 	frames: testFrames,
 }
-export const specificRatio: StoryFn<typeof Animator> = TemplateFactory()
-specificRatio.args = {
+export const specificRatio8x6: StoryFn<typeof Animator> = TemplateFactory()
+specificRatio8x6.args = {
 	interval: 0.25,
-	frames: testFrames,
-	ratio: 7 / 5,
+	frames: testFrames8x6,
+	ratio: 8 / 6,
+}
+export const specificRatio16x9: StoryFn<typeof Animator> = TemplateFactory()
+specificRatio16x9.args = {
+	interval: 0.25,
+	frames: testFrames16x9,
+	ratio: 16 / 9,
 }
 export const maxWidthAndHeight: StoryFn<typeof Animator> = TemplateFactory()
 maxWidthAndHeight.args = {
@@ -65,4 +71,11 @@ maxWidthAndHeight.args = {
 	frames: testFrames,
 	width: 500,
 	height: 500,
+}
+export const overlays: StoryFn<typeof Animator> = TemplateFactory()
+overlays.args = {
+	interval: 0.25,
+	frames: testDataWithOverlays.files,
+	overlays: testDataWithOverlays.overlays,
+	ratio: 16 / 9,
 }

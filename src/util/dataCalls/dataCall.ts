@@ -18,9 +18,13 @@ export const getData = async (url) => {
 		}
 
 		const data_data = await data_res.json()
-		const data_files = data_data.err === false ? data_data.files : []
+		console.log('data_data', data_data)
 
-		return data_files
+		return {
+			frames: data_data.err === false ? data_data.files : [],
+			imageInfo: data_data.img,
+			overlays: { static: data_data.overlays?.static ?? {}, dynamic: data_data.overlays?.dynamic ?? {} },
+		}
 	} catch (error) {
 		console.error('Error fetching data:', error)
 		throw error

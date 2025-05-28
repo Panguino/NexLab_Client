@@ -61,7 +61,7 @@ const SelectGrouped: React.FC<SelectGroupedProps> = ({
 	}, [])
 
 	useEffect(() => {
-		if (value && simplifiedOptions) {
+		if (value && simplifiedOptions && simplifiedOptions.length) {
 			const foundValue = simplifiedOptions.find((option) => option.value === value)?.value
 			if (foundValue !== value) {
 				onChange(foundValue)
@@ -77,8 +77,6 @@ const SelectGrouped: React.FC<SelectGroupedProps> = ({
 		}
 		return null
 	}, null)
-
-	console.log('foundValue', foundValue)
 
 	return (
 		<div className={styles.SelectGrouped}>

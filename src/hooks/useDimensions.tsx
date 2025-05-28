@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 
-const useDimensions = (aspectRatio?: number) => {
+const useDimensions = (aspectRatio?: number, contain: boolean = false) => {
 	const ref = useRef(null)
 	const [dimensions, setDimensions] = useState({ width: 0, height: 0, x: 0, y: 0, adjustedWidth: 0, adjustedHeight: 0 })
 
@@ -17,12 +17,22 @@ const useDimensions = (aspectRatio?: number) => {
 				const containerAspectRatio = width / height
 				if (containerAspectRatio > aspectRatio) {
 					// Container is wider than the desired aspect ratio
-					// Increase height to fill the space, adjust width based on the aspect ratio
-					adjustedHeight = width / aspectRatio
+					if (contain) {
+						// Adjust width to fit inside the container
+						adjustedWidth = height * aspectRatio
+					} else {
+						// Bleed outside: Adjust height to fill the space
+						adjustedHeight = width / aspectRatio
+					}
 				} else if (containerAspectRatio < aspectRatio) {
 					// Container is taller than the desired aspect ratio
-					// Increase width to fill the space, adjust height based on the aspect ratio
-					adjustedWidth = height * aspectRatio
+					if (contain) {
+						// Adjust height to fit inside the container
+						adjustedHeight = width / aspectRatio
+					} else {
+						// Bleed outside: Adjust width to fill the space
+						adjustedWidth = height * aspectRatio
+					}
 				}
 				// If containerAspectRatio equals aspectRatio, no adjustment needed
 			}
@@ -39,7 +49,7 @@ const useDimensions = (aspectRatio?: number) => {
 		return () => {
 			resizeObserver.disconnect()
 		}
-	}, [aspectRatio]) // Removed ref from the dependency array as it's a ref object and won't change
+	}, [aspectRatio, contain]) // Added contain to the dependency array
 
 	return [ref, dimensions] as const
 }

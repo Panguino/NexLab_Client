@@ -1,0 +1,79 @@
+'use client'
+
+import { Animator } from '@/components/elements/Animator/Animator'
+import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
+import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
+import useDimensions from '@/hooks/useDimensions'
+import { useRootStore } from '@/store/useRootStore'
+import { getSatradData } from '@/util/dataCalls/satrad/query-satrad'
+import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useParams } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+import SatradAnimatorSettings from '../../_animatorSettingPanels/SatradAnimatorSettings/SatradAnimatorSettings'
+import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
+import styles from './SatradAnimator.module.scss'
+
+interface SatradAnimatorProps {
+	productInfo: ProductInfoProps
+}
+
+const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
+	const { satradProductId: productId, satradRegionId: regionId, satradSectorId: sectorId } = useParams()
+	const [activeTab, setActiveTab] = useState(-1)
+	const satradNumberOfFrames = useRootStore.use.satradNumberOfFrames()
+	const satradFrameRate = useRootStore.use.satradFrameRate()
+	const satradFrameStep = useRootStore.use.satradFrameStep()
+	const [ratio, setRatio] = useState(1)
+	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
+	const [satradData, setSatradData] = useState([])
+	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
+
+	useEffect(() => {
+		async function getData() {
+			const regionIdStr = Array.isArray(regionId) ? regionId[0] : regionId
+			const scaleId = regionIdStr.split('-')[0] // regionId is a combo of scale and "map region", query only requires scale
+			const data = await getSatradData(scaleId, sectorId, productId, satradNumberOfFrames, satradFrameStep)
+			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setSatradData(data.frames)
+			setSatradOverlays(data.overlays)
+		}
+		getData()
+	}, [sectorId, productId, regionId, satradNumberOfFrames, satradFrameStep])
+
+	return (
+		<div className={styles.satradAnimatorContainer}>
+			<div className={styles.satradAnimator} ref={wrapperRef}>
+				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
+					<Animator
+						frames={satradData}
+						ratio={ratio}
+						interval={satradFrameRate}
+						overlays={satradOverlays}
+						settingsComponent={
+							<AnimatorSettings title="Settings">
+								<SatradAnimatorSettings />
+							</AnimatorSettings>
+						}
+					/>
+				</div>
+			</div>
+			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
+				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+					<ProductInfo {...productInfo} />
+				</Tab>
+				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
+					Alerts TODO
+				</Tab>
+				<Tab label="Overlays" icon={<FontAwesomeIcon icon={faLayerGroup} />}>
+					Overlays TODO
+				</Tab>
+				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
+					Download / Save Gif TODO
+				</Tab>
+			</Tabs>
+		</div>
+	)
+}
+
+export default SatradAnimator

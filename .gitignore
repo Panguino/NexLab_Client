@@ -132,3 +132,6 @@ dist
 
 .env_local
 .env_staging
+
+# storybook
+storybook-static
