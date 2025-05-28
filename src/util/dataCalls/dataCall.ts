@@ -23,6 +23,7 @@ export const getData = async (url) => {
 		return {
 			frames: data_data.err === false ? data_data.files : [],
 			imageInfo: data_data.img,
+			overlays: { static: data_data.overlays?.static ?? {}, dynamic: data_data.overlays?.dynamic ?? {} },
 		}
 	} catch (error) {
 		console.error('Error fetching data:', error)

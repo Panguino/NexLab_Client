@@ -1,18 +1,21 @@
 'use client'
+import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
-import { faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import BasicPlaybackControls, { LoopMethod } from '../BasicPlaybackControls/BasicPlaybackControls'
 import Scrubber from '../Scrubber/Scrubber'
 import styles from './Animator.module.scss'
 import { AnimatorImageMachine } from './AnimatorImageMachine/AnimatorImageMachine'
+import { OverlayPanel } from './OverlayPanel/OverylayPanel'
 
 type direction = 1 | -1
 
 interface IAnimatorProps {
 	frames: string[]
+	overlays?: { static: object; dynamic: object }
 	ratio?: number
 	height?: number
 	width?: number
@@ -25,6 +28,7 @@ interface IAnimatorProps {
 
 export const Animator = ({
 	frames,
+	overlays,
 	ratio = 1,
 	height,
 	width,
@@ -35,6 +39,8 @@ export const Animator = ({
 	settingsComponent = null,
 }: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
+	const [activeOverlays, setActiveOverlays] = useState(['data', 'map'])
+	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
 	const [playDirection, setPlayDirection] = useState<direction>(1)
@@ -121,6 +127,19 @@ export const Animator = ({
 		}
 	}, [])
 
+	const allOverlayImages = useMemo(() => {
+		return {
+			...Object.keys(overlays.static).reduce((acc, key) => {
+				acc[key] = [overlays.static[key]]
+				return acc
+			}, {}),
+			...Object.keys(overlays.dynamic).reduce((acc, key) => {
+				acc[key] = overlays.dynamic[key]
+				return acc
+			}, {}),
+		}
+	}, [overlays.static, overlays.dynamic])
+
 	return (
 		<div ref={animatorRef} className={styles.animator} style={{ height: height || '100%', width: width || '100%' }}>
 			<TransformWrapper ref={transformRef} disablePadding centerOnInit doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }}>
@@ -131,6 +150,7 @@ export const Animator = ({
 								width: _width,
 								height: _height,
 							}}
+							contentClass={styles.animatorImagesContainer}
 							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
 						>
 							<AnimatorImageMachine
@@ -138,7 +158,20 @@ export const Animator = ({
 								currentFrame={currentFrame}
 								loadedFrames={loadedFrames}
 								setLoadedFrames={setLoadedFrames}
+								baseOpacity={activeOverlays.includes('data') ? 1 : 0}
 							/>
+							{activeOverlays.map((overlay, index) => {
+								if (overlay === 'data') return null
+								return (
+									<AnimatorImageMachine
+										key={index}
+										baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
+										zIndex={SATRAD_OVERLAYS[overlay].zIndex}
+										frames={allOverlayImages[overlay] || []}
+										currentFrame={currentFrame}
+									/>
+								)
+							})}
 						</TransformComponent>
 						{!hideZoomControls && (
 							<div className={styles.zoomControls}>
@@ -155,6 +188,18 @@ export const Animator = ({
 								>
 									<FontAwesomeIcon icon={faUndo} />
 								</button>
+								{overlays && (
+									<button onClick={() => setOverlayPanelOpen(true)}>
+										<FontAwesomeIcon icon={faLayerGroup} />
+										<OverlayPanel
+											activeOverlays={activeOverlays}
+											setActiveOverlays={setActiveOverlays}
+											overlays={overlays}
+											onClose={() => setOverlayPanelOpen(false)}
+											open={overlayPanelOpen}
+										/>
+									</button>
+								)}
 							</div>
 						)}
 					</>

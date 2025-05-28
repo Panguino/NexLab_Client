@@ -218,3 +218,241 @@ export const testFrames16x9 = [
 	'https://weather.cod.edu/assets/bannerwave/dimensions/16x9/5.jpg',
 	'https://weather.cod.edu/assets/bannerwave/dimensions/16x9/6.jpg',
 ]
+
+export const testDataWithOverlays = {
+	// matching as closely as possible to this reference: https://weather.cod.edu/datapoints/satrad/get-files.php?parms=regional-midwest-truecolor-6-1
+	// ASK AN YOU SHALL RECEIVE
+	// BIG RESULTS
+	files: [
+		'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest.truecolor.20250521.180617.jpg',
+		'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest.truecolor.20250521.190617.jpg',
+		'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest.truecolor.20250521.200617.jpg',
+	],
+	overlays: {
+		static: {
+			map: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_map.png',
+			id: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_id.gif',
+			ranges: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_ranges.png',
+			cwa: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_cwa.png',
+			artcc: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_artcc.png',
+			latlon: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_latlon.png',
+			rivers: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_rivers.png',
+			counties: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_counties.png',
+			ushw: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_ushw.png',
+			usint: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_usint.png',
+			usstrd: 'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest_usstrd.png',
+		},
+		dynamic: {
+			acha: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-acha.20250521180617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-acha.20250521190617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-acha.20250521200617.png',
+			],
+			acht: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-acht.20250521180020.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-acht.20250521190020.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-acht.20250521200020.png',
+			],
+			actp: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-actp.20250521180617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-actp.20250521190617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-actp.20250521200617.png',
+			],
+			adp_dust: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-adp_dust.20250521180117.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-adp_dust.20250521190117.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-adp_dust.20250521200117.png',
+			],
+			adp_smoke: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-adp_smoke.20250521180117.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-adp_smoke.20250521190117.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-adp_smoke.20250521200117.png',
+			],
+			dsi_cape: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-dsi_cape.20250521180617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-dsi_cape.20250521190617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-dsi_cape.20250521200617.png',
+			],
+			glm_fed: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_fed.20250521180617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_fed.20250521190617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_fed.20250521200617.png',
+			],
+			glm_flash: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_flash.20250521180617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_flash.20250521190617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_flash.20250521200617.png',
+			],
+			glm_mfa: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_mfa.20250521180617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_mfa.20250521190617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_mfa.20250521200617.png',
+			],
+			glm_toe: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_toe.20250521180617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_toe.20250521190617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-glm_toe.20250521200617.png',
+			],
+			lst: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-lst.20250521180117.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-lst.20250521190117.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-lst.20250521200117.png',
+			],
+			tpw: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-tpw.20250521180617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-tpw.20250521190617.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-tpw.20250521200617.png',
+			],
+			cape: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-cape.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-cape.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-cape.20250521200000.gif',
+			],
+			cin: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-cin.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-cin.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-cin.20250521200000.gif',
+			],
+			dew: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-dew.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-dew.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-dew.20250521200000.gif',
+			],
+			dvg: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-dvg.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-dvg.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-dvg.20250521200000.gif',
+			],
+			gusts: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-gusts.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-gusts.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-gusts.20250521200000.gif',
+			],
+			h5ana: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-h5ana.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-h5ana.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-h5ana.20250521200000.gif',
+			],
+			mdvg: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-mdvg.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-mdvg.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-mdvg.20250521200000.gif',
+			],
+			mslp: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-mslp.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-mslp.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-mslp.20250521200000.gif',
+			],
+			pfalls: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-pfalls.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-pfalls.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-pfalls.20250521200000.gif',
+			],
+			plot: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-plot.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-plot.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-plot.20250521200000.gif',
+			],
+			radar: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-radar.20250521180500.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-radar.20250521190500.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-radar.20250521200500.gif',
+			],
+			scp: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-scp.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-scp.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-scp.20250521200000.gif',
+			],
+			spc_day1_cat: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_cat.20250521163000.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_cat.20250521163000.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_cat.20250521200000.png',
+			],
+			spc_day1_hail: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_hail.20250521163000.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_hail.20250521163000.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_hail.20250521200000.png',
+			],
+			spc_day1_tor: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_tor.20250521163000.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_tor.20250521163000.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_tor.20250521200000.png',
+			],
+			spc_day1_wind: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_wind.20250521163000.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_wind.20250521163000.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day1_wind.20250521200000.png',
+			],
+			spc_day2_cat: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_cat.20250521172847.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_cat.20250521172847.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_cat.20250521172847.png',
+			],
+			spc_day2_hail: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_hail.20250521172847.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_hail.20250521172847.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_hail.20250521172847.png',
+			],
+			spc_day2_tor: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_tor.20250521172847.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_tor.20250521172847.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_tor.20250521172847.png',
+			],
+			spc_day2_wind: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_wind.20250521172847.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_wind.20250521172847.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day2_wind.20250521172847.png',
+			],
+			spc_day3_cat: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day3_cat.20250521072633.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day3_cat.20250521072633.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day3_cat.20250521192753.png',
+			],
+			spc_day3_prob: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day3_prob.20250521072633.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day3_prob.20250521072633.png',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-spc_day3_prob.20250521192753.png',
+			],
+			streamlines: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-streamlines.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-streamlines.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-streamlines.20250521200000.gif',
+			],
+			temp: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-temp.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-temp.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-temp.20250521200000.gif',
+			],
+			theta: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-theta.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-theta.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-theta.20250521200000.gif',
+			],
+			thetae: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-thetae.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-thetae.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-thetae.20250521200000.gif',
+			],
+			vort: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-vort.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-vort.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-vort.20250521200000.gif',
+			],
+			windv: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-windv.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-windv.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-windv.20250521200000.gif',
+			],
+			wsym: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-wsym.20250521180000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-wsym.20250521190000.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-wsym.20250521200000.gif',
+			],
+			ww: [
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-ww.20250521180500.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-ww.20250521190500.gif',
+				'https://weather.cod.edu/assets/bannerwave/storybook/overlays/midwest-ww.20250521200500.gif',
+			],
+		},
+	},
+}
