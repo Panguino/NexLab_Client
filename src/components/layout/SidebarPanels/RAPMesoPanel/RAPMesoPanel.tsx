@@ -37,7 +37,7 @@ export const RAPMesoPanel = ({ basepath, isActive }: RAPMesoPanelProps) => {
 				<SidebarGroup title="Select a Product">
 					<SidebarPanelPad>
 						{productsArray.map(({ id, label }) => (
-							<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/RAP-mesoanalysis/${id}`} />
+							<SidebarLink key={id} name={label} active={id === productId} linkUrl={`/weather-data/analysis/RAP-mesoanalysis/${id}`} />
 						))}
 					</SidebarPanelPad>
 				</SidebarGroup>

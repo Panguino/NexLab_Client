@@ -37,7 +37,7 @@ export const IsentropicPanel = ({ basepath, isActive }: IsentropicPanelProps) =>
 				<SidebarGroup title="Select a Product">
 					<SidebarPanelPad>
 						{productsArray.map(({ id, label }) => (
-							<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/isentropic-maps/${id}`} />
+							<SidebarLink key={id} name={label} active={id === productId} linkUrl={`/weather-data/analysis/isentropic-maps/${id}`} />
 						))}
 					</SidebarPanelPad>
 				</SidebarGroup>
