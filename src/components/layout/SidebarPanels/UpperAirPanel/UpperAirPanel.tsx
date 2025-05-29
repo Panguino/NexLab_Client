@@ -62,11 +62,11 @@ export const UpperAirPanel = ({ basepath, isActive }: UpperAirPanelProps) => {
 			return Object.keys(ALL_UPPERAIR_SECTORS[siteId as string].levels).map((levelId) => {
 				const thisLevel = ALL_UPPERAIR_SECTORS[siteId as string].levels[levelId]
 				return {
-					levelId: levelId,
+					levelIdArr: levelId,
 					label: thisLevel.label,
 					columns: thisLevel.columns,
 					products: thisLevel.products.map((productId) => ({
-						productId: productId,
+						productIdArr: productId,
 						label: ALL_UPPERAIR_PRODUCTS[productId].label,
 					})),
 				}
@@ -81,14 +81,15 @@ export const UpperAirPanel = ({ basepath, isActive }: UpperAirPanelProps) => {
 				<div className={styles.options}>
 					<Select value={siteId} options={sectorOptions} onChange={handleSectorChange} />
 				</div>
-				{productsArray.map(({ levelId, label, columns, products }) => (
-					<SidebarGroup key={levelId} title={label}>
+				{productsArray.map(({ levelIdArr, label, columns, products }) => (
+					<SidebarGroup key={levelIdArr} title={label}>
 						<SidebarGrid columns={columns}>
-							{products.map(({ productId, label }) => (
+							{products.map(({ productIdArr, label }) => (
 								<SidebarLink
-									key={productId}
+									key={productIdArr}
 									name={label}
-									linkUrl={`/weather-data/analysis/upper-air/${levelId}/${productId}/${regionId}/${siteId}`}
+									active={productIdArr === productId && levelIdArr === levelId}
+									linkUrl={`/weather-data/analysis/upper-air/${levelIdArr}/${productIdArr}/${regionId}/${siteId}`}
 								/>
 							))}
 						</SidebarGrid>

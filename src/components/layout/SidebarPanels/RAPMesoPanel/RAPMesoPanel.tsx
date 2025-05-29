@@ -5,6 +5,7 @@ import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { ALL_RAPMESO_PRODUCTS } from '@/data/analysis/rap-mesoanalysis/products'
+import { useParams } from 'next/navigation'
 import styles from './RAPMesoPanel.module.scss'
 
 interface RAPMesoPanelProps {
@@ -12,6 +13,7 @@ interface RAPMesoPanelProps {
 }
 
 export const RAPMesoPanel = ({ basepath }: RAPMesoPanelProps) => {
+	const { rapmesoProductId: productId } = useParams()
 	const productsArray = Object.keys(ALL_RAPMESO_PRODUCTS).map((productId) => {
 		return { id: productId, label: ALL_RAPMESO_PRODUCTS[productId].label }
 	})
@@ -23,7 +25,7 @@ export const RAPMesoPanel = ({ basepath }: RAPMesoPanelProps) => {
 				<SidebarGroup title="Select a Product">
 					<SidebarPanelPad>
 						{productsArray.map(({ id, label }) => (
-							<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/RAP-mesoanalysis/${id}`} />
+							<SidebarLink key={id} name={label} active={id === productId} linkUrl={`/weather-data/analysis/RAP-mesoanalysis/${id}`} />
 						))}
 					</SidebarPanelPad>
 				</SidebarGroup>
