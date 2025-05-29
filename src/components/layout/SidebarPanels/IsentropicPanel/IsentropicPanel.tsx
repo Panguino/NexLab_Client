@@ -5,6 +5,7 @@ import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { ALL_ISENTROPIC_PRODUCTS } from '@/data/analysis/isentropic/products'
+import { useParams } from 'next/navigation'
 import styles from './IsentropicPanel.module.scss'
 
 interface IsentropicPanelProps {
@@ -12,6 +13,7 @@ interface IsentropicPanelProps {
 }
 
 export const IsentropicPanel = ({ basepath }: IsentropicPanelProps) => {
+	const { isentropicProductId: productId } = useParams()
 	const productsArray = Object.keys(ALL_ISENTROPIC_PRODUCTS).map((productId) => {
 		return { id: productId, label: ALL_ISENTROPIC_PRODUCTS[productId].label }
 	})
@@ -23,7 +25,7 @@ export const IsentropicPanel = ({ basepath }: IsentropicPanelProps) => {
 				<SidebarGroup title="Select a Product">
 					<SidebarPanelPad>
 						{productsArray.map(({ id, label }) => (
-							<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/isentropic-maps/${id}`} />
+							<SidebarLink key={id} name={label} active={id === productId} linkUrl={`/weather-data/analysis/isentropic-maps/${id}`} />
 						))}
 					</SidebarPanelPad>
 				</SidebarGroup>

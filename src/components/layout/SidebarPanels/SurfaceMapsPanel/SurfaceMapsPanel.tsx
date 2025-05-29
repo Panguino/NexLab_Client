@@ -110,7 +110,12 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 					<Button onClick={openSectorSelectorPanel} label={getSelectorLabel(siteId)} />
 				</div>
 				{productsArray.map(({ id, label }) => (
-					<SidebarLink key={id} name={label} linkUrl={`/weather-data/analysis/surface-maps/${id}/${regionId}/${siteId}`} />
+					<SidebarLink
+						key={id}
+						name={label}
+						active={id === productId}
+						linkUrl={`/weather-data/analysis/surface-maps/${id}/${regionId}/${siteId}`}
+					/>
 				))}
 			</SidebarPanelPad>
 		</div>
