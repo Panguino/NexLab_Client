@@ -1,6 +1,7 @@
 'use client'
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
+import { zoomState } from '@/types/general'
 import { faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -24,6 +25,8 @@ interface IAnimatorProps {
 	autoPlay?: boolean
 	interval?: number
 	settingsComponent?: React.ReactNode | null
+	initialZoomState?: zoomState
+	setZoomState?: (zoomState: zoomState) => void
 }
 
 export const Animator = ({
@@ -37,6 +40,10 @@ export const Animator = ({
 	autoPlay = false,
 	hideZoomControls = false,
 	settingsComponent = null,
+	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
+	setZoomState = (zoomState: zoomState) => {
+		console.warn('setZoomState function not provided, zoom state will not be updated.', zoomState)
+	},
 }: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [activeOverlays, setActiveOverlays] = useState(['data', 'map'])
@@ -141,9 +148,29 @@ export const Animator = ({
 		}
 	}, [overlays])
 
+	const handleZoomChange = (e: any) => {
+		console.log('Zoom Animator', e?.state)
+		setZoomState(e?.state)
+	}
+	const handlePanningChange = (e: any) => {
+		console.log('Panning Animator', e?.state)
+		setZoomState(e?.state)
+	}
+
 	return (
 		<div ref={animatorRef} className={styles.animator} style={{ height: height || '100%', width: width || '100%' }}>
-			<TransformWrapper ref={transformRef} disablePadding centerOnInit doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }}>
+			<TransformWrapper
+				ref={transformRef}
+				initialScale={initialZoomState.scale}
+				initialPositionX={initialZoomState.positionX}
+				initialPositionY={initialZoomState.positionY}
+				onZoomStop={handleZoomChange}
+				onPanningStop={handlePanningChange}
+				disablePadding
+				centerOnInit
+				doubleClick={{ disabled: true }}
+				panning={{ velocityDisabled: true }}
+			>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
 						<TransformComponent
