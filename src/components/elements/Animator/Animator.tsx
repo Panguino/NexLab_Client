@@ -128,6 +128,7 @@ export const Animator = ({
 	}, [])
 
 	const allOverlayImages = useMemo(() => {
+		if (!overlays) return {}
 		return {
 			...Object.keys(overlays.static).reduce((acc, key) => {
 				acc[key] = [overlays.static[key]]
@@ -138,7 +139,7 @@ export const Animator = ({
 				return acc
 			}, {}),
 		}
-	}, [overlays.static, overlays.dynamic])
+	}, [overlays])
 
 	return (
 		<div ref={animatorRef} className={styles.animator} style={{ height: height || '100%', width: width || '100%' }}>
