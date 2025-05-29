@@ -11,13 +11,14 @@ import styles from './RAPMesoPanel.module.scss'
 
 interface RAPMesoPanelProps {
 	basepath: string
-	isActive?: boolean | false
+	isActive: boolean
 }
 
 export const RAPMesoPanel = ({ basepath, isActive }: RAPMesoPanelProps) => {
 	const router = useRouter()
 	const { rapmesoProductId: paramProductId } = useParams()
 	const productId = paramProductId ?? RAPMESO_PRODUCT_DEFAULT
+	console.log('productId', productId) // prevent compiler error in lieu of active links
 
 	useEffect(() => {
 		if (isActive && !ALL_RAPMESO_PRODUCTS[paramProductId as string]) {

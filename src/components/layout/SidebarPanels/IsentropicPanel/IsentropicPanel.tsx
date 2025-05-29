@@ -18,6 +18,7 @@ export const IsentropicPanel = ({ basepath, isActive }: IsentropicPanelProps) =>
 	const router = useRouter()
 	const { isentropicProductId: paramProductId } = useParams()
 	const productId = paramProductId ?? ISENTROPIC_PRODUCT_DEFAULT
+	console.log('productId', productId) // prevent compiler error in lieu of active links
 
 	useEffect(() => {
 		if (isActive && !ALL_ISENTROPIC_PRODUCTS[paramProductId as string]) {
