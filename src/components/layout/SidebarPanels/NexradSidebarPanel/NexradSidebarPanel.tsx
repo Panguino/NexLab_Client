@@ -20,6 +20,7 @@ const NexradSidebarPanel = () => {
 	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
 	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
+	const resetNexradZoomState = useRootStore.use.resetNexradZoomState()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const { nexradProductId: productId, nexradSiteId: siteId, nexradRegionId: regionId } = useParams()
 
@@ -28,16 +29,18 @@ const NexradSidebarPanel = () => {
 			console.log('Invalid productId:', NEXRAD_PRODUCTS[productId as string])
 			console.log('Invalid regionId:', NEXRAD_REGIONS[regionId as string])
 			console.log('Invalid siteId:', NEXRAD_SITES[siteId as string])
+			resetNexradZoomState()
 			router.push(`/weather-data/nexrad-dual-pol-radar/${DEFAULT_NEXRAD_PRODUCT}/${DEFAULT_NEXRAD_REGION}/${DEFAULT_NEXRAD_SITE}`)
 		}
-	}, [productId, regionId, siteId, router])
+	}, [productId, regionId, siteId, router, resetNexradZoomState])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 			closeSectorSelectorPanel()
+			resetNexradZoomState()
 			router.push(`/weather-data/nexrad-dual-pol-radar/${productId}/${regionId}/${sectorId}`)
 		})
-	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
+	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler, resetNexradZoomState])
 
 	useEffect(() => {
 		if (!regionId) return
@@ -58,6 +61,7 @@ const NexradSidebarPanel = () => {
 
 	const handleRegionChange = (newRegionId) => {
 		router.push(`/weather-data/nexrad-dual-pol-radar/${productId}/${newRegionId}/${siteId}`)
+		resetNexradZoomState()
 		openSectorSelectorPanel()
 	}
 

@@ -1,4 +1,11 @@
+import { zoomState } from '@/types/general'
 import { ZustandStateSlice } from './useRootStore'
+
+const defaultSatradZoomState = {
+	positionX: 0,
+	positionY: 0,
+	scale: 1,
+}
 
 export interface ISatradSlice {
 	satradNumberOfFrames: number
@@ -7,6 +14,9 @@ export interface ISatradSlice {
 	setSatradFrameStep: (frameStep: number) => void
 	satradFrameRate: number
 	setSatradFrameRate: (frameRate: number) => void
+	satradZoomState: zoomState
+	setSatradZoomState: (zoomState: zoomState) => void
+	resetSatradZoomState: () => void
 }
 
 export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
@@ -16,4 +26,7 @@ export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
 	setSatradFrameStep: (frameStep: number) => set(() => ({ satradFrameStep: frameStep })),
 	satradFrameRate: 0.1,
 	setSatradFrameRate: (frameRate: number) => set(() => ({ satradFrameRate: frameRate })),
+	satradZoomState: { ...defaultSatradZoomState },
+	setSatradZoomState: (satradZoomState) => set(() => ({ satradZoomState })),
+	resetSatradZoomState: () => set(() => ({ satradZoomState: { ...defaultSatradZoomState } })),
 })

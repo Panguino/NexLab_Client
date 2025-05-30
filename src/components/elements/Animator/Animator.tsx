@@ -149,11 +149,9 @@ export const Animator = ({
 	}, [overlays])
 
 	const handleZoomChange = (e: any) => {
-		console.log('Zoom Animator', e?.state)
 		setZoomState(e?.state)
 	}
 	const handlePanningChange = (e: any) => {
-		console.log('Panning Animator', e?.state)
 		setZoomState(e?.state)
 	}
 
@@ -167,7 +165,6 @@ export const Animator = ({
 				onZoomStop={handleZoomChange}
 				onPanningStop={handlePanningChange}
 				disablePadding
-				centerOnInit
 				doubleClick={{ disabled: true }}
 				panning={{ velocityDisabled: true }}
 			>

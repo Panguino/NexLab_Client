@@ -18,6 +18,7 @@ import styles from './SatradSidebarPanel.module.scss'
 
 const SatradSidebarPanel = () => {
 	const router = useRouter()
+	const resetSatradZoomState = useRootStore.use.resetSatradZoomState()
 	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
 	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
 	const sectorSelectorPanelIsOpen = useRootStore.use.sectorSelectorPanelIsOpen()
@@ -32,21 +33,24 @@ const SatradSidebarPanel = () => {
 			console.log('Invalid productId:', SATRAD_PRODUCTS[productId as string])
 			console.log('Invalid regionId:', SATRAD_SCALE_REGIONS[regionId as string])
 			console.log('Invalid sectorId:', ALL_SATRAD_SECTORS[sectorId as string])
+			resetSatradZoomState()
 			router.push(`/weather-data/satellite-mosaic-radar/${DEFAULT_SATRAD_PRODUCT}/${DEFAULT_SATRAD_REGION}/${DEFAULT_SATRAD_SECTOR}`)
 		}
-	}, [productId, regionId, sectorId, router])
+	}, [productId, regionId, sectorId, router, resetSatradZoomState])
 
 	const handleRegionChange = (newRegionId) => {
 		tempRegionIdRef.current = newRegionId
 		openSectorSelectorPanel()
+		resetSatradZoomState()
 	}
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 			closeSectorSelectorPanel()
 			router.push(`/weather-data/satellite-mosaic-radar/${productId}/${tempRegionIdRef.current}/${sectorId}`)
+			resetSatradZoomState()
 		})
-	}, [productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
+	}, [productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler, resetSatradZoomState])
 
 	useEffect(() => {
 		if (sectorSelectorPanelIsOpen) {
