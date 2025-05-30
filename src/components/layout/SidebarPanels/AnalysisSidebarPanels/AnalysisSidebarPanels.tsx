@@ -40,10 +40,10 @@ const AnalysisSidebarPanels = () => {
 				<SoundingsPanel basepath={basepath} isActive={isActive(`${basepath}/soundings`)} />
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/RAP-mesoanalysis`} activeX="0%" inactiveX="100%">
-				<RAPMesoPanel basepath={basepath} />
+				<RAPMesoPanel basepath={basepath} isActive={isActive(`${basepath}/RAP-mesoanalysis`)} />
 			</SidebarSubPanel>
 			<SidebarSubPanel includesPath={`${basepath}/isentropic-maps`} activeX="0%" inactiveX="100%">
-				<IsentropicPanel basepath={basepath} />
+				<IsentropicPanel basepath={basepath} isActive={isActive(`${basepath}/isentropic-maps`)} />
 			</SidebarSubPanel>
 		</div>
 	)

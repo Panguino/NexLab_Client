@@ -8,7 +8,7 @@ import { ALL_SURFACE_REGIONS, SURFACE_REGION_DEFAULT } from '@/data/analysis/sur
 import { ALL_SURFACE_SECTORS, SURFACE_SECTOR_DEFAULT } from '@/data/analysis/surface/sectors'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SURFACE_PRODUCT_DEFAULT } from '@/data/analysis/surface/products'
@@ -23,6 +23,7 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	const router = useRouter()
 	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
 	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
+	const sectorSelectorPanelIsOpen = useRootStore.use.sectorSelectorPanelIsOpen()
 	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
@@ -30,6 +31,7 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	const siteId = paramSiteId ?? SURFACE_SECTOR_DEFAULT
 	const regionId = paramRegionId ?? SURFACE_REGION_DEFAULT
 	const productId = paramProductId ?? SURFACE_PRODUCT_DEFAULT
+	const tempRegionIdRef = useRef<string>(regionId as string)
 
 	useEffect(() => {
 		if (isActive) {
@@ -47,34 +49,37 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 		if (isActive) {
 			updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 				closeSectorSelectorPanel()
-				router.push(`/weather-data/analysis/surface-maps/${productId}/${regionId}/${sectorId}`)
+				router.push(`/weather-data/analysis/surface-maps/${productId}/${tempRegionIdRef.current}/${sectorId}`)
 			})
 		}
-	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler, isActive])
+	}, [productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler, isActive])
 
 	useEffect(() => {
 		if (isActive) {
-			const region =
-				regionId && ALL_SURFACE_REGIONS[regionId as string]
-					? ALL_SURFACE_REGIONS[regionId as string]
-					: ALL_SURFACE_REGIONS[SURFACE_REGION_DEFAULT]
-			const newD3config = {
-				rotate: region.rotate,
-				scale: region.scale,
+			if (sectorSelectorPanelIsOpen) {
+				const region = ALL_SURFACE_REGIONS[tempRegionIdRef.current as string] ?? ALL_SURFACE_REGIONS[SURFACE_REGION_DEFAULT]
+				const newD3config = {
+					rotate: region.rotate,
+					scale: region.scale,
+				}
+				const selectedSectors = region.sites.map((siteId) => ({
+					id: siteId,
+					name: ALL_SURFACE_SECTORS[siteId].name,
+					type: ALL_SURFACE_SECTORS[siteId].type,
+					coordinates: ALL_SURFACE_SECTORS[siteId].coordinates,
+				}))
+				setSectorSelectorD3config(newD3config)
+				setSectorSelectorSectors(selectedSectors)
+			} else {
+				if (tempRegionIdRef.current && tempRegionIdRef.current !== regionId) {
+					tempRegionIdRef.current = regionId as string
+				}
 			}
-			const selectedSectors = region.sites.map((siteId) => ({
-				id: siteId,
-				name: ALL_SURFACE_SECTORS[siteId].name,
-				type: ALL_SURFACE_SECTORS[siteId].type,
-				coordinates: ALL_SURFACE_SECTORS[siteId].coordinates,
-			}))
-			setSectorSelectorD3config(newD3config)
-			setSectorSelectorSectors(selectedSectors)
 		}
-	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors, isActive])
+	}, [sectorSelectorPanelIsOpen, setSectorSelectorD3config, setSectorSelectorSectors, regionId, isActive])
 
 	const handleRegionChange = (newRegionId) => {
-		router.push(`/weather-data/analysis/surface-maps/${productId}/${newRegionId}/${siteId}`)
+		tempRegionIdRef.current = newRegionId
 		openSectorSelectorPanel()
 	}
 
