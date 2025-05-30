@@ -125,8 +125,8 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 		name: 'Alabama',
 		type: 'Geobox',
 		coordinates: [
-			[86.0 + local_longitude_modifier, 33.6 - local_latitude_modifier],
-			[86.0 - local_longitude_modifier, 33.6 + local_latitude_modifier],
+			[31.81, -90.3],
+			[35.3, -81.63],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -134,8 +134,8 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 		name: 'Arizona',
 		type: 'Geobox',
 		coordinates: [
-			[-114.0 + local_longitude_modifier, 35.2 - local_latitude_modifier],
-			[-114.0 - local_longitude_modifier, 35.2 + local_latitude_modifier],
+			[32.98, -115.82],
+			[37.33, -107.68],
 		],
 		products: SATRAD_PRODUCTS,
 	},
