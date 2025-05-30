@@ -25,7 +25,7 @@ const SatradSidebarPanel = () => {
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const { satradProductId: productId, satradSectorId: sectorId, satradRegionId: regionId } = useParams()
-	const tempRegionIdRef = useRef<string | null>(null)
+	const tempRegionIdRef = useRef<string>(regionId as string)
 
 	useEffect(() => {
 		if (!SATRAD_PRODUCTS[productId as string] || !SATRAD_SCALE_REGIONS[regionId as string] || !ALL_SATRAD_SECTORS[sectorId as string]) {
@@ -52,22 +52,27 @@ const SatradSidebarPanel = () => {
 	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
 
 	useEffect(() => {
-		if (!sectorSelectorPanelIsOpen) return
-		if (!tempRegionIdRef.current) return
-		const region = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].region
-		const newD3config = {
-			rotate: region.rotate,
-			scale: region.scale,
+		if (sectorSelectorPanelIsOpen) {
+			if (!tempRegionIdRef.current) return
+			const region = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].region
+			const newD3config = {
+				rotate: region.rotate,
+				scale: region.scale,
+			}
+			setSectorSelectorD3config(newD3config)
+			const selectedSectors = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].sectors.map((sectorId) => ({
+				id: sectorId,
+				name: ALL_SATRAD_SECTORS[sectorId].name,
+				type: ALL_SATRAD_SECTORS[sectorId].type,
+				coordinates: ALL_SATRAD_SECTORS[sectorId].coordinates,
+			}))
+			setSectorSelectorSectors(selectedSectors)
+		} else {
+			if (tempRegionIdRef.current && tempRegionIdRef.current !== regionId) {
+				tempRegionIdRef.current = regionId as string
+			}
 		}
-		setSectorSelectorD3config(newD3config)
-		const selectedSectors = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].sectors.map((sectorId) => ({
-			id: sectorId,
-			name: ALL_SATRAD_SECTORS[sectorId].name,
-			type: ALL_SATRAD_SECTORS[sectorId].type,
-			coordinates: ALL_SATRAD_SECTORS[sectorId].coordinates,
-		}))
-		setSectorSelectorSectors(selectedSectors)
-	}, [sectorSelectorPanelIsOpen, setSectorSelectorD3config, setSectorSelectorSectors])
+	}, [sectorSelectorPanelIsOpen, regionId, setSectorSelectorD3config, setSectorSelectorSectors])
 
 	const productsArray =
 		sectorId !== undefined
