@@ -49,9 +49,6 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 		if (isActive) {
 			updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 				closeSectorSelectorPanel()
-				if (!tempRegionIdRef.current) {
-					tempRegionIdRef.current = regionId as string
-				}
 				router.push(`/weather-data/analysis/surface-maps/${productId}/${tempRegionIdRef.current}/${sectorId}`)
 			})
 		}

@@ -44,9 +44,6 @@ const SatradSidebarPanel = () => {
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 			closeSectorSelectorPanel()
-			if (!tempRegionIdRef.current) {
-				tempRegionIdRef.current = regionId as string
-			}
 			router.push(`/weather-data/satellite-mosaic-radar/${productId}/${tempRegionIdRef.current}/${sectorId}`)
 		})
 	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
