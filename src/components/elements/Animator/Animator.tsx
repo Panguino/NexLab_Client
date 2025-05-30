@@ -32,7 +32,7 @@ export const Animator = ({
 	ratio = 1,
 	height,
 	width,
-	interval = 0.1,
+	interval = 200,
 	hideControls = false,
 	autoPlay = false,
 	hideZoomControls = false,
@@ -73,7 +73,7 @@ export const Animator = ({
 					}
 					return nextFrame
 				})
-			}, interval * 1000)
+			}, interval)
 		} else if (intervalRef.current) {
 			clearInterval(intervalRef.current)
 			intervalRef.current = null
