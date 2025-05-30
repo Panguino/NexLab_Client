@@ -115,6 +115,13 @@ export const Animator = ({
 	}, [autoPlay, loadedFrames])
 
 	useEffect(() => {
+		if (loadedFrames.length > 0) {
+			// make it so animation initialize on last frame
+			setCurrentFrame(loadedFrames.length - 1)
+		}
+	}, [loadedFrames])
+
+	useEffect(() => {
 		const handleResize = () => {
 			if (transformRef.current) {
 				transformRef.current.resetTransform()
