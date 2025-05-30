@@ -25,16 +25,6 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
-	const resetAnalysisZoomState = useRootStore.use.resetAnalysisZoomState()
-
-	useEffect(() => {
-		console.log('resetting', siteId, levelId, resetAnalysisZoomState)
-		resetAnalysisZoomState()
-	}, [siteId, levelId, resetAnalysisZoomState])
-
-	useEffect(() => {
-		console.log('reinitializing zoom state for upper air animator')
-	}, [])
 
 	useEffect(() => {
 		async function getData() {
