@@ -17,7 +17,7 @@ const SatradAnimatorSettings = () => {
 			<p>Number Of Frames (1-200)</p>
 			<div className={styles.group}>
 				<b>{satradNumberOfFrames}</b>
-				<RangeInput minValue={1} maxValue={200} value={satradNumberOfFrames} onChange={(value) => setSatradNumberOfFrames(value)} />
+				<RangeInput minValue={1} maxValue={200} value={satradNumberOfFrames} onChangeEnd={(value) => setSatradNumberOfFrames(value)} />
 			</div>
 			<p>Animation Speed (slow/fast)</p>
 			<div className={styles.group}>
