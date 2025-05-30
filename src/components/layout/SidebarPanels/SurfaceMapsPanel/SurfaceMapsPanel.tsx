@@ -52,7 +52,7 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 				router.push(`/weather-data/analysis/surface-maps/${productId}/${tempRegionIdRef.current}/${sectorId}`)
 			})
 		}
-	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler, isActive])
+	}, [productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler, isActive])
 
 	useEffect(() => {
 		if (isActive) {
