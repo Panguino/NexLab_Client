@@ -11,7 +11,7 @@ import { ALL_SATRAD_SECTORS } from '@/data/satrad/sectors'
 import { DEFAULT_SATRAD_SECTOR } from '@/data/satrad/sectorsContinental'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import styles from './SatradSidebarPanel.module.scss'
@@ -20,10 +20,12 @@ const SatradSidebarPanel = () => {
 	const router = useRouter()
 	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
 	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
+	const sectorSelectorPanelIsOpen = useRootStore.use.sectorSelectorPanelIsOpen()
 	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const { satradProductId: productId, satradSectorId: sectorId, satradRegionId: regionId } = useParams()
+	const tempRegionIdRef = useRef<string>(regionId as string)
 
 	useEffect(() => {
 		if (!SATRAD_PRODUCTS[productId as string] || !SATRAD_SCALE_REGIONS[regionId as string] || !ALL_SATRAD_SECTORS[sectorId as string]) {
@@ -35,33 +37,38 @@ const SatradSidebarPanel = () => {
 	}, [productId, regionId, sectorId, router])
 
 	const handleRegionChange = (newRegionId) => {
-		router.push(`/weather-data/satellite-mosaic-radar/${productId}/${newRegionId}/${sectorId}`)
+		tempRegionIdRef.current = newRegionId
 		openSectorSelectorPanel()
 	}
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 			closeSectorSelectorPanel()
-			router.push(`/weather-data/satellite-mosaic-radar/${productId}/${regionId}/${sectorId}`)
+			router.push(`/weather-data/satellite-mosaic-radar/${productId}/${tempRegionIdRef.current}/${sectorId}`)
 		})
-	}, [productId, regionId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
+	}, [productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
 
 	useEffect(() => {
-		if (!regionId) return
-		const region = SATRAD_SCALE_REGIONS[regionId as string].region
-		const newD3config = {
-			rotate: region.rotate,
-			scale: region.scale,
+		if (sectorSelectorPanelIsOpen) {
+			const region = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].region
+			const newD3config = {
+				rotate: region.rotate,
+				scale: region.scale,
+			}
+			setSectorSelectorD3config(newD3config)
+			const selectedSectors = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].sectors.map((sectorId) => ({
+				id: sectorId,
+				name: ALL_SATRAD_SECTORS[sectorId].name,
+				type: ALL_SATRAD_SECTORS[sectorId].type,
+				coordinates: ALL_SATRAD_SECTORS[sectorId].coordinates,
+			}))
+			setSectorSelectorSectors(selectedSectors)
+		} else {
+			if (tempRegionIdRef.current && tempRegionIdRef.current !== regionId) {
+				tempRegionIdRef.current = regionId as string
+			}
 		}
-		setSectorSelectorD3config(newD3config)
-		const selectedSectors = SATRAD_SCALE_REGIONS[regionId as string].sectors.map((sectorId) => ({
-			id: sectorId,
-			name: ALL_SATRAD_SECTORS[sectorId].name,
-			type: ALL_SATRAD_SECTORS[sectorId].type,
-			coordinates: ALL_SATRAD_SECTORS[sectorId].coordinates,
-		}))
-		setSectorSelectorSectors(selectedSectors)
-	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors])
+	}, [sectorSelectorPanelIsOpen, regionId, setSectorSelectorD3config, setSectorSelectorSectors])
 
 	const productsArray =
 		sectorId !== undefined
