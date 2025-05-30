@@ -53,7 +53,6 @@ const SatradSidebarPanel = () => {
 
 	useEffect(() => {
 		if (sectorSelectorPanelIsOpen) {
-			if (!tempRegionIdRef.current) return
 			const region = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].region
 			const newD3config = {
 				rotate: region.rotate,

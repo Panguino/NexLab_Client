@@ -60,7 +60,6 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	useEffect(() => {
 		if (isActive) {
 			if (sectorSelectorPanelIsOpen) {
-				if (!tempRegionIdRef.current) return
 				const region = ALL_SURFACE_REGIONS[tempRegionIdRef.current as string] ?? ALL_SURFACE_REGIONS[SURFACE_REGION_DEFAULT]
 				const newD3config = {
 					rotate: region.rotate,
