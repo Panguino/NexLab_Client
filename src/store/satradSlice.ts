@@ -14,6 +14,6 @@ export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
 	setSatradNumberOfFrames: (frames: number) => set(() => ({ satradNumberOfFrames: frames })),
 	satradFrameStep: 1,
 	setSatradFrameStep: (frameStep: number) => set(() => ({ satradFrameStep: frameStep })),
-	satradFrameRate: 0.1,
+	satradFrameRate: 15,
 	setSatradFrameRate: (frameRate: number) => set(() => ({ satradFrameRate: frameRate })),
 })

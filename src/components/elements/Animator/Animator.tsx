@@ -15,6 +15,7 @@ type direction = 1 | -1
 
 interface IAnimatorProps {
 	frames: string[]
+	startFrame?: number
 	overlays?: { static: object; dynamic: object }
 	ratio?: number
 	height?: number
@@ -28,11 +29,12 @@ interface IAnimatorProps {
 
 export const Animator = ({
 	frames,
+	startFrame,
 	overlays,
 	ratio = 1,
 	height,
 	width,
-	interval = 0.1,
+	interval = 200,
 	hideControls = false,
 	autoPlay = false,
 	hideZoomControls = false,
@@ -41,7 +43,7 @@ export const Animator = ({
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [activeOverlays, setActiveOverlays] = useState(['data', 'map'])
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
-	const [currentFrame, setCurrentFrame] = useState(0)
+	const [currentFrame, setCurrentFrame] = useState(startFrame || frames.length - 1)
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
 	const [playDirection, setPlayDirection] = useState<direction>(1)
 	const [isPlaying, setIsPlaying] = useState(false)
@@ -73,7 +75,7 @@ export const Animator = ({
 					}
 					return nextFrame
 				})
-			}, interval * 1000)
+			}, interval)
 		} else if (intervalRef.current) {
 			clearInterval(intervalRef.current)
 			intervalRef.current = null
@@ -113,6 +115,14 @@ export const Animator = ({
 			setIsPlaying(true)
 		}
 	}, [autoPlay, loadedFrames])
+
+	useEffect(() => {
+		if (loadedFrames.length > 0) {
+			// make it so animation initializes at the startFrame
+			// if startFrame is greater than the number of loaded frames, set it to 0
+			setCurrentFrame(startFrame >= loadedFrames.length ? loadedFrames.length - 1 : startFrame)
+		}
+	}, [loadedFrames, startFrame])
 
 	useEffect(() => {
 		const handleResize = () => {

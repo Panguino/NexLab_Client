@@ -65,9 +65,7 @@ export const SoundingsPanel = ({ basepath, isActive }: soundingsPanelProps) => {
 			setSectorSelectorD3config(newD3config)
 			const selectedSectors = region.sites.map((siteId) => ({
 				id: siteId,
-				name: ALL_SOUNDING_SITES[siteId].name,
-				type: ALL_SOUNDING_SITES[siteId].type,
-				coordinates: ALL_SOUNDING_SITES[siteId].coordinates,
+				...ALL_SOUNDING_SITES[siteId],
 			}))
 			setSectorSelectorSectors(selectedSectors)
 		}

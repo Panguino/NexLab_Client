@@ -37,7 +37,7 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 		<div className={styles.surfaceMapsAnimatorContainer}>
 			<div className={styles.surfaceMapsAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={surfaceMapsData} ratio={ratio} />
+					<Animator frames={surfaceMapsData} startFrame={surfaceMapsData.length - 1} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

@@ -58,9 +58,7 @@ const SatradSidebarPanel = () => {
 			setSectorSelectorD3config(newD3config)
 			const selectedSectors = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].sectors.map((sectorId) => ({
 				id: sectorId,
-				name: ALL_SATRAD_SECTORS[sectorId].name,
-				type: ALL_SATRAD_SECTORS[sectorId].type,
-				coordinates: ALL_SATRAD_SECTORS[sectorId].coordinates,
+				...ALL_SATRAD_SECTORS[sectorId],
 			}))
 			setSectorSelectorSectors(selectedSectors)
 		} else {

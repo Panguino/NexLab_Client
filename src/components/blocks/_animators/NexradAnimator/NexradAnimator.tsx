@@ -42,8 +42,9 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
 					<Animator
 						frames={nexradData}
+						startFrame={nexradData.length - 1}
 						ratio={ratio}
-						interval={nexradFrameRate}
+						interval={1000 / nexradFrameRate}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<NexradAnimatorSettings />
