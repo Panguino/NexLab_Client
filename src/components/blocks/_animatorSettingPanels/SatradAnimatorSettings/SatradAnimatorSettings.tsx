@@ -9,9 +9,6 @@ const SatradAnimatorSettings = () => {
 	const setSatradFrameRate = useRootStore.use.setSatradFrameRate()
 	const setSatradNumberOfFrames = useRootStore.use.setSatradNumberOfFrames()
 
-	const frameDurationMs = 16 + (1000 - 16) * satradFrameRate
-	const fps = 1000 / frameDurationMs
-
 	return (
 		<div className={styles.SatradAnimatorSettings}>
 			<p>Number Of Frames (1-200)</p>
@@ -21,14 +18,8 @@ const SatradAnimatorSettings = () => {
 			</div>
 			<p>Animation Speed (slow/fast)</p>
 			<div className={styles.group}>
-				<b>{fps >= 1 ? Math.floor(fps) : fps.toFixed(1)} fps</b>
-				<RangeInput
-					minValue={0.01}
-					maxValue={0.99}
-					value={1 - satradFrameRate}
-					unitStep={0.01}
-					onChange={(value) => setSatradFrameRate(1 - value)}
-				/>
+				<b>{satradFrameRate} fps</b>
+				<RangeInput minValue={1} maxValue={40} value={satradFrameRate} unitStep={1} onChange={setSatradFrameRate} />
 			</div>
 		</div>
 	)
