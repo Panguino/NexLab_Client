@@ -64,9 +64,7 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 				}
 				const selectedSectors = region.sites.map((siteId) => ({
 					id: siteId,
-					name: ALL_SURFACE_SECTORS[siteId].name,
-					type: ALL_SURFACE_SECTORS[siteId].type,
-					coordinates: ALL_SURFACE_SECTORS[siteId].coordinates,
+					...ALL_SURFACE_SECTORS[siteId],
 				}))
 				setSectorSelectorD3config(newD3config)
 				setSectorSelectorSectors(selectedSectors)
