@@ -29,7 +29,7 @@ interface IAnimatorProps {
 
 export const Animator = ({
 	frames,
-	startFrame = 0,
+	startFrame,
 	overlays,
 	ratio = 1,
 	height,
@@ -43,7 +43,7 @@ export const Animator = ({
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [activeOverlays, setActiveOverlays] = useState(['data', 'map'])
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
-	const [currentFrame, setCurrentFrame] = useState(startFrame)
+	const [currentFrame, setCurrentFrame] = useState(startFrame || frames.length - 1)
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
 	const [playDirection, setPlayDirection] = useState<direction>(1)
 	const [isPlaying, setIsPlaying] = useState(false)
@@ -120,7 +120,7 @@ export const Animator = ({
 		if (loadedFrames.length > 0) {
 			// make it so animation initializes at the startFrame
 			// if startFrame is greater than the number of loaded frames, set it to 0
-			setCurrentFrame(startFrame >= loadedFrames.length ? 0 : startFrame)
+			setCurrentFrame(startFrame >= loadedFrames.length ? loadedFrames.length - 1 : startFrame)
 		}
 	}, [loadedFrames, startFrame])
 
