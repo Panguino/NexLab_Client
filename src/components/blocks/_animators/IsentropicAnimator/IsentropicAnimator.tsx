@@ -35,7 +35,7 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 		<div className={styles.IsentropicAnimatorContainer}>
 			<div className={styles.IsentropicAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={IsentropicData} ratio={ratio} />
+					<Animator frames={IsentropicData} startFrame={IsentropicData.length - 1} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

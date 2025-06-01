@@ -39,7 +39,13 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 		<div className={styles.upperAirAnimatorContainer}>
 			<div className={styles.upperAirAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={upperAirData} ratio={ratio} initialZoomState={analysisZoomState} setZoomState={setAnalysisZoomState} />
+					<Animator
+						frames={upperAirData}
+						startFrame={upperAirData.length - 1}
+						ratio={ratio}
+						initialZoomState={analysisZoomState}
+						setZoomState={setAnalysisZoomState}
+					/>
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

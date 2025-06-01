@@ -50,6 +50,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
 					<Animator
 						frames={satradData}
+						startFrame={satradData.length - 1}
 						ratio={ratio}
 						interval={satradFrameRate}
 						overlays={satradOverlays}

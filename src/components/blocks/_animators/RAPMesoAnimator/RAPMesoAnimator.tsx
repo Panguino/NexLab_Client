@@ -35,7 +35,7 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 		<div className={styles.RAPMesoAnimatorContainer}>
 			<div className={styles.RAPMesoAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={RAPMesoData} ratio={ratio} />
+					<Animator frames={RAPMesoData} startFrame={RAPMesoData.length - 1} ratio={ratio} />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

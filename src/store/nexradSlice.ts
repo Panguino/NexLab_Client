@@ -20,7 +20,7 @@ export interface INexradSlice {
 export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
 	nexradNumberOfFrames: 24,
 	setNexradNumberOfFrames: (frames: number) => set(() => ({ nexradNumberOfFrames: frames })),
-	nexradFrameRate: 0.25,
+	nexradFrameRate: 15,
 	setNexradFrameRate: (frameRate: number) => set(() => ({ nexradFrameRate: frameRate })),
 	nexradZoomState: { ...defaultNexradZoomState },
 	setNexradZoomState: (nexradZoomState) => set(() => ({ nexradZoomState })),

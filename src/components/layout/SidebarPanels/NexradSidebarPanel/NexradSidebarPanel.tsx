@@ -52,9 +52,7 @@ const NexradSidebarPanel = () => {
 		setSectorSelectorD3config(newD3config)
 		const selectedSectors = region.sites.map((siteId) => ({
 			id: siteId,
-			name: NEXRAD_SITES[siteId].name,
-			type: NEXRAD_SITES[siteId].type,
-			coordinates: NEXRAD_SITES[siteId].coordinates,
+			...NEXRAD_SITES[siteId],
 		}))
 		setSectorSelectorSectors(selectedSectors)
 	}, [regionId, setSectorSelectorD3config, setSectorSelectorSectors])
