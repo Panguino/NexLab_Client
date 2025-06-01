@@ -24,6 +24,7 @@ interface IAnimatorProps {
 	hideControls?: boolean
 	hideZoomControls?: boolean
 	autoPlay?: boolean
+	disableZoom?: boolean
 	interval?: number
 	settingsComponent?: React.ReactNode | null
 	initialZoomState?: zoomState
@@ -40,6 +41,7 @@ export const Animator = ({
 	interval = 200,
 	hideControls = false,
 	autoPlay = false,
+	disableZoom = false,
 	hideZoomControls = false,
 	settingsComponent = null,
 	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
@@ -177,6 +179,7 @@ export const Animator = ({
 				disablePadding
 				doubleClick={{ disabled: true }}
 				panning={{ velocityDisabled: true }}
+				disabled={disableZoom}
 			>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
@@ -208,7 +211,7 @@ export const Animator = ({
 								)
 							})}
 						</TransformComponent>
-						{!hideZoomControls && (
+						{!hideZoomControls && !disableZoom && (
 							<div className={styles.zoomControls}>
 								<button onClick={() => zoomIn()}>
 									<FontAwesomeIcon icon={faSearchPlus} />
@@ -240,7 +243,7 @@ export const Animator = ({
 					</>
 				)}
 			</TransformWrapper>
-			{!hideControls && (
+			{!hideControls && loadedFrames.length > 1 && (
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
 						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />

@@ -3,6 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import useDimensions from '@/hooks/useDimensions'
+import { useRootStore } from '@/store/useRootStore'
 import { getRapMesoData } from '@/util/dataCalls/analysis/query-rap-mesoanalysis'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -21,6 +22,8 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 	const [ratio, setRatio] = useState(1)
 	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [RAPMesoData, setRAPMesoData] = useState([])
+	const analysisZoomState = useRootStore.use.analysisZoomState()
+	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
 
 	useEffect(() => {
 		async function getData() {
@@ -35,7 +38,13 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 		<div className={styles.RAPMesoAnimatorContainer}>
 			<div className={styles.RAPMesoAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={RAPMesoData} startFrame={RAPMesoData.length - 1} ratio={ratio} />
+					<Animator
+						frames={RAPMesoData}
+						startFrame={RAPMesoData.length - 1}
+						ratio={ratio}
+						initialZoomState={analysisZoomState}
+						setZoomState={setAnalysisZoomState}
+					/>
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
