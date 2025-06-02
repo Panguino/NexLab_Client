@@ -1,7 +1,7 @@
 'use client'
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
-import { faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { faCompress, faExpand, faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
@@ -47,9 +47,10 @@ export const Animator = ({
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
 	const [playDirection, setPlayDirection] = useState<direction>(1)
 	const [isPlaying, setIsPlaying] = useState(false)
+	const [expanded, setExpanded] = useState(true)
 	const intervalRef = useRef<number | null>(null)
 	const transformRef = useRef(null)
-	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio)
+	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio, !expanded)
 
 	useEffect(() => {
 		if (loopMethod === LoopMethod.LeftToRight) {
@@ -117,10 +118,12 @@ export const Animator = ({
 	}, [autoPlay, loadedFrames])
 
 	useEffect(() => {
-		if (loadedFrames.length > 0) {
-			// make it so animation initializes at the startFrame
+		if (!startFrame && loadedFrames.length > 0) {
+			// if no startFrame is set, default to the last frame
+			setCurrentFrame(loadedFrames.length - 1)
+		} else if (loadedFrames.length > 0) {
 			// if startFrame is greater than the number of loaded frames, set it to 0
-			setCurrentFrame(startFrame >= loadedFrames.length ? loadedFrames.length - 1 : startFrame)
+			setCurrentFrame(startFrame > loadedFrames.length - 1 ? loadedFrames.length - 1 : startFrame)
 		}
 	}, [loadedFrames, startFrame])
 
@@ -151,87 +154,116 @@ export const Animator = ({
 		}
 	}, [overlays])
 
+	const expandToggle = () => {
+		setExpanded(!expanded)
+	}
+
+	const animatorWidth = useMemo(() => {
+		if (width) return width
+		if (!expanded && adjustedWidth) return adjustedWidth
+		return '100%'
+	}, [width, expanded, adjustedWidth])
+
+	const animatorHeight = useMemo(() => {
+		if (height) return height
+		if (!expanded && adjustedHeight) return adjustedHeight
+		return '100%'
+	}, [height, expanded, adjustedHeight])
+
+	useEffect(() => {
+		if (transformRef.current) {
+			transformRef.current.resetTransform()
+		}
+	}, [expanded])
+
 	return (
-		<div ref={animatorRef} className={styles.animator} style={{ height: height || '100%', width: width || '100%' }}>
-			<TransformWrapper ref={transformRef} disablePadding centerOnInit doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }}>
-				{({ zoomIn, zoomOut, resetTransform }) => (
-					<>
-						<TransformComponent
-							wrapperStyle={{
-								width: _width,
-								height: _height,
-							}}
-							contentClass={styles.animatorImagesContainer}
-							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
-						>
-							<AnimatorImageMachine
-								frames={frames || []}
-								currentFrame={currentFrame}
-								loadedFrames={loadedFrames}
-								setLoadedFrames={setLoadedFrames}
-								baseOpacity={activeOverlays.includes('data') ? 1 : 0}
-							/>
-							{activeOverlays.map((overlay, index) => {
-								if (overlay === 'data') return null
-								return (
-									<AnimatorImageMachine
-										key={index}
-										baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
-										zIndex={SATRAD_OVERLAYS[overlay].zIndex}
-										frames={allOverlayImages[overlay] || []}
-										currentFrame={currentFrame}
-									/>
-								)
-							})}
-						</TransformComponent>
-						{!hideZoomControls && (
-							<div className={styles.zoomControls}>
-								<button onClick={() => zoomIn()}>
-									<FontAwesomeIcon icon={faSearchPlus} />
-								</button>
-								<button onClick={() => zoomOut()}>
-									<FontAwesomeIcon icon={faSearchMinus} />
-								</button>
-								<button
-									onClick={() => {
-										resetTransform()
-									}}
-								>
-									<FontAwesomeIcon icon={faUndo} />
-								</button>
-								{overlays && (
-									<button onClick={() => setOverlayPanelOpen(true)}>
-										<FontAwesomeIcon icon={faLayerGroup} />
-										<OverlayPanel
-											activeOverlays={activeOverlays}
-											setActiveOverlays={setActiveOverlays}
-											overlays={overlays}
-											onClose={() => setOverlayPanelOpen(false)}
-											open={overlayPanelOpen}
+		<div ref={animatorRef} className={styles.animator}>
+			<div className={styles.animatorWrapper} style={{ width: animatorWidth, height: animatorHeight }}>
+				<TransformWrapper
+					ref={transformRef}
+					disablePadding
+					centerOnInit
+					doubleClick={{ disabled: true }}
+					panning={{ velocityDisabled: true }}
+				>
+					{({ zoomIn, zoomOut, resetTransform }) => (
+						<>
+							<TransformComponent
+								wrapperStyle={{
+									width: _width,
+									height: _height,
+								}}
+								contentClass={styles.animatorImagesContainer}
+								contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
+							>
+								<AnimatorImageMachine
+									frames={frames || []}
+									currentFrame={currentFrame}
+									loadedFrames={loadedFrames}
+									setLoadedFrames={setLoadedFrames}
+									baseOpacity={activeOverlays.includes('data') ? 1 : 0}
+								/>
+								{activeOverlays.map((overlay, index) => {
+									if (overlay === 'data') return null
+									return (
+										<AnimatorImageMachine
+											key={index}
+											baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
+											zIndex={SATRAD_OVERLAYS[overlay].zIndex}
+											frames={allOverlayImages[overlay] || []}
+											currentFrame={currentFrame}
 										/>
+									)
+								})}
+							</TransformComponent>
+							{!hideZoomControls && (
+								<div className={styles.zoomControls}>
+									{overlays && (
+										<button onClick={() => setOverlayPanelOpen(true)}>
+											<FontAwesomeIcon icon={faLayerGroup} />
+											<OverlayPanel
+												activeOverlays={activeOverlays}
+												setActiveOverlays={setActiveOverlays}
+												overlays={overlays}
+												onClose={() => setOverlayPanelOpen(false)}
+												open={overlayPanelOpen}
+											/>
+										</button>
+									)}
+									<button onClick={() => zoomIn()}>
+										<FontAwesomeIcon icon={faSearchPlus} />
 									</button>
-								)}
-							</div>
-						)}
-					</>
-				)}
-			</TransformWrapper>
-			{!hideControls && (
-				<div className={styles.controlsContainer}>
-					<div className={styles.controls}>
-						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
-						<BasicPlaybackControls
-							isPlaying={isPlaying}
-							loopMethod={loopMethod}
-							onLoopMethodToggle={setLoopMethod}
-							onStepBackwardClick={stepBackward}
-							onStepForwardClick={stepForward}
-							onPlayPauseClick={playPause}
-						/>
-						{settingsComponent}
+									<button onClick={() => zoomOut()}>
+										<FontAwesomeIcon icon={faSearchMinus} />
+									</button>
+									<button onClick={() => resetTransform()}>
+										<FontAwesomeIcon icon={faUndo} />
+									</button>
+									<button onClick={() => expandToggle()}>
+										<FontAwesomeIcon icon={expanded ? faCompress : faExpand} />
+									</button>
+								</div>
+							)}
+						</>
+					)}
+				</TransformWrapper>
+				{!hideControls && (
+					<div className={styles.controlsContainer}>
+						<div className={styles.controls}>
+							<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
+							<BasicPlaybackControls
+								isPlaying={isPlaying}
+								loopMethod={loopMethod}
+								onLoopMethodToggle={setLoopMethod}
+								onStepBackwardClick={stepBackward}
+								onStepForwardClick={stepForward}
+								onPlayPauseClick={playPause}
+							/>
+							{settingsComponent}
+						</div>
 					</div>
-				</div>
-			)}
+				)}
+			</div>
 		</div>
 	)
 }
