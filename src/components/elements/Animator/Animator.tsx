@@ -2,6 +2,7 @@
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
 import { zoomState } from '@/types/general'
+import { faCompress, faExpand, faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
@@ -178,12 +179,6 @@ export const Animator = ({
 		return '100%'
 	}, [height, expanded, adjustedHeight])
 
-	useEffect(() => {
-		if (transformRef.current) {
-			transformRef.current.resetTransform()
-		}
-	}, [expanded])
-
 	const handleZoomChange = (e: any) => {
 		setZoomState(e?.state)
 	}
@@ -198,6 +193,11 @@ export const Animator = ({
 					ref={transformRef}
 					disablePadding
 					centerOnInit
+					initialScale={initialZoomState.scale}
+					initialPositionX={initialZoomState.positionX}
+					initialPositionY={initialZoomState.positionY}
+					onZoomStop={handleZoomChange}
+					onPanningStop={handlePanningChange}
 					doubleClick={{ disabled: true }}
 					panning={{ velocityDisabled: true }}
 				>
@@ -227,16 +227,11 @@ export const Animator = ({
 											zIndex={SATRAD_OVERLAYS[overlay].zIndex}
 											frames={allOverlayImages[overlay] || []}
 											currentFrame={currentFrame}
-				initialScale={initialZoomState.scale}
-				initialPositionX={initialZoomState.positionX}
-				initialPositionY={initialZoomState.positionY}
-				onZoomStop={handleZoomChange}
-				onPanningStop={handlePanningChange}
 										/>
 									)
 								})}
 							</TransformComponent>
-							{!hideZoomControls && (
+							{!hideZoomControls && !disableZoom && (
 								<div className={styles.zoomControls}>
 									{overlays && (
 										<button onClick={() => setOverlayPanelOpen(true)}>
@@ -283,23 +278,7 @@ export const Animator = ({
 						</div>
 					</div>
 				)}
-			</TransformWrapper>
-			{!hideControls && (
-				<div className={styles.controlsContainer}>
-					<div className={styles.controls}>
-						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
-						<BasicPlaybackControls
-							isPlaying={isPlaying}
-							loopMethod={loopMethod}
-							onLoopMethodToggle={setLoopMethod}
-							onStepBackwardClick={stepBackward}
-							onStepForwardClick={stepForward}
-							onPlayPauseClick={playPause}
-						/>
-						{settingsComponent}
-					</div>
-				</div>
-			)}
+			</div>
 		</div>
 	)
 }

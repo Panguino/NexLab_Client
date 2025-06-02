@@ -44,6 +44,8 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 					frames={nexradData}
 					startFrame={nexradData.length - 1}
 					ratio={ratio}
+					initialZoomState={nexradZoomState}
+					setZoomState={setNexradZoomState}
 					interval={1000 / nexradFrameRate}
 					settingsComponent={
 						<AnimatorSettings title="Settings">
@@ -51,8 +53,6 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 						</AnimatorSettings>
 					}
 				/>
-						initialZoomState={nexradZoomState}
-						setZoomState={setNexradZoomState}
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
