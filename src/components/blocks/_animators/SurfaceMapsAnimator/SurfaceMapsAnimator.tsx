@@ -23,6 +23,8 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 	const [ratio, setRatio] = useState(1)
 	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [surfaceMapsData, setSurfaceMapsData] = useState([])
+	const analysisZoomState = useRootStore.use.analysisZoomState()
+	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
 
 	useEffect(() => {
 		async function getData() {
@@ -37,7 +39,13 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 		<div className={styles.surfaceMapsAnimatorContainer}>
 			<div className={styles.surfaceMapsAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={surfaceMapsData} startFrame={surfaceMapsData.length - 1} ratio={ratio} />
+					<Animator
+						frames={surfaceMapsData}
+						startFrame={surfaceMapsData.length - 1}
+						ratio={ratio}
+						initialZoomState={analysisZoomState}
+						setZoomState={setAnalysisZoomState}
+					/>
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

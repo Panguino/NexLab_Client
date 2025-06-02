@@ -32,27 +32,31 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	const regionId = paramRegionId ?? SURFACE_REGION_DEFAULT
 	const productId = paramProductId ?? SURFACE_PRODUCT_DEFAULT
 	const tempRegionIdRef = useRef<string>(regionId as string)
+	const resetAnalysisZoomState = useRootStore.use.resetAnalysisZoomState()
 
 	useEffect(() => {
 		if (isActive) {
 			if (!ALL_SURFACE_REGIONS[paramRegionId as string] || !ALL_SURFACE_SECTORS[paramSiteId as string]) {
 				// needs testing first, if bad make no assumptions, use default values
+				resetAnalysisZoomState()
 				router.push(`/weather-data/analysis/surface-maps/${SURFACE_PRODUCT_DEFAULT}/${SURFACE_REGION_DEFAULT}/${SURFACE_SECTOR_DEFAULT}`)
 			} else if (!ALL_SURFACE_SECTORS[paramSiteId as string].products[paramProductId as string]) {
 				// both site and region have to be valid to get here, but if product is bad, use default values
+				resetAnalysisZoomState()
 				router.push(`/weather-data/analysis/surface-maps/${SURFACE_PRODUCT_DEFAULT}/${paramRegionId}/${paramSiteId}`)
 			}
 		}
-	}, [paramProductId, paramRegionId, paramSiteId, router, isActive])
+	}, [paramProductId, paramRegionId, paramSiteId, router, isActive, resetAnalysisZoomState])
 
 	useEffect(() => {
 		if (isActive) {
 			updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 				closeSectorSelectorPanel()
+				resetAnalysisZoomState()
 				router.push(`/weather-data/analysis/surface-maps/${productId}/${tempRegionIdRef.current}/${sectorId}`)
 			})
 		}
-	}, [productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler, isActive])
+	}, [productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler, isActive, resetAnalysisZoomState])
 
 	useEffect(() => {
 		if (isActive) {

@@ -1,7 +1,7 @@
 'use client'
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
-import { faCompress, faExpand, faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { zoomState } from '@/types/general'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
@@ -23,8 +23,11 @@ interface IAnimatorProps {
 	hideControls?: boolean
 	hideZoomControls?: boolean
 	autoPlay?: boolean
+	disableZoom?: boolean
 	interval?: number
 	settingsComponent?: React.ReactNode | null
+	initialZoomState?: zoomState
+	setZoomState?: (zoomState: zoomState) => void
 }
 
 export const Animator = ({
@@ -37,8 +40,13 @@ export const Animator = ({
 	interval = 200,
 	hideControls = false,
 	autoPlay = false,
+	disableZoom = false,
 	hideZoomControls = false,
 	settingsComponent = null,
+	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
+	setZoomState = (zoomState: zoomState) => {
+		console.warn('setZoomState function not provided, zoom state will not be updated.', zoomState)
+	},
 }: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [activeOverlays, setActiveOverlays] = useState(['data', 'map'])
@@ -176,6 +184,13 @@ export const Animator = ({
 		}
 	}, [expanded])
 
+	const handleZoomChange = (e: any) => {
+		setZoomState(e?.state)
+	}
+	const handlePanningChange = (e: any) => {
+		setZoomState(e?.state)
+	}
+
 	return (
 		<div ref={animatorRef} className={styles.animator}>
 			<div className={styles.animatorWrapper} style={{ width: animatorWidth, height: animatorHeight }}>
@@ -212,6 +227,11 @@ export const Animator = ({
 											zIndex={SATRAD_OVERLAYS[overlay].zIndex}
 											frames={allOverlayImages[overlay] || []}
 											currentFrame={currentFrame}
+				initialScale={initialZoomState.scale}
+				initialPositionX={initialZoomState.positionX}
+				initialPositionY={initialZoomState.positionY}
+				onZoomStop={handleZoomChange}
+				onPanningStop={handlePanningChange}
 										/>
 									)
 								})}
@@ -263,7 +283,23 @@ export const Animator = ({
 						</div>
 					</div>
 				)}
-			</div>
+			</TransformWrapper>
+			{!hideControls && (
+				<div className={styles.controlsContainer}>
+					<div className={styles.controls}>
+						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
+						<BasicPlaybackControls
+							isPlaying={isPlaying}
+							loopMethod={loopMethod}
+							onLoopMethodToggle={setLoopMethod}
+							onStepBackwardClick={stepBackward}
+							onStepForwardClick={stepForward}
+							onPlayPauseClick={playPause}
+						/>
+						{settingsComponent}
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }

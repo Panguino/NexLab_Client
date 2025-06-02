@@ -25,6 +25,9 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	const [ratio, setRatio] = useState(1)
 	const [nexradData, setNexradData] = useState([])
 
+	const nexradZoomState = useRootStore.use.nexradZoomState()
+	const setNexradZoomState = useRootStore.use.setNexradZoomState()
+
 	useEffect(() => {
 		async function getData() {
 			const data = await getNexradData(siteId, productId, nexradNumberOfFrames)
@@ -48,6 +51,8 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 						</AnimatorSettings>
 					}
 				/>
+						initialZoomState={nexradZoomState}
+						setZoomState={setNexradZoomState}
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>

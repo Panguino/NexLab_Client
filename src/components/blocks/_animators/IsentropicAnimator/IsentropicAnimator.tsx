@@ -3,6 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import useDimensions from '@/hooks/useDimensions'
+import { useRootStore } from '@/store/useRootStore'
 import { getIsentropicData } from '@/util/dataCalls/analysis/query-isentropic'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -21,6 +22,8 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 	const [ratio, setRatio] = useState(1)
 	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [IsentropicData, setIsentropicData] = useState([])
+	const analysisZoomState = useRootStore.use.analysisZoomState()
+	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
 
 	useEffect(() => {
 		async function getData() {
@@ -35,7 +38,13 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 		<div className={styles.IsentropicAnimatorContainer}>
 			<div className={styles.IsentropicAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={IsentropicData} startFrame={IsentropicData.length - 1} ratio={ratio} />
+					<Animator
+						frames={IsentropicData}
+						startFrame={IsentropicData.length - 1}
+						ratio={ratio}
+						initialZoomState={analysisZoomState}
+						setZoomState={setAnalysisZoomState}
+					/>
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

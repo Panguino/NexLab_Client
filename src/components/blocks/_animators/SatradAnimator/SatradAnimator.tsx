@@ -29,6 +29,9 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	const [satradData, setSatradData] = useState([])
 	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
 
+	const satradZoomState = useRootStore.use.satradZoomState()
+	const setSatradZoomState = useRootStore.use.setSatradZoomState()
+
 	useEffect(() => {
 		async function getData() {
 			const regionIdStr = Array.isArray(regionId) ? regionId[0] : regionId
@@ -51,6 +54,8 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 						ratio={ratio}
 						interval={satradFrameRate}
 						overlays={satradOverlays}
+						initialZoomState={satradZoomState}
+						setZoomState={setSatradZoomState}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<SatradAnimatorSettings />
