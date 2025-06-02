@@ -36,8 +36,6 @@ export const Animator = ({
 	startFrame,
 	overlays,
 	ratio = 1,
-	height,
-	width,
 	interval = 200,
 	hideControls = false,
 	autoPlay = false,
@@ -59,6 +57,7 @@ export const Animator = ({
 	const [expanded, setExpanded] = useState(true)
 	const intervalRef = useRef<number | null>(null)
 	const transformRef = useRef(null)
+	const ImageMachineRef = useRef(null)
 	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio, !expanded)
 
 	useEffect(() => {
@@ -167,18 +166,6 @@ export const Animator = ({
 		setExpanded(!expanded)
 	}
 
-	const animatorWidth = useMemo(() => {
-		if (width) return width
-		if (!expanded && adjustedWidth) return adjustedWidth
-		return '100%'
-	}, [width, expanded, adjustedWidth])
-
-	const animatorHeight = useMemo(() => {
-		if (height) return height
-		if (!expanded && adjustedHeight) return adjustedHeight
-		return '100%'
-	}, [height, expanded, adjustedHeight])
-
 	const handleZoomChange = (e: any) => {
 		setZoomState(e?.state)
 	}
@@ -186,99 +173,103 @@ export const Animator = ({
 		setZoomState(e?.state)
 	}
 
+	useEffect(() => {
+		if (!transformRef.current) return
+		console.log(adjustedHeight, adjustedWidth, _width, _height)
+		transformRef.current.zoomOut(0, 0)
+	}, [adjustedHeight, adjustedWidth, _width, _height])
+
 	return (
 		<div ref={animatorRef} className={styles.animator}>
-			<div className={styles.animatorWrapper} style={{ width: animatorWidth, height: animatorHeight }}>
-				<TransformWrapper
-					ref={transformRef}
-					disablePadding
-					centerOnInit
-					initialScale={initialZoomState.scale}
-					initialPositionX={initialZoomState.positionX}
-					initialPositionY={initialZoomState.positionY}
-					onZoomStop={handleZoomChange}
-					onPanningStop={handlePanningChange}
-					doubleClick={{ disabled: true }}
-					panning={{ velocityDisabled: true }}
-				>
-					{({ zoomIn, zoomOut, resetTransform }) => (
-						<>
-							<TransformComponent
-								wrapperStyle={{
-									width: _width,
-									height: _height,
-								}}
-								contentClass={styles.animatorImagesContainer}
-								contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
-							>
-								<AnimatorImageMachine
-									frames={frames || []}
-									currentFrame={currentFrame}
-									loadedFrames={loadedFrames}
-									setLoadedFrames={setLoadedFrames}
-									baseOpacity={activeOverlays.includes('data') ? 1 : 0}
-								/>
-								{activeOverlays.map((overlay, index) => {
-									if (overlay === 'data') return null
-									return (
-										<AnimatorImageMachine
-											key={index}
-											baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
-											zIndex={SATRAD_OVERLAYS[overlay].zIndex}
-											frames={allOverlayImages[overlay] || []}
-											currentFrame={currentFrame}
-										/>
-									)
-								})}
-							</TransformComponent>
-							{!hideZoomControls && !disableZoom && (
-								<div className={styles.zoomControls}>
-									{overlays && (
-										<button onClick={() => setOverlayPanelOpen(true)}>
-											<FontAwesomeIcon icon={faLayerGroup} />
-											<OverlayPanel
-												activeOverlays={activeOverlays}
-												setActiveOverlays={setActiveOverlays}
-												overlays={overlays}
-												onClose={() => setOverlayPanelOpen(false)}
-												open={overlayPanelOpen}
-											/>
-										</button>
-									)}
-									<button onClick={() => zoomIn()}>
-										<FontAwesomeIcon icon={faSearchPlus} />
-									</button>
-									<button onClick={() => zoomOut()}>
-										<FontAwesomeIcon icon={faSearchMinus} />
-									</button>
-									<button onClick={() => resetTransform()}>
-										<FontAwesomeIcon icon={faUndo} />
-									</button>
-									<button onClick={() => expandToggle()}>
-										<FontAwesomeIcon icon={expanded ? faCompress : faExpand} />
-									</button>
-								</div>
-							)}
-						</>
-					)}
-				</TransformWrapper>
-				{!hideControls && (
-					<div className={styles.controlsContainer}>
-						<div className={styles.controls}>
-							<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
-							<BasicPlaybackControls
-								isPlaying={isPlaying}
-								loopMethod={loopMethod}
-								onLoopMethodToggle={setLoopMethod}
-								onStepBackwardClick={stepBackward}
-								onStepForwardClick={stepForward}
-								onPlayPauseClick={playPause}
+			<TransformWrapper
+				ref={transformRef}
+				disablePadding
+				initialScale={initialZoomState.scale}
+				initialPositionX={initialZoomState.positionX}
+				initialPositionY={initialZoomState.positionY}
+				onZoomStop={handleZoomChange}
+				onPanningStop={handlePanningChange}
+				doubleClick={{ disabled: true }}
+				panning={{ velocityDisabled: true }}
+			>
+				{({ zoomIn, zoomOut, resetTransform }) => (
+					<>
+						<TransformComponent
+							wrapperStyle={{
+								width: _width,
+								height: _height,
+							}}
+							contentClass={styles.animatorImagesContainer}
+							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
+						>
+							<AnimatorImageMachine
+								ref={ImageMachineRef}
+								frames={frames || []}
+								currentFrame={currentFrame}
+								loadedFrames={loadedFrames}
+								setLoadedFrames={setLoadedFrames}
+								baseOpacity={activeOverlays.includes('data') ? 1 : 0}
 							/>
-							{settingsComponent}
-						</div>
-					</div>
+							{activeOverlays.map((overlay, index) => {
+								if (overlay === 'data') return null
+								return (
+									<AnimatorImageMachine
+										key={index}
+										baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
+										zIndex={SATRAD_OVERLAYS[overlay].zIndex}
+										frames={allOverlayImages[overlay] || []}
+										currentFrame={currentFrame}
+									/>
+								)
+							})}
+						</TransformComponent>
+						{!hideZoomControls && !disableZoom && (
+							<div className={styles.zoomControls}>
+								{overlays && (
+									<button onClick={() => setOverlayPanelOpen(true)}>
+										<FontAwesomeIcon icon={faLayerGroup} />
+										<OverlayPanel
+											activeOverlays={activeOverlays}
+											setActiveOverlays={setActiveOverlays}
+											overlays={overlays}
+											onClose={() => setOverlayPanelOpen(false)}
+											open={overlayPanelOpen}
+										/>
+									</button>
+								)}
+								<button onClick={() => zoomIn()}>
+									<FontAwesomeIcon icon={faSearchPlus} />
+								</button>
+								<button onClick={() => zoomOut()}>
+									<FontAwesomeIcon icon={faSearchMinus} />
+								</button>
+								<button onClick={() => resetTransform()}>
+									<FontAwesomeIcon icon={faUndo} />
+								</button>
+								<button onClick={() => expandToggle()}>
+									<FontAwesomeIcon icon={expanded ? faCompress : faExpand} />
+								</button>
+							</div>
+						)}
+					</>
 				)}
-			</div>
+			</TransformWrapper>
+			{!hideControls && (
+				<div className={styles.controlsContainer}>
+					<div className={styles.controls}>
+						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
+						<BasicPlaybackControls
+							isPlaying={isPlaying}
+							loopMethod={loopMethod}
+							onLoopMethodToggle={setLoopMethod}
+							onStepBackwardClick={stepBackward}
+							onStepForwardClick={stepForward}
+							onPlayPauseClick={playPause}
+						/>
+						{settingsComponent}
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }
