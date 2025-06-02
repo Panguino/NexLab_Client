@@ -1,6 +1,7 @@
 'use client'
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
+import { zoomState } from '@/types/general'
 import { faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -23,8 +24,11 @@ interface IAnimatorProps {
 	hideControls?: boolean
 	hideZoomControls?: boolean
 	autoPlay?: boolean
+	disableZoom?: boolean
 	interval?: number
 	settingsComponent?: React.ReactNode | null
+	initialZoomState?: zoomState
+	setZoomState?: (zoomState: zoomState) => void
 }
 
 export const Animator = ({
@@ -37,8 +41,13 @@ export const Animator = ({
 	interval = 200,
 	hideControls = false,
 	autoPlay = false,
+	disableZoom = false,
 	hideZoomControls = false,
 	settingsComponent = null,
+	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
+	setZoomState = (zoomState: zoomState) => {
+		console.warn('setZoomState function not provided, zoom state will not be updated.', zoomState)
+	},
 }: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [activeOverlays, setActiveOverlays] = useState(['data', 'map'])
@@ -151,9 +160,27 @@ export const Animator = ({
 		}
 	}, [overlays])
 
+	const handleZoomChange = (e: any) => {
+		setZoomState(e?.state)
+	}
+	const handlePanningChange = (e: any) => {
+		setZoomState(e?.state)
+	}
+
 	return (
 		<div ref={animatorRef} className={styles.animator} style={{ height: height || '100%', width: width || '100%' }}>
-			<TransformWrapper ref={transformRef} disablePadding centerOnInit doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }}>
+			<TransformWrapper
+				ref={transformRef}
+				initialScale={initialZoomState.scale}
+				initialPositionX={initialZoomState.positionX}
+				initialPositionY={initialZoomState.positionY}
+				onZoomStop={handleZoomChange}
+				onPanningStop={handlePanningChange}
+				disablePadding
+				doubleClick={{ disabled: true }}
+				panning={{ velocityDisabled: true }}
+				disabled={disableZoom}
+			>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
 						<TransformComponent
@@ -184,7 +211,7 @@ export const Animator = ({
 								)
 							})}
 						</TransformComponent>
-						{!hideZoomControls && (
+						{!hideZoomControls && !disableZoom && (
 							<div className={styles.zoomControls}>
 								<button onClick={() => zoomIn()}>
 									<FontAwesomeIcon icon={faSearchPlus} />
@@ -216,7 +243,7 @@ export const Animator = ({
 					</>
 				)}
 			</TransformWrapper>
-			{!hideControls && (
+			{!hideControls && loadedFrames.length > 1 && (
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
 						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />

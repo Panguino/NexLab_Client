@@ -37,7 +37,7 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 		<div className={styles.soundingAnimatorContainer}>
 			<div className={styles.soundingAnimator} ref={wrapperRef}>
 				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={soundingData} startFrame={soundingData.length - 1} ratio={ratio} />
+					<Animator frames={soundingData} startFrame={soundingData.length - 1} ratio={ratio} disableZoom />
 				</div>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
