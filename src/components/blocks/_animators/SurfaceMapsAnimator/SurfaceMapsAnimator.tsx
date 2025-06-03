@@ -2,7 +2,6 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
-import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
 import { getSurfaceData } from '@/util/dataCalls/analysis/query-surface'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -21,7 +20,6 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 	const [activeTab, setActiveTab] = useState(-1)
 	const surfaceMapsNumberOfFrames = useRootStore.use.surfaceMapsNumberOfFrames()
 	const [ratio, setRatio] = useState(1)
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [surfaceMapsData, setSurfaceMapsData] = useState([])
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
@@ -37,16 +35,14 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 
 	return (
 		<div className={styles.surfaceMapsAnimatorContainer}>
-			<div className={styles.surfaceMapsAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator
-						frames={surfaceMapsData}
-						startFrame={surfaceMapsData.length - 1}
-						ratio={ratio}
-						initialZoomState={analysisZoomState}
-						setZoomState={setAnalysisZoomState}
-					/>
-				</div>
+			<div className={styles.surfaceMapsAnimator}>
+				<Animator
+					frames={surfaceMapsData}
+					startFrame={surfaceMapsData.length - 1}
+					ratio={ratio}
+					initialZoomState={analysisZoomState}
+					setZoomState={setAnalysisZoomState}
+				/>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>

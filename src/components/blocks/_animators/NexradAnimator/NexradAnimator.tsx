@@ -3,10 +3,9 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
-import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
 import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
-import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -24,7 +23,6 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
 	const nexradFrameRate = useRootStore.use.nexradFrameRate()
 	const [ratio, setRatio] = useState(1)
-	const [wrapperRef, { width, height }] = useDimensions(ratio, true)
 	const [nexradData, setNexradData] = useState([])
 
 	const nexradZoomState = useRootStore.use.nexradZoomState()
@@ -41,22 +39,20 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 
 	return (
 		<div className={styles.nexradAnimatorContainer}>
-			<div className={styles.nexradAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: width > height ? height : width, height: width > height ? height : width }}>
-					<Animator
-						frames={nexradData}
-						startFrame={nexradData.length - 1}
-						ratio={ratio}
-						initialZoomState={nexradZoomState}
-						setZoomState={setNexradZoomState}
-						interval={1000 / nexradFrameRate}
-						settingsComponent={
-							<AnimatorSettings title="Settings">
-								<NexradAnimatorSettings />
-							</AnimatorSettings>
-						}
-					/>
-				</div>
+			<div className={styles.nexradAnimator}>
+				<Animator
+					frames={nexradData}
+					startFrame={nexradData.length - 1}
+					ratio={ratio}
+					initialZoomState={nexradZoomState}
+					setZoomState={setNexradZoomState}
+					interval={1000 / nexradFrameRate}
+					settingsComponent={
+						<AnimatorSettings title="Settings">
+							<NexradAnimatorSettings />
+						</AnimatorSettings>
+					}
+				/>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
@@ -64,9 +60,6 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 				</Tab>
 				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
 					Alerts TODO
-				</Tab>
-				<Tab label="Overlays" icon={<FontAwesomeIcon icon={faLayerGroup} />}>
-					Overlays TODO
 				</Tab>
 				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
 					Download / Save Gif TODO

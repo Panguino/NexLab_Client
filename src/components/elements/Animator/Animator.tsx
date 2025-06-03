@@ -2,7 +2,7 @@
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
 import { zoomState } from '@/types/general'
-import { faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
+import { faCompress, faExpand, faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
@@ -36,8 +36,6 @@ export const Animator = ({
 	startFrame,
 	overlays,
 	ratio = 1,
-	height,
-	width,
 	interval = 200,
 	hideControls = false,
 	autoPlay = false,
@@ -56,9 +54,11 @@ export const Animator = ({
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
 	const [playDirection, setPlayDirection] = useState<direction>(1)
 	const [isPlaying, setIsPlaying] = useState(false)
+	const [expanded, setExpanded] = useState(!disableZoom)
 	const intervalRef = useRef<number | null>(null)
 	const transformRef = useRef(null)
-	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio)
+	const ImageMachineRef = useRef(null)
+	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio, !expanded)
 
 	useEffect(() => {
 		if (loopMethod === LoopMethod.LeftToRight) {
@@ -126,10 +126,12 @@ export const Animator = ({
 	}, [autoPlay, loadedFrames])
 
 	useEffect(() => {
-		if (loadedFrames.length > 0) {
-			// make it so animation initializes at the startFrame
+		if (!startFrame && loadedFrames.length > 0) {
+			// if no startFrame is set, default to the last frame
+			setCurrentFrame(loadedFrames.length - 1)
+		} else if (loadedFrames.length > 0) {
 			// if startFrame is greater than the number of loaded frames, set it to 0
-			setCurrentFrame(startFrame >= loadedFrames.length ? loadedFrames.length - 1 : startFrame)
+			setCurrentFrame(startFrame > loadedFrames.length - 1 ? loadedFrames.length - 1 : startFrame)
 		}
 	}, [loadedFrames, startFrame])
 
@@ -160,6 +162,10 @@ export const Animator = ({
 		}
 	}, [overlays])
 
+	const expandToggle = () => {
+		setExpanded((prev) => !prev)
+	}
+
 	const handleZoomChange = (e: any) => {
 		setZoomState(e?.state)
 	}
@@ -167,19 +173,29 @@ export const Animator = ({
 		setZoomState(e?.state)
 	}
 
+	useEffect(() => {
+		if (!transformRef.current) return
+		// for some reason this is the only way to make it center correctly on expand change
+		transformRef.current.zoomOut(0, 0)
+		// this is the only way to keep the zoom position and level intact when you change expand
+		const manualCenterY = Math.ceil((_height - adjustedHeight) / 2)
+		const manualCenterX = Math.ceil((_width - adjustedWidth) / 2)
+		transformRef.current.setTransform(manualCenterX, manualCenterY, initialZoomState.scale, 0)
+		// I know this is stupid, but it works
+	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState])
+
 	return (
-		<div ref={animatorRef} className={styles.animator} style={{ height: height || '100%', width: width || '100%' }}>
+		<div ref={animatorRef} className={styles.animator}>
 			<TransformWrapper
 				ref={transformRef}
+				disablePadding
 				initialScale={initialZoomState.scale}
 				initialPositionX={initialZoomState.positionX}
 				initialPositionY={initialZoomState.positionY}
 				onZoomStop={handleZoomChange}
 				onPanningStop={handlePanningChange}
-				disablePadding
 				doubleClick={{ disabled: true }}
 				panning={{ velocityDisabled: true }}
-				disabled={disableZoom}
 			>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
@@ -192,6 +208,7 @@ export const Animator = ({
 							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
 						>
 							<AnimatorImageMachine
+								ref={ImageMachineRef}
 								frames={frames || []}
 								currentFrame={currentFrame}
 								loadedFrames={loadedFrames}
@@ -213,19 +230,6 @@ export const Animator = ({
 						</TransformComponent>
 						{!hideZoomControls && !disableZoom && (
 							<div className={styles.zoomControls}>
-								<button onClick={() => zoomIn()}>
-									<FontAwesomeIcon icon={faSearchPlus} />
-								</button>
-								<button onClick={() => zoomOut()}>
-									<FontAwesomeIcon icon={faSearchMinus} />
-								</button>
-								<button
-									onClick={() => {
-										resetTransform()
-									}}
-								>
-									<FontAwesomeIcon icon={faUndo} />
-								</button>
 								{overlays && (
 									<button onClick={() => setOverlayPanelOpen(true)}>
 										<FontAwesomeIcon icon={faLayerGroup} />
@@ -238,12 +242,24 @@ export const Animator = ({
 										/>
 									</button>
 								)}
+								<button onClick={() => zoomIn()}>
+									<FontAwesomeIcon icon={faSearchPlus} />
+								</button>
+								<button onClick={() => zoomOut()}>
+									<FontAwesomeIcon icon={faSearchMinus} />
+								</button>
+								<button onClick={() => resetTransform()}>
+									<FontAwesomeIcon icon={faUndo} />
+								</button>
+								<button onClick={() => expandToggle()}>
+									<FontAwesomeIcon icon={expanded ? faCompress : faExpand} />
+								</button>
 							</div>
 						)}
 					</>
 				)}
 			</TransformWrapper>
-			{!hideControls && loadedFrames.length > 1 && (
+			{!hideControls && (
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
 						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />

@@ -2,7 +2,6 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
-import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData } from '@/util/dataCalls/analysis/query-soundings'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -21,7 +20,6 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	const [activeTab, setActiveTab] = useState(-1)
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
 	const [ratio, setRatio] = useState(1)
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [soundingData, setSoundingData] = useState([])
 
 	useEffect(() => {
@@ -35,10 +33,8 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 
 	return (
 		<div className={styles.soundingAnimatorContainer}>
-			<div className={styles.soundingAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={soundingData} startFrame={soundingData.length - 1} ratio={ratio} disableZoom />
-				</div>
+			<div className={styles.soundingAnimator}>
+				<Animator frames={soundingData} startFrame={soundingData.length - 1} ratio={ratio} disableZoom />
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
