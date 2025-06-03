@@ -65,16 +65,74 @@ const SATRAD_SECTOR_SUBREGIONAL_CA_S_MANITOBA_SASKACHEWAN_ID = 'ca_s_mb_sk'
 const SATRAD_SECTOR_SUBREGIONAL_CA_S_ONTARIO_ID = 'ca_s_ontario'
 const SATRAD_SECTOR_SUBREGIONAL_CA_UNGAVA_ID = 'ca_ungava'
 
-const subregional_latitude_modifier = 1.5
-const subregional_longitude_modifier = 1.5
+// subregional Baja 24.75;-119.27;33.69;-103.51
+// subregional Cali_Gulf 18.32;-115.21;27.16;-99.82
+// subregional Mexico_City 13.88;-107.5;22.22;-92.14
+// subregional Big_Bend 24.08;-109.59;32.36;-93.43
+// subregional Desert_SW 29.97;-115.99;38.44;-99.57
+// subregional Cen_Rockies 36.14;-117.27;44.33;-100.27
+// subregional N_Rockies 42.41;-117.61;50.14;-99.89
+// subregional N_Plains 42.23;-107.37;49.34;-89.15
+// subregional Cen_Plains 36.63;-107.55;44.15;-90.02
+// subregional S_Plains 32.22;-105.85;39.89;-88.72
+// subregional Texas 27.13;-106.59;35.09;-90.01
+// subregional W_Gulf_Coast 23.79;-100.68;31.44;-84.17
+// subregional E_Gulf_Coast 24.04;-94.32;31.21;-77.54
+// subregional Yucatan 17.23;-98.34;24.85;-82.33
+// subregional W_Caribbean 14.96;-89.41;21.92;-73.28
+// subregional Cuba 17.95;-87.38;24.71;-70.91
+// subregional Greater_Antilles 15.08;-81.26;21.39;-64.86
+// subregional Bahamas 20.32;-83.16;26.72;-66.34
+// subregional Florida 24.24;-89.03;31.0;-72.04
+// subregional Dixie 28.52;-96.39;35.69;-79.25
+// subregional Carolinas 30.48;-87.37;36.92;-69.69
+// subregional Bootheel 32.71;-97.66;39.79;-80.13
+// subregional Virginias 34.01;-85.88;40.19;-67.76
+// subregional IL 37.38;-97.62;44.2;-79.56
+// subregional MI 40.63;-93.22;46.95;-74.57
+// subregional Nrn_Mo 36.80;-101.90;43.80;-83.90
+// subregional N_Tier 42.66;-97.54;49.12;-78.82
+// subregional Quebec 42.67;-84.92;48.31;-65.69
+// subregional St_Lawrence 42.98;-73.06;47.8;-53.39
+// subregional New_England 39.47;-82.26;45.11;-63.36
+// subregional Mid_Atlantic 37.11;-84.97;43.07;-66.45
+// subregional N_Iowa 39.48;-102.82;46.5;-84.73
+// subregional Bermuda 29.57;-79.46;35.45;-61.61
+// subregional S_SK 45.74;-115.09;53.02;-96.79
+// subregional OH_RV 35.09;-93.73;41.77;-75.77
+// subregional NE_WY 39.85;-113.28;47.52;-95.64
+// subregional CO_KS_PanHan 33.37;-109.33;41.22;-92.24
+// subregional Durango 32.92;-116.01;41.23;-99.29
+// subregional S_PanHandle 29.79;-109.15;37.81;-92.43
+// subregional ca_ern_nl 45.58;-62.32;50.08;-42.81
+// subregional ca_gulf_stl 47.01;-69.98;51.84;-50.5
+// subregional ca_nl 51.76;-70.88;56.29;-50.79
+// subregional ca_ungava 55.6;-76.06;60.06;-55.56
+// subregional ca_c_quebec 47.03;-84.34;52.6;-65.3
+// subregional ca_n_quebec 52.86;-85.2;57.98;-65.42
+// subregional ca_s_ontario 47.03;-96.11;53.19;-77.5
+// subregional ca_n_ontario 52.79;-96.46;58.43;-77.12
+// subregional ca_s_mb_sk 48.34;-110.46;55.07;-92.29
+// subregional ca_n_mb_sk 54.16;-110.43;60.26;-91.49
+// subregional ca_edmonton 49.73;-122.65;56.86;-104.88
+// subregional ca_n_alberta 53.96;-123.89;60.63;-105.63
+// subregional ca_s_bc 50.35;-132.43;57.82;-115.08
+// subregional ca_n_bc 54.43;-136.56;61.54;-118.91
+// subregional Pac_NW 43.49;-128.65;50.19;-111.88
+// subregional N_Nevada 37.49;-126.46;44.61;-110.08
+// subregional Sierra 32.18;-122.94;39.52;-106.81
+// subregional S_British_Columbia 46.95;-128.18;53.32;-111.11
+// subregional Oregon 39.84;-130.3;46.92;-113.87
+// subregional SanFran 34.64;-130.05;42.11;-113.97
+// subregional Vandenburg 30.90;-128.30;38.30;-112.30
 
 export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 	[SATRAD_SECTOR_SUBREGIONAL_BAHAMAS_ID]: {
 		name: 'Bahamas',
 		type: 'Geobox',
 		coordinates: [
-			[-74.9 + subregional_longitude_modifier, 23.7 - subregional_latitude_modifier],
-			[-74.9 - subregional_longitude_modifier, 23.7 + subregional_latitude_modifier],
+			[-83.16, 20.32],
+			[-66.34, 26.72],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -82,8 +140,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Baja',
 		type: 'Geobox',
 		coordinates: [
-			[-111.6 + subregional_longitude_modifier, 29.4 - subregional_latitude_modifier],
-			[-111.6 - subregional_longitude_modifier, 29.4 + subregional_latitude_modifier],
+			[-119.27, 24.75],
+			[-103.51, 33.69],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -91,8 +149,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Bermuda',
 		type: 'Geobox',
 		coordinates: [
-			[-70.7 + subregional_longitude_modifier, 32.7 - subregional_latitude_modifier],
-			[-70.7 - subregional_longitude_modifier, 32.7 + subregional_latitude_modifier],
+			[-79.46, 29.57],
+			[-61.61, 35.45],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -100,8 +158,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Big Bend',
 		type: 'Geobox',
 		coordinates: [
-			[-101.7 + subregional_longitude_modifier, 28.4 - subregional_latitude_modifier],
-			[-101.7 - subregional_longitude_modifier, 28.4 + subregional_latitude_modifier],
+			[-109.59, 24.08],
+			[-93.43, 32.36],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -109,8 +167,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Bootheel',
 		type: 'Geobox',
 		coordinates: [
-			[-89.1 + subregional_longitude_modifier, 36.45 - subregional_latitude_modifier],
-			[-89.1 - subregional_longitude_modifier, 36.45 + subregional_latitude_modifier],
+			[-97.66, 32.71],
+			[-80.13, 39.79],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -118,8 +176,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CO_KS_PanHandle',
 		type: 'Geobox',
 		coordinates: [
-			[-101.0 + subregional_longitude_modifier, 37.5 - subregional_latitude_modifier],
-			[-101.0 - subregional_longitude_modifier, 37.5 + subregional_latitude_modifier],
+			[-109.33, 33.37],
+			[-92.24, 41.22],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -127,8 +185,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Cali_Gulf',
 		type: 'Geobox',
 		coordinates: [
-			[-107.7 + subregional_longitude_modifier, 22.9 - subregional_latitude_modifier],
-			[-107.7 - subregional_longitude_modifier, 22.9 + subregional_latitude_modifier],
+			[-115.21, 18.32],
+			[-99.82, 27.16],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -136,8 +194,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Carolinas',
 		type: 'Geobox',
 		coordinates: [
-			[-78.7 + subregional_longitude_modifier, 33.9 - subregional_latitude_modifier],
-			[-78.7 - subregional_longitude_modifier, 33.9 + subregional_latitude_modifier],
+			[-87.37, 30.48],
+			[-69.69, 36.92],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -145,8 +203,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Cen_Plains',
 		type: 'Geobox',
 		coordinates: [
-			[-99.0 + subregional_longitude_modifier, 40.6 - subregional_latitude_modifier],
-			[-99.0 - subregional_longitude_modifier, 40.6 + subregional_latitude_modifier],
+			[-107.55, 36.63],
+			[-90.02, 44.15],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -154,8 +212,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Cen_Rockies',
 		type: 'Geobox',
 		coordinates: [
-			[-109.0 + subregional_longitude_modifier, 40.45 - subregional_latitude_modifier],
-			[-109.0 - subregional_longitude_modifier, 40.45 + subregional_latitude_modifier],
+			[-117.27, 36.14],
+			[-100.27, 44.33],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -163,8 +221,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Cuba',
 		type: 'Geobox',
 		coordinates: [
-			[-79.3 + subregional_longitude_modifier, 21.5 - subregional_latitude_modifier],
-			[-79.3 - subregional_longitude_modifier, 21.5 + subregional_latitude_modifier],
+			[-87.38, 17.95],
+			[-70.91, 24.71],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -172,8 +230,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Desert_SW',
 		type: 'Geobox',
 		coordinates: [
-			[-108.0 + subregional_longitude_modifier, 34.4 - subregional_latitude_modifier],
-			[-108.0 - subregional_longitude_modifier, 34.4 + subregional_latitude_modifier],
+			[-115.99, 29.97],
+			[-99.57, 38.44],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -181,8 +239,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Dixie',
 		type: 'Geobox',
 		coordinates: [
-			[-88.0 + subregional_longitude_modifier, 32.3 - subregional_latitude_modifier],
-			[-88.0 - subregional_longitude_modifier, 32.3 + subregional_latitude_modifier],
+			[-96.39, 28.52],
+			[-79.25, 35.69],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -190,8 +248,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Durango',
 		type: 'Geobox',
 		coordinates: [
-			[-107.88 + subregional_longitude_modifier, 37.28 - subregional_latitude_modifier],
-			[-107.88 - subregional_longitude_modifier, 37.28 + subregional_latitude_modifier],
+			[-116.01, 32.92],
+			[-99.29, 41.23],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -199,8 +257,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'E_Antilles',
 		type: 'Geobox',
 		coordinates: [
-			[-67.3 + subregional_longitude_modifier, 19.6 - subregional_latitude_modifier],
-			[-67.3 - subregional_longitude_modifier, 19.6 + subregional_latitude_modifier],
+			[-66.3, 13.2],
+			[-66.3, 13.2],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -208,8 +266,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'E_Caribbean',
 		type: 'Geobox',
 		coordinates: [
-			[-66.3 + subregional_longitude_modifier, 13.2 - subregional_latitude_modifier],
-			[-66.3 - subregional_longitude_modifier, 13.2 + subregional_latitude_modifier],
+			[-66.3, 13.2],
+			[-66.3, 13.2],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -217,8 +275,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'E_Gulf_Coast',
 		type: 'Geobox',
 		coordinates: [
-			[-86.1 + subregional_longitude_modifier, 27.8 - subregional_latitude_modifier],
-			[-86.1 - subregional_longitude_modifier, 27.8 + subregional_latitude_modifier],
+			[-94.32, 24.04],
+			[-77.54, 31.21],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -226,8 +284,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Florida',
 		type: 'Geobox',
 		coordinates: [
-			[-80.7 + subregional_longitude_modifier, 27.8 - subregional_latitude_modifier],
-			[-80.7 - subregional_longitude_modifier, 27.8 + subregional_latitude_modifier],
+			[-89.03, 24.24],
+			[-72.04, 31.0],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -235,8 +293,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Greater Antilles',
 		type: 'Geobox',
 		coordinates: [
-			[-73.2 + subregional_longitude_modifier, 18.4 - subregional_latitude_modifier],
-			[-73.2 - subregional_longitude_modifier, 18.4 + subregional_latitude_modifier],
+			[-81.26, 15.08],
+			[-64.86, 21.39],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -244,8 +302,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Illinois',
 		type: 'Geobox',
 		coordinates: [
-			[-88.8 + subregional_longitude_modifier, 41.0 - subregional_latitude_modifier],
-			[-88.8 - subregional_longitude_modifier, 41.0 + subregional_latitude_modifier],
+			[-97.62, 37.38],
+			[-79.56, 44.2],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -253,8 +311,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Michigan',
 		type: 'Geobox',
 		coordinates: [
-			[-84.1 + subregional_longitude_modifier, 44.0 - subregional_latitude_modifier],
-			[-84.1 - subregional_longitude_modifier, 44.0 + subregional_latitude_modifier],
+			[-93.22, 40.63],
+			[-74.57, 46.95],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -262,8 +320,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Mexico City',
 		type: 'Geobox',
 		coordinates: [
-			[-100.0 + subregional_longitude_modifier, 18.2 - subregional_latitude_modifier],
-			[-100.0 - subregional_longitude_modifier, 18.2 + subregional_latitude_modifier],
+			[-107.5, 13.88],
+			[-92.14, 22.22],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -271,8 +329,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Mid Atlantic',
 		type: 'Geobox',
 		coordinates: [
-			[-75.9 + subregional_longitude_modifier, 40.3 - subregional_latitude_modifier],
-			[-75.9 - subregional_longitude_modifier, 40.3 + subregional_latitude_modifier],
+			[-84.97, 37.11],
+			[-66.45, 43.07],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -280,8 +338,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'NE_WY',
 		type: 'Geobox',
 		coordinates: [
-			[-104.7 + subregional_longitude_modifier, 43.9 - subregional_latitude_modifier],
-			[-104.7 - subregional_longitude_modifier, 43.9 + subregional_latitude_modifier],
+			[-113.28, 39.85],
+			[-95.64, 47.52],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -289,8 +347,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'N_Iowa',
 		type: 'Geobox',
 		coordinates: [
-			[-94.0 + subregional_longitude_modifier, 43.2 - subregional_latitude_modifier],
-			[-94.0 - subregional_longitude_modifier, 43.2 + subregional_latitude_modifier],
+			[-102.82, 39.48],
+			[-84.73, 46.5],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -298,8 +356,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'N_Nevada',
 		type: 'Geobox',
 		coordinates: [
-			[-118.4 + subregional_longitude_modifier, 41.2 - subregional_latitude_modifier],
-			[-118.4 - subregional_longitude_modifier, 41.2 + subregional_latitude_modifier],
+			[-126.46, 37.49],
+			[-110.08, 44.61],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -307,8 +365,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'N_Plains',
 		type: 'Geobox',
 		coordinates: [
-			[-98.5 + subregional_longitude_modifier, 46.0 - subregional_latitude_modifier],
-			[-98.5 - subregional_longitude_modifier, 46.0 + subregional_latitude_modifier],
+			[-107.37, 42.23],
+			[-89.15, 49.34],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -316,8 +374,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'N_Rockies',
 		type: 'Geobox',
 		coordinates: [
-			[-109.0 + subregional_longitude_modifier, 46.5 - subregional_latitude_modifier],
-			[-109.0 - subregional_longitude_modifier, 46.5 + subregional_latitude_modifier],
+			[-117.61, 42.41],
+			[-99.89, 50.14],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -325,8 +383,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Upper Peninsula',
 		type: 'Geobox',
 		coordinates: [
-			[-88.4 + subregional_longitude_modifier, 46.1 - subregional_latitude_modifier],
-			[-88.4 - subregional_longitude_modifier, 46.1 + subregional_latitude_modifier],
+			[-97.54, 42.66],
+			[-78.82, 49.12],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -334,8 +392,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Ohio River Valley',
 		type: 'Geobox',
 		coordinates: [
-			[-84.95 + subregional_longitude_modifier, 38.63 - subregional_latitude_modifier],
-			[-84.95 - subregional_longitude_modifier, 38.63 + subregional_latitude_modifier],
+			[-93.73, 35.09],
+			[-75.77, 41.77],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -343,8 +401,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'New England',
 		type: 'Geobox',
 		coordinates: [
-			[-73.0 + subregional_longitude_modifier, 42.5 - subregional_latitude_modifier],
-			[-73.0 - subregional_longitude_modifier, 42.5 + subregional_latitude_modifier],
+			[-82.26, 39.47],
+			[-63.36, 45.11],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -352,8 +410,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Northern Missouri',
 		type: 'Geobox',
 		coordinates: [
-			[-93.0 + subregional_longitude_modifier, 40.5 - subregional_latitude_modifier],
-			[-93.0 - subregional_longitude_modifier, 40.5 + subregional_latitude_modifier],
+			[-101.9, 36.8],
+			[-83.9, 43.8],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -361,8 +419,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Oregon',
 		type: 'Geobox',
 		coordinates: [
-			[-122.22 + subregional_longitude_modifier, 43.54 - subregional_latitude_modifier],
-			[-122.22 - subregional_longitude_modifier, 43.54 + subregional_latitude_modifier],
+			[-130.3, 39.84],
+			[-113.87, 46.92],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -370,8 +428,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Quebec',
 		type: 'Geobox',
 		coordinates: [
-			[-75.5 + subregional_longitude_modifier, 45.7 - subregional_latitude_modifier],
-			[-75.5 - subregional_longitude_modifier, 45.7 + subregional_latitude_modifier],
+			[-84.92, 42.67],
+			[-65.69, 48.31],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -379,8 +437,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Pacific Northwest',
 		type: 'Geobox',
 		coordinates: [
-			[-120.4 + subregional_longitude_modifier, 47.0 - subregional_latitude_modifier],
-			[-120.4 - subregional_longitude_modifier, 47.0 + subregional_latitude_modifier],
+			[-128.65, 43.49],
+			[-111.88, 50.19],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -388,8 +446,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'S_British_Columbia',
 		type: 'Geobox',
 		coordinates: [
-			[-119.8 + subregional_longitude_modifier, 50.3 - subregional_latitude_modifier],
-			[-119.8 - subregional_longitude_modifier, 50.3 + subregional_latitude_modifier],
+			[-132.43, 50.35],
+			[-115.08, 57.82],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -397,8 +455,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'S_Panhandle',
 		type: 'Geobox',
 		coordinates: [
-			[-101.0 + subregional_longitude_modifier, 34.0 - subregional_latitude_modifier],
-			[-101.0 - subregional_longitude_modifier, 34.0 + subregional_latitude_modifier],
+			[-109.15, 29.79],
+			[-92.43, 37.81],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -406,8 +464,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'S_Plains',
 		type: 'Geobox',
 		coordinates: [
-			[-97.5 + subregional_longitude_modifier, 36.26 - subregional_latitude_modifier],
-			[-97.5 - subregional_longitude_modifier, 36.26 + subregional_latitude_modifier],
+			[-105.85, 32.22],
+			[-88.72, 39.89],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -415,8 +473,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'S_Saskatchewan',
 		type: 'Geobox',
 		coordinates: [
-			[-106.2 + subregional_longitude_modifier, 49.6 - subregional_latitude_modifier],
-			[-106.2 - subregional_longitude_modifier, 49.6 + subregional_latitude_modifier],
+			[-115.09, 45.74],
+			[-96.79, 53.02],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -424,8 +482,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'San Francisco',
 		type: 'Geobox',
 		coordinates: [
-			[-122.15 + subregional_longitude_modifier, 38.53 - subregional_latitude_modifier],
-			[-122.15 - subregional_longitude_modifier, 38.53 + subregional_latitude_modifier],
+			[-130.05, 34.64],
+			[-113.97, 42.11],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -433,8 +491,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Sierra',
 		type: 'Geobox',
 		coordinates: [
-			[-115.0 + subregional_longitude_modifier, 36.0 - subregional_latitude_modifier],
-			[-115.0 - subregional_longitude_modifier, 36.0 + subregional_latitude_modifier],
+			[-122.94, 32.18],
+			[-106.81, 39.52],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -442,8 +500,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'St. Lawrence',
 		type: 'Geobox',
 		coordinates: [
-			[-63.4 + subregional_longitude_modifier, 45.6 - subregional_latitude_modifier],
-			[-63.4 - subregional_longitude_modifier, 45.6 + subregional_latitude_modifier],
+			[-73.06, 42.98],
+			[-53.39, 47.8],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -451,8 +509,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Texas',
 		type: 'Geobox',
 		coordinates: [
-			[-98.5 + subregional_longitude_modifier, 31.3 - subregional_latitude_modifier],
-			[-98.5 - subregional_longitude_modifier, 31.3 + subregional_latitude_modifier],
+			[-106.59, 27.13],
+			[-90.01, 35.09],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -460,8 +518,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Vandenberg',
 		type: 'Geobox',
 		coordinates: [
-			[-120.6 + subregional_longitude_modifier, 34.7 - subregional_latitude_modifier],
-			[-120.6 - subregional_longitude_modifier, 34.7 + subregional_latitude_modifier],
+			[-128.3, 30.9],
+			[-112.3, 38.3],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -469,8 +527,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Virginias',
 		type: 'Geobox',
 		coordinates: [
-			[-77.0 + subregional_longitude_modifier, 37.3 - subregional_latitude_modifier],
-			[-77.0 - subregional_longitude_modifier, 37.3 + subregional_latitude_modifier],
+			[-85.88, 34.01],
+			[-67.76, 40.19],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -478,8 +536,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'W_Caribbean',
 		type: 'Geobox',
 		coordinates: [
-			[-81.5 + subregional_longitude_modifier, 18.6 - subregional_latitude_modifier],
-			[-81.5 - subregional_longitude_modifier, 18.6 + subregional_latitude_modifier],
+			[-89.41, 14.96],
+			[-73.28, 21.92],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -487,8 +545,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'W_Gulf_Coast',
 		type: 'Geobox',
 		coordinates: [
-			[-97.5 + subregional_longitude_modifier, 30.0 - subregional_latitude_modifier],
-			[-97.5 - subregional_longitude_modifier, 30.0 + subregional_latitude_modifier],
+			[-100.68, 23.79],
+			[-84.17, 31.44],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -496,8 +554,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Yellowstone',
 		type: 'Geobox',
 		coordinates: [
-			[-110.0 + subregional_longitude_modifier, 44.5 - subregional_latitude_modifier],
-			[-110.0 - subregional_longitude_modifier, 44.5 + subregional_latitude_modifier],
+			[-109.59, 44.08],
+			[-93.43, 49.36],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -505,8 +563,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Yucatan',
 		type: 'Geobox',
 		coordinates: [
-			[-89.2 + subregional_longitude_modifier, 21.0 - subregional_latitude_modifier],
-			[-89.2 - subregional_longitude_modifier, 21.0 + subregional_latitude_modifier],
+			[-98.34, 17.23],
+			[-82.33, 24.85],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -514,8 +572,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_Central_Quebec',
 		type: 'Geobox',
 		coordinates: [
-			[-75.0 + subregional_longitude_modifier, 50.0 - subregional_latitude_modifier],
-			[-75.0 - subregional_longitude_modifier, 50.0 + subregional_latitude_modifier],
+			[-84.34, 47.03],
+			[-65.3, 52.6],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -523,8 +581,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_Edmonton',
 		type: 'Geobox',
 		coordinates: [
-			[-114.0 + subregional_longitude_modifier, 53.5 - subregional_latitude_modifier],
-			[-114.0 - subregional_longitude_modifier, 53.5 + subregional_latitude_modifier],
+			[-114.0, 53.5],
+			[-114.0, 53.5],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -532,8 +590,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_Eastern_Newfoundland',
 		type: 'Geobox',
 		coordinates: [
-			[-52.71 + subregional_longitude_modifier, 48.0 - subregional_latitude_modifier],
-			[-52.71 - subregional_longitude_modifier, 48.0 + subregional_latitude_modifier],
+			[-52.71, 48.0],
+			[-52.71, 48.0],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -541,8 +599,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_Gulf_St_Lawrence',
 		type: 'Geobox',
 		coordinates: [
-			[-60.4 + subregional_longitude_modifier, 49.6 - subregional_latitude_modifier],
-			[-60.4 - subregional_longitude_modifier, 49.6 + subregional_latitude_modifier],
+			[-60.4, 49.6],
+			[-60.4, 49.6],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -550,8 +608,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_N_Alberta',
 		type: 'Geobox',
 		coordinates: [
-			[-115.0 + subregional_longitude_modifier, 57.5 - subregional_latitude_modifier],
-			[-115.0 - subregional_longitude_modifier, 57.5 + subregional_latitude_modifier],
+			[-115.0, 57.5],
+			[-115.0, 57.5],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -559,8 +617,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_N_British_Columbia',
 		type: 'Geobox',
 		coordinates: [
-			[-128.0 + subregional_longitude_modifier, 58.2 - subregional_latitude_modifier],
-			[-128.0 - subregional_longitude_modifier, 58.2 + subregional_latitude_modifier],
+			[-128.0, 58.2],
+			[-128.0, 58.2],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -568,8 +626,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_N_Manitoba_Saskatchewan',
 		type: 'Geobox',
 		coordinates: [
-			[-101.2 + subregional_longitude_modifier, 57.4 - subregional_latitude_modifier],
-			[-101.2 - subregional_longitude_modifier, 57.4 + subregional_latitude_modifier],
+			[-101.2, 57.4],
+			[-101.2, 57.4],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -577,8 +635,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_N_Ontario',
 		type: 'Geobox',
 		coordinates: [
-			[-87.0 + subregional_longitude_modifier, 55.8 - subregional_latitude_modifier],
-			[-87.0 - subregional_longitude_modifier, 55.8 + subregional_latitude_modifier],
+			[-87.0, 55.8],
+			[-87.0, 55.8],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -586,8 +644,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_N_Quebec',
 		type: 'Geobox',
 		coordinates: [
-			[-75.5 + subregional_longitude_modifier, 55.6 - subregional_latitude_modifier],
-			[-75.5 - subregional_longitude_modifier, 55.6 + subregional_latitude_modifier],
+			[-75.5, 55.6],
+			[-75.5, 55.6],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -595,8 +653,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_Newfoundland',
 		type: 'Geobox',
 		coordinates: [
-			[-61.0 + subregional_longitude_modifier, 54.2 - subregional_latitude_modifier],
-			[-61.0 - subregional_longitude_modifier, 54.2 + subregional_latitude_modifier],
+			[-61.0, 54.2],
+			[-61.0, 54.2],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -604,8 +662,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_S_British_Columbia',
 		type: 'Geobox',
 		coordinates: [
-			[-124.0 + subregional_longitude_modifier, 54.3 - subregional_latitude_modifier],
-			[-124.0 - subregional_longitude_modifier, 54.3 + subregional_latitude_modifier],
+			[-124.0, 54.3],
+			[-124.0, 54.3],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -613,8 +671,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_S_Manitoba_Saskatchewan',
 		type: 'Geobox',
 		coordinates: [
-			[-101.6 + subregional_longitude_modifier, 51.9 - subregional_latitude_modifier],
-			[-101.6 - subregional_longitude_modifier, 51.9 + subregional_latitude_modifier],
+			[-101.6, 51.9],
+			[-101.6, 51.9],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -622,8 +680,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_S_Ontario',
 		type: 'Geobox',
 		coordinates: [
-			[-87.0 + subregional_longitude_modifier, 50.3 - subregional_latitude_modifier],
-			[-87.0 - subregional_longitude_modifier, 50.3 + subregional_latitude_modifier],
+			[-87.0, 50.3],
+			[-87.0, 50.3],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -631,8 +689,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'CA_Ungava',
 		type: 'Geobox',
 		coordinates: [
-			[-66.0 + subregional_longitude_modifier, 58.0 - subregional_latitude_modifier],
-			[-66.0 - subregional_longitude_modifier, 58.0 + subregional_latitude_modifier],
+			[-66.0, 58.0],
+			[-66.0, 58.0],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -651,8 +709,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 		name: 'Alaska West',
 		type: 'Geobox',
 		coordinates: [
-			[-162.88 + subregional_longitude_modifier, 64.06 - subregional_latitude_modifier],
-			[-162.88 - subregional_longitude_modifier, 64.06 + subregional_latitude_modifier],
+			[-162.88, 64.06],
+			[-162.88, 64.06],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -660,8 +718,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 		name: 'Anchorage Sub',
 		type: 'Geobox',
 		coordinates: [
-			[-149.9 + subregional_longitude_modifier, 61.2 - subregional_latitude_modifier],
-			[-149.9 - subregional_longitude_modifier, 61.2 + subregional_latitude_modifier],
+			[-149.9, 61.2],
+			[-149.9, 61.2],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -669,8 +727,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 		name: 'NW Alaska',
 		type: 'Geobox',
 		coordinates: [
-			[-155.41 + subregional_longitude_modifier, 68.75 - subregional_latitude_modifier],
-			[-155.41 - subregional_longitude_modifier, 68.75 + subregional_latitude_modifier],
+			[-155.41, 68.75],
+			[-155.41, 68.75],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -678,8 +736,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 		name: 'Juneau Sub',
 		type: 'Geobox',
 		coordinates: [
-			[-134.2 + subregional_longitude_modifier, 58.15 - subregional_latitude_modifier],
-			[-134.2 - subregional_longitude_modifier, 58.15 + subregional_latitude_modifier],
+			[-134.2, 58.15],
+			[-134.2, 58.15],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -687,8 +745,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 		name: 'Fairbanks',
 		type: 'Geobox',
 		coordinates: [
-			[-147.75 + subregional_longitude_modifier, 64.75 - subregional_latitude_modifier],
-			[-147.75 - subregional_longitude_modifier, 64.75 + subregional_latitude_modifier],
+			[-147.75, 64.75],
+			[-147.75, 64.75],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -696,8 +754,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 		name: 'Bristol Bay',
 		type: 'Geobox',
 		coordinates: [
-			[-160.0 + subregional_longitude_modifier, 56.96 - subregional_latitude_modifier],
-			[-160.0 - subregional_longitude_modifier, 56.96 + subregional_latitude_modifier],
+			[-160.0, 56.96],
+			[-160.0, 56.96],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -705,8 +763,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_ALASKA = {
 		name: 'Unalaska',
 		type: 'Geobox',
 		coordinates: [
-			[-166.53 + subregional_longitude_modifier, 53.87 - subregional_latitude_modifier],
-			[-166.53 - subregional_longitude_modifier, 53.87 + subregional_latitude_modifier],
+			[-166.53, 53.87],
+			[-166.53, 53.87],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -719,8 +777,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_HAWAII = {
 		name: 'Hawaii Zoom',
 		type: 'Geobox',
 		coordinates: [
-			[-156.1 + subregional_longitude_modifier, 20.5 - subregional_latitude_modifier],
-			[-156.1 - subregional_longitude_modifier, 20.5 + subregional_latitude_modifier],
+			[-156.1, 20.5],
+			[-156.1, 20.5],
 		],
 		products: SATRAD_PRODUCTS,
 	},
