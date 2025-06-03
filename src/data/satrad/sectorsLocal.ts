@@ -1114,7 +1114,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 		name: 'Wisconsin',
 		type: 'Geobox',
 		coordinates: [
-			[-92.18, 42.51],
+			[-94.1, 43.51],
 			[-84.81, 47.08],
 		],
 		products: SATRAD_PRODUCTS,
