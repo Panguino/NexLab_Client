@@ -163,7 +163,7 @@ export const Animator = ({
 	}, [overlays])
 
 	const expandToggle = () => {
-		setExpanded(!expanded)
+		setExpanded((prev) => !prev)
 	}
 
 	const handleZoomChange = (e: any) => {
@@ -175,9 +175,12 @@ export const Animator = ({
 
 	useEffect(() => {
 		if (!transformRef.current) return
-		console.log(adjustedHeight, adjustedWidth, _width, _height)
+		// for some reason this is the only way to make it center correctly on expand change
 		transformRef.current.zoomOut(0, 0)
-	}, [adjustedHeight, adjustedWidth, _width, _height])
+		// this is the only way to keep the zoom position and level intact when you change expand
+		transformRef.current.setTransform(initialZoomState.positionX, initialZoomState.positionY, initialZoomState.scale, 0)
+		// I know this is stupid, but it works
+	}, [adjustedHeight, adjustedWidth, initialZoomState])
 
 	return (
 		<div ref={animatorRef} className={styles.animator}>
