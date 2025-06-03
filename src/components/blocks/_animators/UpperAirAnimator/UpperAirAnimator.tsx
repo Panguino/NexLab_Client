@@ -2,6 +2,7 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
+import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { getUpperAirData } from '@/util/dataCalls/analysis/query-upper-air'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -34,28 +35,31 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 	}, [siteId, levelId, productId])
 
 	return (
-		<div className={styles.upperAirAnimatorContainer}>
-			<div className={styles.upperAirAnimator}>
-				<Animator
-					frames={upperAirData}
-					startFrame={upperAirData.length - 1}
-					ratio={ratio}
-					initialZoomState={analysisZoomState}
-					setZoomState={setAnalysisZoomState}
-				/>
+		<>
+			<div className={styles.upperAirAnimatorContainer}>
+				<div className={styles.upperAirAnimator}>
+					<Animator
+						frames={upperAirData}
+						startFrame={upperAirData.length - 1}
+						ratio={ratio}
+						initialZoomState={analysisZoomState}
+						setZoomState={setAnalysisZoomState}
+					/>
+				</div>
+				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
+					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+						<ProductInfo {...productInfo} />
+					</Tab>
+					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
+						Alerts TODO
+					</Tab>
+					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
+						Download / Save Gif TODO
+					</Tab>
+				</Tabs>
 			</div>
-			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-					<ProductInfo {...productInfo} />
-				</Tab>
-				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-					Alerts TODO
-				</Tab>
-				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-					Download / Save Gif TODO
-				</Tab>
-			</Tabs>
-		</div>
+			<MobileIconNav topRight />
+		</>
 	)
 }
 
