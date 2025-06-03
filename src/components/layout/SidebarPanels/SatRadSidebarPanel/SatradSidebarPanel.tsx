@@ -30,6 +30,7 @@ const SatradSidebarPanel = () => {
 
 	useEffect(() => {
 		if (!SATRAD_PRODUCTS[productId as string] || !SATRAD_SCALE_REGIONS[regionId as string] || !ALL_SATRAD_SECTORS[sectorId as string]) {
+			resetSatradZoomState()
 			router.push(`/weather-data/satellite-mosaic-radar/${DEFAULT_SATRAD_PRODUCT}/${DEFAULT_SATRAD_REGION}/${DEFAULT_SATRAD_SECTOR}`)
 		} else if (tempRegionIdRef.current !== regionId) {
 			tempRegionIdRef.current = regionId as string
