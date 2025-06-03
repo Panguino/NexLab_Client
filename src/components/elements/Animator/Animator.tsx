@@ -54,7 +54,7 @@ export const Animator = ({
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
 	const [playDirection, setPlayDirection] = useState<direction>(1)
 	const [isPlaying, setIsPlaying] = useState(false)
-	const [expanded, setExpanded] = useState(true)
+	const [expanded, setExpanded] = useState(!disableZoom)
 	const intervalRef = useRef<number | null>(null)
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
@@ -178,9 +178,11 @@ export const Animator = ({
 		// for some reason this is the only way to make it center correctly on expand change
 		transformRef.current.zoomOut(0, 0)
 		// this is the only way to keep the zoom position and level intact when you change expand
-		transformRef.current.setTransform(initialZoomState.positionX, initialZoomState.positionY, initialZoomState.scale, 0)
+		const manualCenterY = Math.ceil((_height - adjustedHeight) / 2)
+		const manualCenterX = Math.ceil((_width - adjustedWidth) / 2)
+		transformRef.current.setTransform(manualCenterX, manualCenterY, initialZoomState.scale, 0)
 		// I know this is stupid, but it works
-	}, [adjustedHeight, adjustedWidth, initialZoomState])
+	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState])
 
 	return (
 		<div ref={animatorRef} className={styles.animator}>

@@ -2,10 +2,9 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
-import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
 import { getUpperAirData } from '@/util/dataCalls/analysis/query-upper-air'
-import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -20,7 +19,6 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 	const { upperairLevelId: levelId, upperairProductId: productId, upperairSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const [ratio, setRatio] = useState(1)
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [upperAirData, setUpperAirData] = useState([])
 
 	const analysisZoomState = useRootStore.use.analysisZoomState()
@@ -37,16 +35,14 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 
 	return (
 		<div className={styles.upperAirAnimatorContainer}>
-			<div className={styles.upperAirAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator
-						frames={upperAirData}
-						startFrame={upperAirData.length - 1}
-						ratio={ratio}
-						initialZoomState={analysisZoomState}
-						setZoomState={setAnalysisZoomState}
-					/>
-				</div>
+			<div className={styles.upperAirAnimator}>
+				<Animator
+					frames={upperAirData}
+					startFrame={upperAirData.length - 1}
+					ratio={ratio}
+					initialZoomState={analysisZoomState}
+					setZoomState={setAnalysisZoomState}
+				/>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
@@ -54,9 +50,6 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 				</Tab>
 				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
 					Alerts TODO
-				</Tab>
-				<Tab label="Overlays" icon={<FontAwesomeIcon icon={faLayerGroup} />}>
-					Overlays TODO
 				</Tab>
 				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
 					Download / Save Gif TODO

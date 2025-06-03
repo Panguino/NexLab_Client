@@ -3,7 +3,6 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
-import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
 import { getSatradData } from '@/util/dataCalls/satrad/query-satrad'
 import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -25,7 +24,6 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	const satradFrameRate = useRootStore.use.satradFrameRate()
 	const satradFrameStep = useRootStore.use.satradFrameStep()
 	const [ratio, setRatio] = useState(1)
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [satradData, setSatradData] = useState([])
 	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
 
@@ -46,23 +44,21 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 
 	return (
 		<div className={styles.satradAnimatorContainer}>
-			<div className={styles.satradAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator
-						frames={satradData}
-						startFrame={satradData.length - 1}
-						ratio={ratio}
-						interval={satradFrameRate}
-						overlays={satradOverlays}
-						initialZoomState={satradZoomState}
-						setZoomState={setSatradZoomState}
-						settingsComponent={
-							<AnimatorSettings title="Settings">
-								<SatradAnimatorSettings />
-							</AnimatorSettings>
-						}
-					/>
-				</div>
+			<div className={styles.satradAnimator}>
+				<Animator
+					frames={satradData}
+					startFrame={satradData.length - 1}
+					ratio={ratio}
+					interval={1000 / satradFrameRate}
+					overlays={satradOverlays}
+					initialZoomState={satradZoomState}
+					setZoomState={setSatradZoomState}
+					settingsComponent={
+						<AnimatorSettings title="Settings">
+							<SatradAnimatorSettings />
+						</AnimatorSettings>
+					}
+				/>
 			</div>
 			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
