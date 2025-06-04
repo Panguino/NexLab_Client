@@ -31,6 +31,8 @@ interface IAnimatorProps {
 	setZoomState?: (zoomState: zoomState) => void
 	activeOverlays?: string[]
 	setActiveOverlays?: (overlays: string[]) => void
+	setZoomFill?: (zoomFill: boolean) => void
+	zoomFill?: boolean
 }
 
 export const Animator = ({
@@ -43,6 +45,7 @@ export const Animator = ({
 	autoPlay = false,
 	disableZoom = false,
 	hideZoomControls = false,
+	zoomFill = true,
 	settingsComponent = null,
 	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
 	activeOverlays = ['data', 'map'],
@@ -52,6 +55,9 @@ export const Animator = ({
 	setZoomState = (zoomState: zoomState) => {
 		console.warn('setZoomState function not provided, zoom state will not be updated.', zoomState)
 	},
+	setZoomFill = (zoomFill: boolean) => {
+		console.warn('setZoomFill function not provided, zoom fill will not be updated.', zoomFill)
+	},
 }: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
@@ -59,11 +65,10 @@ export const Animator = ({
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
 	const [playDirection, setPlayDirection] = useState<direction>(1)
 	const [isPlaying, setIsPlaying] = useState(false)
-	const [expanded, setExpanded] = useState(!disableZoom)
 	const intervalRef = useRef<number | null>(null)
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
-	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio, !expanded)
+	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio, !zoomFill)
 
 	useEffect(() => {
 		if (loopMethod === LoopMethod.LeftToRight) {
@@ -168,7 +173,9 @@ export const Animator = ({
 	}, [overlays])
 
 	const expandToggle = () => {
-		setExpanded((prev) => !prev)
+		// zooming out when changing modes
+		transformRef.current.zoomOut(15, 0)
+		setZoomFill(!zoomFill)
 	}
 
 	const handleZoomChange = (e: any) => {
@@ -180,12 +187,14 @@ export const Animator = ({
 
 	useEffect(() => {
 		if (!transformRef.current) return
-		// for some reason this is the only way to make it center correctly on expand change
-		transformRef.current.zoomOut(0, 0)
 		// this is the only way to keep the zoom position and level intact when you change expand
 		const manualCenterY = Math.ceil((_height - adjustedHeight) / 2)
 		const manualCenterX = Math.ceil((_width - adjustedWidth) / 2)
-		transformRef.current.setTransform(manualCenterX, manualCenterY, initialZoomState.scale, 0)
+		if (initialZoomState.scale === 1) {
+			transformRef.current.setTransform(manualCenterX, manualCenterY, initialZoomState.scale, 0)
+		} else {
+			transformRef.current.setTransform(initialZoomState.positionX, initialZoomState.positionY, initialZoomState.scale, 0)
+		}
 		// I know this is stupid, but it works
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState])
 
@@ -259,7 +268,7 @@ export const Animator = ({
 									<FontAwesomeIcon icon={faUndo} />
 								</button>
 								<button onClick={() => expandToggle()}>
-									<FontAwesomeIcon icon={expanded ? faCompress : faExpand} />
+									<FontAwesomeIcon icon={zoomFill ? faCompress : faExpand} />
 								</button>
 							</div>
 						)}
