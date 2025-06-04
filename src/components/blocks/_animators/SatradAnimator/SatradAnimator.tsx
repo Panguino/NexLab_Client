@@ -24,12 +24,15 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	const satradNumberOfFrames = useRootStore.use.satradNumberOfFrames()
 	const satradFrameRate = useRootStore.use.satradFrameRate()
 	const satradFrameStep = useRootStore.use.satradFrameStep()
+	const activeOverlays = useRootStore.use.activeOverlays()
+	const setActiveOverlays = useRootStore.use.setActiveOverlays()
+	const satradZoomState = useRootStore.use.satradZoomState()
+	const setSatradZoomState = useRootStore.use.setSatradZoomState()
+	const satradZoomFill = useRootStore.use.satradZoomFill()
+	const setSatradZoomFill = useRootStore.use.setSatradZoomFill()
 	const [ratio, setRatio] = useState(1)
 	const [satradData, setSatradData] = useState([])
 	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
-
-	const satradZoomState = useRootStore.use.satradZoomState()
-	const setSatradZoomState = useRootStore.use.setSatradZoomState()
 
 	useEffect(() => {
 		async function getData() {
@@ -55,6 +58,10 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 						overlays={satradOverlays}
 						initialZoomState={satradZoomState}
 						setZoomState={setSatradZoomState}
+						activeOverlays={activeOverlays}
+						setActiveOverlays={setActiveOverlays}
+						zoomFill={satradZoomFill}
+						setZoomFill={setSatradZoomFill}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<SatradAnimatorSettings />

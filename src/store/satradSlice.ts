@@ -17,6 +17,10 @@ export interface ISatradSlice {
 	satradZoomState: zoomState
 	setSatradZoomState: (zoomState: zoomState) => void
 	resetSatradZoomState: () => void
+	activeOverlays: string[]
+	setActiveOverlays: (overlays: string[]) => void
+	satradZoomFill: boolean
+	setSatradZoomFill: (zoomFill: boolean) => void
 }
 
 export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
@@ -29,4 +33,12 @@ export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
 	satradZoomState: { ...defaultSatradZoomState },
 	setSatradZoomState: (satradZoomState) => set(() => ({ satradZoomState })),
 	resetSatradZoomState: () => set(() => ({ satradZoomState: { ...defaultSatradZoomState } })),
+	activeOverlays: ['data', 'map'],
+	setActiveOverlays: (overlays: string[]) =>
+		set(() => {
+			console.log('Setting active overlays:', overlays)
+			return { activeOverlays: overlays }
+		}),
+	satradZoomFill: false,
+	setSatradZoomFill: (zoomFill: boolean) => set(() => ({ satradZoomFill: zoomFill })),
 })

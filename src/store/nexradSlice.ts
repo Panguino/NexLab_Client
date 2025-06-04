@@ -15,6 +15,8 @@ export interface INexradSlice {
 	nexradZoomState: zoomState
 	setNexradZoomState: (zoomState: zoomState) => void
 	resetNexradZoomState: () => void
+	nexradZoomFill: boolean
+	setNexradZoomFill: (zoomFill: boolean) => void
 }
 
 export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
@@ -25,4 +27,6 @@ export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
 	nexradZoomState: { ...defaultNexradZoomState },
 	setNexradZoomState: (nexradZoomState) => set(() => ({ nexradZoomState })),
 	resetNexradZoomState: () => set(() => ({ nexradZoomState: { ...defaultNexradZoomState } })),
+	nexradZoomFill: false,
+	setNexradZoomFill: (zoomFill: boolean) => set(() => ({ nexradZoomFill: zoomFill })),
 })

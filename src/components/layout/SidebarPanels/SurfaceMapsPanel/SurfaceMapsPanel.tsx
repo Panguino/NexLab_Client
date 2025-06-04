@@ -31,7 +31,7 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	const siteId = paramSiteId ?? SURFACE_SECTOR_DEFAULT
 	const regionId = paramRegionId ?? SURFACE_REGION_DEFAULT
 	const productId = paramProductId ?? SURFACE_PRODUCT_DEFAULT
-	const tempRegionIdRef = useRef<string>(regionId as string)
+	const tempRegionIdRef = useRef<string | null>(null)
 	const resetAnalysisZoomState = useRootStore.use.resetAnalysisZoomState()
 
 	useEffect(() => {
@@ -44,9 +44,11 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 				// both site and region have to be valid to get here, but if product is bad, use default values
 				resetAnalysisZoomState()
 				router.push(`/weather-data/analysis/surface-maps/${SURFACE_PRODUCT_DEFAULT}/${paramRegionId}/${paramSiteId}`)
+			} else if (tempRegionIdRef.current !== regionId) {
+				tempRegionIdRef.current = regionId as string
 			}
 		}
-	}, [paramProductId, paramRegionId, paramSiteId, router, isActive, resetAnalysisZoomState])
+	}, [paramProductId, paramRegionId, regionId, paramSiteId, router, isActive, resetAnalysisZoomState])
 
 	useEffect(() => {
 		if (isActive) {
@@ -73,7 +75,7 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 				setSectorSelectorD3config(newD3config)
 				setSectorSelectorSectors(selectedSectors)
 			} else {
-				if (tempRegionIdRef.current && tempRegionIdRef.current !== regionId) {
+				if (tempRegionIdRef.current !== regionId) {
 					tempRegionIdRef.current = regionId as string
 				}
 			}

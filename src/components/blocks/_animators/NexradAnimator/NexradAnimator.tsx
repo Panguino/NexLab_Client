@@ -23,11 +23,12 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	const [activeTab, setActiveTab] = useState(-1)
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
 	const nexradFrameRate = useRootStore.use.nexradFrameRate()
-	const [ratio, setRatio] = useState(1)
-	const [nexradData, setNexradData] = useState([])
-
 	const nexradZoomState = useRootStore.use.nexradZoomState()
 	const setNexradZoomState = useRootStore.use.setNexradZoomState()
+	const nexradZoomFill = useRootStore.use.nexradZoomFill()
+	const setNexradZoomFill = useRootStore.use.setNexradZoomFill()
+	const [ratio, setRatio] = useState(1)
+	const [nexradData, setNexradData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
@@ -48,6 +49,8 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 						ratio={ratio}
 						initialZoomState={nexradZoomState}
 						setZoomState={setNexradZoomState}
+						zoomFill={nexradZoomFill}
+						setZoomFill={setNexradZoomFill}
 						interval={1000 / nexradFrameRate}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
