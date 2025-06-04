@@ -65,67 +65,6 @@ const SATRAD_SECTOR_SUBREGIONAL_CA_S_MANITOBA_SASKACHEWAN_ID = 'ca_s_mb_sk'
 const SATRAD_SECTOR_SUBREGIONAL_CA_S_ONTARIO_ID = 'ca_s_ontario'
 const SATRAD_SECTOR_SUBREGIONAL_CA_UNGAVA_ID = 'ca_ungava'
 
-// subregional Baja 24.75;-119.27;33.69;-103.51
-// subregional Cali_Gulf 18.32;-115.21;27.16;-99.82
-// subregional Mexico_City 13.88;-107.5;22.22;-92.14
-// subregional Big_Bend 24.08;-109.59;32.36;-93.43
-// subregional Desert_SW 29.97;-115.99;38.44;-99.57
-// subregional Cen_Rockies 36.14;-117.27;44.33;-100.27
-// subregional N_Rockies 42.41;-117.61;50.14;-99.89
-// subregional N_Plains 42.23;-107.37;49.34;-89.15
-// subregional Cen_Plains 36.63;-107.55;44.15;-90.02
-// subregional S_Plains 32.22;-105.85;39.89;-88.72
-// subregional Texas 27.13;-106.59;35.09;-90.01
-// subregional W_Gulf_Coast 23.79;-100.68;31.44;-84.17
-// subregional E_Gulf_Coast 24.04;-94.32;31.21;-77.54
-// subregional Yucatan 17.23;-98.34;24.85;-82.33
-// subregional W_Caribbean 14.96;-89.41;21.92;-73.28
-// subregional Cuba 17.95;-87.38;24.71;-70.91
-// subregional Greater_Antilles 15.08;-81.26;21.39;-64.86
-// subregional Bahamas 20.32;-83.16;26.72;-66.34
-// subregional Florida 24.24;-89.03;31.0;-72.04
-// subregional Dixie 28.52;-96.39;35.69;-79.25
-// subregional Carolinas 30.48;-87.37;36.92;-69.69
-// subregional Bootheel 32.71;-97.66;39.79;-80.13
-// subregional Virginias 34.01;-85.88;40.19;-67.76
-// subregional IL 37.38;-97.62;44.2;-79.56
-// subregional MI 40.63;-93.22;46.95;-74.57
-// subregional Nrn_Mo 36.80;-101.90;43.80;-83.90
-// subregional N_Tier 42.66;-97.54;49.12;-78.82
-// subregional Quebec 42.67;-84.92;48.31;-65.69
-// subregional St_Lawrence 42.98;-73.06;47.8;-53.39
-// subregional New_England 39.47;-82.26;45.11;-63.36
-// subregional Mid_Atlantic 37.11;-84.97;43.07;-66.45
-// subregional N_Iowa 39.48;-102.82;46.5;-84.73
-// subregional Bermuda 29.57;-79.46;35.45;-61.61
-// subregional S_SK 45.74;-115.09;53.02;-96.79
-// subregional OH_RV 35.09;-93.73;41.77;-75.77
-// subregional NE_WY 39.85;-113.28;47.52;-95.64
-// subregional CO_KS_PanHan 33.37;-109.33;41.22;-92.24
-// subregional Durango 32.92;-116.01;41.23;-99.29
-// subregional S_PanHandle 29.79;-109.15;37.81;-92.43
-// subregional ca_ern_nl 45.58;-62.32;50.08;-42.81
-// subregional ca_gulf_stl 47.01;-69.98;51.84;-50.5
-// subregional ca_nl 51.76;-70.88;56.29;-50.79
-// subregional ca_ungava 55.6;-76.06;60.06;-55.56
-// subregional ca_c_quebec 47.03;-84.34;52.6;-65.3
-// subregional ca_n_quebec 52.86;-85.2;57.98;-65.42
-// subregional ca_s_ontario 47.03;-96.11;53.19;-77.5
-// subregional ca_n_ontario 52.79;-96.46;58.43;-77.12
-// subregional ca_s_mb_sk 48.34;-110.46;55.07;-92.29
-// subregional ca_n_mb_sk 54.16;-110.43;60.26;-91.49
-// subregional ca_edmonton 49.73;-122.65;56.86;-104.88
-// subregional ca_n_alberta 53.96;-123.89;60.63;-105.63
-// subregional ca_s_bc 50.35;-132.43;57.82;-115.08
-// subregional ca_n_bc 54.43;-136.56;61.54;-118.91
-// subregional Pac_NW 43.49;-128.65;50.19;-111.88
-// subregional N_Nevada 37.49;-126.46;44.61;-110.08
-// subregional Sierra 32.18;-122.94;39.52;-106.81
-// subregional S_British_Columbia 46.95;-128.18;53.32;-111.11
-// subregional Oregon 39.84;-130.3;46.92;-113.87
-// subregional SanFran 34.64;-130.05;42.11;-113.97
-// subregional Vandenburg 30.90;-128.30;38.30;-112.30
-
 export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 	[SATRAD_SECTOR_SUBREGIONAL_BAHAMAS_ID]: {
 		name: 'Bahamas',
