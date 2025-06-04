@@ -23,6 +23,8 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 	const [IsentropicData, setIsentropicData] = useState([])
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
+	const analysisZoomFill = useRootStore.use.nexradZoomFill()
+	const setAnalysisZoomFill = useRootStore.use.setNexradZoomFill()
 
 	useEffect(() => {
 		async function getData() {
@@ -43,6 +45,8 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 						ratio={ratio}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
+						zoomFill={analysisZoomFill}
+						setZoomFill={setAnalysisZoomFill}
 					/>
 				</div>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
