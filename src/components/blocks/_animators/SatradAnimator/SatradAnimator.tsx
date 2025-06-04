@@ -3,10 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
-<<<<<<< HEAD
-=======
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
->>>>>>> development
 import { useRootStore } from '@/store/useRootStore'
 import { getSatradData } from '@/util/dataCalls/satrad/query-satrad'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -49,24 +46,6 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	}, [sectorId, productId, regionId, satradNumberOfFrames, satradFrameStep])
 
 	return (
-<<<<<<< HEAD
-		<div className={styles.satradAnimatorContainer}>
-			<div className={styles.satradAnimator}>
-				<Animator
-					frames={satradData}
-					startFrame={satradData.length - 1}
-					ratio={ratio}
-					interval={1000 / satradFrameRate}
-					overlays={satradOverlays}
-					initialZoomState={satradZoomState}
-					setZoomState={setSatradZoomState}
-					settingsComponent={
-						<AnimatorSettings title="Settings">
-							<SatradAnimatorSettings />
-						</AnimatorSettings>
-					}
-				/>
-=======
 		<>
 			<div className={styles.satradAnimatorContainer}>
 				<div className={styles.satradAnimator}>
@@ -98,7 +77,6 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 						Download / Save Gif TODO
 					</Tab>
 				</Tabs>
->>>>>>> development
 			</div>
 			<MobileIconNav topRight />
 		</>
