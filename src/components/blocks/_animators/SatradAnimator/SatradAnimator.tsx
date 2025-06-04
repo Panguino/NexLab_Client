@@ -4,6 +4,7 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getSatradData } from '@/util/dataCalls/satrad/query-satrad'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -19,6 +20,7 @@ interface SatradAnimatorProps {
 }
 
 const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
+	const { isMobile } = useIsMobile()
 	const { satradProductId: productId, satradRegionId: regionId, satradSectorId: sectorId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const satradNumberOfFrames = useRootStore.use.satradNumberOfFrames()
@@ -45,6 +47,10 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 		}
 		getData()
 	}, [sectorId, productId, regionId, satradNumberOfFrames, satradFrameStep])
+
+	useEffect(() => {
+		setSatradZoomFill(isMobile)
+	}, [isMobile, setSatradZoomFill])
 
 	return (
 		<>

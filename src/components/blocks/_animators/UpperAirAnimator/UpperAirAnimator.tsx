@@ -3,6 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getUpperAirData } from '@/util/dataCalls/analysis/query-upper-air'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -17,6 +18,7 @@ interface UpperAirAnimatorProps {
 }
 
 const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
+	const { isMobile } = useIsMobile()
 	const { upperairLevelId: levelId, upperairProductId: productId, upperairSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const [ratio, setRatio] = useState(1)
@@ -35,6 +37,10 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 		}
 		getData()
 	}, [siteId, levelId, productId])
+
+	useEffect(() => {
+		setAnalysisZoomFill(isMobile)
+	}, [isMobile, setAnalysisZoomFill])
 
 	return (
 		<>
