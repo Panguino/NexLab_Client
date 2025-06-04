@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components/elements/Button/Button'
+import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import SelectGrouped from '@/components/elements/SelectGrouped/SelectGrouped'
 import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
@@ -13,11 +13,11 @@ import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
-import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import styles from './SatradSidebarPanel.module.scss'
 
 const SatradSidebarPanel = () => {
 	const router = useRouter()
+	const resetSatradZoomState = useRootStore.use.resetSatradZoomState()
 	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
 	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
 	const sectorSelectorPanelIsOpen = useRootStore.use.sectorSelectorPanelIsOpen()
@@ -25,28 +25,30 @@ const SatradSidebarPanel = () => {
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const { satradProductId: productId, satradSectorId: sectorId, satradRegionId: regionId } = useParams()
-	const tempRegionIdRef = useRef<string>(regionId as string)
+	const tempRegionIdRef = useRef<string | null>(null)
 
 	useEffect(() => {
 		if (!SATRAD_PRODUCTS[productId as string] || !SATRAD_SCALE_REGIONS[regionId as string] || !ALL_SATRAD_SECTORS[sectorId as string]) {
-			console.log('Invalid productId:', SATRAD_PRODUCTS[productId as string])
-			console.log('Invalid regionId:', SATRAD_SCALE_REGIONS[regionId as string])
-			console.log('Invalid sectorId:', ALL_SATRAD_SECTORS[sectorId as string])
+			resetSatradZoomState()
 			router.push(`/weather-data/satellite-mosaic-radar/${DEFAULT_SATRAD_PRODUCT}/${DEFAULT_SATRAD_REGION}/${DEFAULT_SATRAD_SECTOR}`)
+		} else if (tempRegionIdRef.current !== regionId) {
+			tempRegionIdRef.current = regionId as string
 		}
-	}, [productId, regionId, sectorId, router])
+	}, [productId, regionId, sectorId, router, resetSatradZoomState])
 
 	const handleRegionChange = (newRegionId) => {
 		tempRegionIdRef.current = newRegionId
 		openSectorSelectorPanel()
+		resetSatradZoomState()
 	}
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 			closeSectorSelectorPanel()
 			router.push(`/weather-data/satellite-mosaic-radar/${productId}/${tempRegionIdRef.current}/${sectorId}`)
+			resetSatradZoomState()
 		})
-	}, [productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
+	}, [productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler, resetSatradZoomState])
 
 	useEffect(() => {
 		if (sectorSelectorPanelIsOpen) {
@@ -62,7 +64,7 @@ const SatradSidebarPanel = () => {
 			}))
 			setSectorSelectorSectors(selectedSectors)
 		} else {
-			if (tempRegionIdRef.current && tempRegionIdRef.current !== regionId) {
+			if (tempRegionIdRef.current !== regionId) {
 				tempRegionIdRef.current = regionId as string
 			}
 		}
@@ -98,33 +100,35 @@ const SatradSidebarPanel = () => {
 
 	return (
 		<ScrollArea>
-			<SidebarPanelPad>
-				<div className={styles.SatradSidebarPanel}>
-					<div className={styles.options}>
-						<SelectGrouped
-							onChange={handleRegionChange}
-							value={regionId as string}
-							options={SATRAD_MAP_OPTIONS}
-							placeholder="Select Region"
-						/>
-						<Button onClick={openSectorSelectorPanel} label={`Sector: ${ALL_SATRAD_SECTORS[sectorId as string]?.name}`} />
-					</div>
-					{panelGroupedProducts.map(({ groupId, label, columns, products }) => (
-						<SidebarGroup key={groupId} title={label}>
-							<SidebarGrid columns={columns}>
-								{products.map(({ id, label }) => (
-									<SidebarLink
-										key={id}
-										name={label}
-										linkUrl={`/weather-data/satellite-mosaic-radar/${id}/${regionId}/${sectorId}`}
-										active={id === productId}
-									/>
-								))}
-							</SidebarGrid>
-						</SidebarGroup>
-					))}
+			<div className={styles.SatradSidebarPanel}>
+				<div className={styles.options}>
+					<SelectGrouped
+						onChange={handleRegionChange}
+						value={regionId as string}
+						options={SATRAD_MAP_OPTIONS}
+						placeholder="Select Region"
+					/>
+					<SectorChangeButton
+						onClick={openSectorSelectorPanel}
+						label="Selected Sector:"
+						labelValue={ALL_SATRAD_SECTORS[sectorId as string]?.name}
+					/>
 				</div>
-			</SidebarPanelPad>
+				{panelGroupedProducts.map(({ groupId, label, columns, products }) => (
+					<SidebarGroup key={groupId} title={label}>
+						<SidebarGrid columns={columns}>
+							{products.map(({ id, label }) => (
+								<SidebarLink
+									key={id}
+									name={label}
+									linkUrl={`/weather-data/satellite-mosaic-radar/${id}/${regionId}/${sectorId}`}
+									active={id === productId}
+								/>
+							))}
+						</SidebarGrid>
+					</SidebarGroup>
+				))}
+			</div>
 		</ScrollArea>
 	)
 }

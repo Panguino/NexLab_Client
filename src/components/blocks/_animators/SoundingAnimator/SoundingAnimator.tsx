@@ -2,10 +2,10 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
-import useDimensions from '@/hooks/useDimensions'
+import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData } from '@/util/dataCalls/analysis/query-soundings'
-import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -21,7 +21,6 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	const [activeTab, setActiveTab] = useState(-1)
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
 	const [ratio, setRatio] = useState(1)
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [soundingData, setSoundingData] = useState([])
 
 	useEffect(() => {
@@ -34,27 +33,25 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	}, [siteId, productId, soundingNumberOfFrames])
 
 	return (
-		<div className={styles.soundingAnimatorContainer}>
-			<div className={styles.soundingAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={soundingData} startFrame={soundingData.length - 1} ratio={ratio} />
+		<>
+			<div className={styles.soundingAnimatorContainer}>
+				<div className={styles.soundingAnimator}>
+					<Animator frames={soundingData} startFrame={soundingData.length - 1} ratio={ratio} disableZoom />
 				</div>
+				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
+					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+						<ProductInfo {...productInfo} />
+					</Tab>
+					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
+						Alerts TODO
+					</Tab>
+					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
+						Download / Save Gif TODO
+					</Tab>
+				</Tabs>
 			</div>
-			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-					<ProductInfo {...productInfo} />
-				</Tab>
-				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-					Alerts TODO
-				</Tab>
-				<Tab label="Overlays" icon={<FontAwesomeIcon icon={faLayerGroup} />}>
-					Overlays TODO
-				</Tab>
-				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-					Download / Save Gif TODO
-				</Tab>
-			</Tabs>
-		</div>
+			<MobileIconNav topRight />
+		</>
 	)
 }
 

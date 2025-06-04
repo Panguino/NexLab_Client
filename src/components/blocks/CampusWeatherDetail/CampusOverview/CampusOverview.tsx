@@ -13,7 +13,9 @@ export const CampusOverview = ({ campusImage, currentConditions, radarImageSeque
 		<div className={styles.campusOverview}>
 			<div className={styles.campusImageContainer} style={{ backgroundImage: `url('${campusImage}')` }} />
 			<CurrentConditions {...currentConditions} />
-			<Animator height={400} width={400} frames={radarImageSequence} autoPlay hideControls interval={0.1} />
+			<div style={{ width: 460, height: 460 }}>
+				<Animator frames={radarImageSequence} autoPlay hideControls interval={1000 / 15} hideZoomControls />
+			</div>
 		</div>
 	)
 }
