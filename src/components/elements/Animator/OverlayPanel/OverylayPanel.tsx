@@ -25,13 +25,11 @@ export const OverlayPanel = ({ onClose, overlays, activeOverlays, setActiveOverl
 	const flattenedOverlays = [...Object.keys(overlays.static), ...Object.keys(overlays.dynamic)]
 
 	const handleOverlayClick = (id) => {
-		setActiveOverlays((prev) => {
-			if (prev.includes(id)) {
-				return prev.filter((overlayId) => overlayId !== id)
-			} else {
-				return [...prev, id]
-			}
-		})
+		if (activeOverlays.includes(id)) {
+			setActiveOverlays(activeOverlays.filter((overlayId) => overlayId !== id))
+		} else {
+			setActiveOverlays([...activeOverlays, id])
+		}
 	}
 
 	return (
