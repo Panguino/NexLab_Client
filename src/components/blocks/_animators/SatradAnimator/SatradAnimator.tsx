@@ -3,10 +3,10 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
-import useDimensions from '@/hooks/useDimensions'
+import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { getSatradData } from '@/util/dataCalls/satrad/query-satrad'
-import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -24,8 +24,13 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	const satradNumberOfFrames = useRootStore.use.satradNumberOfFrames()
 	const satradFrameRate = useRootStore.use.satradFrameRate()
 	const satradFrameStep = useRootStore.use.satradFrameStep()
+	const activeOverlays = useRootStore.use.activeOverlays()
+	const setActiveOverlays = useRootStore.use.setActiveOverlays()
+	const satradZoomState = useRootStore.use.satradZoomState()
+	const setSatradZoomState = useRootStore.use.setSatradZoomState()
+	const satradZoomFill = useRootStore.use.satradZoomFill()
+	const setSatradZoomFill = useRootStore.use.setSatradZoomFill()
 	const [ratio, setRatio] = useState(1)
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [satradData, setSatradData] = useState([])
 	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
 
@@ -42,14 +47,21 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	}, [sectorId, productId, regionId, satradNumberOfFrames, satradFrameStep])
 
 	return (
-		<div className={styles.satradAnimatorContainer}>
-			<div className={styles.satradAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
+		<>
+			<div className={styles.satradAnimatorContainer}>
+				<div className={styles.satradAnimator}>
 					<Animator
 						frames={satradData}
+						startFrame={satradData.length - 1}
 						ratio={ratio}
-						interval={satradFrameRate}
+						interval={1000 / satradFrameRate}
 						overlays={satradOverlays}
+						initialZoomState={satradZoomState}
+						setZoomState={setSatradZoomState}
+						activeOverlays={activeOverlays}
+						setActiveOverlays={setActiveOverlays}
+						zoomFill={satradZoomFill}
+						setZoomFill={setSatradZoomFill}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<SatradAnimatorSettings />
@@ -57,22 +69,20 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 						}
 					/>
 				</div>
+				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
+					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+						<ProductInfo {...productInfo} />
+					</Tab>
+					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
+						Alerts TODO
+					</Tab>
+					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
+						Download / Save Gif TODO
+					</Tab>
+				</Tabs>
 			</div>
-			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-					<ProductInfo {...productInfo} />
-				</Tab>
-				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-					Alerts TODO
-				</Tab>
-				<Tab label="Overlays" icon={<FontAwesomeIcon icon={faLayerGroup} />}>
-					Overlays TODO
-				</Tab>
-				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-					Download / Save Gif TODO
-				</Tab>
-			</Tabs>
-		</div>
+			<MobileIconNav topRight />
+		</>
 	)
 }
 

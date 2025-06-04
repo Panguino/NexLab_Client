@@ -2,9 +2,10 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
-import useDimensions from '@/hooks/useDimensions'
+import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { useRootStore } from '@/store/useRootStore'
 import { getRapMesoData } from '@/util/dataCalls/analysis/query-rap-mesoanalysis'
-import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -19,8 +20,11 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 	const { rapmesoProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const [ratio, setRatio] = useState(1)
-	const [wrapperRef, { adjustedHeight, adjustedWidth }] = useDimensions(ratio, true)
 	const [RAPMesoData, setRAPMesoData] = useState([])
+	const analysisZoomState = useRootStore.use.analysisZoomState()
+	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
+	const analysisZoomFill = useRootStore.use.nexradZoomFill()
+	const setAnalysisZoomFill = useRootStore.use.setNexradZoomFill()
 
 	useEffect(() => {
 		async function getData() {
@@ -32,27 +36,33 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 	}, [productId])
 
 	return (
-		<div className={styles.RAPMesoAnimatorContainer}>
-			<div className={styles.RAPMesoAnimator} ref={wrapperRef}>
-				<div className={styles.animatorWrapper} style={{ width: adjustedWidth, height: adjustedHeight }}>
-					<Animator frames={RAPMesoData} ratio={ratio} />
+		<>
+			<div className={styles.RAPMesoAnimatorContainer}>
+				<div className={styles.RAPMesoAnimator}>
+					<Animator
+						frames={RAPMesoData}
+						startFrame={RAPMesoData.length - 1}
+						ratio={ratio}
+						initialZoomState={analysisZoomState}
+						setZoomState={setAnalysisZoomState}
+						zoomFill={analysisZoomFill}
+						setZoomFill={setAnalysisZoomFill}
+					/>
 				</div>
+				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
+					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+						<ProductInfo {...productInfo} />
+					</Tab>
+					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
+						Alerts TODO
+					</Tab>
+					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
+						Download / Save Gif TODO
+					</Tab>
+				</Tabs>
 			</div>
-			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-					<ProductInfo {...productInfo} />
-				</Tab>
-				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-					Alerts TODO
-				</Tab>
-				<Tab label="Overlays" icon={<FontAwesomeIcon icon={faLayerGroup} />}>
-					Overlays TODO
-				</Tab>
-				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-					Download / Save Gif TODO
-				</Tab>
-			</Tabs>
-		</div>
+			<MobileIconNav topRight />
+		</>
 	)
 }
 

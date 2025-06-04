@@ -86,7 +86,7 @@ const MobileMenu = ({ children, navItems }) => {
 										key={id}
 										title={title}
 										url={buildFullUrl(id)}
-										target={`_${target}`}
+										target={`${target}`}
 										onArrowClick={
 											ifMenuItemHasChildren(id)
 												? () => {
