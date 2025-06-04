@@ -1,15 +1,14 @@
 'use client'
 
-import { Button } from '@/components/elements/Button/Button'
 import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
-import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { ALL_SURFACE_REGIONS, SURFACE_REGION_DEFAULT } from '@/data/analysis/surface/regions'
 import { ALL_SURFACE_SECTORS, SURFACE_SECTOR_DEFAULT } from '@/data/analysis/surface/sectors'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
 
+import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SURFACE_PRODUCT_DEFAULT } from '@/data/analysis/surface/products'
 import styles from './SurfaceMapsPanel.module.scss'
@@ -102,22 +101,18 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 		return []
 	}, [siteId])
 
-	const getSelectorLabel = (siteId) => {
-		if (siteId && ALL_SURFACE_SECTORS[siteId as string]) {
-			return `Sector: ${ALL_SURFACE_SECTORS[siteId as string].name}`
-		} else {
-			return 'Select Sector'
-		}
-	}
-
 	return (
 		<div className={styles.SurfaceMapsPanel}>
 			<SidebarSectionHeader name="Surface Maps" linkUrl={`${basepath}`} />
-			<SidebarPanelPad>
-				<div className={styles.options}>
-					<Select value={regionId} options={regionOptions} onChange={handleRegionChange} />
-					<Button onClick={openSectorSelectorPanel} label={getSelectorLabel(siteId)} />
-				</div>
+			<div className={styles.options}>
+				<Select value={regionId} options={regionOptions} onChange={handleRegionChange} />
+				<SectorChangeButton
+					onClick={openSectorSelectorPanel}
+					label="Selected Sector:"
+					labelValue={ALL_SURFACE_SECTORS[siteId as string].name}
+				/>
+			</div>
+			<div className={styles.products}>
 				{productsArray.map(({ id, label }) => (
 					<SidebarLink
 						key={id}
@@ -126,7 +121,7 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 						linkUrl={`/weather-data/analysis/surface-maps/${id}/${regionId}/${siteId}`}
 					/>
 				))}
-			</SidebarPanelPad>
+			</div>
 		</div>
 	)
 }

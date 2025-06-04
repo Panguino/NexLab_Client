@@ -2,7 +2,6 @@
 
 import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
-import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { ALL_UPPERAIR_PRODUCTS, UPPERAIR_PRODUCT_DEFAULT } from '@/data/analysis/upper-air/products'
 import { ALL_UPPERAIR_SECTORS, UPPERAIR_SECTOR_DEFAULT } from '@/data/analysis/upper-air/sectors'
 import { useParams, useRouter } from 'next/navigation'
@@ -81,25 +80,23 @@ export const UpperAirPanel = ({ basepath, isActive }: UpperAirPanelProps) => {
 	return (
 		<div className={styles.UpperAirPanel}>
 			<SidebarSectionHeader name="Upper Air Maps" linkUrl={`${basepath}`} />
-			<SidebarPanelPad>
-				<div className={styles.options}>
-					<Select value={siteId} options={sectorOptions} onChange={handleSectorChange} />
-				</div>
-				{productsArray.map(({ levelIdArr, label, columns, products }) => (
-					<SidebarGroup key={levelIdArr} title={label}>
-						<SidebarGrid columns={columns}>
-							{products.map(({ productIdArr, label }) => (
-								<SidebarLink
-									key={productIdArr}
-									name={label}
-									active={productIdArr === productId && levelIdArr === levelId}
-									linkUrl={`/weather-data/analysis/upper-air/${levelIdArr}/${productIdArr}/${regionId}/${siteId}`}
-								/>
-							))}
-						</SidebarGrid>
-					</SidebarGroup>
-				))}
-			</SidebarPanelPad>
+			<div className={styles.options}>
+				<Select value={siteId} options={sectorOptions} onChange={handleSectorChange} />
+			</div>
+			{productsArray.map(({ levelIdArr, label, columns, products }) => (
+				<SidebarGroup key={levelIdArr} title={label}>
+					<SidebarGrid columns={columns}>
+						{products.map(({ productIdArr, label }) => (
+							<SidebarLink
+								key={productIdArr}
+								name={label}
+								active={productIdArr === productId && levelIdArr === levelId}
+								linkUrl={`/weather-data/analysis/upper-air/${levelIdArr}/${productIdArr}/${regionId}/${siteId}`}
+							/>
+						))}
+					</SidebarGrid>
+				</SidebarGroup>
+			))}
 		</div>
 	)
 }

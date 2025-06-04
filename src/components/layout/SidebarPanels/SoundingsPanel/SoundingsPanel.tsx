@@ -1,15 +1,14 @@
 'use client'
 
-import { Button } from '@/components/elements/Button/Button'
 import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
-import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { ALL_SOUNDING_REGIONS, SOUNDING_REGION_DEFAULT } from '@/data/analysis/soundings/regions'
 import { ALL_SOUNDING_SITES, SOUNDING_SITE_DEFAULT } from '@/data/analysis/soundings/sites'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useMemo } from 'react'
 
+import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SOUNDING_PRODUCT_DEFAULT } from '@/data/analysis/soundings/products'
 import styles from './SoundingsPanel.module.scss'
@@ -91,22 +90,14 @@ export const SoundingsPanel = ({ basepath, isActive }: soundingsPanelProps) => {
 		return []
 	}, [siteId])
 
-	const getSelectorLabel = (siteId) => {
-		if (siteId && ALL_SOUNDING_SITES[siteId as string]) {
-			return `Site:  ${siteId} - ${ALL_SOUNDING_SITES[siteId as string].name}`
-		} else {
-			return 'Select Site'
-		}
-	}
-
 	return (
 		<div className={styles.soundingsPanel}>
 			<SidebarSectionHeader name="Soundings" linkUrl={`${basepath}`} />
-			<SidebarPanelPad>
-				<div className={styles.options}>
-					<Select value={regionId} options={regionOptions} onChange={handleRegionChange} />
-					<Button onClick={openSectorSelectorPanel} label={getSelectorLabel(siteId)} />
-				</div>
+			<div className={styles.options}>
+				<Select value={regionId} options={regionOptions} onChange={handleRegionChange} />
+				<SectorChangeButton onClick={openSectorSelectorPanel} label="Selected Site:" labelValue={ALL_SOUNDING_SITES[siteId as string].name} />
+			</div>
+			<div className={styles.products}>
 				{productsArray.map(({ id, label }) => (
 					<SidebarLink
 						key={id}
@@ -115,7 +106,7 @@ export const SoundingsPanel = ({ basepath, isActive }: soundingsPanelProps) => {
 						linkUrl={`/weather-data/analysis/soundings/${id}/${regionId}/${siteId}`}
 					/>
 				))}
-			</SidebarPanelPad>
+			</div>
 		</div>
 	)
 }

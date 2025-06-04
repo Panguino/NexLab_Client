@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components/elements/Button/Button'
+import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import SelectGrouped from '@/components/elements/SelectGrouped/SelectGrouped'
 import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
@@ -13,7 +13,6 @@ import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
-import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import styles from './SatradSidebarPanel.module.scss'
 
 const SatradSidebarPanel = () => {
@@ -101,33 +100,35 @@ const SatradSidebarPanel = () => {
 
 	return (
 		<ScrollArea>
-			<SidebarPanelPad>
-				<div className={styles.SatradSidebarPanel}>
-					<div className={styles.options}>
-						<SelectGrouped
-							onChange={handleRegionChange}
-							value={regionId as string}
-							options={SATRAD_MAP_OPTIONS}
-							placeholder="Select Region"
-						/>
-						<Button onClick={openSectorSelectorPanel} label={`Sector: ${ALL_SATRAD_SECTORS[sectorId as string]?.name}`} />
-					</div>
-					{panelGroupedProducts.map(({ groupId, label, columns, products }) => (
-						<SidebarGroup key={groupId} title={label}>
-							<SidebarGrid columns={columns}>
-								{products.map(({ id, label }) => (
-									<SidebarLink
-										key={id}
-										name={label}
-										linkUrl={`/weather-data/satellite-mosaic-radar/${id}/${regionId}/${sectorId}`}
-										active={id === productId}
-									/>
-								))}
-							</SidebarGrid>
-						</SidebarGroup>
-					))}
+			<div className={styles.SatradSidebarPanel}>
+				<div className={styles.options}>
+					<SelectGrouped
+						onChange={handleRegionChange}
+						value={regionId as string}
+						options={SATRAD_MAP_OPTIONS}
+						placeholder="Select Region"
+					/>
+					<SectorChangeButton
+						onClick={openSectorSelectorPanel}
+						label="Selected Sector:"
+						labelValue={ALL_SATRAD_SECTORS[sectorId as string]?.name}
+					/>
 				</div>
-			</SidebarPanelPad>
+				{panelGroupedProducts.map(({ groupId, label, columns, products }) => (
+					<SidebarGroup key={groupId} title={label}>
+						<SidebarGrid columns={columns}>
+							{products.map(({ id, label }) => (
+								<SidebarLink
+									key={id}
+									name={label}
+									linkUrl={`/weather-data/satellite-mosaic-radar/${id}/${regionId}/${sectorId}`}
+									active={id === productId}
+								/>
+							))}
+						</SidebarGrid>
+					</SidebarGroup>
+				))}
+			</div>
 		</ScrollArea>
 	)
 }
