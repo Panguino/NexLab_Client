@@ -2,7 +2,16 @@
   position: absolute;
   top: 106px;
   left: 300px;
-  width: calc(80% - 300px);
-  height: calc(80% - 106px);
+  width: calc(100% - 300px);
+  max-width: 1024px;
+  aspect-ratio: 16 / 9;
   z-index: 30;
+  background-color: black;
+
+  @media screen and (max-width: 900px) {
+    left: 0;
+    top: 50px;
+    width: 100%;
+    z-index: 60;
+  }
 }
