@@ -1,16 +1,21 @@
 .SoundingsPanel {
-	position: relative;
+  position: relative;
 }
 .options {
-	padding: 10px;
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .siteSelector {
-	position: absolute;
-	right: -1000px;
-	width: 1000px;
-	height: 600px;
-	top: 0;
+  position: absolute;
+  right: -1000px;
+  width: 1000px;
+  height: 600px;
+  top: 0;
+}
+
+.products {
+  padding: 10px;
+  border-top: 1px solid var(--color-grey16);
 }

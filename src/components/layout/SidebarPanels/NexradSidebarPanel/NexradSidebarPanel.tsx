@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components/elements/Button/Button'
+import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import Select from '@/components/elements/Select/Select'
 import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
@@ -98,7 +98,7 @@ const NexradSidebarPanel = () => {
 			<div className={styles.NexradSidebarPanel}>
 				<div className={styles.options}>
 					<Select value={regionId} options={regionOptions} onChange={handleRegionChange} />
-					<Button onClick={openSectorSelectorPanel} label={`Site:  ${siteId} - ${NEXRAD_SITES[siteId as string]?.name}`} />
+					<SectorChangeButton label="Selected Site:" labelValue={NEXRAD_SITES[siteId as string]?.name} onClick={openSectorSelectorPanel} />
 				</div>
 				{panelGroupedProducts.map(({ groupId, label, sublabel, columns, products }) => (
 					<SidebarGroup key={groupId} title={label} extraInfo={sublabel && `(${sublabel})`}>
