@@ -26,15 +26,14 @@ const SatradSidebarPanel = () => {
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const { satradProductId: productId, satradSectorId: sectorId, satradRegionId: regionId } = useParams()
-	const tempRegionIdRef = useRef<string>(regionId as string)
+	const tempRegionIdRef = useRef<string | null>(null)
 
 	useEffect(() => {
 		if (!SATRAD_PRODUCTS[productId as string] || !SATRAD_SCALE_REGIONS[regionId as string] || !ALL_SATRAD_SECTORS[sectorId as string]) {
-			console.log('Invalid productId:', SATRAD_PRODUCTS[productId as string])
-			console.log('Invalid regionId:', SATRAD_SCALE_REGIONS[regionId as string])
-			console.log('Invalid sectorId:', ALL_SATRAD_SECTORS[sectorId as string])
 			resetSatradZoomState()
 			router.push(`/weather-data/satellite-mosaic-radar/${DEFAULT_SATRAD_PRODUCT}/${DEFAULT_SATRAD_REGION}/${DEFAULT_SATRAD_SECTOR}`)
+		} else if (tempRegionIdRef.current !== regionId) {
+			tempRegionIdRef.current = regionId as string
 		}
 	}, [productId, regionId, sectorId, router, resetSatradZoomState])
 
@@ -66,7 +65,7 @@ const SatradSidebarPanel = () => {
 			}))
 			setSectorSelectorSectors(selectedSectors)
 		} else {
-			if (tempRegionIdRef.current && tempRegionIdRef.current !== regionId) {
+			if (tempRegionIdRef.current !== regionId) {
 				tempRegionIdRef.current = regionId as string
 			}
 		}

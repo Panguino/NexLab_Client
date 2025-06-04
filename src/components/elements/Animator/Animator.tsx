@@ -29,6 +29,8 @@ interface IAnimatorProps {
 	settingsComponent?: React.ReactNode | null
 	initialZoomState?: zoomState
 	setZoomState?: (zoomState: zoomState) => void
+	activeOverlays?: string[]
+	setActiveOverlays?: (overlays: string[]) => void
 }
 
 export const Animator = ({
@@ -43,12 +45,15 @@ export const Animator = ({
 	hideZoomControls = false,
 	settingsComponent = null,
 	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
+	activeOverlays = ['data', 'map'],
+	setActiveOverlays = (overlays: string[]) => {
+		console.warn('setActiveOverlays function not provided, active overlays will not be updated.', overlays)
+	},
 	setZoomState = (zoomState: zoomState) => {
 		console.warn('setZoomState function not provided, zoom state will not be updated.', zoomState)
 	},
 }: IAnimatorProps) => {
 	const [loadedFrames, setLoadedFrames] = useState([])
-	const [activeOverlays, setActiveOverlays] = useState(['data', 'map'])
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
 	const [currentFrame, setCurrentFrame] = useState(startFrame || frames.length - 1)
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
@@ -183,6 +188,8 @@ export const Animator = ({
 		transformRef.current.setTransform(manualCenterX, manualCenterY, initialZoomState.scale, 0)
 		// I know this is stupid, but it works
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState])
+
+	console.log('activeOverlays', activeOverlays)
 
 	return (
 		<div ref={animatorRef} className={styles.animator}>

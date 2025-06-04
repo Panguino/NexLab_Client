@@ -3,6 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
+import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -38,34 +39,37 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	}, [siteId, productId, nexradNumberOfFrames])
 
 	return (
-		<div className={styles.nexradAnimatorContainer}>
-			<div className={styles.nexradAnimator}>
-				<Animator
-					frames={nexradData}
-					startFrame={nexradData.length - 1}
-					ratio={ratio}
-					initialZoomState={nexradZoomState}
-					setZoomState={setNexradZoomState}
-					interval={1000 / nexradFrameRate}
-					settingsComponent={
-						<AnimatorSettings title="Settings">
-							<NexradAnimatorSettings />
-						</AnimatorSettings>
-					}
-				/>
+		<>
+			<div className={styles.nexradAnimatorContainer}>
+				<div className={styles.nexradAnimator}>
+					<Animator
+						frames={nexradData}
+						startFrame={nexradData.length - 1}
+						ratio={ratio}
+						initialZoomState={nexradZoomState}
+						setZoomState={setNexradZoomState}
+						interval={1000 / nexradFrameRate}
+						settingsComponent={
+							<AnimatorSettings title="Settings">
+								<NexradAnimatorSettings />
+							</AnimatorSettings>
+						}
+					/>
+				</div>
+				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
+					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+						<ProductInfo {...productInfo} />
+					</Tab>
+					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
+						Alerts TODO
+					</Tab>
+					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
+						Download / Save Gif TODO
+					</Tab>
+				</Tabs>
 			</div>
-			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-					<ProductInfo {...productInfo} />
-				</Tab>
-				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-					Alerts TODO
-				</Tab>
-				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-					Download / Save Gif TODO
-				</Tab>
-			</Tabs>
-		</div>
+			<MobileIconNav topRight />
+		</>
 	)
 }
 

@@ -2,9 +2,10 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
+import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { getSurfaceData } from '@/util/dataCalls/analysis/query-surface'
-import { faDownload, faInfoCircle, faLayerGroup, faWarning } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -34,31 +35,31 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 	}, [productId, regionId, siteId, surfaceMapsNumberOfFrames])
 
 	return (
-		<div className={styles.surfaceMapsAnimatorContainer}>
-			<div className={styles.surfaceMapsAnimator}>
-				<Animator
-					frames={surfaceMapsData}
-					startFrame={surfaceMapsData.length - 1}
-					ratio={ratio}
-					initialZoomState={analysisZoomState}
-					setZoomState={setAnalysisZoomState}
-				/>
+		<>
+			<div className={styles.surfaceMapsAnimatorContainer}>
+				<div className={styles.surfaceMapsAnimator}>
+					<Animator
+						frames={surfaceMapsData}
+						startFrame={surfaceMapsData.length - 1}
+						ratio={ratio}
+						initialZoomState={analysisZoomState}
+						setZoomState={setAnalysisZoomState}
+					/>
+				</div>
+				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
+					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
+						<ProductInfo {...productInfo} />
+					</Tab>
+					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
+						Alerts TODO
+					</Tab>
+					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
+						Download / Save Gif TODO
+					</Tab>
+				</Tabs>
 			</div>
-			<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-				<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-					<ProductInfo {...productInfo} />
-				</Tab>
-				<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-					Alerts TODO
-				</Tab>
-				<Tab label="Overlays" icon={<FontAwesomeIcon icon={faLayerGroup} />}>
-					Overlays TODO
-				</Tab>
-				<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-					Download / Save Gif TODO
-				</Tab>
-			</Tabs>
-		</div>
+			<MobileIconNav topRight />
+		</>
 	)
 }
 

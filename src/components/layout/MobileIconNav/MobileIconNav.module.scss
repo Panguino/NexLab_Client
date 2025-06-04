@@ -10,6 +10,12 @@
   z-index: 100;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 
+  &.topRight {
+    top: 60px;
+    right: 10px;
+    bottom: auto;
+  }
+
   @media (max-width: $mobile-menu-breakpoint) {
     display: flex;
   }
