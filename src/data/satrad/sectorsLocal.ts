@@ -114,7 +114,6 @@ const SATRAD_SECTOR_LOCAL_WINNIPEG_ID = 'Winnipeg'
 const SATRAD_SECTOR_LOCAL_WISCONSIN_ID = 'Wisconsin'
 const SATRAD_SECTOR_LOCAL_WYOMING_ID = 'Wyoming'
 const SATRAD_SECTOR_LOCAL_YELLOWSTONE_ID = 'Yellowstone'
-const SATRAD_SECTOR_LOCAL_YUCATAN_ID = 'Yucatan'
 const SATRAD_SECTOR_LOCAL_CA_ST_JOHNS_ID = 'ca_stjohns'
 
 export const SATRAD_SECTORS_LOCAL_NAMER = {
@@ -227,7 +226,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_LOCAL_CAMPECHE_ID]: {
-		name: 'Campeche',
+		name: 'NW Yucatan Peninsula',
 		type: 'Geobox',
 		coordinates: [
 			[-93.96, 18.87],
@@ -1137,21 +1136,12 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 		],
 		products: SATRAD_PRODUCTS,
 	},
-	[SATRAD_SECTOR_LOCAL_YUCATAN_ID]: {
-		name: 'Yucatan',
-		type: 'Geobox',
-		coordinates: [
-			[-91.06, 18.87],
-			[-85.97, 22.66],
-		],
-		products: SATRAD_PRODUCTS,
-	},
 	[SATRAD_SECTOR_LOCAL_CA_ST_JOHNS_ID]: {
 		name: 'St. Johns, Newfoundland',
 		type: 'Geobox',
 		coordinates: [
-			[-60.05, 46.8],
-			[-52.73, 47.7],
+			[-57.05, 45.8],
+			[-48.5, 48.5],
 		],
 		products: SATRAD_PRODUCTS,
 	},

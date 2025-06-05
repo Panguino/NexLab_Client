@@ -1,7 +1,7 @@
 import { SATRAD_PRODUCTS } from './products'
 
 // Sub-regional Sectors
-const SATRAD_SECTOR_SUBREGIONAL_BAHAMAS_ID = 'Bahamas'
+const SATRAD_SECTOR_SUBREGIONAL_BAHAMAS_ID = 'Bahamas_sub'
 const SATRAD_SECTOR_SUBREGIONAL_BAJA_ID = 'Baja'
 const SATRAD_SECTOR_SUBREGIONAL_BERMUDA_ID = 'Bermuda'
 const SATRAD_SECTOR_SUBREGIONAL_BIG_BEND_ID = 'Big_Bend'
@@ -48,7 +48,6 @@ const SATRAD_SECTOR_SUBREGIONAL_VANDENBERG_ID = 'Vandenburg'
 const SATRAD_SECTOR_SUBREGIONAL_VIRGINIAS_ID = 'Virginias'
 const SATRAD_SECTOR_SUBREGIONAL_W_CARIBBEAN_ID = 'W_Caribbean'
 const SATRAD_SECTOR_SUBREGIONAL_W_GULF_COAST_ID = 'W_Gulf_Coast'
-const SATRAD_SECTOR_SUBREGIONAL_YELLOWSTONE_ID = 'Yellowstone'
 const SATRAD_SECTOR_SUBREGIONAL_YUCATAN_ID = 'Yucatan'
 const SATRAD_SECTOR_SUBREGIONAL_CA_CENTRAL_QUEBEC_ID = 'ca_c_quebec'
 const SATRAD_SECTOR_SUBREGIONAL_CA_EDMONTON_ID = 'ca_edmonton'
@@ -76,7 +75,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_BAJA_ID]: {
-		name: 'Baja',
+		name: 'Northern Gulf of California',
 		type: 'Geobox',
 		coordinates: [
 			[-119.27, 24.75],
@@ -112,7 +111,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CO_KS_PANHAN_ID]: {
-		name: 'CO_KS_PanHandle',
+		name: 'Central Great Plains',
 		type: 'Geobox',
 		coordinates: [
 			[-109.33, 33.37],
@@ -121,7 +120,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CALIGULF_ID]: {
-		name: 'Cali_Gulf',
+		name: 'Southern Gulf of California',
 		type: 'Geobox',
 		coordinates: [
 			[-115.21, 18.32],
@@ -139,7 +138,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CENPLAINS_ID]: {
-		name: 'Cen_Plains',
+		name: 'Platte River Basin',
 		type: 'Geobox',
 		coordinates: [
 			[-107.55, 36.63],
@@ -148,7 +147,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CENROCKIES_ID]: {
-		name: 'Cen_Rockies',
+		name: 'Central Rockies',
 		type: 'Geobox',
 		coordinates: [
 			[-117.27, 36.14],
@@ -166,7 +165,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_DESERTSW_ID]: {
-		name: 'Desert_SW',
+		name: 'Arizona & New Mexico',
 		type: 'Geobox',
 		coordinates: [
 			[-115.99, 29.97],
@@ -175,7 +174,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_DIXIE_ID]: {
-		name: 'Dixie',
+		name: 'Southeast U.S.',
 		type: 'Geobox',
 		coordinates: [
 			[-96.39, 28.52],
@@ -184,7 +183,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_DURANGO_ID]: {
-		name: 'Durango',
+		name: 'Four Corners',
 		type: 'Geobox',
 		coordinates: [
 			[-116.01, 32.92],
@@ -193,25 +192,25 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_E_ANTILLES_ID]: {
-		name: 'E_Antilles',
+		name: 'Eastern Antilles',
 		type: 'Geobox',
 		coordinates: [
-			[-66.3, 13.2],
-			[-66.3, 13.2],
+			[-75.1, 15.25],
+			[-58.75, 24.25],
 		],
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_E_CARIBBEAN_ID]: {
-		name: 'E_Caribbean',
+		name: 'Eastern Caribbean',
 		type: 'Geobox',
 		coordinates: [
-			[-66.3, 13.2],
-			[-66.3, 13.2],
+			[-74.25, 11.0],
+			[-58.25, 17.9],
 		],
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_E_GULF_COAST_ID]: {
-		name: 'E_Gulf_Coast',
+		name: 'East Gulf Coast',
 		type: 'Geobox',
 		coordinates: [
 			[-94.32, 24.04],
@@ -274,7 +273,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_NE_WY_ID]: {
-		name: 'NE_WY',
+		name: 'Black Hills',
 		type: 'Geobox',
 		coordinates: [
 			[-113.28, 39.85],
@@ -283,7 +282,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_N_IOWA_ID]: {
-		name: 'N_Iowa',
+		name: 'Midwest',
 		type: 'Geobox',
 		coordinates: [
 			[-102.82, 39.48],
@@ -292,7 +291,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_N_NEVADA_ID]: {
-		name: 'N_Nevada',
+		name: 'Great Basin',
 		type: 'Geobox',
 		coordinates: [
 			[-126.46, 37.49],
@@ -301,7 +300,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_N_PLAINS_ID]: {
-		name: 'N_Plains',
+		name: 'Dakotas',
 		type: 'Geobox',
 		coordinates: [
 			[-107.37, 42.23],
@@ -310,7 +309,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_N_ROCKIES_ID]: {
-		name: 'N_Rockies',
+		name: 'Montana',
 		type: 'Geobox',
 		coordinates: [
 			[-117.61, 42.41],
@@ -346,7 +345,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_NRN_MO_ID]: {
-		name: 'Northern Missouri',
+		name: 'Corn Belt',
 		type: 'Geobox',
 		coordinates: [
 			[-101.9, 36.8],
@@ -364,7 +363,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_QUEBEC_ID]: {
-		name: 'Quebec',
+		name: 'Southern Quebec',
 		type: 'Geobox',
 		coordinates: [
 			[-84.92, 42.67],
@@ -373,7 +372,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_PACNW_ID]: {
-		name: 'Pacific Northwest',
+		name: 'Washington',
 		type: 'Geobox',
 		coordinates: [
 			[-128.65, 43.49],
@@ -382,16 +381,17 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_S_BRITISH_COLUMBIA_ID]: {
-		name: 'S_British_Columbia',
+		name: 'Southern British Columbia',
 		type: 'Geobox',
 		coordinates: [
-			[-132.43, 50.35],
-			[-115.08, 57.82],
+			// 46.95;-128.18;53.32;-111.11
+			[-128.18, 46.95],
+			[-111.11, 53.32],
 		],
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_S_PANHANDLE_ID]: {
-		name: 'S_Panhandle',
+		name: 'Texas Panhandle',
 		type: 'Geobox',
 		coordinates: [
 			[-109.15, 29.79],
@@ -400,7 +400,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_S_PLAINS_ID]: {
-		name: 'S_Plains',
+		name: 'Oklahoma',
 		type: 'Geobox',
 		coordinates: [
 			[-105.85, 32.22],
@@ -409,7 +409,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_S_SASKATCHEWAN_ID]: {
-		name: 'S_Saskatchewan',
+		name: 'Canadian Prairies',
 		type: 'Geobox',
 		coordinates: [
 			[-115.09, 45.74],
@@ -418,7 +418,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_SANFRAN_ID]: {
-		name: 'San Francisco',
+		name: 'Northern California',
 		type: 'Geobox',
 		coordinates: [
 			[-130.05, 34.64],
@@ -427,7 +427,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_SIERRA_ID]: {
-		name: 'Sierra',
+		name: 'Mojave Desert',
 		type: 'Geobox',
 		coordinates: [
 			[-122.94, 32.18],
@@ -436,7 +436,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_ST_LAWRENCE_ID]: {
-		name: 'St. Lawrence',
+		name: 'Nova Scotia',
 		type: 'Geobox',
 		coordinates: [
 			[-73.06, 42.98],
@@ -454,7 +454,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_VANDENBERG_ID]: {
-		name: 'Vandenberg',
+		name: 'Southern California',
 		type: 'Geobox',
 		coordinates: [
 			[-128.3, 30.9],
@@ -472,7 +472,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_W_CARIBBEAN_ID]: {
-		name: 'W_Caribbean',
+		name: 'Western Caribbean',
 		type: 'Geobox',
 		coordinates: [
 			[-89.41, 14.96],
@@ -481,7 +481,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_W_GULF_COAST_ID]: {
-		name: 'W_Gulf_Coast',
+		name: 'West Gulf Coast',
 		type: 'Geobox',
 		coordinates: [
 			[-100.68, 23.79],
@@ -489,26 +489,32 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		],
 		products: SATRAD_PRODUCTS,
 	},
-	[SATRAD_SECTOR_SUBREGIONAL_YELLOWSTONE_ID]: {
-		name: 'Yellowstone',
-		type: 'Geobox',
-		coordinates: [
-			[-109.59, 44.08],
-			[-93.43, 49.36],
-		],
-		products: SATRAD_PRODUCTS,
-	},
 	[SATRAD_SECTOR_SUBREGIONAL_YUCATAN_ID]: {
-		name: 'Yucatan',
+		name: 'Yucatan Peninsula',
 		type: 'Geobox',
 		coordinates: [
+			// 17.23;-98.34;24.85;-82.33
 			[-98.34, 17.23],
 			[-82.33, 24.85],
 		],
 		products: SATRAD_PRODUCTS,
 	},
+	// subregional ca_ern_nl 45.58;-62.32;50.08;-42.81
+	// subregional ca_gulf_stl 47.01;-69.98;51.84;-50.5
+	// subregional ca_nl 51.76;-70.88;56.29;-50.79
+	// subregional ca_ungava 55.6;-76.06;60.06;-55.56
+	// subregional ca_c_quebec 47.03;-84.34;52.6;-65.3
+	// subregional ca_n_quebec 52.86;-85.2;57.98;-65.42
+	// subregional ca_s_ontario 47.03;-96.11;53.19;-77.5
+	// subregional ca_n_ontario 52.79;-96.46;58.43;-77.12
+	// subregional ca_s_mb_sk 48.34;-110.46;55.07;-92.29
+	// subregional ca_n_mb_sk 54.16;-110.43;60.26;-91.49
+	// subregional ca_edmonton 49.73;-122.65;56.86;-104.88
+	// subregional ca_n_alberta 53.96;-123.89;60.63;-105.63
+	// subregional ca_s_bc 50.35;-132.43;57.82;-115.08
+	// subregional ca_n_bc 54.43;-136.56;61.54;-118.91
 	[SATRAD_SECTOR_SUBREGIONAL_CA_CENTRAL_QUEBEC_ID]: {
-		name: 'CA_Central_Quebec',
+		name: 'Central Quebec',
 		type: 'Geobox',
 		coordinates: [
 			[-84.34, 47.03],
@@ -517,7 +523,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_EDMONTON_ID]: {
-		name: 'CA_Edmonton',
+		name: 'Southern Alberta',
 		type: 'Geobox',
 		coordinates: [
 			[-122.65, 49.73],
@@ -526,8 +532,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_ERN_NEWFOUNDLAND_ID]: {
-		name: 'CA_Eastern_Newfoundland',
-		type: 'Geobox',
+		name: 'Southern Newfoundland',
+		type: 'Geobox', //45.58;-62.32;50.08;-42.81
 		coordinates: [
 			[-62.32, 45.58],
 			[-42.81, 50.08],
@@ -535,7 +541,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_GULF_STLAWRENCE_ID]: {
-		name: 'CA_Gulf_St_Lawrence',
+		name: 'Gulf of St. Lawrence',
 		type: 'Geobox',
 		coordinates: [
 			[-69.98, 47.01],
@@ -544,7 +550,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_N_ALBERTA_ID]: {
-		name: 'CA_N_Alberta',
+		name: 'Northern Alberta',
 		type: 'Geobox',
 		coordinates: [
 			[-123.89, 53.96],
@@ -553,7 +559,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_N_BRITISH_COLUMBIA_ID]: {
-		name: 'CA_N_British_Columbia',
+		name: 'Northern British Columbia',
 		type: 'Geobox',
 		coordinates: [
 			[-136.56, 54.43],
@@ -562,25 +568,16 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_N_MANITOBA_SASKACHEWAN_ID]: {
-		name: 'CA_N_Manitoba_Saskatchewan',
+		name: 'N. Manitoba & Saskatchewan',
 		type: 'Geobox',
 		coordinates: [
-			[-110.46, 54.16],
-			[-92.29, 60.26],
+			[-110.43, 54.16],
+			[-91.49, 60.26],
 		],
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_N_ONTARIO_ID]: {
-		name: 'CA_N_Ontario',
-		type: 'Geobox',
-		coordinates: [
-			[-96.11, 47.03],
-			[-77.5, 53.19],
-		],
-		products: SATRAD_PRODUCTS,
-	},
-	[SATRAD_SECTOR_SUBREGIONAL_CA_N_QUEBEC_ID]: {
-		name: 'CA_N_Quebec',
+		name: 'Northern Ontario',
 		type: 'Geobox',
 		coordinates: [
 			[-96.46, 52.79],
@@ -588,8 +585,17 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		],
 		products: SATRAD_PRODUCTS,
 	},
+	[SATRAD_SECTOR_SUBREGIONAL_CA_N_QUEBEC_ID]: {
+		name: 'Northern Quebec',
+		type: 'Geobox',
+		coordinates: [
+			[-85.2, 52.86],
+			[-65.42, 57.98],
+		],
+		products: SATRAD_PRODUCTS,
+	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_NEWFOUNDLAND_ID]: {
-		name: 'CA_Newfoundland',
+		name: 'Northern Newfoundland',
 		type: 'Geobox',
 		coordinates: [
 			[-70.88, 51.76],
@@ -598,8 +604,8 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_S_BRITISH_COLUMBIA_ID]: {
-		name: 'CA_S_British_Columbia',
-		type: 'Geobox',
+		name: 'Central British Columbia',
+		type: 'Geobox', //50.35;-132.43;57.82;-115.08
 		coordinates: [
 			[-132.43, 50.35],
 			[-115.08, 57.82],
@@ -607,7 +613,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_S_MANITOBA_SASKACHEWAN_ID]: {
-		name: 'CA_S_Manitoba_Saskatchewan',
+		name: 'S. Manitoba & Saskatchewan',
 		type: 'Geobox',
 		coordinates: [
 			[-110.46, 48.34],
@@ -616,7 +622,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_S_ONTARIO_ID]: {
-		name: 'CA_S_Ontario',
+		name: 'Southern Ontario',
 		type: 'Geobox',
 		coordinates: [
 			[-96.11, 47.03],
@@ -625,7 +631,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_UNGAVA_ID]: {
-		name: 'CA_Ungava',
+		name: 'Ungava',
 		type: 'Geobox',
 		coordinates: [
 			[-76.06, 55.6],
