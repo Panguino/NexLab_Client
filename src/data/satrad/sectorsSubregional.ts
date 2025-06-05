@@ -384,7 +384,6 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Southern British Columbia',
 		type: 'Geobox',
 		coordinates: [
-			// 46.95;-128.18;53.32;-111.11
 			[-128.18, 46.95],
 			[-111.11, 53.32],
 		],
@@ -493,26 +492,11 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 		name: 'Yucatan Peninsula',
 		type: 'Geobox',
 		coordinates: [
-			// 17.23;-98.34;24.85;-82.33
 			[-98.34, 17.23],
 			[-82.33, 24.85],
 		],
 		products: SATRAD_PRODUCTS,
 	},
-	// subregional ca_ern_nl 45.58;-62.32;50.08;-42.81
-	// subregional ca_gulf_stl 47.01;-69.98;51.84;-50.5
-	// subregional ca_nl 51.76;-70.88;56.29;-50.79
-	// subregional ca_ungava 55.6;-76.06;60.06;-55.56
-	// subregional ca_c_quebec 47.03;-84.34;52.6;-65.3
-	// subregional ca_n_quebec 52.86;-85.2;57.98;-65.42
-	// subregional ca_s_ontario 47.03;-96.11;53.19;-77.5
-	// subregional ca_n_ontario 52.79;-96.46;58.43;-77.12
-	// subregional ca_s_mb_sk 48.34;-110.46;55.07;-92.29
-	// subregional ca_n_mb_sk 54.16;-110.43;60.26;-91.49
-	// subregional ca_edmonton 49.73;-122.65;56.86;-104.88
-	// subregional ca_n_alberta 53.96;-123.89;60.63;-105.63
-	// subregional ca_s_bc 50.35;-132.43;57.82;-115.08
-	// subregional ca_n_bc 54.43;-136.56;61.54;-118.91
 	[SATRAD_SECTOR_SUBREGIONAL_CA_CENTRAL_QUEBEC_ID]: {
 		name: 'Central Quebec',
 		type: 'Geobox',
@@ -533,7 +517,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_ERN_NEWFOUNDLAND_ID]: {
 		name: 'Southern Newfoundland',
-		type: 'Geobox', //45.58;-62.32;50.08;-42.81
+		type: 'Geobox',
 		coordinates: [
 			[-62.32, 45.58],
 			[-42.81, 50.08],
@@ -605,7 +589,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_CA_S_BRITISH_COLUMBIA_ID]: {
 		name: 'Central British Columbia',
-		type: 'Geobox', //50.35;-132.43;57.82;-115.08
+		type: 'Geobox',
 		coordinates: [
 			[-132.43, 50.35],
 			[-115.08, 57.82],

@@ -30,26 +30,6 @@ const SATRAD_SECTOR_REGIONAL_W_NORTH_WEST_ID = 'w_northwest'
 const SATRAD_SECTOR_REGIONAL_W_SOUTH_WEST_ID = 'w_southwest'
 const SATRAD_SECTOR_REGIONAL_W_ATLANTIC_ID = 'watlantic'
 
-// regional northwest 34.73;-126.36;50.76;-91.72
-// regional northcentral 34.65;-114.95;49.27;-79.26
-// regional northeast 35.6;-98.32;47.92;-61.12
-// regional southwest 27.38;-123.53;44.04;-90.23
-// regional southcentral 24.89;-114.5;40.59;-80.91
-// regional southeast 24.33;-101.03;38.16;-66.54
-// regional gulf 16.31;-102.26;30.8;-69.41
-// regional northmexico 16.85;-119.08;33.81;-87.41
-// regional southmexico 12.94;-115.91;29.62;-84.67
-// regional central 30.1;-114.74;45.28;-80.07
-// regional midwest 32.15;-108.39;46.23;-72.75
-// regional eastcoast 29.7;-93.13;41.92;-56.98
-// regional ca_lksuper 39.8;-108.0;52.8;-70.55
-// regional ca_reg_west 46.09;-135.67;60.65;-100.45
-// regional ca_reg_cen 47.62;-112.0;59.85;-74.3
-// regional ca_reg_east 45.52;-87.92;55.87;-49.11
-// regional ca_Regina 42.63;-121.62;56.69;-85.91
-// regional w_southwest 28.7;-140.37;44.08;-108.59
-// regional eastpac 16.65;-140.68;33.33;-110.37
-
 export const SATRAD_SECTORS_REGIONAL_NAMER = {
 	[SATRAD_SECTOR_REGIONAL_CA_REGINA_ID]: {
 		name: 'U.S. & Canadian Great Plains',
@@ -125,7 +105,7 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 	},
 	[SATRAD_SECTOR_REGIONAL_EAST_COAST_ID]: {
 		name: 'East Coast',
-		type: 'Geobox', // 29.7;-93.13;41.92;-56.98
+		type: 'Geobox',
 		coordinates: [
 			[-93.13, 29.7],
 			[-56.98, 41.92],
@@ -145,7 +125,6 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Gulf Coast',
 		type: 'Geobox',
 		coordinates: [
-			//16.31;-102.26;30.8;-69.41
 			[-102.26, 16.31],
 			[-69.41, 30.8],
 		],
@@ -164,7 +143,6 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'North Central US',
 		type: 'Geobox',
 		coordinates: [
-			//34.65;-114.95;49.27;-79.26
 			[-114.95, 34.65],
 			[-79.26, 49.27],
 		],
@@ -183,7 +161,6 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'North Mexico',
 		type: 'Geobox',
 		coordinates: [
-			// 16.85;-119.08;33.81;-87.41
 			[-119.08, 16.85],
 			[-87.41, 33.81],
 		],
