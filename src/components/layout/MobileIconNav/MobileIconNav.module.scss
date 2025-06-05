@@ -7,15 +7,24 @@
   right: 10px;
   border-radius: 7px;
   overflow: hidden;
-  z-index: 100;
+  z-index: 45;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 
   &.topRight {
     top: 60px;
     right: 10px;
-    bottom: auto;
+    bottom: unset;
   }
-
+  &.tab {
+    top: 50%;
+    left: 0px;
+    bottom: unset;
+    right: unset;
+    border-radius: 0 7px 7px 0;
+    .icon {
+      padding: 25px 10px 25px 5px;
+    }
+  }
   @media (max-width: $mobile-menu-breakpoint) {
     display: flex;
   }

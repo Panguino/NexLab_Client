@@ -37,8 +37,8 @@ $track-border: var(--color-grey7-grey13);
       background-color: $thumb-color;
       cursor: pointer;
       -webkit-appearance: none;
-      margin-top: -9px;
-      box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.1);
+      margin-top: -10px;
+      box-shadow: 1px 1px 3px 0px rgba(0, 0, 0, 0.4);
     }
 
     &::-moz-range-track {
