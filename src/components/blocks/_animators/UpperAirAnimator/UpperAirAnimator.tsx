@@ -68,7 +68,7 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 					</Tab>
 				</Tabs>
 			</div>
-			<MobileIconNav topRight />
+			<MobileIconNav tab />
 		</>
 	)
 }

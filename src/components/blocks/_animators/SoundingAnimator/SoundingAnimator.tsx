@@ -50,7 +50,7 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 					</Tab>
 				</Tabs>
 			</div>
-			<MobileIconNav topRight />
+			<MobileIconNav tab />
 		</>
 	)
 }

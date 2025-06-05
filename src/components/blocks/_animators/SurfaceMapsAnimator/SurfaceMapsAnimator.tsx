@@ -68,7 +68,7 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 					</Tab>
 				</Tabs>
 			</div>
-			<MobileIconNav topRight />
+			<MobileIconNav tab />
 		</>
 	)
 }

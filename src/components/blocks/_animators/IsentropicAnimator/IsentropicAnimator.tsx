@@ -67,7 +67,7 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 					</Tab>
 				</Tabs>
 			</div>
-			<MobileIconNav topRight />
+			<MobileIconNav tab />
 		</>
 	)
 }

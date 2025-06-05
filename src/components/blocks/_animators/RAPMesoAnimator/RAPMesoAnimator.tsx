@@ -67,7 +67,7 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 					</Tab>
 				</Tabs>
 			</div>
-			<MobileIconNav topRight />
+			<MobileIconNav tab />
 		</>
 	)
 }

@@ -87,7 +87,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 					</Tab>
 				</Tabs>
 			</div>
-			<MobileIconNav topRight />
+			<MobileIconNav tab />
 		</>
 	)
 }
