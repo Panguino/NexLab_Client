@@ -9,6 +9,9 @@
   background: var(--color-grey5-grey19);
   justify-content: stretch;
   font-size: 13px;
+  @media screen and (max-width: 400px) {
+    font-size: 11px;
+  }
 }
 .activeTab {
   position: relative;
@@ -32,6 +35,9 @@
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  @media screen and (max-width: 400px) {
+    padding: 7px 10px;
+  }
 }
 .tabContent {
   background: var(--color-white-grey17);
