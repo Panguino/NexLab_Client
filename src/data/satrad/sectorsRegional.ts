@@ -30,16 +30,13 @@ const SATRAD_SECTOR_REGIONAL_W_NORTH_WEST_ID = 'w_northwest'
 const SATRAD_SECTOR_REGIONAL_W_SOUTH_WEST_ID = 'w_southwest'
 const SATRAD_SECTOR_REGIONAL_W_ATLANTIC_ID = 'watlantic'
 
-const regional_latitude_modifier = 2
-const regional_longitude_modifier = 2
-
 export const SATRAD_SECTORS_REGIONAL_NAMER = {
 	[SATRAD_SECTOR_REGIONAL_CA_REGINA_ID]: {
-		name: 'Regina',
+		name: 'U.S. & Canadian Great Plains',
 		type: 'Geobox',
 		coordinates: [
-			[-104.61 + regional_longitude_modifier, 50.45 - regional_latitude_modifier],
-			[-104.61 - regional_longitude_modifier, 50.45 + regional_latitude_modifier],
+			[-121.62, 42.63],
+			[-85.91, 56.69],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -47,8 +44,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Baffin',
 		type: 'Geobox',
 		coordinates: [
-			[-70.0 + regional_longitude_modifier, 64.6 - regional_latitude_modifier],
-			[-70.0 - regional_longitude_modifier, 64.6 + regional_latitude_modifier],
+			[-90.05, 60.25],
+			[-48.0, 68.0],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -56,8 +53,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Baker Lake',
 		type: 'Geobox',
 		coordinates: [
-			[-96.0 + regional_longitude_modifier, 64.3 - regional_latitude_modifier],
-			[-96.0 - regional_longitude_modifier, 64.3 + regional_latitude_modifier],
+			[-116.0, 59.0],
+			[-75.0, 70.0],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -65,8 +62,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Lake Superior',
 		type: 'Geobox',
 		coordinates: [
-			[-90.0 + regional_longitude_modifier, 47.0 - regional_latitude_modifier],
-			[-90.0 - regional_longitude_modifier, 47.0 + regional_latitude_modifier],
+			[-108.0, 39.8],
+			[-70.55, 52.8],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -74,8 +71,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Central Canada',
 		type: 'Geobox',
 		coordinates: [
-			[-94.0 + regional_longitude_modifier, 54.5 - regional_latitude_modifier],
-			[-94.0 - regional_longitude_modifier, 54.5 + regional_latitude_modifier],
+			[-112.0, 47.62],
+			[-74.3, 59.85],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -83,8 +80,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Eastern Canada',
 		type: 'Geobox',
 		coordinates: [
-			[-69.2 + regional_longitude_modifier, 51.4 - regional_latitude_modifier],
-			[-69.2 - regional_longitude_modifier, 51.4 + regional_latitude_modifier],
+			[-87.92, 45.52],
+			[-49.11, 55.87],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -92,8 +89,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Western Canada',
 		type: 'Geobox',
 		coordinates: [
-			[-119.0 + regional_longitude_modifier, 54.2 - regional_latitude_modifier],
-			[-119.0 - regional_longitude_modifier, 54.2 + regional_latitude_modifier],
+			[-135.67, 46.09],
+			[-100.45, 60.65],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -101,8 +98,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Central US',
 		type: 'Geobox',
 		coordinates: [
-			[-98.25 + regional_longitude_modifier, 38.5 - regional_latitude_modifier],
-			[-98.25 - regional_longitude_modifier, 38.5 + regional_latitude_modifier],
+			[-114.74, 30.1],
+			[-80.07, 45.28],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -110,8 +107,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'East Coast',
 		type: 'Geobox',
 		coordinates: [
-			[-75.75 + regional_longitude_modifier, 36.6 - regional_latitude_modifier],
-			[-75.75 - regional_longitude_modifier, 36.6 + regional_latitude_modifier],
+			[-93.13, 29.7],
+			[-56.98, 41.92],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -119,8 +116,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'East Pacific',
 		type: 'Geobox',
 		coordinates: [
-			[-126.0 + regional_longitude_modifier, 25.5 - regional_latitude_modifier],
-			[-126.0 - regional_longitude_modifier, 25.5 + regional_latitude_modifier],
+			[-140.68, 16.65],
+			[-110.37, 33.33],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -128,8 +125,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Gulf Coast',
 		type: 'Geobox',
 		coordinates: [
-			[-86.5 + regional_longitude_modifier, 24.24 - regional_latitude_modifier],
-			[-86.5 - regional_longitude_modifier, 24.24 + regional_latitude_modifier],
+			[-102.26, 16.31],
+			[-69.41, 30.8],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -137,8 +134,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Midwest',
 		type: 'Geobox',
 		coordinates: [
-			[-91.4 + regional_longitude_modifier, 40.0 - regional_latitude_modifier],
-			[-91.4 - regional_longitude_modifier, 40.0 + regional_latitude_modifier],
+			[-108.39, 32.15],
+			[-72.75, 46.23],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -146,8 +143,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'North Central US',
 		type: 'Geobox',
 		coordinates: [
-			[-98.0 + regional_longitude_modifier, 42.8 - regional_latitude_modifier],
-			[-98.0 - regional_longitude_modifier, 42.8 + regional_latitude_modifier],
+			[-114.95, 34.65],
+			[-79.26, 49.27],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -155,8 +152,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Northeast US',
 		type: 'Geobox',
 		coordinates: [
-			[-80.5 + regional_longitude_modifier, 42.58 - regional_latitude_modifier],
-			[-80.5 - regional_longitude_modifier, 42.58 + regional_latitude_modifier],
+			[-98.32, 35.6],
+			[-61.12, 47.92],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -164,8 +161,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'North Mexico',
 		type: 'Geobox',
 		coordinates: [
-			[-104.0 + regional_longitude_modifier, 26.0 - regional_latitude_modifier],
-			[-104.0 - regional_longitude_modifier, 26.0 + regional_latitude_modifier],
+			[-119.08, 16.85],
+			[-87.41, 33.81],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -173,8 +170,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Northwest US',
 		type: 'Geobox',
 		coordinates: [
-			[-110.0 + regional_longitude_modifier, 43.6 - regional_latitude_modifier],
-			[-110.0 - regional_longitude_modifier, 43.6 + regional_latitude_modifier],
+			[-126.36, 34.73],
+			[-91.72, 50.76],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -182,8 +179,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Northwest Atlantic',
 		type: 'Geobox',
 		coordinates: [
-			[-58.1 + regional_longitude_modifier, 43.8 - regional_latitude_modifier],
-			[-58.1 - regional_longitude_modifier, 43.8 + regional_latitude_modifier],
+			[-87.0, 31.0],
+			[-29.0, 55.0],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -191,8 +188,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Puerto Rico',
 		type: 'Geobox',
 		coordinates: [
-			[-67.81 + regional_longitude_modifier, 17.92 - regional_latitude_modifier],
-			[-67.81 - regional_longitude_modifier, 17.92 + regional_latitude_modifier],
+			[-76.25, 9.5],
+			[-59.5, 25.0],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -200,8 +197,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'South Central US',
 		type: 'Geobox',
 		coordinates: [
-			[-98.5 + regional_longitude_modifier, 33.5 - regional_latitude_modifier],
-			[-98.5 - regional_longitude_modifier, 33.5 + regional_latitude_modifier],
+			[-114.5, 24.89],
+			[-80.91, 40.59],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -209,8 +206,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Southeast US',
 		type: 'Geobox',
 		coordinates: [
-			[-84.5 + regional_longitude_modifier, 32.0 - regional_latitude_modifier],
-			[-84.5 - regional_longitude_modifier, 32.0 + regional_latitude_modifier],
+			[-101.03, 24.33],
+			[-66.54, 38.16],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -218,8 +215,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'South Mexico',
 		type: 'Geobox',
 		coordinates: [
-			[-101.0 + regional_longitude_modifier, 21.9 - regional_latitude_modifier],
-			[-101.0 - regional_longitude_modifier, 21.9 + regional_latitude_modifier],
+			[-115.91, 12.94],
+			[-84.67, 29.62],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -227,17 +224,17 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Southwest US',
 		type: 'Geobox',
 		coordinates: [
-			[-107.75 + regional_longitude_modifier, 36.5 - regional_latitude_modifier],
-			[-107.75 - regional_longitude_modifier, 36.5 + regional_latitude_modifier],
+			[-123.53, 27.38],
+			[-90.23, 44.04],
 		],
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_REGIONAL_W_NORTH_WEST_ID]: {
-		name: 'Northwest US',
+		name: 'Northwest Pacific Coast',
 		type: 'Geobox',
 		coordinates: [
-			[-125.0 + regional_longitude_modifier, 45.0 - regional_latitude_modifier],
-			[-125.0 - regional_longitude_modifier, 45.0 + regional_latitude_modifier],
+			[-142.0, 39.5],
+			[-108.5, 51.5],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -245,8 +242,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Southwest US',
 		type: 'Geobox',
 		coordinates: [
-			[-125.0 + regional_longitude_modifier, 37.0 - regional_latitude_modifier],
-			[-125.0 - regional_longitude_modifier, 37.0 + regional_latitude_modifier],
+			[-140.37, 28.7],
+			[-108.59, 44.08],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -254,8 +251,8 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 		name: 'Western Atlantic',
 		type: 'Geobox',
 		coordinates: [
-			[-67.2 + regional_longitude_modifier, 30.9 - regional_latitude_modifier],
-			[-67.2 - regional_longitude_modifier, 30.9 + regional_latitude_modifier],
+			[-96.0, 17.0],
+			[-38.0, 44.0],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -266,8 +263,8 @@ export const SATRAD_SECTORS_REGIONAL_ALASKA = {
 		name: 'Bering Sea',
 		type: 'Geobox',
 		coordinates: [
-			[-172.0 + regional_longitude_modifier, 59.0 - regional_latitude_modifier],
-			[-172.0 - regional_longitude_modifier, 59.0 + regional_latitude_modifier],
+			[-195.0, 51.0],
+			[-145.0, 64.75],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -275,8 +272,8 @@ export const SATRAD_SECTORS_REGIONAL_ALASKA = {
 		name: 'Gulf of Alaska',
 		type: 'Geobox',
 		coordinates: [
-			[-149.0 + regional_longitude_modifier, 54.5 - regional_latitude_modifier],
-			[-149.0 - regional_longitude_modifier, 54.5 + regional_latitude_modifier],
+			[-175.0, 47.75],
+			[-124.0, 60.0],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -286,8 +283,8 @@ export const SATRAD_SECTORS_REGIONAL_HAWAII = {
 		name: 'Hawaii',
 		type: 'Geobox',
 		coordinates: [
-			[-156.1 + regional_longitude_modifier, 20.5 - regional_latitude_modifier],
-			[-156.1 - regional_longitude_modifier, 20.5 + regional_latitude_modifier],
+			[-170.0, 11.0],
+			[-142.5, 29.0],
 		],
 		products: SATRAD_PRODUCTS,
 	},
