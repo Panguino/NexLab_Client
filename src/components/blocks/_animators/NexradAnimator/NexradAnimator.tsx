@@ -4,6 +4,7 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -19,6 +20,7 @@ interface NexradAnimatorProps {
 }
 
 const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
+	const { isMobile } = useIsMobile()
 	const { nexradProductId: productId, nexradSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
@@ -38,6 +40,10 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 		}
 		getData()
 	}, [siteId, productId, nexradNumberOfFrames])
+
+	useEffect(() => {
+		setNexradZoomFill(isMobile)
+	}, [isMobile, setNexradZoomFill])
 
 	return (
 		<>
@@ -71,7 +77,7 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 					</Tab>
 				</Tabs>
 			</div>
-			<MobileIconNav topRight />
+			<MobileIconNav tab />
 		</>
 	)
 }

@@ -1,10 +1,11 @@
 'use client'
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
+import { useRootStore } from '@/store/useRootStore'
 import { zoomState } from '@/types/general'
 import { faCompress, faExpand, faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import BasicPlaybackControls, { LoopMethod } from '../BasicPlaybackControls/BasicPlaybackControls'
 import Scrubber from '../Scrubber/Scrubber'
@@ -59,6 +60,7 @@ export const Animator = ({
 		console.warn('setZoomFill function not provided, zoom fill will not be updated.', zoomFill)
 	},
 }: IAnimatorProps) => {
+	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
 	const [currentFrame, setCurrentFrame] = useState(startFrame || frames.length - 1)
@@ -68,7 +70,11 @@ export const Animator = ({
 	const intervalRef = useRef<number | null>(null)
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
-	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }] = useDimensions(ratio, !zoomFill)
+	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }, updateDimensions] = useDimensions(ratio, !zoomFill)
+
+	useLayoutEffect(() => {
+		updateDimensions()
+	}, [updateDimensions, loadedFrames])
 
 	useEffect(() => {
 		if (loopMethod === LoopMethod.LeftToRight) {
@@ -147,16 +153,14 @@ export const Animator = ({
 
 	useEffect(() => {
 		const handleResize = () => {
-			if (transformRef.current) {
-				transformRef.current.resetTransform()
-			}
+			updateDimensions()
 		}
 
 		window.addEventListener('resize', handleResize)
 		return () => {
 			window.removeEventListener('resize', handleResize)
 		}
-	}, [])
+	}, [updateDimensions])
 
 	const allOverlayImages = useMemo(() => {
 		if (!overlays) return {}
@@ -201,7 +205,13 @@ export const Animator = ({
 	console.log('activeOverlays', activeOverlays)
 
 	return (
-		<div ref={animatorRef} className={styles.animator}>
+		<div
+			ref={animatorRef}
+			className={styles.animator}
+			onClick={() => {
+				closeMobileSidebarMenu()
+			}}
+		>
 			<TransformWrapper
 				ref={transformRef}
 				disablePadding

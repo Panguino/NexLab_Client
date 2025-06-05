@@ -3,6 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getSurfaceData } from '@/util/dataCalls/analysis/query-surface'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -17,6 +18,7 @@ interface SurfaceMapsAnimatorProps {
 }
 
 const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }) => {
+	const { isMobile } = useIsMobile()
 	const { surfaceProductId: productId, surfaceRegionId: regionId, surfaceSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const surfaceMapsNumberOfFrames = useRootStore.use.surfaceMapsNumberOfFrames()
@@ -35,6 +37,10 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 		}
 		getData()
 	}, [productId, regionId, siteId, surfaceMapsNumberOfFrames])
+
+	useEffect(() => {
+		setAnalysisZoomFill(isMobile)
+	}, [isMobile, setAnalysisZoomFill])
 
 	return (
 		<>
@@ -62,7 +68,7 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 					</Tab>
 				</Tabs>
 			</div>
-			<MobileIconNav topRight />
+			<MobileIconNav tab />
 		</>
 	)
 }

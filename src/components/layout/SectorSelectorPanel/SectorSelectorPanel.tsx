@@ -1,8 +1,12 @@
 'use client'
 
 import SectorSelector from '@/components/elements/SectorSelector/SectorSelector'
+import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
-import { useEffect, useRef } from 'react'
+import { faClose } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useEffect, useLayoutEffect, useRef } from 'react'
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import styles from './SectorSelectorPanel.module.scss'
 
 const SectorSelectorPanel = () => {
@@ -12,6 +16,7 @@ const SectorSelectorPanel = () => {
 	const sectorSelectorPanelIsOpen = useRootStore.use.sectorSelectorPanelIsOpen()
 	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
 	const onChangeSectorSelectorSectorHandler = useRootStore.use.onChangeSectorSelectorSectorHandler()
+	const [wrapperRef, { width, height, adjustedHeight, adjustedWidth }, updateDimensions] = useDimensions(10 / 7, false)
 
 	useEffect(() => {
 		const handleClickOutsideSectorSelector = (event) => {
@@ -23,17 +28,49 @@ const SectorSelectorPanel = () => {
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutsideSectorSelector)
 		}
-	}, [sectorSelectorPanelIsOpen, closeSectorSelectorPanel])
+	}, [sectorSelectorPanelIsOpen, closeSectorSelectorPanel, sectorSelectorRef])
+
+	useEffect(() => {
+		const handleResize = () => {
+			updateDimensions()
+		}
+
+		window.addEventListener('resize', handleResize)
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [updateDimensions])
+
+	useLayoutEffect(() => {
+		updateDimensions()
+	}, [updateDimensions, sectorSelectorPanelIsOpen])
 
 	return (
 		<>
 			{sectorSelectorPanelIsOpen && (
 				<div ref={sectorSelectorRef} className={styles.sectorSelectorPanel}>
-					<SectorSelector
-						sectors={sectorSelectorSectors}
-						d3config={sectorSelectorD3config}
-						onChange={onChangeSectorSelectorSectorHandler}
-					/>
+					<div ref={wrapperRef} className={styles.sectorSelectorPanelWrapper}>
+						<div className={styles.closeButton} onClick={closeSectorSelectorPanel}>
+							<FontAwesomeIcon icon={faClose} />
+						</div>
+						<TransformWrapper disablePadding doubleClick={{ disabled: true }} panning={{ velocityDisabled: true }} centerOnInit>
+							{() => (
+								<TransformComponent
+									wrapperStyle={{
+										width: width,
+										height: height,
+									}}
+									contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
+								>
+									<SectorSelector
+										sectors={sectorSelectorSectors}
+										d3config={sectorSelectorD3config}
+										onChange={onChangeSectorSelectorSectorHandler}
+									/>
+								</TransformComponent>
+							)}
+						</TransformWrapper>
+					</div>
 				</div>
 			)}
 		</>

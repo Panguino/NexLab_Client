@@ -3,6 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getIsentropicData } from '@/util/dataCalls/analysis/query-isentropic'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
@@ -17,6 +18,7 @@ interface IsentropicAnimatorProps {
 }
 
 const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) => {
+	const { isMobile } = useIsMobile()
 	const { isentropicProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const [ratio, setRatio] = useState(1)
@@ -34,6 +36,10 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 		}
 		getData()
 	}, [productId])
+
+	useEffect(() => {
+		setAnalysisZoomFill(isMobile)
+	}, [isMobile, setAnalysisZoomFill])
 
 	return (
 		<>
@@ -61,7 +67,7 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 					</Tab>
 				</Tabs>
 			</div>
-			<MobileIconNav topRight />
+			<MobileIconNav tab />
 		</>
 	)
 }

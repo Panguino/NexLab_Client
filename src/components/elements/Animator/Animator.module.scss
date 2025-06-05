@@ -22,6 +22,12 @@
   @media screen and (max-width: 700px) {
     width: 95%;
     gap: 10px;
+    flex-wrap: wrap;
+    & > div:first-child {
+      width: 100%;
+      min-width: 100%;
+      margin-bottom: -10px;
+    }
   }
 }
 .zoomControls {

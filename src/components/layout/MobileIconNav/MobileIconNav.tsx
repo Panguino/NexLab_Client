@@ -4,7 +4,7 @@ import { faSliders } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './MobileIconNav.module.scss'
 
-const MobileIconNav = ({ topRight = false }) => {
+const MobileIconNav = ({ topRight = false, tab = false }) => {
 	const toggleMobileSidebarMenu = useRootStore.use.toggleMobileSidebarMenu()
 	const iconNavItems = [
 		{
@@ -15,7 +15,7 @@ const MobileIconNav = ({ topRight = false }) => {
 		},
 	]
 	return (
-		<div className={`${styles.MobileIconNav} ${topRight ? styles.topRight : null}`}>
+		<div className={`${styles.MobileIconNav} ${topRight ? styles.topRight : null} ${tab ? styles.tab : null}`}>
 			{iconNavItems.map((item, index) => (
 				<div key={index} className={styles.icon} onClick={item.onClick}>
 					{item.icon}
