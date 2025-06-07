@@ -21,6 +21,10 @@ export interface ISatradSlice {
 	setActiveOverlays: (overlays: string[]) => void
 	satradZoomFill: boolean
 	setSatradZoomFill: (zoomFill: boolean) => void
+	satradDataRefreshInterval: number
+	satradDataRefreshActive: boolean
+	setSatradDataRefreshInterval: (interval: number) => void
+	setSatradDataRefreshActive: (active: boolean) => void
 }
 
 export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
@@ -41,4 +45,8 @@ export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
 		}),
 	satradZoomFill: false,
 	setSatradZoomFill: (zoomFill: boolean) => set(() => ({ satradZoomFill: zoomFill })),
+	satradDataRefreshInterval: 5,
+	setSatradDataRefreshInterval: (interval: number) => set(() => ({ satradDataRefreshInterval: interval })),
+	satradDataRefreshActive: true,
+	setSatradDataRefreshActive: (active: boolean) => set(() => ({ satradDataRefreshActive: active })),
 })

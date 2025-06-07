@@ -17,6 +17,10 @@ export interface INexradSlice {
 	resetNexradZoomState: () => void
 	nexradZoomFill: boolean
 	setNexradZoomFill: (zoomFill: boolean) => void
+	nexradDataRefreshInterval: number
+	nexradDataRefreshActive: boolean
+	setNexradDataRefreshInterval: (interval: number) => void
+	setNexradDataRefreshActive: (active: boolean) => void
 }
 
 export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
@@ -29,4 +33,8 @@ export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
 	resetNexradZoomState: () => set(() => ({ nexradZoomState: { ...defaultNexradZoomState } })),
 	nexradZoomFill: false,
 	setNexradZoomFill: (zoomFill: boolean) => set(() => ({ nexradZoomFill: zoomFill })),
+	nexradDataRefreshInterval: 5,
+	setNexradDataRefreshInterval: (interval: number) => set(() => ({ nexradDataRefreshInterval: interval })),
+	nexradDataRefreshActive: true,
+	setNexradDataRefreshActive: (active: boolean) => set(() => ({ nexradDataRefreshActive: active })),
 })

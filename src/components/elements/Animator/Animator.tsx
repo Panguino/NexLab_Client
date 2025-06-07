@@ -202,7 +202,7 @@ export const Animator = ({
 		// I know this is stupid, but it works
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState])
 
-	console.log('activeOverlays', activeOverlays)
+	//console.log('activeOverlays', activeOverlays)
 
 	return (
 		<div
