@@ -29,6 +29,8 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	const setNexradZoomState = useRootStore.use.setNexradZoomState()
 	const nexradZoomFill = useRootStore.use.nexradZoomFill()
 	const setNexradZoomFill = useRootStore.use.setNexradZoomFill()
+	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
+	const setNexradMapFullScreen = useRootStore.use.setNexradMapFullScreen()
 	const [ratio, setRatio] = useState(1)
 	const [nexradData, setNexradData] = useState([])
 
@@ -60,6 +62,8 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 						setZoomState={setNexradZoomState}
 						zoomFill={nexradZoomFill}
 						setZoomFill={setNexradZoomFill}
+						fullScreen={nexradMapFullScreen}
+						setFullScreen={setNexradMapFullScreen}
 						interval={1000 / nexradFrameRate}
 						settingsComponent={
 							<AnimatorSettings title="Settings">

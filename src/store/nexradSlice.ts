@@ -21,6 +21,8 @@ export interface INexradSlice {
 	nexradDataRefreshActive: boolean
 	setNexradDataRefreshInterval: (interval: number) => void
 	setNexradDataRefreshActive: (active: boolean) => void
+	nexradMapFullScreen: boolean
+	setNexradMapFullScreen: (fullScreen: boolean) => void
 }
 
 export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
@@ -37,4 +39,6 @@ export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
 	setNexradDataRefreshInterval: (interval: number) => set(() => ({ nexradDataRefreshInterval: interval })),
 	nexradDataRefreshActive: true,
 	setNexradDataRefreshActive: (active: boolean) => set(() => ({ nexradDataRefreshActive: active })),
+	nexradMapFullScreen: false,
+	setNexradMapFullScreen: (fullScreen) => set({ nexradMapFullScreen: fullScreen }),
 })

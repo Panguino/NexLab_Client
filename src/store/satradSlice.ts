@@ -25,6 +25,8 @@ export interface ISatradSlice {
 	satradDataRefreshActive: boolean
 	setSatradDataRefreshInterval: (interval: number) => void
 	setSatradDataRefreshActive: (active: boolean) => void
+	satradMapFullScreen: boolean
+	setSatradMapFullScreen: (fullScreen: boolean) => void
 }
 
 export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
@@ -49,4 +51,6 @@ export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
 	setSatradDataRefreshInterval: (interval: number) => set(() => ({ satradDataRefreshInterval: interval })),
 	satradDataRefreshActive: true,
 	setSatradDataRefreshActive: (active: boolean) => set(() => ({ satradDataRefreshActive: active })),
+	satradMapFullScreen: false,
+	setSatradMapFullScreen: (fullScreen) => set({ satradMapFullScreen: fullScreen }),
 })
