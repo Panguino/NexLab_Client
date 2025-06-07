@@ -10,7 +10,7 @@ import { getSatradData } from '@/util/dataCalls/satrad/query-satrad'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import SatradAnimatorSettings from '../../_animatorSettingPanels/SatradAnimatorSettings/SatradAnimatorSettings'
 import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import styles from './SatradAnimator.module.scss'
@@ -32,21 +32,26 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	const setSatradZoomState = useRootStore.use.setSatradZoomState()
 	const satradZoomFill = useRootStore.use.satradZoomFill()
 	const setSatradZoomFill = useRootStore.use.setSatradZoomFill()
+	const satradMapFullScreen = useRootStore.use.satradMapFullScreen()
+	const setSatradMapFullScreen = useRootStore.use.setSatradMapFullScreen()
 	const [ratio, setRatio] = useState(1)
 	const [satradData, setSatradData] = useState([])
 	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
 
-	useEffect(() => {
-		async function getData() {
-			const regionIdStr = Array.isArray(regionId) ? regionId[0] : regionId
-			const scaleId = regionIdStr.split('-')[0] // regionId is a combo of scale and "map region", query only requires scale
-			const data = await getSatradData(scaleId, sectorId, productId, satradNumberOfFrames, satradFrameStep)
-			setRatio(data.imageInfo.width / data.imageInfo.height)
-			setSatradData(data.frames)
-			setSatradOverlays(data.overlays)
-		}
-		getData()
+	const getData = useCallback(async () => {
+		console.log('SatradAnimator: Fetching data')
+		const regionIdStr = Array.isArray(regionId) ? regionId[0] : regionId
+		const scaleId = regionIdStr.split('-')[0] // regionId is a combo of scale and "map region", query only requires scale
+		const data = await getSatradData(scaleId, sectorId, productId, satradNumberOfFrames, satradFrameStep)
+		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setSatradData(data.frames)
+		setSatradOverlays(data.overlays)
+		console.log('SatradAnimator: data fetched')
 	}, [sectorId, productId, regionId, satradNumberOfFrames, satradFrameStep])
+
+	useEffect(() => {
+		getData()
+	}, [sectorId, productId, regionId, satradNumberOfFrames, satradFrameStep, getData])
 
 	useEffect(() => {
 		setSatradZoomFill(isMobile)
@@ -68,9 +73,11 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 						setActiveOverlays={setActiveOverlays}
 						zoomFill={satradZoomFill}
 						setZoomFill={setSatradZoomFill}
+						fullScreen={satradMapFullScreen}
+						setFullScreen={setSatradMapFullScreen}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
-								<SatradAnimatorSettings />
+								<SatradAnimatorSettings refreshData={getData} />
 							</AnimatorSettings>
 						}
 					/>

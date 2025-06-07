@@ -9,7 +9,9 @@ interface SubNavigationProps {
 
 const SubNavigation = ({ children }: SubNavigationProps) => {
 	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
-	const hideSubNavigation = hazardMapFullScreen
+	const satradMapFullScreen = useRootStore.use.satradMapFullScreen()
+	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
+	const hideSubNavigation = hazardMapFullScreen || satradMapFullScreen || nexradMapFullScreen
 	return (
 		<>
 			<div className={`SubNavigation ${styles.SubNavigation} ${hideSubNavigation ? styles.hide : ''}`}>

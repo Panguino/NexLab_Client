@@ -10,7 +10,7 @@ import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import NexradAnimatorSettings from '../../_animatorSettingPanels/NexradAnimatorSettings/NexradAnimatorSettings'
 import styles from './NexradAnimator.module.scss'
@@ -29,17 +29,22 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	const setNexradZoomState = useRootStore.use.setNexradZoomState()
 	const nexradZoomFill = useRootStore.use.nexradZoomFill()
 	const setNexradZoomFill = useRootStore.use.setNexradZoomFill()
+	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
+	const setNexradMapFullScreen = useRootStore.use.setNexradMapFullScreen()
 	const [ratio, setRatio] = useState(1)
 	const [nexradData, setNexradData] = useState([])
 
+	const getData = useCallback(async () => {
+		console.log('NexradAnimator: Fetching data')
+		const data = await getNexradData(siteId, productId, nexradNumberOfFrames)
+		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setNexradData(data.frames)
+		console.log('NexradAnimator: data fetched')
+	}, [siteId, productId, nexradNumberOfFrames, setRatio, setNexradData])
+
 	useEffect(() => {
-		async function getData() {
-			const data = await getNexradData(siteId, productId, nexradNumberOfFrames)
-			setRatio(data.imageInfo.width / data.imageInfo.height)
-			setNexradData(data.frames)
-		}
 		getData()
-	}, [siteId, productId, nexradNumberOfFrames])
+	}, [siteId, productId, nexradNumberOfFrames, getData])
 
 	useEffect(() => {
 		setNexradZoomFill(isMobile)
@@ -57,10 +62,12 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 						setZoomState={setNexradZoomState}
 						zoomFill={nexradZoomFill}
 						setZoomFill={setNexradZoomFill}
+						fullScreen={nexradMapFullScreen}
+						setFullScreen={setNexradMapFullScreen}
 						interval={1000 / nexradFrameRate}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
-								<NexradAnimatorSettings />
+								<NexradAnimatorSettings refreshData={getData} />
 							</AnimatorSettings>
 						}
 					/>

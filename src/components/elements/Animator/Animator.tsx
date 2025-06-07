@@ -3,7 +3,16 @@ import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
 import { useRootStore } from '@/store/useRootStore'
 import { zoomState } from '@/types/general'
-import { faCompress, faExpand, faLayerGroup, faSearchMinus, faSearchPlus, faUndo } from '@fortawesome/free-solid-svg-icons'
+import {
+	faCompress,
+	faDownLeftAndUpRightToCenter,
+	faExpand,
+	faLayerGroup,
+	faSearchMinus,
+	faSearchPlus,
+	faUndo,
+	faUpRightAndDownLeftFromCenter,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
@@ -34,6 +43,8 @@ interface IAnimatorProps {
 	setActiveOverlays?: (overlays: string[]) => void
 	setZoomFill?: (zoomFill: boolean) => void
 	zoomFill?: boolean
+	fullScreen?: boolean
+	setFullScreen?: (fullScreen: boolean) => void
 }
 
 export const Animator = ({
@@ -50,6 +61,7 @@ export const Animator = ({
 	settingsComponent = null,
 	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
 	activeOverlays = ['data', 'map'],
+	fullScreen = false,
 	setActiveOverlays = (overlays: string[]) => {
 		console.warn('setActiveOverlays function not provided, active overlays will not be updated.', overlays)
 	},
@@ -58,6 +70,9 @@ export const Animator = ({
 	},
 	setZoomFill = (zoomFill: boolean) => {
 		console.warn('setZoomFill function not provided, zoom fill will not be updated.', zoomFill)
+	},
+	setFullScreen = (fullScreen: boolean) => {
+		console.warn('setFullScreen function not provided, full screen state will not be updated.', fullScreen)
 	},
 }: IAnimatorProps) => {
 	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
@@ -177,9 +192,11 @@ export const Animator = ({
 	}, [overlays])
 
 	const expandToggle = () => {
-		// zooming out when changing modes
-		transformRef.current.zoomOut(15, 0)
 		setZoomFill(!zoomFill)
+	}
+
+	const fullScreenToggle = () => {
+		setFullScreen(!fullScreen)
 	}
 
 	const handleZoomChange = (e: any) => {
@@ -200,9 +217,9 @@ export const Animator = ({
 			transformRef.current.setTransform(initialZoomState.positionX, initialZoomState.positionY, initialZoomState.scale, 0)
 		}
 		// I know this is stupid, but it works
-	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState])
+	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
 
-	console.log('activeOverlays', activeOverlays)
+	//console.log('activeOverlays', activeOverlays)
 
 	return (
 		<div
@@ -279,6 +296,9 @@ export const Animator = ({
 								</button>
 								<button onClick={() => expandToggle()}>
 									<FontAwesomeIcon icon={zoomFill ? faCompress : faExpand} />
+								</button>
+								<button onClick={() => fullScreenToggle()}>
+									<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
 								</button>
 							</div>
 						)}
