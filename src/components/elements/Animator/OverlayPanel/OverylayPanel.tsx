@@ -42,6 +42,11 @@ export const OverlayPanel = ({ onClose, overlays, activeOverlays, setActiveOverl
 			</div>
 			{Object.entries(ALL_SATRAD_OVERLAY_GROUPS).map(([key, { name, overlays }]) => {
 				const open = groupOpen === key
+				const nameSortedOverlays = [...overlays].sort((a, b) => {
+					const nameA = SATRAD_OVERLAYS[a]?.name?.toLowerCase() ?? ''
+					const nameB = SATRAD_OVERLAYS[b]?.name?.toLowerCase() ?? ''
+					return nameA.localeCompare(nameB)
+				})
 				return (
 					<div key={key} className={styles.overlayGroup}>
 						<div
@@ -56,7 +61,7 @@ export const OverlayPanel = ({ onClose, overlays, activeOverlays, setActiveOverl
 							</motion.div>
 						</div>
 						<motion.div animate={{ height: open ? 'auto' : 0 }} className={styles.overlayItems}>
-							{overlays.map((overlayId, index) => {
+							{nameSortedOverlays.map((overlayId, index) => {
 								if (!flattenedOverlays.includes(overlayId)) {
 									return null
 								}
