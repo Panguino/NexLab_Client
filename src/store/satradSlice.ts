@@ -27,6 +27,10 @@ export interface ISatradSlice {
 	setSatradDataRefreshActive: (active: boolean) => void
 	satradMapFullScreen: boolean
 	setSatradMapFullScreen: (fullScreen: boolean) => void
+	satradLastFrameDwell: boolean
+	setSatradLastFrameDwell: (dwell: boolean) => void
+	satradLastFrameDwellTime?: number
+	setSatradLastFrameDwellTime?: (dwellTime: number) => void
 }
 
 export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
@@ -53,4 +57,8 @@ export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
 	setSatradDataRefreshActive: (active: boolean) => set(() => ({ satradDataRefreshActive: active })),
 	satradMapFullScreen: false,
 	setSatradMapFullScreen: (fullScreen) => set({ satradMapFullScreen: fullScreen }),
+	satradLastFrameDwell: true,
+	setSatradLastFrameDwell: (dwell: boolean) => set(() => ({ satradLastFrameDwell: dwell })),
+	satradLastFrameDwellTime: 1,
+	setSatradLastFrameDwellTime: (dwellTime: number) => set(() => ({ satradLastFrameDwellTime: dwellTime })),
 })
