@@ -36,6 +36,8 @@ interface IAnimatorProps {
 	autoPlay?: boolean
 	disableZoom?: boolean
 	interval?: number
+	lastFrameDwell?: boolean
+	lastFrameDwellTime?: number
 	settingsComponent?: React.ReactNode | null
 	initialZoomState?: zoomState
 	setZoomState?: (zoomState: zoomState) => void
@@ -53,6 +55,8 @@ export const Animator = ({
 	overlays,
 	ratio = 1,
 	interval = 200,
+	lastFrameDwell = true,
+	lastFrameDwellTime = 1000,
 	hideControls = false,
 	autoPlay = false,
 	disableZoom = false,
@@ -107,6 +111,17 @@ export const Animator = ({
 
 	useEffect(() => {
 		if (isPlaying) {
+			const calculateInterval = () => {
+				if (lastFrameDwell && currentFrame === loadedFrames.length - 1) {
+					return lastFrameDwellTime
+				}
+				return interval
+			}
+
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current)
+			}
+
 			intervalRef.current = window.setInterval(() => {
 				setCurrentFrame((prevFrame) => {
 					const nextFrame = (prevFrame + 1 * playDirection) % loadedFrames.length
@@ -115,18 +130,23 @@ export const Animator = ({
 					}
 					return nextFrame
 				})
-			}, interval)
+
+				clearInterval(intervalRef.current)
+				intervalRef.current = window.setInterval(() => {
+					setCurrentFrame((prevFrame) => {
+						const nextFrame = (prevFrame + 1 * playDirection) % loadedFrames.length
+						if (nextFrame < 0) {
+							return loadedFrames.length - 1
+						}
+						return nextFrame
+					})
+				}, calculateInterval())
+			}, calculateInterval())
 		} else if (intervalRef.current) {
 			clearInterval(intervalRef.current)
 			intervalRef.current = null
 		}
-
-		return () => {
-			if (intervalRef.current) {
-				clearInterval(intervalRef.current)
-			}
-		}
-	}, [isPlaying, interval, loadedFrames.length, playDirection])
+	}, [isPlaying, playDirection, interval, lastFrameDwellTime, lastFrameDwell, currentFrame, loadedFrames.length])
 
 	const playPause = () => {
 		if (isPlaying) {
