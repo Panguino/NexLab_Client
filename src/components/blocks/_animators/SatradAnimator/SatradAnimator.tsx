@@ -34,6 +34,8 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	const setSatradZoomFill = useRootStore.use.setSatradZoomFill()
 	const satradMapFullScreen = useRootStore.use.satradMapFullScreen()
 	const setSatradMapFullScreen = useRootStore.use.setSatradMapFullScreen()
+	const satradLastFrameDwell = useRootStore.use.satradLastFrameDwell()
+	const satradLastFrameDwellTime = useRootStore.use.satradLastFrameDwellTime()
 	const [ratio, setRatio] = useState(1)
 	const [satradData, setSatradData] = useState([])
 	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
@@ -71,6 +73,8 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 						setZoomState={setSatradZoomState}
 						activeOverlays={activeOverlays}
 						setActiveOverlays={setActiveOverlays}
+						lastFrameDwell={satradLastFrameDwell}
+						lastFrameDwellTime={satradLastFrameDwellTime * 1000}
 						zoomFill={satradZoomFill}
 						setZoomFill={setSatradZoomFill}
 						fullScreen={satradMapFullScreen}

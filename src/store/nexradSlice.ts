@@ -23,6 +23,10 @@ export interface INexradSlice {
 	setNexradDataRefreshActive: (active: boolean) => void
 	nexradMapFullScreen: boolean
 	setNexradMapFullScreen: (fullScreen: boolean) => void
+	nexradLastFrameDwell: boolean
+	setNexradLastFrameDwell: (dwell: boolean) => void
+	nexradLastFrameDwellTime?: number
+	setNexradLastFrameDwellTime?: (dwellTime: number) => void
 }
 
 export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
@@ -41,4 +45,8 @@ export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
 	setNexradDataRefreshActive: (active: boolean) => set(() => ({ nexradDataRefreshActive: active })),
 	nexradMapFullScreen: false,
 	setNexradMapFullScreen: (fullScreen) => set({ nexradMapFullScreen: fullScreen }),
+	nexradLastFrameDwell: true,
+	setNexradLastFrameDwell: (dwell: boolean) => set(() => ({ nexradLastFrameDwell: dwell })),
+	nexradLastFrameDwellTime: 1,
+	setNexradLastFrameDwellTime: (dwellTime: number) => set(() => ({ nexradLastFrameDwellTime: dwellTime })),
 })
