@@ -46,7 +46,7 @@ const SatradAnimatorSettings = ({ refreshData }) => {
 			</div>
 			<div className={styles.group}>
 				<b>{satradLastFrameDwellTime} sec</b>
-				<RangeInput minValue={0.1} maxValue={2} value={satradLastFrameDwellTime} unitStep={0.1} onChange={setSatradLastFrameDwellTime} />
+				<RangeInput minValue={0.1} maxValue={5} value={satradLastFrameDwellTime} unitStep={0.1} onChange={setSatradLastFrameDwellTime} />
 			</div>
 			<p>Refresh Settings</p>
 			<div className={styles.padding}>

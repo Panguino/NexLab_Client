@@ -46,7 +46,7 @@ const NexradAnimatorSettings = ({ refreshData }) => {
 			</div>
 			<div className={styles.group}>
 				<b>{nexradLastFrameDwellTime} sec</b>
-				<RangeInput minValue={0.1} maxValue={2} value={nexradLastFrameDwellTime} unitStep={0.1} onChange={setNexradLastFrameDwellTime} />
+				<RangeInput minValue={0.1} maxValue={5} value={nexradLastFrameDwellTime} unitStep={0.1} onChange={setNexradLastFrameDwellTime} />
 			</div>
 			<p>Refresh Settings</p>
 			<div className={styles.padding}>
