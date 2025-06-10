@@ -10,7 +10,9 @@ import styles from './Navigation.module.scss'
 
 const Navigation = ({ mobileMenuItems }) => {
 	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
-	const hideNavigation = hazardMapFullScreen
+	const satradMapFullScreen = useRootStore.use.satradMapFullScreen()
+	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
+	const hideNavigation = hazardMapFullScreen || satradMapFullScreen || nexradMapFullScreen
 
 	return (
 		<>

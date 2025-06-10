@@ -12,9 +12,11 @@ interface SidebarNavigationProps {
 const SidebarNavigation = ({ children }: SidebarNavigationProps) => {
 	const { isMobile } = useIsMobile()
 	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
+	const satradMapFullScreen = useRootStore.use.satradMapFullScreen()
+	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
 	const mobileSidebarMenuIsOpen = useRootStore.use.mobileSidebarMenuIsOpen()
 	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
-	const hideSidebar = hazardMapFullScreen
+	const hideSidebar = hazardMapFullScreen || satradMapFullScreen || nexradMapFullScreen
 	const pathname = usePathname()
 
 	useEffect(() => {
