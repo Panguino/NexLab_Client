@@ -5,6 +5,7 @@ import RangeInput from '@/components/elements/RangeInput/RangeInput'
 import { useIntervalWithCountdown } from '@/hooks/useIntervalWithCountdown'
 import { useRootStore } from '@/store/useRootStore'
 import { formatTimeMstoMinutesAndSeconds } from '@/util/time'
+import { useState } from 'react'
 import styles from '../AnimatorSettings.module.scss'
 
 const SatradAnimatorSettings = ({ refreshData }) => {
@@ -20,6 +21,7 @@ const SatradAnimatorSettings = ({ refreshData }) => {
 	const satradDataRefreshInterval = useRootStore.use.satradDataRefreshInterval()
 	const setSatradDataRefreshInterval = useRootStore.use.setSatradDataRefreshInterval()
 	const setSatradDataRefreshActive = useRootStore.use.setSatradDataRefreshActive()
+	const [displayNumberOfFrames, setDisplayNumberOfFrames] = useState(satradNumberOfFrames)
 
 	const refreshAlertData = async () => {
 		if (satradDataRefreshActive && refreshData) {
@@ -32,8 +34,14 @@ const SatradAnimatorSettings = ({ refreshData }) => {
 		<div className={styles.animatorSettings}>
 			<p>Number Of Frames (1-200)</p>
 			<div className={styles.group}>
-				<b>{satradNumberOfFrames}</b>
-				<RangeInput minValue={1} maxValue={200} value={satradNumberOfFrames} onChangeEnd={(value) => setSatradNumberOfFrames(value)} />
+				<b>{displayNumberOfFrames}</b>
+				<RangeInput
+					minValue={1}
+					maxValue={200}
+					value={satradNumberOfFrames}
+					onChange={(value) => setDisplayNumberOfFrames(value)}
+					onChangeEnd={(value) => setSatradNumberOfFrames(value)}
+				/>
 			</div>
 			<p>Animation Speed (slow/fast)</p>
 			<div className={styles.group}>
