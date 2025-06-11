@@ -25,6 +25,7 @@
     width: 95%;
     gap: 10px;
     flex-wrap: wrap;
+    justify-content: space-between;
     & > div:first-child {
       width: 100%;
       min-width: 100%;
