@@ -113,6 +113,8 @@ export const FORECAST_PRODUCT_HAILSWSFC_ID = 'hailswsfc'
 export const FORECAST_PRODUCT_HAILSWCLM_ID = 'hailswclm'
 export const FORECAST_PRODUCT_HAILSIG01_ID = 'hailswsig01'
 
+export const DEFAULT_FORECAST_PRODUCT = FORECAST_PRODUCT_TEMP_ID
+
 export const FORECAST_PRODUCTS = {
 	[FORECAST_PRODUCT_SHEAR_ID]: { name: 'Bulk Shear (H5-SFC BWD)' },
 	[FORECAST_PRODUCT_UPDRAFT_HELICITY_ID]: { name: 'Updraft Helicity' },
