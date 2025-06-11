@@ -38,9 +38,12 @@ const SatradAnimatorSettings = ({ refreshData }) => {
 				<RangeInput
 					minValue={1}
 					maxValue={200}
-					value={satradNumberOfFrames}
+					value={displayNumberOfFrames}
 					onChange={(value) => setDisplayNumberOfFrames(value)}
-					onChangeEnd={(value) => setSatradNumberOfFrames(value)}
+					onChangeEnd={(value) => {
+						setDisplayNumberOfFrames(value)
+						setSatradNumberOfFrames(value)
+					}}
 				/>
 			</div>
 			<p>Animation Speed (slow/fast)</p>
