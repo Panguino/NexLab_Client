@@ -26,7 +26,7 @@ const AnimatorSettings = ({ title, children }) => {
 			<FloatingInfoPanel
 				className={styles.AnimatorSettingsPanel}
 				title={title}
-				style={{ visibility: open ? 'visible' : 'hidden' }}
+				style={{ visibility: open ? 'visible' : 'hidden', opacity: open ? 1 : 0 }}
 				onClose={() => {
 					setOpen(false)
 				}}
