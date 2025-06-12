@@ -25,9 +25,10 @@ export const FORECAST_SECTOR_FLOAT_ONE_ID = 'FLT1'
 export const FORECAST_SECTOR_FLOAT_TWO_ID = 'FLT2'
 export const FORECAST_SECTOR_FLOAT_THREE_ID = 'FLT3'
 
+export const DEFAULT_FORECAST_SECTOR = FORECAST_SECTOR_US_ID
+
 export const FORECAST_SECTORS = {
 	[FORECAST_SECTOR_US_ID]: {
-		id: 'US',
 		name: 'Continental U.S.',
 		type: 'Geobox',
 		coordinates: [
@@ -37,7 +38,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['MW'],
 	},
 	[FORECAST_SECTOR_NORTH_AMERICA_ID]: {
-		id: 'NA',
 		name: 'North America',
 		type: 'Geobox',
 		coordinates: [
@@ -47,7 +47,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['US', 'MW'],
 	},
 	[FORECAST_SECTOR_WORLD_ID]: {
-		id: 'WLD',
 		name: 'World',
 		type: 'Geobox',
 		coordinates: [
@@ -57,7 +56,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['NA'],
 	},
 	[FORECAST_SECTOR_ATLANTIC_OCEAN_ID]: {
-		id: 'AO',
 		name: 'Atlantic Ocean',
 		type: 'Geobox',
 		coordinates: [
@@ -67,7 +65,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['NA'],
 	},
 	[FORECAST_SECTOR_PACIFIC_OCEAN_ID]: {
-		id: 'PO',
 		name: 'Pacific Ocean',
 		type: 'Geobox',
 		coordinates: [
@@ -77,7 +74,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['NA'],
 	},
 	[FORECAST_SECTOR_CANADA_ID]: {
-		id: 'CA',
 		name: 'Canada',
 		type: 'Geobox',
 		coordinates: [
@@ -87,7 +83,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['WCAN', 'NA'],
 	},
 	[FORECAST_SECTOR_WESTERN_CANADA_ID]: {
-		id: 'WCAN',
 		name: 'Western Canada',
 		type: 'Geobox',
 		coordinates: [
@@ -97,7 +92,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['NW', 'US', 'NA'],
 	},
 	[FORECAST_SECTOR_ALASKA_ID]: {
-		id: 'AK',
 		name: 'Alaska',
 		type: 'Geobox',
 		coordinates: [
@@ -107,7 +101,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['WCAN', 'NA'],
 	},
 	[FORECAST_SECTOR_NORTHWEST_ID]: {
-		id: 'NW',
 		name: 'Northwest',
 		type: 'Geobox',
 		coordinates: [
@@ -117,7 +110,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['NA'],
 	},
 	[FORECAST_SECTOR_SOUTHWEST_ID]: {
-		id: 'SW',
 		name: 'Southwest',
 		type: 'Geobox',
 		coordinates: [
@@ -127,7 +119,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['GBSN', 'NA'],
 	},
 	[FORECAST_SECTOR_SOUTHEAST_ID]: {
-		id: 'SE',
 		name: 'Southeast',
 		type: 'Geobox',
 		coordinates: [
@@ -137,7 +128,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['MA'],
 	},
 	[FORECAST_SECTOR_NORTHEAST_ID]: {
-		id: 'NE',
 		name: 'Northeast',
 		type: 'Geobox',
 		coordinates: [
@@ -147,7 +137,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['US'],
 	},
 	[FORECAST_SECTOR_GREAT_BASIN_ID]: {
-		id: 'GBSN',
 		name: 'Great Basin',
 		type: 'Geobox',
 		coordinates: [
@@ -157,7 +146,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['SW', 'NA'],
 	},
 	[FORECAST_SECTOR_MID_ATLANTIC_ID]: {
-		id: 'MA',
 		name: 'Mid-Atlantic',
 		type: 'Geobox',
 		coordinates: [
@@ -167,7 +155,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['US'],
 	},
 	[FORECAST_SECTOR_GREAT_LAKES_ID]: {
-		id: 'GL',
 		name: 'Great Lakes',
 		type: 'Geobox',
 		coordinates: [
@@ -177,7 +164,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['MW'],
 	},
 	[FORECAST_SECTOR_MIDWEST_ID]: {
-		id: 'MW',
 		name: 'Midwest',
 		type: 'Geobox',
 		coordinates: [
@@ -187,7 +173,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['US'],
 	},
 	[FORECAST_SECTOR_NORTHERN_GREAT_PLAINS_ID]: {
-		id: 'NGP',
 		name: 'Northern Great Plains',
 		type: 'Geobox',
 		coordinates: [
@@ -197,7 +182,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['US'],
 	},
 	[FORECAST_SECTOR_CENTRAL_GREAT_PLAINS_ID]: {
-		id: 'CGP',
 		name: 'Central Great Plains',
 		type: 'Geobox',
 		coordinates: [
@@ -207,7 +191,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['US'],
 	},
 	[FORECAST_SECTOR_SOUTHERN_GREAT_PLAINS_ID]: {
-		id: 'SGP',
 		name: 'Southern Great Plains',
 		type: 'Geobox',
 		coordinates: [
@@ -217,7 +200,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['CGP'],
 	},
 	[FORECAST_SECTOR_NORTHERN_ILLINOIS_ID]: {
-		id: 'NIL',
 		name: 'Northern Illinois',
 		type: 'Geobox',
 		coordinates: [
@@ -227,7 +209,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['MW'],
 	},
 	[FORECAST_SECTOR_DENVER_ID]: {
-		id: 'DEN',
 		name: 'Denver, CO',
 		type: 'Geobox',
 		coordinates: [
@@ -237,7 +218,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['CGP'],
 	},
 	[FORECAST_SECTOR_OKLAHOMA_CITY_ID]: {
-		id: 'OKC',
 		name: 'Oklahoma City, OK',
 		type: 'Geobox',
 		coordinates: [
@@ -247,7 +227,6 @@ export const FORECAST_SECTORS = {
 		alternateSectors: ['SGP'],
 	},
 	[FORECAST_SECTOR_DUGWAY_ID]: {
-		id: 'DPG',
 		name: 'Dugway (KDPG)',
 		type: 'Geobox',
 		coordinates: [
@@ -256,36 +235,33 @@ export const FORECAST_SECTORS = {
 		],
 		alternateSectors: ['GBSN', 'SW'],
 	},
-	[FORECAST_SECTOR_FLOAT_ONE_ID]: {
-		id: 'FLT1',
-		name: 'FLOAT 1',
-		type: 'Geobox',
-		coordinates: [
-			[0, 0],
-			[0, 0],
-		], // Replace with actual values if needed
-		alternateSectors: ['MW'],
-	},
-	[FORECAST_SECTOR_FLOAT_TWO_ID]: {
-		id: 'FLT2',
-		name: 'FLOAT 2',
-		type: 'Geobox',
-		coordinates: [
-			[0, 0],
-			[0, 0],
-		], // Replace with actual values if needed
-		alternateSectors: ['MW'],
-	},
-	[FORECAST_SECTOR_FLOAT_THREE_ID]: {
-		id: 'FLT3',
-		name: 'ICECHIP',
-		type: 'Geobox',
-		coordinates: [
-			[0, 0],
-			[0, 0],
-		], // Replace with actual values if needed
-		alternateSectors: ['MW'],
-	},
+	// [FORECAST_SECTOR_FLOAT_ONE_ID]: {
+	// 	name: 'FLOAT 1',
+	// 	type: 'Geobox',
+	// 	coordinates: [
+	// 		[0, 0],
+	// 		[0, 0],
+	// 	], // Replace with actual values if needed
+	// 	alternateSectors: ['MW'],
+	// },
+	// [FORECAST_SECTOR_FLOAT_TWO_ID]: {
+	// 	name: 'FLOAT 2',
+	// 	type: 'Geobox',
+	// 	coordinates: [
+	// 		[0, 0],
+	// 		[0, 0],
+	// 	], // Replace with actual values if needed
+	// 	alternateSectors: ['MW'],
+	// },
+	// [FORECAST_SECTOR_FLOAT_THREE_ID]: {
+	// 	name: 'ICECHIP',
+	// 	type: 'Geobox',
+	// 	coordinates: [
+	// 		[0, 0],
+	// 		[0, 0],
+	// 	], // Replace with actual values if needed
+	// 	alternateSectors: ['MW'],
+	// },
 }
 
 export const ALL_FORECAST_SECTORS = Object.keys(FORECAST_SECTORS).map((sectorId) => sectorId)
