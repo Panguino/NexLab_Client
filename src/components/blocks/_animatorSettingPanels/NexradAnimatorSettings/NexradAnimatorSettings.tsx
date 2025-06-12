@@ -5,6 +5,7 @@ import RangeInput from '@/components/elements/RangeInput/RangeInput'
 import { useIntervalWithCountdown } from '@/hooks/useIntervalWithCountdown'
 import { useRootStore } from '@/store/useRootStore'
 import { formatTimeMstoMinutesAndSeconds } from '@/util/time'
+import { useState } from 'react'
 import styles from '../AnimatorSettings.module.scss'
 
 const NexradAnimatorSettings = ({ refreshData }) => {
@@ -20,6 +21,7 @@ const NexradAnimatorSettings = ({ refreshData }) => {
 	const nexradDataRefreshInterval = useRootStore.use.nexradDataRefreshInterval()
 	const setNexradDataRefreshInterval = useRootStore.use.setNexradDataRefreshInterval()
 	const setNexradDataRefreshActive = useRootStore.use.setNexradDataRefreshActive()
+	const [displayNumberOfFrames, setDisplayNumberOfFrames] = useState(nexradNumberOfFrames)
 
 	const refreshAlertData = async () => {
 		if (nexradDataRefreshActive && refreshData) {
@@ -32,8 +34,17 @@ const NexradAnimatorSettings = ({ refreshData }) => {
 		<div className={styles.animatorSettings}>
 			<p>Number Of Frames (1-200)</p>
 			<div className={styles.group}>
-				<b>{nexradNumberOfFrames}</b>
-				<RangeInput minValue={1} maxValue={200} value={nexradNumberOfFrames} onChangeEnd={(value) => setNexradNumberOfFrames(value)} />
+				<b>{displayNumberOfFrames}</b>
+				<RangeInput
+					minValue={1}
+					maxValue={200}
+					value={displayNumberOfFrames}
+					onChange={(value) => setDisplayNumberOfFrames(value)}
+					onChangeEnd={(value) => {
+						setDisplayNumberOfFrames(value)
+						setNexradNumberOfFrames(value)
+					}}
+				/>
 			</div>
 			<p>Animation Speed (slow/fast)</p>
 			<div className={styles.group}>

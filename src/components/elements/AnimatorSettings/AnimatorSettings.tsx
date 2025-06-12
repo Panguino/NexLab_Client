@@ -23,17 +23,16 @@ const AnimatorSettings = ({ title, children }) => {
 					style={{ pointerEvents: open ? 'none' : 'auto' }} // fix issue with "click outside to close" floating panel
 				/>
 			</div>
-			{open && (
-				<FloatingInfoPanel
-					className={styles.AnimatorSettingsPanel}
-					title={title}
-					onClose={() => {
-						setOpen(false)
-					}}
-				>
-					{children}
-				</FloatingInfoPanel>
-			)}
+			<FloatingInfoPanel
+				className={styles.AnimatorSettingsPanel}
+				title={title}
+				style={{ visibility: open ? 'visible' : 'hidden', opacity: open ? 1 : 0 }}
+				onClose={() => {
+					setOpen(false)
+				}}
+			>
+				{children}
+			</FloatingInfoPanel>
 		</div>
 	)
 }

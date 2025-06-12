@@ -8,9 +8,10 @@ interface FloatingInfoPanelProps {
 	onClose: () => void
 	children: React.ReactNode
 	className?: string
+	style?: React.CSSProperties
 }
 
-export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({ title, onClose, children, className }) => {
+export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({ title, onClose, children, className, style }) => {
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if ((event.target as HTMLElement).closest(`.${styles.floatingInfoPanel}`) === null) {
@@ -25,7 +26,7 @@ export const FloatingInfoPanel: React.FC<FloatingInfoPanelProps> = ({ title, onC
 	}, [onClose])
 
 	return (
-		<div className={`${className || ''} ${styles.floatingInfoPanel}`}>
+		<div className={`${className || ''} ${styles.floatingInfoPanel}`} style={style}>
 			<div className={styles.header}>
 				<h2>{title}</h2>
 				<button className={styles.closeButton} onClick={onClose}>

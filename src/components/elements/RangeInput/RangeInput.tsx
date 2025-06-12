@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './RangeInput.module.scss'
 
 interface IRangeInputProps {
@@ -12,14 +12,17 @@ interface IRangeInputProps {
 
 const RangeInput: React.FC<IRangeInputProps> = ({ minValue, maxValue, value, onChange, unitStep = 1, onChangeEnd }) => {
 	const [localValue, setLocalValue] = useState(value)
+
+	useEffect(() => {
+		setLocalValue(value)
+	}, [value])
+
 	const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newValue = Number(event.target.value)
-		if (onChange) {
-			onChange(newValue)
-		} else {
-			setLocalValue(newValue)
-		}
+		setLocalValue(newValue)
+		onChange && onChange(newValue)
 	}
+
 	const handleSliderChangeEnd = (event: any) => {
 		onChangeEnd && onChangeEnd(Number(event.target.value))
 	}
@@ -31,7 +34,7 @@ const RangeInput: React.FC<IRangeInputProps> = ({ minValue, maxValue, value, onC
 				min={minValue}
 				max={maxValue}
 				step={unitStep}
-				value={onChange ? value : localValue}
+				value={localValue}
 				onChange={handleSliderChange}
 				onMouseUp={handleSliderChangeEnd}
 				onTouchEnd={handleSliderChangeEnd}
