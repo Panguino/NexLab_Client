@@ -1,3 +1,18 @@
+import { FORECAST_LEVEL_850MB_ID, FORECAST_LEVEL_CONVECTIVE_ID, FORECAST_LEVEL_SURFACE_ID } from './levels'
+import {
+	FORECAST_CFS_PRODUCTS_BY_LEVEL,
+	FORECAST_ECMWF_PRODUCTS_BY_LEVEL,
+	FORECAST_GEFS_PRODUCTS_BY_LEVEL,
+	FORECAST_GFS_PRODUCTS_BY_LEVEL,
+	FORECAST_HRRR_PRODUCTS_BY_LEVEL,
+	FORECAST_NAM_PRODUCTS_BY_LEVEL,
+	FORECAST_NAMNST_PRODUCTS_BY_LEVEL,
+	FORECAST_PRODUCT_CAPE1000_ID,
+	FORECAST_PRODUCT_TEMP_ID,
+	FORECAST_RAP_PRODUCTS_BY_LEVEL,
+	FORECAST_RDPS_PRODUCTS_BY_LEVEL,
+	FORECAST_SREF_PRODUCTS_BY_LEVEL,
+} from './products'
 import {
 	FORECAST_SECTOR_ALASKA_ID,
 	FORECAST_SECTOR_ATLANTIC_OCEAN_ID,
@@ -43,7 +58,6 @@ export const DEFAULT_FORECAST_MODEL = FORECAST_NAM_ID
 
 export const FORECAST_MODELS = {
 	[FORECAST_HRRR_ID]: {
-		id: FORECAST_HRRR_ID,
 		name: 'HRRR',
 		title: 'High-Resolution Rapid Refresh',
 		sectors: [
@@ -65,9 +79,14 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_FLOAT_TWO_ID,
 			FORECAST_SECTOR_FLOAT_THREE_ID,
 		],
+		products: FORECAST_HRRR_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_MIDWEST_ID,
+			level: FORECAST_LEVEL_SURFACE_ID,
+			product: FORECAST_PRODUCT_TEMP_ID,
+		},
 	},
 	[FORECAST_RAP_ID]: {
-		id: FORECAST_RAP_ID,
 		name: 'RAP',
 		title: 'Rapid Refresh',
 		sectors: [
@@ -87,9 +106,14 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_FLOAT_ONE_ID,
 			FORECAST_SECTOR_FLOAT_TWO_ID,
 		],
+		products: FORECAST_RAP_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_US_ID,
+			level: FORECAST_LEVEL_SURFACE_ID,
+			product: FORECAST_PRODUCT_TEMP_ID,
+		},
 	},
 	[FORECAST_NAM_ID]: {
-		id: FORECAST_NAM_ID,
 		name: 'NAM',
 		title: 'North American Mesoscale',
 		sectors: [
@@ -111,9 +135,14 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_FLOAT_ONE_ID,
 			FORECAST_SECTOR_FLOAT_TWO_ID,
 		],
+		products: FORECAST_NAM_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_US_ID,
+			level: FORECAST_LEVEL_SURFACE_ID,
+			product: FORECAST_PRODUCT_TEMP_ID,
+		},
 	},
 	[FORECAST_NAMNST_ID]: {
-		id: FORECAST_NAMNST_ID,
 		name: 'NAMNST',
 		title: 'North American Mesoscale NST 3km',
 		sectors: [
@@ -133,9 +162,14 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_FLOAT_ONE_ID,
 			FORECAST_SECTOR_FLOAT_TWO_ID,
 		],
+		products: FORECAST_NAMNST_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_MIDWEST_ID,
+			level: FORECAST_LEVEL_SURFACE_ID,
+			product: FORECAST_PRODUCT_TEMP_ID,
+		},
 	},
 	[FORECAST_RDPS_ID]: {
-		id: FORECAST_RDPS_ID,
 		name: 'RDPS',
 		title: 'Regional Deterministic Prediction System',
 		sectors: [
@@ -154,9 +188,14 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_FLOAT_ONE_ID,
 			FORECAST_SECTOR_FLOAT_TWO_ID,
 		],
+		products: FORECAST_RDPS_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_US_ID,
+			level: FORECAST_LEVEL_SURFACE_ID,
+			product: FORECAST_PRODUCT_TEMP_ID,
+		},
 	},
 	[FORECAST_GDPS_ID]: {
-		id: FORECAST_GDPS_ID,
 		name: 'GDPS',
 		title: 'Global Deterministic Prediction System',
 		sectors: [
@@ -166,9 +205,14 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_FLOAT_ONE_ID,
 			FORECAST_SECTOR_FLOAT_TWO_ID,
 		],
+		products: FORECAST_RDPS_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_US_ID,
+			level: FORECAST_LEVEL_SURFACE_ID,
+			product: FORECAST_PRODUCT_TEMP_ID,
+		},
 	},
 	[FORECAST_ECMWF_ID]: {
-		id: FORECAST_ECMWF_ID,
 		name: 'ECMWF',
 		title: 'European Centre for Medium-Range Weather Forecasts',
 		sectors: [
@@ -190,9 +234,14 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_FLOAT_ONE_ID,
 			FORECAST_SECTOR_FLOAT_TWO_ID,
 		],
+		products: FORECAST_ECMWF_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_US_ID,
+			level: FORECAST_LEVEL_SURFACE_ID,
+			product: FORECAST_PRODUCT_TEMP_ID,
+		},
 	},
 	[FORECAST_GFS_ID]: {
-		id: FORECAST_GFS_ID,
 		name: 'GFS',
 		title: 'Global Forecast System',
 		sectors: [
@@ -221,15 +270,25 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_FLOAT_ONE_ID,
 			FORECAST_SECTOR_FLOAT_TWO_ID,
 		],
+		products: FORECAST_GFS_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_US_ID,
+			level: FORECAST_LEVEL_SURFACE_ID,
+			product: FORECAST_PRODUCT_TEMP_ID,
+		},
 	},
 	[FORECAST_CFS_ID]: {
-		id: FORECAST_CFS_ID,
 		name: 'CFS',
 		title: 'Climate Forecast System',
 		sectors: [FORECAST_SECTOR_NORTH_AMERICA_ID, FORECAST_SECTOR_US_ID],
+		products: FORECAST_CFS_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_US_ID,
+			level: FORECAST_LEVEL_850MB_ID,
+			product: FORECAST_PRODUCT_TEMP_ID,
+		},
 	},
 	[FORECAST_SREF_ID]: {
-		id: FORECAST_SREF_ID,
 		name: 'SREF',
 		title: 'Short Range Ensemble Forecast',
 		sectors: [
@@ -241,9 +300,14 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_SOUTHERN_GREAT_PLAINS_ID,
 			FORECAST_SECTOR_SOUTHWEST_ID,
 		],
+		products: FORECAST_SREF_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_US_ID,
+			level: FORECAST_LEVEL_CONVECTIVE_ID,
+			product: FORECAST_PRODUCT_CAPE1000_ID,
+		},
 	},
 	[FORECAST_GEFS_ID]: {
-		id: FORECAST_GEFS_ID,
 		name: 'GEFS',
 		title: 'Global Ensemble Forecast System',
 		sectors: [
@@ -259,5 +323,11 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_CENTRAL_GREAT_PLAINS_ID,
 			FORECAST_SECTOR_SOUTHERN_GREAT_PLAINS_ID,
 		],
+		products: FORECAST_GEFS_PRODUCTS_BY_LEVEL,
+		defaults: {
+			sector: FORECAST_SECTOR_US_ID,
+			level: FORECAST_LEVEL_CONVECTIVE_ID,
+			product: FORECAST_PRODUCT_CAPE1000_ID,
+		},
 	},
 }
