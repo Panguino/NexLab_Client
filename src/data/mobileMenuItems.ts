@@ -18,7 +18,7 @@ export const mobileMenuItems: MenuItemProps[] = [
 	{ id: '4', parentId: '1', title: 'Analysis', url: '/analysis', target: LinkTarget.self },
 	{ id: '3', parentId: '1', title: 'Satellite & Radar', url: '/satellite-mosaic-radar', target: LinkTarget.self },
 	{ id: '5', parentId: '1', title: 'NEXRAD Dual-Pol', url: '/nexrad-dual-pol-radar', target: LinkTarget.self },
-	// { id: '6', parentId: '1', title: 'Forecast Models', url: '/forecast-models', target: LinkTarget.self },
+	{ id: '6', parentId: '1', title: 'Forecast Models', url: '/forecast-models', target: LinkTarget.self },
 	{ id: '7', parentId: '1', title: 'Text & Outlooks', url: '/text-hazards-outlooks', target: LinkTarget.self },
 	{ id: '8', parentId: '4', title: 'Surface Maps', url: '/surface-maps', target: LinkTarget.self },
 	// { id: '9', parentId: '8', title: 'Raw METARS', url: '/raw-metar-observations', target: LinkTarget.self },

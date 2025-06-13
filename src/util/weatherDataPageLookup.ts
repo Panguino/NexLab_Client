@@ -361,6 +361,13 @@ export const getSatradPageIdByProductId = (productId) => {
 			return null
 	}
 }
+export const getForecastPageIdByParams = (modelId, levelId, productId) => {
+	// we need to discuss whether this is stored in strapi; if so how? It'd be 100+ entries so plan for that
+	console.log('meta needs defining', modelId, levelId, productId)
+	// in lieu of meta, will always return home page id for now
+	return 'gxhgxxjlq57yz9wrcf1djtwb'
+}
+
 export const getDataPageIdByProductId = (productId) => {
 	switch (productId) {
 		case NEXRAD_PRODUCT_BASEREF_0_5:

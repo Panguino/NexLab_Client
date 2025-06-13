@@ -82,7 +82,7 @@ export const Animator = ({
 	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
-	const [currentFrame, setCurrentFrame] = useState(startFrame || frames.length - 1)
+	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
 	const [playDirection, setPlayDirection] = useState<direction>(1)
 	const [isPlaying, setIsPlaying] = useState(false)
@@ -177,11 +177,9 @@ export const Animator = ({
 	}, [autoPlay, loadedFrames])
 
 	useEffect(() => {
-		if (!startFrame && loadedFrames.length > 0) {
-			// if no startFrame is set, default to the last frame
+		if (startFrame === undefined && loadedFrames.length > 0) {
 			setCurrentFrame(loadedFrames.length - 1)
 		} else if (loadedFrames.length > 0) {
-			// if startFrame is greater than the number of loaded frames, set it to 0
 			setCurrentFrame(startFrame > loadedFrames.length - 1 ? loadedFrames.length - 1 : startFrame)
 		}
 	}, [loadedFrames, startFrame])
