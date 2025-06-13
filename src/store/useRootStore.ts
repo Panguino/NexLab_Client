@@ -2,6 +2,7 @@ import { enableMapSet } from 'immer'
 import { StateCreator, create } from 'zustand'
 import { IAnalysisSlice, createAnalysisSlice } from './analysisSlice'
 import createSelectors from './createSelectors'
+import { IForecastSlice, createForecastSlice } from './forecastSlice'
 import { IGlobalSettingsSlice, createGlobalSettingsSlice } from './globalSettingsSlice'
 import { IHazardsSlice, createHazardsSlice } from './hazardsSlice'
 import { IMobileMenuSlice, createMobileMenuSlice } from './mobileMenuSlice'
@@ -20,6 +21,7 @@ export interface IGlobalStore
 		IGlobalSettingsSlice,
 		INexradSlice,
 		ISatradSlice,
+		IForecastSlice,
 		IAnalysisSlice {}
 
 export type ZustandStateSlice<T> = StateCreator<IGlobalStore, [], [], T>
@@ -32,6 +34,7 @@ const useRootStoreBase = create<IGlobalStore>((...args) => ({
 	...createGlobalSettingsSlice(...args),
 	...createNexradSlice(...args),
 	...createSatradSlice(...args),
+	...createForecastSlice(...args),
 	...createAnalysisSlice(...args),
 }))
 
