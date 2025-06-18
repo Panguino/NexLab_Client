@@ -30,11 +30,11 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 		const center = [-rotate[0], -rotate[1]]
 		const translate = [width / 2, height / 2]
 		const projection = d3
-			.geoOrthographic() // like a 2d globe
+			.geoOrthographic()
+			.rotate(rotate) // center projection by using inverse lat,lon
 			.precision(0)
 			.scale(height * scale) // zoom
 			.translate(translate)
-			.rotate(rotate) // center projection by using inverse lat,lon
 		const path = d3.geoPath().projection(projection)
 
 		svg.selectAll('*').remove()
@@ -50,6 +50,18 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 
 		const statesGroup = svg.append('g')
 		statesGroup.selectAll('path.statePath').data(statesJson.features).enter().append('path').attr('d', path).attr('class', styles.statePath)
+
+		// Draw graticule (latitude/longitude lines)
+		const graticule = d3
+			.geoGraticule()
+			.step([10, 10]) // Wider steps to reduce visual clutter
+			.precision(0.1) // Lower precision for straighter lines
+
+		// Add graticule lines
+		svg.append('path').datum(graticule()).attr('d', path).attr('class', styles.graticule)
+
+		// Optional: Add graticule outline (border)
+		svg.append('path').datum(graticule.outline()).attr('d', path).attr('class', styles.graticuleOutline)
 
 		// store symbol generator for later use
 		const symbolGenerator = d3.symbol().size(100)
