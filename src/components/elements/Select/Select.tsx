@@ -14,11 +14,12 @@ interface SelectProps {
 	value: any
 	options: Option[]
 	onChange: (value: any) => void
+	title?: string | null
 	placeholder?: string
 	optionsEmptyText?: string
 }
 
-const Select: React.FC<SelectProps> = ({ value, options, onChange, placeholder = '', optionsEmptyText = 'No options' }) => {
+const Select: React.FC<SelectProps> = ({ value, options, onChange, title = null, placeholder = '', optionsEmptyText = 'No options' }) => {
 	const [open, setOpen] = useState(false)
 	const wrapperRef = useRef(null)
 
@@ -55,7 +56,8 @@ const Select: React.FC<SelectProps> = ({ value, options, onChange, placeholder =
 
 	return (
 		<div className={styles.wrapper}>
-			<div className={styles.select} ref={wrapperRef} onClick={() => setOpen((prevOpen) => !prevOpen)}>
+			{title && <span className={styles.title}>{title}</span>}
+			<div className={`${styles.select} ${title ? styles.withTitle : ''}`} onClick={() => setOpen((prevOpen) => !prevOpen)}>
 				{!foundValue && placeholder && <label>{placeholder}</label>}
 				{foundValue && foundValue.label && <div className={styles.value}>{foundValue.label}</div>}
 

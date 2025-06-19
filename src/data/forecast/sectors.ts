@@ -1,3 +1,5 @@
+import { FORECAST_REGION_CONUS_ID, FORECAST_REGION_NAMER_ID } from './regions'
+
 export const FORECAST_SECTOR_US_ID = 'US'
 export const FORECAST_SECTOR_NORTH_AMERICA_ID = 'NA'
 export const FORECAST_SECTOR_WORLD_ID = 'WLD'
@@ -35,6 +37,7 @@ export const FORECAST_SECTORS = {
 			[-128, 20],
 			[-65, 57],
 		],
+		region: FORECAST_REGION_NAMER_ID,
 		alternateSectors: ['MW'],
 	},
 	[FORECAST_SECTOR_NORTH_AMERICA_ID]: {
@@ -44,6 +47,7 @@ export const FORECAST_SECTORS = {
 			[-165, 8.5],
 			[-48, 78],
 		],
+		region: FORECAST_REGION_NAMER_ID,
 		alternateSectors: ['US', 'MW'],
 	},
 	[FORECAST_SECTOR_WORLD_ID]: {
@@ -53,6 +57,7 @@ export const FORECAST_SECTORS = {
 			[-300, -100],
 			[60, 100],
 		],
+		region: FORECAST_REGION_NAMER_ID,
 		alternateSectors: ['NA'],
 	},
 	[FORECAST_SECTOR_ATLANTIC_OCEAN_ID]: {
@@ -62,6 +67,7 @@ export const FORECAST_SECTORS = {
 			[-110, 0],
 			[3, 67],
 		],
+		region: FORECAST_REGION_NAMER_ID,
 		alternateSectors: ['NA'],
 	},
 	[FORECAST_SECTOR_PACIFIC_OCEAN_ID]: {
@@ -71,6 +77,7 @@ export const FORECAST_SECTORS = {
 			[-225, 0],
 			[-100, 74],
 		],
+		region: FORECAST_REGION_NAMER_ID,
 		alternateSectors: ['NA'],
 	},
 	[FORECAST_SECTOR_CANADA_ID]: {
@@ -80,6 +87,7 @@ export const FORECAST_SECTORS = {
 			[-138.8, 37.3],
 			[-61.9, 82.8],
 		],
+		region: FORECAST_REGION_NAMER_ID,
 		alternateSectors: ['WCAN', 'NA'],
 	},
 	[FORECAST_SECTOR_WESTERN_CANADA_ID]: {
@@ -89,6 +97,7 @@ export const FORECAST_SECTORS = {
 			[-132.5, 45.1],
 			[-106, 60.7],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['NW', 'US', 'NA'],
 	},
 	[FORECAST_SECTOR_ALASKA_ID]: {
@@ -98,6 +107,7 @@ export const FORECAST_SECTORS = {
 			[-180, 43],
 			[-121, 78],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['WCAN', 'NA'],
 	},
 	[FORECAST_SECTOR_NORTHWEST_ID]: {
@@ -107,6 +117,7 @@ export const FORECAST_SECTORS = {
 			[-126.8, 40.3],
 			[-105.5, 52.9],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['NA'],
 	},
 	[FORECAST_SECTOR_SOUTHWEST_ID]: {
@@ -116,6 +127,7 @@ export const FORECAST_SECTORS = {
 			[-123.1, 29.9],
 			[-101.7, 42.5],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['GBSN', 'NA'],
 	},
 	[FORECAST_SECTOR_SOUTHEAST_ID]: {
@@ -125,6 +137,7 @@ export const FORECAST_SECTORS = {
 			[-98.5, 24.5],
 			[-77.5, 36.92],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['MA'],
 	},
 	[FORECAST_SECTOR_NORTHEAST_ID]: {
@@ -134,6 +147,7 @@ export const FORECAST_SECTORS = {
 			[-84.1, 38.7],
 			[-66, 49.3],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['US'],
 	},
 	[FORECAST_SECTOR_GREAT_BASIN_ID]: {
@@ -143,6 +157,7 @@ export const FORECAST_SECTORS = {
 			[-129.5, 31.9],
 			[-106.5, 45.5],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['SW', 'NA'],
 	},
 	[FORECAST_SECTOR_MID_ATLANTIC_ID]: {
@@ -152,6 +167,7 @@ export const FORECAST_SECTORS = {
 			[-90.5, 31.6],
 			[-69.5, 44],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['US'],
 	},
 	[FORECAST_SECTOR_GREAT_LAKES_ID]: {
@@ -161,6 +177,7 @@ export const FORECAST_SECTORS = {
 			[-95.5, 39.58],
 			[-74.5, 52.0],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['MW'],
 	},
 	[FORECAST_SECTOR_MIDWEST_ID]: {
@@ -170,6 +187,7 @@ export const FORECAST_SECTORS = {
 			[-101, 34.55],
 			[-80, 47],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['US'],
 	},
 	[FORECAST_SECTOR_NORTHERN_GREAT_PLAINS_ID]: {
@@ -179,6 +197,7 @@ export const FORECAST_SECTORS = {
 			[-110.4, 41.7],
 			[-89.2, 54.1],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['US'],
 	},
 	[FORECAST_SECTOR_CENTRAL_GREAT_PLAINS_ID]: {
@@ -188,6 +207,7 @@ export const FORECAST_SECTORS = {
 			[-111.7, 34.5],
 			[-90.5, 47],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['US'],
 	},
 	[FORECAST_SECTOR_SOUTHERN_GREAT_PLAINS_ID]: {
@@ -197,6 +217,7 @@ export const FORECAST_SECTORS = {
 			[-109, 25.5],
 			[-85, 39.7],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['CGP'],
 	},
 	[FORECAST_SECTOR_NORTHERN_ILLINOIS_ID]: {
@@ -206,6 +227,7 @@ export const FORECAST_SECTORS = {
 			[-93.98, 38.13],
 			[-83.9, 44.05],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['MW'],
 	},
 	[FORECAST_SECTOR_DENVER_ID]: {
@@ -215,6 +237,7 @@ export const FORECAST_SECTORS = {
 			[-106, 38.8],
 			[-101, 42.05],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['CGP'],
 	},
 	[FORECAST_SECTOR_OKLAHOMA_CITY_ID]: {
@@ -224,6 +247,7 @@ export const FORECAST_SECTORS = {
 			[-102.5, 33.2],
 			[94, 38.2],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['SGP'],
 	},
 	[FORECAST_SECTOR_DUGWAY_ID]: {
@@ -233,6 +257,7 @@ export const FORECAST_SECTORS = {
 			[-114.8, 38.7],
 			[-108.8, 42.2],
 		],
+		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['GBSN', 'SW'],
 	},
 	// [FORECAST_SECTOR_FLOAT_ONE_ID]: {
