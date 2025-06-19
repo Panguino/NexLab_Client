@@ -9,7 +9,7 @@ export const FORECAST_REGIONS = {
 	},
 	[FORECAST_REGION_NAMER_ID]: {
 		label: 'Large Sectors',
-		rotate: [100, -40],
+		rotate: [100, -30],
 		scale: 0.75,
 	},
 }

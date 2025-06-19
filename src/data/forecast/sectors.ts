@@ -54,8 +54,8 @@ export const FORECAST_SECTORS = {
 		name: 'World',
 		type: 'Geobox',
 		coordinates: [
-			[-300, -100],
-			[60, 100],
+			[-279.9, -85],
+			[80, 85],
 		],
 		region: FORECAST_REGION_NAMER_ID,
 		alternateSectors: ['NA'],
@@ -245,7 +245,7 @@ export const FORECAST_SECTORS = {
 		type: 'Geobox',
 		coordinates: [
 			[-102.5, 33.2],
-			[94, 38.2],
+			[-94, 38.2],
 		],
 		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['SGP'],
