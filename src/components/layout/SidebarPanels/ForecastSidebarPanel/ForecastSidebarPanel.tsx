@@ -7,6 +7,7 @@ import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { FORECAST_LEVEL_ORDER, FORECAST_LEVELS } from '@/data/forecast/levels'
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
 import { FORECAST_PRODUCTS } from '@/data/forecast/products'
+import { FORECAST_REGIONS } from '@/data/forecast/regions'
 import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
@@ -24,6 +25,7 @@ const ForecastSidebarPanel = () => {
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
+	const [regionId, setRegionId] = useState('')
 	const { forecastModelId: modelId, forecastSectorId: sectorId, forecastLevelId: levelId, forecastProductId: productId } = useParams()
 
 	useEffect(() => {
@@ -52,6 +54,7 @@ const ForecastSidebarPanel = () => {
 		} else {
 			const productsByLevel = buildProductsByLevel(modelId as string, sectorId as string)
 			setSortedProductEntries(productsByLevel)
+			setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		}
 	}, [productId, sectorId, router, modelId, levelId])
 
@@ -65,19 +68,32 @@ const ForecastSidebarPanel = () => {
 	useEffect(() => {
 		if (sectorSelectorPanelIsOpen) {
 			// We may expand to allow for more regions in the future, but for now we only have one region
-			const region = { rotate: [98, -40], scale: 2 }
+			const region = FORECAST_REGIONS[regionId as string]
 			const newD3config = {
 				rotate: region.rotate,
 				scale: region.scale,
 			}
 			setSectorSelectorD3config(newD3config)
-			const selectedSectors = FORECAST_MODELS[modelId as string].sectors.map((sectorId) => ({
-				id: sectorId,
-				...FORECAST_SECTORS[sectorId],
-			}))
+			const selectedSectors = FORECAST_MODELS[modelId as string].sectors
+				.filter((sectorId) => FORECAST_SECTORS[sectorId].region === regionId)
+				.map((sectorId) => ({
+					id: sectorId,
+					...FORECAST_SECTORS[sectorId],
+				}))
 			setSectorSelectorSectors(selectedSectors)
 		}
-	}, [sectorSelectorPanelIsOpen, modelId, setSectorSelectorD3config, setSectorSelectorSectors])
+	}, [sectorSelectorPanelIsOpen, modelId, regionId, setSectorSelectorD3config, setSectorSelectorSectors])
+
+	const handleRegionChange = (regionId: string) => {
+		setRegionId(regionId)
+		openSectorSelectorPanel()
+	}
+	const handleSectorChangeButton = () => {
+		if (regionId !== FORECAST_SECTORS[sectorId as string].region) {
+			setRegionId(FORECAST_SECTORS[sectorId as string].region)
+		}
+		openSectorSelectorPanel()
+	}
 
 	// get products grouped by level to build the sidebar
 	const buildProductsByLevel = (modelId: string, sectorId: string) => {
@@ -105,11 +121,22 @@ const ForecastSidebarPanel = () => {
 					<Select
 						value={modelId}
 						placeholder={modelId as string}
+						title="Model:"
 						options={modelOptions}
 						onChange={(value) => router.push(`/weather-data/forecast-models/${value}/${sectorId}/${levelId}/${productId}`)}
 					/>
+					<Select
+						value={regionId}
+						placeholder={FORECAST_REGIONS[regionId as string]?.label ?? ''}
+						title="Sector Size:"
+						options={Object.keys(FORECAST_REGIONS).map((regionId) => ({
+							value: regionId,
+							label: FORECAST_REGIONS[regionId].label,
+						}))}
+						onChange={handleRegionChange}
+					/>
 					<SectorChangeButton
-						onClick={openSectorSelectorPanel}
+						onClick={handleSectorChangeButton}
 						label="Selected Sector:"
 						labelValue={FORECAST_SECTORS[sectorId as string]?.name ?? 'Unknown Sector'}
 					/>
