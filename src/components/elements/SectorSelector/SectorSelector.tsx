@@ -51,18 +51,6 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 		const statesGroup = svg.append('g')
 		statesGroup.selectAll('path.statePath').data(statesJson.features).enter().append('path').attr('d', path).attr('class', styles.statePath)
 
-		// Draw graticule (latitude/longitude lines)
-		const graticule = d3
-			.geoGraticule()
-			.step([10, 10]) // Wider steps to reduce visual clutter
-			.precision(0.1) // Lower precision for straighter lines
-
-		// Add graticule lines
-		svg.append('path').datum(graticule()).attr('d', path).attr('class', styles.graticule)
-
-		// Optional: Add graticule outline (border)
-		svg.append('path').datum(graticule.outline()).attr('d', path).attr('class', styles.graticuleOutline)
-
 		// store symbol generator for later use
 		const symbolGenerator = d3.symbol().size(100)
 		// Set default values for dotShape and dotColor within sectors
