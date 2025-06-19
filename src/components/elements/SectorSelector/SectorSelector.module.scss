@@ -21,14 +21,14 @@
 .graticule {
 	fill: none;
 	stroke: var(--color-grey6-grey12);
-	stroke-width: 2px;
+	stroke-width: 1px;
 	opacity: 0.6;
 	pointer-events: none;
 }
 .graticuleOutline {
 	fill: none;
 	stroke: var(--color-grey8-grey10);
-	stroke-width: 4px;
+	stroke-width: 2px;
 	opacity: 0.8;
 	pointer-events: none;
 }

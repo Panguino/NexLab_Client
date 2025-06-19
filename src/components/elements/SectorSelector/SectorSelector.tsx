@@ -31,9 +31,9 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 		const translate = [width / 2, height / 2]
 		const projection = d3
 			.geoOrthographic()
-			.rotate(rotate) // center projection by using inverse lat,lon
-			.precision(0)
-			.scale(height * scale) // zoom
+			.rotate(rotate)
+			.precision(0.1)
+			.scale(height * scale)
 			.translate(translate)
 		const path = d3.geoPath().projection(projection)
 
