@@ -27,6 +27,9 @@ type direction = 1 | -1
 interface IAnimatorProps {
 	frames: string[]
 	startFrame?: number
+	runs?: { value: string; label: string }[] | null
+	activeRun?: string
+	setActiveRun?: (run: string) => void
 	overlays?: { static: object; dynamic: object }
 	ratio?: number
 	height?: number
@@ -52,6 +55,8 @@ interface IAnimatorProps {
 export const Animator = ({
 	frames,
 	startFrame,
+	runs,
+	activeRun = runs && runs[runs.length - 1]?.value,
 	overlays,
 	ratio = 1,
 	interval = 200,
@@ -77,6 +82,9 @@ export const Animator = ({
 	},
 	setFullScreen = (fullScreen: boolean) => {
 		console.warn('setFullScreen function not provided, full screen state will not be updated.', fullScreen)
+	},
+	setActiveRun = (run: string) => {
+		console.warn('setActiveRun function not provided, active run will not be updated.', run)
 	},
 }: IAnimatorProps) => {
 	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
@@ -326,6 +334,15 @@ export const Animator = ({
 			{!hideControls && (
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
+						{runs && (
+							<input type="select" className={styles.runSelector} value={activeRun} onChange={(e) => setActiveRun(e.target.value)}>
+								{runs.map((run) => (
+									<option key={run.value} value={run.value}>
+										{run.label}
+									</option>
+								))}
+							</input>
+						)}
 						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
 						<BasicPlaybackControls
 							isPlaying={isPlaying}

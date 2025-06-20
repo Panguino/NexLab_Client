@@ -26,7 +26,13 @@ const ForecastSidebarPanel = () => {
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
 	const [regionId, setRegionId] = useState('')
-	const { forecastModelId: modelId, forecastSectorId: sectorId, forecastLevelId: levelId, forecastProductId: productId } = useParams()
+	const {
+		forecastRunId: runId,
+		forecastModelId: modelId,
+		forecastSectorId: sectorId,
+		forecastLevelId: levelId,
+		forecastProductId: productId,
+	} = useParams()
 
 	useEffect(() => {
 		if (
@@ -49,14 +55,14 @@ const ForecastSidebarPanel = () => {
 				DEFAULT_FORECAST_PRODUCT,
 			)
 			router.push(
-				`/weather-data/forecast-models/${modelIdDefault}/${DEFAULT_FORECAST_SECTOR}/${DEFAULT_FORECAST_LEVEL}/${DEFAULT_FORECAST_PRODUCT}`,
+				`/weather-data/forecast-models/${runId || 'current'}/${modelIdDefault}/${DEFAULT_FORECAST_SECTOR}/${DEFAULT_FORECAST_LEVEL}/${DEFAULT_FORECAST_PRODUCT}`,
 			)
 		} else {
 			const productsByLevel = buildProductsByLevel(modelId as string, sectorId as string)
 			setSortedProductEntries(productsByLevel)
 			setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		}
-	}, [productId, sectorId, router, modelId, levelId])
+	}, [productId, sectorId, router, modelId, levelId, runId])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {

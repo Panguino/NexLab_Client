@@ -21,8 +21,13 @@ interface ForecastAnimatorProps {
 
 const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const { isMobile } = useIsMobile()
-	const { forecastModelId: modelId, forecastSectorId: sectorId, forecastLevelId: levelId, forecastProductId: productId } = useParams()
-	const runId = 'current' // Placeholder for runtimeId, will need to come from params
+	const {
+		forecastRunId: runId,
+		forecastModelId: modelId,
+		forecastSectorId: sectorId,
+		forecastLevelId: levelId,
+		forecastProductId: productId,
+	} = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
