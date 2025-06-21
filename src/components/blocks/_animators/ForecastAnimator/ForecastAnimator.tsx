@@ -27,13 +27,7 @@ interface runsProps {
 
 const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const { isMobile } = useIsMobile()
-	const {
-		forecastRunId: runId,
-		forecastModelId: modelId,
-		forecastSectorId: sectorId,
-		forecastLevelId: levelId,
-		forecastProductId: productId,
-	} = useParams()
+	const { forecastModelId: modelId, forecastSectorId: sectorId, forecastLevelId: levelId, forecastProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const activeRun = useRootStore.use.activeRun()
 	const setActiveRun = useRootStore.use.setActiveRun()
@@ -51,13 +45,13 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const [forecastRuns, setForecastRuns] = useState<Record<string, runsProps>>({})
 
 	const getData = useCallback(async () => {
-		console.log('ForecastAnimator: Fetching data', modelId, runId, sectorId, levelId, productId)
-		const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
+		console.log('ForecastAnimator: Fetching data', modelId, activeRun, sectorId, levelId, productId)
+		const data = await getForecastData(modelId, activeRun, sectorId, levelId, productId)
 		const runs = await getModelRuns(modelId)
 		setRatio(data.imageInfo.width / data.imageInfo.height)
 		setForecastData(data.frames)
 		setForecastRuns(runs.runs)
-		if (!runs.runs[runId as string]) {
+		if (!runs.runs[activeRun as string]) {
 			// If this works then this would be where we'd make a more intelligent choice of run
 			// e.g. if runId is properly formatted but not found, we could look for the closest match
 			// ex: I don't have a 19Z but I've got an 18Z
@@ -65,11 +59,11 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 			const currentRun = Object.keys(runs.runs).at(-1)
 			setActiveRun(currentRun)
 		}
-	}, [modelId, runId, sectorId, levelId, productId, setRatio, setForecastData, setForecastRuns, setActiveRun])
+	}, [activeRun, modelId, sectorId, levelId, productId, setRatio, setForecastData, setForecastRuns, setActiveRun])
 
 	useEffect(() => {
 		getData()
-	}, [modelId, runId, sectorId, levelId, productId, getData])
+	}, [activeRun, modelId, sectorId, levelId, productId, getData])
 
 	useEffect(() => {
 		setForecastZoomFill(isMobile)

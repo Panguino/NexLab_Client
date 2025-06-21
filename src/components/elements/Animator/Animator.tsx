@@ -335,6 +335,7 @@ export const Animator = ({
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
 						{runs && (
+							// needs to become a proper select component with styling
 							<select className={styles.runSelector} value={activeRun} onChange={(e) => setActiveRun(e.target.value)}>
 								{runs.map((run) => (
 									<option key={run.value} value={run.value}>
