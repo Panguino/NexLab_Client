@@ -56,7 +56,7 @@ export const Animator = ({
 	frames,
 	startFrame,
 	runs,
-	activeRun = runs && runs[runs.length - 1]?.value,
+	activeRun,
 	overlays,
 	ratio = 1,
 	interval = 200,
@@ -335,13 +335,13 @@ export const Animator = ({
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
 						{runs && (
-							<input type="select" className={styles.runSelector} value={activeRun} onChange={(e) => setActiveRun(e.target.value)}>
+							<select className={styles.runSelector} value={activeRun} onChange={(e) => setActiveRun(e.target.value)}>
 								{runs.map((run) => (
 									<option key={run.value} value={run.value}>
 										{run.label}
 									</option>
 								))}
-							</input>
+							</select>
 						)}
 						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
 						<BasicPlaybackControls
