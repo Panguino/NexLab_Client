@@ -13,7 +13,6 @@ import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
-import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import styles from './ForecastSidebarPanel.module.scss'
 
 const ForecastSidebarPanel = () => {
@@ -27,6 +26,7 @@ const ForecastSidebarPanel = () => {
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
 	const [regionId, setRegionId] = useState('')
 	const { forecastModelId: modelId, forecastSectorId: sectorId, forecastLevelId: levelId, forecastProductId: productId } = useParams()
+	const [openIndex, setOpenIndex] = useState<number | null>(null)
 
 	useEffect(() => {
 		if (
@@ -114,6 +114,10 @@ const ForecastSidebarPanel = () => {
 		label: FORECAST_MODELS[modelId].name,
 	}))
 
+	const handleToggle = (index: number) => {
+		setOpenIndex(openIndex === index ? null : index) // Close if already open, otherwise open the clicked accordion
+	}
+
 	return (
 		<ScrollArea>
 			<div className={styles.ForecastSidebarPanel}>
@@ -141,9 +145,16 @@ const ForecastSidebarPanel = () => {
 						labelValue={FORECAST_SECTORS[sectorId as string]?.name ?? 'Unknown Sector'}
 					/>
 				</div>
-				{sortedProductEntries.map(({ level, products }) => (
-					<Accordian key={level} title={FORECAST_LEVELS[level].name} initiallyClosed={level !== levelId} variant="line">
-						<SidebarPanelPad>
+				{sortedProductEntries.map(({ level, products }, index) => (
+					<Accordian
+						key={level}
+						title={FORECAST_LEVELS[level].name}
+						initiallyClosed={level !== levelId}
+						variant="sidebar"
+						isOpen={openIndex === index}
+						onToggle={() => handleToggle(index)}
+					>
+						<div className={styles.forecastProducts}>
 							{(products as string[]).map((product) => (
 								<SidebarLink
 									key={product}
@@ -152,7 +163,7 @@ const ForecastSidebarPanel = () => {
 									onClick={() => router.push(`/weather-data/forecast-models/${modelId}/${sectorId}/${level}/${product}`)}
 								/>
 							))}
-						</SidebarPanelPad>
+						</div>
 					</Accordian>
 				))}
 			</div>
