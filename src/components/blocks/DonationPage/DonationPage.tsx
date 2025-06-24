@@ -1,11 +1,13 @@
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { Footer } from '../PageBlocks/Footer/Footer'
+import DonationForm from './DonationForm/DonationForm'
 import styles from './DonationPage.module.scss'
 
 export const DonationPage = () => {
 	return (
 		<ScrollArea>
 			<div className={styles.donationPage}>
+				<DonationForm />
 				<div className={styles.hero}>
 					<div className={styles.heroContent}>
 						<h1>Support the Future of Free Weather Data and Analysis</h1>
