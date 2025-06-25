@@ -29,6 +29,7 @@ interface IAnimatorProps {
 	frames: string[]
 	startFrame?: number
 	runs?: { value: string; label: string }[] | null
+	runsPerRow?: number
 	activeRun?: string
 	setActiveRun?: (run: string) => void
 	overlays?: { static: object; dynamic: object }
@@ -57,6 +58,7 @@ export const Animator = ({
 	frames,
 	startFrame,
 	runs,
+	runsPerRow = 4,
 	activeRun,
 	overlays,
 	ratio = 1,
@@ -335,7 +337,14 @@ export const Animator = ({
 			{!hideControls && (
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
-						{runs && <RunSelector run={activeRun} runs={runs} onSelect={(selectedRun) => setActiveRun(selectedRun)} />}
+						{runs && (
+							<RunSelector
+								run={activeRun}
+								runs={runs}
+								runsPerRow={runsPerRow ?? 4}
+								onSelect={(selectedRun) => setActiveRun(selectedRun)}
+							/>
+						)}
 						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
 						<BasicPlaybackControls
 							isPlaying={isPlaying}

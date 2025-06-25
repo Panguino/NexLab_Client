@@ -4,6 +4,7 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
@@ -11,7 +12,7 @@ import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import ForecastAnimatorSettings from '../../_animatorSettingPanels/ForecastAnimatorSettings/ForecastAnimatorSettings'
 import styles from './ForecastAnimator.module.scss'
@@ -74,6 +75,12 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 		label: value.readable,
 	}))
 
+	// Use useMemo to derive the runsPerRow value based on modelId
+	const runsPerRow = useMemo(() => {
+		// Default to 4 if model doesn't exist or doesn't specify runsPerRow
+		return FORECAST_MODELS[modelId as string]?.runsPerRow || 4
+	}, [modelId])
+
 	return (
 		<>
 			<div className={styles.forecastAnimatorContainer}>
@@ -82,6 +89,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 						frames={forecastData}
 						startFrame={0}
 						runs={transformedRuns}
+						runsPerRow={runsPerRow}
 						activeRun={activeRun}
 						setActiveRun={setActiveRun}
 						ratio={ratio}

@@ -1,73 +1,93 @@
 .runSelector {
-  position: relative;
-  display: inline-block;
+	position: relative;
+	display: inline-block;
 }
 
 .runSelectorButton {
-  padding: 8px 12px;
-  cursor: pointer;
-  text-wrap: nowrap;
-  background: var(--color-white-grey17);
-  border: 0;
-  outline: 0;
-  display: flex;
-  gap: 12px;
-  font-size: 13px;
-  border-radius: 5px;
+	padding: 8px 12px;
+	cursor: pointer;
+	text-wrap: nowrap;
+	background: var(--color-white-grey17);
+	border: 0;
+	outline: 0;
+	display: flex;
+	gap: 12px;
+	font-size: 13px;
+	border-radius: 5px;
 }
 
 .runSelectorDropdown {
-  position: absolute;
-  bottom: 102%; /* Opens upwards */
-  left: 0;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  border-radius: 5px;
-  background: var(--color-white-grey17);
+	position: absolute;
+	bottom: 102%; /* Opens upwards */
+	left: 0;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+	padding: 12px;
+	display: flex;
+	flex-direction: column;
+	border-radius: 5px;
+	background: var(--color-white-grey17);
 }
 
 .runSelectorRow {
-  padding-bottom: 8px;
-  &:last-child {
-    padding-bottom: 0;
-    .runSelectorGrid {
-      justify-content: flex-end;
-    }
-  }
+	padding-bottom: 8px;
+	&:last-child {
+		padding-bottom: 0;
+
+		/* Target the last grid container in the last row */
+		.runSelectorGridContainer:last-child {
+			/* Target the last grid in that container */
+			.runSelectorGrid:last-child {
+				grid-template-columns: repeat(auto-fit, minmax(0, auto));
+				justify-content: end;
+			}
+		}
+	}
 }
 
 .runSelectorDate {
-  padding-bottom: 4px;
-  font-weight: 500;
-  color: var(--color-grey17-grey1);
-  font-size: 13px;
+	padding-bottom: 4px;
+	font-weight: 500;
+	color: var(--color-grey17-grey1);
+	font-size: 13px;
 }
 
+.runSelectorGridContainer {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
 .runSelectorGrid {
-  display: flex;
-  gap: 5px;
+	display: grid;
+	gap: 5px;
+}
+.runSelectorGrid2 {
+	grid-template-columns: repeat(2, 1fr);
+}
+.runSelectorGrid4 {
+	grid-template-columns: repeat(4, 1fr);
+}
+.runSelectorGrid6 {
+	grid-template-columns: repeat(6, 1fr);
 }
 
 .runSelectorCell {
-  background: var(--color-grey19);
-  border: 1px solid var(--color-grey13);
-  color: #fff;
-  font-size: 12px;
-  padding: 5px 8px;
-  text-wrap: nowrap;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: all 0.2s ease-in-out;
+	background: var(--color-grey19);
+	border: 1px solid var(--color-grey13);
+	color: #fff;
+	font-size: 12px;
+	padding: 5px 8px;
+	text-wrap: nowrap;
+	cursor: pointer;
+	border-radius: 4px;
+	transition: all 0.2s ease-in-out;
 
-  &:hover {
-    background-color: var(--color-blue3);
-    border: 1px solid var(--color-blue3);
-  }
-  &.active {
-    background-color: var(--color-blue3);
-    border: 1px solid var(--color-blue3);
-  }
+	&:hover {
+		background-color: var(--color-blue3);
+		border: 1px solid var(--color-blue3);
+	}
+	&.active {
+		background-color: var(--color-blue3);
+		border: 1px solid var(--color-blue3);
+	}
 }
