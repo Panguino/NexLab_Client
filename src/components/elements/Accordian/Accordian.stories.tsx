@@ -46,3 +46,9 @@ AccordianLineVariant.args = {
 	title: 'Some title accordian with line variant',
 	variant: 'line',
 }
+
+export const AccordianSidebarVariant: StoryFn<typeof Accordian> = TemplateFactory()
+AccordianSidebarVariant.args = {
+	title: 'Some title accordian with line variant',
+	variant: 'sidebar',
+}
