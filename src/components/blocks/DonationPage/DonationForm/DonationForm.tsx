@@ -10,7 +10,7 @@ export default function DonationForm() {
 		e.preventDefault()
 		setResponse('Submitting...')
 
-		const res = await fetch('/api/donate', {
+		const res = await fetch('/api/blackbaud', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({

@@ -1,7 +1,7 @@
-export default async function handler(req, res) {
-	if (req.method !== 'POST') return res.status(405).end()
+import { NextRequest, NextResponse } from 'next/server'
 
-	const { amount, donor } = req.body
+export async function POST(req: NextRequest) {
+	const { amount, donor } = await req.json()
 
 	// Replace these with your actual Blackbaud credentials
 	const CLIENT_ID = process.env.BLACKBAUD_APP_ID
@@ -18,14 +18,16 @@ export default async function handler(req, res) {
 				grant_type: 'client_credentials',
 				client_id: CLIENT_ID,
 				client_secret: CLIENT_SECRET,
+				scope: 'donf.r',
 			}),
 		})
 
 		const tokenData = await tokenRes.json()
 		const accessToken = tokenData.access_token
+		console.log('Access Token:', tokenData)
 
 		if (!accessToken) {
-			return res.status(401).json({ error: 'Failed to get access token', details: tokenData })
+			return NextResponse.json({ error: 'Failed to get access token', details: tokenData }, { status: 401 })
 		}
 
 		// 2. Submit donation (example – replace with actual endpoint and fields)
@@ -47,9 +49,9 @@ export default async function handler(req, res) {
 		})
 
 		const donationData = await donationRes.json()
-		res.status(200).json(donationData)
-	} catch (error) {
+		return NextResponse.json(donationData, { status: 200 })
+	} catch (error: any) {
 		console.error(error)
-		res.status(500).json({ error: 'Server error', details: error.message })
+		return NextResponse.json({ error: 'Server error', details: error.message }, { status: 500 })
 	}
 }
