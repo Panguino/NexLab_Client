@@ -11,7 +11,7 @@ import { FORECAST_REGIONS } from '@/data/forecast/regions'
 import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSidebarPanel.module.scss'
 
@@ -27,6 +27,7 @@ const ForecastSidebarPanel = () => {
 	const [regionId, setRegionId] = useState('')
 	const { forecastModelId: modelId, forecastSectorId: sectorId, forecastLevelId: levelId, forecastProductId: productId } = useParams()
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
+	const openIndexRef = useRef<number | null>(null)
 
 	useEffect(() => {
 		if (
@@ -53,6 +54,10 @@ const ForecastSidebarPanel = () => {
 			)
 		} else {
 			const productsByLevel = buildProductsByLevel(modelId as string, sectorId as string)
+			const levelIndex = productsByLevel.findIndex((item) => item.level === levelId)
+			if (openIndexRef.current !== levelIndex) {
+				setOpenIndex(levelIndex)
+			}
 			setSortedProductEntries(productsByLevel)
 			setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		}
@@ -114,6 +119,10 @@ const ForecastSidebarPanel = () => {
 		label: FORECAST_MODELS[modelId].name,
 	}))
 
+	useEffect(() => {
+		openIndexRef.current = openIndex
+	}, [openIndex])
+
 	const handleToggle = (index: number) => {
 		setOpenIndex(openIndex === index ? null : index) // Close if already open, otherwise open the clicked accordion
 	}
@@ -149,7 +158,6 @@ const ForecastSidebarPanel = () => {
 					<Accordian
 						key={level}
 						title={FORECAST_LEVELS[level].name}
-						initiallyClosed={level !== levelId}
 						variant="sidebar"
 						isOpen={openIndex === index}
 						onToggle={() => handleToggle(index)}
