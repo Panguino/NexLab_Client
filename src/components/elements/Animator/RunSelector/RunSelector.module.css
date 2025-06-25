@@ -53,8 +53,7 @@
 
 .runSelectorCell {
   background: var(--color-grey19);
-  border-color: var(--color-grey13);
-  border-width: 1px;
+  border: 1px solid var(--color-grey13);
   color: #fff;
   font-size: 12px;
   padding: 5px 8px;
@@ -65,8 +64,10 @@
 
   &:hover {
     background-color: var(--color-blue3);
+    border: 1px solid var(--color-blue3);
   }
   &.active {
     background-color: var(--color-blue3);
+    border: 1px solid var(--color-blue3);
   }
 }
