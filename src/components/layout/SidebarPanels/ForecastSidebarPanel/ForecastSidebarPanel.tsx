@@ -34,6 +34,8 @@ const ForecastSidebarPanel = () => {
 		forecastLevelId: levelId,
 		forecastProductId: productId,
 	} = useParams()
+	const [openIndex, setOpenIndex] = useState<number | null>(null)
+	const openIndexRef = useRef<number | null>(null)
 
 	useEffect(() => {
 		setActiveRun(runId || 'current')
