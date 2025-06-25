@@ -1,0 +1,72 @@
+.runSelector {
+  position: relative;
+  display: inline-block;
+}
+
+.runSelectorButton {
+  padding: 8px 12px;
+  cursor: pointer;
+  text-wrap: nowrap;
+  background: var(--color-white-grey17);
+  border: 0;
+  outline: 0;
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  border-radius: 5px;
+}
+
+.runSelectorDropdown {
+  position: absolute;
+  bottom: 102%; /* Opens upwards */
+  left: 0;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  background: var(--color-white-grey17);
+}
+
+.runSelectorRow {
+  padding-bottom: 8px;
+  &:last-child {
+    padding-bottom: 0;
+    .runSelectorGrid {
+      justify-content: flex-end;
+    }
+  }
+}
+
+.runSelectorDate {
+  padding-bottom: 4px;
+  font-weight: 500;
+  color: var(--color-grey17-grey1);
+  font-size: 13px;
+}
+
+.runSelectorGrid {
+  display: flex;
+  gap: 5px;
+}
+
+.runSelectorCell {
+  background: var(--color-grey19);
+  border-color: var(--color-grey13);
+  border-width: 1px;
+  color: #fff;
+  font-size: 12px;
+  padding: 5px 8px;
+  text-wrap: nowrap;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: var(--color-blue3);
+  }
+  &.active {
+    background-color: var(--color-blue3);
+  }
+}

@@ -21,6 +21,7 @@ import Scrubber from '../Scrubber/Scrubber'
 import styles from './Animator.module.scss'
 import { AnimatorImageMachine } from './AnimatorImageMachine/AnimatorImageMachine'
 import { OverlayPanel } from './OverlayPanel/OverylayPanel'
+import { RunSelector } from './RunSelector/RunSelector'
 
 type direction = 1 | -1
 
@@ -334,16 +335,7 @@ export const Animator = ({
 			{!hideControls && (
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
-						{runs && (
-							// needs to become a proper select component with styling
-							<select className={styles.runSelector} value={activeRun} onChange={(e) => setActiveRun(e.target.value)}>
-								{runs.map((run) => (
-									<option key={run.value} value={run.value}>
-										{run.label}
-									</option>
-								))}
-							</select>
-						)}
+						{runs && <RunSelector run={activeRun} runs={runs} onSelect={(selectedRun) => setActiveRun(selectedRun)} />}
 						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
 						<BasicPlaybackControls
 							isPlaying={isPlaying}
