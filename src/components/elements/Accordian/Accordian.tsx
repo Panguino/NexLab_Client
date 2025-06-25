@@ -8,13 +8,14 @@ import styles from './Accordian.module.scss'
 interface AccordianProps {
 	title: string
 	children: React.ReactNode
+	initiallyClosed?: boolean
 	variant?: 'default' | 'line' | 'sidebar'
 	isOpen?: boolean // New prop for external control
 	onToggle?: (open: boolean) => void // Callback for state changes
 }
 
-export const Accordian = ({ title, children, variant = 'default', isOpen, onToggle }: AccordianProps) => {
-	const [open, setOpen] = useState(isOpen !== undefined ? isOpen : false)
+export const Accordian = ({ title, children, initiallyClosed = false, variant = 'default', isOpen, onToggle }: AccordianProps) => {
+	const [open, setOpen] = useState(isOpen ?? !initiallyClosed)
 
 	// Sync internal state with external `isOpen` prop
 	useEffect(() => {
