@@ -20,6 +20,8 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	const { soundingProductId: productId, soundingSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
+	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
+	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const [ratio, setRatio] = useState(1)
 	const [soundingData, setSoundingData] = useState([])
 
@@ -36,7 +38,14 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 		<>
 			<div className={styles.soundingAnimatorContainer}>
 				<div className={styles.soundingAnimator}>
-					<Animator frames={soundingData} startFrame={soundingData.length - 1} ratio={ratio} disableZoom />
+					<Animator
+						frames={soundingData}
+						startFrame={soundingData.length - 1}
+						fullScreen={analysisMapFullScreen}
+						setFullScreen={setAnalysisMapFullScreen}
+						ratio={ratio}
+						disableZoom
+					/>
 				</div>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
