@@ -14,6 +14,7 @@ import {
 	faUpRightAndDownLeftFromCenter,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import BasicPlaybackControls, { LoopMethod } from '../BasicPlaybackControls/BasicPlaybackControls'
@@ -86,10 +87,12 @@ export const Animator = ({
 	setFullScreen = (fullScreen: boolean) => {
 		console.warn('setFullScreen function not provided, full screen state will not be updated.', fullScreen)
 	},
-	setActiveRun = (run: string) => {
-		console.warn('setActiveRun function not provided, active run will not be updated.', run)
-	},
+	// setActiveRun = (run: string) => {
+	// 	console.warn('setActiveRun function not provided, active run will not be updated.', run)
+	// },
 }: IAnimatorProps) => {
+	const router = useRouter()
+	const pathname = usePathname()
 	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
@@ -250,6 +253,12 @@ export const Animator = ({
 
 	//console.log('activeOverlays', activeOverlays)
 
+	const handleRunChange = (newRun) => {
+		const currentURL = pathname.split('/')
+		currentURL[3] = newRun
+		router.push(currentURL.join('/'))
+	}
+
 	return (
 		<div
 			className={styles.animator}
@@ -340,14 +349,7 @@ export const Animator = ({
 			{!hideControls && (
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
-						{runs && (
-							<RunSelector
-								run={activeRun}
-								runs={runs}
-								runsPerRow={runsPerRow ?? 4}
-								onSelect={(selectedRun) => setActiveRun(selectedRun)}
-							/>
-						)}
+						{runs && <RunSelector run={activeRun} runs={runs} runsPerRow={runsPerRow ?? 4} onSelect={handleRunChange} />}
 						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
 						<BasicPlaybackControls
 							isPlaying={isPlaying}
