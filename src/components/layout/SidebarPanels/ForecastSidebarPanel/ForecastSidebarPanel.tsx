@@ -7,12 +7,12 @@ import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { FORECAST_LEVEL_ORDER, FORECAST_LEVELS } from '@/data/forecast/levels'
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
 import { FORECAST_PRODUCTS } from '@/data/forecast/products'
+import { FORECAST_REGIONS } from '@/data/forecast/regions'
 import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
-import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import styles from './ForecastSidebarPanel.module.scss'
 
 const ForecastSidebarPanel = () => {
@@ -24,7 +24,10 @@ const ForecastSidebarPanel = () => {
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
+	const [regionId, setRegionId] = useState('')
 	const { forecastModelId: modelId, forecastSectorId: sectorId, forecastLevelId: levelId, forecastProductId: productId } = useParams()
+	const [openIndex, setOpenIndex] = useState<number | null>(null)
+	const openIndexRef = useRef<number | null>(null)
 
 	useEffect(() => {
 		if (
@@ -51,7 +54,12 @@ const ForecastSidebarPanel = () => {
 			)
 		} else {
 			const productsByLevel = buildProductsByLevel(modelId as string, sectorId as string)
+			const levelIndex = productsByLevel.findIndex((item) => item.level === levelId)
+			if (openIndexRef.current !== levelIndex) {
+				setOpenIndex(levelIndex)
+			}
 			setSortedProductEntries(productsByLevel)
+			setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		}
 	}, [productId, sectorId, router, modelId, levelId])
 
@@ -65,19 +73,32 @@ const ForecastSidebarPanel = () => {
 	useEffect(() => {
 		if (sectorSelectorPanelIsOpen) {
 			// We may expand to allow for more regions in the future, but for now we only have one region
-			const region = { rotate: [98, -40], scale: 2 }
+			const region = FORECAST_REGIONS[regionId as string]
 			const newD3config = {
 				rotate: region.rotate,
 				scale: region.scale,
 			}
 			setSectorSelectorD3config(newD3config)
-			const selectedSectors = FORECAST_MODELS[modelId as string].sectors.map((sectorId) => ({
-				id: sectorId,
-				...FORECAST_SECTORS[sectorId],
-			}))
+			const selectedSectors = FORECAST_MODELS[modelId as string].sectors
+				.filter((sectorId) => FORECAST_SECTORS[sectorId].region === regionId)
+				.map((sectorId) => ({
+					id: sectorId,
+					...FORECAST_SECTORS[sectorId],
+				}))
 			setSectorSelectorSectors(selectedSectors)
 		}
-	}, [sectorSelectorPanelIsOpen, modelId, setSectorSelectorD3config, setSectorSelectorSectors])
+	}, [sectorSelectorPanelIsOpen, modelId, regionId, setSectorSelectorD3config, setSectorSelectorSectors])
+
+	const handleRegionChange = (regionId: string) => {
+		setRegionId(regionId)
+		openSectorSelectorPanel()
+	}
+	const handleSectorChangeButton = () => {
+		if (regionId !== FORECAST_SECTORS[sectorId as string].region) {
+			setRegionId(FORECAST_SECTORS[sectorId as string].region)
+		}
+		openSectorSelectorPanel()
+	}
 
 	// get products grouped by level to build the sidebar
 	const buildProductsByLevel = (modelId: string, sectorId: string) => {
@@ -98,6 +119,14 @@ const ForecastSidebarPanel = () => {
 		label: FORECAST_MODELS[modelId].name,
 	}))
 
+	useEffect(() => {
+		openIndexRef.current = openIndex
+	}, [openIndex])
+
+	const handleToggle = (index: number) => {
+		setOpenIndex(openIndex === index ? null : index) // Close if already open, otherwise open the clicked accordion
+	}
+
 	return (
 		<ScrollArea>
 			<div className={styles.ForecastSidebarPanel}>
@@ -105,18 +134,35 @@ const ForecastSidebarPanel = () => {
 					<Select
 						value={modelId}
 						placeholder={modelId as string}
+						title="Model:"
 						options={modelOptions}
 						onChange={(value) => router.push(`/weather-data/forecast-models/${value}/${sectorId}/${levelId}/${productId}`)}
 					/>
+					<Select
+						value={regionId}
+						placeholder={FORECAST_REGIONS[regionId as string]?.label ?? ''}
+						title="Sector Size:"
+						options={Object.keys(FORECAST_REGIONS).map((regionId) => ({
+							value: regionId,
+							label: FORECAST_REGIONS[regionId].label,
+						}))}
+						onChange={handleRegionChange}
+					/>
 					<SectorChangeButton
-						onClick={openSectorSelectorPanel}
+						onClick={handleSectorChangeButton}
 						label="Selected Sector:"
 						labelValue={FORECAST_SECTORS[sectorId as string]?.name ?? 'Unknown Sector'}
 					/>
 				</div>
-				{sortedProductEntries.map(({ level, products }) => (
-					<Accordian key={level} title={FORECAST_LEVELS[level].name} initiallyClosed={level !== levelId} variant="line">
-						<SidebarPanelPad>
+				{sortedProductEntries.map(({ level, products }, index) => (
+					<Accordian
+						key={level}
+						title={FORECAST_LEVELS[level].name}
+						variant="sidebar"
+						isOpen={openIndex === index}
+						onToggle={() => handleToggle(index)}
+					>
+						<div className={styles.forecastProducts}>
 							{(products as string[]).map((product) => (
 								<SidebarLink
 									key={product}
@@ -125,7 +171,7 @@ const ForecastSidebarPanel = () => {
 									onClick={() => router.push(`/weather-data/forecast-models/${modelId}/${sectorId}/${level}/${product}`)}
 								/>
 							))}
-						</SidebarPanelPad>
+						</div>
 					</Accordian>
 				))}
 			</div>
