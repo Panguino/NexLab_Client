@@ -28,6 +28,8 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
 	const analysisZoomFill = useRootStore.use.nexradZoomFill()
 	const setAnalysisZoomFill = useRootStore.use.setNexradZoomFill()
+	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
+	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 
 	useEffect(() => {
 		async function getData() {
@@ -54,6 +56,8 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 						setZoomState={setAnalysisZoomState}
 						zoomFill={analysisZoomFill}
 						setZoomFill={setAnalysisZoomFill}
+						fullScreen={analysisMapFullScreen}
+						setFullScreen={setAnalysisMapFullScreen}
 					/>
 				</div>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

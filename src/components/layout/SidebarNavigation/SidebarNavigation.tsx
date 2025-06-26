@@ -14,9 +14,11 @@ const SidebarNavigation = ({ children }: SidebarNavigationProps) => {
 	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
 	const satradMapFullScreen = useRootStore.use.satradMapFullScreen()
 	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
+	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
+	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
 	const mobileSidebarMenuIsOpen = useRootStore.use.mobileSidebarMenuIsOpen()
 	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
-	const hideSidebar = hazardMapFullScreen || satradMapFullScreen || nexradMapFullScreen
+	const hideSidebar = hazardMapFullScreen || satradMapFullScreen || nexradMapFullScreen || forecastMapFullScreen || analysisMapFullScreen
 	const pathname = usePathname()
 
 	useEffect(() => {
