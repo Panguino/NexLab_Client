@@ -26,8 +26,10 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 	const [surfaceMapsData, setSurfaceMapsData] = useState([])
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
-	const analysisZoomFill = useRootStore.use.nexradZoomFill()
-	const setAnalysisZoomFill = useRootStore.use.setNexradZoomFill()
+	const analysisZoomFill = useRootStore.use.analysisZoomFill()
+	const setAnalysisZoomFill = useRootStore.use.setAnalysisZoomFill()
+	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
+	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 
 	useEffect(() => {
 		async function getData() {
@@ -54,6 +56,8 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 						setZoomState={setAnalysisZoomState}
 						zoomFill={analysisZoomFill}
 						setZoomFill={setAnalysisZoomFill}
+						fullScreen={analysisMapFullScreen}
+						setFullScreen={setAnalysisMapFullScreen}
 					/>
 				</div>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

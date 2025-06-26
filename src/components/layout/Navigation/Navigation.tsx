@@ -12,7 +12,9 @@ const Navigation = ({ mobileMenuItems }) => {
 	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
 	const satradMapFullScreen = useRootStore.use.satradMapFullScreen()
 	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
-	const hideNavigation = hazardMapFullScreen || satradMapFullScreen || nexradMapFullScreen
+	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
+	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
+	const hideNavigation = hazardMapFullScreen || satradMapFullScreen || nexradMapFullScreen || forecastMapFullScreen || analysisMapFullScreen
 
 	return (
 		<>
