@@ -252,88 +252,91 @@ export const Animator = ({
 
 	return (
 		<div
-			ref={animatorRef}
 			className={styles.animator}
 			onClick={() => {
 				closeMobileSidebarMenu()
 			}}
 		>
-			<TransformWrapper
-				ref={transformRef}
-				disablePadding
-				initialScale={initialZoomState.scale}
-				initialPositionX={initialZoomState.positionX}
-				initialPositionY={initialZoomState.positionY}
-				onZoomStop={handleZoomChange}
-				onPanningStop={handlePanningChange}
-				doubleClick={{ disabled: true }}
-				panning={{ velocityDisabled: true }}
-			>
-				{({ zoomIn, zoomOut, resetTransform }) => (
-					<>
-						<TransformComponent
-							wrapperStyle={{
-								width: _width,
-								height: _height,
-							}}
-							contentClass={styles.animatorImagesContainer}
-							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
-						>
-							<AnimatorImageMachine
-								ref={ImageMachineRef}
-								frames={frames || []}
-								currentFrame={currentFrame}
-								loadedFrames={loadedFrames}
-								setLoadedFrames={setLoadedFrames}
-								baseOpacity={activeOverlays.includes('data') ? 1 : 0}
-							/>
-							{activeOverlays.map((overlay, index) => {
-								if (overlay === 'data') return null
-								return (
+			<div className={styles.animatorOuterImageContainer}>
+				<div className={styles.animatorInnerImageContainer} ref={animatorRef}>
+					<TransformWrapper
+						ref={transformRef}
+						disablePadding
+						initialScale={initialZoomState.scale}
+						initialPositionX={initialZoomState.positionX}
+						initialPositionY={initialZoomState.positionY}
+						onZoomStop={handleZoomChange}
+						onPanningStop={handlePanningChange}
+						doubleClick={{ disabled: true }}
+						panning={{ velocityDisabled: true }}
+					>
+						{({ zoomIn, zoomOut, resetTransform }) => (
+							<>
+								<TransformComponent
+									wrapperStyle={{
+										width: _width,
+										height: _height,
+									}}
+									contentClass={styles.animatorImagesContainer}
+									contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
+								>
 									<AnimatorImageMachine
-										key={index}
-										baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
-										zIndex={SATRAD_OVERLAYS[overlay].zIndex}
-										frames={allOverlayImages[overlay] || []}
+										ref={ImageMachineRef}
+										frames={frames || []}
 										currentFrame={currentFrame}
+										loadedFrames={loadedFrames}
+										setLoadedFrames={setLoadedFrames}
+										baseOpacity={activeOverlays.includes('data') ? 1 : 0}
 									/>
-								)
-							})}
-						</TransformComponent>
-						{!hideZoomControls && !disableZoom && (
-							<div className={styles.zoomControls}>
-								{overlays && (
-									<button onClick={() => setOverlayPanelOpen(true)}>
-										<FontAwesomeIcon icon={faLayerGroup} />
-										<OverlayPanel
-											activeOverlays={activeOverlays}
-											setActiveOverlays={setActiveOverlays}
-											overlays={overlays}
-											onClose={() => setOverlayPanelOpen(false)}
-											open={overlayPanelOpen}
-										/>
-									</button>
+									{activeOverlays.map((overlay, index) => {
+										if (overlay === 'data') return null
+										return (
+											<AnimatorImageMachine
+												key={index}
+												baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
+												zIndex={SATRAD_OVERLAYS[overlay].zIndex}
+												frames={allOverlayImages[overlay] || []}
+												currentFrame={currentFrame}
+											/>
+										)
+									})}
+								</TransformComponent>
+								{!hideZoomControls && !disableZoom && (
+									<div className={styles.zoomControls}>
+										{overlays && (
+											<button onClick={() => setOverlayPanelOpen(true)}>
+												<FontAwesomeIcon icon={faLayerGroup} />
+												<OverlayPanel
+													activeOverlays={activeOverlays}
+													setActiveOverlays={setActiveOverlays}
+													overlays={overlays}
+													onClose={() => setOverlayPanelOpen(false)}
+													open={overlayPanelOpen}
+												/>
+											</button>
+										)}
+										<button onClick={() => zoomIn()}>
+											<FontAwesomeIcon icon={faSearchPlus} />
+										</button>
+										<button onClick={() => zoomOut()}>
+											<FontAwesomeIcon icon={faSearchMinus} />
+										</button>
+										<button onClick={() => resetTransform()}>
+											<FontAwesomeIcon icon={faUndo} />
+										</button>
+										<button onClick={() => expandToggle()}>
+											<FontAwesomeIcon icon={zoomFill ? faCompress : faExpand} />
+										</button>
+										<button onClick={() => fullScreenToggle()}>
+											<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
+										</button>
+									</div>
 								)}
-								<button onClick={() => zoomIn()}>
-									<FontAwesomeIcon icon={faSearchPlus} />
-								</button>
-								<button onClick={() => zoomOut()}>
-									<FontAwesomeIcon icon={faSearchMinus} />
-								</button>
-								<button onClick={() => resetTransform()}>
-									<FontAwesomeIcon icon={faUndo} />
-								</button>
-								<button onClick={() => expandToggle()}>
-									<FontAwesomeIcon icon={zoomFill ? faCompress : faExpand} />
-								</button>
-								<button onClick={() => fullScreenToggle()}>
-									<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
-								</button>
-							</div>
+							</>
 						)}
-					</>
-				)}
-			</TransformWrapper>
+					</TransformWrapper>
+				</div>
+			</div>
 			{!hideControls && (
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
