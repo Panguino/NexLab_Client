@@ -14,6 +14,7 @@ import {
 	faUpRightAndDownLeftFromCenter,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import BasicPlaybackControls, { LoopMethod } from '../BasicPlaybackControls/BasicPlaybackControls'
@@ -21,12 +22,16 @@ import Scrubber from '../Scrubber/Scrubber'
 import styles from './Animator.module.scss'
 import { AnimatorImageMachine } from './AnimatorImageMachine/AnimatorImageMachine'
 import { OverlayPanel } from './OverlayPanel/OverylayPanel'
+import { RunSelector } from './RunSelector/RunSelector'
 
 type direction = 1 | -1
 
 interface IAnimatorProps {
 	frames: string[]
 	startFrame?: number
+	runs?: { value: string; label: string }[] | null
+	activeRun?: string
+	runsPerRow?: number
 	overlays?: { static: object; dynamic: object }
 	ratio?: number
 	height?: number
@@ -52,6 +57,9 @@ interface IAnimatorProps {
 export const Animator = ({
 	frames,
 	startFrame,
+	runs,
+	activeRun,
+	runsPerRow = 4,
 	overlays,
 	ratio = 1,
 	interval = 200,
@@ -79,6 +87,8 @@ export const Animator = ({
 		console.warn('setFullScreen function not provided, full screen state will not be updated.', fullScreen)
 	},
 }: IAnimatorProps) => {
+	const router = useRouter()
+	const pathname = usePathname()
 	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
@@ -239,93 +249,103 @@ export const Animator = ({
 
 	//console.log('activeOverlays', activeOverlays)
 
+	const handleRunChange = (newRun) => {
+		const currentURL = pathname.split('/')
+		currentURL[3] = newRun
+		router.push(currentURL.join('/'))
+	}
+
 	return (
 		<div
-			ref={animatorRef}
 			className={styles.animator}
 			onClick={() => {
 				closeMobileSidebarMenu()
 			}}
 		>
-			<TransformWrapper
-				ref={transformRef}
-				disablePadding
-				initialScale={initialZoomState.scale}
-				initialPositionX={initialZoomState.positionX}
-				initialPositionY={initialZoomState.positionY}
-				onZoomStop={handleZoomChange}
-				onPanningStop={handlePanningChange}
-				doubleClick={{ disabled: true }}
-				panning={{ velocityDisabled: true }}
-			>
-				{({ zoomIn, zoomOut, resetTransform }) => (
-					<>
-						<TransformComponent
-							wrapperStyle={{
-								width: _width,
-								height: _height,
-							}}
-							contentClass={styles.animatorImagesContainer}
-							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
-						>
-							<AnimatorImageMachine
-								ref={ImageMachineRef}
-								frames={frames || []}
-								currentFrame={currentFrame}
-								loadedFrames={loadedFrames}
-								setLoadedFrames={setLoadedFrames}
-								baseOpacity={activeOverlays.includes('data') ? 1 : 0}
-							/>
-							{activeOverlays.map((overlay, index) => {
-								if (overlay === 'data') return null
-								return (
+			<div className={styles.animatorOuterImageContainer}>
+				<div className={styles.animatorInnerImageContainer} ref={animatorRef}>
+					<TransformWrapper
+						ref={transformRef}
+						disablePadding
+						initialScale={initialZoomState.scale}
+						initialPositionX={initialZoomState.positionX}
+						initialPositionY={initialZoomState.positionY}
+						onZoomStop={handleZoomChange}
+						onPanningStop={handlePanningChange}
+						doubleClick={{ disabled: true }}
+						panning={{ velocityDisabled: true }}
+					>
+						{({ zoomIn, zoomOut, resetTransform }) => (
+							<>
+								<TransformComponent
+									wrapperStyle={{
+										width: _width,
+										height: _height,
+									}}
+									contentClass={styles.animatorImagesContainer}
+									contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
+								>
 									<AnimatorImageMachine
-										key={index}
-										baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
-										zIndex={SATRAD_OVERLAYS[overlay].zIndex}
-										frames={allOverlayImages[overlay] || []}
+										ref={ImageMachineRef}
+										frames={frames || []}
 										currentFrame={currentFrame}
+										loadedFrames={loadedFrames}
+										setLoadedFrames={setLoadedFrames}
+										baseOpacity={activeOverlays.includes('data') ? 1 : 0}
 									/>
-								)
-							})}
-						</TransformComponent>
-						{!hideZoomControls && !disableZoom && (
-							<div className={styles.zoomControls}>
-								{overlays && (
-									<button onClick={() => setOverlayPanelOpen(true)}>
-										<FontAwesomeIcon icon={faLayerGroup} />
-										<OverlayPanel
-											activeOverlays={activeOverlays}
-											setActiveOverlays={setActiveOverlays}
-											overlays={overlays}
-											onClose={() => setOverlayPanelOpen(false)}
-											open={overlayPanelOpen}
-										/>
-									</button>
+									{activeOverlays.map((overlay, index) => {
+										if (overlay === 'data') return null
+										return (
+											<AnimatorImageMachine
+												key={index}
+												baseOpacity={SATRAD_OVERLAYS[overlay].opacity}
+												zIndex={SATRAD_OVERLAYS[overlay].zIndex}
+												frames={allOverlayImages[overlay] || []}
+												currentFrame={currentFrame}
+											/>
+										)
+									})}
+								</TransformComponent>
+								{!hideZoomControls && !disableZoom && (
+									<div className={styles.zoomControls}>
+										{overlays && (
+											<button onClick={() => setOverlayPanelOpen(true)}>
+												<FontAwesomeIcon icon={faLayerGroup} />
+												<OverlayPanel
+													activeOverlays={activeOverlays}
+													setActiveOverlays={setActiveOverlays}
+													overlays={overlays}
+													onClose={() => setOverlayPanelOpen(false)}
+													open={overlayPanelOpen}
+												/>
+											</button>
+										)}
+										<button onClick={() => zoomIn()}>
+											<FontAwesomeIcon icon={faSearchPlus} />
+										</button>
+										<button onClick={() => zoomOut()}>
+											<FontAwesomeIcon icon={faSearchMinus} />
+										</button>
+										<button onClick={() => resetTransform()}>
+											<FontAwesomeIcon icon={faUndo} />
+										</button>
+										<button onClick={() => expandToggle()}>
+											<FontAwesomeIcon icon={zoomFill ? faCompress : faExpand} />
+										</button>
+										<button onClick={() => fullScreenToggle()}>
+											<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
+										</button>
+									</div>
 								)}
-								<button onClick={() => zoomIn()}>
-									<FontAwesomeIcon icon={faSearchPlus} />
-								</button>
-								<button onClick={() => zoomOut()}>
-									<FontAwesomeIcon icon={faSearchMinus} />
-								</button>
-								<button onClick={() => resetTransform()}>
-									<FontAwesomeIcon icon={faUndo} />
-								</button>
-								<button onClick={() => expandToggle()}>
-									<FontAwesomeIcon icon={zoomFill ? faCompress : faExpand} />
-								</button>
-								<button onClick={() => fullScreenToggle()}>
-									<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
-								</button>
-							</div>
+							</>
 						)}
-					</>
-				)}
-			</TransformWrapper>
+					</TransformWrapper>
+				</div>
+			</div>
 			{!hideControls && (
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
+						{runs && <RunSelector run={activeRun} runs={runs} runsPerRow={runsPerRow} onSelect={handleRunChange} />}
 						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
 						<BasicPlaybackControls
 							isPlaying={isPlaying}
