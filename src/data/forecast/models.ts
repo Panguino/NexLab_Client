@@ -85,6 +85,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 6,
 	},
 	[FORECAST_RAP_ID]: {
 		name: 'RAP',
@@ -112,6 +113,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_NAM_ID]: {
 		name: 'NAM',
@@ -141,6 +143,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_NAMNST_ID]: {
 		name: 'NAMNST',
@@ -168,6 +171,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_RDPS_ID]: {
 		name: 'RDPS',
@@ -194,6 +198,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_GDPS_ID]: {
 		name: 'GDPS',
@@ -211,6 +216,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 2,
 	},
 	[FORECAST_ECMWF_ID]: {
 		name: 'ECMWF',
@@ -240,6 +246,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_GFS_ID]: {
 		name: 'GFS',
@@ -274,6 +281,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_CFS_ID]: {
 		name: 'CFS',
@@ -285,6 +293,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_850MB_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_SREF_ID]: {
 		name: 'SREF',
@@ -304,6 +313,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_CONVECTIVE_ID,
 			product: FORECAST_PRODUCT_CAPE1000_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_GEFS_ID]: {
 		name: 'GEFS',
@@ -327,5 +337,6 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_CONVECTIVE_ID,
 			product: FORECAST_PRODUCT_CAPE1000_ID,
 		},
+		runsPerRow: 4,
 	},
 }
