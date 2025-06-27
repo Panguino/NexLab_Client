@@ -17,8 +17,6 @@ import styles from './ForecastSidebarPanel.module.scss'
 
 const ForecastSidebarPanel = () => {
 	const router = useRouter()
-	const activeRun = useRootStore.use.activeRun()
-	const setActiveRun = useRootStore.use.setActiveRun()
 	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
 	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
 	const sectorSelectorPanelIsOpen = useRootStore.use.sectorSelectorPanelIsOpen()
@@ -28,7 +26,7 @@ const ForecastSidebarPanel = () => {
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
 	const [regionId, setRegionId] = useState('')
 	const {
-		forecastRunId: runId, // effectively used to make URLs sharable, but not used in the component logic
+		forecastRunId: runId,
 		forecastModelId: modelId,
 		forecastSectorId: sectorId,
 		forecastLevelId: levelId,
@@ -36,10 +34,6 @@ const ForecastSidebarPanel = () => {
 	} = useParams()
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
 	const openIndexRef = useRef<number | null>(null)
-
-	useEffect(() => {
-		setActiveRun(runId || 'current')
-	}, [runId, setActiveRun])
 
 	useEffect(() => {
 		if (
@@ -55,15 +49,15 @@ const ForecastSidebarPanel = () => {
 			const DEFAULT_FORECAST_LEVEL = FORECAST_MODELS[modelIdDefault as string].defaults.level
 			const DEFAULT_FORECAST_PRODUCT = FORECAST_MODELS[modelIdDefault as string].defaults.product
 			console.log(
-				`Invalid forecast parameters: runId=${activeRun}, modelId=${modelId}, sectorId=${sectorId}, levelId=${levelId}, productId=${productId}. Redirecting to default.`,
-				activeRun,
+				`Invalid forecast parameters: runId=${runId}, modelId=${modelId}, sectorId=${sectorId}, levelId=${levelId}, productId=${productId}. Redirecting to default.`,
+				runId,
 				modelIdDefault,
 				DEFAULT_FORECAST_SECTOR,
 				DEFAULT_FORECAST_LEVEL,
 				DEFAULT_FORECAST_PRODUCT,
 			)
 			router.push(
-				`/weather-data/forecast-models/${activeRun}/${modelIdDefault}/${DEFAULT_FORECAST_SECTOR}/${DEFAULT_FORECAST_LEVEL}/${DEFAULT_FORECAST_PRODUCT}`,
+				`/weather-data/forecast-models/${runId}/${modelIdDefault}/${DEFAULT_FORECAST_SECTOR}/${DEFAULT_FORECAST_LEVEL}/${DEFAULT_FORECAST_PRODUCT}`,
 			)
 		} else {
 			const productsByLevel = buildProductsByLevel(modelId as string, sectorId as string)
@@ -74,14 +68,14 @@ const ForecastSidebarPanel = () => {
 			setSortedProductEntries(productsByLevel)
 			setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		}
-	}, [activeRun, modelId, sectorId, levelId, productId, router])
+	}, [runId, modelId, sectorId, levelId, productId, router])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
 			closeSectorSelectorPanel()
-			router.push(`/weather-data/forecast-models/${activeRun}/${modelId}/${sectorId}/${levelId}/${productId}`)
+			router.push(`/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`)
 		})
-	}, [activeRun, modelId, levelId, productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
+	}, [runId, modelId, levelId, productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
 
 	useEffect(() => {
 		if (sectorSelectorPanelIsOpen) {
@@ -149,7 +143,7 @@ const ForecastSidebarPanel = () => {
 						placeholder={modelId as string}
 						title="Model:"
 						options={modelOptions}
-						onChange={(value) => router.push(`/weather-data/forecast-models/${activeRun}/${value}/${sectorId}/${levelId}/${productId}`)}
+						onChange={(value) => router.push(`/weather-data/forecast-models/${runId}/${value}/${sectorId}/${levelId}/${productId}`)}
 					/>
 					<Select
 						value={regionId}
@@ -181,9 +175,7 @@ const ForecastSidebarPanel = () => {
 									key={product}
 									name={FORECAST_PRODUCTS[product].name}
 									active={product === productId && level === levelId}
-									onClick={() =>
-										router.push(`/weather-data/forecast-models/${activeRun}/${modelId}/${sectorId}/${level}/${product}`)
-									}
+									onClick={() => router.push(`/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${level}/${product}`)}
 								/>
 							))}
 						</div>

@@ -6,10 +6,10 @@ import styles from './RunSelector.module.css' // Import CSS module
 
 type run = {
 	label: string // Display label for the run
-	value: string // Value of the run in the format "XXZ MM-DD-YYYY"
+	value: string // Value of the run in the format "HHZ MM-DD-YYYY"
 }
 interface RunSelectorProps {
-	runs: run[] // Array of runs in the format "XXZ MM-DD-YYYY"
+	runs: run[] // Array of runs in the format "HHZ MM-DD-YYYY"
 	run: string | null // Currently selected run
 	runsPerRow?: number // New prop with default value
 	onSelect: (selectedRun: string) => void // Callback when a run is selected

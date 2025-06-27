@@ -30,9 +30,8 @@ interface IAnimatorProps {
 	frames: string[]
 	startFrame?: number
 	runs?: { value: string; label: string }[] | null
-	runsPerRow?: number
 	activeRun?: string
-	setActiveRun?: (run: string) => void
+	runsPerRow?: number
 	overlays?: { static: object; dynamic: object }
 	ratio?: number
 	height?: number
@@ -59,8 +58,8 @@ export const Animator = ({
 	frames,
 	startFrame,
 	runs,
-	runsPerRow = 4,
 	activeRun,
+	runsPerRow = 4,
 	overlays,
 	ratio = 1,
 	interval = 200,
@@ -87,9 +86,6 @@ export const Animator = ({
 	setFullScreen = (fullScreen: boolean) => {
 		console.warn('setFullScreen function not provided, full screen state will not be updated.', fullScreen)
 	},
-	// setActiveRun = (run: string) => {
-	// 	console.warn('setActiveRun function not provided, active run will not be updated.', run)
-	// },
 }: IAnimatorProps) => {
 	const router = useRouter()
 	const pathname = usePathname()
@@ -349,7 +345,7 @@ export const Animator = ({
 			{!hideControls && (
 				<div className={styles.controlsContainer}>
 					<div className={styles.controls}>
-						{runs && <RunSelector run={activeRun} runs={runs} runsPerRow={runsPerRow ?? 4} onSelect={handleRunChange} />}
+						{runs && <RunSelector run={activeRun} runs={runs} runsPerRow={runsPerRow} onSelect={handleRunChange} />}
 						<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
 						<BasicPlaybackControls
 							isPlaying={isPlaying}

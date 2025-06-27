@@ -11,7 +11,7 @@ import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import ForecastAnimatorSettings from '../../_animatorSettingPanels/ForecastAnimatorSettings/ForecastAnimatorSettings'
@@ -28,10 +28,15 @@ interface runsProps {
 
 const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const { isMobile } = useIsMobile()
-	const { forecastModelId: modelId, forecastSectorId: sectorId, forecastLevelId: levelId, forecastProductId: productId } = useParams()
+	const router = useRouter()
+	const {
+		forecastRunId: runId,
+		forecastModelId: modelId,
+		forecastSectorId: sectorId,
+		forecastLevelId: levelId,
+		forecastProductId: productId,
+	} = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const activeRun = useRootStore.use.activeRun()
-	const setActiveRun = useRootStore.use.setActiveRun()
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
@@ -46,25 +51,25 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const [forecastRuns, setForecastRuns] = useState<Record<string, runsProps>>({})
 
 	const getData = useCallback(async () => {
-		console.log('ForecastAnimator: Fetching data', modelId, activeRun, sectorId, levelId, productId)
-		const data = await getForecastData(modelId, activeRun, sectorId, levelId, productId)
+		console.log('ForecastAnimator: Fetching data', modelId, runId, sectorId, levelId, productId)
+		const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
 		const runs = await getModelRuns(modelId)
 		setRatio(data.imageInfo.width / data.imageInfo.height)
 		setForecastData(data.frames)
 		setForecastRuns(runs.runs)
-		if (!runs.runs[activeRun as string]) {
+		if (!runs.runs[runId as string]) {
 			// If this works then this would be where we'd make a more intelligent choice of run
 			// e.g. if runId is properly formatted but not found, we could look for the closest match
 			// ex: I don't have a 19Z but I've got an 18Z
 			console.log('ForecastAnimator: could not find runId in runs, defaulting to current run')
 			const currentRun = Object.keys(runs.runs).at(-1)
-			setActiveRun(currentRun)
+			router.push(`/weather-data/forecast-models/${currentRun}/${modelId}/${sectorId}/${levelId}/${productId}`)
 		}
-	}, [activeRun, modelId, sectorId, levelId, productId, setRatio, setForecastData, setForecastRuns, setActiveRun])
+	}, [runId, modelId, sectorId, levelId, productId, setRatio, setForecastData, setForecastRuns, router])
 
 	useEffect(() => {
 		getData()
-	}, [activeRun, modelId, sectorId, levelId, productId, getData])
+	}, [runId, modelId, sectorId, levelId, productId, getData])
 
 	useEffect(() => {
 		setForecastZoomFill(isMobile)
@@ -90,8 +95,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 						startFrame={0}
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}
-						activeRun={activeRun}
-						setActiveRun={setActiveRun}
+						activeRun={runId as string}
 						ratio={ratio}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}
