@@ -25,6 +25,7 @@ export const getData = async (url) => {
 			// perhaps we should have this do less transformation and just return the raw data
 			// then let the query utilities handle the transformation
 			frames: data_data.err === false ? data_data.files : [],
+			validtimes: data_data.validtimes || [],
 			imageInfo: data_data?.img || { width: 0, height: 0 },
 			overlays: { static: data_data.overlays?.static ?? {}, dynamic: data_data.overlays?.dynamic ?? {} },
 			runs: data_data.runs || {},

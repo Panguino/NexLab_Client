@@ -90,6 +90,16 @@ export const FORECAST_SECTORS = {
 		region: FORECAST_REGION_NAMER_ID,
 		alternateSectors: ['WCAN', 'NA'],
 	},
+	[FORECAST_SECTOR_ALASKA_ID]: {
+		name: 'Alaska',
+		type: 'Geobox',
+		coordinates: [
+			[-180, 43],
+			[-121, 78],
+		],
+		region: FORECAST_REGION_NAMER_ID,
+		alternateSectors: ['WCAN', 'NA'],
+	},
 	[FORECAST_SECTOR_WESTERN_CANADA_ID]: {
 		name: 'Western Canada',
 		type: 'Geobox',
@@ -99,16 +109,6 @@ export const FORECAST_SECTORS = {
 		],
 		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['NW', 'US', 'NA'],
-	},
-	[FORECAST_SECTOR_ALASKA_ID]: {
-		name: 'Alaska',
-		type: 'Geobox',
-		coordinates: [
-			[-180, 43],
-			[-121, 78],
-		],
-		region: FORECAST_REGION_CONUS_ID,
-		alternateSectors: ['WCAN', 'NA'],
 	},
 	[FORECAST_SECTOR_NORTHWEST_ID]: {
 		name: 'Northwest',
