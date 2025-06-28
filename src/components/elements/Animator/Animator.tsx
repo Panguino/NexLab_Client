@@ -35,6 +35,7 @@ interface IAnimatorProps {
 	activeRun?: string
 	runsPerRow?: number
 	overlays?: { static: object; dynamic: object }
+	enableReadouts?: boolean
 	ratio?: number
 	height?: number
 	width?: number
@@ -64,6 +65,7 @@ export const Animator = ({
 	activeRun,
 	runsPerRow = 4,
 	overlays,
+	enableReadouts = true,
 	ratio = 1,
 	interval = 200,
 	lastFrameDwell = true,
@@ -106,6 +108,8 @@ export const Animator = ({
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
 	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }, updateDimensions] = useDimensions(ratio, !zoomFill)
+	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+	const [isHovering, setIsHovering] = useState(false)
 
 	useLayoutEffect(() => {
 		updateDimensions()
@@ -247,6 +251,23 @@ export const Animator = ({
 		setZoomState(e?.state)
 	}
 
+	// Add mouse event handlers
+	const handleMouseMove = (e) => {
+		// Get position relative to the animator container
+		const rect = animatorRef.current.getBoundingClientRect()
+		const x = e.clientX - rect.left
+		const y = e.clientY - rect.top
+		setMousePosition({ x, y })
+	}
+
+	const handleMouseEnter = () => {
+		setIsHovering(true)
+	}
+
+	const handleMouseLeave = () => {
+		setIsHovering(false)
+	}
+
 	useEffect(() => {
 		if (!transformRef.current) return
 		// this is the only way to keep the zoom position and level intact when you change expand
@@ -276,7 +297,13 @@ export const Animator = ({
 			}}
 		>
 			<div className={styles.animatorOuterImageContainer}>
-				<div className={styles.animatorInnerImageContainer} ref={animatorRef}>
+				<div
+					className={styles.animatorInnerImageContainer}
+					ref={animatorRef}
+					onMouseMove={handleMouseMove}
+					onMouseEnter={handleMouseEnter}
+					onMouseLeave={handleMouseLeave}
+				>
 					<TransformWrapper
 						ref={transformRef}
 						disablePadding
@@ -319,6 +346,29 @@ export const Animator = ({
 										)
 									})}
 								</TransformComponent>
+								{/* Data Readout Tooltip */}
+								{enableReadouts && isHovering && !isPlaying && (
+									<div
+										className={styles.dataTooltip}
+										style={{
+											left: `${mousePosition.x}px`,
+											top: `${mousePosition.y}px`,
+										}}
+									>
+										<div className={styles.tooltipContent}>
+											<p>
+												Frame: {currentFrame + 1}/{loadedFrames.length}
+											</p>
+											{frameValidTimes && frameValidTimes[currentFrame] && (
+												<p>Time: {new Date(frameValidTimes[currentFrame]).toLocaleTimeString()}</p>
+											)}
+											<p>
+												Position: {Math.round(mousePosition.x)}, {Math.round(mousePosition.y)}
+											</p>
+										</div>
+									</div>
+								)}
+
 								{!hideZoomControls && !disableZoom && (
 									<div className={styles.zoomControls}>
 										{overlays && (

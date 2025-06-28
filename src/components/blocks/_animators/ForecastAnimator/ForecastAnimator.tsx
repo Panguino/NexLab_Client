@@ -129,6 +129,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}
 						activeRun={runId as string}
+						enableReadouts={true}
 						ratio={ratio}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}
