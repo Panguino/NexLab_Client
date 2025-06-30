@@ -12,7 +12,7 @@ import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import ForecastAnimatorSettings from '../../_animatorSettingPanels/ForecastAnimatorSettings/ForecastAnimatorSettings'
 import styles from './ForecastAnimator.module.scss'
@@ -46,17 +46,21 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
 	const forecastLastFrameDwellTime = useRootStore.use.forecastLastFrameDwellTime()
+	const frameValidTime = useRootStore.use.frameValidTime()
+	const setFrameValidTime = useRootStore.use.setFrameValidTime()
 	const [ratio, setRatio] = useState(1)
 	const [forecastData, setForecastData] = useState([])
 	const [forecastRuns, setForecastRuns] = useState<Record<string, runsProps>>({})
+	const [startFrame, setStartFrame] = useState(0)
+	const frameValidTimeRef = useRef<number | null>(null)
+	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
 
 	const getData = useCallback(async () => {
 		console.log('ForecastAnimator: Fetching data', modelId, runId, sectorId, levelId, productId)
 		const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
 		const runs = await getModelRuns(modelId)
-		setRatio(data.imageInfo.width / data.imageInfo.height)
-		setForecastData(data.frames)
-		setForecastRuns(runs.runs)
+		const currentFrameValidTime = frameValidTimeRef.current || data.validtimes[0] // Use the current frame valid time or the first valid time if not set
+
 		if (!runs.runs[runId as string]) {
 			// If this works then this would be where we'd make a more intelligent choice of run
 			// e.g. if runId is properly formatted but not found, we could look for the closest match
@@ -65,11 +69,38 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 			const currentRun = Object.keys(runs.runs).at(-1)
 			router.push(`/weather-data/forecast-models/${currentRun}/${modelId}/${sectorId}/${levelId}/${productId}`)
 		}
-	}, [runId, modelId, sectorId, levelId, productId, setRatio, setForecastData, setForecastRuns, router])
+
+		if (data.validtimes.indexOf(currentFrameValidTime) < 0) {
+			// frameValidTime doesn't exist in the array, find closest match
+			const closestValidTime = data.validtimes.reduce((closest, current) => {
+				const currentDiff = Math.abs(current - currentFrameValidTime)
+				const closestDiff = Math.abs(closest - currentFrameValidTime)
+				return currentDiff < closestDiff ? current : closest
+			}, data.validtimes[0]) // Start with first timestamp as default closest
+
+			// Update to use the closest timestamp
+			setFrameValidTime(closestValidTime)
+
+			// Also set the starting frame to match this timestamp
+			const closestIndex = data.validtimes.indexOf(closestValidTime)
+			setStartFrame(closestIndex)
+		} else {
+			setStartFrame(data.validtimes.indexOf(currentFrameValidTime))
+		}
+
+		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setForecastData(data.frames)
+		setForecastRuns(runs.runs)
+		setFrameValidTimes(data.validtimes)
+	}, [runId, modelId, sectorId, levelId, productId, setRatio, setForecastData, setForecastRuns, setFrameValidTimes, setFrameValidTime, router])
 
 	useEffect(() => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, getData])
+
+	useEffect(() => {
+		frameValidTimeRef.current = frameValidTime
+	}, [frameValidTime])
 
 	useEffect(() => {
 		setForecastZoomFill(isMobile)
@@ -92,7 +123,9 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 				<div className={styles.forecastAnimator}>
 					<Animator
 						frames={forecastData}
-						startFrame={0}
+						frameValidTimes={frameValidTimes}
+						setFrameValidTime={setFrameValidTime}
+						startFrame={startFrame}
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}
 						activeRun={runId as string}

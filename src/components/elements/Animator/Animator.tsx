@@ -28,6 +28,8 @@ type direction = 1 | -1
 
 interface IAnimatorProps {
 	frames: string[]
+	frameValidTimes?: number[]
+	setFrameValidTime?: (validtime: number) => void
 	startFrame?: number
 	runs?: { value: string; label: string }[] | null
 	activeRun?: string
@@ -56,6 +58,7 @@ interface IAnimatorProps {
 
 export const Animator = ({
 	frames,
+	frameValidTimes,
 	startFrame,
 	runs,
 	activeRun,
@@ -74,6 +77,9 @@ export const Animator = ({
 	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
 	activeOverlays = ['data', 'map'],
 	fullScreen = false,
+	setFrameValidTime = (validtime: number) => {
+		console.warn('setFrameValidTime function not provided, frame valid time will not be updated.', validtime)
+	},
 	setActiveOverlays = (overlays: string[]) => {
 		console.warn('setActiveOverlays function not provided, active overlays will not be updated.', overlays)
 	},
@@ -193,6 +199,13 @@ export const Animator = ({
 			setCurrentFrame(startFrame > loadedFrames.length - 1 ? loadedFrames.length - 1 : startFrame)
 		}
 	}, [loadedFrames, startFrame])
+
+	useEffect(() => {
+		// update valid time when current frame changes
+		if (frameValidTimes && frameValidTimes.length > 0 && frameValidTimes[currentFrame] !== undefined) {
+			setFrameValidTime(frameValidTimes[currentFrame])
+		}
+	}, [currentFrame, frameValidTimes, setFrameValidTime])
 
 	useEffect(() => {
 		const handleResize = () => {
