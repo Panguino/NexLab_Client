@@ -20,9 +20,24 @@
 }
 .dataTooltip {
 	position: absolute;
-	pointer-events: none; // Let mouse events pass through the tooltip
+	pointer-events: none;
 	z-index: 100;
-	transform: translate(10px, 10px); // Offset from cursor
+
+	&.bottom-right {
+		transform: translate(10px, 10px);
+	}
+
+	&.bottom-left {
+		transform: translate(calc(-100% - 10px), 10px);
+	}
+
+	&.top-right {
+		transform: translate(10px, calc(-100% - 10px));
+	}
+
+	&.top-left {
+		transform: translate(calc(-100% - 10px), calc(-100% - 10px));
+	}
 
 	.tooltipContent {
 		background-color: rgba(0, 0, 0, 0.7);

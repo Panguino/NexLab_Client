@@ -15,7 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import BasicPlaybackControls, { LoopMethod } from '../BasicPlaybackControls/BasicPlaybackControls'
 import Scrubber from '../Scrubber/Scrubber'
@@ -110,6 +110,8 @@ export const Animator = ({
 	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }, updateDimensions] = useDimensions(ratio, !zoomFill)
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 	const [isHovering, setIsHovering] = useState(false)
+	const tooltipRef = useRef<HTMLDivElement>(null)
+	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0, position: 'bottom-right' })
 
 	useLayoutEffect(() => {
 		updateDimensions()
@@ -251,13 +253,41 @@ export const Animator = ({
 		setZoomState(e?.state)
 	}
 
+	const calculateTooltipPosition = useCallback(() => {
+		if (!animatorRef.current || !tooltipRef.current) return
+
+		const containerRect = animatorRef.current.getBoundingClientRect()
+		const tooltipRect = tooltipRef.current.getBoundingClientRect()
+		const tooltipWidth = tooltipRect.width
+		const tooltipHeight = tooltipRect.height
+
+		// Calculate available space
+		const spaceRight = containerRect.width - mousePosition.x
+		const spaceBottom = containerRect.height - mousePosition.y
+
+		// Determine position based on available space
+		let position = 'bottom-right' // default
+
+		if (spaceRight < tooltipWidth + 20) {
+			position = spaceBottom < tooltipHeight + 20 ? 'top-left' : 'bottom-left'
+		} else if (spaceBottom < tooltipHeight + 20) {
+			position = 'top-right'
+		}
+
+		setTooltipPosition({
+			x: mousePosition.x,
+			y: mousePosition.y,
+			position,
+		})
+	}, [mousePosition.x, mousePosition.y, animatorRef, tooltipRef])
+
 	// Add mouse event handlers
 	const handleMouseMove = (e) => {
-		// Get position relative to the animator container
 		const rect = animatorRef.current.getBoundingClientRect()
 		const x = e.clientX - rect.left
 		const y = e.clientY - rect.top
 		setMousePosition({ x, y })
+		calculateTooltipPosition()
 	}
 
 	const handleMouseEnter = () => {
@@ -349,10 +379,11 @@ export const Animator = ({
 								{/* Data Readout Tooltip */}
 								{enableReadouts && isHovering && !isPlaying && (
 									<div
-										className={styles.dataTooltip}
+										ref={tooltipRef}
+										className={`${styles.dataTooltip} ${styles[tooltipPosition.position]}`}
 										style={{
-											left: `${mousePosition.x}px`,
-											top: `${mousePosition.y}px`,
+											left: `${tooltipPosition.x}px`,
+											top: `${tooltipPosition.y}px`,
 										}}
 									>
 										<div className={styles.tooltipContent}>
