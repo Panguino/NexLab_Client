@@ -124,19 +124,21 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 				return
 			}
 
-			// Set a timeout to fetch data after 2 seconds
+			// Set a timeout to fetch data after 1 seconds
 			setIsLoadingReadoutData(true)
 			frameDataTimeoutRef.current = setTimeout(async () => {
 				try {
 					const data = await getFrameReadoutData(modelId, runId, sectorId, levelId, productId, frameIndex)
-					setFrameReadoutData(data.readoutData)
+					const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
+					console.log('READOUT TIMEOUT - Fetched frame readout data:', readoutDataObj)
+					setFrameReadoutData(readoutDataObj)
 				} catch (error) {
 					console.error('Error fetching frame readout data:', error)
 				} finally {
 					setIsLoadingReadoutData(false)
 					frameDataTimeoutRef.current = null
 				}
-			}, 2000) // 2-second delay
+			}, 1000) // 1-second delay
 		},
 		[modelId, runId, sectorId, levelId, productId],
 	)

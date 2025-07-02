@@ -297,41 +297,26 @@ export const Animator = ({
 	}, [mousePosition.x, mousePosition.y, animatorRef, tooltipRef])
 
 	useEffect(() => {
-		console.log('useEffect for updating tooltip content triggered')
 		if (!animatorRef.current || !isHovering || isPlaying || !frameReadoutData?.dataTypes?.length) return
-
 		const containerRect = animatorRef.current.getBoundingClientRect()
 		const percentageX = mousePosition.x / containerRect.width
 		const percentageY = mousePosition.y / containerRect.height
-
 		try {
-			console.log('frameReadoutData structure check:', {
-				hasDataTypes: Boolean(frameReadoutData?.dataTypes),
-				firstDataType: frameReadoutData?.dataTypes?.[0],
-				sampleArrayCheck: Array.isArray(frameReadoutData?.[frameReadoutData?.dataTypes?.[0]]),
-				sampleArrayLength: frameReadoutData?.[frameReadoutData?.dataTypes?.[0]]?.length,
-			})
 			const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc, dataType) => {
-				const type2DArray = frameReadoutData[dataType]
-
-				if (Array.isArray(type2DArray) && type2DArray.length > 0) {
-					const typeYIndex = Math.min(Math.floor(percentageY * type2DArray.length), type2DArray.length - 1)
-
-					if (Array.isArray(type2DArray[typeYIndex]) && type2DArray[typeYIndex].length > 0) {
-						const typeXIndex = Math.min(Math.floor(percentageX * type2DArray[typeYIndex].length), type2DArray[typeYIndex].length - 1)
-						acc[dataType] = type2DArray[typeYIndex][typeXIndex]
-					}
-				}
+				const type2DArray = frameReadoutData.readoutData[dataType]
+				const typeYIndex = Math.floor(percentageY * type2DArray.length)
+				const typeXIndex = Math.floor(percentageX * type2DArray[typeYIndex].length)
+				acc[dataType] = type2DArray[typeYIndex][typeXIndex]
 
 				return acc
 			}, {})
 
 			setTooltipContent(dataAtMousePosition)
-			console.log('Tooltip content updated:', dataAtMousePosition, 'Has entries:', Object.keys(dataAtMousePosition).length > 0)
+			// console.log('Tooltip content updated:', dataAtMousePosition, 'Has entries:', Object.keys(dataAtMousePosition).length > 0)
 		} catch (error) {
 			console.error('Error processing readout data:', error)
 		}
-	}, [frameReadoutData, mousePosition.x, mousePosition.y, isHovering, isPlaying, animatorRef])
+	}, [frameReadoutData, mousePosition, isHovering, isPlaying, animatorRef])
 
 	// Add mouse event handlers
 	const handleMouseMove = (e) => {
