@@ -29,6 +29,8 @@ export const getData = async (url) => {
 			imageInfo: data_data?.img || { width: 0, height: 0 },
 			overlays: { static: data_data.overlays?.static ?? {}, dynamic: data_data.overlays?.dynamic ?? {} },
 			runs: data_data.runs || {},
+			dataTypes: data_data.dataTypes || [],
+			readoutData: data_data.readoutData || [],
 		}
 	} catch (error) {
 		console.error('Error fetching data:', error)

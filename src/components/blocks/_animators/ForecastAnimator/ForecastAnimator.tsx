@@ -8,6 +8,7 @@ import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
+import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -54,6 +55,9 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const [startFrame, setStartFrame] = useState(0)
 	const frameValidTimeRef = useRef<number | null>(null)
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
+	const [frameReadoutData, setFrameReadoutData] = useState(null)
+	const [isLoadingReadoutData, setIsLoadingReadoutData] = useState(false)
+	const frameDataTimeoutRef = useRef(null)
 
 	const getData = useCallback(async () => {
 		console.log('ForecastAnimator: Fetching data', modelId, runId, sectorId, levelId, productId)
@@ -102,6 +106,50 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 		frameValidTimeRef.current = frameValidTime
 	}, [frameValidTime])
 
+	// Add this handler function
+	const handleReadoutDataRequest = useCallback(
+		(frameIndex) => {
+			// Clear any existing timeout
+			if (frameDataTimeoutRef.current) {
+				clearTimeout(frameDataTimeoutRef.current)
+				frameDataTimeoutRef.current = null
+			}
+
+			// Reset state
+			setFrameReadoutData(null)
+
+			// Only fetch if we have all required parameters
+			if (!(modelId && runId && sectorId && levelId && productId)) {
+				console.log('Missing required parameters for readout data')
+				return
+			}
+
+			// Set a timeout to fetch data after 2 seconds
+			setIsLoadingReadoutData(true)
+			frameDataTimeoutRef.current = setTimeout(async () => {
+				try {
+					const data = await getFrameReadoutData(modelId, runId, sectorId, levelId, productId, frameIndex)
+					setFrameReadoutData(data.readoutData)
+				} catch (error) {
+					console.error('Error fetching frame readout data:', error)
+				} finally {
+					setIsLoadingReadoutData(false)
+					frameDataTimeoutRef.current = null
+				}
+			}, 2000) // 2-second delay
+		},
+		[modelId, runId, sectorId, levelId, productId],
+	)
+
+	// Add a cleanup effect
+	useEffect(() => {
+		return () => {
+			if (frameDataTimeoutRef.current) {
+				clearTimeout(frameDataTimeoutRef.current)
+			}
+		}
+	}, [])
+
 	useEffect(() => {
 		setForecastZoomFill(isMobile)
 	}, [isMobile, setForecastZoomFill])
@@ -130,6 +178,9 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 						runsPerRow={runsPerRow}
 						activeRun={runId as string}
 						enableReadouts={true}
+						frameReadoutData={frameReadoutData}
+						isLoadingReadoutData={isLoadingReadoutData}
+						requestReadoutData={handleReadoutDataRequest}
 						ratio={ratio}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}

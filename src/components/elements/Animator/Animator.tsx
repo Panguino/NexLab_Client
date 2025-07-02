@@ -36,6 +36,9 @@ interface IAnimatorProps {
 	runsPerRow?: number
 	overlays?: { static: object; dynamic: object }
 	enableReadouts?: boolean
+	frameReadoutData?: any
+	isLoadingReadoutData?: boolean
+	requestReadoutData?: (frameIndex: number) => void
 	ratio?: number
 	height?: number
 	width?: number
@@ -66,6 +69,9 @@ export const Animator = ({
 	runsPerRow = 4,
 	overlays,
 	enableReadouts = true,
+	frameReadoutData,
+	isLoadingReadoutData,
+	requestReadoutData,
 	ratio = 1,
 	interval = 200,
 	lastFrameDwell = true,
@@ -112,6 +118,7 @@ export const Animator = ({
 	const [isHovering, setIsHovering] = useState(false)
 	const tooltipRef = useRef<HTMLDivElement>(null)
 	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0, position: 'bottom-right' })
+	const [tooltipContent, setTooltipContent] = useState({})
 
 	useLayoutEffect(() => {
 		updateDimensions()
@@ -253,6 +260,14 @@ export const Animator = ({
 		setZoomState(e?.state)
 	}
 
+	useEffect(() => {
+		// Check conditions for requesting data
+		if (enableReadouts && !isPlaying && requestReadoutData && currentFrame >= 0) {
+			// Request readout data for the current frame
+			requestReadoutData(currentFrame)
+		}
+	}, [currentFrame, enableReadouts, isPlaying, requestReadoutData])
+
 	const calculateTooltipPosition = useCallback(() => {
 		if (!animatorRef.current || !tooltipRef.current) return
 
@@ -280,6 +295,43 @@ export const Animator = ({
 			position,
 		})
 	}, [mousePosition.x, mousePosition.y, animatorRef, tooltipRef])
+
+	useEffect(() => {
+		console.log('useEffect for updating tooltip content triggered')
+		if (!animatorRef.current || !isHovering || isPlaying || !frameReadoutData?.dataTypes?.length) return
+
+		const containerRect = animatorRef.current.getBoundingClientRect()
+		const percentageX = mousePosition.x / containerRect.width
+		const percentageY = mousePosition.y / containerRect.height
+
+		try {
+			console.log('frameReadoutData structure check:', {
+				hasDataTypes: Boolean(frameReadoutData?.dataTypes),
+				firstDataType: frameReadoutData?.dataTypes?.[0],
+				sampleArrayCheck: Array.isArray(frameReadoutData?.[frameReadoutData?.dataTypes?.[0]]),
+				sampleArrayLength: frameReadoutData?.[frameReadoutData?.dataTypes?.[0]]?.length,
+			})
+			const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc, dataType) => {
+				const type2DArray = frameReadoutData[dataType]
+
+				if (Array.isArray(type2DArray) && type2DArray.length > 0) {
+					const typeYIndex = Math.min(Math.floor(percentageY * type2DArray.length), type2DArray.length - 1)
+
+					if (Array.isArray(type2DArray[typeYIndex]) && type2DArray[typeYIndex].length > 0) {
+						const typeXIndex = Math.min(Math.floor(percentageX * type2DArray[typeYIndex].length), type2DArray[typeYIndex].length - 1)
+						acc[dataType] = type2DArray[typeYIndex][typeXIndex]
+					}
+				}
+
+				return acc
+			}, {})
+
+			setTooltipContent(dataAtMousePosition)
+			console.log('Tooltip content updated:', dataAtMousePosition, 'Has entries:', Object.keys(dataAtMousePosition).length > 0)
+		} catch (error) {
+			console.error('Error processing readout data:', error)
+		}
+	}, [frameReadoutData, mousePosition.x, mousePosition.y, isHovering, isPlaying, animatorRef])
 
 	// Add mouse event handlers
 	const handleMouseMove = (e) => {
@@ -390,12 +442,25 @@ export const Animator = ({
 											<p>
 												Frame: {currentFrame + 1}/{loadedFrames.length}
 											</p>
-											{frameValidTimes && frameValidTimes[currentFrame] && (
-												<p>Time: {new Date(frameValidTimes[currentFrame]).toLocaleTimeString()}</p>
-											)}
 											<p>
 												Position: {Math.round(mousePosition.x)}, {Math.round(mousePosition.y)}
 											</p>
+
+											{/* Show loading indicator */}
+											{isLoadingReadoutData && <p className={styles.loadingIndicator}>Loading data...</p>}
+
+											{/* Show readout data if available */}
+											{frameReadoutData && Object.keys(tooltipContent).length > 0 ? (
+												<div className={styles.readoutData}>
+													{Object.entries(tooltipContent).map(([key, value]) => (
+														<p key={key}>
+															<strong>{key}:</strong> {String(value)}
+														</p>
+													))}
+												</div>
+											) : (
+												frameReadoutData && <p>No data available at this position</p>
+											)}
 										</div>
 									</div>
 								)}
