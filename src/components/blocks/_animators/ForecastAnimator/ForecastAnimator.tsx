@@ -12,7 +12,7 @@ import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import ForecastAnimatorSettings from '../../_animatorSettingPanels/ForecastAnimatorSettings/ForecastAnimatorSettings'
@@ -30,6 +30,7 @@ interface runsProps {
 const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const { isMobile } = useIsMobile()
 	const router = useRouter()
+	const pathname = usePathname()
 	const {
 		forecastRunId: runId,
 		forecastModelId: modelId,
@@ -167,6 +168,12 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 		return FORECAST_MODELS[modelId as string]?.runsPerRow || 4
 	}, [modelId])
 
+	const handleRunChange = (newRun) => {
+		const currentURL = pathname.split('/')
+		currentURL[3] = newRun
+		router.push(currentURL.join('/'))
+	}
+
 	return (
 		<>
 			<div className={styles.forecastAnimatorContainer}>
@@ -179,6 +186,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}
 						activeRun={runId as string}
+						setActiveRun={handleRunChange}
 						enableReadouts={true}
 						frameReadoutData={frameReadoutData}
 						isLoadingReadoutData={isLoadingReadoutData}

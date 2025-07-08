@@ -1,0 +1,44 @@
+.dataTooltip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+
+  &.bottom-right {
+    transform: translate(10px, 10px);
+  }
+
+  &.bottom-left {
+    transform: translate(calc(-100% - 10px), 10px);
+  }
+
+  &.top-right {
+    transform: translate(10px, calc(-100% - 10px));
+  }
+
+  &.top-left {
+    transform: translate(calc(-100% - 10px), calc(-100% - 10px));
+  }
+
+  .tooltipContent {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    min-width: 120px;
+
+    p {
+      margin: 0;
+      padding: 0;
+      font-size: 12px;
+      word-wrap: nowrap;
+    }
+    .loadingIndicator {
+      font-style: italic;
+      opacity: 0.7;
+    }
+
+    .readoutData {
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+    }
+  }
+}
