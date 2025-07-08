@@ -121,7 +121,7 @@ const AnimatorImageSizer = () => {
 								)
 							})}
 						</TransformComponent>
-						<DataTooltip hoverRef={ImageMachineRef} />
+						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} />
 
 						{!hideZoomControls && !disableZoom && <ImageControls zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />}
 					</>

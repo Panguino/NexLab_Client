@@ -4,14 +4,16 @@ import styles from './DataTooltip.module.scss' // Import tooltip-specific styles
 
 interface DataTooltipProps {
 	hoverRef: React.RefObject<HTMLDivElement>
+	frameRef: React.RefObject<HTMLDivElement>
 }
 
-const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef }) => {
+const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
 	const { loadedFrames, currentFrame, requestReadoutData, enableReadouts, isPlaying, isLoadingReadoutData, frameReadoutData } = useAnimator()
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+	const [relativePosition, setRelativePosition] = useState({ x: 0, y: 0 })
 	const [isHovering, setIsHovering] = useState(false)
 	const tooltipRef = useRef<HTMLDivElement>(null)
-	const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0, position: 'bottom-right' })
+	const [tooltipPosition, setTooltipPosition] = useState('bottom-right')
 	const [tooltipContent, setTooltipContent] = useState({})
 
 	useEffect(() => {
@@ -25,14 +27,15 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef }) => {
 	const calculateTooltipPosition = useCallback(() => {
 		if (!hoverRef.current || !tooltipRef.current) return
 
-		const containerRect = hoverRef.current.getBoundingClientRect()
+		const imageRect = hoverRef.current.getBoundingClientRect()
+		const frameRect = frameRef.current.getBoundingClientRect()
 		const tooltipRect = tooltipRef.current.getBoundingClientRect()
 		const tooltipWidth = tooltipRect.width
 		const tooltipHeight = tooltipRect.height
 
 		// Calculate available space
-		const spaceRight = containerRect.width - mousePosition.x
-		const spaceBottom = containerRect.height - mousePosition.y
+		const spaceRight = Math.min(imageRect.width, frameRect.width) - relativePosition.x
+		const spaceBottom = Math.min(imageRect.height, frameRect.height) - relativePosition.y
 
 		// Determine position based on available space
 		let position = 'bottom-right' // default
@@ -43,18 +46,14 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef }) => {
 			position = 'top-right'
 		}
 
-		setTooltipPosition({
-			x: mousePosition.x,
-			y: mousePosition.y,
-			position,
-		})
-	}, [mousePosition.x, mousePosition.y, hoverRef, tooltipRef])
+		setTooltipPosition(position)
+	}, [relativePosition.x, relativePosition.y, hoverRef, tooltipRef, frameRef])
 
 	useEffect(() => {
 		if (!hoverRef.current || !isHovering || isPlaying || !frameReadoutData?.dataTypes?.length) return
 		const containerRect = hoverRef.current.getBoundingClientRect()
-		const percentageX = mousePosition.x / containerRect.width
-		const percentageY = mousePosition.y / containerRect.height
+		const percentageX = relativePosition.x / containerRect.width
+		const percentageY = relativePosition.y / containerRect.height
 		try {
 			const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc, dataType) => {
 				const type2DArray = frameReadoutData.readoutData[dataType]
@@ -70,14 +69,15 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef }) => {
 		} catch (error) {
 			console.error('Error processing readout data:', error)
 		}
-	}, [frameReadoutData, mousePosition, isHovering, isPlaying, hoverRef])
+	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef])
 
 	useEffect(() => {
 		const handleMouseMove = (e) => {
 			const rect = hoverRef.current.getBoundingClientRect()
 			const x = e.clientX - rect.left
 			const y = e.clientY - rect.top
-			setMousePosition({ x, y })
+			setRelativePosition({ x, y })
+			setMousePosition({ x: e.clientX, y: e.clientY })
 			calculateTooltipPosition()
 		}
 
@@ -111,10 +111,10 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef }) => {
 	return (
 		<div
 			ref={tooltipRef}
-			className={`${styles.dataTooltip} ${styles[tooltipPosition.position]}`}
+			className={`${styles.dataTooltip} ${styles[tooltipPosition]}`}
 			style={{
-				left: `${tooltipPosition.x}px`,
-				top: `${tooltipPosition.y}px`,
+				left: `${mousePosition.x}px`,
+				top: `${mousePosition.y}px`,
 			}}
 		>
 			<div className={styles.tooltipContent}>
@@ -124,6 +124,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef }) => {
 				<p>
 					Position: {Math.round(mousePosition.x)}, {Math.round(mousePosition.y)}
 				</p>
+				<p>Percentage Position: {Math.round((relativePosition.x / hoverRef.current.getBoundingClientRect().width) * 100)}%</p>
 
 				{/* Show loading indicator */}
 				{isLoadingReadoutData && <p className={styles.loadingIndicator}>Loading data...</p>}

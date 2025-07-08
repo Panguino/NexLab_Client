@@ -1,7 +1,8 @@
 .dataTooltip {
-  position: absolute;
+  position: fixed;
   pointer-events: none;
   z-index: 100;
+  display: block;
 
   &.bottom-right {
     transform: translate(10px, 10px);
@@ -25,11 +26,13 @@
     padding: 8px 12px;
     border-radius: 4px;
     min-width: 120px;
+    white-space: nowrap;
 
     p {
       margin: 0;
       padding: 0;
       font-size: 12px;
+      line-height: 17px;
       word-wrap: nowrap;
     }
     .loadingIndicator {
