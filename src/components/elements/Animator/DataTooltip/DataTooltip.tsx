@@ -8,9 +8,11 @@ interface DataTooltipProps {
 }
 
 const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
-	const { loadedFrames, currentFrame, requestReadoutData, enableReadouts, isPlaying, isLoadingReadoutData, frameReadoutData } = useAnimator()
+	const { loadedFrames, currentFrame, requestReadoutData, enableReadouts, isPlaying, isLoadingReadoutData, frameReadoutData, imageInfo } =
+		useAnimator()
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 	const [relativePosition, setRelativePosition] = useState({ x: 0, y: 0 })
+	const [percentagePosition, setPercentagePosition] = useState({ xPercent: 0, yPercent: 0 })
 	const [isHovering, setIsHovering] = useState(false)
 	const tooltipRef = useRef<HTMLDivElement>(null)
 	const [tooltipPosition, setTooltipPosition] = useState('bottom-right')
@@ -51,9 +53,42 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
 
 	useEffect(() => {
 		if (!hoverRef.current || !isHovering || isPlaying || !frameReadoutData?.dataTypes?.length) return
+
+		// Retrieve native image size and current size
+		const { width: nativeWidth, height: nativeHeight } = imageInfo
 		const containerRect = hoverRef.current.getBoundingClientRect()
-		const percentageX = relativePosition.x / containerRect.width
-		const percentageY = relativePosition.y / containerRect.height
+
+		// Calculate scale factors
+		const scaleFactorX = containerRect.width / nativeWidth
+		const scaleFactorY = containerRect.height / nativeHeight
+
+		// Scale padding based on the scale factor
+		const basePadding = {
+			top: 26,
+			left: 0,
+			right: 0,
+			bottom: 26,
+		}
+		const scaledPadding = {
+			top: basePadding.top * scaleFactorY,
+			left: basePadding.left * scaleFactorX,
+			right: basePadding.right * scaleFactorX,
+			bottom: basePadding.bottom * scaleFactorY,
+		}
+
+		// Adjust dimensions based on scaled padding
+		const adjustedWidth = containerRect.width - scaledPadding.left - scaledPadding.right
+		const adjustedHeight = containerRect.height - scaledPadding.top - scaledPadding.bottom
+
+		// Adjust position based on scaled padding
+		const adjustedX = relativePosition.x - scaledPadding.left
+		const adjustedY = relativePosition.y - scaledPadding.top
+
+		// Calculate percentages based on adjusted dimensions and positions
+		const percentageX = Math.max(0, Math.min(1, adjustedX / adjustedWidth))
+		const percentageY = Math.max(0, Math.min(1, adjustedY / adjustedHeight))
+		setPercentagePosition({ xPercent: percentageX, yPercent: percentageY })
+
 		try {
 			const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc, dataType) => {
 				const type2DArray = frameReadoutData.readoutData[dataType]
@@ -69,7 +104,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
 		} catch (error) {
 			console.error('Error processing readout data:', error)
 		}
-	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef])
+	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo])
 
 	useEffect(() => {
 		const handleMouseMove = (e) => {
@@ -124,7 +159,8 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
 				<p>
 					Position: {Math.round(mousePosition.x)}, {Math.round(mousePosition.y)}
 				</p>
-				<p>Percentage Position: {Math.round((relativePosition.x / hoverRef.current.getBoundingClientRect().width) * 100)}%</p>
+				<p>Percentage Position X: {Math.floor(100 * percentagePosition.xPercent)}%</p>
+				<p>Percentage Position Y: {Math.floor(100 * percentagePosition.yPercent)}%</p>
 
 				{/* Show loading indicator */}
 				{isLoadingReadoutData && <p className={styles.loadingIndicator}>Loading data...</p>}

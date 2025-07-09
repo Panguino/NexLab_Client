@@ -21,7 +21,7 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 	const { isMobile } = useIsMobile()
 	const { upperairLevelId: levelId, upperairProductId: productId, upperairSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [ratio, setRatio] = useState(1)
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [upperAirData, setUpperAirData] = useState([])
 
 	const analysisZoomState = useRootStore.use.analysisZoomState()
@@ -34,7 +34,7 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 	useEffect(() => {
 		async function getData() {
 			const data = await getUpperAirData(siteId, levelId, productId)
-			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setImageInfo(data.imageInfo)
 			setUpperAirData(data.frames)
 		}
 		getData()
@@ -51,7 +51,7 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 					<Animator
 						frames={upperAirData}
 						startFrame={upperAirData.length - 1}
-						ratio={ratio}
+						imageInfo={imageInfo}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
 						zoomFill={analysisZoomFill}

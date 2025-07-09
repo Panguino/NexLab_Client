@@ -17,7 +17,7 @@ interface IAnimatorProps {
 	frameReadoutData?: any
 	isLoadingReadoutData?: boolean
 	requestReadoutData?: (frameIndex: number) => void
-	ratio?: number
+	imageInfo: { width: number; height: number }
 	height?: number
 	width?: number
 	hideControls?: boolean
@@ -44,6 +44,7 @@ interface IAnimatorProvider extends IAnimatorProps {
 	setCurrentFrame: Dispatch<SetStateAction<number>>
 	isPlaying: boolean
 	setIsPlaying: Dispatch<SetStateAction<boolean>>
+	ratio: number
 }
 
 const AnimatorContext = createContext<IAnimatorProvider | undefined>(undefined)
@@ -63,7 +64,7 @@ export const Animator = ({
 	frameReadoutData,
 	isLoadingReadoutData,
 	requestReadoutData,
-	ratio = 1,
+	imageInfo = { width: 500, height: 500 },
 	interval = 200,
 	lastFrameDwell = true,
 	lastFrameDwellTime = 1000,
@@ -95,6 +96,7 @@ export const Animator = ({
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
+	console.log('frames', frames)
 	return (
 		<AnimatorContext.Provider
 			value={{
@@ -116,7 +118,8 @@ export const Animator = ({
 				frameReadoutData,
 				isLoadingReadoutData,
 				requestReadoutData,
-				ratio,
+				ratio: imageInfo.width / imageInfo.height,
+				imageInfo,
 				interval,
 				lastFrameDwell,
 				lastFrameDwellTime,

@@ -22,13 +22,13 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
 	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
-	const [ratio, setRatio] = useState(1)
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [soundingData, setSoundingData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
 			const data = await getSoundingData(siteId, productId, soundingNumberOfFrames)
-			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setImageInfo(data.imageInfo)
 			setSoundingData(data.frames)
 		}
 		getData()
@@ -43,7 +43,7 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 						startFrame={soundingData.length - 1}
 						fullScreen={analysisMapFullScreen}
 						setFullScreen={setAnalysisMapFullScreen}
-						ratio={ratio}
+						imageInfo={imageInfo}
 						disableZoom
 					/>
 				</div>
