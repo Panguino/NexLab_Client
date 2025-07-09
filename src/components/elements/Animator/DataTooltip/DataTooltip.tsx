@@ -12,7 +12,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
 		useAnimator()
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
 	const [relativePosition, setRelativePosition] = useState({ x: 0, y: 0 })
-	const [percentagePosition, setPercentagePosition] = useState({ xPercent: 0, yPercent: 0 })
+	const [percentagePosition, setPercentagePosition] = useState({ xPercent: 0, yPercent: 0, rawPercentageX: 0, rawPercentageY: 0 })
 	const [isHovering, setIsHovering] = useState(false)
 	const tooltipRef = useRef<HTMLDivElement>(null)
 	const [tooltipPosition, setTooltipPosition] = useState('bottom-right')
@@ -27,25 +27,33 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
 	}, [currentFrame, enableReadouts, isPlaying, requestReadoutData])
 
 	const calculateTooltipPosition = useCallback(() => {
-		if (!hoverRef.current || !tooltipRef.current) return
+		if (!hoverRef.current || !tooltipRef.current || !frameRef.current) return
 
 		const imageRect = hoverRef.current.getBoundingClientRect()
 		const frameRect = frameRef.current.getBoundingClientRect()
 		const tooltipRect = tooltipRef.current.getBoundingClientRect()
-		const tooltipWidth = tooltipRect.width
-		const tooltipHeight = tooltipRect.height
+		const tooltipWidth = tooltipRect.width + 20 // to account for padding
+		const tooltipHeight = tooltipRect.height + 20 // to account for padding
 
-		// Calculate available space
-		const spaceRight = Math.min(imageRect.width, frameRect.width) - relativePosition.x
-		const spaceBottom = Math.min(imageRect.height, frameRect.height) - relativePosition.y
+		// determine if tooltip is approaching edge of frame
+		const isNearRightEdge = relativePosition.x + tooltipWidth > frameRect.width
+		const isNearBottomEdge = relativePosition.y + tooltipHeight > frameRect.height
 
-		// Determine position based on available space
-		let position = 'bottom-right' // default
+		// determine if tooltip is approaching edge of hover area
+		const isNearHoverRightEdge = relativePosition.x + tooltipWidth > imageRect.width
+		const isNearHoverBottomEdge = relativePosition.y + tooltipHeight > imageRect.height
 
-		if (spaceRight < tooltipWidth + 20) {
-			position = spaceBottom < tooltipHeight + 20 ? 'top-left' : 'bottom-left'
-		} else if (spaceBottom < tooltipHeight + 20) {
-			position = 'top-right'
+		// set position to bottom-right or bottom-left based on proximity to edges
+		let position = 'bottom-right'
+		if (isNearRightEdge || isNearHoverRightEdge) {
+			position = 'bottom-left'
+			if (isNearBottomEdge || isNearHoverBottomEdge) {
+				position = 'top-left'
+			}
+		} else {
+			if (isNearBottomEdge || isNearHoverBottomEdge) {
+				position = 'top-right'
+			}
 		}
 
 		setTooltipPosition(position)
@@ -85,9 +93,11 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
 		const adjustedY = relativePosition.y - scaledPadding.top
 
 		// Calculate percentages based on adjusted dimensions and positions
-		const percentageX = Math.max(0, Math.min(1, adjustedX / adjustedWidth))
-		const percentageY = Math.max(0, Math.min(1, adjustedY / adjustedHeight))
-		setPercentagePosition({ xPercent: percentageX, yPercent: percentageY })
+		const rawPercentageX = adjustedX / adjustedWidth
+		const rawPercentageY = adjustedY / adjustedHeight
+		const percentageX = Math.max(0, Math.min(1, rawPercentageX))
+		const percentageY = Math.max(0, Math.min(1, rawPercentageY))
+		setPercentagePosition({ xPercent: percentageX, yPercent: percentageY, rawPercentageX, rawPercentageY })
 
 		try {
 			const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc, dataType) => {
@@ -141,7 +151,16 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
 		}
 	}, [hoverRef, calculateTooltipPosition])
 
-	if (!enableReadouts || !isHovering || isPlaying) return null
+	if (
+		!enableReadouts ||
+		!isHovering ||
+		isPlaying ||
+		percentagePosition.rawPercentageX < 0 ||
+		percentagePosition.rawPercentageX > 1 ||
+		percentagePosition.rawPercentageY < 0 ||
+		percentagePosition.rawPercentageY > 1
+	)
+		return null
 
 	return (
 		<div
