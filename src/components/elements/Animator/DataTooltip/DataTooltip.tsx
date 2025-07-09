@@ -5,9 +5,10 @@ import styles from './DataTooltip.module.scss' // Import tooltip-specific styles
 interface DataTooltipProps {
 	hoverRef: React.RefObject<HTMLDivElement>
 	frameRef: React.RefObject<HTMLDivElement>
+	debug?: boolean
 }
 
-const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
+const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, debug = false }) => {
 	const { loadedFrames, currentFrame, requestReadoutData, enableReadouts, isPlaying, isLoadingReadoutData, frameReadoutData, imageInfo } =
 		useAnimator()
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -172,15 +173,20 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef }) => {
 			}}
 		>
 			<div className={styles.tooltipContent}>
-				<p>
-					Frame: {currentFrame + 1}/{loadedFrames.length}
-				</p>
-				<p>
-					Position: {Math.round(mousePosition.x)}, {Math.round(mousePosition.y)}
-				</p>
-				<p>Percentage Position X: {Math.floor(100 * percentagePosition.xPercent)}%</p>
-				<p>Percentage Position Y: {Math.floor(100 * percentagePosition.yPercent)}%</p>
+				{debug && (
+					<div className={styles.debugInfo}>
+						<p>
+							Frame: {currentFrame + 1}/{loadedFrames.length}
+						</p>
+						<p>
+							Position: {Math.round(mousePosition.x)}, {Math.round(mousePosition.y)}
+						</p>
+						<p>Percentage Position X: {Math.floor(100 * percentagePosition.xPercent)}%</p>
+						<p>Percentage Position Y: {Math.floor(100 * percentagePosition.yPercent)}%</p>
+					</div>
+				)}
 
+				{/* Show loading indicator if data is being fetched */}
 				{/* Show loading indicator */}
 				{isLoadingReadoutData && <p className={styles.loadingIndicator}>Loading data...</p>}
 
