@@ -96,7 +96,6 @@ export const Animator = ({
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
-	console.log('frames', frames)
 	return (
 		<AnimatorContext.Provider
 			value={{

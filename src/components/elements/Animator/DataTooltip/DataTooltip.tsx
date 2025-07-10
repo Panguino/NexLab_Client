@@ -111,7 +111,6 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, debug = f
 			}, {})
 
 			setTooltipContent(dataAtMousePosition)
-			// console.log('Tooltip content updated:', dataAtMousePosition, 'Has entries:', Object.keys(dataAtMousePosition).length > 0)
 		} catch (error) {
 			console.error('Error processing readout data:', error)
 		}
