@@ -18,7 +18,7 @@ export const getData = async (url) => {
 		}
 
 		const data_data = await data_res.json()
-		console.log('data_data', data_data)
+		//console.log('data_data', data_data)
 
 		return {
 			// Beginning to feel that there's too much variety in the data returned from different endpoints

@@ -65,7 +65,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 		const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
 		const runs = await getModelRuns(modelId)
 		const currentFrameValidTime = frameValidTimeRef.current || data.validtimes[0] // Use the current frame valid time or the first valid time if not set
-		console.log('data', data)
+
 		if (!runs.runs[runId as string]) {
 			// If this works then this would be where we'd make a more intelligent choice of run
 			// e.g. if runId is properly formatted but not found, we could look for the closest match
@@ -130,7 +130,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 				try {
 					const data = await getFrameReadoutData(modelId, runId, sectorId, levelId, productId, frameIndex)
 					const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
-					console.log('READOUT TIMEOUT - Fetched frame readout data:', readoutDataObj)
+					//console.log('READOUT TIMEOUT - Fetched frame readout data:', readoutDataObj)
 					setFrameReadoutData(readoutDataObj)
 				} catch (error) {
 					console.error('Error fetching frame readout data:', error)
