@@ -77,22 +77,47 @@ const ForecastSidebarPanel = () => {
 		})
 	}, [runId, modelId, levelId, productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
 
+	const fetchFloaterSectorData = async () => {
+		try {
+			const response = await fetch('https://weather.cod.edu/datapoints/forecast/get-floaters.php')
+			if (!response.ok) {
+				throw new Error(`Failed to fetch sector data: ${response.status} ${response.statusText}`)
+			}
+			return await response.json()
+		} catch (error) {
+			console.error('Error fetching sector data:', error)
+			return null
+		}
+	}
+
 	useEffect(() => {
 		if (sectorSelectorPanelIsOpen) {
-			// We may expand to allow for more regions in the future, but for now we only have one region
-			const region = FORECAST_REGIONS[regionId as string]
-			const newD3config = {
-				rotate: region.rotate,
-				scale: region.scale,
+			const loadSectorData = async () => {
+				const region = FORECAST_REGIONS[regionId as string]
+				const newD3config = {
+					rotate: region.rotate,
+					scale: region.scale,
+				}
+				setSectorSelectorD3config(newD3config)
+				const updatedSectorData = await fetchFloaterSectorData()
+				const selectedSectors = FORECAST_MODELS[modelId as string].sectors
+					.filter((sectorId) => FORECAST_SECTORS[sectorId].region === regionId)
+					.map((sectorId) => {
+						if (updatedSectorData && updatedSectorData[sectorId] && updatedSectorData[sectorId].coordinates) {
+							return {
+								id: sectorId,
+								...FORECAST_SECTORS[sectorId],
+								coordinates: updatedSectorData[sectorId].coordinates,
+							}
+						}
+						return {
+							id: sectorId,
+							...FORECAST_SECTORS[sectorId],
+						}
+					})
+				setSectorSelectorSectors(selectedSectors)
 			}
-			setSectorSelectorD3config(newD3config)
-			const selectedSectors = FORECAST_MODELS[modelId as string].sectors
-				.filter((sectorId) => FORECAST_SECTORS[sectorId].region === regionId)
-				.map((sectorId) => ({
-					id: sectorId,
-					...FORECAST_SECTORS[sectorId],
-				}))
-			setSectorSelectorSectors(selectedSectors)
+			loadSectorData()
 		}
 	}, [sectorSelectorPanelIsOpen, modelId, regionId, setSectorSelectorD3config, setSectorSelectorSectors])
 
