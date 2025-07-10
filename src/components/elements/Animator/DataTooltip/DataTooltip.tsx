@@ -96,8 +96,8 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, debug = f
 		// Calculate percentages based on adjusted dimensions and positions
 		const rawPercentageX = adjustedX / adjustedWidth
 		const rawPercentageY = adjustedY / adjustedHeight
-		const percentageX = Math.max(0, Math.min(1, rawPercentageX))
-		const percentageY = Math.max(0, Math.min(1, rawPercentageY))
+		const percentageX = Math.max(0, Math.min(0.999, rawPercentageX))
+		const percentageY = Math.max(0, Math.min(0.999, rawPercentageY))
 		setPercentagePosition({ xPercent: percentageX, yPercent: percentageY, rawPercentageX, rawPercentageY })
 
 		try {
@@ -112,6 +112,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, debug = f
 
 			setTooltipContent(dataAtMousePosition)
 		} catch (error) {
+			console.log(rawPercentageX, rawPercentageY, percentageX, percentageY)
 			console.error('Error processing readout data:', error)
 		}
 	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo])
