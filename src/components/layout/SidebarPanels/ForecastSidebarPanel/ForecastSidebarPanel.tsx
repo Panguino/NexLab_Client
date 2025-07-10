@@ -82,13 +82,11 @@ const ForecastSidebarPanel = () => {
 			const response = await fetch('https://weather.cod.edu/datapoints/forecast/get-floaters.php')
 			if (!response.ok) {
 				throw new Error(`Failed to fetch sector data: ${response.status} ${response.statusText}`)
-			} else {
-				console.log('Fetched sector data successfully')
 			}
 			return await response.json()
 		} catch (error) {
 			console.error('Error fetching sector data:', error)
-			return null // Return null on error so callers can handle it
+			return null
 		}
 	}
 
@@ -101,16 +99,10 @@ const ForecastSidebarPanel = () => {
 					scale: region.scale,
 				}
 				setSectorSelectorD3config(newD3config)
-
-				// Fetch updated sector data
 				const updatedSectorData = await fetchFloaterSectorData()
-				console.log('Updated sector data:', updatedSectorData)
-
-				// Filter sectors by region
 				const selectedSectors = FORECAST_MODELS[modelId as string].sectors
 					.filter((sectorId) => FORECAST_SECTORS[sectorId].region === regionId)
 					.map((sectorId) => {
-						// If we have updated coordinates for this sector, use them
 						if (updatedSectorData && updatedSectorData[sectorId] && updatedSectorData[sectorId].coordinates) {
 							return {
 								id: sectorId,
@@ -118,17 +110,13 @@ const ForecastSidebarPanel = () => {
 								coordinates: updatedSectorData[sectorId].coordinates,
 							}
 						}
-						// Otherwise use the original sector data
 						return {
 							id: sectorId,
 							...FORECAST_SECTORS[sectorId],
 						}
 					})
-				console.log('Selected sectors:', selectedSectors)
-
 				setSectorSelectorSectors(selectedSectors)
 			}
-
 			loadSectorData()
 		}
 	}, [sectorSelectorPanelIsOpen, modelId, regionId, setSectorSelectorD3config, setSectorSelectorSectors])
