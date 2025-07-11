@@ -15,6 +15,7 @@ const FORECAST_READOUT_DEWPOINT_ID = 'Dewpoint'
 const FORECAST_READOUT_LIFTED_INDEX_ID = 'Lifted_Index'
 const FORECAST_READOUT_EHI_ID = 'EHI'
 const FORECAST_READOUT_FRONTOGENESIS_ID = 'Frontogenesis'
+const FORECAST_READOUT_TEMP_ADVECTION_ID = 'Temp_Advection'
 const FORECAST_READOUT_FREEZING_RAIN_ID = 'Freezing_Rain_Accumulation'
 const FORECAST_READOUT_HELICITY_ID = 'Helicity'
 const FORECAST_READOUT_BRIGHTNESS_TEMPERATURE_ID = 'Brightness_Temperature'
@@ -144,6 +145,9 @@ export const createReadout = (readoutProd) => {
 			case FORECAST_READOUT_FRONTOGENESIS_ID:
 				return '&deg;C / 100km &middot; 3hr'
 
+			case FORECAST_READOUT_TEMP_ADVECTION_ID:
+				return '&deg;C / hr'
+
 			case FORECAST_READOUT_HELICITY_ID:
 			case FORECAST_READOUT_UPDRAFT_HELICITY_ID:
 				return 'm<sup>2</sup>/s<sup>2</sup>'
@@ -213,6 +217,7 @@ export const createReadout = (readoutProd) => {
 		[FORECAST_READOUT_LIFTED_INDEX_ID]: { label: 'LI' },
 		[FORECAST_READOUT_EHI_ID]: { label: 'EHI' },
 		[FORECAST_READOUT_FRONTOGENESIS_ID]: { label: 'Advection Rate' },
+		[FORECAST_READOUT_TEMP_ADVECTION_ID]: { label: 'Advection Rate' },
 		[FORECAST_READOUT_FREEZING_RAIN_ID]: { label: 'FZRA' },
 		[FORECAST_READOUT_HELICITY_ID]: { label: 'Helicity' },
 		[FORECAST_READOUT_BRIGHTNESS_TEMPERATURE_ID]: { label: 'Temperature' },
