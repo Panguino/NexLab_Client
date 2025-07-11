@@ -1,3 +1,4 @@
+import { createReadout } from '@/util/createForecastReadout'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useAnimator } from '../Animator'
 import styles from './DataTooltip.module.scss' // Import tooltip-specific styles
@@ -193,11 +194,15 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, debug = f
 				{/* Show readout data if available */}
 				{frameReadoutData && Object.keys(tooltipContent).length > 0 ? (
 					<div className={styles.readoutData}>
-						{Object.entries(tooltipContent).map(([key, value]) => (
-							<p key={key}>
-								<strong>{key}:</strong> {String(value)}
-							</p>
-						))}
+						{Object.entries(tooltipContent).map(([key, value]) => {
+							const formattedData = createReadout(key)
+							return (
+								<p key={key}>
+									<strong>{formattedData.label}:</strong> {String(value)}
+									<span dangerouslySetInnerHTML={{ __html: formattedData.unit }} />
+								</p>
+							)
+						})}
 					</div>
 				) : (
 					frameReadoutData && <p>No data available at this position</p>
