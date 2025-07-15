@@ -30,6 +30,8 @@ export interface INexradSlice {
 }
 
 export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
+	frameValidTime: 0,
+	setFrameValidTime: (validTime: number) => set(() => ({ frameValidTime: validTime })),
 	nexradNumberOfFrames: 24,
 	setNexradNumberOfFrames: (frames: number) => set(() => ({ nexradNumberOfFrames: frames })),
 	nexradFrameRate: 15,

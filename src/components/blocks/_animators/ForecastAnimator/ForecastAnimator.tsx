@@ -9,6 +9,7 @@ import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
+import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams, useRouter } from 'next/navigation'
@@ -70,29 +71,14 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 			router.push(`/weather-data/forecast-models/${currentRun}/${modelId}/${sectorId}/${levelId}/${productId}`)
 		}
 
-		if (data.validtimes.indexOf(currentFrameValidTime) < 0) {
-			// frameValidTime doesn't exist in the array, find closest match
-			const closestValidTime = data.validtimes.reduce((closest, current) => {
-				const currentDiff = Math.abs(current - currentFrameValidTime)
-				const closestDiff = Math.abs(closest - currentFrameValidTime)
-				return currentDiff < closestDiff ? current : closest
-			}, data.validtimes[0]) // Start with first timestamp as default closest
-
-			// Update to use the closest timestamp
-			setFrameValidTime(closestValidTime)
-
-			// Also set the starting frame to match this timestamp
-			const closestIndex = data.validtimes.indexOf(closestValidTime)
-			setStartFrame(closestIndex)
-		} else {
-			setStartFrame(data.validtimes.indexOf(currentFrameValidTime))
-		}
+		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
+		setStartFrame(closestValidTimeIndex)
 
 		setRatio(data.imageInfo.width / data.imageInfo.height)
 		setForecastData(data.frames)
 		setForecastRuns(runs.runs)
 		setFrameValidTimes(data.validtimes)
-	}, [runId, modelId, sectorId, levelId, productId, setRatio, setForecastData, setForecastRuns, setFrameValidTimes, setFrameValidTime, router])
+	}, [runId, modelId, sectorId, levelId, productId, setRatio, setForecastData, setForecastRuns, setFrameValidTimes, router])
 
 	useEffect(() => {
 		getData()
