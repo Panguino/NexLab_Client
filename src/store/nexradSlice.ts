@@ -8,6 +8,8 @@ const defaultNexradZoomState = {
 }
 
 export interface INexradSlice {
+	frameValidTime: number
+	setFrameValidTime: (validTime: number) => void
 	nexradNumberOfFrames: number
 	setNexradNumberOfFrames: (frames: number) => void
 	nexradFrameRate: number
