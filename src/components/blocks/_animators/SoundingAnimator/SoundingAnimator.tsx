@@ -1,14 +1,19 @@
 'use client'
 
 import { Animator } from '@/components/elements/Animator/Animator'
+import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { useIsMobile } from '@/hooks/useIsMobile'
+import { useIsUserIdle } from '@/hooks/useIsUserIdle'
 import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData } from '@/util/dataCalls/analysis/query-soundings'
+import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import AnalysisAnimatorSettings from '../../_animatorSettingPanels/AnalysisAnimatorSettings/AnalysisAnimatorSettings'
 import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import styles from './SoundingAnimator.module.scss'
 
@@ -17,22 +22,66 @@ interface SoundingAnimatorProps {
 }
 
 const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
+	const { isMobile } = useIsMobile()
+	const analysisRefreshInterval = useRootStore.use.analysisDataRefreshInterval()
+	const userIdle = useIsUserIdle((analysisRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
+	const userIdleRef = useRef(false)
 	const { soundingProductId: productId, soundingSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
-	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
-	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const [ratio, setRatio] = useState(1)
 	const [soundingData, setSoundingData] = useState([])
+	const analysisZoomState = useRootStore.use.analysisZoomState()
+	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
+	const analysisZoomFill = useRootStore.use.analysisZoomFill()
+	const setAnalysisZoomFill = useRootStore.use.setAnalysisZoomFill()
+	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
+	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
+	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
+	const analysisFrameRate = useRootStore.use.analysisFrameRate()
+	const analysisLastFrameDwell = useRootStore.use.analysisLastFrameDwell()
+	const analysisLastFrameDwellTime = useRootStore.use.analysisLastFrameDwellTime()
+	const soundingFrameValidTime = useRootStore.use.soundingFrameValidTime()
+	const setSoundingFrameValidTime = useRootStore.use.setSoundingFrameValidTime()
+	const [startFrame, setStartFrame] = useState(0)
+	const frameValidTimeRef = useRef<number | null>(null)
+	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
+
+	// Keep userIdleRef in sync with userIdle state
+	useEffect(() => {
+		userIdleRef.current = userIdle
+	}, [userIdle])
+
+	const getData = useCallback(async () => {
+		const data = await getSoundingData(siteId, productId, soundingNumberOfFrames)
+
+		// Determine current frame based on user idle state
+		let currentFrameValidTime
+		if (userIdleRef.current) {
+			// If user is idle, always use the latest frame
+			currentFrameValidTime = data.validtimes[data.validtimes.length - 1]
+		} else {
+			// If user is active, use their current frame if available, otherwise use latest
+			currentFrameValidTime = frameValidTimeRef.current || data.validtimes[data.validtimes.length - 1]
+		}
+
+		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
+		setStartFrame(closestValidTimeIndex)
+		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setSoundingData(data.frames)
+		setFrameValidTimes(data.validtimes)
+	}, [siteId, productId, soundingNumberOfFrames, setRatio, setSoundingData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
-		async function getData() {
-			const data = await getSoundingData(siteId, productId, soundingNumberOfFrames)
-			setRatio(data.imageInfo.width / data.imageInfo.height)
-			setSoundingData(data.frames)
-		}
 		getData()
-	}, [siteId, productId, soundingNumberOfFrames])
+	}, [siteId, productId, soundingNumberOfFrames, getData])
+
+	useEffect(() => {
+		frameValidTimeRef.current = soundingFrameValidTime
+	}, [soundingFrameValidTime])
+
+	useEffect(() => {
+		setAnalysisZoomFill(isMobile)
+	}, [isMobile, setAnalysisZoomFill])
 
 	return (
 		<>
@@ -40,11 +89,24 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 				<div className={styles.soundingAnimator}>
 					<Animator
 						frames={soundingData}
-						startFrame={soundingData.length - 1}
+						frameValidTimes={frameValidTimes}
+						setFrameValidTime={setSoundingFrameValidTime}
+						startFrame={startFrame}
+						ratio={ratio}
+						initialZoomState={analysisZoomState}
+						setZoomState={setAnalysisZoomState}
+						zoomFill={analysisZoomFill}
+						setZoomFill={setAnalysisZoomFill}
 						fullScreen={analysisMapFullScreen}
 						setFullScreen={setAnalysisMapFullScreen}
-						ratio={ratio}
-						disableZoom
+						interval={1000 / analysisFrameRate}
+						lastFrameDwell={analysisLastFrameDwell}
+						lastFrameDwellTime={analysisLastFrameDwellTime * 1000}
+						settingsComponent={
+							<AnimatorSettings title="Settings">
+								<AnalysisAnimatorSettings refreshData={getData} />
+							</AnimatorSettings>
+						}
 					/>
 				</div>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

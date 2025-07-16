@@ -1,15 +1,19 @@
 'use client'
 
 import { Animator } from '@/components/elements/Animator/Animator'
+import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useIsMobile } from '@/hooks/useIsMobile'
+import { useIsUserIdle } from '@/hooks/useIsUserIdle'
 import { useRootStore } from '@/store/useRootStore'
 import { getRapMesoData } from '@/util/dataCalls/analysis/query-rap-mesoanalysis'
+import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import AnalysisAnimatorSettings from '../../_animatorSettingPanels/AnalysisAnimatorSettings/AnalysisAnimatorSettings'
 import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import styles from './RAPMesoAnimator.module.scss'
 
@@ -19,6 +23,9 @@ interface RAPMesoAnimatorProps {
 
 const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 	const { isMobile } = useIsMobile()
+	const analysisRefreshInterval = useRootStore.use.analysisDataRefreshInterval()
+	const userIdle = useIsUserIdle((analysisRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
+	const userIdleRef = useRef(false)
 	const { rapmesoProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const [ratio, setRatio] = useState(1)
@@ -29,15 +36,47 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 	const setAnalysisZoomFill = useRootStore.use.setNexradZoomFill()
 	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
+	const analysisFrameRate = useRootStore.use.analysisFrameRate()
+	const analysisLastFrameDwell = useRootStore.use.analysisLastFrameDwell()
+	const analysisLastFrameDwellTime = useRootStore.use.analysisLastFrameDwellTime()
+	const rapMesoFrameValidTime = useRootStore.use.rapMesoFrameValidTime()
+	const setRapMesoFrameValidTime = useRootStore.use.setRapMesoFrameValidTime()
+	const [startFrame, setStartFrame] = useState(0)
+	const frameValidTimeRef = useRef<number | null>(null)
+	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
+
+	// Keep userIdleRef in sync with userIdle state
+	useEffect(() => {
+		userIdleRef.current = userIdle
+	}, [userIdle])
+
+	const getData = useCallback(async () => {
+		const data = await getRapMesoData(productId)
+
+		// Determine current frame based on user idle state
+		let currentFrameValidTime
+		if (userIdleRef.current) {
+			// If user is idle, always use the latest frame
+			currentFrameValidTime = data.validtimes[data.validtimes.length - 1]
+		} else {
+			// If user is active, use their current frame if available, otherwise use latest
+			currentFrameValidTime = frameValidTimeRef.current || data.validtimes[data.validtimes.length - 1]
+		}
+
+		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
+		setStartFrame(closestValidTimeIndex)
+		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setRAPMesoData(data.frames)
+		setFrameValidTimes(data.validtimes)
+	}, [productId, setRatio, setRAPMesoData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
-		async function getData() {
-			const data = await getRapMesoData(productId)
-			setRatio(data.imageInfo.width / data.imageInfo.height)
-			setRAPMesoData(data.frames)
-		}
 		getData()
-	}, [productId])
+	}, [productId, getData])
+
+	useEffect(() => {
+		frameValidTimeRef.current = rapMesoFrameValidTime
+	}, [rapMesoFrameValidTime])
 
 	useEffect(() => {
 		setAnalysisZoomFill(isMobile)
@@ -49,7 +88,9 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 				<div className={styles.RAPMesoAnimator}>
 					<Animator
 						frames={RAPMesoData}
-						startFrame={RAPMesoData.length - 1}
+						frameValidTimes={frameValidTimes}
+						setFrameValidTime={setRapMesoFrameValidTime}
+						startFrame={startFrame}
 						ratio={ratio}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
@@ -57,6 +98,14 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 						setZoomFill={setAnalysisZoomFill}
 						fullScreen={analysisMapFullScreen}
 						setFullScreen={setAnalysisMapFullScreen}
+						interval={1000 / analysisFrameRate}
+						lastFrameDwell={analysisLastFrameDwell}
+						lastFrameDwellTime={analysisLastFrameDwellTime * 1000}
+						settingsComponent={
+							<AnimatorSettings title="Settings">
+								<AnalysisAnimatorSettings refreshData={getData} />
+							</AnimatorSettings>
+						}
 					/>
 				</div>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
