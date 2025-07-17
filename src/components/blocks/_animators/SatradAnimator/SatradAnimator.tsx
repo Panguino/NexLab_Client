@@ -41,8 +41,8 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	const setSatradMapFullScreen = useRootStore.use.setSatradMapFullScreen()
 	const satradLastFrameDwell = useRootStore.use.satradLastFrameDwell()
 	const satradLastFrameDwellTime = useRootStore.use.satradLastFrameDwellTime()
-	const frameValidTime = useRootStore.use.frameValidTime()
-	const setFrameValidTime = useRootStore.use.setFrameValidTime()
+	const satradFrameValidTime = useRootStore.use.satradFrameValidTime()
+	const setSatradFrameValidTime = useRootStore.use.setSatradFrameValidTime()
 	const [ratio, setRatio] = useState(1)
 	const [satradData, setSatradData] = useState([])
 	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
@@ -84,8 +84,8 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	}, [sectorId, productId, regionId, satradNumberOfFrames, satradFrameStep, getData])
 
 	useEffect(() => {
-		frameValidTimeRef.current = frameValidTime
-	}, [frameValidTime])
+		frameValidTimeRef.current = satradFrameValidTime
+	}, [satradFrameValidTime])
 
 	useEffect(() => {
 		setSatradZoomFill(isMobile)
@@ -98,7 +98,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 					<Animator
 						frames={satradData}
 						frameValidTimes={frameValidTimes}
-						setFrameValidTime={setFrameValidTime}
+						setFrameValidTime={setSatradFrameValidTime}
 						startFrame={startFrame}
 						ratio={ratio}
 						interval={1000 / satradFrameRate}

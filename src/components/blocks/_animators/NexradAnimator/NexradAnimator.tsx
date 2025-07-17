@@ -38,8 +38,8 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	const setNexradMapFullScreen = useRootStore.use.setNexradMapFullScreen()
 	const nexradLastFrameDwell = useRootStore.use.nexradLastFrameDwell()
 	const nexradLastFrameDwellTime = useRootStore.use.nexradLastFrameDwellTime()
-	const frameValidTime = useRootStore.use.frameValidTime()
-	const setFrameValidTime = useRootStore.use.setFrameValidTime()
+	const nexradFrameValidTime = useRootStore.use.nexradFrameValidTime()
+	const setNexradFrameValidTime = useRootStore.use.setNexradFrameValidTime()
 	const [ratio, setRatio] = useState(1)
 	const [nexradData, setNexradData] = useState([])
 	const [startFrame, setStartFrame] = useState(0)
@@ -76,8 +76,8 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	}, [siteId, productId, nexradNumberOfFrames, getData])
 
 	useEffect(() => {
-		frameValidTimeRef.current = frameValidTime
-	}, [frameValidTime])
+		frameValidTimeRef.current = nexradFrameValidTime
+	}, [nexradFrameValidTime])
 
 	useEffect(() => {
 		setNexradZoomFill(isMobile)
@@ -90,7 +90,7 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 					<Animator
 						frames={nexradData}
 						frameValidTimes={frameValidTimes}
-						setFrameValidTime={setFrameValidTime}
+						setFrameValidTime={setNexradFrameValidTime}
 						startFrame={startFrame}
 						ratio={ratio}
 						initialZoomState={nexradZoomState}

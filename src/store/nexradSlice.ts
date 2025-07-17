@@ -8,8 +8,8 @@ const defaultNexradZoomState = {
 }
 
 export interface INexradSlice {
-	frameValidTime: number
-	setFrameValidTime: (validTime: number) => void
+	nexradFrameValidTime: number
+	setNexradFrameValidTime: (validTime: number) => void
 	nexradNumberOfFrames: number
 	setNexradNumberOfFrames: (frames: number) => void
 	nexradFrameRate: number
@@ -32,8 +32,8 @@ export interface INexradSlice {
 }
 
 export const createNexradSlice: ZustandStateSlice<INexradSlice> = (set) => ({
-	frameValidTime: 0,
-	setFrameValidTime: (validTime: number) => set(() => ({ frameValidTime: validTime })),
+	nexradFrameValidTime: 0,
+	setNexradFrameValidTime: (validTime: number) => set(() => ({ nexradFrameValidTime: validTime })),
 	nexradNumberOfFrames: 24,
 	setNexradNumberOfFrames: (frames: number) => set(() => ({ nexradNumberOfFrames: frames })),
 	nexradFrameRate: 15,
