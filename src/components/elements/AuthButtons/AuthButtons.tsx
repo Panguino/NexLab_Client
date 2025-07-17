@@ -3,6 +3,7 @@
 import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { signIn } from 'next-auth/react'
+import styles from './AuthButtons.module.scss'
 
 export function GoogleSignInButton() {
 	const handleClick = () => {
@@ -10,9 +11,9 @@ export function GoogleSignInButton() {
 	}
 
 	return (
-		<button onClick={handleClick}>
+		<button onClick={handleClick} className={`${styles.authButton} ${styles.googleButton}`}>
 			<FontAwesomeIcon icon={faGoogle} />
-			<span> with Google</span>
+			<span>Sign in with Google</span>
 		</button>
 	)
 }
@@ -22,9 +23,9 @@ export function FacebookSignInButton() {
 	}
 
 	return (
-		<button onClick={handleClick}>
+		<button onClick={handleClick} className={`${styles.authButton} ${styles.facebookButton}`}>
 			<FontAwesomeIcon icon={faFacebook} />
-			<span> with Facebook</span>
+			<span>Sign in with Facebook</span>
 		</button>
 	)
 }
