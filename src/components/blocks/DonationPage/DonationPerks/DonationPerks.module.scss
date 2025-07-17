@@ -1,0 +1,114 @@
+@import '/src/styles/vars';
+
+.perks {
+	padding: 80px 0;
+	background-color: var(--color-grey0-grey19);
+	transition: background-color var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 60px 0;
+	}
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.header {
+	text-align: center;
+	margin-bottom: 60px;
+
+	h2 {
+		color: var(--color-grey20-grey0);
+		font-size: 36px;
+		font-weight: 700;
+		margin: 0 0 24px 0;
+		transition: color var(--themeChange);
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 28px;
+		}
+	}
+
+	p {
+		color: var(--color-grey16-grey5);
+		font-size: 16px;
+		line-height: 1.6;
+		max-width: 800px;
+		margin: 0 auto;
+		transition: color var(--themeChange);
+	}
+}
+
+.perksList {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 32px;
+	margin-bottom: 60px;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		grid-template-columns: 1fr;
+		gap: 24px;
+		margin-bottom: 40px;
+	}
+}
+
+.perkCard {
+	text-align: center;
+	padding: 40px 24px;
+	background-color: var(--color-white-grey17);
+	border-radius: 12px;
+	border: 1px solid var(--color-grey3-grey15);
+	transition: all var(--themeChange);
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+		border-color: var(--color-blue3-blue4);
+	}
+
+	@media (max-width: 480px) {
+		padding: 32px 20px;
+	}
+
+	h4 {
+		color: var(--color-grey20-grey0);
+		font-size: 18px;
+		font-weight: 600;
+		margin: 16px 0 12px 0;
+		transition: color var(--themeChange);
+	}
+
+	p {
+		color: var(--color-grey16-grey5);
+		font-size: 14px;
+		line-height: 1.5;
+		margin: 0;
+		transition: color var(--themeChange);
+	}
+}
+
+.perkIcon {
+	width: 64px;
+	height: 64px;
+	background: linear-gradient(135deg, var(--color-blue3) 0%, var(--color-blue4) 100%);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--color-white);
+	font-size: 24px;
+	margin: 0 auto;
+
+	@media (max-width: 480px) {
+		width: 56px;
+		height: 56px;
+		font-size: 20px;
+	}
+}
+
+.cta {
+	text-align: center;
+}

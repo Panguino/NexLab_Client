@@ -1,0 +1,69 @@
+@import '/src/styles/vars';
+
+.hero {
+	background-color: var(--color-grey19-grey2);
+	padding: 100px 0;
+	text-align: center;
+	transition: background-color var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 80px 0;
+	}
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.heroContent {
+	max-width: 800px;
+	margin: 0 auto;
+
+	h1 {
+		color: var(--color-white-grey20);
+		font-size: 48px;
+		font-weight: 700;
+		line-height: 1.2;
+		margin: 0 0 32px 0;
+		transition: color var(--themeChange);
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 36px;
+			margin: 0 0 24px 0;
+		}
+
+		@media (max-width: 480px) {
+			font-size: 28px;
+		}
+	}
+
+	p {
+		color: var(--color-grey4-grey16);
+		font-size: 18px;
+		line-height: 1.6;
+		margin: 0 0 48px 0;
+		max-width: 700px;
+		margin-left: auto;
+		margin-right: auto;
+		transition: color var(--themeChange);
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 16px;
+			margin: 0 0 40px 0;
+		}
+	}
+}
+
+.heroActions {
+	display: flex;
+	gap: 20px;
+	justify-content: center;
+	align-items: center;
+
+	@media (max-width: 480px) {
+		flex-direction: column;
+		gap: 16px;
+	}
+}
