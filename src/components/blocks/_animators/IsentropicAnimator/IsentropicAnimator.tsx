@@ -21,7 +21,7 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 	const { isMobile } = useIsMobile()
 	const { isentropicProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [ratio, setRatio] = useState(1)
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [IsentropicData, setIsentropicData] = useState([])
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
@@ -33,7 +33,7 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 	useEffect(() => {
 		async function getData() {
 			const data = await getIsentropicData(productId)
-			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setImageInfo(data.imageInfo)
 			setIsentropicData(data.frames)
 		}
 		getData()
@@ -50,7 +50,7 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 					<Animator
 						frames={IsentropicData}
 						startFrame={IsentropicData.length - 1}
-						ratio={ratio}
+						imageInfo={imageInfo}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
 						zoomFill={analysisZoomFill}

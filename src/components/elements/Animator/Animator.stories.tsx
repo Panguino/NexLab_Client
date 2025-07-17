@@ -57,13 +57,13 @@ export const specificRatio8x6: StoryFn<typeof Animator> = TemplateFactory()
 specificRatio8x6.args = {
 	interval: 0.25,
 	frames: testFrames8x6,
-	ratio: 8 / 6,
+	imageInfo: { width: 800, height: 600 },
 }
 export const specificRatio16x9: StoryFn<typeof Animator> = TemplateFactory()
 specificRatio16x9.args = {
 	interval: 0.25,
 	frames: testFrames16x9,
-	ratio: 16 / 9,
+	imageInfo: { width: 1600, height: 900 },
 }
 export const maxWidthAndHeight: StoryFn<typeof Animator> = TemplateFactory()
 maxWidthAndHeight.args = {
@@ -77,5 +77,5 @@ overlays.args = {
 	interval: 0.25,
 	frames: testDataWithOverlays.files,
 	overlays: testDataWithOverlays.overlays,
-	ratio: 16 / 9,
+	imageInfo: { width: 1600, height: 900 },
 }
