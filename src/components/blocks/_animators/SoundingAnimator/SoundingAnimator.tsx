@@ -20,13 +20,15 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	const { soundingProductId: productId, soundingSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
-	const [ratio, setRatio] = useState(1)
+	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
+	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [soundingData, setSoundingData] = useState([])
 
 	useEffect(() => {
 		async function getData() {
 			const data = await getSoundingData(siteId, productId, soundingNumberOfFrames)
-			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setImageInfo(data.imageInfo)
 			setSoundingData(data.frames)
 		}
 		getData()
@@ -36,7 +38,14 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 		<>
 			<div className={styles.soundingAnimatorContainer}>
 				<div className={styles.soundingAnimator}>
-					<Animator frames={soundingData} startFrame={soundingData.length - 1} ratio={ratio} disableZoom />
+					<Animator
+						frames={soundingData}
+						startFrame={soundingData.length - 1}
+						fullScreen={analysisMapFullScreen}
+						setFullScreen={setAnalysisMapFullScreen}
+						imageInfo={imageInfo}
+						disableZoom
+					/>
 				</div>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
 					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>

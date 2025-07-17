@@ -19,6 +19,8 @@ export interface IAnalysisSlice {
 	resetAnalysisZoomState: () => void
 	analysisZoomFill: boolean
 	setAnalysisZoomFill: (zoomFill: boolean) => void
+	analysisMapFullScreen: boolean
+	setAnalysisMapFullScreen: (fullScreen: boolean) => void
 }
 
 export const createAnalysisSlice: ZustandStateSlice<IAnalysisSlice> = (set) => ({
@@ -33,4 +35,6 @@ export const createAnalysisSlice: ZustandStateSlice<IAnalysisSlice> = (set) => (
 	resetAnalysisZoomState: () => set(() => ({ analysisZoomState: { ...defaultAnalysisZoomState } })),
 	analysisZoomFill: false,
 	setAnalysisZoomFill: (zoomFill: boolean) => set(() => ({ analysisZoomFill: zoomFill })),
+	analysisMapFullScreen: false,
+	setAnalysisMapFullScreen: (fullScreen) => set({ analysisMapFullScreen: fullScreen }),
 })

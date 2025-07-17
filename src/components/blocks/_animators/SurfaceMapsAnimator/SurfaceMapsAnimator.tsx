@@ -22,17 +22,19 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 	const { surfaceProductId: productId, surfaceRegionId: regionId, surfaceSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const surfaceMapsNumberOfFrames = useRootStore.use.surfaceMapsNumberOfFrames()
-	const [ratio, setRatio] = useState(1)
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [surfaceMapsData, setSurfaceMapsData] = useState([])
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
-	const analysisZoomFill = useRootStore.use.nexradZoomFill()
-	const setAnalysisZoomFill = useRootStore.use.setNexradZoomFill()
+	const analysisZoomFill = useRootStore.use.analysisZoomFill()
+	const setAnalysisZoomFill = useRootStore.use.setAnalysisZoomFill()
+	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
+	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 
 	useEffect(() => {
 		async function getData() {
 			const data = await getSurfaceData(regionId, siteId, productId, surfaceMapsNumberOfFrames)
-			setRatio(data.imageInfo.width / data.imageInfo.height)
+			setImageInfo(data.imageInfo)
 			setSurfaceMapsData(data.frames)
 		}
 		getData()
@@ -49,11 +51,13 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 					<Animator
 						frames={surfaceMapsData}
 						startFrame={surfaceMapsData.length - 1}
-						ratio={ratio}
+						imageInfo={imageInfo}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
 						zoomFill={analysisZoomFill}
 						setZoomFill={setAnalysisZoomFill}
+						fullScreen={analysisMapFullScreen}
+						setFullScreen={setAnalysisMapFullScreen}
 					/>
 				</div>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

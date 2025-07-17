@@ -85,6 +85,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 6,
 	},
 	[FORECAST_RAP_ID]: {
 		name: 'RAP',
@@ -112,6 +113,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_NAM_ID]: {
 		name: 'NAM',
@@ -141,6 +143,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_NAMNST_ID]: {
 		name: 'NAMNST',
@@ -168,6 +171,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_RDPS_ID]: {
 		name: 'RDPS',
@@ -194,6 +198,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_GDPS_ID]: {
 		name: 'GDPS',
@@ -211,6 +216,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 2,
 	},
 	[FORECAST_ECMWF_ID]: {
 		name: 'ECMWF',
@@ -240,6 +246,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_GFS_ID]: {
 		name: 'GFS',
@@ -250,7 +257,7 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_US_ID,
 			FORECAST_SECTOR_ATLANTIC_OCEAN_ID,
 			FORECAST_SECTOR_PACIFIC_OCEAN_ID,
-			FORECAST_SECTOR_CANADA_ID,
+			FORECAST_SECTOR_ALASKA_ID,
 			FORECAST_SECTOR_WESTERN_CANADA_ID,
 			FORECAST_SECTOR_NORTHEAST_ID,
 			FORECAST_SECTOR_MID_ATLANTIC_ID,
@@ -264,9 +271,6 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_CENTRAL_GREAT_PLAINS_ID,
 			FORECAST_SECTOR_SOUTHERN_GREAT_PLAINS_ID,
 			FORECAST_SECTOR_NORTHERN_ILLINOIS_ID,
-			FORECAST_SECTOR_OKLAHOMA_CITY_ID,
-			FORECAST_SECTOR_DENVER_ID,
-			FORECAST_SECTOR_DUGWAY_ID,
 			FORECAST_SECTOR_FLOAT_ONE_ID,
 			FORECAST_SECTOR_FLOAT_TWO_ID,
 		],
@@ -276,6 +280,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_SURFACE_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_CFS_ID]: {
 		name: 'CFS',
@@ -287,6 +292,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_850MB_ID,
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_SREF_ID]: {
 		name: 'SREF',
@@ -306,6 +312,7 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_CONVECTIVE_ID,
 			product: FORECAST_PRODUCT_CAPE1000_ID,
 		},
+		runsPerRow: 4,
 	},
 	[FORECAST_GEFS_ID]: {
 		name: 'GEFS',
@@ -329,5 +336,6 @@ export const FORECAST_MODELS = {
 			level: FORECAST_LEVEL_CONVECTIVE_ID,
 			product: FORECAST_PRODUCT_CAPE1000_ID,
 		},
+		runsPerRow: 4,
 	},
 }

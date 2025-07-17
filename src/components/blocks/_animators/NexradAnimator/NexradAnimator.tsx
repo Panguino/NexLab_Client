@@ -33,16 +33,16 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	const setNexradMapFullScreen = useRootStore.use.setNexradMapFullScreen()
 	const nexradLastFrameDwell = useRootStore.use.nexradLastFrameDwell()
 	const nexradLastFrameDwellTime = useRootStore.use.nexradLastFrameDwellTime()
-	const [ratio, setRatio] = useState(1)
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [nexradData, setNexradData] = useState([])
 
 	const getData = useCallback(async () => {
 		console.log('NexradAnimator: Fetching data')
 		const data = await getNexradData(siteId, productId, nexradNumberOfFrames)
-		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setImageInfo(data.imageInfo)
 		setNexradData(data.frames)
 		console.log('NexradAnimator: data fetched')
-	}, [siteId, productId, nexradNumberOfFrames, setRatio, setNexradData])
+	}, [siteId, productId, nexradNumberOfFrames, setNexradData])
 
 	useEffect(() => {
 		getData()
@@ -59,7 +59,7 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 					<Animator
 						frames={nexradData}
 						startFrame={nexradData.length - 1}
-						ratio={ratio}
+						imageInfo={imageInfo}
 						initialZoomState={nexradZoomState}
 						setZoomState={setNexradZoomState}
 						zoomFill={nexradZoomFill}

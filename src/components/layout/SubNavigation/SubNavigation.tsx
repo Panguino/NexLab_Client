@@ -11,7 +11,9 @@ const SubNavigation = ({ children }: SubNavigationProps) => {
 	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
 	const satradMapFullScreen = useRootStore.use.satradMapFullScreen()
 	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
-	const hideSubNavigation = hazardMapFullScreen || satradMapFullScreen || nexradMapFullScreen
+	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
+	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
+	const hideSubNavigation = hazardMapFullScreen || satradMapFullScreen || nexradMapFullScreen || forecastMapFullScreen || analysisMapFullScreen
 	return (
 		<>
 			<div className={`SubNavigation ${styles.SubNavigation} ${hideSubNavigation ? styles.hide : ''}`}>

@@ -36,7 +36,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	const setSatradMapFullScreen = useRootStore.use.setSatradMapFullScreen()
 	const satradLastFrameDwell = useRootStore.use.satradLastFrameDwell()
 	const satradLastFrameDwellTime = useRootStore.use.satradLastFrameDwellTime()
-	const [ratio, setRatio] = useState(1)
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [satradData, setSatradData] = useState([])
 	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
 
@@ -45,7 +45,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 		const regionIdStr = Array.isArray(regionId) ? regionId[0] : regionId
 		const scaleId = regionIdStr.split('-')[0] // regionId is a combo of scale and "map region", query only requires scale
 		const data = await getSatradData(scaleId, sectorId, productId, satradNumberOfFrames, satradFrameStep)
-		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setImageInfo(data.imageInfo)
 		setSatradData(data.frames)
 		setSatradOverlays(data.overlays)
 		console.log('SatradAnimator: data fetched')
@@ -66,7 +66,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 					<Animator
 						frames={satradData}
 						startFrame={satradData.length - 1}
-						ratio={ratio}
+						imageInfo={imageInfo}
 						interval={1000 / satradFrameRate}
 						overlays={satradOverlays}
 						initialZoomState={satradZoomState}

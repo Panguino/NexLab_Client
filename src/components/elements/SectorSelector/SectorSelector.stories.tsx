@@ -1,6 +1,7 @@
 import { ALL_CROSS_SECTORS } from '@/data/analysis/cross-sectional-analysis/sectors'
 import { LARGE_SURFACE_SECTORS, STATE_SURFACE_SECTORS } from '@/data/analysis/surface/sectors'
 import { DotColor, DotShape } from '@/data/d3Map/dotStyles'
+import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import { StoryFn } from '@storybook/react'
 import { useState } from 'react'
 import Select from '../Select/Select'
@@ -16,6 +17,14 @@ const geoboxSectors = Object.entries(LARGE_SURFACE_SECTORS).map(([sector, sector
 	id: sector,
 	...sectorObj,
 }))
+
+const largeModelSectors = ['WLD', 'NA', 'CA', 'US', 'AO', 'AK', 'PO'].map((sectorId) => ({
+	id: sectorId,
+	...FORECAST_SECTORS[sectorId],
+}))
+
+console.log('geoboxSectors', geoboxSectors)
+console.log('largeModelSectors', largeModelSectors)
 
 const crossSectors = Object.entries(ALL_CROSS_SECTORS).map(([sector, sectorObj]) => ({
 	id: sector,
@@ -173,6 +182,17 @@ RegionSelection.args = {
 export const DotStyles = TemplateDotStyles.bind({})
 DotStyles.args = {
 	sectors: pointSectors,
+	d3config: {
+		width: 1000,
+		height: 600,
+		rotate: regions.CONUS.rotate,
+		scale: regions.CONUS.scale,
+	},
+}
+
+export const LargeModelSectors = TemplateSelect.bind({})
+LargeModelSectors.args = {
+	sectors: largeModelSectors,
 	d3config: {
 		width: 1000,
 		height: 600,
