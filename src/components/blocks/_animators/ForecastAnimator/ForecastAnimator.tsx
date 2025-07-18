@@ -10,6 +10,7 @@ import { useRootStore } from '@/store/useRootStore'
 import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
+import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams, usePathname, useRouter } from 'next/navigation'
@@ -48,8 +49,8 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
 	const forecastLastFrameDwellTime = useRootStore.use.forecastLastFrameDwellTime()
-	const frameValidTime = useRootStore.use.frameValidTime()
-	const setFrameValidTime = useRootStore.use.setFrameValidTime()
+	const forecastFrameValidTime = useRootStore.use.forecastFrameValidTime()
+	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime()
 	const [forecastData, setForecastData] = useState([])
 	const [forecastRuns, setForecastRuns] = useState<Record<string, runsProps>>({})
 	const [startFrame, setStartFrame] = useState(0)
@@ -75,36 +76,22 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 			router.push(`/weather-data/forecast-models/${currentRun}/${modelId}/${sectorId}/${levelId}/${productId}`)
 		}
 
-		if (data.validtimes.indexOf(currentFrameValidTime) < 0) {
-			// frameValidTime doesn't exist in the array, find closest match
-			const closestValidTime = data.validtimes.reduce((closest, current) => {
-				const currentDiff = Math.abs(current - currentFrameValidTime)
-				const closestDiff = Math.abs(closest - currentFrameValidTime)
-				return currentDiff < closestDiff ? current : closest
-			}, data.validtimes[0]) // Start with first timestamp as default closest
+		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
 
-			// Update to use the closest timestamp
-			setFrameValidTime(closestValidTime)
-
-			// Also set the starting frame to match this timestamp
-			const closestIndex = data.validtimes.indexOf(closestValidTime)
-			setStartFrame(closestIndex)
-		} else {
-			setStartFrame(data.validtimes.indexOf(currentFrameValidTime))
-		}
+		setStartFrame(closestValidTimeIndex)
 		setImageInfo(data.imageInfo)
 		setForecastData(data.frames)
 		setForecastRuns(runs.runs)
 		setFrameValidTimes(data.validtimes)
-	}, [runId, modelId, sectorId, levelId, productId, setForecastData, setForecastRuns, setFrameValidTimes, setFrameValidTime, router])
+	}, [runId, modelId, sectorId, levelId, productId, setForecastData, setForecastRuns, setFrameValidTimes, router])
 
 	useEffect(() => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, getData])
 
 	useEffect(() => {
-		frameValidTimeRef.current = frameValidTime
-	}, [frameValidTime])
+		frameValidTimeRef.current = forecastFrameValidTime
+	}, [forecastFrameValidTime])
 
 	// Add this handler function
 	const handleReadoutDataRequest = useCallback(
@@ -180,7 +167,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 					<Animator
 						frames={forecastData}
 						frameValidTimes={frameValidTimes}
-						setFrameValidTime={setFrameValidTime}
+						setFrameValidTime={setForecastFrameValidTime}
 						startFrame={startFrame}
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}
