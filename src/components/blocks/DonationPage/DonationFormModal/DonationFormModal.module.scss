@@ -1,0 +1,113 @@
+@import '/src/styles/vars';
+
+.modalOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.75);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+	padding: 20px;
+	backdrop-filter: blur(4px);
+}
+
+.modalContent {
+	background-color: var(--color-white-grey19);
+	border-radius: 16px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+	max-width: 800px;
+	width: 100%;
+	max-height: 90vh;
+	overflow: hidden;
+	position: relative;
+	transition: all var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		max-width: 95vw;
+		max-height: 95vh;
+		border-radius: 12px;
+	}
+}
+
+.modalHeader {
+	padding: 24px 32px;
+	border-bottom: 1px solid var(--color-grey3-grey15);
+	background-color: var(--color-grey1-grey18);
+	position: relative;
+	transition: all var(--themeChange);
+
+	h2 {
+		color: var(--color-grey20-grey0);
+		font-size: 24px;
+		font-weight: 700;
+		margin: 0 0 8px 0;
+		transition: color var(--themeChange);
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 20px;
+		}
+	}
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 20px 24px;
+	}
+}
+
+.tierInfo,
+.amountInfo {
+	color: var(--color-grey16-grey4);
+	font-size: 14px;
+	margin: 4px 0 0 0;
+	transition: color var(--themeChange);
+
+	strong {
+		color: var(--color-blue4-blue3);
+		font-weight: 600;
+	}
+}
+
+.closeButton {
+	position: absolute;
+	top: 24px;
+	right: 32px;
+	background: none;
+	border: none;
+	color: var(--color-grey14-grey6);
+	font-size: 20px;
+	cursor: pointer;
+	padding: 8px;
+	border-radius: 8px;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background-color: var(--color-grey3-grey15);
+		color: var(--color-grey18-grey2);
+	}
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		top: 20px;
+		right: 24px;
+		font-size: 18px;
+	}
+}
+
+.modalBody {
+	padding: 32px;
+	max-height: calc(90vh - 120px);
+	overflow-y: auto;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 24px;
+		max-height: calc(95vh - 100px);
+	}
+}
+
+.formContainer {
+	min-height: 400px;
+}
+
+// Custom styling for Blackbaud form will be handled in a separate global CSS file

@@ -114,9 +114,35 @@
 	font-size: 12px;
 	opacity: 0.8;
 	font-weight: 400;
+	margin-bottom: 12px;
 
 	@media (max-width: $mobile-menu-breakpoint) {
 		font-size: 11px;
+		margin-bottom: 8px;
+	}
+}
+
+.tierActions {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 12px;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		gap: 6px;
+		margin-top: 8px;
+	}
+}
+
+.tierButton {
+	font-size: 11px !important;
+	padding: 6px 12px !important;
+	min-height: auto !important;
+	white-space: nowrap;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		font-size: 10px !important;
+		padding: 4px 8px !important;
 	}
 }
 

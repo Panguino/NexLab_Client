@@ -1,0 +1,118 @@
+/* Custom styling for Blackbaud donation form */
+.customBboxForm {
+	font-family: inherit !important;
+}
+
+/* Form container */
+.customBboxForm .bbox-form-container {
+	background: transparent !important;
+	border: none !important;
+	box-shadow: none !important;
+}
+
+/* Input fields */
+.customBboxForm input[type="text"],
+.customBboxForm input[type="email"],
+.customBboxForm input[type="tel"],
+.customBboxForm select,
+.customBboxForm textarea {
+	background-color: var(--color-white-grey17) !important;
+	border: 1px solid var(--color-grey3-grey15) !important;
+	border-radius: 8px !important;
+	padding: 12px 16px !important;
+	font-size: 14px !important;
+	color: var(--color-grey20-grey0) !important;
+	font-family: inherit !important;
+	transition: all 0.2s ease !important;
+}
+
+.customBboxForm input[type="text"]:focus,
+.customBboxForm input[type="email"]:focus,
+.customBboxForm input[type="tel"]:focus,
+.customBboxForm select:focus,
+.customBboxForm textarea:focus {
+	border-color: var(--color-blue3-blue4) !important;
+	box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1) !important;
+	outline: none !important;
+}
+
+/* Labels */
+.customBboxForm label {
+	color: var(--color-grey18-grey2) !important;
+	font-weight: 500 !important;
+	font-size: 14px !important;
+	margin-bottom: 8px !important;
+	display: block !important;
+}
+
+/* Buttons */
+.customBboxForm button,
+.customBboxForm input[type="submit"] {
+	background: linear-gradient(135deg, var(--color-blue3) 0%, var(--color-blue4) 100%) !important;
+	border: none !important;
+	border-radius: 8px !important;
+	color: white !important;
+	padding: 12px 24px !important;
+	font-size: 14px !important;
+	font-weight: 600 !important;
+	cursor: pointer !important;
+	transition: all 0.2s ease !important;
+}
+
+.customBboxForm button:hover,
+.customBboxForm input[type="submit"]:hover {
+	transform: translateY(-1px) !important;
+	box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3) !important;
+}
+
+/* Error messages */
+.customBboxForm .error,
+.customBboxForm .bbox-error {
+	color: var(--color-red4) !important;
+	font-size: 12px !important;
+	margin-top: 4px !important;
+}
+
+/* Success messages */
+.customBboxForm .success,
+.customBboxForm .bbox-success {
+	color: var(--color-green4) !important;
+	font-size: 14px !important;
+	padding: 12px !important;
+	background-color: var(--color-green1) !important;
+	border-radius: 8px !important;
+	border: 1px solid var(--color-green3) !important;
+}
+
+/* Form sections */
+.customBboxForm .bbox-form-section {
+	margin-bottom: 24px !important;
+}
+
+/* Radio buttons and checkboxes */
+.customBboxForm input[type="radio"],
+.customBboxForm input[type="checkbox"] {
+	accent-color: var(--color-blue3) !important;
+}
+
+/* Amount selection buttons */
+.customBboxForm .amount-button,
+.customBboxForm .bbox-amount-button {
+	background-color: var(--color-white-grey17) !important;
+	border: 1px solid var(--color-grey3-grey15) !important;
+	border-radius: 8px !important;
+	color: var(--color-grey18-grey2) !important;
+	padding: 12px 16px !important;
+	margin: 4px !important;
+	cursor: pointer !important;
+	transition: all 0.2s ease !important;
+}
+
+.customBboxForm .amount-button:hover,
+.customBboxForm .amount-button.selected,
+.customBboxForm .bbox-amount-button:hover,
+.customBboxForm .bbox-amount-button.selected {
+	background-color: var(--color-blue3) !important;
+	border-color: var(--color-blue3) !important;
+	color: white !important;
+}

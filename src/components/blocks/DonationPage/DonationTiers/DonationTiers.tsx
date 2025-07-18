@@ -1,25 +1,50 @@
 'use client'
 
+import { Button } from '@/components/elements/Button/Button'
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState } from 'react'
+import { DonationFormModal } from '../DonationFormModal/DonationFormModal'
 import styles from './DonationTiers.module.scss'
 
 export const DonationTiers = () => {
+	const [isModalOpen, setIsModalOpen] = useState(false)
+	const [selectedTier, setSelectedTier] = useState<string>('')
+	const [selectedAmount, setSelectedAmount] = useState<number>(0)
+
+	const openModal = (tierName: string, amount: number) => {
+		setSelectedTier(tierName)
+		setSelectedAmount(amount)
+		setIsModalOpen(true)
+	}
+
+	const closeModal = () => {
+		setIsModalOpen(false)
+		setSelectedTier('')
+		setSelectedAmount(0)
+	}
+
 	const tiers = [
 		{
 			name: 'Standard',
 			price: '$5/mo or $100 lifetime',
 			highlight: false,
+			monthlyAmount: 5,
+			lifetimeAmount: 100,
 		},
 		{
 			name: 'Advanced',
 			price: '$25/mo or $250 lifetime',
 			highlight: true,
+			monthlyAmount: 25,
+			lifetimeAmount: 250,
 		},
 		{
 			name: 'Premium',
 			price: '$50/mo or $1,000 lifetime',
 			highlight: false,
+			monthlyAmount: 50,
+			lifetimeAmount: 1000,
 		},
 	]
 
@@ -75,6 +100,18 @@ export const DonationTiers = () => {
 									<th key={index} className={`${styles.tierHeader} ${tier.highlight ? styles.highlighted : ''}`}>
 										<div className={styles.tierName}>{tier.name}</div>
 										<div className={styles.tierPrice}>{tier.price}</div>
+										<div className={styles.tierActions}>
+											<Button
+												label={`$${tier.monthlyAmount}/mo`}
+												onClick={() => openModal(tier.name, tier.monthlyAmount)}
+												className={styles.tierButton}
+											/>
+											<Button
+												label={`$${tier.lifetimeAmount} lifetime`}
+												onClick={() => openModal(tier.name, tier.lifetimeAmount)}
+												className={styles.tierButton}
+											/>
+										</div>
 									</th>
 								))}
 							</tr>
@@ -92,6 +129,7 @@ export const DonationTiers = () => {
 					</table>
 				</div>
 			</div>
+			<DonationFormModal isOpen={isModalOpen} onClose={closeModal} tier={selectedTier} amount={selectedAmount} />
 		</section>
 	)
 }
