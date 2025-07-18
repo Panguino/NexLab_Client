@@ -47,8 +47,8 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
 	const forecastLastFrameDwellTime = useRootStore.use.forecastLastFrameDwellTime()
-	const frameValidTime = useRootStore.use.frameValidTime()
-	const setFrameValidTime = useRootStore.use.setFrameValidTime()
+	const forecastFrameValidTime = useRootStore.use.forecastFrameValidTime()
+	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime()
 	const [ratio, setRatio] = useState(1)
 	const [forecastData, setForecastData] = useState([])
 	const [forecastRuns, setForecastRuns] = useState<Record<string, runsProps>>({})
@@ -85,8 +85,8 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	}, [runId, modelId, sectorId, levelId, productId, getData])
 
 	useEffect(() => {
-		frameValidTimeRef.current = frameValidTime
-	}, [frameValidTime])
+		frameValidTimeRef.current = forecastFrameValidTime
+	}, [forecastFrameValidTime])
 
 	useEffect(() => {
 		setForecastZoomFill(isMobile)
@@ -110,7 +110,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 					<Animator
 						frames={forecastData}
 						frameValidTimes={frameValidTimes}
-						setFrameValidTime={setFrameValidTime}
+						setFrameValidTime={setForecastFrameValidTime}
 						startFrame={startFrame}
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}
