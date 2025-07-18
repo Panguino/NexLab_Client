@@ -45,6 +45,7 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	const [startFrame, setStartFrame] = useState(0)
 	const frameValidTimeRef = useRef<number | null>(null)
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 
 	// Keep userIdleRef in sync with userIdle state
 	useEffect(() => {
@@ -107,6 +108,7 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 								<AnalysisAnimatorSettings refreshData={getData} />
 							</AnimatorSettings>
 						}
+						imageInfo={imageInfo}
 					/>
 				</div>
 				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>

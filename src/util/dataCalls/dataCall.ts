@@ -18,7 +18,7 @@ export const getData = async (url) => {
 		}
 
 		const data_data = await data_res.json()
-		console.log('data_data', data_data)
+		//console.log('data_data', data_data)
 
 		return {
 			// Beginning to feel that there's too much variety in the data returned from different endpoints
@@ -29,6 +29,8 @@ export const getData = async (url) => {
 			imageInfo: data_data?.img || { width: 0, height: 0 },
 			overlays: { static: data_data.overlays?.static ?? {}, dynamic: data_data.overlays?.dynamic ?? {} },
 			runs: data_data.runs || {},
+			dataTypes: data_data.dataTypes || [],
+			readoutData: data_data.readoutData || [],
 		}
 	} catch (error) {
 		console.error('Error fetching data:', error)

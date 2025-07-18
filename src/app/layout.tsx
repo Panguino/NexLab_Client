@@ -3,6 +3,7 @@ import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
 import Providers from '@/components/providers/Providers/Providers'
 import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
 import { mobileMenuItems } from '@/data/mobileMenuItems'
+import '@/lib/fontawesome'
 import '@/styles/global.scss'
 import { Viewport } from 'next'
 

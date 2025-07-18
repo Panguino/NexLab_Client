@@ -43,7 +43,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 	const satradLastFrameDwellTime = useRootStore.use.satradLastFrameDwellTime()
 	const satradFrameValidTime = useRootStore.use.satradFrameValidTime()
 	const setSatradFrameValidTime = useRootStore.use.setSatradFrameValidTime()
-	const [ratio, setRatio] = useState(1)
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [satradData, setSatradData] = useState([])
 	const [satradOverlays, setSatradOverlays] = useState<{ static: object; dynamic: object }>({ static: {}, dynamic: {} })
 	const [startFrame, setStartFrame] = useState(0)
@@ -72,7 +72,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
 		setStartFrame(closestValidTimeIndex)
-		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setImageInfo(data.imageInfo)
 		setSatradData(data.frames)
 		setFrameValidTimes(data.validtimes)
 		setSatradOverlays(data.overlays)
@@ -100,7 +100,7 @@ const SatradAnimator: React.FC<SatradAnimatorProps> = ({ productInfo }) => {
 						frameValidTimes={frameValidTimes}
 						setFrameValidTime={setSatradFrameValidTime}
 						startFrame={startFrame}
-						ratio={ratio}
+						imageInfo={imageInfo}
 						interval={1000 / satradFrameRate}
 						overlays={satradOverlays}
 						initialZoomState={satradZoomState}

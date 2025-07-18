@@ -40,7 +40,7 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 	const nexradLastFrameDwellTime = useRootStore.use.nexradLastFrameDwellTime()
 	const nexradFrameValidTime = useRootStore.use.nexradFrameValidTime()
 	const setNexradFrameValidTime = useRootStore.use.setNexradFrameValidTime()
-	const [ratio, setRatio] = useState(1)
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [nexradData, setNexradData] = useState([])
 	const [startFrame, setStartFrame] = useState(0)
 	const frameValidTimeRef = useRef<number | null>(null)
@@ -66,10 +66,9 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
 		setStartFrame(closestValidTimeIndex)
-		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setImageInfo(data.imageInfo)
 		setNexradData(data.frames)
-		setFrameValidTimes(data.validtimes)
-	}, [siteId, productId, nexradNumberOfFrames, setRatio, setNexradData])
+	}, [siteId, productId, nexradNumberOfFrames, setNexradData])
 
 	useEffect(() => {
 		getData()
@@ -92,7 +91,7 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 						frameValidTimes={frameValidTimes}
 						setFrameValidTime={setNexradFrameValidTime}
 						startFrame={startFrame}
-						ratio={ratio}
+						imageInfo={imageInfo}
 						initialZoomState={nexradZoomState}
 						setZoomState={setNexradZoomState}
 						zoomFill={nexradZoomFill}

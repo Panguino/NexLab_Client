@@ -28,7 +28,7 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 	const userIdleRef = useRef(false)
 	const { rapmesoProductId: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [ratio, setRatio] = useState(1)
+	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [RAPMesoData, setRAPMesoData] = useState([])
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
@@ -91,7 +91,7 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 						frameValidTimes={frameValidTimes}
 						setFrameValidTime={setRapMesoFrameValidTime}
 						startFrame={startFrame}
-						ratio={ratio}
+						imageInfo={imageInfo}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
 						zoomFill={analysisZoomFill}
