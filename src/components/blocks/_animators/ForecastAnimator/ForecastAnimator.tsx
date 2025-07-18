@@ -77,13 +77,13 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 		}
 
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
-		setStartFrame(closestValidTimeIndex)
 
+		setStartFrame(closestValidTimeIndex)
 		setImageInfo(data.imageInfo)
 		setForecastData(data.frames)
 		setForecastRuns(runs.runs)
 		setFrameValidTimes(data.validtimes)
-	}, [runId, modelId, sectorId, levelId, productId, setForecastData, setForecastRuns, setFrameValidTimes, setFrameValidTime, router])
+	}, [runId, modelId, sectorId, levelId, productId, setForecastData, setForecastRuns, setFrameValidTimes, router])
 
 	useEffect(() => {
 		getData()

@@ -28,7 +28,6 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 	const userIdleRef = useRef(false)
 	const { soundingProductId: productId, soundingSiteId: siteId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
-	const [ratio, setRatio] = useState(1)
 	const [soundingData, setSoundingData] = useState([])
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
@@ -67,10 +66,10 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
 		setStartFrame(closestValidTimeIndex)
-		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setImageInfo(data.imageInfo)
 		setSoundingData(data.frames)
 		setFrameValidTimes(data.validtimes)
-	}, [siteId, productId, soundingNumberOfFrames, setRatio, setSoundingData, setStartFrame, setFrameValidTimes])
+	}, [siteId, productId, soundingNumberOfFrames, setSoundingData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
 		getData()
@@ -93,7 +92,6 @@ const SoundingAnimator: React.FC<SoundingAnimatorProps> = ({ productInfo }) => {
 						frameValidTimes={frameValidTimes}
 						setFrameValidTime={setSoundingFrameValidTime}
 						startFrame={startFrame}
-						ratio={ratio}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
 						zoomFill={analysisZoomFill}

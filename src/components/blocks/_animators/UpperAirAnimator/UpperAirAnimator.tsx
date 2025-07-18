@@ -66,10 +66,10 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
 		setStartFrame(closestValidTimeIndex)
-		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setImageInfo(data.imageInfo)
 		setUpperAirData(data.frames)
 		setFrameValidTimes(data.validtimes)
-	}, [siteId, levelId, productId, setRatio, setUpperAirData, setStartFrame, setFrameValidTimes])
+	}, [siteId, levelId, productId, setUpperAirData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
 		getData()

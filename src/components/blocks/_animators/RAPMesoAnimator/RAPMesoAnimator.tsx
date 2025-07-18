@@ -65,10 +65,10 @@ const RAPMesoAnimator: React.FC<RAPMesoAnimatorProps> = ({ productInfo }) => {
 
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
 		setStartFrame(closestValidTimeIndex)
-		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setImageInfo(data.imageInfo)
 		setRAPMesoData(data.frames)
 		setFrameValidTimes(data.validtimes)
-	}, [productId, setRatio, setRAPMesoData, setStartFrame, setFrameValidTimes])
+	}, [productId, setRAPMesoData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
 		getData()

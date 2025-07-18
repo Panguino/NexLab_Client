@@ -66,10 +66,10 @@ const SurfaceMapsAnimator: React.FC<SurfaceMapsAnimatorProps> = ({ productInfo }
 
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
 		setStartFrame(closestValidTimeIndex)
-		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setImageInfo(data.imageInfo)
 		setSurfaceMapsData(data.frames)
 		setFrameValidTimes(data.validtimes)
-	}, [productId, regionId, siteId, surfaceMapsNumberOfFrames, setRatio, setSurfaceMapsData, setStartFrame, setFrameValidTimes])
+	}, [productId, regionId, siteId, surfaceMapsNumberOfFrames, setSurfaceMapsData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
 		getData()

@@ -65,9 +65,11 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 		}
 
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
+
 		setStartFrame(closestValidTimeIndex)
 		setImageInfo(data.imageInfo)
 		setNexradData(data.frames)
+		setFrameValidTimes(data.validtimes)
 	}, [siteId, productId, nexradNumberOfFrames, setNexradData])
 
 	useEffect(() => {
