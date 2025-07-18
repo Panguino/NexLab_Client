@@ -60,7 +60,7 @@ export const Animator = ({
 	},
 	runsPerRow = 4,
 	overlays,
-	enableReadouts = true,
+	enableReadouts = false,
 	frameReadoutData,
 	isLoadingReadoutData,
 	requestReadoutData,
