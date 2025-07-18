@@ -65,10 +65,10 @@ const IsentropicAnimator: React.FC<IsentropicAnimatorProps> = ({ productInfo }) 
 
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
 		setStartFrame(closestValidTimeIndex)
-		setRatio(data.imageInfo.width / data.imageInfo.height)
+		setImageInfo(data.imageInfo)
 		setIsentropicData(data.frames)
 		setFrameValidTimes(data.validtimes)
-	}, [productId, setRatio, setIsentropicData, setStartFrame, setFrameValidTimes])
+	}, [productId, setIsentropicData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
 		getData()
