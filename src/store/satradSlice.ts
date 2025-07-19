@@ -8,6 +8,8 @@ const defaultSatradZoomState = {
 }
 
 export interface ISatradSlice {
+	satradFrameValidTime: number
+	setSatradFrameValidTime: (validTime: number) => void
 	satradNumberOfFrames: number
 	setSatradNumberOfFrames: (frames: number) => void
 	satradFrameStep: number
@@ -34,6 +36,8 @@ export interface ISatradSlice {
 }
 
 export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
+	satradFrameValidTime: 0,
+	setSatradFrameValidTime: (validTime: number) => set(() => ({ satradFrameValidTime: validTime })),
 	satradNumberOfFrames: 12,
 	setSatradNumberOfFrames: (frames: number) => set(() => ({ satradNumberOfFrames: frames })),
 	satradFrameStep: 1,

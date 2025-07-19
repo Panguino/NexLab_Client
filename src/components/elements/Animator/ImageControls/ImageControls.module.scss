@@ -1,0 +1,27 @@
+.imageControls {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  button {
+    position: relative;
+    border-radius: 4px;
+    display: block;
+    background-color: var(--color-grey17);
+    outline: none;
+    border: none;
+    padding: 4px;
+    width: 30px;
+    font-size: 15px;
+    text-align: center;
+    height: 30px;
+    color: var(--color-grey5);
+    transition: var(--themeChange);
+    cursor: pointer;
+    &:hover {
+      color: var(--color-white);
+    }
+  }
+}

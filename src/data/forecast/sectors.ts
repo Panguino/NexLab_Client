@@ -1,3 +1,4 @@
+import { DotColor } from '../d3Map/dotStyles'
 import { FORECAST_REGION_CONUS_ID, FORECAST_REGION_NAMER_ID } from './regions'
 
 export const FORECAST_SECTOR_US_ID = 'US'
@@ -90,6 +91,16 @@ export const FORECAST_SECTORS = {
 		region: FORECAST_REGION_NAMER_ID,
 		alternateSectors: ['WCAN', 'NA'],
 	},
+	[FORECAST_SECTOR_ALASKA_ID]: {
+		name: 'Alaska',
+		type: 'Geobox',
+		coordinates: [
+			[-180, 43],
+			[-121, 78],
+		],
+		region: FORECAST_REGION_NAMER_ID,
+		alternateSectors: ['WCAN', 'NA'],
+	},
 	[FORECAST_SECTOR_WESTERN_CANADA_ID]: {
 		name: 'Western Canada',
 		type: 'Geobox',
@@ -99,16 +110,6 @@ export const FORECAST_SECTORS = {
 		],
 		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['NW', 'US', 'NA'],
-	},
-	[FORECAST_SECTOR_ALASKA_ID]: {
-		name: 'Alaska',
-		type: 'Geobox',
-		coordinates: [
-			[-180, 43],
-			[-121, 78],
-		],
-		region: FORECAST_REGION_CONUS_ID,
-		alternateSectors: ['WCAN', 'NA'],
 	},
 	[FORECAST_SECTOR_NORTHWEST_ID]: {
 		name: 'Northwest',
@@ -260,33 +261,39 @@ export const FORECAST_SECTORS = {
 		region: FORECAST_REGION_CONUS_ID,
 		alternateSectors: ['GBSN', 'SW'],
 	},
-	// [FORECAST_SECTOR_FLOAT_ONE_ID]: {
-	// 	name: 'FLOAT 1',
-	// 	type: 'Geobox',
-	// 	coordinates: [
-	// 		[0, 0],
-	// 		[0, 0],
-	// 	], // Replace with actual values if needed
-	// 	alternateSectors: ['MW'],
-	// },
-	// [FORECAST_SECTOR_FLOAT_TWO_ID]: {
-	// 	name: 'FLOAT 2',
-	// 	type: 'Geobox',
-	// 	coordinates: [
-	// 		[0, 0],
-	// 		[0, 0],
-	// 	], // Replace with actual values if needed
-	// 	alternateSectors: ['MW'],
-	// },
-	// [FORECAST_SECTOR_FLOAT_THREE_ID]: {
-	// 	name: 'ICECHIP',
-	// 	type: 'Geobox',
-	// 	coordinates: [
-	// 		[0, 0],
-	// 		[0, 0],
-	// 	], // Replace with actual values if needed
-	// 	alternateSectors: ['MW'],
-	// },
+	[FORECAST_SECTOR_FLOAT_ONE_ID]: {
+		name: 'FLOAT 1',
+		type: 'Geobox',
+		dotColor: DotColor.Green,
+		coordinates: [
+			[0, 0],
+			[0, 0],
+		],
+		region: FORECAST_REGION_CONUS_ID,
+		alternateSectors: ['MW'],
+	},
+	[FORECAST_SECTOR_FLOAT_TWO_ID]: {
+		name: 'FLOAT 2',
+		type: 'Geobox',
+		dotColor: DotColor.Green,
+		coordinates: [
+			[0, 0],
+			[0, 0],
+		],
+		region: FORECAST_REGION_CONUS_ID,
+		alternateSectors: ['MW'],
+	},
+	[FORECAST_SECTOR_FLOAT_THREE_ID]: {
+		name: 'FLOAT 3',
+		type: 'Geobox',
+		dotColor: DotColor.Green,
+		coordinates: [
+			[0, 0],
+			[0, 0],
+		],
+		region: FORECAST_REGION_CONUS_ID,
+		alternateSectors: ['MW'],
+	},
 }
 
 export const ALL_FORECAST_SECTORS = Object.keys(FORECAST_SECTORS).map((sectorId) => sectorId)
