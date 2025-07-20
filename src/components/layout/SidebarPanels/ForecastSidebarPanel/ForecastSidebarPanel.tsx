@@ -25,13 +25,7 @@ const ForecastSidebarPanel = () => {
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
 	const [regionId, setRegionId] = useState('')
-	const {
-		forecastRunId: runId,
-		forecastModelId: modelId,
-		forecastSectorId: sectorId,
-		forecastLevelId: levelId,
-		forecastProductId: productId,
-	} = useParams()
+	const { fRun: runId, fModel: modelId, fSector: sectorId, fLevel: levelId, fProduct: productId } = useParams()
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
 	const openIndexRef = useRef<number | null>(null)
 

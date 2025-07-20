@@ -3,7 +3,7 @@ import ForecastAnimator from '@/components/blocks/_animators/ForecastAnimator/Fo
 import { getForecastPageIdByParams } from '@/util/weatherDataPageLookup'
 
 const Page = async ({ params }) => {
-	const { forecastModelId: modelId, forecastLevelId: levelId, forecastProductId: productId } = params
+	const { fModel: modelId, fLevel: levelId, fProduct: productId } = params
 	const pageId = getForecastPageIdByParams(modelId, levelId, productId)
 	const pageData = await getDataPageContent(pageId)
 	return (

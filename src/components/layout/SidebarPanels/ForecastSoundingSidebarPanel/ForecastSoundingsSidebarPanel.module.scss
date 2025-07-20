@@ -1,0 +1,19 @@
+.ForecastSoundingsSidebarPanel {
+	position: relative;
+}
+.options {
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+.siteSelector {
+	position: absolute;
+	right: -1000px;
+	width: 1000px;
+	height: 600px;
+	top: 0;
+}
+.forecastProducts {
+	padding: 0 25px 10px;
+}
