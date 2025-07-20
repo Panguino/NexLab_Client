@@ -6,15 +6,15 @@ import styles from './ForecastSoundingsSidebarPanel.module.scss'
 
 const ForecastSoundingsSidebarPanel = () => {
 	const {
-		fModel: modelId,
-		fRun: runId,
-		fSector: sectorId,
-		fLevel: levelId,
-		fProduct: productId,
-		fsValid: validTimeId,
-		fsLoc: locationId,
-		fsParcel: parcelId,
-		fsWeather: weatherId,
+		fcstModel: modelId,
+		fcstRun: runId,
+		fcstSector: sectorId,
+		fcstLevel: levelId,
+		fcstProduct: productId,
+		fcstSndValid: validTimeId,
+		fcstSndLoc: locationId,
+		fcstSndParcel: parcelId,
+		fcstSndWeather: weatherId,
 	} = useParams()
 
 	return (
