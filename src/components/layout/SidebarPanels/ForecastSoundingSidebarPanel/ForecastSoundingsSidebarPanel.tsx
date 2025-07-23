@@ -18,7 +18,7 @@ const ForecastSoundingsSidebarPanel = () => {
 		fcstSndWeather: weatherId,
 	} = useParams()
 
-	const decodedLocationId = tempLocId ? decodeURIComponent(tempLocId) : null
+	const decodedLocationId = tempLocId ? decodeURIComponent(tempLocId as string) : null
 	const isStationId = decodedLocationId?.length === 4 && !decodedLocationId?.includes(',')
 
 	const [locationId, setLocationId] = useState(decodedLocationId)
