@@ -5,7 +5,6 @@ import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { FORECAST_LEVELS } from '@/data/forecast/levels'
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
 import { FORECAST_PRODUCTS } from '@/data/forecast/products'
-import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import { buildProductsByLevel, fetchStationCoordinates } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -31,7 +30,6 @@ const ForecastSoundingsSidebarPanel = () => {
 	const [locationId, setLocationId] = useState(decodedLocationId)
 	const [isLoading, setIsLoading] = useState(isStationId)
 	const [error, setError] = useState(null)
-	const [regionId, setRegionId] = useState('')
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
 	const openIndexRef = useRef<number | null>(null)
@@ -67,7 +65,6 @@ const ForecastSoundingsSidebarPanel = () => {
 				setOpenIndex(levelIndex)
 			}
 			setSortedProductEntries(productsByLevel)
-			setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		}
 	}, [runId, modelId, sectorId, levelId, productId, router])
 
