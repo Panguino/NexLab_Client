@@ -32,13 +32,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const { isMobile } = useIsMobile()
 	const router = useRouter()
 	const pathname = usePathname()
-	const {
-		forecastRunId: runId,
-		forecastModelId: modelId,
-		forecastSectorId: sectorId,
-		forecastLevelId: levelId,
-		forecastProductId: productId,
-	} = useParams()
+	const { fcstModel: modelId, fcstRun: runId, fcstSector: sectorId, fcstLevel: levelId, fcstProduct: productId } = useParams()
 	const [activeTab, setActiveTab] = useState(-1)
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
