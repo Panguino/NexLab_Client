@@ -23,50 +23,61 @@ const ForecastSoundingsSidebarPanel = () => {
 		fcstSndParcel: parcelId,
 		fcstSndWeather: weatherId,
 	} = useParams()
+	const router = useRouter()
+	// sounding location prep
 	const decodedLocationId = tempLocId ? decodeURIComponent(tempLocId as string) : null
 	const isStationId = decodedLocationId?.length === 4 && !decodedLocationId?.includes(',')
-	const router = useRouter()
-
 	const [locationId, setLocationId] = useState(decodedLocationId)
 	const [isLoading, setIsLoading] = useState(isStationId)
 	const [error, setError] = useState(null)
+
+	// menu prep
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
 	const openIndexRef = useRef<number | null>(null)
 
 	useEffect(() => {
-		if (
-			!FORECAST_MODELS[modelId as string] || // Check if the model exists
-			!FORECAST_MODELS[modelId as string].sectors.includes(sectorId as string) || // Check if the sector exists in the model
-			(!FORECAST_MODELS[modelId as string].products[sectorId as string]?.[levelId as string] &&
-				!FORECAST_MODELS[modelId as string].products['general'][levelId as string]) || // Check if the level exists in the sector
-			(!FORECAST_MODELS[modelId as string].products[sectorId as string]?.[levelId as string]?.includes(productId as string) &&
-				!FORECAST_MODELS[modelId as string].products['general'][levelId as string]?.includes(productId as string)) // Check if the product exists in the level
+		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
+		const sanitizedSectorId = FORECAST_MODELS[sanitizedModelId as string].sectors.includes(sectorId as string)
+			? sectorId
+			: FORECAST_MODELS[sanitizedModelId as string].defaults.sector
+		const productsByLevel = buildProductsByLevel(sanitizedModelId as string, sanitizedSectorId as string)
+		const allProducts = productsByLevel.flatMap((item: { products: string[] }) => item.products)
+		const defaultLevel = FORECAST_MODELS[sanitizedModelId as string].defaults.level
+		const defaultProduct = FORECAST_MODELS[sanitizedModelId as string].defaults.product
+		let sanitizedLevelId, sanitizedProductId
+		if (productsByLevel.find((item) => item.level === levelId && item.products.includes(productId))) {
+			// product exists for the level
+			sanitizedLevelId = levelId
+			sanitizedProductId = productId
+		} else if (productsByLevel.some((item) => item.products.includes(productId))) {
+			// product exists for some level just not the one requested
+			sanitizedLevelId = productsByLevel.find((item) => item.products.includes(productId))?.level
+			sanitizedProductId = productId
+		} else if (
+			allProducts.indexOf(productId as string) < 0 &&
+			productsByLevel.find((item) => item.level === levelId)?.products.includes(defaultProduct)
 		) {
-			const modelIdDefault = FORECAST_MODELS[modelId as string] ? modelId : DEFAULT_FORECAST_MODEL
-			const DEFAULT_FORECAST_SECTOR = FORECAST_MODELS[modelIdDefault as string].defaults.sector
-			const DEFAULT_FORECAST_LEVEL = FORECAST_MODELS[modelIdDefault as string].defaults.level
-			const DEFAULT_FORECAST_PRODUCT = FORECAST_MODELS[modelIdDefault as string].defaults.product
-			console.log(
-				`Invalid forecast parameters: runId=${runId}, modelId=${modelId}, sectorId=${sectorId}, levelId=${levelId}, productId=${productId}. Redirecting to default.`,
-				runId,
-				modelIdDefault,
-				DEFAULT_FORECAST_SECTOR,
-				DEFAULT_FORECAST_LEVEL,
-				DEFAULT_FORECAST_PRODUCT,
-			)
-			router.push(
-				`/weather-data/forecast-models/${runId}/${modelIdDefault}/${DEFAULT_FORECAST_SECTOR}/${DEFAULT_FORECAST_LEVEL}/${DEFAULT_FORECAST_PRODUCT}`,
-			)
+			// the requested product doesnt exist anywhere, but the default product does exist for the requested level
+			sanitizedLevelId = levelId
+			sanitizedProductId = defaultProduct
+		} else if (allProducts.indexOf(productId as string) < 0) {
+			// product doesnt exist anywhere
+			sanitizedLevelId = defaultLevel
+			sanitizedProductId = defaultProduct
+		}
+
+		if (sanitizedModelId !== modelId || sanitizedSectorId !== sectorId || sanitizedLevelId !== levelId || sanitizedProductId !== productId) {
+			const baseParmsString = `${runId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`
+			router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${validTimeId}/${locationId}/${parcelId}/${weatherId}`)
 		} else {
-			const productsByLevel = buildProductsByLevel(modelId as string, sectorId as string)
 			const levelIndex = productsByLevel.findIndex((item) => item.level === levelId)
 			if (openIndexRef.current !== levelIndex) {
 				setOpenIndex(levelIndex)
 			}
 			setSortedProductEntries(productsByLevel)
 		}
-	}, [runId, modelId, sectorId, levelId, productId, router])
+	}, [runId, modelId, sectorId, levelId, productId, router, validTimeId, locationId, parcelId, weatherId])
 
 	useEffect(() => {
 		// Only fetch if this is a station ID
@@ -102,7 +113,7 @@ const ForecastSoundingsSidebarPanel = () => {
 	return (
 		<ScrollArea>
 			<div className={styles.ForecastSoundingsSidebarPanel}>
-				Parameters:
+				Parameters sidebar branch:
 				{isLoading ? (
 					<p>Loading station coordinates...</p>
 				) : (
@@ -132,9 +143,11 @@ const ForecastSoundingsSidebarPanel = () => {
 											key={product}
 											name={FORECAST_PRODUCTS[product].name}
 											active={product === productId && level === levelId}
-											onClick={() =>
-												router.push(`/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${level}/${product}`)
-											}
+											onClick={() => {
+												const baseParmsString = `${runId}/${modelId}/${sectorId}/${level}/${product}`
+												const soundingParmsString = `${validTimeId}/${locationId}/${parcelId}/${weatherId}`
+												router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
+											}}
 										/>
 									))}
 								</div>
