@@ -10,13 +10,26 @@ export const fetchStationCoordinates = async (stationId: string): Promise<string
 
 		if (data.geometry && Array.isArray(data.geometry.coordinates) && data.geometry.coordinates.length === 2) {
 			const [longitude, latitude] = data.geometry.coordinates
-			return `${latitude},${longitude}`
+			return `${latitude.toFixed(1)},${longitude.toFixed(1)}`
 		} else {
 			throw new Error('Station coordinates not found')
 		}
 	} catch (err) {
 		console.error('Error fetching station data:', err)
 		throw err // Rethrow to let the calling code handle it
+	}
+}
+
+export const fetchFloaterSectorData = async () => {
+	try {
+		const response = await fetch('https://weather.cod.edu/datapoints/forecast/get-floaters.php')
+		if (!response.ok) {
+			throw new Error(`Failed to fetch sector data: ${response.status} ${response.statusText}`)
+		}
+		return await response.json()
+	} catch (error) {
+		console.error('Error fetching sector data:', error)
+		return null
 	}
 }
 
