@@ -11,11 +11,17 @@ import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
 import { FORECAST_PRODUCTS } from '@/data/forecast/products'
 import { FORECAST_REGIONS } from '@/data/forecast/regions'
 import { FORECAST_SECTORS } from '@/data/forecast/sectors'
-import { FORECAST_SOUNDING_PARCEL_OPTIONS, FORECAST_SOUNDING_WEATHER_OPTIONS } from '@/data/forecast/soundingOptions'
+import {
+	DEFAULT_FORECAST_SOUNDING_PARCEL,
+	DEFAULT_FORECAST_SOUNDING_WEATHER,
+	FORECAST_SOUNDING_PARCEL_OPTIONS,
+	FORECAST_SOUNDING_WEATHER_OPTIONS,
+} from '@/data/forecast/soundingOptions'
 import { useRootStore } from '@/store/useRootStore'
+import { getSoundingRuns, getValidtimes } from '@/util/dataCalls/forecast/query-sounding'
 import { buildProductsByLevel, fetchFloaterSectorData, fetchStationCoordinates } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSoundingsSidebarPanel.module.scss'
 
@@ -33,20 +39,20 @@ const ForecastSoundingsSidebarPanel = () => {
 	} = useParams()
 	const router = useRouter()
 	// sounding location prep
-	const decodedLocationId = tempLocId ? decodeURIComponent(tempLocId as string) : null
-	const isStationId = decodedLocationId?.length === 4 && !decodedLocationId?.includes(',')
-	const [locationId, setLocationId] = useState(decodedLocationId)
+	const locationId = tempLocId ? decodeURIComponent(tempLocId as string) : null // removes encoding from URL, specifically commas
+	const isStationId = locationId?.length === 4 && !locationId?.includes(',')
 
 	// menu prep
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
 	const openIndexRef = useRef<number | null>(null)
-	const [internalModelId, setInternalModelId] = useState(modelId)
-	// const [internalRunId, setInternalRunId] = useState(runId)
-	const [internalLocationId, setInternalLocationId] = useState(locationId)
-	// const [internalValidTimeId, setInternalValidTimeId] = useState(validTimeId)
-	const [internalParcelId, setInternalParcelId] = useState(parcelId)
-	const [internalWeatherId, setInternalWeatherId] = useState(weatherId)
+	// these references are specifically to avoid unnecessary re-renders and wait for a button click to update the URL
+	const modelIdRef = useRef<string>(modelId as string)
+	const runIdRef = useRef<string>(runId as string)
+	const locationIdRef = useRef<string | null>(locationId)
+	const validTimeIdRef = useRef<string | null>(validTimeId as string)
+	const parcelIdRef = useRef<string | null>(parcelId as string)
+	const weatherIdRef = useRef<string | null>(weatherId as string)
 	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
 
 	// sector map stuff
@@ -58,12 +64,14 @@ const ForecastSoundingsSidebarPanel = () => {
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const [regionId, setRegionId] = useState('')
 
-	useEffect(() => {
+	const sanitizeCollectAndSetData = useCallback(async () => {
 		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
 		const sanitizedSectorId = FORECAST_MODELS[sanitizedModelId as string].sectors.includes(sectorId as string)
 			? sectorId
 			: FORECAST_MODELS[sanitizedModelId as string].defaults.sector
 		const productsByLevel = buildProductsByLevel(sanitizedModelId as string, sanitizedSectorId as string)
+
+		// Level and Product have to be evaluated together - so everything below are steps to sanitize them
 		const allProducts = productsByLevel.flatMap((item: { products: string[] }) => item.products)
 		const defaultLevel = FORECAST_MODELS[sanitizedModelId as string].defaults.level
 		const defaultProduct = FORECAST_MODELS[sanitizedModelId as string].defaults.product
@@ -88,10 +96,44 @@ const ForecastSoundingsSidebarPanel = () => {
 			sanitizedLevelId = defaultLevel
 			sanitizedProductId = defaultProduct
 		}
+		// finally sanitize remaining parameters
+		const runsAvailable = await getSoundingRuns(sanitizedModelId)
+		const sanitizedRunId = runsAvailable.runs[runId as string]
+			? runId
+			: (runsAvailable as any).status?.currentRun
+				? `${(runsAvailable as any).status.currentRun}`
+				: Object.keys(runsAvailable.runs).reverse()[0] // fallback to first available run if status is missing
+		const validTimesAvailable = await getValidtimes(sanitizedModelId, sanitizedRunId, sanitizedSectorId, sanitizedLevelId, sanitizedProductId)
+		console.log('runAvailable', runsAvailable, 'validTimesAvailable', validTimesAvailable)
+		const sanitizedValidTimeId = validTimesAvailable.validtimes.includes(validTimeId as string) ? validTimeId : validTimesAvailable.validtimes[0]
+		const sanitizedParcelId = FORECAST_SOUNDING_PARCEL_OPTIONS[parcelId as string] ? parcelId : DEFAULT_FORECAST_SOUNDING_PARCEL
+		const sanitizedWeatherId = FORECAST_SOUNDING_WEATHER_OPTIONS[weatherId as string] ? weatherId : DEFAULT_FORECAST_SOUNDING_WEATHER
 
-		if (sanitizedModelId !== modelId || sanitizedSectorId !== sectorId || sanitizedLevelId !== levelId || sanitizedProductId !== productId) {
-			const baseParmsString = `${runId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`
-			const soundingParmsString = `${validTimeId}/${locationId}/${parcelId}/${weatherId}`
+		// Location need special handling as it can accept either station ID or lat,lon format
+		let sanitizedLocationId = locationId
+		if (isStationId) {
+			sanitizedLocationId = await fetchStationCoordinates(locationId)
+		} else if (locationId && locationId.includes(',') && locationId.split(',').length === 2) {
+			const [lat, lon] = locationId.split(',')
+			if (parseFloat(lat) < -90 || parseFloat(lat) > 90 || parseFloat(lon) < -180 || parseFloat(lon) > 180) {
+				sanitizedLocationId = '0,0' // Default to 0,0 if coordinates are invalid
+			}
+		}
+
+		if (
+			sanitizedModelId !== modelId ||
+			sanitizedRunId !== runId ||
+			sanitizedSectorId !== sectorId ||
+			sanitizedLevelId !== levelId ||
+			sanitizedProductId !== productId ||
+			sanitizedValidTimeId !== validTimeId ||
+			sanitizedLocationId !== locationId ||
+			sanitizedParcelId !== parcelId ||
+			sanitizedWeatherId !== weatherId
+		) {
+			// If any of the sanitized parameters differ from the current ones, update the URL to manage state
+			const baseParmsString = `${sanitizedRunId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`
+			const soundingParmsString = `${sanitizedValidTimeId}/${sanitizedLocationId}/${sanitizedParcelId}/${sanitizedWeatherId}`
 			router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
 		} else {
 			const levelIndex = productsByLevel.findIndex((item) => item.level === levelId)
@@ -101,25 +143,11 @@ const ForecastSoundingsSidebarPanel = () => {
 			setSortedProductEntries(productsByLevel)
 			setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		}
-	}, [runId, modelId, sectorId, levelId, productId, setSortedProductEntries, router, validTimeId, locationId, parcelId, weatherId])
+	}, [modelId, runId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, router])
 
 	useEffect(() => {
-		const fetchLocation = async () => {
-			// Only fetch if this is a station ID
-			if (isStationId && decodedLocationId) {
-				// Using our utility function
-				const convertedCoordinates = await fetchStationCoordinates(decodedLocationId)
-				setLocationId(convertedCoordinates)
-			} else {
-				setLocationId(decodedLocationId)
-			}
-		}
-		fetchLocation()
-	}, [decodedLocationId, isStationId])
-
-	useEffect(() => {
-		setInternalLocationId(locationId)
-	}, [locationId])
+		sanitizeCollectAndSetData()
+	}, [runId, modelId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, sanitizeCollectAndSetData])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sector) => {
@@ -191,38 +219,50 @@ const ForecastSoundingsSidebarPanel = () => {
 		}))
 
 	const handleModelChange = (model: string) => {
-		setInternalModelId(model)
+		modelIdRef.current = model
 		if (model !== modelId && !allowGenerateSounding) {
 			// if selected model is different from current model and generate button has not been enabled, enable it
 			setAllowGenerateSounding(true)
 		}
 	}
 	const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setInternalLocationId(e.target.value)
+		locationIdRef.current = e.target.value
 		if (e.target.value !== locationId && !allowGenerateSounding) {
 			// if entered location is different from current location and generate button has not been enabled, enable it
 			setAllowGenerateSounding(true)
 		}
 	}
 	const handleParcelChange = (parcel: string) => {
-		setInternalParcelId(parcel)
+		parcelIdRef.current = parcel
 		if (parcel !== parcelId && !allowGenerateSounding) {
 			// if selected parcel is different from current parcel and generate button has not been enabled, enable it
 			setAllowGenerateSounding(true)
 		}
 	}
 	const handleWeatherChange = (weather: string) => {
-		setInternalWeatherId(weather)
+		weatherIdRef.current = weather
 		if (weather !== weatherId && !allowGenerateSounding) {
 			// if selected weather is different from current weather and generate button has not been enabled, enable it
 			setAllowGenerateSounding(true)
 		}
 	}
 	const handleGenerateSounding = () => {
-		if (internalModelId !== modelId || internalLocationId !== locationId || internalParcelId !== parcelId || internalWeatherId !== weatherId) {
-			const baseParmsString = `${runId}/${internalModelId}/${sectorId}/${levelId}/${productId}`
-			const soundingParmsString = `${validTimeId}/${internalLocationId}/${internalParcelId}/${internalWeatherId}`
+		if (
+			modelIdRef.current !== modelId ||
+			runIdRef.current !== runId ||
+			locationIdRef.current !== locationId ||
+			validTimeIdRef.current !== validTimeId ||
+			parcelIdRef.current !== parcelId ||
+			weatherIdRef.current !== weatherId
+		) {
+			const baseParmsString = `${runIdRef.current}/${modelIdRef.current}/${sectorId}/${levelId}/${productId}`
+			const soundingParmsString = `${validTimeIdRef.current}/${locationIdRef.current}/${parcelIdRef.current}/${weatherIdRef.current}`
 			router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
+		} else {
+			alert(
+				'No changes to parameters that would generate a new sounding. Change any of the following: Model, Run, Location, Valid Time, Parcel Type, or Weather Type.',
+			)
+			setAllowGenerateSounding(false) // Reset the button state if no changes were made
 		}
 	}
 
@@ -239,8 +279,8 @@ const ForecastSoundingsSidebarPanel = () => {
 			<div className={styles.ForecastSoundingsSidebarPanel}>
 				<div className={styles.options}>
 					<Select
-						value={internalModelId}
-						placeholder={internalModelId as string}
+						value={modelId}
+						placeholder={modelId as string}
 						title="Model:"
 						options={modelOptions}
 						onChange={(model) => {
@@ -249,9 +289,9 @@ const ForecastSoundingsSidebarPanel = () => {
 					/>
 					{runId && <p>Run ID: {runId}</p>}
 					{validTimeId && <p>Valid Time ID: {validTimeId}</p>}
-					<Input label="Location - (Lat,Lon or Station ID)" value={internalLocationId} onChange={handleLocationChange} />
+					<Input label="Location - (Lat,Lon or Station ID)" value={locationId} onChange={handleLocationChange} />
 					<Select
-						value={internalParcelId}
+						value={parcelId}
 						placeholder={parcelId as string}
 						title="Parcel Type:"
 						options={Object.values(FORECAST_SOUNDING_PARCEL_OPTIONS).map((option) => ({
@@ -261,7 +301,7 @@ const ForecastSoundingsSidebarPanel = () => {
 						onChange={handleParcelChange}
 					/>
 					<Select
-						value={internalWeatherId}
+						value={weatherId}
 						placeholder={weatherId as string}
 						title="Weather Type:"
 						options={Object.values(FORECAST_SOUNDING_WEATHER_OPTIONS).map((option) => ({
