@@ -1,6 +1,7 @@
 'use client'
 
 import { Accordian } from '@/components/elements/Accordian/Accordian'
+import { RunSelector } from '@/components/elements/Animator/RunSelector/RunSelector'
 import { Button } from '@/components/elements/Button/Button'
 import Input from '@/components/elements/Input/Input'
 import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
@@ -24,6 +25,11 @@ import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSoundingsSidebarPanel.module.scss'
+
+interface runsProps {
+	unix: number
+	readable: string
+}
 
 const ForecastSoundingsSidebarPanel = () => {
 	const {
@@ -49,7 +55,9 @@ const ForecastSoundingsSidebarPanel = () => {
 	// these references are specifically to avoid unnecessary re-renders and wait for a button click to update the URL
 	const [internalModelId, setInternalModelId] = useState(modelId)
 	const [internalRunId, setInternalRunId] = useState(runId)
+	const [soundingRuns, setSoundingRuns] = useState<Record<string, runsProps>>({})
 	const [internalValidTimeId, setInternalValidTimeId] = useState(validTimeId)
+	// const [validTimes, setValidTimes] = useState<number[]>([])
 	const [internalLocationId, setInternalLocationId] = useState(locationId)
 	const [internalParcelId, setInternalParcelId] = useState(parcelId)
 	const [internalWeatherId, setInternalWeatherId] = useState(weatherId)
@@ -144,6 +152,7 @@ const ForecastSoundingsSidebarPanel = () => {
 		setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		setInternalModelId(sanitizedModelId)
 		setInternalRunId(sanitizedRunId)
+		setSoundingRuns(runsAvailable.runs)
 		setInternalValidTimeId(sanitizedValidTimeId)
 		setInternalLocationId(sanitizedLocationId)
 		setInternalParcelId(sanitizedParcelId)
@@ -230,6 +239,10 @@ const ForecastSoundingsSidebarPanel = () => {
 			setAllowGenerateSounding(true)
 		}
 	}
+	const transformedRuns = Object.entries(soundingRuns).map(([key, value]) => ({
+		value: key,
+		label: value.readable,
+	}))
 	const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.value !== internalLocationId) {
 			setInternalLocationId(e.target.value)
@@ -297,7 +310,17 @@ const ForecastSoundingsSidebarPanel = () => {
 							handleModelChange(model)
 						}}
 					/>
-					{runId && <p>Run ID: {internalRunId}</p>}
+					<RunSelector
+						runs={transformedRuns}
+						run={internalRunId as string}
+						runsPerRow={4}
+						onSelect={(run) => {
+							if (run !== internalRunId) {
+								setInternalRunId(run)
+								setAllowGenerateSounding(true)
+							}
+						}}
+					/>
 					{validTimeId && <p>Valid Time ID: {internalValidTimeId}</p>}
 					<Input label="Location - (Lat,Lon or Station ID)" value={internalLocationId} onChange={handleLocationChange} />
 					<Select
