@@ -104,12 +104,12 @@ export const DonationTiers = () => {
 										<div className={styles.tierActions}>
 											<Button
 												label={`$${tier.monthlyAmount}/mo`}
-												onClick={() => openModal(tier.monthlyAmount, true, tier.name)}
+												onClick={() => openModal(tier.monthlyAmount, false, tier.name)}
 												className={styles.tierButton}
 											/>
 											<Button
 												label={`$${tier.lifetimeAmount} lifetime`}
-												onClick={() => openModal(tier.lifetimeAmount, false, tier.name)}
+												onClick={() => openModal(tier.lifetimeAmount, true, tier.name)}
 												className={styles.tierButton}
 											/>
 										</div>

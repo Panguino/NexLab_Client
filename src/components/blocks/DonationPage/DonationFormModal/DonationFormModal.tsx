@@ -17,11 +17,7 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 	const modalRef = useRef<HTMLDivElement>(null)
 	const formContainerRef = useRef<HTMLDivElement>(null)
 
-	// Inject Blackbaud script and set bboxInit only after modal is open and ref is present
 	useEffect(() => {
-		console.log('DonationFormModal useEffect triggered', { isOpen, formContainerRef })
-		if (!isOpen || !formContainerRef.current) return
-
 		// Set up the bboxInit function before script loads
 		window.bboxInit = function () {
 			console.log('bboxInit called')
@@ -30,7 +26,28 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 				window.bbox.showForm('5763743a-812e-405d-99fc-705c1748069d')
 			}
 		}
+	}, [])
 
+	useEffect(() => {
+		if (document.getElementById('bboxdonation_gift_txtAmountGift')) {
+			const amountInput = document.getElementById('bboxdonation_gift_txtAmountGift') as HTMLInputElement
+			if (amountInput) {
+				amountInput.value = amount ? amount.toString() : ''
+				// Dispatch input and change events so Blackbaud picks up the new value
+				const inputEvent = new Event('input', { bubbles: true })
+				const changeEvent = new Event('change', { bubbles: true })
+				amountInput.dispatchEvent(inputEvent)
+				amountInput.dispatchEvent(changeEvent)
+			}
+		}
+		if (document.getElementById('bboxdonation_recurrence_chkMonthlyGift')) {
+			const recurrenceCheckbox = document.getElementById('bboxdonation_recurrence_chkMonthlyGift') as HTMLInputElement
+			recurrenceCheckbox.checked = !oneTimeDonation
+		}
+	}, [oneTimeDonation, amount])
+
+	// Inject Blackbaud script and set bboxInit only after modal is open and ref is present
+	useEffect(() => {
 		// Inject the Blackbaud script if not already present
 		const scriptId = 'blackbaud-bbox-script'
 		let script = document.getElementById(scriptId) as HTMLScriptElement | null
@@ -43,7 +60,7 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 			script.src = 'https://bbox.blackbaudhosting.com/webforms/bbox-min.js'
 			document.head.appendChild(script)
 		}
-	}, [isOpen, formContainerRef])
+	}, [])
 
 	useEffect(() => {
 		if (!isOpen) {
@@ -73,6 +90,16 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 	)
 
 	useEffect(() => {
+		window.bboxOnFormSubmitted = function () {
+			// Your logic here, e.g. close modal, show thank you, etc.
+			console.log('Donation form submitted!')
+		}
+		return () => {
+			delete window.bboxOnFormSubmitted
+		}
+	}, [])
+
+	useEffect(() => {
 		if (isOpen) {
 			document.addEventListener('keydown', handleKeyDown)
 		}
@@ -93,7 +120,7 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 						<p className={styles.amountInfo}>
 							Suggested Amount:{' '}
 							<strong>
-								${amount} {oneTimeDonation ? 'One Time Payment' : 'Monthly'}
+								${amount} {oneTimeDonation ? 'One Time Payment' : '/ month'}
 							</strong>
 						</p>
 					)}
@@ -117,5 +144,6 @@ declare global {
 		bbox: any
 		bboxInit: () => void
 		bb$: any
+		bboxOnFormSubmitted?: () => void
 	}
 }

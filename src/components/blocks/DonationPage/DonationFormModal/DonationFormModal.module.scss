@@ -69,7 +69,7 @@
 	transition: color var(--themeChange);
 
 	strong {
-		color: var(--color-blue4-blue3);
+		color: var(--color-blue3-blue4);
 		font-weight: 600;
 	}
 }
@@ -113,123 +113,138 @@
 .formContainer {
 	min-height: 400px;
 	:global {
-		/* Custom styling for Blackbaud donation form */
-		.customBboxForm {
-			font-family: inherit !important;
+		.BBFormSection.BBDFormSectionGiftInfo {
+			display: none;
 		}
-
-		/* Form container */
-		.customBboxForm .bbox-form-container {
-			background: transparent !important;
-			border: none !important;
-			box-shadow: none !important;
+		.BBFormSectionRecurrenceInfo {
+			display: none;
 		}
-
-		/* Input fields */
-		.customBboxForm input[type='text'],
-		.customBboxForm input[type='email'],
-		.customBboxForm input[type='tel'],
-		.customBboxForm select,
-		.customBboxForm textarea {
-			background-color: var(--color-white-grey17) !important;
-			border: 1px solid var(--color-grey3-grey15) !important;
-			border-radius: 8px !important;
-			padding: 12px 16px !important;
-			font-size: 14px !important;
-			color: var(--color-grey20-grey0) !important;
-			font-family: inherit !important;
-			transition: all 0.2s ease !important;
+		#bboxdonation_gift_txtAmountGift {
+			color: black;
+			background: white;
+			border: 1px solid var(--color-grey3-grey15);
 		}
-
-		.customBboxForm input[type='text']:focus,
-		.customBboxForm input[type='email']:focus,
-		.customBboxForm input[type='tel']:focus,
-		.customBboxForm select:focus,
-		.customBboxForm textarea:focus {
-			border-color: var(--color-blue3-blue4) !important;
-			box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1) !important;
-			outline: none !important;
+		#bboxdonation_BBEmbeddedForm {
+			padding: 0;
+			margin: 0;
 		}
-
-		/* Labels */
-		.customBboxForm label {
-			color: var(--color-grey18-grey2) !important;
-			font-weight: 500 !important;
-			font-size: 14px !important;
-			margin-bottom: 8px !important;
-			display: block !important;
+		.BBFormSectionHeading {
+			padding: 0 !important;
+			margin: 0;
 		}
-
-		/* Buttons */
-		.customBboxForm button,
-		.customBboxForm input[type='submit'] {
-			background: linear-gradient(135deg, var(--color-blue3) 0%, var(--color-blue4) 100%) !important;
-			border: none !important;
-			border-radius: 8px !important;
-			color: white !important;
-			padding: 12px 24px !important;
-			font-size: 14px !important;
-			font-weight: 600 !important;
-			cursor: pointer !important;
-			transition: all 0.2s ease !important;
+		.BBFormFieldContainer {
+			padding: 0 0 0 10px !important;
+			margin: 0 !important;
+			label,
+			span {
+				font-family: var(--font-primary);
+				color: var(--color-grey17-grey4);
+			}
+			input {
+				font-family: var(--font-primary) !important;
+				color: var(--color-grey20-grey0) !important;
+				border: 1px solid var(--color-grey3-grey15) !important;
+				background: transparent !important;
+				border-radius: 5px;
+				padding: 10px;
+				font-size: 16px;
+				line-height: 24px;
+				transition: border-color var(--themeChange);
+				box-shadow: none !important;
+				&:focus {
+					border-color: var(--color-blue3-blue4) !important;
+					outline: none;
+				}
+			}
+			textarea {
+				font-family: var(--font-primary) !important;
+				color: var(--color-grey20-grey0) !important;
+				border: 1px solid var(--color-grey3-grey15) !important;
+				background: transparent !important;
+				border-radius: 5px;
+				padding: 10px !important;
+				font-size: 16px;
+				line-height: 24px;
+				transition: border-color var(--themeChange);
+				box-shadow: none !important;
+				resize: vertical;
+				min-height: 80px;
+				&:focus {
+					border-color: var(--color-blue3-blue4) !important;
+					outline: none;
+				}
+			}
+			select {
+				font-family: var(--font-primary) !important;
+				color: var(--color-grey20-grey0) !important;
+				border: 1px solid var(--color-grey3-grey15) !important;
+				background: transparent !important;
+				border-radius: 5px;
+				padding: 10px 40px 10px 10px !important;
+				font-size: 16px;
+				line-height: 24px;
+				height: 44px;
+				min-height: 44px;
+				transition: border-color var(--themeChange);
+				box-shadow: none !important;
+				appearance: none;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23677' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+				background-repeat: no-repeat;
+				background-position: right 12px center;
+				background-size: 20px 20px;
+				&:focus {
+					border-color: var(--color-blue3-blue4) !important;
+					outline: none;
+				}
+				option {
+					font-family: var(--font-primary) !important;
+					color: var(--color-grey20-grey0) !important;
+					background: var(--color-white-grey19) !important;
+				}
+			}
+			input[type='checkbox'] {
+				width: 18px;
+				height: 18px;
+				border-radius: 4px !important;
+				border: 1px solid var(--color-grey3-grey15) !important;
+				background-color: transparent !important;
+				box-shadow: none !important;
+				accent-color: var(--color-blue3-blue4);
+				margin-right: 8px;
+				vertical-align: middle;
+				&:focus {
+					border-color: var(--color-blue3-blue4) !important;
+					outline: none;
+				}
+			}
 		}
-
-		.customBboxForm button:hover,
-		.customBboxForm input[type='submit']:hover {
-			transform: translateY(-1px) !important;
-			box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3) !important;
+		#bboxdonation_billing_divBillingHeader {
+			border: none;
+			font-family: var(--font-primary);
+			color: var(--color-grey20-grey0);
+			font-size: 20px;
 		}
-
-		/* Error messages */
-		.customBboxForm .error,
-		.customBboxForm .bbox-error {
-			color: var(--color-red4) !important;
-			font-size: 12px !important;
-			margin-top: 4px !important;
+		#bboxdonation_billing_fldAnonymous {
+			padding-top: 15px !important;
 		}
-
-		/* Success messages */
-		.customBboxForm .success,
-		.customBboxForm .bbox-success {
-			color: var(--color-green4) !important;
-			font-size: 14px !important;
-			padding: 12px !important;
-			background-color: var(--color-green1) !important;
-			border-radius: 8px !important;
-			border: 1px solid var(--color-green3) !important;
-		}
-
-		/* Form sections */
-		.customBboxForm .bbox-form-section {
-			margin-bottom: 24px !important;
-		}
-
-		/* Radio buttons and checkboxes */
-		.customBboxForm input[type='radio'],
-		.customBboxForm input[type='checkbox'] {
-			accent-color: var(--color-blue3) !important;
-		}
-
-		/* Amount selection buttons */
-		.customBboxForm .amount-button,
-		.customBboxForm .bbox-amount-button {
-			background-color: var(--color-white-grey17) !important;
-			border: 1px solid var(--color-grey3-grey15) !important;
-			border-radius: 8px !important;
-			color: var(--color-grey18-grey2) !important;
-			padding: 12px 16px !important;
-			margin: 4px !important;
-			cursor: pointer !important;
-			transition: all 0.2s ease !important;
-		}
-
-		.customBboxForm .amount-button:hover,
-		.customBboxForm .amount-button.selected,
-		.customBboxForm .bbox-amount-button:hover,
-		.customBboxForm .bbox-amount-button.selected {
-			background-color: var(--color-blue3) !important;
-			border-color: var(--color-blue3) !important;
-			color: white !important;
+		#bboxdonation_btnSecurePayment {
+			position: relative;
+			background: var(--color-blue3) !important;
+			border-radius: 5px;
+			padding: 16px 35px;
+			font-size: 16px;
+			line-height: 15px;
+			font-weight: 700;
+			color: var(--color-white) !important;
+			transition: var(--themeChange);
+			cursor: pointer;
+			box-shadow: none;
+			&:hover {
+				background: var(--color-blue5) !important;
+				color: var(--color-white) !important;
+			}
 		}
 	}
 }
