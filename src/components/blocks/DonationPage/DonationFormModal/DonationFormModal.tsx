@@ -106,15 +106,17 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 		window.bboxOnFormReady = function () {
 			console.log('bboxOnFormReady fired')
 		}
-		// Define logEvent outside the if block so it's accessible in cleanup
-		const logEvent = (e: Event) => console.log('bbox-root event:', e.type, e)
-		// Add common DOM event listeners to bbox-root
+		// MutationObserver to detect Blackbaud success message
 		const bboxRoot = document.getElementById('bbox-root')
+		let observer: MutationObserver | undefined
 		if (bboxRoot) {
-			bboxRoot.addEventListener('submit', logEvent)
-			bboxRoot.addEventListener('change', logEvent)
-			bboxRoot.addEventListener('input', logEvent)
-			bboxRoot.addEventListener('click', logEvent)
+			observer = new MutationObserver(() => {
+				if (bboxRoot.textContent?.includes('Thank you for your generous support!')) {
+					console.log('Blackbaud success message detected!')
+					// You can trigger your own logic here, e.g. onClose();
+				}
+			})
+			observer.observe(bboxRoot, { childList: true, subtree: true, characterData: true })
 		}
 		return () => {
 			delete window.bboxOnFormSubmitted
@@ -122,12 +124,7 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 			delete window.bboxOnFormError
 			delete window.bboxOnFormClose
 			delete window.bboxOnFormReady
-			if (bboxRoot) {
-				bboxRoot.removeEventListener('submit', logEvent)
-				bboxRoot.removeEventListener('change', logEvent)
-				bboxRoot.removeEventListener('input', logEvent)
-				bboxRoot.removeEventListener('click', logEvent)
-			}
+			if (observer) observer.disconnect()
 		}
 	}, [])
 
