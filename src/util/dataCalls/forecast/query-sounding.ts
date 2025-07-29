@@ -40,12 +40,11 @@ export const getValidtimes = async (model, run, sector, level, product) => {
 	// this function is meant to populate values for the menu
 	// location will contain '-' for longitude, so delimiter is '|' : making note because this is atypical
 	const params = [model, run, sector, level, product].join('-')
-	const endpoint = `https://weather.cod.edu/datapoints/forecast/get-files.php?parms=${params}`
+	const endpoint = `https://weather.cod.edu/datapoints/forecast/get-validtimes.php?parms=${params}`
 	const data = await getData(endpoint)
 	if (!data.err) {
 		return {
 			validtimes: data.validtimes,
-			imageInfo: data.img,
 		}
 	} else {
 		return {

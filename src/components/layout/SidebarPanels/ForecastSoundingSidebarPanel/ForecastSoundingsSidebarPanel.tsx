@@ -1,12 +1,12 @@
 'use client'
 
 import { Accordian } from '@/components/elements/Accordian/Accordian'
-import { RunSelector } from '@/components/elements/Animator/RunSelector/RunSelector'
 import { Button } from '@/components/elements/Button/Button'
 import Input from '@/components/elements/Input/Input'
 import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import Select from '@/components/elements/Select/Select'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
+import { TimeSelector } from '@/components/elements/TimeSelector/RunSelector/TimeSelector'
 import { FORECAST_LEVELS } from '@/data/forecast/levels'
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
 import { FORECAST_PRODUCTS } from '@/data/forecast/products'
@@ -27,6 +27,10 @@ import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSoundingsSidebarPanel.module.scss'
 
 interface runsProps {
+	unix: number
+	readable: string
+}
+interface validTimesProps {
 	unix: number
 	readable: string
 }
@@ -57,7 +61,7 @@ const ForecastSoundingsSidebarPanel = () => {
 	const [internalRunId, setInternalRunId] = useState(runId)
 	const [soundingRuns, setSoundingRuns] = useState<Record<string, runsProps>>({})
 	const [internalValidTimeId, setInternalValidTimeId] = useState(validTimeId)
-	// const [validTimes, setValidTimes] = useState<number[]>([])
+	const [validTimes, setValidTimes] = useState<Record<string, validTimesProps>>({})
 	const [internalLocationId, setInternalLocationId] = useState(locationId)
 	const [internalParcelId, setInternalParcelId] = useState(parcelId)
 	const [internalWeatherId, setInternalWeatherId] = useState(weatherId)
@@ -113,7 +117,9 @@ const ForecastSoundingsSidebarPanel = () => {
 				: Object.keys(runsAvailable.runs).reverse()[0] // fallback to first available run if status is missing
 		const validTimesAvailable = await getValidtimes(sanitizedModelId, sanitizedRunId, sanitizedSectorId, sanitizedLevelId, sanitizedProductId)
 		console.log('runAvailable', runsAvailable, 'validTimesAvailable', validTimesAvailable)
-		const sanitizedValidTimeId = validTimesAvailable.validtimes.includes(validTimeId as string) ? validTimeId : validTimesAvailable.validtimes[0]
+		const sanitizedValidTimeId = validTimesAvailable.validtimes[validTimeId as string]
+			? validTimeId
+			: Object.keys(validTimesAvailable.validtimes)[0]
 		const sanitizedParcelId = FORECAST_SOUNDING_PARCEL_OPTIONS[parcelId as string] ? parcelId : DEFAULT_FORECAST_SOUNDING_PARCEL
 		const sanitizedWeatherId = FORECAST_SOUNDING_WEATHER_OPTIONS[weatherId as string] ? weatherId : DEFAULT_FORECAST_SOUNDING_WEATHER
 
@@ -153,6 +159,7 @@ const ForecastSoundingsSidebarPanel = () => {
 		setInternalModelId(sanitizedModelId)
 		setInternalRunId(sanitizedRunId)
 		setSoundingRuns(runsAvailable.runs)
+		setValidTimes(validTimesAvailable.validtimes)
 		setInternalValidTimeId(sanitizedValidTimeId)
 		setInternalLocationId(sanitizedLocationId)
 		setInternalParcelId(sanitizedParcelId)
@@ -243,6 +250,10 @@ const ForecastSoundingsSidebarPanel = () => {
 		value: key,
 		label: value.readable,
 	}))
+	const transformedValidTimes = Object.entries(validTimes).map(([key, value]) => ({
+		value: key,
+		label: value.readable,
+	}))
 	const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.value !== internalLocationId) {
 			setInternalLocationId(e.target.value)
@@ -310,18 +321,32 @@ const ForecastSoundingsSidebarPanel = () => {
 							handleModelChange(model)
 						}}
 					/>
-					<RunSelector
-						runs={transformedRuns}
-						run={internalRunId as string}
-						runsPerRow={4}
+					<TimeSelector
+						times={transformedRuns}
+						time={internalRunId as string}
+						timeName="Run"
+						timesPerRow={FORECAST_MODELS[internalModelId as string].runsPerRow}
 						onSelect={(run) => {
 							if (run !== internalRunId) {
 								setInternalRunId(run)
 								setAllowGenerateSounding(true)
 							}
 						}}
+						opensDown={true}
 					/>
-					{validTimeId && <p>Valid Time ID: {internalValidTimeId}</p>}
+					<TimeSelector
+						times={transformedValidTimes}
+						time={internalValidTimeId as string}
+						timeName="Valid Time"
+						timesPerRow={FORECAST_MODELS[internalModelId as string].hoursPerRow}
+						onSelect={(validTime) => {
+							if (validTime !== internalValidTimeId) {
+								setInternalValidTimeId(validTime)
+								setAllowGenerateSounding(true)
+							}
+						}}
+						opensDown={true}
+					/>
 					<Input label="Location - (Lat,Lon or Station ID)" value={internalLocationId} onChange={handleLocationChange} />
 					<Select
 						value={internalParcelId}

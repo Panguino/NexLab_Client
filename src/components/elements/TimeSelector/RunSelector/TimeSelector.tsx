@@ -2,34 +2,35 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion } from 'framer-motion'
 import React, { useEffect, useRef, useState } from 'react'
-import styles from './RunSelector.module.css' // Import CSS module
+import styles from './TimeSelector.module.css' // Import CSS module
 
-type run = {
-	label: string // Display label for the run
-	value: string // Value of the run in the format "HHZ MM-DD-YYYY"
+type time = {
+	label: string // Display label for the time
+	value: string // Value of the time in the format "HHZ MM-DD-YYYY"
 }
-interface RunSelectorProps {
-	runs: run[] // Array of runs in the format "HHZ MM-DD-YYYY"
-	run: string | null // Currently selected run
-	runsPerRow?: number // New prop with default value
+interface TimeSelectorProps {
+	times: time[] // Array of times in the format "HHZ MM-DD-YYYY"
+	time: string | null // Currently selected time
+	timeName: string | null // Optional prop to display a custom name for the time selector
+	timesPerRow?: number // New prop with default value
 	opensDown?: boolean // Optional prop to control dropdown direction
-	onSelect: (selectedRun: string) => void // Callback when a run is selected
+	onSelect: (selectedTime: string) => void // Callback when a time is selected
 }
 
-export const RunSelector: React.FC<RunSelectorProps> = ({ runs, run, runsPerRow = 4, onSelect, opensDown = false }) => {
+export const TimeSelector: React.FC<TimeSelectorProps> = ({ times, time, timeName, timesPerRow = 4, onSelect, opensDown = false }) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const dropdownRef = useRef<HTMLDivElement>(null)
-	const selectedRunLabel = runs.find((r) => r.value === run)?.label || 'Select a Run'
+	const selectedTimeLabel = times.find((t) => t.value === time)?.label || 'Select a Time'
 	const arrowDirection = isOpen || !opensDown ? 'rotate(180deg)' : 'rotate(0deg)'
 
-	const groupedRuns = runs.reduce(
-		(acc, currentRun) => {
-			const [zValue, date] = currentRun.label.split(' ') // Extract zValue and date
+	const groupedTimes = times.reduce(
+		(acc, currentTime) => {
+			const [zValue, date] = currentTime.label.split(' ') // Extract zValue and date
 			if (!acc[date]) acc[date] = []
-			acc[date].push({ zValue, run: currentRun })
+			acc[date].push({ zValue, time: currentTime })
 			return acc
 		},
-		{} as Record<string, { zValue: string; run: run }[]>,
+		{} as Record<string, { zValue: string; time: time }[]>,
 	)
 
 	// Helper function to chunk array into smaller arrays
@@ -59,32 +60,34 @@ export const RunSelector: React.FC<RunSelectorProps> = ({ runs, run, runsPerRow 
 	}, [])
 
 	return (
-		<div className={styles.runSelector}>
-			<div className={styles.runSelectorButton} onClick={() => setIsOpen(!isOpen)}>
-				<span>Run: {selectedRunLabel || 'Select a Run'}</span>{' '}
+		<div className={styles.timeSelector}>
+			<div className={styles.timeSelectorButton} onClick={() => setIsOpen(!isOpen)}>
+				<span>
+					{timeName || 'Time'}: {selectedTimeLabel || `Select a ${timeName || 'Time'}`}
+				</span>{' '}
 				<motion.div className={styles.arrow} animate={{ transform: `${arrowDirection}` }}>
 					<FontAwesomeIcon icon={faChevronDown} />
 				</motion.div>
 			</div>
 			{isOpen && (
-				<div className={`${styles.runSelectorDropdown} ${opensDown ? styles.openDown : ''}`} ref={dropdownRef}>
-					{Object.entries(groupedRuns)
+				<div className={`${styles.timeSelectorDropdown} ${opensDown ? styles.openDown : ''}`} ref={dropdownRef}>
+					{Object.entries(groupedTimes)
 						.reverse()
-						.map(([date, zRuns]) => (
-							<div key={date} className={styles.runSelectorRow}>
-								<div className={styles.runSelectorDate}>{date}</div>
-								<div className={styles.runSelectorGridContainer}>
-									{chunkArray(zRuns, runsPerRow)
+						.map(([date, zTimes]) => (
+							<div key={date} className={styles.timeSelectorRow}>
+								<div className={styles.timeSelectorDate}>{date}</div>
+								<div className={styles.timeSelectorGridContainer}>
+									{chunkArray(zTimes, timesPerRow)
 										.reverse()
 										.map((rowChunk, rowIndex) => (
 											<div
 												key={`${date}-row-${rowIndex}`}
-												className={`${styles.runSelectorGrid} ${styles[`runSelectorGrid${runsPerRow}`]}`}
+												className={`${styles.timeSelectorGrid} ${styles[`timeSelectorGrid${timesPerRow}`]}`}
 											>
-												{rowChunk.map(({ zValue, run: { value } }) => (
+												{rowChunk.map(({ zValue, time: { value } }) => (
 													<div
 														key={value}
-														className={`${styles.runSelectorCell} ${value === run ? styles.active : ''}`}
+														className={`${styles.timeSelectorCell} ${value === time ? styles.active : ''}`}
 														onClick={() => {
 															onSelect(value)
 															setIsOpen(false)

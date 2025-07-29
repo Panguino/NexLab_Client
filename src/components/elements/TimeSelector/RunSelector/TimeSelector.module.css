@@ -1,9 +1,9 @@
-.runSelector {
+.timeSelector {
 	position: relative;
 	display: inline-block;
 }
 
-.runSelectorButton {
+.timeSelectorButton {
 	padding: 8px 12px;
 	cursor: pointer;
 	text-wrap: nowrap;
@@ -16,7 +16,7 @@
 	border-radius: 5px;
 }
 
-.runSelectorDropdown {
+.timeSelectorDropdown {
 	position: absolute;
 	bottom: 102%; /* Opens upwards */
 	left: 0;
@@ -33,15 +33,15 @@
 	}
 }
 
-.runSelectorRow {
+.timeSelectorRow {
 	padding-bottom: 8px;
 	&:last-child {
 		padding-bottom: 0;
 
 		/* Target the last grid container in the last row */
-		.runSelectorGridContainer:last-child {
+		.timeSelectorGridContainer:last-child {
 			/* Target the last grid in that container */
-			.runSelectorGrid:last-child {
+			.timeSelectorGrid:last-child {
 				grid-template-columns: repeat(auto-fit, minmax(0, auto));
 				justify-content: end;
 			}
@@ -49,33 +49,33 @@
 	}
 }
 
-.runSelectorDate {
+.timeSelectorDate {
 	padding-bottom: 4px;
 	font-weight: 500;
 	color: var(--color-grey17-grey1);
 	font-size: 13px;
 }
 
-.runSelectorGridContainer {
+.timeSelectorGridContainer {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
 }
-.runSelectorGrid {
+.timeSelectorGrid {
 	display: grid;
 	gap: 5px;
 }
-.runSelectorGrid2 {
+.timeSelectorGrid2 {
 	grid-template-columns: repeat(2, 1fr);
 }
-.runSelectorGrid4 {
+.timeSelectorGrid4 {
 	grid-template-columns: repeat(4, 1fr);
 }
-.runSelectorGrid6 {
+.timeSelectorGrid6 {
 	grid-template-columns: repeat(6, 1fr);
 }
 
-.runSelectorCell {
+.timeSelectorCell {
 	background: var(--color-grey19);
 	border: 1px solid var(--color-grey13);
 	color: #fff;
