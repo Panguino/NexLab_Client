@@ -10,19 +10,19 @@ export const TestimonialsSection = () => {
 			quote: 'NexLab Weather has been an invaluable resource for my research. The free access to high-quality data and tools has made a significant impact on my work.',
 			name: 'Dr. Jane Smith',
 			title: 'Meteorologist',
-			avatar: 'https://via.placeholder.com/48x48/4285f4/ffffff?text=JS',
+			avatar: 'https://ui-avatars.com/api/?name=Jane+Smith&background=4285f4&color=fff&size=48',
 		},
 		{
 			quote: 'As a storm chaser, having reliable and up-to-date weather data is crucial. NexLab Weather provides exactly what I need, when I need it.',
 			name: 'Mike Johnson',
 			title: 'Storm Chaser',
-			avatar: 'https://via.placeholder.com/48x48/1877f2/ffffff?text=MJ',
+			avatar: 'https://ui-avatars.com/api/?name=Mike+Johnson&background=1877f2&color=fff&size=48',
 		},
 		{
 			quote: 'The educational resources and tools available through NexLab Weather have transformed how I teach meteorology to my students.',
 			name: 'Prof. Sarah Davis',
 			title: 'University Professor',
-			avatar: 'https://via.placeholder.com/48x48/6d889c/ffffff?text=SD',
+			avatar: 'https://ui-avatars.com/api/?name=Sarah+Davis&background=6d889c&color=fff&size=48',
 		},
 	]
 

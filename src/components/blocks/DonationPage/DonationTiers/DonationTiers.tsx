@@ -9,18 +9,19 @@ import styles from './DonationTiers.module.scss'
 
 export const DonationTiers = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false)
-	const [selectedTier, setSelectedTier] = useState<string>('')
 	const [selectedAmount, setSelectedAmount] = useState<number>(0)
+	const [selectedTier, setSelectedTier] = useState<string>('')
+	const [oneTimeDonation, setOneTimeDonation] = useState(false)
 
-	const openModal = (tierName: string, amount: number) => {
-		setSelectedTier(tierName)
+	const openModal = (amount: number, oneTime: boolean, tier: string) => {
+		setOneTimeDonation(oneTime)
+		setSelectedTier(tier)
 		setSelectedAmount(amount)
 		setIsModalOpen(true)
 	}
 
 	const closeModal = () => {
 		setIsModalOpen(false)
-		setSelectedTier('')
 		setSelectedAmount(0)
 	}
 
@@ -103,12 +104,12 @@ export const DonationTiers = () => {
 										<div className={styles.tierActions}>
 											<Button
 												label={`$${tier.monthlyAmount}/mo`}
-												onClick={() => openModal(tier.name, tier.monthlyAmount)}
+												onClick={() => openModal(tier.monthlyAmount, true, tier.name)}
 												className={styles.tierButton}
 											/>
 											<Button
 												label={`$${tier.lifetimeAmount} lifetime`}
-												onClick={() => openModal(tier.name, tier.lifetimeAmount)}
+												onClick={() => openModal(tier.lifetimeAmount, false, tier.name)}
 												className={styles.tierButton}
 											/>
 										</div>
@@ -129,7 +130,13 @@ export const DonationTiers = () => {
 					</table>
 				</div>
 			</div>
-			<DonationFormModal isOpen={isModalOpen} onClose={closeModal} tier={selectedTier} amount={selectedAmount} />
+			<DonationFormModal
+				isOpen={isModalOpen}
+				onClose={closeModal}
+				oneTimeDonation={oneTimeDonation}
+				tier={selectedTier}
+				amount={selectedAmount}
+			/>
 		</section>
 	)
 }

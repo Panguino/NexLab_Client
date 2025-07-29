@@ -2,74 +2,60 @@
 
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import styles from './DonationFormModal.module.scss'
-import '/src/styles/blackbaud-form.css'
 
 interface DonationFormModalProps {
 	isOpen: boolean
 	onClose: () => void
 	tier?: string
 	amount?: number
+	oneTimeDonation?: boolean
 }
 
-export const DonationFormModal = ({ isOpen, onClose, tier, amount }: DonationFormModalProps) => {
+export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amount }: DonationFormModalProps) => {
 	const modalRef = useRef<HTMLDivElement>(null)
 	const formContainerRef = useRef<HTMLDivElement>(null)
 
+	// Inject Blackbaud script and set bboxInit only after modal is open and ref is present
 	useEffect(() => {
-		if (isOpen) {
-			// Load the Blackbaud script and initialize the form
-			const script = document.createElement('script')
+		console.log('DonationFormModal useEffect triggered', { isOpen, formContainerRef })
+		if (!isOpen || !formContainerRef.current) return
+
+		// Set up the bboxInit function before script loads
+		window.bboxInit = function () {
+			console.log('bboxInit called')
+			if (window.bbox) {
+				console.log('showform called')
+				window.bbox.showForm('5763743a-812e-405d-99fc-705c1748069d')
+			}
+		}
+
+		// Inject the Blackbaud script if not already present
+		const scriptId = 'blackbaud-bbox-script'
+		let script = document.getElementById(scriptId) as HTMLScriptElement | null
+		if (!script) {
+			console.log('Injecting Blackbaud script')
+			script = document.createElement('script')
+			script.id = scriptId
 			script.type = 'text/javascript'
 			script.async = true
 			script.src = 'https://bbox.blackbaudhosting.com/webforms/bbox-min.js'
-
-			// Initialize the form when script loads
-			script.onload = () => {
-				if (window.bbox && formContainerRef.current) {
-					// Clear any existing form
-					formContainerRef.current.innerHTML = '<div id="bbox-root"></div>'
-
-					// Initialize Blackbaud form
-					window.bboxInit = function () {
-						window.bbox.showForm('5763743a-812e-405d-99fc-705c1748069d')
-
-						// Apply custom styling after form loads
-						setTimeout(() => {
-							applyCustomStyling()
-						}, 500)
-					}
-
-					// Trigger the form initialization
-					if (window.bboxInit) {
-						window.bboxInit()
-					}
-				}
-			}
-
 			document.head.appendChild(script)
+		}
+	}, [isOpen, formContainerRef])
 
-			// Prevent body scroll when modal is open
-			document.body.style.overflow = 'hidden'
+	useEffect(() => {
+		if (!isOpen) {
+			document.body.style.overflow = 'unset'
+			return undefined
+		}
+		document.body.style.overflow = 'hidden'
 
-			return () => {
-				// Cleanup
-				document.body.style.overflow = 'unset'
-				if (script.parentNode) {
-					script.parentNode.removeChild(script)
-				}
-			}
+		return () => {
+			document.body.style.overflow = 'unset'
 		}
 	}, [isOpen])
-
-	const applyCustomStyling = () => {
-		// Apply custom CSS to match site styling
-		const bboxRoot = document.getElementById('bbox-root')
-		if (bboxRoot) {
-			bboxRoot.classList.add(styles.customBboxForm)
-		}
-	}
 
 	const handleBackdropClick = (e: React.MouseEvent) => {
 		if (e.target === modalRef.current) {
@@ -77,23 +63,24 @@ export const DonationFormModal = ({ isOpen, onClose, tier, amount }: DonationFor
 		}
 	}
 
-	const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.key === 'Escape') {
-			onClose()
-		}
-	}
+	const handleKeyDown = useCallback(
+		(e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
+				onClose()
+			}
+		},
+		[onClose],
+	)
 
 	useEffect(() => {
 		if (isOpen) {
 			document.addEventListener('keydown', handleKeyDown)
-			return () => document.removeEventListener('keydown', handleKeyDown)
 		}
-	}, [isOpen])
-
-	if (!isOpen) return null
+		return () => document.removeEventListener('keydown', handleKeyDown)
+	}, [isOpen, handleKeyDown])
 
 	return (
-		<div className={styles.modalOverlay} ref={modalRef} onClick={handleBackdropClick}>
+		<div className={[styles.modalOverlay, !isOpen ? styles.hidden : ''].filter(Boolean).join(' ')} ref={modalRef} onClick={handleBackdropClick}>
 			<div className={styles.modalContent}>
 				<div className={styles.modalHeader}>
 					<h2>Make a Donation</h2>
@@ -104,7 +91,10 @@ export const DonationFormModal = ({ isOpen, onClose, tier, amount }: DonationFor
 					)}
 					{amount && (
 						<p className={styles.amountInfo}>
-							Suggested Amount: <strong>${amount}</strong>
+							Suggested Amount:{' '}
+							<strong>
+								${amount} {oneTimeDonation ? 'One Time Payment' : 'Monthly'}
+							</strong>
 						</p>
 					)}
 					<button className={styles.closeButton} onClick={onClose} aria-label="Close modal">
@@ -126,5 +116,6 @@ declare global {
 	interface Window {
 		bbox: any
 		bboxInit: () => void
+		bb$: any
 	}
 }
