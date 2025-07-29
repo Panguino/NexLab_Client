@@ -90,12 +90,44 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 	)
 
 	useEffect(() => {
+		// List of known bbox global callbacks
 		window.bboxOnFormSubmitted = function () {
-			// Your logic here, e.g. close modal, show thank you, etc.
-			console.log('Donation form submitted!')
+			console.log('bboxOnFormSubmitted fired')
+		}
+		window.bboxOnFormLoad = function () {
+			console.log('bboxOnFormLoad fired')
+		}
+		window.bboxOnFormError = function () {
+			console.log('bboxOnFormError fired')
+		}
+		window.bboxOnFormClose = function () {
+			console.log('bboxOnFormClose fired')
+		}
+		window.bboxOnFormReady = function () {
+			console.log('bboxOnFormReady fired')
+		}
+		// Define logEvent outside the if block so it's accessible in cleanup
+		const logEvent = (e: Event) => console.log('bbox-root event:', e.type, e)
+		// Add common DOM event listeners to bbox-root
+		const bboxRoot = document.getElementById('bbox-root')
+		if (bboxRoot) {
+			bboxRoot.addEventListener('submit', logEvent)
+			bboxRoot.addEventListener('change', logEvent)
+			bboxRoot.addEventListener('input', logEvent)
+			bboxRoot.addEventListener('click', logEvent)
 		}
 		return () => {
 			delete window.bboxOnFormSubmitted
+			delete window.bboxOnFormLoad
+			delete window.bboxOnFormError
+			delete window.bboxOnFormClose
+			delete window.bboxOnFormReady
+			if (bboxRoot) {
+				bboxRoot.removeEventListener('submit', logEvent)
+				bboxRoot.removeEventListener('change', logEvent)
+				bboxRoot.removeEventListener('input', logEvent)
+				bboxRoot.removeEventListener('click', logEvent)
+			}
 		}
 	}, [])
 
@@ -145,5 +177,9 @@ declare global {
 		bboxInit: () => void
 		bb$: any
 		bboxOnFormSubmitted?: () => void
+		bboxOnFormLoad?: () => void
+		bboxOnFormError?: () => void
+		bboxOnFormClose?: () => void
+		bboxOnFormReady?: () => void
 	}
 }

@@ -246,5 +246,12 @@
 				color: var(--color-white) !important;
 			}
 		}
+		.BBFormConfirmationTransactionDetails {
+			font-family: var(--font-primary);
+			color: var(--color-grey15-grey6);
+			strong {
+				color: var(--color-grey17-grey4);
+			}
+		}
 	}
 }
