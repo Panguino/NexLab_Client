@@ -320,7 +320,13 @@ const ForecastSoundingsSidebarPanel = () => {
 					/>
 				</div>
 				{sortedProductEntries.map(({ level, products }, index) => (
-					<Accordian key={level} title={FORECAST_LEVELS[level].name} variant="sidebar" onToggle={() => handleToggle(index)}>
+					<Accordian
+						initiallyClosed={true}
+						key={level}
+						title={FORECAST_LEVELS[level].name}
+						variant="sidebar"
+						onToggle={() => handleToggle(index)}
+					>
 						<div className={styles.forecastProducts}>
 							{(products as string[]).map((product) => (
 								<SidebarLink
