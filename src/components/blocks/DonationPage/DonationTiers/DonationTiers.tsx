@@ -69,9 +69,9 @@ export const DonationTiers = () => {
 		{ name: 'API Access', standard: false, advanced: true, premium: true },
 		{ name: 'API Polling Frequency', standard: false, advanced: 'Moderate', premium: 'Maximum' },
 		{ name: 'Exclusive Data Packages', standard: false, advanced: true, premium: true },
-		{ name: '• Full ECMWF', standard: '(verify)', advanced: true, premium: 'true?' },
-		{ name: '• HRRR Soundings', standard: false, advanced: false, premium: true },
-		{ name: '• VIP Weather Alert Feed', standard: false, advanced: false, premium: true },
+		{ name: 'Full ECMWF', standard: '(verify)', advanced: true, premium: 'true?' },
+		{ name: 'HRRR Soundings', standard: false, advanced: false, premium: true },
+		{ name: 'VIP Weather Alert Feed', standard: false, advanced: false, premium: true },
 		{ name: 'Monthly Donor Newsletter & Impact Insights', standard: true, advanced: true, premium: true },
 	]
 
