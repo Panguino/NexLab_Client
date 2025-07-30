@@ -12,15 +12,14 @@ interface RunSelectorProps {
 	runs: run[] // Array of runs in the format "HHZ MM-DD-YYYY"
 	run: string | null // Currently selected run
 	runsPerRow?: number // New prop with default value
-	opensDown?: boolean // Optional prop to control dropdown direction
 	onSelect: (selectedRun: string) => void // Callback when a run is selected
 }
 
-export const RunSelector: React.FC<RunSelectorProps> = ({ runs, run, runsPerRow = 4, onSelect, opensDown = false }) => {
+export const RunSelector: React.FC<RunSelectorProps> = ({ runs, run, runsPerRow = 4, onSelect }) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const dropdownRef = useRef<HTMLDivElement>(null)
 	const selectedRunLabel = runs.find((r) => r.value === run)?.label || 'Select a Run'
-	const arrowDirection = isOpen || !opensDown ? 'rotate(180deg)' : 'rotate(0deg)'
+	const arrowDirection = isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
 
 	const groupedRuns = runs.reduce(
 		(acc, currentRun) => {
@@ -67,7 +66,7 @@ export const RunSelector: React.FC<RunSelectorProps> = ({ runs, run, runsPerRow 
 				</motion.div>
 			</div>
 			{isOpen && (
-				<div className={`${styles.runSelectorDropdown} ${opensDown ? styles.openDown : ''}`} ref={dropdownRef}>
+				<div className={`${styles.runSelectorDropdown}`} ref={dropdownRef}>
 					{Object.entries(groupedRuns)
 						.reverse()
 						.map(([date, zRuns]) => (

@@ -9,14 +9,14 @@ export interface InputProps {
 
 const Input: React.FC<InputProps> = ({ label, value, onChange }) => {
 	return (
-		<>
+		<div className={styles.inputContainer}>
 			{label && (
 				<label className={styles.label} htmlFor="input-field">
 					{label}:
 				</label>
 			)}
-			<input id="input-field" type="text" value={value} onChange={onChange} className={styles.input} />
-		</>
+			<input id="input-field" type="text" value={value} onChange={onChange} className={`${styles.input} ${label ? styles.withLabel : ''}`} />
+		</div>
 	)
 }
 

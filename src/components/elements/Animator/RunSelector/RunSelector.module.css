@@ -27,10 +27,6 @@
 	flex-direction: column;
 	border-radius: 5px;
 	background: var(--color-white-grey17);
-	&.openDown {
-		bottom: auto; /* Reset bottom for downward opening */
-		top: 102%; /* Opens downwards */
-	}
 }
 
 .runSelectorRow {
