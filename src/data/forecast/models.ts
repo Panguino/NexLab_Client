@@ -86,7 +86,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 6,
-		hoursPerRow: 6,
 		allowForecastSounding: false,
 	},
 	[FORECAST_RAP_ID]: {
@@ -116,7 +115,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
-		hoursPerRow: 6,
 		allowForecastSounding: true,
 	},
 	[FORECAST_NAM_ID]: {
@@ -148,7 +146,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
-		hoursPerRow: 4,
 		allowForecastSounding: true,
 	},
 	[FORECAST_NAMNST_ID]: {
@@ -178,7 +175,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
-		hoursPerRow: 6,
 		allowForecastSounding: true,
 	},
 	[FORECAST_RDPS_ID]: {
@@ -207,7 +203,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
-		hoursPerRow: 6,
 		allowForecastSounding: false,
 	},
 	[FORECAST_GDPS_ID]: {
@@ -257,7 +252,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
-		hoursPerRow: 4,
 		allowForecastSounding: false,
 	},
 	[FORECAST_GFS_ID]: {
@@ -293,7 +287,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
-		hoursPerRow: 4,
 		allowForecastSounding: true,
 	},
 	[FORECAST_CFS_ID]: {
@@ -307,7 +300,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
-		hoursPerRow: 4,
 	},
 	[FORECAST_SREF_ID]: {
 		name: 'SREF',
@@ -328,7 +320,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_CAPE1000_ID,
 		},
 		runsPerRow: 4,
-		hoursPerRow: 4,
 		allowForecastSounding: false,
 	},
 	[FORECAST_GEFS_ID]: {
@@ -354,7 +345,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_CAPE1000_ID,
 		},
 		runsPerRow: 4,
-		hoursPerRow: 4,
 		allowForecastSounding: false,
 	},
 }
