@@ -86,7 +86,7 @@ export const DonationTiers = () => {
 	}
 
 	return (
-		<section className={styles.donationTiers}>
+		<section className={styles.donationTiers} id="donation-tiers">
 			<div className={styles.container}>
 				<div className={styles.header}>
 					<h2>Become a donating Member</h2>
@@ -96,7 +96,7 @@ export const DonationTiers = () => {
 					<table className={styles.tiersTable}>
 						<thead>
 							<tr>
-								<th className={styles.featureHeader}>Perk / Tier</th>
+								<th className={styles.featureHeader}></th>
 								{tiers.map((tier, index) => (
 									<th key={index} className={`${styles.tierHeader} ${tier.highlight ? styles.highlighted : ''}`}>
 										<div className={styles.tierName}>{tier.name}</div>

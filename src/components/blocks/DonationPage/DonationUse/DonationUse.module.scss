@@ -2,7 +2,7 @@
 
 .donationUse {
 	padding: 80px 0;
-	background-color: var(--color-white-grey18);
+	background-color: var(--color-grey1-grey20);
 	transition: background-color var(--themeChange);
 
 	@media (max-width: $mobile-menu-breakpoint) {
@@ -22,10 +22,14 @@
 
 	h2 {
 		color: var(--color-grey20-grey0);
-		font-size: 36px;
 		font-weight: 700;
 		margin: 0 0 24px 0;
 		transition: color var(--themeChange);
+		font-family: var(--font-secondary);
+		font-size: 50px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 120%;
 
 		@media (max-width: $mobile-menu-breakpoint) {
 			font-size: 28px;
@@ -54,7 +58,7 @@
 }
 
 .useCasePanel {
-	background-color: var(--color-grey0-grey19);
+	background-color: var(--color-white-grey19);
 	border-radius: 16px;
 	padding: 40px 32px;
 	text-align: center;
@@ -62,16 +66,6 @@
 	transition: all var(--themeChange);
 	position: relative;
 	overflow: hidden;
-
-	&::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		height: 4px;
-		background: linear-gradient(90deg, var(--color-blue3) 0%, var(--color-blue4) 100%);
-	}
 
 	&:hover {
 		transform: translateY(-4px);
@@ -87,13 +81,13 @@
 .panelIcon {
 	width: 64px;
 	height: 64px;
-	background: linear-gradient(135deg, var(--color-blue3) 0%, var(--color-blue4) 100%);
+	border: 1px solid var(--color-grey20-white);
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	margin: 0 auto 24px auto;
-	color: var(--color-white);
+	color: var(--color-grey20-white);
 	font-size: 24px;
 
 	@media (max-width: 480px) {
@@ -107,11 +101,13 @@
 .useCasePanel {
 	h4 {
 		color: var(--color-grey20-grey0);
-		font-size: 20px;
-		font-weight: 600;
 		margin: 0 0 16px 0;
-		line-height: 1.3;
+		font-size: 24px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: 120%;
 		transition: color var(--themeChange);
+		font-family: var(--font-primary);
 
 		@media (max-width: 480px) {
 			font-size: 18px;

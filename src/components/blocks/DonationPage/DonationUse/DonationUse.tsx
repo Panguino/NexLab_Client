@@ -1,6 +1,6 @@
 'use client'
 
-import { faRocket, faServer, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faBolt, faServer, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './DonationUse.module.scss'
 
@@ -19,7 +19,7 @@ export const DonationUse = () => {
 				'Running a weather data platform with thousands of daily users requires reliable, high-performance servers and resources. Donations will help us maintain and scale our hosting infrastructure, ensuring data remains accessible and tools run smoothly. These funds also allow us to upgrade equipment and computing resources as needed to handle the demands of our growing community.',
 		},
 		{
-			icon: faRocket,
+			icon: faBolt,
 			title: 'Continued Innovation and Expansion',
 			description:
 				'Beyond upkeep, donations will enable us to pursue ambitious updates and enhancements, including the full UI/UX rebrand, new tool development, and potential open-source contributions to weather data solutions. Your support keeps us innovating and empowers NexLab Weather to evolve for a broader audience.',

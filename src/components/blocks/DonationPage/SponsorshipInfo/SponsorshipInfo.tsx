@@ -10,7 +10,7 @@ export const SponsorshipInfo = () => {
 		{
 			icon: faEye,
 			title: 'Prominent Logo Placement',
-			description: 'Showcase your brand across our high-traffic platform—on the site header, data views, and sponsor page.',
+			description: 'Showcase your brand across our high-traffic platform—on the site footer, data views, and sponsor page.',
 		},
 		{
 			icon: faCode,

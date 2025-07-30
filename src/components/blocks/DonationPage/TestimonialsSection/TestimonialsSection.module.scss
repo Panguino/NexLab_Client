@@ -2,7 +2,7 @@
 
 .testimonials {
 	padding: 80px 0;
-	background-color: var(--color-white-grey18);
+	background-color: var(--color-white-grey19);
 	transition: background-color var(--themeChange);
 
 	@media (max-width: $mobile-menu-breakpoint) {
@@ -53,18 +53,12 @@
 }
 
 .testimonial {
-	background-color: var(--color-grey0-grey19);
+	background-color: var(--color-grey0-grey18);
 	border-radius: 16px;
 	padding: 32px;
 	position: relative;
 	border: 1px solid var(--color-grey3-grey15);
 	transition: all var(--themeChange);
-
-	&:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-		border-color: var(--color-blue3-blue4);
-	}
 
 	@media (max-width: 480px) {
 		padding: 24px;
