@@ -90,23 +90,64 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 	)
 
 	useEffect(() => {
-		// List of known bbox global callbacks
-		window.bboxOnFormSubmitted = function () {
-			console.log('bboxOnFormSubmitted fired')
+		// --- Blackbaud POST response interceptor ---
+		// Only add these once globally
+		if (!(window as any).__bbox_interceptor_installed) {
+			;(window as any).__bbox_interceptor_installed = true
+
+			// Intercept fetch
+			const origFetch = window.fetch
+			window.fetch = async function (...args) {
+				const response = await origFetch.apply(this, args)
+				try {
+					// Only check Blackbaud checkout endpoint
+					if (typeof args[0] === 'string' && args[0].includes('Checkout')) {
+						const clone = response.clone()
+						clone
+							.json()
+							.then((data) => {
+								if (data && data.Success === true) {
+									console.log('Blackbaud checkout POST success detected (fetch)!')
+									// You can trigger your own logic here, e.g. onClose();
+								}
+							})
+							.catch(() => {})
+					}
+				} catch {
+					// Intentionally ignore errors
+				}
+				return response
+			}
+
+			// Intercept XMLHttpRequest
+			const origOpen = XMLHttpRequest.prototype.open
+			const origSend = XMLHttpRequest.prototype.send
+			XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+				;(this as any).__bbox_url = url
+				return origOpen.call(this, method, url, ...rest)
+			}
+			XMLHttpRequest.prototype.send = function (body) {
+				this.addEventListener('load', function () {
+					try {
+						if ((this as any).__bbox_url && (this as any).__bbox_url.includes('Checkout')) {
+							const contentType = this.getResponseHeader('content-type') || ''
+							if (contentType.includes('application/json')) {
+								const data = JSON.parse(this.responseText)
+								if (data && data.Success === true) {
+									console.log('Blackbaud checkout POST success detected (XHR)!')
+									// You can trigger your own logic here, e.g. onClose();
+								}
+							}
+						}
+					} catch {
+						// Intentionally ignore errors
+					}
+				})
+				return origSend.call(this, body)
+			}
 		}
-		window.bboxOnFormLoad = function () {
-			console.log('bboxOnFormLoad fired')
-		}
-		window.bboxOnFormError = function () {
-			console.log('bboxOnFormError fired')
-		}
-		window.bboxOnFormClose = function () {
-			console.log('bboxOnFormClose fired')
-		}
-		window.bboxOnFormReady = function () {
-			console.log('bboxOnFormReady fired')
-		}
-		// MutationObserver to detect Blackbaud success message
+
+		// Keep the MutationObserver as a fallback
 		const bboxRoot = document.getElementById('bbox-root')
 		let observer: MutationObserver | undefined
 		if (bboxRoot) {
@@ -119,11 +160,6 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 			observer.observe(bboxRoot, { childList: true, subtree: true, characterData: true })
 		}
 		return () => {
-			delete window.bboxOnFormSubmitted
-			delete window.bboxOnFormLoad
-			delete window.bboxOnFormError
-			delete window.bboxOnFormClose
-			delete window.bboxOnFormReady
 			if (observer) observer.disconnect()
 		}
 	}, [])
@@ -172,11 +208,5 @@ declare global {
 	interface Window {
 		bbox: any
 		bboxInit: () => void
-		bb$: any
-		bboxOnFormSubmitted?: () => void
-		bboxOnFormLoad?: () => void
-		bboxOnFormError?: () => void
-		bboxOnFormClose?: () => void
-		bboxOnFormReady?: () => void
 	}
 }
