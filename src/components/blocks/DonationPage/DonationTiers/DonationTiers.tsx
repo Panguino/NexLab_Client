@@ -100,10 +100,10 @@ export const DonationTiers = () => {
 								{tiers.map((tier, index) => (
 									<th key={index} className={`${styles.tierHeader} ${tier.highlight ? styles.highlighted : ''}`}>
 										<div className={styles.tierName}>{tier.name}</div>
-										<div className={styles.tierPrice}>{tier.price}</div>
+										<div className={styles.tierPrice}>choose type</div>
 										<div className={styles.tierActions}>
 											<Button
-												label={`$${tier.monthlyAmount}/mo`}
+												label={`$${tier.monthlyAmount} / month`}
 												onClick={() => openModal(tier.monthlyAmount, false, tier.name)}
 												className={styles.tierButton}
 											/>

@@ -52,7 +52,7 @@ export const SponsorshipInfo = () => {
 				</div>
 
 				<div className={styles.cta}>
-					<Button label="Explore Sponsorship Opportunities" link="/sponsors" target="_self" />
+					<Button label="Explore Sponsorship Opportunities" link="/donate/sponsors" target="_self" />
 				</div>
 			</div>
 		</section>
