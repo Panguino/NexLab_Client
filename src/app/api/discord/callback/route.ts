@@ -76,16 +76,21 @@ export async function GET(req: NextRequest) {
 			})
 			const userData = await userResponse.json()
 
+			console.log('User data for role assignment:', {
+				hasDiscordId: !!userData.discordId,
+				hasDonationTier: !!userData.donationTier,
+				donationStatus: userData.donationStatus,
+			})
+
 			// If user has an active donation, assign Discord role
 			if (userData.donationTier && userData.donationStatus === 'active') {
 				try {
-					// Use the request URL to get the correct base URL
 					const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`
 					await fetch(`${baseUrl}/api/discord/assign-role`, {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({
-							discordId: discordUser.id,
+							discordId: discordUser.id, // Use the Discord ID we just got from Discord API
 							donationTier: userData.donationTier,
 						}),
 					})
