@@ -59,6 +59,29 @@ export async function GET(req: NextRequest) {
 		})
 
 		if (updateResponse.ok) {
+			// Get user data to check for existing donation
+			const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
+				headers: { Authorization: `Bearer ${freshJWT}` },
+			})
+			const userData = await userResponse.json()
+
+			// If user has an active donation, assign Discord role
+			if (userData.donationTier && userData.donationStatus === 'active') {
+				try {
+					await fetch(`${process.env.NEXTAUTH_URL}/api/discord/assign-role`, {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({
+							discordId: discordUser.id,
+							donationTier: userData.donationTier,
+						}),
+					})
+					console.log('Discord role assigned for existing donation')
+				} catch (error) {
+					console.error('Failed to assign Discord role:', error)
+				}
+			}
+
 			return NextResponse.redirect(new URL('/dashboard?discord_connected=true', req.url))
 		} else {
 			const errorResponse = await updateResponse.json()

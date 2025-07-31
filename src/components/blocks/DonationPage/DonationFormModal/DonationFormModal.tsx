@@ -153,6 +153,30 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 
 					if (response.ok) {
 						console.log('Donation info updated in Strapi')
+
+						// Get updated user data to check for Discord connection
+						const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
+							headers: { Authorization: `Bearer ${session.user.jwt}` },
+						})
+						const userData = await userResponse.json()
+
+						// If user has Discord connected, assign role
+						if (userData.discordId && tier) {
+							try {
+								await fetch('/api/discord/assign-role', {
+									method: 'POST',
+									headers: { 'Content-Type': 'application/json' },
+									body: JSON.stringify({
+										discordId: userData.discordId,
+										donationTier: tier,
+									}),
+								})
+								console.log('Discord role assigned')
+							} catch (error) {
+								console.error('Failed to assign Discord role:', error)
+							}
+						}
+
 						setTimeout(() => {
 							onClose()
 						}, 3000)
