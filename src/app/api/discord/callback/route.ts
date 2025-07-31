@@ -80,13 +80,14 @@ export async function GET(req: NextRequest) {
 				hasDiscordId: !!userData.discordId,
 				hasDonationTier: !!userData.donationTier,
 				donationStatus: userData.donationStatus,
+				discordUserFromAPI: discordUser.id,
 			})
 
 			// If user has an active donation, assign Discord role
 			if (userData.donationTier && userData.donationStatus === 'active') {
 				try {
 					const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`
-					await fetch(`${baseUrl}/api/discord/assign-role`, {
+					const roleAssignResponse = await fetch(`${baseUrl}/api/discord/assign-role`, {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({
@@ -94,7 +95,13 @@ export async function GET(req: NextRequest) {
 							donationTier: userData.donationTier,
 						}),
 					})
-					console.log('Discord role assigned for existing donation')
+
+					if (roleAssignResponse.ok) {
+						console.log('Discord role assigned for existing donation')
+					} else {
+						const errorText = await roleAssignResponse.text()
+						console.error('Failed to assign Discord role:', errorText)
+					}
 				} catch (error) {
 					console.error('Failed to assign Discord role:', error)
 				}
