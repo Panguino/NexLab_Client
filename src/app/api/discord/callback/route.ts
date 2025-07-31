@@ -160,14 +160,13 @@ export async function GET(req: NextRequest) {
 			if (userData.donationTier && userData.donationStatus === 'active') {
 				console.log('🔄 Assigning Discord role...')
 				try {
-					const baseUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}`
-					console.log('Role assignment URL:', `${baseUrl}/api/discord/assign-role`)
+					console.log('Role assignment URL:', `${process.env.VERCEL_PROTOCOL}://${process.env.VERCEL_URL}/api/discord/assign-role`)
 					console.log('Role assignment payload:', {
 						discordId: discordUser.id,
 						donationTier: userData.donationTier,
 					})
 
-					const roleAssignResponse = await fetch(`${baseUrl}/api/discord/assign-role`, {
+					const roleAssignResponse = await fetch(`${process.env.VERCEL_PROTOCOL}://${process.env.VERCEL_URL}/api/discord/assign-role`, {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({
