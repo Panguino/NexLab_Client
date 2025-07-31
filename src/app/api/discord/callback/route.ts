@@ -6,6 +6,17 @@ export async function GET(req: NextRequest) {
 	const code = searchParams.get('code')
 	const state = searchParams.get('state')
 
+	// Debug environment variables
+	console.log('Environment debug:', {
+		nodeEnv: process.env.NODE_ENV,
+		hasDiscordClientId: !!process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
+		hasDiscordClientSecret: !!process.env.DISCORD_CLIENT_SECRET,
+		hasNextAuthUrl: !!process.env.NEXTAUTH_URL,
+		nextAuthUrl: process.env.NEXTAUTH_URL,
+		discordClientId: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
+		currentDomain: req.nextUrl.host,
+	})
+
 	if (!code || !state) {
 		return NextResponse.redirect(new URL('/dashboard?error=discord_auth_failed', req.url))
 	}
