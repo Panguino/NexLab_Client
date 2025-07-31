@@ -7,7 +7,7 @@
     padding: 20px;
     border: 1px solid var(--color-grey2-grey16);
     border-radius: 8px;
-    background-color: var(--color-grey0-grey18);
+    background-color: var(--color-white-grey18);
     margin-bottom: 16px;
 
     &:last-child {
@@ -97,4 +97,11 @@
         width: 12px;
         height: 12px;
     }
+}
+
+.lastUpdated {
+    font-size: 12px !important;
+    color: var(--color-grey9-grey11) !important;
+    margin: 4px 0 8px 0 !important;
+    font-style: italic;
 }

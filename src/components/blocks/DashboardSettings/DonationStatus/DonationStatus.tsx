@@ -12,6 +12,7 @@ interface DonationStatusProps {
 	donationStatus?: 'active' | 'cancelled' | 'expired'
 	sponsorStatus?: boolean
 	sponsorTier?: string
+	donationUpdatedAt?: string
 }
 
 export const DonationStatus = ({
@@ -21,6 +22,7 @@ export const DonationStatus = ({
 	donationStatus,
 	sponsorStatus,
 	sponsorTier,
+	donationUpdatedAt,
 }: DonationStatusProps) => {
 	const getTierColor = (tier?: string) => {
 		switch (tier?.toLowerCase()) {
@@ -34,7 +36,6 @@ export const DonationStatus = ({
 				return '#6b7280'
 		}
 	}
-	console.log({ donationTier, donationAmount, donationFrequency, donationStatus, sponsorStatus, sponsorTier })
 
 	const renderDonationStatus = () => {
 		if (!donationTier || donationStatus !== 'active') {
@@ -51,6 +52,16 @@ export const DonationStatus = ({
 			)
 		}
 
+		const formatDate = (dateString?: string) => {
+			if (!dateString) return null
+			const date = new Date(dateString)
+			return date.toLocaleDateString('en-US', {
+				year: 'numeric',
+				month: 'short',
+				day: 'numeric',
+			})
+		}
+
 		return (
 			<div className={styles.activeDonation}>
 				<div className={styles.statusIcon} style={{ color: getTierColor(donationTier) }}>
@@ -64,8 +75,10 @@ export const DonationStatus = ({
 						</span>
 					</h4>
 					<p>
-						${donationAmount} {donationFrequency === 'monthly' ? '/ month' : 'lifetime'}
+						${donationAmount} {donationFrequency === 'monthly' ? '/ month' : 'lifetime'}{' '}
+						{donationUpdatedAt && <span className={styles.lastUpdated}>Last updated: {formatDate(donationUpdatedAt)}</span>}
 					</p>
+
 					<div className={styles.manageDonation}>
 						<p className={styles.manageText}>
 							To modify or cancel your donation

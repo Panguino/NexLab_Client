@@ -143,7 +143,7 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 							Authorization: `Bearer ${session.user.jwt}`,
 						},
 						body: JSON.stringify({
-							lastDonationDate: new Date().toISOString(),
+							donationUpdatedAt: new Date().toISOString(),
 							donationTier: tier,
 							donationAmount: amount,
 							donationStatus: 'active',

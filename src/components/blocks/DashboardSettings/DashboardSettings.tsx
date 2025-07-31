@@ -37,6 +37,7 @@ export const DashboardSettings = async () => {
 						donationStatus={data.donationStatus}
 						sponsorStatus={data.sponsorStatus}
 						sponsorTier={data.sponsorTier}
+						donationUpdatedAt={data.donationUpdatedAt}
 					/>
 				</div>
 			</div>
