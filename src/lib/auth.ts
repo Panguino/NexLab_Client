@@ -20,7 +20,11 @@ const authConfig: NextAuthOptions = {
 	},
 	callbacks: {
 		async session({ session, token }) {
-			session.user = token as any
+			session.user = {
+				...token,
+				jwt: token.jwt, // Make sure JWT is available in session
+				id: token.id,
+			} as any
 			return Promise.resolve(session)
 		},
 
