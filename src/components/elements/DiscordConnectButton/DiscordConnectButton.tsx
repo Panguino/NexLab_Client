@@ -22,22 +22,14 @@ export const DiscordConnectButton = ({
 	const [isDisconnecting, setIsDisconnecting] = useState(false)
 
 	const handleDiscordConnect = async () => {
-		if (!session?.user) return
-
-		setIsConnecting(true)
-
-		// Get the JWT from your session endpoint
-		const sessionResponse = await fetch('/api/session')
-		const sessionData = await sessionResponse.json()
-		const jwt = sessionData.token?.jwt
-
-		if (!jwt) {
+		if (!session?.user?.jwt) {
 			console.error('No JWT found in session')
-			setIsConnecting(false)
 			return
 		}
 
-		const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin + '/api/discord/callback')}&response_type=code&scope=identify%20guilds.members.read&state=${jwt}`
+		setIsConnecting(true)
+
+		const discordAuthUrl = `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin + '/api/discord/callback')}&response_type=code&scope=identify%20guilds.members.read&state=${session.user.jwt}`
 
 		window.location.href = discordAuthUrl
 	}

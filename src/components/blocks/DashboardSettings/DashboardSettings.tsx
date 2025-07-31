@@ -50,6 +50,13 @@ export const DashboardSettings = async () => {
 								<FontAwesomeIcon icon={faDiscord} className={styles.discordLogo} />
 								<span>Discord Integration</span>
 							</h3>
+							<p>
+								Join our community:{' '}
+								<a href="https://discord.gg/8NKZKEXpMv" target="_blank" rel="noopener noreferrer" className={styles.discordLink}>
+									https://discord.gg/8NKZKEXpMv
+								</a>
+							</p>
+							<br />
 							<p>Connect your Discord account to access exclusive channels and roles in our community server.</p>
 						</div>
 					</div>
