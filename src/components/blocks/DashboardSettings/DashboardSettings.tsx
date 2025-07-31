@@ -21,43 +21,45 @@ export const DashboardSettings = async () => {
 
 	return (
 		<div className={styles.DashboardSettings}>
-			<div className={styles.section}>
-				<div className={styles.sectionHeader}>
-					<div>
-						<h3>
-							<FontAwesomeIcon icon={faDollarSign} className={styles.sectionIcon} /> <span>Donation & Sponsorship Status</span>
-						</h3>
-						<p>Manage your support and access exclusive member benefits.</p>
+			<div className={styles.sections}>
+				<div className={styles.section}>
+					<div className={styles.sectionHeader}>
+						<div>
+							<h3>
+								<FontAwesomeIcon icon={faDollarSign} className={styles.sectionIcon} /> <span>Donation & Sponsorship Status</span>
+							</h3>
+							<p>Manage your support and access exclusive member benefits.</p>
+						</div>
+						<br />
+						<DonationStatus
+							donationTier={data.donationTier}
+							donationAmount={data.donationAmount}
+							donationFrequency={data.donationFrequency}
+							donationStatus={data.donationStatus}
+							sponsorStatus={data.sponsorStatus}
+							sponsorTier={data.sponsorTier}
+							donationUpdatedAt={data.donationUpdatedAt}
+						/>
 					</div>
-					<br />
-					<DonationStatus
-						donationTier={data.donationTier}
-						donationAmount={data.donationAmount}
-						donationFrequency={data.donationFrequency}
-						donationStatus={data.donationStatus}
-						sponsorStatus={data.sponsorStatus}
-						sponsorTier={data.sponsorTier}
-						donationUpdatedAt={data.donationUpdatedAt}
+				</div>
+
+				<div className={styles.section}>
+					<div className={styles.sectionHeader}>
+						<div>
+							<h3>
+								<FontAwesomeIcon icon={faDiscord} className={styles.discordLogo} />
+								<span>Discord Integration</span>
+							</h3>
+							<p>Connect your Discord account to access exclusive channels and roles in our community server.</p>
+						</div>
+					</div>
+					<DiscordConnectButton
+						isConnected={isDiscordConnected}
+						discordUsername={discordUsername}
+						discordAvatar={discordAvatar}
+						discordId={discordId}
 					/>
 				</div>
-			</div>
-
-			<div className={styles.section}>
-				<div className={styles.sectionHeader}>
-					<div>
-						<h3>
-							<FontAwesomeIcon icon={faDiscord} className={styles.discordLogo} />
-							<span>Discord Integration</span>
-						</h3>
-						<p>Connect your Discord account to access exclusive channels and roles in our community server.</p>
-					</div>
-				</div>
-				<DiscordConnectButton
-					isConnected={isDiscordConnected}
-					discordUsername={discordUsername}
-					discordAvatar={discordAvatar}
-					discordId={discordId}
-				/>
 			</div>
 		</div>
 	)
