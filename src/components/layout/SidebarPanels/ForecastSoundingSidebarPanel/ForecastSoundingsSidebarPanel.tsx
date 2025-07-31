@@ -1,26 +1,19 @@
 'use client'
 
-import { Accordian } from '@/components/elements/Accordian/Accordian'
 import { Button } from '@/components/elements/Button/Button'
 import Input from '@/components/elements/Input/Input'
-import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import Select from '@/components/elements/Select/Select'
-import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
-import { FORECAST_LEVELS } from '@/data/forecast/levels'
+import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
-import { FORECAST_PRODUCTS } from '@/data/forecast/products'
-import { FORECAST_REGIONS } from '@/data/forecast/regions'
-import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import {
 	DEFAULT_FORECAST_SOUNDING_PARCEL,
 	DEFAULT_FORECAST_SOUNDING_WEATHER,
 	FORECAST_SOUNDING_PARCEL_OPTIONS,
 	FORECAST_SOUNDING_WEATHER_OPTIONS,
 } from '@/data/forecast/soundingOptions'
-import { useRootStore } from '@/store/useRootStore'
-import { buildProductsByLevel, fetchFloaterSectorData, fetchStationCoordinates } from '@/util/forecast/common-functions'
+import { buildProductsByLevel, fetchStationCoordinates } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSoundingsSidebarPanel.module.scss'
 
@@ -42,24 +35,13 @@ const ForecastSoundingsSidebarPanel = () => {
 	const isStationId = locationId?.length === 4 && !locationId?.includes(',')
 
 	// menu prep
-	const [sortedProductEntries, setSortedProductEntries] = useState([])
-	const [openIndex, setOpenIndex] = useState<number | null>(null)
-	const openIndexRef = useRef<number | null>(null)
 	// these references are specifically to avoid unnecessary re-renders and wait for a button click to update the URL
 	const [internalModelId, setInternalModelId] = useState(modelId)
 	const [internalLocationId, setInternalLocationId] = useState(locationId)
 	const [internalParcelId, setInternalParcelId] = useState(parcelId)
 	const [internalWeatherId, setInternalWeatherId] = useState(weatherId)
 	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
-
-	// sector map stuff
-	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
-	const closeSectorSelectorPanel = useRootStore.use.closeSectorSelectorPanel()
-	const sectorSelectorPanelIsOpen = useRootStore.use.sectorSelectorPanelIsOpen()
-	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
-	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
-	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
-	const [regionId, setRegionId] = useState('')
+	const [returnLink, setReturnLink] = useState('')
 
 	const sanitizeCollectAndSetData = useCallback(async () => {
 		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
@@ -121,85 +103,18 @@ const ForecastSoundingsSidebarPanel = () => {
 			const soundingParmsString = `${validTimeId}/${sanitizedLocationId}/${sanitizedParcelId}/${sanitizedWeatherId}`
 			router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
 		}
-		const levelIndex = productsByLevel.findIndex((item) => item.level === levelId)
-		if (openIndexRef.current !== levelIndex) {
-			setOpenIndex(levelIndex)
-		}
-		setSortedProductEntries(productsByLevel)
-		setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		setInternalModelId(sanitizedModelId)
 		setInternalLocationId(sanitizedLocationId)
 		setInternalParcelId(sanitizedParcelId)
 		setInternalWeatherId(sanitizedWeatherId)
 		setAllowGenerateSounding(false) // Reset the generate button state
+		setReturnLink(`/weather-data/forecast-models/${runId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`)
 	}, [modelId, runId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, router])
 
 	useEffect(() => {
 		sanitizeCollectAndSetData()
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, sanitizeCollectAndSetData])
 
-	useEffect(() => {
-		updateOnChangeSectorSelectorSectorHandler((sector) => {
-			closeSectorSelectorPanel()
-			const baseParmsString = `${runId}/${modelId}/${sector}/${levelId}/${productId}`
-			const soundingParmsString = `${validTimeId}/${locationId}/${parcelId}/${weatherId}`
-			router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
-		})
-	}, [
-		runId,
-		modelId,
-		levelId,
-		productId,
-		closeSectorSelectorPanel,
-		router,
-		updateOnChangeSectorSelectorSectorHandler,
-		validTimeId,
-		locationId,
-		parcelId,
-		weatherId,
-	])
-
-	useEffect(() => {
-		if (sectorSelectorPanelIsOpen) {
-			const loadSectorData = async () => {
-				const region = FORECAST_REGIONS[regionId as string]
-				const newD3config = {
-					rotate: region.rotate,
-					scale: region.scale,
-				}
-				setSectorSelectorD3config(newD3config)
-				const updatedSectorData = await fetchFloaterSectorData()
-				const selectedSectors = FORECAST_MODELS[modelId as string].sectors
-					.filter((sectorId) => FORECAST_SECTORS[sectorId].region === regionId)
-					.map((sectorId) => {
-						if (updatedSectorData && updatedSectorData[sectorId] && updatedSectorData[sectorId].coordinates) {
-							return {
-								id: sectorId,
-								...FORECAST_SECTORS[sectorId],
-								coordinates: updatedSectorData[sectorId].coordinates,
-							}
-						}
-						return {
-							id: sectorId,
-							...FORECAST_SECTORS[sectorId],
-						}
-					})
-				setSectorSelectorSectors(selectedSectors)
-			}
-			loadSectorData()
-		}
-	}, [sectorSelectorPanelIsOpen, modelId, regionId, setSectorSelectorD3config, setSectorSelectorSectors])
-
-	const handleRegionChange = (regionId: string) => {
-		setRegionId(regionId)
-		openSectorSelectorPanel()
-	}
-	const handleSectorChangeButton = () => {
-		if (regionId !== FORECAST_SECTORS[sectorId as string].region) {
-			setRegionId(FORECAST_SECTORS[sectorId as string].region)
-		}
-		openSectorSelectorPanel()
-	}
 	const modelOptions = Object.keys(FORECAST_MODELS)
 		.filter((model) => FORECAST_MODELS[model].allowForecastSounding === true)
 		.map((model) => ({
@@ -254,17 +169,10 @@ const ForecastSoundingsSidebarPanel = () => {
 		}
 	}
 
-	useEffect(() => {
-		openIndexRef.current = openIndex
-	}, [openIndex])
-
-	const handleToggle = (index: number) => {
-		setOpenIndex(openIndex === index ? null : index) // Close if already open, otherwise open the clicked accordion
-	}
-
 	return (
 		<ScrollArea>
 			<div className={styles.ForecastSoundingsSidebarPanel}>
+				<SidebarSectionHeader name="Return to Forecast Models" linkUrl={returnLink} />
 				<div className={styles.options}>
 					<Select
 						value={internalModelId}
@@ -298,51 +206,6 @@ const ForecastSoundingsSidebarPanel = () => {
 					/>
 					<Button label="Generate Sounding" disabled={!allowGenerateSounding} onClick={handleGenerateSounding} />
 				</div>
-				<p>
-					<strong>For Map Generation:</strong>
-				</p>
-
-				<div className={styles.options}>
-					<Select
-						value={regionId}
-						placeholder={FORECAST_REGIONS[regionId as string]?.label ?? ''}
-						title="Sector Size:"
-						options={Object.keys(FORECAST_REGIONS).map((regionId) => ({
-							value: regionId,
-							label: FORECAST_REGIONS[regionId].label,
-						}))}
-						onChange={handleRegionChange}
-					/>
-					<SectorChangeButton
-						onClick={handleSectorChangeButton}
-						label="Selected Sector:"
-						labelValue={FORECAST_SECTORS[sectorId as string]?.name ?? 'Unknown Sector'}
-					/>
-				</div>
-				{sortedProductEntries.map(({ level, products }, index) => (
-					<Accordian
-						initiallyClosed={true}
-						key={level}
-						title={FORECAST_LEVELS[level].name}
-						variant="sidebar"
-						onToggle={() => handleToggle(index)}
-					>
-						<div className={styles.forecastProducts}>
-							{(products as string[]).map((product) => (
-								<SidebarLink
-									key={product}
-									name={FORECAST_PRODUCTS[product].name}
-									active={product === productId && level === levelId}
-									onClick={() => {
-										const baseParmsString = `${runId}/${modelId}/${sectorId}/${level}/${product}`
-										const soundingParmsString = `${validTimeId}/${locationId}/${parcelId}/${weatherId}`
-										router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
-									}}
-								/>
-							))}
-						</div>
-					</Accordian>
-				))}
 			</div>
 		</ScrollArea>
 	)
