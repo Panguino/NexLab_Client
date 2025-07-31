@@ -2,9 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
 	try {
-		const { discordId, donationTier } = await req.json()
+		const body = await req.json()
+		console.log('Discord assign-role request body:', body)
+
+		const { discordId, donationTier } = body
+
+		console.log('Parsed values:', { discordId, donationTier })
 
 		if (!discordId || !donationTier) {
+			console.error('Missing required fields:', { discordId: !!discordId, donationTier: !!donationTier })
 			return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
 		}
 
@@ -16,13 +22,29 @@ export async function POST(req: NextRequest) {
 			sponsor: process.env.DISCORD_SPONSOR_ROLE_ID,
 		}
 
+		console.log('Role mapping:', roleMapping)
+		console.log('Looking for tier:', donationTier.toLowerCase())
+
 		const roleId = roleMapping[donationTier.toLowerCase()]
+		console.log('Found role ID:', roleId)
+
 		if (!roleId) {
+			console.error('Invalid donation tier:', donationTier)
+			console.error('Available tiers:', Object.keys(roleMapping))
 			return NextResponse.json({ error: 'Invalid donation tier' }, { status: 400 })
 		}
 
+		console.log('Environment variables check:', {
+			hasGuildId: !!process.env.DISCORD_GUILD_ID,
+			hasBotToken: !!process.env.DISCORD_BOT_TOKEN,
+			guildId: process.env.DISCORD_GUILD_ID,
+		})
+
 		// Add role to Discord user
-		const response = await fetch(`https://discord.com/api/v10/guilds/${process.env.DISCORD_GUILD_ID}/members/${discordId}/roles/${roleId}`, {
+		const discordUrl = `https://discord.com/api/v10/guilds/${process.env.DISCORD_GUILD_ID}/members/${discordId}/roles/${roleId}`
+		console.log('Discord API URL:', discordUrl)
+
+		const response = await fetch(discordUrl, {
 			method: 'PUT',
 			headers: {
 				Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
@@ -30,17 +52,18 @@ export async function POST(req: NextRequest) {
 			},
 		})
 
+		console.log('Discord API response:', { ok: response.ok, status: response.status })
+
 		if (response.ok) {
 			console.log(`Successfully assigned ${donationTier} role to Discord user ${discordId}`)
 			return NextResponse.json({ success: true })
 		} else {
 			const error = await response.text()
 			console.error('Discord API error:', error)
-			console.error('Attempted to assign role:', roleId, 'to user:', discordId)
 			return NextResponse.json({ error: 'Failed to assign role', details: error }, { status: 500 })
 		}
 	} catch (error) {
-		console.error('Error assigning Discord role:', error)
+		console.error('Error in assign-role endpoint:', error)
 		return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
 	}
 }
