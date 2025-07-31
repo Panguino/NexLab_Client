@@ -99,9 +99,12 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 		const bboxRoot = document.getElementById('bbox-root')
 		if (!bboxRoot) return undefined
 
+		let formInitialized = false
+
 		const observer = new MutationObserver(async () => {
-			// Check for form ready state
-			if (bboxRoot.textContent?.includes('Your Billing Address')) {
+			// Check for form ready state - only run once
+			if (bboxRoot.textContent?.includes('Your Billing Address') && !formInitialized) {
+				formInitialized = true
 				console.log('Blackbaud form loaded, setting amount and recurrence')
 
 				// Set amount if provided
