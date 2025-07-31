@@ -68,7 +68,8 @@ export async function GET(req: NextRequest) {
 			// If user has an active donation, assign Discord role
 			if (userData.donationTier && userData.donationStatus === 'active') {
 				try {
-					await fetch(`${process.env.NEXTAUTH_URL}/api/discord/assign-role`, {
+					const baseUrl = process.env.NEXTAUTH_URL || `https://${process.env.VERCEL_URL}` || req.nextUrl.origin
+					await fetch(`${baseUrl}/api/discord/assign-role`, {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({
