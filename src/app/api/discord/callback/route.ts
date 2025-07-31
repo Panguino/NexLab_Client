@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
 		// Exchange code for Discord access token
 		console.log('🔄 Exchanging code for Discord access token...')
 
-		const redirectUri = `${process.env.VERCEL_PROTOCOL}://${process.env.VERCEL_URL}/api/discord/callback`
+		const redirectUri = `${process.env.VERCEL_PROTOCOL}://${req.nextUrl.host}/api/discord/callback`
 
 		console.log('Token exchange params:', {
 			client_id: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
@@ -160,13 +160,13 @@ export async function GET(req: NextRequest) {
 			if (userData.donationTier && userData.donationStatus === 'active') {
 				console.log('🔄 Assigning Discord role...')
 				try {
-					console.log('Role assignment URL:', `${process.env.VERCEL_PROTOCOL}://${process.env.VERCEL_URL}/api/discord/assign-role`)
+					console.log('Role assignment URL:', `${process.env.VERCEL_PROTOCOL}://${req.nextUrl.host}/api/discord/assign-role`)
 					console.log('Role assignment payload:', {
 						discordId: discordUser.id,
 						donationTier: userData.donationTier,
 					})
 
-					const roleAssignResponse = await fetch(`${process.env.VERCEL_PROTOCOL}://${process.env.VERCEL_URL}/api/discord/assign-role`, {
+					const roleAssignResponse = await fetch(`${process.env.VERCEL_PROTOCOL}://${req.nextUrl.host}/api/discord/assign-role`, {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({
