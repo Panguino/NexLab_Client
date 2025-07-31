@@ -43,7 +43,11 @@ export async function GET(req: NextRequest) {
 		})
 		const discordUser = await userResponse.json()
 
-		// Update Strapi user with Discord info using correct endpoint
+		console.log('Updating Strapi user...')
+		console.log('Strapi endpoint:', `${process.env.NEXT_PUBLIC_API_URL}/api/user/me`)
+		console.log('JWT being used:', freshJWT ? 'JWT present' : 'No JWT')
+
+		// Update Strapi user with Discord info
 		const updateResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/me`, {
 			method: 'PUT',
 			headers: {
@@ -58,7 +62,14 @@ export async function GET(req: NextRequest) {
 			}),
 		})
 
+		console.log('Strapi update response:', {
+			ok: updateResponse.ok,
+			status: updateResponse.status,
+			statusText: updateResponse.statusText,
+		})
+
 		if (updateResponse.ok) {
+			console.log('Strapi update successful')
 			// Get user data to check for existing donation
 			const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
 				headers: { Authorization: `Bearer ${freshJWT}` },
@@ -86,8 +97,12 @@ export async function GET(req: NextRequest) {
 
 			return NextResponse.redirect(new URL('/dashboard?discord_connected=true', req.url))
 		} else {
-			const errorResponse = await updateResponse.json()
-			console.error('Update failed:', errorResponse)
+			const errorText = await updateResponse.text()
+			console.error('Strapi update failed:', {
+				status: updateResponse.status,
+				statusText: updateResponse.statusText,
+				body: errorText,
+			})
 			return NextResponse.redirect(new URL('/dashboard?error=discord_update_failed', req.url))
 		}
 	} catch (error) {
