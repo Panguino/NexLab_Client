@@ -146,7 +146,8 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 							lastDonationDate: new Date().toISOString(),
 							donationTier: tier,
 							donationAmount: amount,
-							isRecurring: !oneTimeDonation,
+							donationStatus: 'active',
+							donationFrequency: !oneTimeDonation ? 'monthly' : 'lifetime',
 						}),
 					})
 

@@ -34,6 +34,7 @@ export const DonationStatus = ({
 				return '#6b7280'
 		}
 	}
+	console.log({ donationTier, donationAmount, donationFrequency, donationStatus, sponsorStatus, sponsorTier })
 
 	const renderDonationStatus = () => {
 		if (!donationTier || donationStatus !== 'active') {
@@ -67,9 +68,12 @@ export const DonationStatus = ({
 					</p>
 					<div className={styles.manageDonation}>
 						<p className={styles.manageText}>
-							To modify or cancel your donation, please contact{' '}
+							To modify or cancel your donation
+							<br />
+							please contact{' '}
 							<a href="mailto:foundation@codfound.org" className={styles.emailLink}>
-								<FontAwesomeIcon icon={faEnvelope} /> foundation@codfound.org
+								<FontAwesomeIcon icon={faEnvelope} />
+								foundation@codfound.org
 							</a>
 						</p>
 					</div>
