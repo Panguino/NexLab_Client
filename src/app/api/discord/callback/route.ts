@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
 		hasDiscordClientSecret: !!process.env.DISCORD_CLIENT_SECRET,
 		hasNextAuthUrl: !!process.env.NEXTAUTH_URL,
 		nextAuthUrl: process.env.NEXTAUTH_URL,
+		vercelUrl: process.env.VERCEL_URL,
 		discordClientId: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
 		currentDomain: req.nextUrl.host,
 	})
