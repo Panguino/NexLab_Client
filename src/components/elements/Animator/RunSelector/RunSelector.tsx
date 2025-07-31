@@ -19,6 +19,7 @@ export const RunSelector: React.FC<RunSelectorProps> = ({ runs, run, runsPerRow 
 	const [isOpen, setIsOpen] = useState(false)
 	const dropdownRef = useRef<HTMLDivElement>(null)
 	const selectedRunLabel = runs.find((r) => r.value === run)?.label || 'Select a Run'
+	const arrowDirection = isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
 
 	const groupedRuns = runs.reduce(
 		(acc, currentRun) => {
@@ -60,12 +61,12 @@ export const RunSelector: React.FC<RunSelectorProps> = ({ runs, run, runsPerRow 
 		<div className={styles.runSelector}>
 			<div className={styles.runSelectorButton} onClick={() => setIsOpen(!isOpen)}>
 				<span>Run: {selectedRunLabel || 'Select a Run'}</span>{' '}
-				<motion.div className={styles.arrow} animate={{ transform: `${isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}` }}>
+				<motion.div className={styles.arrow} animate={{ transform: `${arrowDirection}` }}>
 					<FontAwesomeIcon icon={faChevronDown} />
 				</motion.div>
 			</div>
 			{isOpen && (
-				<div className={styles.runSelectorDropdown} ref={dropdownRef}>
+				<div className={`${styles.runSelectorDropdown}`} ref={dropdownRef}>
 					{Object.entries(groupedRuns)
 						.reverse()
 						.map(([date, zRuns]) => (
