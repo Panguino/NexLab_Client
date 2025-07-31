@@ -94,49 +94,50 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 	)
 
 	useEffect(() => {
-		if (session) {
-			const bboxRoot = document.getElementById('bbox-root')
-			let observer: MutationObserver | undefined
-			if (bboxRoot) {
-				observer = new MutationObserver(async () => {
-					if (bboxRoot.textContent?.includes('Thank you for your generous support!')) {
-						console.log('Blackbaud success message detected!')
+		if (!session) return undefined
 
-						// Update Strapi with donation information
-						try {
-							const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/me`, {
-								method: 'PUT',
-								headers: {
-									'Content-Type': 'application/json',
-									Authorization: `Bearer ${session.user.jwt}`,
-								},
-								body: JSON.stringify({
-									lastDonationDate: new Date().toISOString(),
-									donationTier: tier,
-									donationAmount: amount,
-									isRecurring: !oneTimeDonation,
-								}),
-							})
+		const bboxRoot = document.getElementById('bbox-root')
+		if (!bboxRoot) return undefined
 
-							if (response.ok) {
-								console.log('Donation info updated in Strapi')
-								// Optionally close modal after successful update
-								setTimeout(() => {
-									onClose()
-								}, 3000) // Close after 3 seconds to let user see success message
-							} else {
-								console.error('Failed to update donation info in Strapi')
-							}
-						} catch (error) {
-							console.error('Error updating donation info:', error)
-						}
+		const observer = new MutationObserver(async () => {
+			if (bboxRoot.textContent?.includes('Thank you for your generous support!')) {
+				console.log('Blackbaud success message detected!')
+
+				// Update Strapi with donation information
+				try {
+					const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/me`, {
+						method: 'PUT',
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization: `Bearer ${session.user.jwt}`,
+						},
+						body: JSON.stringify({
+							lastDonationDate: new Date().toISOString(),
+							donationTier: tier,
+							donationAmount: amount,
+							isRecurring: !oneTimeDonation,
+						}),
+					})
+
+					if (response.ok) {
+						console.log('Donation info updated in Strapi')
+						// Optionally close modal after successful update
+						setTimeout(() => {
+							onClose()
+						}, 3000) // Close after 3 seconds to let user see success message
+					} else {
+						console.error('Failed to update donation info in Strapi')
 					}
-				})
-				observer.observe(bboxRoot, { childList: true, subtree: true, characterData: true })
+				} catch (error) {
+					console.error('Error updating donation info:', error)
+				}
 			}
-			return () => {
-				if (observer) observer.disconnect()
-			}
+		})
+
+		observer.observe(bboxRoot, { childList: true, subtree: true, characterData: true })
+
+		return () => {
+			observer.disconnect()
 		}
 	}, [session, tier, amount, oneTimeDonation, onClose])
 
