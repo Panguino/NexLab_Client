@@ -20,6 +20,8 @@ export async function GET(req: NextRequest) {
 
 	try {
 		// Exchange code for Discord access token
+		console.log('Exchanging code for Discord access token...')
+		console.log('vercel_url:', process.env.VERCEL_URL)
 		const tokenResponse = await fetch('https://discord.com/api/oauth2/token', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
