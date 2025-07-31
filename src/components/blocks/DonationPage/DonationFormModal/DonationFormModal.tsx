@@ -100,6 +100,34 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 		if (!bboxRoot) return undefined
 
 		const observer = new MutationObserver(async () => {
+			// Check for form ready state
+			if (bboxRoot.textContent?.includes('Your Billing Address')) {
+				console.log('Blackbaud form loaded, setting amount and recurrence')
+
+				// Set amount if provided
+				if (amount) {
+					const amountInput = document.getElementById('bboxdonation_gift_txtAmountGift') as HTMLInputElement
+					if (amountInput) {
+						amountInput.value = amount.toString()
+						const inputEvent = new Event('input', { bubbles: true })
+						const changeEvent = new Event('change', { bubbles: true })
+						amountInput.dispatchEvent(inputEvent)
+						amountInput.dispatchEvent(changeEvent)
+						console.log('Amount set to:', amount)
+					}
+				}
+
+				// Set recurrence checkbox
+				const recurrenceCheckbox = document.getElementById('bboxdonation_recurrence_chkMonthlyGift') as HTMLInputElement
+				if (recurrenceCheckbox) {
+					recurrenceCheckbox.checked = !oneTimeDonation
+					const changeEvent = new Event('change', { bubbles: true })
+					recurrenceCheckbox.dispatchEvent(changeEvent)
+					console.log('Recurrence set to:', !oneTimeDonation)
+				}
+			}
+
+			// Check for success message
 			if (bboxRoot.textContent?.includes('Thank you for your generous support!')) {
 				console.log('Blackbaud success message detected!')
 
@@ -121,10 +149,9 @@ export const DonationFormModal = ({ isOpen, onClose, oneTimeDonation, tier, amou
 
 					if (response.ok) {
 						console.log('Donation info updated in Strapi')
-						// Optionally close modal after successful update
 						setTimeout(() => {
 							onClose()
-						}, 3000) // Close after 3 seconds to let user see success message
+						}, 3000)
 					} else {
 						console.error('Failed to update donation info in Strapi')
 					}
