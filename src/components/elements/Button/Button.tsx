@@ -12,8 +12,8 @@ export type ButtonType = {
 	onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 export const Button = ({ label, link, target, variantClassName, disabled, className, onClick }: ButtonType) => {
-	if (!link && !target && !onClick) {
-		throw new Error("If 'link' and 'target' are not defined, 'onClick' must be defined, or visa versa.")
+	if (!link && !onClick) {
+		throw new Error("Either 'link' or 'onClick' must be defined.")
 	}
 
 	const buttonContent = (
@@ -26,7 +26,7 @@ export const Button = ({ label, link, target, variantClassName, disabled, classN
 	)
 	return (
 		<div className={styles.buttonWrapper}>
-			{link && target ? (
+			{link ? (
 				<Link href={link} target={target}>
 					{buttonContent}
 				</Link>

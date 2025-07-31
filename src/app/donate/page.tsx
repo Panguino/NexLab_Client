@@ -1,6 +1,8 @@
+'use client'
+
 import { DonationPage } from '@/components/blocks/DonationPage/DonationPage'
 
-const Page = async () => {
+const Page = () => {
 	return <DonationPage />
 }
 

@@ -3,28 +3,13 @@
 import { Button } from '@/components/elements/Button/Button'
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useState } from 'react'
-import { DonationFormModal } from '../DonationFormModal/DonationFormModal'
 import styles from './DonationTiers.module.scss'
 
-export const DonationTiers = () => {
-	const [isModalOpen, setIsModalOpen] = useState(false)
-	const [selectedAmount, setSelectedAmount] = useState<number>(0)
-	const [selectedTier, setSelectedTier] = useState<string>('')
-	const [oneTimeDonation, setOneTimeDonation] = useState(false)
+interface DonationTiersProps {
+	onOpenModal: (amount: number, oneTime: boolean, tier: string) => void
+}
 
-	const openModal = (amount: number, oneTime: boolean, tier: string) => {
-		setOneTimeDonation(oneTime)
-		setSelectedTier(tier)
-		setSelectedAmount(amount)
-		setIsModalOpen(true)
-	}
-
-	const closeModal = () => {
-		setIsModalOpen(false)
-		setSelectedAmount(0)
-	}
-
+export const DonationTiers = ({ onOpenModal }: DonationTiersProps) => {
 	const tiers = [
 		{
 			name: 'Standard',
@@ -104,12 +89,12 @@ export const DonationTiers = () => {
 										<div className={styles.tierActions}>
 											<Button
 												label={`$${tier.monthlyAmount} / month`}
-												onClick={() => openModal(tier.monthlyAmount, false, tier.name)}
+												onClick={() => onOpenModal(tier.monthlyAmount, false, tier.name)}
 												className={styles.tierButton}
 											/>
 											<Button
 												label={`$${tier.lifetimeAmount} lifetime`}
-												onClick={() => openModal(tier.lifetimeAmount, true, tier.name)}
+												onClick={() => onOpenModal(tier.lifetimeAmount, true, tier.name)}
 												className={styles.tierButton}
 											/>
 										</div>
@@ -130,13 +115,6 @@ export const DonationTiers = () => {
 					</table>
 				</div>
 			</div>
-			<DonationFormModal
-				isOpen={isModalOpen}
-				onClose={closeModal}
-				oneTimeDonation={oneTimeDonation}
-				tier={selectedTier}
-				amount={selectedAmount}
-			/>
 		</section>
 	)
 }

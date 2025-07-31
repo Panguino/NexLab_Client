@@ -19,15 +19,22 @@ const authConfig: NextAuthOptions = {
 		signIn: '/login',
 	},
 	callbacks: {
+		async redirect({ url, baseUrl }) {
+			// If url is a relative path, prepend baseUrl
+			if (url.startsWith('/')) return `${baseUrl}${url}`
+			// If url is on the same origin, return it
+			if (new URL(url).origin === baseUrl) return url
+			// Otherwise return baseUrl
+			return baseUrl
+		},
 		async session({ session, token }) {
 			session.user = {
 				...token,
-				jwt: token.jwt, // Make sure JWT is available in session
+				jwt: token.jwt,
 				id: token.id,
 			} as any
 			return Promise.resolve(session)
 		},
-
 		async jwt({ token, user, account }) {
 			const isSignIn = user ? true : false
 			if (isSignIn && account) {
