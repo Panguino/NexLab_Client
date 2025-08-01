@@ -10,43 +10,71 @@ const defaultForecastZoomState = {
 export interface IForecastSlice {
 	forecastFrameValidTime: number
 	setForecastFrameValidTime: (validTime: number) => void
-	forecastFrameRate: number
-	setForecastFrameRate: (frameRate: number) => void
 	forecastZoomState: zoomState
 	setForecastZoomState: (zoomState: zoomState) => void
 	resetForecastZoomState: () => void
 	forecastZoomFill: boolean
 	setForecastZoomFill: (zoomFill: boolean) => void
-	forecastDataRefreshInterval: number
-	forecastDataRefreshActive: boolean
-	setForecastDataRefreshInterval: (interval: number) => void
-	setForecastDataRefreshActive: (active: boolean) => void
 	forecastMapFullScreen: boolean
 	setForecastMapFullScreen: (fullScreen: boolean) => void
+	forecastFrameRate: number
+	setForecastFrameRate: (frameRate: number) => void
 	forecastLastFrameDwell: boolean
 	setForecastLastFrameDwell: (dwell: boolean) => void
 	forecastLastFrameDwellTime?: number
 	setForecastLastFrameDwellTime?: (dwellTime: number) => void
+	forecastDataRefreshInterval: number
+	setForecastDataRefreshInterval: (interval: number) => void
+	forecastDataRefreshActive: boolean
+	setForecastDataRefreshActive: (active: boolean) => void
+	// forecast sounding state
+	forecastSoundingZoomState: zoomState
+	setForecastSoundingZoomState: (zoomState: zoomState) => void
+	resetForecastSoundingZoomState: () => void
+	forecastSoundingZoomFill: boolean
+	setForecastSoundingZoomFill: (zoomFill: boolean) => void
+	forecastSoundingMapFullScreen: boolean
+	setForecastSoundingMapFullScreen: (fullScreen: boolean) => void
+	forecastSoundingFrameRate: number
+	setForecastSoundingFrameRate: (frameRate: number) => void
+	forecastSoundingLastFrameDwell: boolean
+	setForecastSoundingLastFrameDwell: (dwell: boolean) => void
+	forecastSoundingLastFrameDwellTime?: number
+	setForecastSoundingLastFrameDwellTime?: (dwellTime: number) => void
 }
 
 export const createForecastSlice: ZustandStateSlice<IForecastSlice> = (set) => ({
 	forecastFrameValidTime: 0,
 	setForecastFrameValidTime: (validTime: number) => set(() => ({ forecastFrameValidTime: validTime })),
-	forecastFrameRate: 10,
-	setForecastFrameRate: (frameRate: number) => set(() => ({ forecastFrameRate: frameRate })),
 	forecastZoomState: { ...defaultForecastZoomState },
 	setForecastZoomState: (forecastZoomState) => set(() => ({ forecastZoomState })),
 	resetForecastZoomState: () => set(() => ({ forecastZoomState: { ...defaultForecastZoomState } })),
 	forecastZoomFill: false,
 	setForecastZoomFill: (zoomFill: boolean) => set(() => ({ forecastZoomFill: zoomFill })),
-	forecastDataRefreshInterval: 5,
-	setForecastDataRefreshInterval: (interval: number) => set(() => ({ forecastDataRefreshInterval: interval })),
-	forecastDataRefreshActive: true,
-	setForecastDataRefreshActive: (active: boolean) => set(() => ({ forecastDataRefreshActive: active })),
 	forecastMapFullScreen: false,
 	setForecastMapFullScreen: (fullScreen) => set({ forecastMapFullScreen: fullScreen }),
+	forecastFrameRate: 10,
+	setForecastFrameRate: (frameRate: number) => set(() => ({ forecastFrameRate: frameRate })),
 	forecastLastFrameDwell: true,
 	setForecastLastFrameDwell: (dwell: boolean) => set(() => ({ forecastLastFrameDwell: dwell })),
 	forecastLastFrameDwellTime: 1,
 	setForecastLastFrameDwellTime: (dwellTime: number) => set(() => ({ forecastLastFrameDwellTime: dwellTime })),
+	forecastDataRefreshInterval: 5,
+	setForecastDataRefreshInterval: (interval: number) => set(() => ({ forecastDataRefreshInterval: interval })),
+	forecastDataRefreshActive: true,
+	setForecastDataRefreshActive: (active: boolean) => set(() => ({ forecastDataRefreshActive: active })),
+	// forecast sounding state
+	forecastSoundingZoomState: { ...defaultForecastZoomState },
+	setForecastSoundingZoomState: (forecastSoundingZoomState) => set(() => ({ forecastSoundingZoomState })),
+	resetForecastSoundingZoomState: () => set(() => ({ forecastSoundingZoomState: { ...defaultForecastZoomState } })),
+	forecastSoundingZoomFill: false,
+	setForecastSoundingZoomFill: (zoomFill: boolean) => set(() => ({ forecastSoundingZoomFill: zoomFill })),
+	forecastSoundingMapFullScreen: false,
+	setForecastSoundingMapFullScreen: (fullScreen) => set({ forecastSoundingMapFullScreen: fullScreen }),
+	forecastSoundingFrameRate: 10,
+	setForecastSoundingFrameRate: (frameRate: number) => set(() => ({ forecastSoundingFrameRate: frameRate })),
+	forecastSoundingLastFrameDwell: true,
+	setForecastSoundingLastFrameDwell: (dwell: boolean) => set(() => ({ forecastSoundingLastFrameDwell: dwell })),
+	forecastSoundingLastFrameDwellTime: 1,
+	setForecastSoundingLastFrameDwellTime: (dwellTime: number) => set(() => ({ forecastSoundingLastFrameDwellTime: dwellTime })),
 })
