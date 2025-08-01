@@ -40,12 +40,55 @@ const authConfig: NextAuthOptions = {
 			if (isSignIn && account) {
 				try {
 					const public_url = process.env.NEXT_PUBLIC_API_URL
+					console.log('🔄 [AUTH] Starting backend auth callback:', {
+						provider: account.provider,
+						userEmail: user?.email,
+						hasAccessToken: !!account?.access_token,
+						url: `${public_url}/api/auth/${account.provider}/callback?access_token=${account?.access_token}`,
+					})
+
 					const response = await fetch(`${public_url}/api/auth/${account.provider}/callback?access_token=${account?.access_token}`)
+
+					console.log('📡 [AUTH] Backend response:', {
+						ok: response.ok,
+						status: response.status,
+						statusText: response.statusText,
+						provider: account.provider,
+					})
+
 					const data = await response.json()
-					token.jwt = data.jwt
-					token.id = data.user.id
+					console.log('📦 [AUTH] Backend data:', {
+						hasJWT: !!data.jwt,
+						hasUser: !!data.user,
+						hasUserId: !!data.user?.id,
+						userId: data.user?.id,
+						userEmail: data.user?.email,
+						provider: account.provider,
+						isAccountLinking: data.accountLinked || false,
+						error: data.error?.message,
+					})
+
+					if (data.jwt && data.user?.id) {
+						token.jwt = data.jwt
+						token.id = data.user.id
+						console.log('✅ [AUTH] Successfully authenticated:', {
+							provider: account.provider,
+							userId: data.user.id,
+							email: data.user.email,
+						})
+					} else {
+						console.error('❌ [AUTH] Authentication failed:', {
+							provider: account.provider,
+							error: data.error?.message || 'Missing JWT or user ID',
+							data,
+						})
+					}
 				} catch (error) {
-					console.error('Fetch failed:', error)
+					console.error('💥 [AUTH] Backend auth fetch failed:', {
+						provider: account.provider,
+						error: error.message,
+						stack: error.stack,
+					})
 				}
 			}
 			return Promise.resolve({ ...token, ...user })
