@@ -1,103 +1,96 @@
-# NexLab_Client
+# NexLab Client
 
-Front end nextjs framework for Nexlab website
+> Next.js weather data visualization platform for meteorological analysis
 
-## GIT Workflow
+## 🚀 Quick Start
 
--   Create new branch
+```bash
+# Install dependencies
+npm install
 
-    -   `git checkout -b [branch name]`
-    -   branch name should follow pattern:
-        -   `feature/NXL-[Monday ID]-[name]`
-        -   `issue/NXL-[Monday ID]-[name]`
-    -   reference the Monday ID number in the branch name
-    -   name is 3-4 word description of feature using `-`s as spaces
+# Start development server
+npm run dev
 
--   Commit often to this branch locally
+# Run Storybook
+npm run storybook
+```
 
-    -   `git commit -m "commit description"`
+## 🏗️ Architecture
 
--   Sync changes to remote
+-   **Framework**: Next.js 14 with App Router & TypeScript
+-   **Styling**: SCSS Modules with CSS Variables (Dark/Light themes)
+-   **Authentication**: NextAuth.js with OAuth account linking
+-   **Data**: Apollo GraphQL with dual endpoints (Data API + Strapi CMS)
+-   **UI**: Component-driven development with Storybook
+-   **Testing**: Chromatic for visual regression testing
 
-    -   `git push`
+## � Documentation
 
--   Once done with feature/issue locally and ready to merge to main code
-    -   Lint your code
-        -   `npm run lint`
-    -   Verify any local GraphQL changes
-        -   `npm run codegen` (if there are errors, fix them, you can use `npm run watch` to watch for changes)
-    -   Create pull request
-        -   browse to repo's pull requests page
-            -   https://github.com/Panguino/NexLab_Client/pulls
-        -   find your branch and click `New pull request` next to it
-        -   Include Monday Item ID number in the pull request template
+**→ [Complete Documentation](./docs/README.md)**
 
-# Story Point Guidelines (0.5 - 8 Points)
+### Quick Links
 
-This guide helps define story points based on time and brainpower required for tasks in Jira. The scale ranges from 0.5 (smallest task) to 8 (largest task).
+-   [🚀 Getting Started](./docs/PROJECT_OVERVIEW.md)
+-   [🧩 Component Patterns](./docs/COMPONENT_PATTERNS.md)
+-   [🎨 Coding Standards](./docs/CODING_STANDARDS.md)
+-   [🌦️ Weather Data Architecture](./docs/WEATHER_DATA_ARCHITECTURE.md)
 
-## **0.5 Points: Quick/Easy Tasks**
+## 🔧 Development
 
--   **Time**: Less than 1 hour
--   **Brainpower**: Minimal; mostly mechanical or repetitive
--   **Examples**:
-    -   Updating a single line of code (e.g., typo fixes)
-    -   Changing a color value in CSS
-    -   Adding a minor config change (e.g., updating dependencies)
--   **Ideal Use**: Tasks that require no decision-making and minimal testing.
+### Environment Setup
 
-## **1 Point: Small Tasks**
+```bash
+# Required environment variables
+NEXT_PUBLIC_API_URL=your-strapi-url
+NEXT_PUBLIC_DATA_API_URL=your-data-api-url
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+FACEBOOK_CLIENT_ID=your-facebook-client-id
+FACEBOOK_CLIENT_SECRET=your-facebook-client-secret
+NEXTAUTH_SECRET=your-secret-key
+VERCEL_URL=your-vercel-url
+VERCEL_PROTOCOL=https
+NEXT_PUBLIC_MEILISEARCH_HOST=your-meilisearch-host
+NEXT_PUBLIC_MEILISEARCH_KEY=your-meilisearch-key
 
--   **Time**: 1-2 hours
--   **Brainpower**: Low; straightforward implementation
--   **Examples**:
-    -   Adding a new button with predefined styles
-    -   Creating a simple helper function
-    -   Writing unit tests for a specific function
--   **Ideal Use**: Tasks with clear scope and no dependencies.
+# Optional integrations
+BLACKBAUD_APP_ID=your-blackbaud-app-id
+BLACKBAUD_APP_SECRET=your-blackbaud-secret
+NEXT_PUBLIC_DISCORD_CLIENT_ID=your-discord-client-id
+DISCORD_CLIENT_SECRET=your-discord-secret
+DISCORD_BOT_TOKEN=your-discord-bot-token
+DISCORD_GUILD_ID=your-discord-guild-id
+DISCORD_STANDARD_ROLE_ID=your-standard-role-id
+DISCORD_ADVANCED_ROLE_ID=your-advanced-role-id
+DISCORD_PREMIUM_ROLE_ID=your-premium-role-id
+DISCORD_SPONSOR_ROLE_ID=your-sponsor-role-id
+```
 
-## **2 Points: Slightly Larger Tasks**
+### Git Workflow
 
--   **Time**: 2-4 hours
--   **Brainpower**: Moderate; involves some decision-making or troubleshooting
--   **Examples**:
-    -   Implementing a small API call and rendering its data
-    -   Adding validation logic for a form field
-    -   Writing tests for multiple edge cases
--   **Ideal Use**: Tasks with minor complexity but still self-contained.
+```bash
+# Create feature branch
+git checkout -b feature/NXL-[Monday-ID]-[description]
 
-## **3 Points: Moderate Tasks**
+# Before PR
+npm run lint
+npm run graphql-codegen
 
--   **Time**: 4-6 hours (1 day of work)
--   **Brainpower**: Moderate to High; requires focus and multi-step processes
--   **Examples**:
-    -   Building a small component with state management
-    -   Fixing a bug in a core system where root cause analysis is required
-    -   Adjusting backend API to support a new query parameter
--   **Ideal Use**: Tasks that combine coding and debugging/testing with some risk of unexpected challenges.
+# Create PR with Monday Item ID in description
+```
 
-## **5 Points: Complex Tasks**
+## 🤖 AI-Friendly Codebase
 
--   **Time**: 1-2 days
--   **Brainpower**: High; requires deep focus and potential collaboration
--   **Examples**:
-    -   Refactoring a significant section of code
-    -   Building a new feature with multiple states and integrations
-    -   Creating a reusable component library item
--   **Ideal Use**: Tasks with multiple moving parts or significant scope requiring iterative feedback.
+This project includes comprehensive documentation designed for AI code assistants:
 
-## **8 Points: Large Tasks**
+-   Detailed architecture patterns
+-   Consistent coding standards
+-   Weather data structures
+-   Component organization
+-   Authentication flows
 
--   **Time**: 2-4 days (1 sprint max)
--   **Brainpower**: Very High; requires intense focus and/or cross-team coordination
--   **Examples**:
-    -   Implementing a new backend service or module
-    -   Building a large feature requiring backend, frontend, and state management
-    -   Performing a complex migration (e.g., database schema changes)
--   **Ideal Use**: Tasks with high complexity and uncertainty that must be broken down if they seem larger.
+See [Documentation](./docs/README.md) for complete AI context.
 
-## **Additional Guidelines**
+## 📄 License
 
--   **Avoid Tasks >8 Points**: Break them down into smaller, achievable tickets.
--   **Consider Uncertainty**: More unknowns = more points.
--   **Think in Complexity, Not Just Time**: A task taking 2 hours but requiring significant problem-solving might rate 2 or 3 points.
+[Your License Here]
