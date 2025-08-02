@@ -57,13 +57,14 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 	const setForecastSoundingMapFullScreen = useRootStore.use.setForecastSoundingMapFullScreen()
 	const forecastSoundingLastFrameDwell = useRootStore.use.forecastSoundingLastFrameDwell()
 	const forecastSoundingLastFrameDwellTime = useRootStore.use.forecastSoundingLastFrameDwellTime()
-	const forecastFrameValidTime = useRootStore.use.forecastFrameValidTime()
-	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime() // sounding location prep
-	// location prep
+	// data prep
 	const locationId = tempLocId ? decodeURIComponent(tempLocId as string) : null // removes encoding from URL, specifically commas
 	const isStationId = locationId?.length === 4 && !locationId?.includes(',')
 	const [forecastSoundingData, setForecastSoundingData] = useState([])
 	const [forecastRuns, setForecastRuns] = useState<Record<string, runsProps>>({})
+	const setForecastSoundingRunId = useRootStore.use.setForecastSoundingRunId()
+	const forecastFrameValidTime = useRootStore.use.forecastFrameValidTime()
+	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime()
 	const [startFrame, setStartFrame] = useState(0)
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const frameValidTimeRef = useRef<number | null>(null)
@@ -161,7 +162,7 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 		// find a way to change the runId in the URL without reloading the page
 		const currentURL = pathname.split('/')
 		currentURL[3] = newRun
-		router.push(currentURL.join('/'))
+		setForecastSoundingRunId(newRun) // Update the runId in the store
 	}
 
 	return (
