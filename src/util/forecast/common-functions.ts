@@ -58,3 +58,22 @@ export const buildProductsByLevel = (modelId: string, sectorId: string) => {
 
 	return productsByLevel
 }
+
+/**
+ * Calculates the forecast hour difference between two Unix timestamps
+ * and formats it as a 3-digit padded string
+ *
+ * @param runId - Unix timestamp for the model run time
+ * @param validtimeId - Unix timestamp for the valid time
+ * @returns 3-digit zero-padded hour difference string
+ */
+export const forecastHourFromUnixValidtime = (runId: number, validtimeId: number | string): string => {
+	// Calculate difference in seconds
+	const diffSeconds = (typeof validtimeId === 'string' ? parseInt(validtimeId) : validtimeId) - runId
+
+	// Convert to hours and round down to integer
+	const diffHours = Math.floor(diffSeconds / 3600)
+
+	// Pad with leading zeros to ensure 3 digits
+	return diffHours.toString().padStart(3, '0')
+}

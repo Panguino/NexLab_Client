@@ -3,8 +3,12 @@ import { getData } from '../dataCall-generic'
 export const getSoundingData = async (model, run, sector, level, product, validtime, location, parcel, weather) => {
 	// this function actually makes the request to generate a sounding
 	// location will contain '-' for longitude, so delimiter is '|' : making note because this is atypical
+	// "validtime" actually needs to be in HHH format before this point. It may be worth it to set this endpoint up
+	// so that it can accept unix timestamps, but for now we will just use the HHH format
 	const params = [run, model, sector, level, product, validtime, location, parcel, weather].join('|')
 	const endpoint = `https://weather.cod.edu/datapoints/forecast/get-sounding.php?parms=${params}`
+	// validtime needs to be converted to HHH
+	console.log('getSoundingData endpoint:', endpoint)
 	const data = await getData(endpoint)
 	if (!data.err) {
 		return {

@@ -38,6 +38,7 @@ const AnimatorControls = () => {
 		// update valid time when current frame changes
 		if (frameValidTimes && frameValidTimes.length > 0 && frameValidTimes[currentFrame] !== undefined) {
 			setFrameValidTime(frameValidTimes[currentFrame])
+			console.log('Setting store frame valid time to', frameValidTimes[currentFrame])
 		}
 	}, [currentFrame, frameValidTimes, setFrameValidTime])
 
