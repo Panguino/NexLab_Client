@@ -67,9 +67,9 @@ export const buildProductsByLevel = (modelId: string, sectorId: string) => {
  * @param validtimeId - Unix timestamp for the valid time
  * @returns 3-digit zero-padded hour difference string
  */
-export const forecastHourFromUnixValidtime = (runId: number, validtimeId: number | string): string => {
+export const forecastHourFromUnixValidtime = (runId: number, validtimeId: number): string => {
 	// Calculate difference in seconds
-	const diffSeconds = (typeof validtimeId === 'string' ? parseInt(validtimeId) : validtimeId) - runId
+	const diffSeconds = validtimeId - runId
 
 	// Convert to hours and round down to integer
 	const diffHours = Math.floor(diffSeconds / 3600)

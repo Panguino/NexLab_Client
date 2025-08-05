@@ -13,7 +13,7 @@ import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams, usePathname, useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import ForecastSoundingAnimatorSettings from '../../_animatorSettingPanels/ForecastSoundingAnimatorSettings/ForecastSoundingAnimatorSettings'
 import styles from './ForecastSoundingAnimator.module.scss'
@@ -64,13 +64,9 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 	const [forecastRuns, setForecastRuns] = useState<Record<string, runsProps>>({})
 	const setForecastSoundingRunId = useRootStore.use.setForecastSoundingRunId()
 	const [startFrame, setStartFrame] = useState(0)
-	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
-	const forecastFrameValidTime = useRootStore.use.forecastFrameValidTime()
+	const [imageInfo, setImageInfo] = useState({ width: 1180, height: 783 })
 	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime()
-	const frameValidTimeRef = useRef<number | null>(null)
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
-
-	console.log('ForecastSoundingAnimator: validtime in store', forecastFrameValidTime, 'validTimeId', validTimeId)
 
 	const getData = useCallback(async () => {
 		console.log(
@@ -102,25 +98,17 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 			// If this works then this would be where we'd make a more intelligent choice of run
 			// e.g. if runId is properly formatted but not found, we could look for the closest match
 			// ex: I don't have a 19Z but I've got an 18Z
-			console.log('ForecastSoundingAnimator: could not find runId in runs, defaulting to current run')
 			const currentRun = Object.keys(runs.runs).at(-1)
 			const baseParmString = `${currentRun}/${modelId}/${sectorId}/${levelId}/${productId}`
 			const soundingParmString = `${validTimeId}/${sanitizedLocationId}/${parcelId}/${weatherId}`
 			router.push(`/weather-data/forecast-models/${baseParmString}/sounding/${soundingParmString}`)
 		}
-
-		console.log('ForecastSoundingAnimator: runs', runs)
 		const unixRun = runs.runs[runId as string].unix
-		const paddedForecastHour = forecastHourFromUnixValidtime(unixRun, validTimeId) // this is kind of a bandaid solution, see get snd fn for details
+		const typeSafeValidTimeId = parseInt(validTimeId as string)
+		const paddedForecastHour = forecastHourFromUnixValidtime(unixRun, typeSafeValidTimeId) // this is kind of a bandaid solution, see get snd fn for details
 		const data = await getSoundingData(modelId, runId, sectorId, levelId, productId, paddedForecastHour, sanitizedLocationId, parcelId, weatherId)
-		const sanitizedValidTimeId = data.validtimes.indexOf(validTimeId) !== -1 ? validTimeId : data.validtimes[0] // Fallback to first valid time if not found
-		const currentFrameValidTime = frameValidTimeRef.current || sanitizedValidTimeId // Use the current frame valid time or the first valid time if not set
-
-		console.log('ForecastSoundingAnimator: Data fetched', data)
-		console.log('ForecastSoundingAnimator: valid Time', currentFrameValidTime)
-		console.log('ForecastSoundingAnimator: validtimes', data.validtimes)
-		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, currentFrameValidTime)
-		console.log('The index of start frame is', closestValidTimeIndex)
+		const sanitizedValidTimeId = data.validtimes.indexOf(typeSafeValidTimeId) !== -1 ? typeSafeValidTimeId : data.validtimes[0] // Fallback to first valid time if not found
+		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, sanitizedValidTimeId)
 
 		setStartFrame(closestValidTimeIndex)
 		setImageInfo(data.imageInfo)
@@ -146,18 +134,7 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 
 	useEffect(() => {
 		getData()
-	}, [runId, modelId, sectorId, levelId, productId, getData])
-
-	useEffect(() => {
-		console.log(
-			'sounding forecast valid time useEffect',
-			'forecastFrameValidTime',
-			forecastFrameValidTime,
-			'frameValidTimeRef.current',
-			frameValidTimeRef.current,
-		)
-		frameValidTimeRef.current = forecastFrameValidTime
-	}, [forecastFrameValidTime])
+	}, [runId, modelId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, getData])
 
 	useEffect(() => {
 		setForecastSoundingZoomFill(isMobile)
