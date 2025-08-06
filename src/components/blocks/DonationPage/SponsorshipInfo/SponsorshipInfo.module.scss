@@ -1,0 +1,134 @@
+@import '/src/styles/vars';
+
+.sponsorship {
+	padding: 80px 0;
+	background: linear-gradient(135deg, var(--color-steel2-steel8) 0%, var(--color-steel3-steel9) 100%);
+	position: relative;
+	overflow: hidden;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 60px 0;
+	}
+}
+
+.container {
+	position: relative;
+	z-index: 2;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.header {
+	text-align: center;
+	margin-bottom: 60px;
+
+	h2 {
+		color: var(--color-grey20-grey0);
+		font-size: 36px;
+		font-weight: 700;
+		margin: 0 0 24px 0;
+		transition: color var(--themeChange);
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 28px;
+		}
+	}
+
+	p {
+		color: var(--color-grey16-grey4);
+		font-size: 16px;
+		line-height: 1.6;
+		max-width: 800px;
+		margin: 0 auto;
+		transition: color var(--themeChange);
+	}
+}
+
+.benefitsList {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+	gap: 32px;
+	margin-bottom: 60px;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		grid-template-columns: 1fr;
+		gap: 24px;
+		margin-bottom: 40px;
+	}
+}
+
+.benefitItem {
+	display: flex;
+	align-items: flex-start;
+	gap: 20px;
+	padding: 32px;
+	background-color: var(--color-white-grey17);
+	border-radius: 16px;
+	border: 1px solid var(--color-grey3-grey14);
+	transition: all var(--themeChange);
+	position: relative;
+	overflow: hidden;
+
+	@media (max-width: 480px) {
+		padding: 24px;
+		gap: 16px;
+	}
+}
+
+.benefitIcon {
+	flex-shrink: 0;
+	width: 56px;
+	height: 56px;
+	background-color: var(--color-blue3);
+	border-radius: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--color-white);
+	font-size: 22px;
+
+	@media (max-width: 480px) {
+		width: 48px;
+		height: 48px;
+		font-size: 20px;
+	}
+}
+
+.benefitContent {
+	flex: 1;
+
+	h4 {
+		color: var(--color-grey20-grey0);
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0 0 12px 0;
+		transition: color var(--themeChange);
+
+		@media (max-width: 480px) {
+			font-size: 18px;
+		}
+	}
+
+	p {
+		color: var(--color-grey16-grey4);
+		font-size: 14px;
+		line-height: 1.6;
+		margin: 0;
+		transition: color var(--themeChange);
+	}
+}
+
+.cta {
+	text-align: center;
+	display: table;
+	margin: 0 auto;
+}
+
+.ctaLink {
+	text-decoration: none;
+
+	&:hover {
+		text-decoration: none;
+	}
+}

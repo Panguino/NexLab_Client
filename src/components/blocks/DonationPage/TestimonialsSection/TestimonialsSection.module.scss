@@ -1,0 +1,155 @@
+@import '/src/styles/vars';
+
+.testimonials {
+	padding: 80px 0;
+	background-color: var(--color-white-grey19);
+	transition: background-color var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 60px 0;
+	}
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.header {
+	text-align: center;
+	margin-bottom: 60px;
+
+	h2 {
+		color: var(--color-grey20-grey0);
+		font-size: 36px;
+		font-weight: 700;
+		margin: 0 0 16px 0;
+		transition: color var(--themeChange);
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 28px;
+		}
+	}
+
+	p {
+		color: var(--color-grey16-grey5);
+		font-size: 16px;
+		line-height: 1.6;
+		margin: 0;
+		transition: color var(--themeChange);
+	}
+}
+
+.testimonialsGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+	gap: 32px;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+}
+
+.testimonial {
+	background-color: var(--color-grey0-grey18);
+	border-radius: 16px;
+	padding: 32px;
+	position: relative;
+	border: 1px solid var(--color-grey3-grey15);
+	transition: all var(--themeChange);
+
+	@media (max-width: 480px) {
+		padding: 24px;
+	}
+}
+
+.quoteIcon {
+	position: absolute;
+	top: 20px;
+	right: 24px;
+	color: var(--color-blue3-blue4);
+	font-size: 24px;
+	opacity: 0.3;
+
+	@media (max-width: 480px) {
+		top: 16px;
+		right: 20px;
+		font-size: 20px;
+	}
+}
+
+.quote {
+	color: var(--color-grey18-grey2);
+	font-size: 16px;
+	line-height: 1.6;
+	font-style: italic;
+	margin: 0 0 24px 0;
+	padding-right: 40px;
+	transition: color var(--themeChange);
+
+	@media (max-width: 480px) {
+		font-size: 14px;
+		padding-right: 32px;
+	}
+}
+
+.author {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.avatar {
+	flex-shrink: 0;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	overflow: hidden;
+	border: 2px solid var(--color-blue3-blue4);
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	@media (max-width: 480px) {
+		width: 40px;
+		height: 40px;
+	}
+}
+
+.authorInfo {
+	flex: 1;
+}
+
+.name {
+	display: block;
+	color: var(--color-grey20-grey0);
+	font-size: 16px;
+	font-weight: 600;
+	font-style: normal;
+	margin: 0 0 4px 0;
+	transition: color var(--themeChange);
+
+	@media (max-width: 480px) {
+		font-size: 14px;
+	}
+}
+
+.title {
+	display: block;
+	color: var(--color-grey14-grey6);
+	font-size: 14px;
+	font-weight: 400;
+	font-style: normal;
+	margin: 0;
+	transition: color var(--themeChange);
+
+	@media (max-width: 480px) {
+		font-size: 12px;
+	}
+}
