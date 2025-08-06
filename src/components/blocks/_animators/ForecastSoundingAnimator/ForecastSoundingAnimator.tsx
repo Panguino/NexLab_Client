@@ -110,6 +110,8 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 		const sanitizedValidTimeId = data.validtimes.indexOf(typeSafeValidTimeId) !== -1 ? typeSafeValidTimeId : data.validtimes[0] // Fallback to first valid time if not found
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, sanitizedValidTimeId)
 
+		console.log('ForecastSoundingAnimator: Data fetched', data)
+
 		setStartFrame(closestValidTimeIndex)
 		setImageInfo(data.imageInfo)
 		setForecastSoundingData(data.frames)

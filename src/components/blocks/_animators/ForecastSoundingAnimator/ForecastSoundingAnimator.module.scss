@@ -1,4 +1,4 @@
-.forecastAnimatorContainer {
+.forecastSoundingAnimatorContainer {
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -8,7 +8,7 @@
 	overflow: hidden;
 }
 
-.forecastAnimator {
+.forecastSoundingAnimator {
 	flex-grow: 1;
 	max-height: 100%;
 	display: flex;
