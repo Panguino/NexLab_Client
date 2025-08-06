@@ -36,14 +36,15 @@ $themes: (
 		'steel9': #2b3740,
 		'steel10': #151a1e,
 		// blues
+		'blue0': #d5e2ee,
 		'blue1': #8aadcf,
 		'blue2': #233544,
 		'blue3': #2677f0,
 		'blue4': #0ec5ff,
 		'blue5': #154da1,
 		'blue6': #0c2a58,
-		'blue7': #080d29,
-	),
+		'blue7': #080d29
+	)
 );
 
 @mixin theme() {

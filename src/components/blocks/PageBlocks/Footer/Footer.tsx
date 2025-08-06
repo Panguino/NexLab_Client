@@ -1,9 +1,24 @@
+'use client'
 import { getFooterContent } from '@/apollo/strapi/getFooterContent'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import styles from './Footer.module.scss'
 
-export const Footer = async () => {
-	const footerData = await getFooterContent()
+export const Footer = () => {
+	const [footerData, setFooterData] = useState(null)
+
+	useEffect(() => {
+		const fetchFooterData = async () => {
+			const data = await getFooterContent()
+			setFooterData(data)
+		}
+		fetchFooterData()
+	}, [])
+
+	if (!footerData) {
+		return <div className={styles.footer}>Loading...</div>
+	}
+
 	return (
 		<div className={styles.footer}>
 			<div className={styles.container}>

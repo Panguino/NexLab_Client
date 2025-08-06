@@ -3,11 +3,15 @@
 import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { signIn } from 'next-auth/react'
+import { useSearchParams } from 'next/navigation'
 import styles from './AuthButtons.module.scss'
 
 export function GoogleSignInButton() {
+	const searchParams = useSearchParams()
+	const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+
 	const handleClick = () => {
-		signIn('google', { callbackUrl: '/dashboard' })
+		signIn('google', { callbackUrl })
 	}
 
 	return (
@@ -18,8 +22,11 @@ export function GoogleSignInButton() {
 	)
 }
 export function FacebookSignInButton() {
+	const searchParams = useSearchParams()
+	const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+
 	const handleClick = () => {
-		signIn('facebook')
+		signIn('facebook', { callbackUrl })
 	}
 
 	return (

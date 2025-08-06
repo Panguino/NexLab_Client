@@ -10,7 +10,7 @@ const Page = async () => {
 	}
 	return (
 		<PageContentWrapper>
-			<h1>Dashaboard</h1>
+			<h1>Profile Dashboard</h1>
 			<DashboardSettings />
 		</PageContentWrapper>
 	)
