@@ -44,6 +44,7 @@ const ForecastSoundingsSidebarPanel = () => {
 	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
 	const [returnLink, setReturnLink] = useState('')
 	const forecastSoundingRunId = useRootStore.use.forecastSoundingRunId() // this version from the store helps to keep the sidebar in sync with the animator
+	const forecastSoundingValidTime = useRootStore.use.forecastFrameValidTime()
 
 	const sanitizeCollectAndSetData = useCallback(async () => {
 		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
@@ -136,6 +137,12 @@ const ForecastSoundingsSidebarPanel = () => {
 			setAllowGenerateSounding(true)
 		}
 	}, [forecastSoundingRunId, runId])
+	useEffect(() => {
+		if (forecastSoundingValidTime && forecastSoundingValidTime !== validTimeId) {
+			// serves the same function as these other handlers, but specifically for the validTimeId because it comes from the animator
+			setAllowGenerateSounding(true)
+		}
+	}, [forecastSoundingValidTime, validTimeId])
 	const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.value !== internalLocationId) {
 			setInternalLocationId(e.target.value)
@@ -159,6 +166,7 @@ const ForecastSoundingsSidebarPanel = () => {
 			allowGenerateSounding: allowGenerateSounding,
 			internalModelId: internalModelId !== modelId,
 			forecastSoundingRunId: forecastSoundingRunId !== runId,
+			forecastSoundingValidTime: forecastSoundingValidTime !== validTimeId,
 			internalLocationId: internalLocationId !== locationId,
 			internalParcelId: internalParcelId !== parcelId,
 			internalWeatherId: internalWeatherId !== weatherId,
@@ -167,12 +175,13 @@ const ForecastSoundingsSidebarPanel = () => {
 			allowGenerateSounding &&
 			(internalModelId !== modelId ||
 				forecastSoundingRunId !== runId ||
+				forecastSoundingValidTime !== validTimeId ||
 				internalLocationId !== locationId ||
 				internalParcelId !== parcelId ||
 				internalWeatherId !== weatherId)
 		) {
 			const baseParmsString = `${forecastSoundingRunId}/${internalModelId}/${sectorId}/${levelId}/${productId}`
-			const soundingParmsString = `${validTimeId}/${internalLocationId}/${internalParcelId}/${internalWeatherId}`
+			const soundingParmsString = `${forecastSoundingValidTime}/${internalLocationId}/${internalParcelId}/${internalWeatherId}`
 			router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
 		} else {
 			alert(
