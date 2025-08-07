@@ -1,3 +1,4 @@
+import WeatherBalloonIcon from '@/components/icons/WeatherBalloonIcon'
 import {
 	faCompress,
 	faDownLeftAndUpRightToCenter,
@@ -53,6 +54,9 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 			</button>
 			<button onClick={() => fullScreenToggle()}>
 				<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
+			</button>
+			<button onClick={() => console.log('sounding')}>
+				<WeatherBalloonIcon />
 			</button>
 		</div>
 	)
