@@ -15,7 +15,6 @@ const SlideoutPanel = () => {
 	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
 	const currentSlideoutPanel = useRootStore.use.currentSlideoutPanel()
 	const closeSlideoutPanel = useRootStore.use.closeSlideoutPanel()
-	const productInfoId = useRootStore.use.productInfoId()
 
 	const [hovering, setHovering] = useState(false)
 	//router
@@ -34,7 +33,7 @@ const SlideoutPanel = () => {
 			case SEARCH_RESULTS_SLIDEOUT:
 				return <Meilisearch />
 			case PRODUCT_INFO_SLIDEOUT:
-				return <ProductInfoPanel id={productInfoId} />
+				return <ProductInfoPanel />
 			default:
 				return <></>
 		}

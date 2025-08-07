@@ -1,12 +1,9 @@
 import { getProductInfoById } from '@/apollo/strapi/getProductInfoById'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import { useRootStore } from '@/store/useRootStore'
 import { useEffect, useState } from 'react'
 import ProductInfo from './ProductInfo/ProductInfo'
 import styles from './ProductInfoPanel.module.scss'
-
-interface ProductInfoPanelProps {
-	id: string
-}
 
 // TODO: Replace with actual fetch logic for product info by id
 const fetchProductInfoById = async (id: string) => {
@@ -14,16 +11,17 @@ const fetchProductInfoById = async (id: string) => {
 	return info
 }
 
-export const ProductInfoPanel = ({ id }: ProductInfoPanelProps) => {
+export const ProductInfoPanel = () => {
 	const [info, setInfo] = useState<any>(null)
+	const productInfoId = useRootStore.use.productInfoId()
 
 	useEffect(() => {
-		if (id) {
-			fetchProductInfoById(id).then(setInfo)
+		if (productInfoId) {
+			fetchProductInfoById(productInfoId).then(setInfo)
 		}
-	}, [id])
+	}, [productInfoId])
 
-	if (!id || id === '') return null
+	if (!productInfoId || productInfoId === '') return null
 	if (!info) return null
 
 	return (
