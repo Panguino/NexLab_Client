@@ -23,6 +23,7 @@ export const ProductInfoPanel = ({ id }: ProductInfoPanelProps) => {
 		}
 	}, [id])
 
+	if (!id || id === '') return null
 	if (!info) return null
 
 	return (
