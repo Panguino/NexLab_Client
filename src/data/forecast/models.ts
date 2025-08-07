@@ -86,6 +86,7 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 6,
+		allowForecastSounding: false,
 	},
 	[FORECAST_RAP_ID]: {
 		name: 'RAP',
@@ -114,6 +115,7 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
+		allowForecastSounding: true,
 	},
 	[FORECAST_NAM_ID]: {
 		name: 'NAM',
@@ -144,6 +146,7 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
+		allowForecastSounding: true,
 	},
 	[FORECAST_NAMNST_ID]: {
 		name: 'NAMNST',
@@ -172,6 +175,7 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
+		allowForecastSounding: true,
 	},
 	[FORECAST_RDPS_ID]: {
 		name: 'RDPS',
@@ -199,6 +203,7 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
+		allowForecastSounding: false,
 	},
 	[FORECAST_GDPS_ID]: {
 		name: 'GDPS',
@@ -247,6 +252,7 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
+		allowForecastSounding: false,
 	},
 	[FORECAST_GFS_ID]: {
 		name: 'GFS',
@@ -281,6 +287,7 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_TEMP_ID,
 		},
 		runsPerRow: 4,
+		allowForecastSounding: true,
 	},
 	[FORECAST_CFS_ID]: {
 		name: 'CFS',
@@ -313,6 +320,7 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_CAPE1000_ID,
 		},
 		runsPerRow: 4,
+		allowForecastSounding: false,
 	},
 	[FORECAST_GEFS_ID]: {
 		name: 'GEFS',
@@ -337,5 +345,6 @@ export const FORECAST_MODELS = {
 			product: FORECAST_PRODUCT_CAPE1000_ID,
 		},
 		runsPerRow: 4,
+		allowForecastSounding: false,
 	},
 }

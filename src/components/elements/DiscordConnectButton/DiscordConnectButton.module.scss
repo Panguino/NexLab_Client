@@ -1,0 +1,119 @@
+.connectButton {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    border: 2px solid #5865f2;
+    border-radius: 8px;
+    background-color: #5865f2;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+
+    &:hover {
+        background-color: #4752c4;
+        border-color: #4752c4;
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        background-color: var(--color-grey10-grey14);
+        border-color: var(--color-grey10-grey14);
+        color: var(--color-grey14-grey10);
+        cursor: not-allowed;
+        transform: none;
+
+        &:hover {
+            background-color: var(--color-grey10-grey14);
+            border-color: var(--color-grey10-grey14);
+            transform: none;
+        }
+    }
+
+    svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.connectedStatus {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 20px;
+    border: 2px solid var(--color-green5-green4);
+    border-radius: 12px;
+    background-color: var(--color-green1-green8);
+    transition: all var(--themeChange);
+
+    .userInfo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid var(--color-green5-green4);
+    }
+
+    .discordIcon {
+        width: 20px;
+        height: 20px;
+        color: #5865f2;
+    }
+
+    .userDetails {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .connectedText {
+        font-size: 12px;
+        color: var(--color-green7-green2);
+        font-weight: 500;
+    }
+
+    .username {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--color-green8-green1);
+    }
+
+    .disconnectButton {
+        display: table;
+        margin-top: 3px;
+        padding: 8px 16px;
+        border: 1px solid #a70b0b;
+        border-radius: 6px;
+        background-color: transparent;
+        color: var(--color-red7-red3);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--themeChange);
+
+        &:hover {
+            background-color: #a70b0b;
+            border-color: #a70b0b;
+            color: #fff;
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+    }
+}

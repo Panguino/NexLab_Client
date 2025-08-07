@@ -10,6 +10,7 @@ import { FORECAST_PRODUCTS } from '@/data/forecast/products'
 import { FORECAST_REGIONS } from '@/data/forecast/regions'
 import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import { useRootStore } from '@/store/useRootStore'
+import { fetchFloaterSectorData } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
@@ -25,13 +26,7 @@ const ForecastSidebarPanel = () => {
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
 	const [regionId, setRegionId] = useState('')
-	const {
-		forecastRunId: runId,
-		forecastModelId: modelId,
-		forecastSectorId: sectorId,
-		forecastLevelId: levelId,
-		forecastProductId: productId,
-	} = useParams()
+	const { fcstModel: modelId, fcstRun: runId, fcstSector: sectorId, fcstLevel: levelId, fcstProduct: productId } = useParams()
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
 	const openIndexRef = useRef<number | null>(null)
 
@@ -76,19 +71,6 @@ const ForecastSidebarPanel = () => {
 			router.push(`/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`)
 		})
 	}, [runId, modelId, levelId, productId, closeSectorSelectorPanel, router, updateOnChangeSectorSelectorSectorHandler])
-
-	const fetchFloaterSectorData = async () => {
-		try {
-			const response = await fetch('https://weather.cod.edu/datapoints/forecast/get-floaters.php')
-			if (!response.ok) {
-				throw new Error(`Failed to fetch sector data: ${response.status} ${response.statusText}`)
-			}
-			return await response.json()
-		} catch (error) {
-			console.error('Error fetching sector data:', error)
-			return null
-		}
-	}
 
 	useEffect(() => {
 		if (sectorSelectorPanelIsOpen) {

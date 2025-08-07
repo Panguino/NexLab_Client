@@ -64,8 +64,6 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, debug = f
 	useEffect(() => {
 		if (!hoverRef.current || !isHovering || isPlaying || !frameReadoutData?.dataTypes?.length) return
 
-		console.log(frameReadoutData)
-
 		// Retrieve native image size and current size
 		const { width: nativeWidth, height: nativeHeight } = imageInfo
 		const containerRect = hoverRef.current.getBoundingClientRect()

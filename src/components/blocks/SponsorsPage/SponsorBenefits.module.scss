@@ -1,0 +1,73 @@
+@import '/src/styles/vars';
+
+.sponsorBenefits {
+    padding: 70px 0 50px 0;
+    background: var(--color-grey1-grey20);
+    color: var(--color-grey20-grey0);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.benefitCategory {
+    .benefitPanelGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 32px;
+        margin-top: 40px;
+    }
+
+    .benefitPanel {
+        background: var(--color-grey2-grey18);
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+        padding: 36px 28px 28px 28px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: box-shadow 0.2s, background 0.2s;
+        position: relative;
+        &:hover {
+            box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+            background: var(--color-grey3-grey17);
+        }
+        h3 {
+            color: var(--color-blue4);
+            font-size: 1.15rem;
+            margin: 18px 0 14px 0;
+            text-align: center;
+        }
+        ul {
+            margin: 0;
+            padding-left: 0;
+            color: var(--color-grey18);
+            list-style: none;
+            li {
+                margin-bottom: 10px;
+                font-size: 1rem;
+                strong {
+                    color: var(--color-blue3);
+                }
+            }
+        }
+    }
+
+    .panelIcon {
+        width: 54px;
+        height: 54px;
+        background: linear-gradient(135deg, var(--color-blue3) 0%, var(--color-blue4) 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-white);
+        font-size: 2rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+        position: absolute;
+        top: -27px;
+        left: 50%;
+        transform: translateX(-50%);
+    }

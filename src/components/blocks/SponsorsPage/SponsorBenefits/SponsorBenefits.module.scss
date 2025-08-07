@@ -1,0 +1,107 @@
+@import '/src/styles/vars';
+
+.sponsorBenefits {
+    padding: 80px 0;
+    background: var(--color-grey1-grey20);
+    color: var(--color-grey20-grey0);
+    transition:
+        background-color var(--themeChange),
+        color var(--themeChange);
+
+    h2 {
+        text-align: center;
+        font-size: 42px;
+        font-weight: 600;
+        margin: 0 0 48px 0;
+        color: var(--color-blue6-white);
+        transition: color var(--themeChange);
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.benefitPanelGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-top: 0;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+}
+
+.benefitPanel {
+    background: var(--color-white-grey18);
+    border: 1px solid var(--color-grey3-grey16);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s,
+        background-color var(--themeChange),
+        border-color var(--themeChange);
+    break-inside: avoid;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    h3 {
+        font-size: 32px;
+        font-weight: 400;
+        margin: 16px 0 20px 0;
+        color: var(--color-blue6-white);
+        transition: color var(--themeChange);
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            margin-bottom: 16px;
+            padding-left: 24px;
+            position: relative;
+            line-height: 1.6;
+            color: var(--color-grey16-grey4);
+            transition: color var(--themeChange);
+
+            &:before {
+                content: '✓';
+                position: absolute;
+                left: 0;
+                color: var(--color-green5-green4);
+                font-weight: bold;
+                font-size: 16px;
+                transition: color var(--themeChange);
+            }
+
+            strong {
+                color: var(--color-grey20-grey0);
+                font-weight: 600;
+                transition: color var(--themeChange);
+            }
+        }
+    }
+}
+
+.panelIcon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--color-blue5) 0%, var(--color-blue7) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+}
