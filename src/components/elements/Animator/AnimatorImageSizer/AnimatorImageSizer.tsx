@@ -1,6 +1,6 @@
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { useAnimator } from '../Animator'
 import { AnimatorImageMachine } from '../AnimatorImageMachine/AnimatorImageMachine'
@@ -28,6 +28,7 @@ const AnimatorImageSizer = () => {
 	} = useAnimator()
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
+	const [imagePosition, setImagePosition] = useState({ xPercent: 0, yPercent: 0 })
 	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }, updateDimensions] = useDimensions(ratio, !zoomFill)
 
 	const allOverlayImages = useMemo(() => {
@@ -78,13 +79,9 @@ const AnimatorImageSizer = () => {
 		}
 		// I know this is stupid, but it works
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
-	const handleImageClick = (event: React.MouseEvent) => {
+	const handleImageClick = () => {
 		if (soundingsPickerMode) {
-			const rect = event.currentTarget.getBoundingClientRect()
-			const x = event.clientX - rect.left
-			const y = event.clientY - rect.top
-
-			console.log('Sounding location clicked:', { x, y })
+			console.log('Picked Image Location', imagePosition)
 			setSoundingsPickerMode(false) // Exit pick mode after selection
 		}
 	}
@@ -136,7 +133,7 @@ const AnimatorImageSizer = () => {
 								)
 							})}
 						</TransformComponent>
-						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} />
+						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} onUpdatePosition={setImagePosition} />
 
 						{!hideZoomControls && !disableZoom && <ImageControls zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />}
 					</>

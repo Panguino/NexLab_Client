@@ -6,10 +6,11 @@ import styles from './DataTooltip.module.scss' // Import tooltip-specific styles
 interface DataTooltipProps {
 	hoverRef: React.RefObject<HTMLDivElement>
 	frameRef: React.RefObject<HTMLDivElement>
+	onUpdatePosition: (position: { xPercent: number; yPercent: number }) => void
 	debug?: boolean
 }
 
-const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, debug = false }) => {
+const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdatePosition, debug = false }) => {
 	const { loadedFrames, currentFrame, requestReadoutData, enableReadouts, isPlaying, isLoadingReadoutData, frameReadoutData, imageInfo } =
 		useAnimator()
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -100,6 +101,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, debug = f
 		const percentageX = Math.max(0, Math.min(0.999, rawPercentageX))
 		const percentageY = Math.max(0, Math.min(0.999, rawPercentageY))
 		setPercentagePosition({ xPercent: percentageX, yPercent: percentageY, rawPercentageX, rawPercentageY })
+		onUpdatePosition({ xPercent: rawPercentageX, yPercent: rawPercentageY })
 
 		try {
 			const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc, dataType) => {
@@ -116,7 +118,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, debug = f
 			console.log(rawPercentageX, rawPercentageY, percentageX, percentageY)
 			console.error('Error processing readout data:', error)
 		}
-	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo])
+	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo, onUpdatePosition])
 
 	useEffect(() => {
 		const handleMouseMove = (e) => {
