@@ -92,6 +92,10 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 		frameValidTimeRef.current = forecastFrameValidTime
 	}, [forecastFrameValidTime])
 
+	const onSoundingsClickthrough = ({ xPercent, yPercent }) => {
+		console.log('ForecastAnimator: Soundings Clickthrough', xPercent, yPercent)
+	}
+
 	// Add this handler function
 	const handleReadoutDataRequest = useCallback(
 		(frameIndex) => {
@@ -190,6 +194,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 						soundingsPicker={true}
 						soundingsPickerMode={forecastSoundingsPickMode}
 						setSoundingsPickerMode={setForecastSoundingsPickMode}
+						onSoundingsClickthrough={onSoundingsClickthrough}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastAnimatorSettings refreshData={getData} />

@@ -25,6 +25,7 @@ const AnimatorImageSizer = () => {
 		hideZoomControls,
 		soundingsPickerMode,
 		setSoundingsPickerMode,
+		onSoundingsClickthrough,
 	} = useAnimator()
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
@@ -81,7 +82,7 @@ const AnimatorImageSizer = () => {
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
 	const handleImageClick = () => {
 		if (soundingsPickerMode) {
-			console.log('Picked Image Location', imagePosition)
+			onSoundingsClickthrough(imagePosition)
 			setSoundingsPickerMode(false) // Exit pick mode after selection
 		}
 	}
