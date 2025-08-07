@@ -28,11 +28,6 @@ interface runsProps {
 }
 
 const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ productInfo }) => {
-	// This first pass of the sounding animator should be unable to modify run and valid time
-	// simply display what you can retrieve from the API with the current URL params
-	// we have 2 problems to solve:
-	// 1. how to change run and valid time without routing but also communicating those changes to the sidebar
-	// 2. displaying an animator that has empty frames if the data is not available for the valid time
 	const { isMobile } = useIsMobile()
 	const router = useRouter()
 	const pathname = usePathname()
@@ -69,18 +64,6 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
 
 	const getData = useCallback(async () => {
-		console.log(
-			'ForecastSoundingAnimator: Fetching data',
-			modelId,
-			runId,
-			sectorId,
-			levelId,
-			productId,
-			validTimeId,
-			locationId,
-			parcelId,
-			weatherId,
-		)
 		// Location need special handling as it can accept either station ID or lat,lon format
 		let sanitizedLocationId = locationId
 		if (isStationId) {
@@ -103,14 +86,12 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 			const soundingParmString = `${validTimeId}/${sanitizedLocationId}/${parcelId}/${weatherId}`
 			router.push(`/weather-data/forecast-models/${baseParmString}/sounding/${soundingParmString}`)
 		}
-		const unixRun = runs.runs[runId as string].unix
+		const unixRun = runs.runs[runId as string]?.unix
 		const typeSafeValidTimeId = parseInt(validTimeId as string)
 		const paddedForecastHour = forecastHourFromUnixValidtime(unixRun, typeSafeValidTimeId) // this is kind of a bandaid solution, see get snd fn for details
 		const data = await getSoundingData(modelId, runId, sectorId, levelId, productId, paddedForecastHour, sanitizedLocationId, parcelId, weatherId)
 		const sanitizedValidTimeId = data.validtimes.indexOf(typeSafeValidTimeId) !== -1 ? typeSafeValidTimeId : data.validtimes[0] // Fallback to first valid time if not found
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, sanitizedValidTimeId)
-
-		console.log('ForecastSoundingAnimator: Data fetched', data)
 
 		setStartFrame(closestValidTimeIndex)
 		setImageInfo(data.imageInfo)

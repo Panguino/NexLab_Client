@@ -18,8 +18,15 @@ interface RunSelectorProps {
 export const RunSelector: React.FC<RunSelectorProps> = ({ runs, run, runsPerRow = 4, onSelect }) => {
 	const [isOpen, setIsOpen] = useState(false)
 	const dropdownRef = useRef<HTMLDivElement>(null)
-	const selectedRunLabel = runs.find((r) => r.value === run)?.label || 'Select a Run'
-	const arrowDirection = isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+	const [selectedRunLabel, setSelectedRunLabel] = useState<string | null>('Select a Run')
+	const [activeRun, setActiveRun] = useState<string | null>(run)
+
+	useEffect(() => {
+		if (run) {
+			const selectedRun = runs.find((r) => r.value === run)
+			setSelectedRunLabel(selectedRun?.label || 'Select a Run')
+		}
+	}, [run, runs])
 
 	const groupedRuns = runs.reduce(
 		(acc, currentRun) => {
@@ -57,11 +64,17 @@ export const RunSelector: React.FC<RunSelectorProps> = ({ runs, run, runsPerRow 
 		}
 	}, [])
 
+	const doInternalOnSelect = (selectedRun: string) => {
+		onSelect(selectedRun)
+		setActiveRun(selectedRun)
+		setSelectedRunLabel(runs.find((r) => r.value === selectedRun)?.label || 'Select a Run')
+	}
+
 	return (
 		<div className={styles.runSelector}>
 			<div className={styles.runSelectorButton} onClick={() => setIsOpen(!isOpen)}>
 				<span>Run: {selectedRunLabel || 'Select a Run'}</span>{' '}
-				<motion.div className={styles.arrow} animate={{ transform: `${arrowDirection}` }}>
+				<motion.div className={styles.arrow} animate={{ transform: `${isOpen ? 'rotate(180deg)' : 'rotate(0deg)'}` }}>
 					<FontAwesomeIcon icon={faChevronDown} />
 				</motion.div>
 			</div>
@@ -83,9 +96,9 @@ export const RunSelector: React.FC<RunSelectorProps> = ({ runs, run, runsPerRow 
 												{rowChunk.map(({ zValue, run: { value } }) => (
 													<div
 														key={value}
-														className={`${styles.runSelectorCell} ${value === run ? styles.active : ''}`}
+														className={`${styles.runSelectorCell} ${value === activeRun ? styles.active : ''}`}
 														onClick={() => {
-															onSelect(value)
+															doInternalOnSelect(value)
 															setIsOpen(false)
 														}}
 													>

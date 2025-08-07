@@ -7,8 +7,6 @@ export const getSoundingData = async (model, run, sector, level, product, validt
 	// so that it can accept unix timestamps, but for now we will just use the HHH format
 	const params = [run, model, sector, level, product, validtime, location, parcel, weather].join('|')
 	const endpoint = `https://weather.cod.edu/datapoints/forecast/get-sounding.php?parms=${params}`
-	// validtime needs to be converted to HHH
-	console.log('getSoundingData endpoint:', endpoint)
 	const data = await getData(endpoint)
 	if (!data.err) {
 		return {

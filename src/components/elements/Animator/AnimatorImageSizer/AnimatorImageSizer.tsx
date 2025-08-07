@@ -75,7 +75,6 @@ const AnimatorImageSizer = () => {
 			transformRef.current.setTransform(initialZoomState.positionX, initialZoomState.positionY, initialZoomState.scale, 0)
 		}
 		// I know this is stupid, but it works
-		console.log('AnimatorImageSizer useLayoutEffect', { _width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen })
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
 
 	return (

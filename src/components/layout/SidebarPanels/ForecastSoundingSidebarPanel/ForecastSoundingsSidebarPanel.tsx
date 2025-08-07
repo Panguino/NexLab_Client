@@ -162,15 +162,6 @@ const ForecastSoundingsSidebarPanel = () => {
 		}
 	}
 	const handleGenerateSounding = () => {
-		console.log('conditions to be tested', {
-			allowGenerateSounding: allowGenerateSounding,
-			internalModelId: internalModelId !== modelId,
-			forecastSoundingRunId: forecastSoundingRunId !== runId,
-			forecastSoundingValidTime: forecastSoundingValidTime !== validTimeId,
-			internalLocationId: internalLocationId !== locationId,
-			internalParcelId: internalParcelId !== parcelId,
-			internalWeatherId: internalWeatherId !== weatherId,
-		})
 		if (
 			allowGenerateSounding &&
 			(internalModelId !== modelId ||
