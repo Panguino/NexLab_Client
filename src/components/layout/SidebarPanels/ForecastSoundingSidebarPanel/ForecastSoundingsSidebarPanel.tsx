@@ -11,6 +11,7 @@ import {
 	FORECAST_SOUNDING_PARCEL_OPTIONS,
 	FORECAST_SOUNDING_WEATHER_OPTIONS,
 } from '@/data/forecast/soundingOptions'
+import { useRootStore } from '@/store/useRootStore'
 import { buildProductsByLevel, fetchStationCoordinates } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
@@ -42,6 +43,8 @@ const ForecastSoundingsSidebarPanel = () => {
 	const [internalWeatherId, setInternalWeatherId] = useState(weatherId)
 	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
 	const [returnLink, setReturnLink] = useState('')
+	const forecastSoundingRunId = useRootStore.use.forecastSoundingRunId() // this version from the store helps to keep the sidebar in sync with the animator
+	const forecastSoundingValidTime = useRootStore.use.forecastFrameValidTime()
 
 	const sanitizeCollectAndSetData = useCallback(async () => {
 		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
@@ -128,6 +131,18 @@ const ForecastSoundingsSidebarPanel = () => {
 			setAllowGenerateSounding(true)
 		}
 	}
+	useEffect(() => {
+		if (forecastSoundingRunId && forecastSoundingRunId !== runId) {
+			// serves the same function as these other handlers, but specifically for the runId because it comes from the animator
+			setAllowGenerateSounding(true)
+		}
+	}, [forecastSoundingRunId, runId])
+	useEffect(() => {
+		if (forecastSoundingValidTime && forecastSoundingValidTime !== validTimeId) {
+			// serves the same function as these other handlers, but specifically for the validTimeId because it comes from the animator
+			setAllowGenerateSounding(true)
+		}
+	}, [forecastSoundingValidTime, validTimeId])
 	const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.value !== internalLocationId) {
 			setInternalLocationId(e.target.value)
@@ -147,19 +162,17 @@ const ForecastSoundingsSidebarPanel = () => {
 		}
 	}
 	const handleGenerateSounding = () => {
-		console.log('conditions to be tested', {
-			allowGenerateSounding: allowGenerateSounding,
-			internalModelId: internalModelId !== modelId,
-			internalLocationId: internalLocationId !== locationId,
-			internalParcelId: internalParcelId !== parcelId,
-			internalWeatherId: internalWeatherId !== weatherId,
-		})
 		if (
 			allowGenerateSounding &&
-			(internalModelId !== modelId || internalLocationId !== locationId || internalParcelId !== parcelId || internalWeatherId !== weatherId)
+			(internalModelId !== modelId ||
+				forecastSoundingRunId !== runId ||
+				forecastSoundingValidTime !== validTimeId ||
+				internalLocationId !== locationId ||
+				internalParcelId !== parcelId ||
+				internalWeatherId !== weatherId)
 		) {
-			const baseParmsString = `${runId}/${internalModelId}/${sectorId}/${levelId}/${productId}`
-			const soundingParmsString = `${validTimeId}/${internalLocationId}/${internalParcelId}/${internalWeatherId}`
+			const baseParmsString = `${forecastSoundingRunId}/${internalModelId}/${sectorId}/${levelId}/${productId}`
+			const soundingParmsString = `${forecastSoundingValidTime}/${internalLocationId}/${internalParcelId}/${internalWeatherId}`
 			router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
 		} else {
 			alert(

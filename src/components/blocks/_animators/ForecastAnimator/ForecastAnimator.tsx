@@ -33,6 +33,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const router = useRouter()
 	const pathname = usePathname()
 	const { fcstModel: modelId, fcstRun: runId, fcstSector: sectorId, fcstLevel: levelId, fcstProduct: productId } = useParams()
+	const setForecastSoundingRunId = useRootStore.use.setForecastSoundingRunId()
 	const [activeTab, setActiveTab] = useState(-1)
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
@@ -43,12 +44,12 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
 	const forecastLastFrameDwellTime = useRootStore.use.forecastLastFrameDwellTime()
-	const forecastFrameValidTime = useRootStore.use.forecastFrameValidTime()
-	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime()
 	const [forecastData, setForecastData] = useState([])
 	const [forecastRuns, setForecastRuns] = useState<Record<string, runsProps>>({})
 	const [startFrame, setStartFrame] = useState(0)
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
+	const forecastFrameValidTime = useRootStore.use.forecastFrameValidTime()
+	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime()
 	const frameValidTimeRef = useRef<number | null>(null)
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
 	const [frameReadoutData, setFrameReadoutData] = useState(null)
@@ -60,6 +61,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 		const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
 		const runs = await getModelRuns(modelId)
 		const currentFrameValidTime = frameValidTimeRef.current || data.validtimes[0] // Use the current frame valid time or the first valid time if not set
+		console.log('ForecastAnimator: valid Time', currentFrameValidTime)
 
 		if (!runs.runs[runId as string]) {
 			// If this works then this would be where we'd make a more intelligent choice of run
@@ -151,6 +153,7 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const handleRunChange = (newRun) => {
 		const currentURL = pathname.split('/')
 		currentURL[3] = newRun
+		setForecastSoundingRunId(newRun) // Update the runId in the store
 		router.push(currentURL.join('/'))
 	}
 
