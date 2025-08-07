@@ -119,6 +119,7 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 						name={label}
 						active={id === productId}
 						linkUrl={`/weather-data/analysis/surface-maps/${id}/${regionId}/${siteId}`}
+						onInfoClick={() => alert('info')}
 					/>
 				))}
 			</div>
