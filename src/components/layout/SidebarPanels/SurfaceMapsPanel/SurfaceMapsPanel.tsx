@@ -7,10 +7,13 @@ import { ALL_SURFACE_SECTORS, SURFACE_SECTOR_DEFAULT } from '@/data/analysis/sur
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useMemo, useRef } from 'react'
+// ...existing code...
+// Add these hooks for slideout panel state (replace with your actual store/actions if different)
 
 import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SURFACE_PRODUCT_DEFAULT } from '@/data/analysis/surface/products'
+import { PRODUCT_INFO_SLIDEOUT } from '@/data/vars'
 import styles from './SurfaceMapsPanel.module.scss'
 
 interface SurfaceMapsPanelProps {
@@ -32,6 +35,8 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	const productId = paramProductId ?? SURFACE_PRODUCT_DEFAULT
 	const tempRegionIdRef = useRef<string | null>(null)
 	const resetAnalysisZoomState = useRootStore.use.resetAnalysisZoomState()
+	const setProductInfoId = useRootStore.use.setProductInfoId()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	useEffect(() => {
 		if (isActive) {
@@ -95,7 +100,9 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	const productsArray = useMemo(() => {
 		if (siteId && ALL_SURFACE_SECTORS[siteId as string]) {
 			return Object.keys(ALL_SURFACE_SECTORS[siteId as string].products).map((productId) => {
-				return { id: productId, label: ALL_SURFACE_SECTORS[siteId as string].products[productId].label }
+				const product = ALL_SURFACE_SECTORS[siteId as string].products[productId]
+				const base = { id: productId, label: product.label }
+				return product.infoId !== undefined ? { ...base, infoId: product.infoId } : base
 			})
 		}
 		return []
@@ -113,15 +120,22 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 				/>
 			</div>
 			<div className={styles.products}>
-				{productsArray.map(({ id, label }) => (
-					<SidebarLink
-						key={id}
-						name={label}
-						active={id === productId}
-						linkUrl={`/weather-data/analysis/surface-maps/${id}/${regionId}/${siteId}`}
-						onInfoClick={() => alert('info')}
-					/>
-				))}
+				{productsArray.map((product) => {
+					const { id, label } = product
+					const sidebarLinkProps: any = {
+						key: id,
+						name: label,
+						active: id === productId,
+						linkUrl: `/weather-data/analysis/surface-maps/${id}/${regionId}/${siteId}`,
+					}
+					if ('infoId' in product && product.infoId && product.infoId !== '') {
+						sidebarLinkProps.onInfoClick = () => {
+							setProductInfoId(product.infoId)
+							openSlideoutPanel(PRODUCT_INFO_SLIDEOUT)
+						}
+					}
+					return <SidebarLink {...sidebarLinkProps} />
+				})}
 			</div>
 		</div>
 	)

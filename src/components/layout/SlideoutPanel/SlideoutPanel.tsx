@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react'
 
 import HazardsDetailPanel from '@/components/blocks/Hazards/HazardsMap/HazardsDetailPanel/HazardsDetailPanel'
 import { Meilisearch } from '@/components/blocks/Meilisearch/Meilisearch'
+import ProductInfoPanel from '@/components/blocks/ProductInfoPanel/ProductInfoPanel'
 import CloseX from '@/components/elements/icons/CloseX/CloseX'
-import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT, SEARCH_RESULTS_SLIDEOUT } from '@/data/vars'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT, PRODUCT_INFO_SLIDEOUT, SEARCH_RESULTS_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { usePathname } from 'next/navigation'
 import styles from './SlideoutPanel.module.scss'
@@ -14,6 +15,7 @@ const SlideoutPanel = () => {
 	const slideoutPanelIsOpen = useRootStore.use.slideoutPanelIsOpen()
 	const currentSlideoutPanel = useRootStore.use.currentSlideoutPanel()
 	const closeSlideoutPanel = useRootStore.use.closeSlideoutPanel()
+	const productInfoId = useRootStore.use.productInfoId()
 
 	const [hovering, setHovering] = useState(false)
 	//router
@@ -31,6 +33,8 @@ const SlideoutPanel = () => {
 				return <HazardsDetailPanel />
 			case SEARCH_RESULTS_SLIDEOUT:
 				return <Meilisearch />
+			case PRODUCT_INFO_SLIDEOUT:
+				return <ProductInfoPanel id={productInfoId} />
 			default:
 				return <></>
 		}

@@ -4,12 +4,12 @@ import React from 'react'
 import styles from './ProductInfo.module.scss'
 
 export interface ProductInfoProps {
-	info?: RichTextContent | string
+	name: string
 	image?: string
 	description?: RichTextContent | string
 }
 
-const ProductInfo: React.FC<ProductInfoProps> = ({ info, image, description }) => {
+const ProductInfo: React.FC<ProductInfoProps> = ({ name, image, description }) => {
 	const renderContent = (content?: RichTextContent | string) => {
 		if (typeof content === 'string') {
 			return <p>{content}</p>
@@ -21,9 +21,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ info, image, description }) =
 
 	return (
 		<div className={styles.productInfo}>
-			<div className={styles.productInfoColumnLeft}>{info && renderContent(info)}</div>
-			<div className={styles.productInfoColumnCenter}>{image && <img src={image} alt="Product" />}</div>
-			<div className={styles.productInfoColumnRight}>{description && renderContent(description)}</div>
+			<h2>{name}</h2>
+			{image && <img src={image} alt="Product" />}
+			<div>{description && renderContent(description)}</div>
 		</div>
 	)
 }
