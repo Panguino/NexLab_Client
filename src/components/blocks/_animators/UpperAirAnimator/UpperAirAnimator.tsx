@@ -2,32 +2,23 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
-import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
 import { useRootStore } from '@/store/useRootStore'
 import { getUpperAirData } from '@/util/dataCalls/analysis/query-upper-air'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
-import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import AnalysisAnimatorSettings from '../../_animatorSettingPanels/AnalysisAnimatorSettings/AnalysisAnimatorSettings'
-import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import styles from './UpperAirAnimator.module.scss'
 
-interface UpperAirAnimatorProps {
-	productInfo: ProductInfoProps
-}
-
-const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
+const UpperAirAnimator: React.FC = () => {
 	const { isMobile } = useIsMobile()
 	const analysisRefreshInterval = useRootStore.use.analysisDataRefreshInterval()
 	const userIdle = useIsUserIdle((analysisRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
 	const userIdleRef = useRef(false)
 	const { upperairLevelId: levelId, upperairProductId: productId, upperairSiteId: siteId } = useParams()
-	const [activeTab, setActiveTab] = useState(-1)
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [upperAirData, setUpperAirData] = useState([])
 
@@ -109,17 +100,6 @@ const UpperAirAnimator: React.FC<UpperAirAnimatorProps> = ({ productInfo }) => {
 						}
 					/>
 				</div>
-				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-						<ProductInfo {...productInfo} />
-					</Tab>
-					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-						Alerts TODO
-					</Tab>
-					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-						Download / Save Gif TODO
-					</Tab>
-				</Tabs>
 			</div>
 			<MobileIconNav tab />
 		</>

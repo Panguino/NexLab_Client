@@ -2,7 +2,6 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
-import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useIsMobile } from '@/hooks/useIsMobile'
@@ -10,24 +9,17 @@ import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData, getSoundingRuns } from '@/util/dataCalls/forecast/query-sounding'
 import { fetchStationCoordinates, forecastHourFromUnixValidtime } from '@/util/forecast/common-functions'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
-import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import ForecastSoundingAnimatorSettings from '../../_animatorSettingPanels/ForecastSoundingAnimatorSettings/ForecastSoundingAnimatorSettings'
 import styles from './ForecastSoundingAnimator.module.scss'
-
-interface ForecastSoundingAnimatorProps {
-	productInfo: ProductInfoProps
-}
 
 interface runsProps {
 	unix: number
 	readable: string
 }
 
-const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ productInfo }) => {
+const ForecastSoundingAnimator: React.FC = () => {
 	const { isMobile } = useIsMobile()
 	const router = useRouter()
 	const pathname = usePathname()
@@ -42,7 +34,6 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 		fcstSndParcel: parcelId,
 		fcstSndWeather: weatherId,
 	} = useParams()
-	const [activeTab, setActiveTab] = useState(-1)
 	const forecastSoundingFrameRate = useRootStore.use.forecastSoundingFrameRate()
 	const forecastSoundingZoomState = useRootStore.use.forecastSoundingZoomState()
 	const setForecastSoundingZoomState = useRootStore.use.setForecastSoundingZoomState()
@@ -171,17 +162,6 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 						}
 					/>
 				</div>
-				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-						<ProductInfo {...productInfo} />
-					</Tab>
-					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-						Alerts TODO
-					</Tab>
-					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-						Download / Save Gif TODO
-					</Tab>
-				</Tabs>
 			</div>
 			<MobileIconNav tab />
 		</>
