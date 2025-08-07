@@ -16,7 +16,18 @@ import { OverlayPanel } from '../OverlayPanel/OverylayPanel'
 import styles from './ImageControls.module.scss'
 
 const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
-	const { setZoomFill, zoomFill, setFullScreen, fullScreen, overlays, activeOverlays, setActiveOverlays } = useAnimator()
+	const {
+		setZoomFill,
+		zoomFill,
+		setFullScreen,
+		fullScreen,
+		overlays,
+		activeOverlays,
+		setActiveOverlays,
+		soundingsPickerMode,
+		setSoundingsPickerMode,
+		soundingsPicker,
+	} = useAnimator()
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
 	const expandToggle = () => {
 		setZoomFill(!zoomFill)
@@ -55,9 +66,11 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 			<button onClick={() => fullScreenToggle()}>
 				<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
 			</button>
-			<button onClick={() => console.log('sounding')}>
-				<WeatherBalloonIcon />
-			</button>
+			{soundingsPicker && (
+				<button onClick={() => setSoundingsPickerMode(!soundingsPickerMode)}>
+					<WeatherBalloonIcon className={soundingsPickerMode ? styles.active : ''} />
+				</button>
+			)}
 		</div>
 	)
 }

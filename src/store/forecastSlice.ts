@@ -8,6 +8,8 @@ const defaultForecastZoomState = {
 }
 
 export interface IForecastSlice {
+	forecastSoundingsPickMode: boolean
+	setForecastSoundingsPickMode: (mode: boolean) => void
 	forecastFrameValidTime: number
 	setForecastFrameValidTime: (validTime: number) => void
 	forecastSoundingRunId?: number
@@ -46,6 +48,8 @@ export interface IForecastSlice {
 }
 
 export const createForecastSlice: ZustandStateSlice<IForecastSlice> = (set) => ({
+	forecastSoundingsPickMode: false,
+	setForecastSoundingsPickMode: (mode: boolean) => set(() => ({ forecastSoundingsPickMode: mode })),
 	forecastFrameValidTime: 0,
 	setForecastFrameValidTime: (validTime: number) => set(() => ({ forecastFrameValidTime: validTime })),
 	forecastSoundingRunId: null,

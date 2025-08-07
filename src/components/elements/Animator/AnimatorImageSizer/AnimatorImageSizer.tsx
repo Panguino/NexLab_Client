@@ -23,6 +23,8 @@ const AnimatorImageSizer = () => {
 		disableZoom,
 		frames,
 		hideZoomControls,
+		soundingsPickerMode,
+		setSoundingsPickerMode,
 	} = useAnimator()
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
@@ -76,9 +78,22 @@ const AnimatorImageSizer = () => {
 		}
 		// I know this is stupid, but it works
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
+	const handleImageClick = (event: React.MouseEvent) => {
+		if (soundingsPickerMode) {
+			const rect = event.currentTarget.getBoundingClientRect()
+			const x = event.clientX - rect.left
+			const y = event.clientY - rect.top
 
+			console.log('Sounding location clicked:', { x, y })
+			setSoundingsPickerMode(false) // Exit pick mode after selection
+		}
+	}
 	return (
-		<div className={styles.animatorImageSizer} ref={animatorRef}>
+		<div
+			className={`${styles.animatorImageSizer} ${soundingsPickerMode ? styles.soundingPickMode : ''}`}
+			onClick={handleImageClick}
+			ref={animatorRef}
+		>
 			<TransformWrapper
 				ref={transformRef}
 				disablePadding

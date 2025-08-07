@@ -56,6 +56,9 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const [isLoadingReadoutData, setIsLoadingReadoutData] = useState(false)
 	const frameDataTimeoutRef = useRef(null)
 
+	const forecastSoundingsPickMode = useRootStore.use.forecastSoundingsPickMode()
+	const setForecastSoundingsPickMode = useRootStore.use.setForecastSoundingsPickMode()
+
 	const getData = useCallback(async () => {
 		console.log('ForecastAnimator: Fetching data', modelId, runId, sectorId, levelId, productId)
 		const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
@@ -184,6 +187,9 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 						interval={1000 / forecastFrameRate}
 						lastFrameDwell={forecastLastFrameDwell}
 						lastFrameDwellTime={forecastLastFrameDwellTime * 1000}
+						soundingsPicker={true}
+						soundingsPickerMode={forecastSoundingsPickMode}
+						setSoundingsPickerMode={setForecastSoundingsPickMode}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastAnimatorSettings refreshData={getData} />
