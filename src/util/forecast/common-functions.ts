@@ -27,10 +27,16 @@ export const getLatLonFromXYandSector = (x: number, y: number, sectorId: string)
 	const sectorBounds = FORECAST_SECTORS[sectorId]?.coordinates
 	if (!sectorBounds) return null
 
+	const westCorrection = sectorBounds[0][0] < -180 ? true : false
+	const eastCorrection = sectorBounds[1][0] > 180 ? true : false
+
 	const longSpan = sectorBounds[1][0] - sectorBounds[0][0]
 	const latSpan = sectorBounds[1][1] - sectorBounds[0][1]
-	const longitude = (sectorBounds[0][0] + longSpan * x).toFixed(1)
-	const latitude = (sectorBounds[0][1] + latSpan * (1 - y)).toFixed(1)
+	const lonRaw = sectorBounds[0][0] + longSpan * x
+	const latRaw = sectorBounds[0][1] + latSpan * (1 - y)
+	const lonCorrected = eastCorrection ? lonRaw - 360 : westCorrection ? lonRaw + 360 : lonRaw
+	const longitude = lonCorrected.toFixed(1)
+	const latitude = latRaw.toFixed(1)
 
 	return `${latitude},${longitude}`
 }

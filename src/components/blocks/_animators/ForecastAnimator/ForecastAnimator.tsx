@@ -65,7 +65,6 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 		const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
 		const runs = await getModelRuns(modelId)
 		const currentFrameValidTime = frameValidTimeRef.current || data.validtimes[0] // Use the current frame valid time or the first valid time if not set
-		console.log('ForecastAnimator: valid Time', currentFrameValidTime)
 
 		if (!runs.runs[runId as string]) {
 			// If this works then this would be where we'd make a more intelligent choice of run
