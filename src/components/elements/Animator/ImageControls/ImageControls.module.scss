@@ -23,5 +23,15 @@
     &:hover {
       color: var(--color-white);
     }
+    svg {
+      * {
+        fill: var(--color-grey5);
+      }
+      &.active {
+        * {
+          fill: var(--color-blue4);
+        }
+      }
+    }
   }
 }

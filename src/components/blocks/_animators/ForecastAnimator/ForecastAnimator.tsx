@@ -10,6 +10,7 @@ import { useRootStore } from '@/store/useRootStore'
 import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
+import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -56,12 +57,14 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	const [isLoadingReadoutData, setIsLoadingReadoutData] = useState(false)
 	const frameDataTimeoutRef = useRef(null)
 
+	const forecastSoundingsPickMode = useRootStore.use.forecastSoundingsPickMode()
+	const setForecastSoundingsPickMode = useRootStore.use.setForecastSoundingsPickMode()
+
 	const getData = useCallback(async () => {
 		console.log('ForecastAnimator: Fetching data', modelId, runId, sectorId, levelId, productId)
 		const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
 		const runs = await getModelRuns(modelId)
 		const currentFrameValidTime = frameValidTimeRef.current || data.validtimes[0] // Use the current frame valid time or the first valid time if not set
-		console.log('ForecastAnimator: valid Time', currentFrameValidTime)
 
 		if (!runs.runs[runId as string]) {
 			// If this works then this would be where we'd make a more intelligent choice of run
@@ -88,6 +91,14 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	useEffect(() => {
 		frameValidTimeRef.current = forecastFrameValidTime
 	}, [forecastFrameValidTime])
+
+	const onSoundingsClickthrough = ({ xPercent, yPercent }) => {
+		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+		const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
+		const soundingParams = `/sounding/${frameValidTimeRef.current}/${locationId}/ml/severe`
+		const route = `${baseParams}${soundingParams}`
+		router.push(route)
+	}
 
 	// Add this handler function
 	const handleReadoutDataRequest = useCallback(
@@ -184,6 +195,10 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 						interval={1000 / forecastFrameRate}
 						lastFrameDwell={forecastLastFrameDwell}
 						lastFrameDwellTime={forecastLastFrameDwellTime * 1000}
+						soundingsPicker={true}
+						soundingsPickerMode={forecastSoundingsPickMode}
+						setSoundingsPickerMode={setForecastSoundingsPickMode}
+						onSoundingsClickthrough={onSoundingsClickthrough}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastAnimatorSettings refreshData={getData} />

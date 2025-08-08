@@ -36,6 +36,10 @@ interface IAnimatorProps {
 	zoomFill?: boolean
 	fullScreen?: boolean
 	setFullScreen?: (fullScreen: boolean) => void
+	soundingsPicker?: boolean
+	soundingsPickerMode?: boolean
+	setSoundingsPickerMode?: (mode: boolean) => void
+	onSoundingsClickthrough?: (event: any) => void
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -77,6 +81,14 @@ export const Animator = ({
 	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
 	activeOverlays = ['data', 'map'],
 	fullScreen = false,
+	soundingsPicker = false,
+	soundingsPickerMode = false,
+	setSoundingsPickerMode = (mode: boolean) => {
+		console.warn('setSoundingsPickerMode function not provided, soundings picker mode will not be updated.', mode)
+	},
+	onSoundingsClickthrough = (event: any) => {
+		console.warn('onSoundingsClickthrough function not provided, soundings clickthrough will not be handled.', event)
+	},
 	setFrameValidTime = (validtime: number) => {
 		console.warn('setFrameValidTime function not provided, frame valid time will not be updated.', validtime)
 	},
@@ -136,6 +148,10 @@ export const Animator = ({
 				setZoomState,
 				setZoomFill,
 				setFullScreen,
+				soundingsPicker,
+				soundingsPickerMode,
+				setSoundingsPickerMode,
+				onSoundingsClickthrough,
 			}}
 		>
 			<AnimatorLayout />
