@@ -1,3 +1,7 @@
+import { FORECAST_LEVEL_ORDER } from '@/data/forecast/levels'
+import { FORECAST_MODELS } from '@/data/forecast/models'
+import { FORECAST_SECTORS } from '@/data/forecast/sectors'
+
 export const fetchStationCoordinates = async (stationId: string): Promise<string> => {
 	try {
 		const response = await fetch(`https://api.weather.gov/stations/${stationId}`)
@@ -19,6 +23,17 @@ export const fetchStationCoordinates = async (stationId: string): Promise<string
 		throw err // Rethrow to let the calling code handle it
 	}
 }
+export const getLatLonFromXYandSector = (x: number, y: number, sectorId: string): string | null => {
+	const sectorBounds = FORECAST_SECTORS[sectorId]?.coordinates
+	if (!sectorBounds) return null
+
+	const longSpan = sectorBounds[1][0] - sectorBounds[0][0]
+	const latSpan = sectorBounds[1][1] - sectorBounds[0][1]
+	const longitude = (sectorBounds[0][0] + longSpan * x).toFixed(1)
+	const latitude = (sectorBounds[0][1] + latSpan * (1 - y)).toFixed(1)
+
+	return `${latitude},${longitude}`
+}
 
 export const fetchFloaterSectorData = async () => {
 	try {
@@ -32,9 +47,6 @@ export const fetchFloaterSectorData = async () => {
 		return null
 	}
 }
-
-import { FORECAST_LEVEL_ORDER } from '@/data/forecast/levels'
-import { FORECAST_MODELS } from '@/data/forecast/models'
 
 /**
  * Builds a list of products organized by level for a given model and sector

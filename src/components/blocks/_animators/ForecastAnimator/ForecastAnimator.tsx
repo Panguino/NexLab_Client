@@ -10,6 +10,7 @@ import { useRootStore } from '@/store/useRootStore'
 import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
+import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -93,7 +94,11 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 	}, [forecastFrameValidTime])
 
 	const onSoundingsClickthrough = ({ xPercent, yPercent }) => {
-		console.log('ForecastAnimator: Soundings Clickthrough', xPercent, yPercent)
+		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+		const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
+		const soundingParams = `/sounding/${frameValidTimeRef.current}/${locationId}/ml/severe`
+		const route = `${baseParams}${soundingParams}`
+		router.push(route)
 	}
 
 	// Add this handler function
