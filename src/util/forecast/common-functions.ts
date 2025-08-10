@@ -77,3 +77,42 @@ export const forecastHourFromUnixValidtime = (runId: number, validtimeId: number
 	// Pad with leading zeros to ensure 3 digits
 	return diffHours.toString().padStart(3, '0')
 }
+/**
+ * Retrieves the infoId string by traversing through nested product objects
+ *
+ * @param obj - The product object to search within
+ * @param level - The level identifier to match
+ * @param model - The model identifier to match (only checked within a valid level)
+ * @returns The found infoId string or false if not found
+ */
+export const getProductInfoId = (obj: any, level: string, model: string): string | false => {
+	// Base case: if infoId doesn't exist, return false immediately
+	if (!obj.infoId) {
+		return false
+	}
+
+	// Case 1: infoId is a simple string
+	if (typeof obj.infoId === 'string') {
+		return obj.infoId
+	}
+
+	// Case 2: infoId is an object with levels
+	const levelValue = obj.infoId[level] || obj.infoId.general
+
+	// If no matching level or general fallback found, return false
+	if (!levelValue) {
+		return false
+	}
+
+	// Case 2a: level value is a string - we're done
+	if (typeof levelValue === 'string') {
+		return levelValue
+	}
+
+	// Case 2b: level value is an object - check for model
+	// Model is only checked within a valid level object
+	const modelValue = levelValue[model] || levelValue.general
+
+	// Return model value if it's a string, otherwise false
+	return typeof modelValue === 'string' ? modelValue : false
+}
