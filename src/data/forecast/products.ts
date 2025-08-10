@@ -162,7 +162,17 @@ export const FORECAST_PRODUCTS = {
 	[FORECAST_PRODUCT_DEWP_ID]: { name: 'Dewpoint Temp.' },
 	[FORECAST_PRODUCT_PWAT_ID]: { name: 'Precipitable Water' },
 	[FORECAST_PRODUCT_AVORT_ID]: { name: 'Vorticity' },
-	[FORECAST_PRODUCT_VVEL_ID]: { name: 'Vertical Velocity' },
+	[FORECAST_PRODUCT_VVEL_ID]: {
+		name: 'Vertical Velocity',
+		infoId: {
+			FORECAST_LEVEL_500MB_ID: 'qa2bnkopu99aj0bsq8u89ul3',
+			FORECAST_LEVEL_700MB_ID: {
+				general: 'fmxumhhc4sr21zi1oskldmp6',
+				FORECAST_HRRR_ID: 'b4w0dydusq2hrxhntc0vrgwi',
+				FORECAST_NAMNST_ID: 'b4w0dydusq2hrxhntc0vrgwi',
+			},
+		},
+	},
 	[FORECAST_PRODUCT_THETAE_ID]: { name: 'Theta-E' },
 	[FORECAST_PRODUCT_RHUM_ID]: { name: 'Relative Humidity' },
 	[FORECAST_PRODUCT_SPD_ID]: { name: 'Wind Speed' },
