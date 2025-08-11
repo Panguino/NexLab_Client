@@ -42,17 +42,17 @@ import {
 	FORECAST_SECTOR_WORLD_ID,
 } from './sectors'
 
-export const FORECAST_HRRR_ID = 'HRRR'
-export const FORECAST_RAP_ID = 'RAP'
-export const FORECAST_NAM_ID = 'NAM'
-export const FORECAST_NAMNST_ID = 'NAMNST'
-export const FORECAST_RDPS_ID = 'RDPS'
-export const FORECAST_GDPS_ID = 'GDPS'
-export const FORECAST_ECMWF_ID = 'ECMWF'
-export const FORECAST_GFS_ID = 'GFS'
-export const FORECAST_CFS_ID = 'CFS'
-export const FORECAST_SREF_ID = 'SREF'
-export const FORECAST_GEFS_ID = 'GEFS'
+const FORECAST_HRRR_ID = 'HRRR'
+const FORECAST_RAP_ID = 'RAP'
+const FORECAST_NAM_ID = 'NAM'
+const FORECAST_NAMNST_ID = 'NAMNST'
+const FORECAST_RDPS_ID = 'RDPS'
+const FORECAST_GDPS_ID = 'GDPS'
+const FORECAST_ECMWF_ID = 'ECMWF'
+const FORECAST_GFS_ID = 'GFS'
+const FORECAST_CFS_ID = 'CFS'
+const FORECAST_SREF_ID = 'SREF'
+const FORECAST_GEFS_ID = 'GEFS'
 
 export const DEFAULT_FORECAST_MODEL = FORECAST_NAM_ID
 
