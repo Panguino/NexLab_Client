@@ -53,6 +53,7 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const [imageInfo, setImageInfo] = useState({ width: 1180, height: 783 })
 	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime()
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
+	const [placeholderImage, setPlaceholderImage] = useState(null)
 
 	const getData = useCallback(async () => {
 		// Location need special handling as it can accept either station ID or lat,lon format
@@ -89,6 +90,7 @@ const ForecastSoundingAnimator: React.FC = () => {
 		setForecastSoundingData(data.frames)
 		setForecastRuns(runs.runs)
 		setFrameValidTimes(data.validtimes)
+		setPlaceholderImage(data.placeholderImage)
 	}, [
 		runId,
 		modelId,
@@ -155,6 +157,8 @@ const ForecastSoundingAnimator: React.FC = () => {
 						interval={1000 / forecastSoundingFrameRate}
 						lastFrameDwell={forecastSoundingLastFrameDwell}
 						lastFrameDwellTime={forecastSoundingLastFrameDwellTime * 1000}
+						scrubberPlaceholderImageUrl={placeholderImage}
+						scrubberFrameLoadStates={forecastSoundingData.map((frame) => frame !== placeholderImage)}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastSoundingAnimatorSettings />

@@ -28,6 +28,9 @@ const AnimatorControls = () => {
 		isPlaying,
 		setIsPlaying,
 		setCurrentFrame,
+		frames,
+		scrubberPlaceholderImageUrl,
+		scrubberFrameLoadStates,
 	} = useAnimator()
 
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
@@ -134,7 +137,15 @@ const AnimatorControls = () => {
 		<div className={styles.controlsContainer}>
 			<div className={styles.controls}>
 				{runs && <RunSelector run={activeRun} runs={runs} runsPerRow={runsPerRow} onSelect={setActiveRun} />}
-				<Scrubber minValue={0} maxValue={loadedFrames.length - 1} value={currentFrame} onChange={seek} />
+				<Scrubber
+					minValue={0}
+					maxValue={loadedFrames.length - 1}
+					value={currentFrame}
+					onChange={seek}
+					frames={frames}
+					placeholderImageUrl={scrubberPlaceholderImageUrl}
+					frameLoadStates={scrubberFrameLoadStates}
+				/>
 				<BasicPlaybackControls
 					isPlaying={isPlaying}
 					loopMethod={loopMethod}
