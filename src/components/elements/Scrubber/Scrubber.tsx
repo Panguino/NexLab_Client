@@ -42,6 +42,13 @@ const Scrubber: React.FC<IScrubberProps> = ({ minValue, maxValue, value, onChang
 			<div className={styles.timelineScrubber}>
 				<div className={styles.enhancedScrubber}>
 					<div className={styles.frameIndicators}>
+						{(() => {
+							const totalFrames = loadStates.length
+							const percentPerFrame = totalFrames > 0 ? 100 / totalFrames : 0
+							const left = `${value * percentPerFrame}%`
+							const width = `${percentPerFrame}%`
+							return <div className={styles.scrubTab} style={{ left, width }} />
+						})()}
 						{loadStates.map((isLoaded, index) => (
 							<div
 								key={index}
@@ -50,13 +57,6 @@ const Scrubber: React.FC<IScrubberProps> = ({ minValue, maxValue, value, onChang
 								title={`Frame ${index + 1} - ${isLoaded ? 'Loaded' : 'Unloaded'}`}
 							/>
 						))}
-						{(() => {
-							const totalFrames = loadStates.length
-							const percentPerFrame = totalFrames > 0 ? 100 / totalFrames : 0
-							const left = `${value * percentPerFrame}%`
-							const width = `${percentPerFrame}%`
-							return <div className={styles.scrubTab} style={{ left, width }} />
-						})()}
 					</div>
 					<input
 						type="range"
