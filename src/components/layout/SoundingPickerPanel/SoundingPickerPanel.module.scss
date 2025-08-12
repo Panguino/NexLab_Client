@@ -1,0 +1,38 @@
+.soundingPickerPanel {
+  position: absolute;
+  top: 106px;
+  left: 300px;
+  width: calc(100% - 300px);
+  max-width: 900px;
+  aspect-ratio: 10 / 7;
+  z-index: 30;
+  background-color: black;
+
+  @media screen and (max-width: 900px) {
+    left: 0;
+    top: 50px;
+    width: 100%;
+    height: calc(100% - 50px);
+    z-index: 85;
+  }
+}
+.soundingPickerPanelWrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 90;
+  font-size: 23px;
+}
+.soundingPickerContent {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
