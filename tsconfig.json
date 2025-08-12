@@ -30,6 +30,6 @@
 			}
 		]
 	},
-	"include": ["src", ".next/types/**/*.ts", "svgr.d.ts"],
-	"exclude": ["node_modules"]
+	"include": ["src", "svgr.d.ts"],
+	"exclude": ["node_modules", ".next"]
 }
