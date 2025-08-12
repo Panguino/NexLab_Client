@@ -127,9 +127,11 @@ $frame-indicator-border: var(--color-grey3-white);
 
   .scrubTab {
     position: absolute;
-    top: 8px; // below the 8px tall bar
+    top: 9px; // below the 8px tall bar
     /* left and width are set inline to align exactly with frame widths */
     height: 16px;
+    min-width: 50px; // enforce minimum size
+    transform: translateX(-50%); // center the tab over its left coordinate
     background-color: $thumb-color;
     border: 1px solid $thumb-border;
     border-radius: 6px;
@@ -143,6 +145,20 @@ $frame-indicator-border: var(--color-grey3-white);
     cursor: pointer;
     pointer-events: none; // hidden input handles the drag
     border-radius: 0 0 5px 5px;
+  }
+
+  /* small arrow pointing upward at the represented frame */
+  .scrubTab::before {
+    content: '';
+    position: absolute;
+    top: -5px; // arrow height
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid $thumb-color; // small white arrow
   }
 
   .frameIndicator {

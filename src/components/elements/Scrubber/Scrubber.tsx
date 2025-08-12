@@ -45,9 +45,9 @@ const Scrubber: React.FC<IScrubberProps> = ({ minValue, maxValue, value, onChang
 						{(() => {
 							const totalFrames = loadStates.length
 							const percentPerFrame = totalFrames > 0 ? 100 / totalFrames : 0
-							const left = `${value * percentPerFrame}%`
-							const width = `${percentPerFrame}%`
-							return <div className={styles.scrubTab} style={{ left, width }} />
+							const centerLeft = `${(value + 0.5) * percentPerFrame}%`
+							const width = totalFrames > 0 ? `max(50px, ${percentPerFrame}%)` : '50px'
+							return <div className={styles.scrubTab} style={{ left: centerLeft, width }} />
 						})()}
 						{loadStates.map((isLoaded, index) => (
 							<div
