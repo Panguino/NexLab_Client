@@ -63,7 +63,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 	}, [relativePosition.x, relativePosition.y, hoverRef, tooltipRef, frameRef])
 
 	useEffect(() => {
-		if (!hoverRef.current || !isHovering || isPlaying || !frameReadoutData?.dataTypes?.length) return
+		if (!hoverRef.current || !isHovering || isPlaying) return
 
 		// Retrieve native image size and current size
 		const { width: nativeWidth, height: nativeHeight } = imageInfo
@@ -103,20 +103,22 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 		setPercentagePosition({ xPercent: percentageX, yPercent: percentageY, rawPercentageX, rawPercentageY })
 		onUpdatePosition({ xPercent: rawPercentageX, yPercent: rawPercentageY })
 
-		try {
-			const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc, dataType) => {
-				const type2DArray = frameReadoutData.readoutData[dataType]
-				const typeYIndex = Math.floor(percentageY * type2DArray.length)
-				const typeXIndex = Math.floor(percentageX * type2DArray[typeYIndex].length)
-				acc[dataType] = type2DArray[typeYIndex][typeXIndex]
+		if (frameReadoutData?.dataTypes?.length) {
+			try {
+				const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc, dataType) => {
+					const type2DArray = frameReadoutData.readoutData[dataType]
+					const typeYIndex = Math.floor(percentageY * type2DArray.length)
+					const typeXIndex = Math.floor(percentageX * type2DArray[typeYIndex].length)
+					acc[dataType] = type2DArray[typeYIndex][typeXIndex]
 
-				return acc
-			}, {})
+					return acc
+				}, {})
 
-			setTooltipContent(dataAtMousePosition)
-		} catch (error) {
-			console.log(rawPercentageX, rawPercentageY, percentageX, percentageY)
-			console.error('Error processing readout data:', error)
+				setTooltipContent(dataAtMousePosition)
+			} catch (error) {
+				console.log(rawPercentageX, rawPercentageY, percentageX, percentageY)
+				console.error('Error processing readout data:', error)
+			}
 		}
 	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo, onUpdatePosition])
 
@@ -155,7 +157,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 		}
 	}, [hoverRef, calculateTooltipPosition])
 
-	if (
+	const hideTooltip =
 		!enableReadouts ||
 		!isHovering ||
 		isPlaying ||
@@ -163,8 +165,6 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 		percentagePosition.rawPercentageX > 1 ||
 		percentagePosition.rawPercentageY < 0 ||
 		percentagePosition.rawPercentageY > 1
-	)
-		return null
 
 	return (
 		<div
@@ -175,41 +175,43 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 				top: `${mousePosition.y}px`,
 			}}
 		>
-			<div className={styles.tooltipContent}>
-				{debug && (
-					<div className={styles.debugInfo}>
-						<p>
-							Frame: {currentFrame + 1}/{loadedFrames.length}
-						</p>
-						<p>
-							Position: {Math.round(mousePosition.x)}, {Math.round(mousePosition.y)}
-						</p>
-						<p>Percentage Position X: {Math.floor(100 * percentagePosition.xPercent)}%</p>
-						<p>Percentage Position Y: {Math.floor(100 * percentagePosition.yPercent)}%</p>
-					</div>
-				)}
+			{!hideTooltip && (
+				<div className={styles.tooltipContent}>
+					{debug && (
+						<div className={styles.debugInfo}>
+							<p>
+								Frame: {currentFrame + 1}/{loadedFrames.length}
+							</p>
+							<p>
+								Position: {Math.round(mousePosition.x)}, {Math.round(mousePosition.y)}
+							</p>
+							<p>Percentage Position X: {Math.floor(100 * percentagePosition.xPercent)}%</p>
+							<p>Percentage Position Y: {Math.floor(100 * percentagePosition.yPercent)}%</p>
+						</div>
+					)}
 
-				{/* Show loading indicator if data is being fetched */}
-				{/* Show loading indicator */}
-				{isLoadingReadoutData && <p className={styles.loadingIndicator}>Loading data...</p>}
+					{/* Show loading indicator if data is being fetched */}
+					{/* Show loading indicator */}
+					{isLoadingReadoutData && <p className={styles.loadingIndicator}>Loading data...</p>}
 
-				{/* Show readout data if available */}
-				{frameReadoutData && Object.keys(tooltipContent).length > 0 ? (
-					<div className={styles.readoutData}>
-						{Object.entries(tooltipContent).map(([key, value]) => {
-							const formattedData = createReadout(key)
-							return (
-								<p key={key}>
-									<strong>{formattedData.label}:</strong> {String(value)}
-									<span dangerouslySetInnerHTML={{ __html: formattedData.unit }} />
-								</p>
-							)
-						})}
-					</div>
-				) : (
-					frameReadoutData && <p>No data available at this position</p>
-				)}
-			</div>
+					{/* Show readout data if available */}
+					{frameReadoutData && Object.keys(tooltipContent).length > 0 ? (
+						<div className={styles.readoutData}>
+							{Object.entries(tooltipContent).map(([key, value]) => {
+								const formattedData = createReadout(key)
+								return (
+									<p key={key}>
+										<strong>{formattedData.label}:</strong> {String(value)}
+										<span dangerouslySetInnerHTML={{ __html: formattedData.unit }} />
+									</p>
+								)
+							})}
+						</div>
+					) : (
+						frameReadoutData && <p>No data available at this position</p>
+					)}
+				</div>
+			)}
 		</div>
 	)
 }

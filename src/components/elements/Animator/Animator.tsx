@@ -43,6 +43,8 @@ interface IAnimatorProps {
 	// Scrubber enhancements
 	scrubberPlaceholderImageUrl?: string
 	scrubberFrameLoadStates?: boolean[]
+	// Simple overlay markers (percent positions inside the image content)
+	overlayMarkers?: { xPercent: number; yPercent: number }[]
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -68,6 +70,7 @@ export const Animator = ({
 	runsPerRow = 4,
 	overlays,
 	enableReadouts = false,
+	overlayMarkers = [],
 	frameReadoutData,
 	isLoadingReadoutData,
 	requestReadoutData,
@@ -131,6 +134,7 @@ export const Animator = ({
 				runsPerRow,
 				overlays,
 				enableReadouts,
+				overlayMarkers,
 				frameReadoutData,
 				isLoadingReadoutData,
 				requestReadoutData,
