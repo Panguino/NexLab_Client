@@ -144,7 +144,7 @@ $frame-indicator-border: var(--color-grey3-white);
     background-position: 50% 65%;
     cursor: pointer;
     pointer-events: none; // hidden input handles the drag
-    border-radius: 0 0 5px 5px;
+    border-radius: 3px;
   }
 
   /* small arrow pointing upward at the represented frame */
