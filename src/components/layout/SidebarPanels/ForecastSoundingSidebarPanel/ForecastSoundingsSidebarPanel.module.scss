@@ -22,3 +22,33 @@
 .forecastProducts {
 	padding: 0 25px 10px;
 }
+
+.locationWithPicker {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.pickButton {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 6px;
+	border: 1px solid var(--color-grey14);
+	background: var(--color-grey19);
+	color: var(--color-grey3);
+	cursor: pointer;
+	transition: all var(--themeChange);
+
+	svg {
+		width: 20px;
+		height: 20px;
+		fill: var(--color-blue4);
+	}
+
+	&:hover {
+		background: var(--color-grey18);
+	}
+}

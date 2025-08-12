@@ -4,6 +4,9 @@ import { Button } from '@/components/elements/Button/Button'
 import Input from '@/components/elements/Input/Input'
 import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
 import {
 	DEFAULT_FORECAST_SOUNDING_PARCEL,
@@ -197,7 +200,12 @@ const ForecastSoundingsSidebarPanel = () => {
 						}}
 					/>
 					<label>Location:</label>
-					<Input value={internalLocationId} onChange={handleLocationChange} />
+					<div className={styles.locationWithPicker}>
+						<Input value={internalLocationId} onChange={handleLocationChange} />
+						<button className={styles.pickButton} title="Pick on map">
+							<FontAwesomeIcon icon={faLocationDot} />
+						</button>
+					</div>
 					<label>Parcel Type:</label>
 					<Select
 						value={internalParcelId}
