@@ -187,30 +187,31 @@ const ForecastSoundingsSidebarPanel = () => {
 			<div className={styles.ForecastSoundingsSidebarPanel}>
 				<SidebarSectionHeader name="Return to Forecast Models" linkUrl={returnLink} />
 				<div className={styles.options}>
+					<label>Model:</label>
 					<Select
 						value={internalModelId}
 						placeholder={internalModelId as string}
-						title="Model:"
 						options={modelOptions}
 						onChange={(model) => {
 							handleModelChange(model)
 						}}
 					/>
-					<Input label="Location" value={internalLocationId} onChange={handleLocationChange} />
+					<label>Location:</label>
+					<Input value={internalLocationId} onChange={handleLocationChange} />
+					<label>Parcel Type:</label>
 					<Select
 						value={internalParcelId}
 						placeholder={internalParcelId as string}
-						title="Parcel Type:"
 						options={Object.values(FORECAST_SOUNDING_PARCEL_OPTIONS).map((option) => ({
 							value: option.id,
 							label: option.label,
 						}))}
 						onChange={handleParcelChange}
 					/>
+					<label>Weather Type:</label>
 					<Select
 						value={internalWeatherId}
 						placeholder={internalWeatherId as string}
-						title="Weather Type:"
 						options={Object.values(FORECAST_SOUNDING_WEATHER_OPTIONS).map((option) => ({
 							value: option.id,
 							label: option.label,
