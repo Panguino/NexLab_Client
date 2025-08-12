@@ -15,9 +15,12 @@ import {
 	FORECAST_SOUNDING_WEATHER_OPTIONS,
 } from '@/data/forecast/soundingOptions'
 import { useRootStore } from '@/store/useRootStore'
+import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
 import { buildProductsByLevel, fetchStationCoordinates } from '@/util/forecast/common-functions'
+import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSoundingsSidebarPanel.module.scss'
 
@@ -44,6 +47,10 @@ const ForecastSoundingsSidebarPanel = () => {
 	const [internalLocationId, setInternalLocationId] = useState(locationId)
 	const [internalParcelId, setInternalParcelId] = useState(parcelId)
 	const [internalWeatherId, setInternalWeatherId] = useState(weatherId)
+	const openSoundingPicker = useRootStore.use.openSoundingPicker()
+	const setSoundingPickerFrames = useRootStore.use.setSoundingPickerFrames()
+	const setSoundingPickerImageInfo = useRootStore.use.setSoundingPickerImageInfo()
+
 	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
 	const [returnLink, setReturnLink] = useState('')
 	const forecastSoundingRunId = useRootStore.use.forecastSoundingRunId() // this version from the store helps to keep the sidebar in sync with the animator
@@ -202,7 +209,22 @@ const ForecastSoundingsSidebarPanel = () => {
 					<label>Location:</label>
 					<div className={styles.locationWithPicker}>
 						<Input value={internalLocationId} onChange={handleLocationChange} />
-						<button className={styles.pickButton} title="Pick on map">
+						<button
+							className={styles.pickButton}
+							title="Pick on map"
+							onClick={async () => {
+								try {
+									const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
+									const currentVT = forecastSoundingValidTime || data.validtimes[data.validtimes.length - 1]
+									const index = findClosestValidTimeIndex(data.validtimes, currentVT)
+									setSoundingPickerFrames([data.frames[index]])
+									setSoundingPickerImageInfo(data.imageInfo)
+									openSoundingPicker()
+								} catch (e) {
+									console.error('Failed to open sounding picker', e)
+								}
+							}}
+						>
 							<FontAwesomeIcon icon={faLocationDot} />
 						</button>
 					</div>
