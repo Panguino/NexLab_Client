@@ -1,10 +1,5 @@
 const Page = () => {
-	return (
-		<div>
-			<h1>Soundings Page</h1>
-			Content
-		</div>
-	)
+	return <div></div>
 }
 
 export default Page

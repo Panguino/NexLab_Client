@@ -1,5 +1,5 @@
 const Page = () => {
-	return <>Satrad Landing Page</>
+	return <></>
 }
 
 export default Page

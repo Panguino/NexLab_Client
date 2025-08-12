@@ -13,6 +13,7 @@ export const ALL_SURFACE_PRODUCTS = {
 	},
 	[SURFACE_PRODUCT_RAW]: {
 		label: 'Station Plots',
+		infoId: 't6jq4sc2wkkxfku7zhfmhw2h',
 	},
 	[SURFACE_PRODUCT_MOISTURE_DIVERGENCE]: {
 		label: 'Moisture Convergence',

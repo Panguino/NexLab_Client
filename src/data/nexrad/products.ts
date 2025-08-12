@@ -114,14 +114,17 @@ export const NEXRAD_PRODUCTS = {
 	},
 	[NEXRAD_PRODUCT_BASEREF_0_5]: {
 		label: '0.5',
+		infoId: 'jj49r3kfbliaw3r7141t01fh',
 		limited: false,
 	},
 	[NEXRAD_PRODUCT_COEFFICIENT_0_5]: {
 		label: '0.5',
+		infoId: 'i0qn0vlhncyiy54ykjb1b44o',
 		limited: false,
 	},
 	[NEXRAD_PRODUCT_BASEVEL_0_5]: {
 		label: '0.5',
+		infoId: 'e0blgbkjax4ng2wen41myr5n',
 		limited: false,
 	},
 	[NEXRAD_PRODUCT_PHASE_0_5]: {
@@ -138,14 +141,17 @@ export const NEXRAD_PRODUCTS = {
 	},
 	[NEXRAD_PRODUCT_BASEREF_1_5]: {
 		label: '1.5',
+		infoId: 'jj49r3kfbliaw3r7141t01fh',
 		limited: true,
 	},
 	[NEXRAD_PRODUCT_COEFFICIENT_1_5]: {
 		label: '1.5',
+		infoId: 'i0qn0vlhncyiy54ykjb1b44o',
 		limited: true,
 	},
 	[NEXRAD_PRODUCT_BASEVEL_1_5]: {
 		label: '1.5',
+		infoId: 'e0blgbkjax4ng2wen41myr5n',
 		limited: true,
 	},
 	[NEXRAD_PRODUCT_PHASE_1_5]: {
@@ -158,10 +164,12 @@ export const NEXRAD_PRODUCTS = {
 	},
 	[NEXRAD_PRODUCT_BASEREF_2_5]: {
 		label: '2.5',
+		infoId: 'jj49r3kfbliaw3r7141t01fh',
 		limited: true,
 	},
 	[NEXRAD_PRODUCT_COEFFICIENT_2_5]: {
 		label: '2.5',
+		infoId: 'i0qn0vlhncyiy54ykjb1b44o',
 		limited: true,
 	},
 	[NEXRAD_PRODUCT_PHASE_2_5]: {
@@ -170,6 +178,7 @@ export const NEXRAD_PRODUCTS = {
 	},
 	[NEXRAD_PRODUCT_BASEVEL_2_5]: {
 		label: '2.5',
+		infoId: 'e0blgbkjax4ng2wen41myr5n',
 		limited: true,
 	},
 	[NEXRAD_PRODUCT_DIGITALREF_2_5]: {
@@ -178,10 +187,12 @@ export const NEXRAD_PRODUCTS = {
 	},
 	[NEXRAD_PRODUCT_BASEREF_3_5]: {
 		label: '3.5',
+		infoId: 'jj49r3kfbliaw3r7141t01fh',
 		limited: true,
 	},
 	[NEXRAD_PRODUCT_COEFFICIENT_3_5]: {
 		label: '3.5',
+		infoId: 'i0qn0vlhncyiy54ykjb1b44o',
 		limited: true,
 	},
 	[NEXRAD_PRODUCT_PHASE_3_5]: {
@@ -190,6 +201,7 @@ export const NEXRAD_PRODUCTS = {
 	},
 	[NEXRAD_PRODUCT_BASEVEL_3_5]: {
 		label: '3.5',
+		infoId: 'e0blgbkjax4ng2wen41myr5n',
 		limited: true,
 	},
 	[NEXRAD_PRODUCT_DIGITALREF_3_5]: {
