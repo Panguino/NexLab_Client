@@ -1,6 +1,6 @@
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { useAnimator } from '../Animator'
 import { AnimatorImageMachine } from '../AnimatorImageMachine/AnimatorImageMachine'
@@ -23,9 +23,13 @@ const AnimatorImageSizer = () => {
 		disableZoom,
 		frames,
 		hideZoomControls,
+		soundingsPickerMode,
+		setSoundingsPickerMode,
+		onSoundingsClickthrough,
 	} = useAnimator()
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
+	const [imagePosition, setImagePosition] = useState({ xPercent: 0, yPercent: 0 })
 	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }, updateDimensions] = useDimensions(ratio, !zoomFill)
 
 	const allOverlayImages = useMemo(() => {
@@ -76,9 +80,18 @@ const AnimatorImageSizer = () => {
 		}
 		// I know this is stupid, but it works
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
-
+	const handleImageClick = () => {
+		if (soundingsPickerMode) {
+			onSoundingsClickthrough(imagePosition)
+			setSoundingsPickerMode(false) // Exit pick mode after selection
+		}
+	}
 	return (
-		<div className={styles.animatorImageSizer} ref={animatorRef}>
+		<div
+			className={`${styles.animatorImageSizer} ${soundingsPickerMode ? styles.soundingPickMode : ''}`}
+			onClick={handleImageClick}
+			ref={animatorRef}
+		>
 			<TransformWrapper
 				ref={transformRef}
 				disablePadding
@@ -121,7 +134,7 @@ const AnimatorImageSizer = () => {
 								)
 							})}
 						</TransformComponent>
-						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} />
+						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} onUpdatePosition={setImagePosition} />
 
 						{!hideZoomControls && !disableZoom && <ImageControls zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />}
 					</>
