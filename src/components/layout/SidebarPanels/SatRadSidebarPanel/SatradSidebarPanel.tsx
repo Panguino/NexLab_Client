@@ -9,6 +9,7 @@ import { ALL_SATRAD_GROUPS, DEFAULT_SATRAD_PRODUCT, SATRAD_GROUPS, SATRAD_PRODUC
 import { DEFAULT_SATRAD_REGION, SATRAD_MAP_OPTIONS, SATRAD_SCALE_REGIONS } from '@/data/satrad/scaleRegions'
 import { ALL_SATRAD_SECTORS } from '@/data/satrad/sectors'
 import { DEFAULT_SATRAD_SECTOR } from '@/data/satrad/sectorsContinental'
+import { PRODUCT_INFO_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef } from 'react'
@@ -26,6 +27,8 @@ const SatradSidebarPanel = () => {
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const { satradProductId: productId, satradSectorId: sectorId, satradRegionId: regionId } = useParams()
 	const tempRegionIdRef = useRef<string | null>(null)
+	const setProductInfoId = useRootStore.use.setProductInfoId()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	useEffect(() => {
 		if (!SATRAD_PRODUCTS[productId as string] || !SATRAD_SCALE_REGIONS[regionId as string] || !ALL_SATRAD_SECTORS[sectorId as string]) {
@@ -81,10 +84,14 @@ const SatradSidebarPanel = () => {
 			const group = satradGroups[groupId]
 			const products = productsArray
 				.filter((productId) => group.products.includes(productId))
-				.map((productId) => ({
-					id: productId,
-					label: satradProducts[productId].shortLabel,
-				}))
+				.map((productId) => {
+					const product = satradProducts[productId]
+					const base = {
+						id: productId,
+						label: product.label,
+					}
+					return product.infoId !== undefined ? { ...base, infoId: product.infoId } : base
+				})
 
 			return {
 				groupId,
@@ -117,14 +124,23 @@ const SatradSidebarPanel = () => {
 				{panelGroupedProducts.map(({ groupId, label, columns, products }) => (
 					<SidebarGroup key={groupId} title={label}>
 						<SidebarGrid columns={columns}>
-							{products.map(({ id, label }) => (
-								<SidebarLink
-									key={id}
-									name={label}
-									linkUrl={`/weather-data/satellite-mosaic-radar/${id}/${regionId}/${sectorId}`}
-									active={id === productId}
-								/>
-							))}
+							{products.map((product) => {
+								const { id, label } = product
+								const sidebarLinkProps: any = {
+									key: id,
+									name: label,
+									active: id === productId,
+									linkUrl: `/weather-data/satellite-mosaic-radar/${id}/${regionId}/${sectorId}`,
+								}
+								if ('infoId' in product && product.infoId && product.infoId !== '') {
+									sidebarLinkProps.onInfoClick = () => {
+										setProductInfoId(product.infoId)
+										openSlideoutPanel(PRODUCT_INFO_SLIDEOUT)
+									}
+								}
+
+								return <SidebarLink {...sidebarLinkProps} />
+							})}
 						</SidebarGrid>
 					</SidebarGroup>
 				))}
