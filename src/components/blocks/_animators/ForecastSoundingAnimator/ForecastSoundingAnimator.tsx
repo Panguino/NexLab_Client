@@ -2,7 +2,6 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
-import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useIsMobile } from '@/hooks/useIsMobile'
@@ -10,24 +9,17 @@ import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData, getSoundingRuns } from '@/util/dataCalls/forecast/query-sounding'
 import { fetchStationCoordinates, forecastHourFromUnixValidtime } from '@/util/forecast/common-functions'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
-import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import ForecastSoundingAnimatorSettings from '../../_animatorSettingPanels/ForecastSoundingAnimatorSettings/ForecastSoundingAnimatorSettings'
 import styles from './ForecastSoundingAnimator.module.scss'
-
-interface ForecastSoundingAnimatorProps {
-	productInfo: ProductInfoProps
-}
 
 interface runsProps {
 	unix: number
 	readable: string
 }
 
-const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ productInfo }) => {
+const ForecastSoundingAnimator: React.FC = () => {
 	const { isMobile } = useIsMobile()
 	const router = useRouter()
 	const pathname = usePathname()
@@ -42,7 +34,6 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 		fcstSndParcel: parcelId,
 		fcstSndWeather: weatherId,
 	} = useParams()
-	const [activeTab, setActiveTab] = useState(-1)
 	const forecastSoundingFrameRate = useRootStore.use.forecastSoundingFrameRate()
 	const forecastSoundingZoomState = useRootStore.use.forecastSoundingZoomState()
 	const setForecastSoundingZoomState = useRootStore.use.setForecastSoundingZoomState()
@@ -62,6 +53,10 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 	const [imageInfo, setImageInfo] = useState({ width: 1180, height: 783 })
 	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime()
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
+	const [placeholderImage, setPlaceholderImage] = useState(null)
+	const [frameTexts, setFrameTexts] = useState<string[]>([])
+	const setSoundingTextURL = useRootStore.use.setSoundingTextURL()
+	const closeSlideoutPanel = useRootStore.use.closeSlideoutPanel()
 
 	const getData = useCallback(async () => {
 		// Location need special handling as it can accept either station ID or lat,lon format
@@ -93,11 +88,15 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 		const sanitizedValidTimeId = data.validtimes.indexOf(typeSafeValidTimeId) !== -1 ? typeSafeValidTimeId : data.validtimes[0] // Fallback to first valid time if not found
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, sanitizedValidTimeId)
 
+		console.log('ForecastSoundingAnimator: data fetched', data)
+
 		setStartFrame(closestValidTimeIndex)
 		setImageInfo(data.imageInfo)
 		setForecastSoundingData(data.frames)
+		setFrameTexts(data.text)
 		setForecastRuns(runs.runs)
 		setFrameValidTimes(data.validtimes)
+		setPlaceholderImage(data.placeholderImage)
 	}, [
 		runId,
 		modelId,
@@ -141,6 +140,14 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 		setForecastSoundingRunId(newRun) // Update the runId in the store
 	}
 
+	const handleFrameTextChange = (frameIndex) => {
+		const soundingTextURL = frameTexts[frameIndex]
+		setSoundingTextURL(soundingTextURL)
+		if (!soundingTextURL) {
+			closeSlideoutPanel()
+		}
+	}
+
 	return (
 		<>
 			<div className={styles.forecastSoundingAnimatorContainer}>
@@ -150,6 +157,7 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 						frameValidTimes={frameValidTimes}
 						setFrameValidTime={setForecastFrameValidTime}
 						startFrame={startFrame}
+						onFrameUpdate={handleFrameTextChange}
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}
 						activeRun={runId as string}
@@ -164,6 +172,8 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 						interval={1000 / forecastSoundingFrameRate}
 						lastFrameDwell={forecastSoundingLastFrameDwell}
 						lastFrameDwellTime={forecastSoundingLastFrameDwellTime * 1000}
+						scrubberPlaceholderImageUrl={placeholderImage}
+						scrubberFrameLoadStates={forecastSoundingData.map((frame) => frame !== placeholderImage)}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastSoundingAnimatorSettings />
@@ -171,17 +181,6 @@ const ForecastSoundingAnimator: React.FC<ForecastSoundingAnimatorProps> = ({ pro
 						}
 					/>
 				</div>
-				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-						<ProductInfo {...productInfo} />
-					</Tab>
-					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-						Alerts TODO
-					</Tab>
-					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-						Download / Save Gif TODO
-					</Tab>
-				</Tabs>
 			</div>
 			<MobileIconNav tab />
 		</>

@@ -1,0 +1,21 @@
+.productInfo {
+	max-width: 600px;
+	padding: 10px;
+	color: var(--color-grey17-grey2);
+
+	h2 {
+		font-size: 24px;
+		font-weight: 600;
+		margin: 0 0 10px;
+	}
+	img {
+		max-width: 100%;
+		height: auto !important;
+	}
+}
+
+@media (max-width: 768px) {
+	.productInfo {
+		flex-direction: column;
+	}
+}

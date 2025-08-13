@@ -1,4 +1,6 @@
 import SectorSelectorPanel from '@/components/layout/SectorSelectorPanel/SectorSelectorPanel'
+import SoundingPickerPanel from '@/components/layout/SoundingPickerPanel/SoundingPickerPanel'
+
 import SubNavigation from '@/components/layout/SubNavigation/SubNavigation'
 import SubNavigationItem from '@/components/layout/SubNavigation/SubNavigationItem/SubNavigationItem'
 
@@ -12,6 +14,8 @@ export default function Layout({ children }) {
 				<SubNavigationItem name="Numerical Models" link="/weather-data/forecast-models/" />
 				<SubNavigationItem name="Text Products" link="/weather-data/text-hazards-outlooks/" />
 			</SubNavigation>
+			<SoundingPickerPanel />
+
 			<SectorSelectorPanel />
 			{children}
 		</>

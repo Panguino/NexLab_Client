@@ -1,3 +1,30 @@
+import {
+	FORECAST_LEVEL_250MB_ID,
+	FORECAST_LEVEL_2PVU_ID,
+	FORECAST_LEVEL_300MB_ID,
+	FORECAST_LEVEL_500MB_ID,
+	FORECAST_LEVEL_700MB_ID,
+	FORECAST_LEVEL_850MB_ID,
+	FORECAST_LEVEL_925MB_ID,
+	FORECAST_LEVEL_CONVECTIVE_ID,
+	FORECAST_LEVEL_PRECIPITATION_ID,
+	FORECAST_LEVEL_SURFACE_ID,
+	FORECAST_LEVEL_WINTER_ID,
+} from './levels'
+
+import {
+	FORECAST_SECTOR_ALASKA_ID,
+	FORECAST_SECTOR_ATLANTIC_OCEAN_ID,
+	FORECAST_SECTOR_FLOAT_ONE_ID,
+	FORECAST_SECTOR_FLOAT_THREE_ID,
+	FORECAST_SECTOR_FLOAT_TWO_ID,
+	FORECAST_SECTOR_NORTH_AMERICA_ID,
+	FORECAST_SECTOR_NORTHERN_ILLINOIS_ID,
+	FORECAST_SECTOR_PACIFIC_OCEAN_ID,
+	FORECAST_SECTOR_US_ID,
+	FORECAST_SECTOR_WORLD_ID,
+} from './sectors'
+
 export const FORECAST_PRODUCT_SHEAR_ID = 'shear'
 export const FORECAST_PRODUCT_UPDRAFT_HELICITY_ID = 'uphly'
 export const FORECAST_PRODUCT_UPDRAFT_HELICITY_SWATH_ID = 'uphlysw'
@@ -162,7 +189,17 @@ export const FORECAST_PRODUCTS = {
 	[FORECAST_PRODUCT_DEWP_ID]: { name: 'Dewpoint Temp.' },
 	[FORECAST_PRODUCT_PWAT_ID]: { name: 'Precipitable Water' },
 	[FORECAST_PRODUCT_AVORT_ID]: { name: 'Vorticity' },
-	[FORECAST_PRODUCT_VVEL_ID]: { name: 'Vertical Velocity' },
+	[FORECAST_PRODUCT_VVEL_ID]: {
+		name: 'Vertical Velocity',
+		infoId: {
+			[FORECAST_LEVEL_500MB_ID]: 'qa2bnkopu99aj0bsq8u89ul3',
+			[FORECAST_LEVEL_700MB_ID]: {
+				general: 'fmxumhhc4sr21zi1oskldmp6', // circular dependancy problem if model IDs pulled from models.ts
+				HRRR: 'b4w0dydusq2hrxhntc0vrgwi',
+				NAMNST: 'b4w0dydusq2hrxhntc0vrgwi',
+			},
+		},
+	},
 	[FORECAST_PRODUCT_THETAE_ID]: { name: 'Theta-E' },
 	[FORECAST_PRODUCT_RHUM_ID]: { name: 'Relative Humidity' },
 	[FORECAST_PRODUCT_SPD_ID]: { name: 'Wind Speed' },
@@ -236,33 +273,6 @@ export const FORECAST_PRODUCTS = {
 // Everything below sets up individual product arrays for each model, broken down by sector and level.
 // every time you see a 'general' sector, it means that the products defined there are available
 // for all other sectors available for that model that are not explicitly defined.
-
-import {
-	FORECAST_LEVEL_250MB_ID,
-	FORECAST_LEVEL_2PVU_ID,
-	FORECAST_LEVEL_300MB_ID,
-	FORECAST_LEVEL_500MB_ID,
-	FORECAST_LEVEL_700MB_ID,
-	FORECAST_LEVEL_850MB_ID,
-	FORECAST_LEVEL_925MB_ID,
-	FORECAST_LEVEL_CONVECTIVE_ID,
-	FORECAST_LEVEL_PRECIPITATION_ID,
-	FORECAST_LEVEL_SURFACE_ID,
-	FORECAST_LEVEL_WINTER_ID,
-} from './levels'
-
-import {
-	FORECAST_SECTOR_ALASKA_ID,
-	FORECAST_SECTOR_ATLANTIC_OCEAN_ID,
-	FORECAST_SECTOR_FLOAT_ONE_ID,
-	FORECAST_SECTOR_FLOAT_THREE_ID,
-	FORECAST_SECTOR_FLOAT_TWO_ID,
-	FORECAST_SECTOR_NORTH_AMERICA_ID,
-	FORECAST_SECTOR_NORTHERN_ILLINOIS_ID,
-	FORECAST_SECTOR_PACIFIC_OCEAN_ID,
-	FORECAST_SECTOR_US_ID,
-	FORECAST_SECTOR_WORLD_ID,
-} from './sectors'
 
 export const FORECAST_HRRR_PRODUCTS_BY_LEVEL = {
 	[FORECAST_SECTOR_FLOAT_TWO_ID]: {

@@ -11,12 +11,15 @@ export const getSoundingData = async (model, run, sector, level, product, validt
 	if (!data.err) {
 		return {
 			frames: data.frames,
+			text: data.text,
 			validtimes: data.validtimes,
 			imageInfo: data.img,
+			placeholderImage: data.placeholder,
 		}
 	} else {
 		return {
 			frames: [],
+			text: [],
 			validtimes: [],
 			imageInfo: { width: 1180, height: 783 },
 			error: data.error,
