@@ -3,6 +3,8 @@ import { ZustandStateSlice } from './useRootStore'
 export interface ISlideoutPanelSlice {
 	productInfoId: string
 	setProductInfoId: (id: string) => void
+	soundingTextURL: string
+	setSoundingTextURL: (url: string) => void
 	slideoutPanelIsOpen: boolean
 	currentSlideoutPanel: string
 	openSlideoutPanel: (panel: string) => void
@@ -12,6 +14,8 @@ export interface ISlideoutPanelSlice {
 export const createSlideoutPanelSlice: ZustandStateSlice<ISlideoutPanelSlice> = (set, get) => ({
 	productInfoId: '',
 	setProductInfoId: (id: string) => set(() => ({ productInfoId: id })),
+	soundingTextURL: '',
+	setSoundingTextURL: (url: string) => set(() => ({ soundingTextURL: url })),
 	slideoutPanelIsOpen: false,
 	currentSlideoutPanel: '',
 	openSlideoutPanel: (panel: string) => set(() => ({ slideoutPanelIsOpen: true, currentSlideoutPanel: panel })),

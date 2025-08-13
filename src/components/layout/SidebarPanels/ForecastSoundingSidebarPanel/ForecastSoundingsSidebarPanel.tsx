@@ -4,7 +4,7 @@ import { Button } from '@/components/elements/Button/Button'
 import Input from '@/components/elements/Input/Input'
 import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { faFileLines, faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
@@ -248,6 +248,10 @@ const ForecastSoundingsSidebarPanel = () => {
 						}))}
 						onChange={handleWeatherChange}
 					/>
+					<button className={styles.viewSoundingTextButton}>
+						<span className={styles.soundingTextLabel}>View Sounding Text</span>
+						<FontAwesomeIcon icon={faFileLines} />
+					</button>
 					<Button label="Generate Sounding" disabled={!allowGenerateSounding} onClick={handleGenerateSounding} />
 				</div>
 			</div>

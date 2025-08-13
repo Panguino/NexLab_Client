@@ -8,6 +8,8 @@ interface IAnimatorProps {
 	frameValidTimes?: number[]
 	setFrameValidTime?: (validtime: number) => void
 	startFrame?: number
+	frameTexts?: string[]
+	setFrameText?: (text: string) => void
 	runs?: { value: string; label: string }[] | null
 	activeRun?: string
 	setActiveRun?: (run: string) => void
@@ -62,6 +64,10 @@ export const Animator = ({
 	frames,
 	frameValidTimes,
 	startFrame,
+	frameTexts,
+	setFrameText = (text: string) => {
+		console.warn('setFrameText function not provided, frame text will not be updated.', text)
+	},
 	runs,
 	activeRun,
 	setActiveRun = (run: string) => {
@@ -128,6 +134,8 @@ export const Animator = ({
 				frames,
 				frameValidTimes,
 				startFrame,
+				frameTexts,
+				setFrameText,
 				runs,
 				activeRun,
 				setActiveRun,

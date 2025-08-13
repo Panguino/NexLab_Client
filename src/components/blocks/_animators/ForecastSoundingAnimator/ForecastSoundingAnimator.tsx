@@ -4,6 +4,7 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { FORECAST_MODELS } from '@/data/forecast/models'
+import { SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData, getSoundingRuns } from '@/util/dataCalls/forecast/query-sounding'
@@ -54,6 +55,9 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime()
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
 	const [placeholderImage, setPlaceholderImage] = useState(null)
+	const [frameTexts, setFrameTexts] = useState<string[]>([])
+	const setSoundingTextURL = useRootStore.use.setSoundingTextURL()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	const getData = useCallback(async () => {
 		// Location need special handling as it can accept either station ID or lat,lon format
@@ -88,6 +92,7 @@ const ForecastSoundingAnimator: React.FC = () => {
 		setStartFrame(closestValidTimeIndex)
 		setImageInfo(data.imageInfo)
 		setForecastSoundingData(data.frames)
+		setFrameTexts(data.text)
 		setForecastRuns(runs.runs)
 		setFrameValidTimes(data.validtimes)
 		setPlaceholderImage(data.placeholderImage)
@@ -134,6 +139,12 @@ const ForecastSoundingAnimator: React.FC = () => {
 		setForecastSoundingRunId(newRun) // Update the runId in the store
 	}
 
+	const handleFrameTextChange = (frameIndex) => {
+		const soundingTextURL = frameTexts[frameIndex]
+		setSoundingTextURL(soundingTextURL)
+		openSlideoutPanel(SOUNDING_TEXT_SLIDEOUT)
+	}
+
 	return (
 		<>
 			<div className={styles.forecastSoundingAnimatorContainer}>
@@ -143,6 +154,8 @@ const ForecastSoundingAnimator: React.FC = () => {
 						frameValidTimes={frameValidTimes}
 						setFrameValidTime={setForecastFrameValidTime}
 						startFrame={startFrame}
+						frameTexts={frameTexts}
+						setFrameText={handleFrameTextChange}
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}
 						activeRun={runId as string}
