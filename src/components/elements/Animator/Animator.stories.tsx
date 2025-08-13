@@ -79,3 +79,24 @@ overlays.args = {
 	overlays: testDataWithOverlays.overlays,
 	imageInfo: { width: 1600, height: 900 },
 }
+
+export const withScrubberFrameStates: StoryFn<typeof Animator> = TemplateFactory()
+withScrubberFrameStates.args = {
+	interval: 0.25,
+	frames: testFrames8x6.concat(testFrames8x6), // 12 frames
+	scrubberFrameLoadStates: [true, false, true, true, false, true, true, true, false, true, false, true],
+}
+
+export const withScrubberPlaceholder: StoryFn<typeof Animator> = TemplateFactory()
+withScrubberPlaceholder.args = {
+	interval: 0.25,
+	frames: [
+		// mix of real frames and placeholder entries
+		...testFrames8x6,
+		'/img/vertical-lines.png', // placeholder
+		...testFrames8x6.slice(0, 3),
+		'/img/vertical-lines.png', // placeholder
+		'/img/vertical-lines.png', // placeholder
+	],
+	scrubberPlaceholderImageUrl: '/img/vertical-lines.png',
+}

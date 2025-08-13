@@ -13,6 +13,7 @@ export const getSoundingData = async (model, run, sector, level, product, validt
 			frames: data.frames,
 			validtimes: data.validtimes,
 			imageInfo: data.img,
+			placeholderImage: data.placeholder,
 		}
 	} else {
 		return {
