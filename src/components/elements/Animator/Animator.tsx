@@ -8,8 +8,6 @@ interface IAnimatorProps {
 	frameValidTimes?: number[]
 	setFrameValidTime?: (validtime: number) => void
 	startFrame?: number
-	frameTexts?: string[]
-	setFrameText?: (text: string) => void
 	runs?: { value: string; label: string }[] | null
 	activeRun?: string
 	setActiveRun?: (run: string) => void
@@ -47,6 +45,7 @@ interface IAnimatorProps {
 	scrubberFrameLoadStates?: boolean[]
 	// Simple overlay markers (percent positions inside the image content)
 	overlayMarkers?: { xPercent: number; yPercent: number }[]
+	onFrameUpdate?: (frameIndex: number) => void
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -64,10 +63,6 @@ export const Animator = ({
 	frames,
 	frameValidTimes,
 	startFrame,
-	frameTexts,
-	setFrameText = (text: string) => {
-		console.warn('setFrameText function not provided, frame text will not be updated.', text)
-	},
 	runs,
 	activeRun,
 	setActiveRun = (run: string) => {
@@ -118,6 +113,9 @@ export const Animator = ({
 	setFullScreen = (fullScreen: boolean) => {
 		console.warn('setFullScreen function not provided, full screen state will not be updated.', fullScreen)
 	},
+	onFrameUpdate = (frameIndex: number) => {
+		console.warn('onFrameUpdate function not provided, frame update will not be handled.', frameIndex)
+	},
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
@@ -134,8 +132,6 @@ export const Animator = ({
 				frames,
 				frameValidTimes,
 				startFrame,
-				frameTexts,
-				setFrameText,
 				runs,
 				activeRun,
 				setActiveRun,
@@ -171,6 +167,7 @@ export const Animator = ({
 				onSoundingsClickthrough,
 				scrubberPlaceholderImageUrl,
 				scrubberFrameLoadStates,
+				onFrameUpdate,
 			}}
 		>
 			<AnimatorLayout />

@@ -31,6 +31,7 @@ const AnimatorControls = () => {
 		frames,
 		scrubberPlaceholderImageUrl,
 		scrubberFrameLoadStates,
+		onFrameUpdate,
 	} = useAnimator()
 
 	const [loopMethod, setLoopMethod] = useState(LoopMethod.LeftToRight)
@@ -132,6 +133,12 @@ const AnimatorControls = () => {
 			setCurrentFrame(startFrame > loadedFrames.length - 1 ? loadedFrames.length - 1 : startFrame)
 		}
 	}, [loadedFrames, startFrame, setCurrentFrame])
+
+	useEffect(() => {
+		if (onFrameUpdate) {
+			onFrameUpdate(currentFrame)
+		}
+	}, [currentFrame, onFrameUpdate])
 
 	return (
 		<div className={styles.controlsContainer}>

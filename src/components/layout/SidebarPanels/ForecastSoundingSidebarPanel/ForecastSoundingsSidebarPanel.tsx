@@ -21,6 +21,7 @@ import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
+import { SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSoundingsSidebarPanel.module.scss'
 
@@ -50,6 +51,8 @@ const ForecastSoundingsSidebarPanel = () => {
 	const openSoundingPicker = useRootStore.use.openSoundingPicker()
 	const setSoundingPickerFrames = useRootStore.use.setSoundingPickerFrames()
 	const setSoundingPickerImageInfo = useRootStore.use.setSoundingPickerImageInfo()
+	const soundingTextURL = useRootStore.use.soundingTextURL()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
 	const [returnLink, setReturnLink] = useState('')
@@ -248,11 +251,13 @@ const ForecastSoundingsSidebarPanel = () => {
 						}))}
 						onChange={handleWeatherChange}
 					/>
-					<button className={styles.viewSoundingTextButton}>
-						<span className={styles.soundingTextLabel}>View Sounding Text</span>
-						<FontAwesomeIcon icon={faFileLines} />
-					</button>
 					<Button label="Generate Sounding" disabled={!allowGenerateSounding} onClick={handleGenerateSounding} />
+					{soundingTextURL && (
+						<button className={styles.viewSoundingTextButton} onClick={() => openSlideoutPanel(SOUNDING_TEXT_SLIDEOUT)}>
+							<span className={styles.soundingTextLabel}>View Sounding Text</span>
+							<FontAwesomeIcon icon={faFileLines} />
+						</button>
+					)}
 				</div>
 			</div>
 		</ScrollArea>

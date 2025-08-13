@@ -4,7 +4,6 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { FORECAST_MODELS } from '@/data/forecast/models'
-import { SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData, getSoundingRuns } from '@/util/dataCalls/forecast/query-sounding'
@@ -57,7 +56,7 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const [placeholderImage, setPlaceholderImage] = useState(null)
 	const [frameTexts, setFrameTexts] = useState<string[]>([])
 	const setSoundingTextURL = useRootStore.use.setSoundingTextURL()
-	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+	const closeSlideoutPanel = useRootStore.use.closeSlideoutPanel()
 
 	const getData = useCallback(async () => {
 		// Location need special handling as it can accept either station ID or lat,lon format
@@ -88,6 +87,8 @@ const ForecastSoundingAnimator: React.FC = () => {
 		const data = await getSoundingData(modelId, runId, sectorId, levelId, productId, paddedForecastHour, sanitizedLocationId, parcelId, weatherId)
 		const sanitizedValidTimeId = data.validtimes.indexOf(typeSafeValidTimeId) !== -1 ? typeSafeValidTimeId : data.validtimes[0] // Fallback to first valid time if not found
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, sanitizedValidTimeId)
+
+		console.log('ForecastSoundingAnimator: data fetched', data)
 
 		setStartFrame(closestValidTimeIndex)
 		setImageInfo(data.imageInfo)
@@ -142,7 +143,9 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const handleFrameTextChange = (frameIndex) => {
 		const soundingTextURL = frameTexts[frameIndex]
 		setSoundingTextURL(soundingTextURL)
-		openSlideoutPanel(SOUNDING_TEXT_SLIDEOUT)
+		if (!soundingTextURL) {
+			closeSlideoutPanel()
+		}
 	}
 
 	return (
@@ -154,8 +157,7 @@ const ForecastSoundingAnimator: React.FC = () => {
 						frameValidTimes={frameValidTimes}
 						setFrameValidTime={setForecastFrameValidTime}
 						startFrame={startFrame}
-						frameTexts={frameTexts}
-						setFrameText={handleFrameTextChange}
+						onFrameUpdate={handleFrameTextChange}
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}
 						activeRun={runId as string}
