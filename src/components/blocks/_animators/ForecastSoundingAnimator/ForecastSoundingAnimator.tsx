@@ -54,6 +54,9 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const setForecastFrameValidTime = useRootStore.use.setForecastFrameValidTime()
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
 	const [placeholderImage, setPlaceholderImage] = useState(null)
+	const [frameTexts, setFrameTexts] = useState<string[]>([])
+	const setSoundingTextURL = useRootStore.use.setSoundingTextURL()
+	const closeSlideoutPanel = useRootStore.use.closeSlideoutPanel()
 
 	const getData = useCallback(async () => {
 		// Location need special handling as it can accept either station ID or lat,lon format
@@ -85,9 +88,12 @@ const ForecastSoundingAnimator: React.FC = () => {
 		const sanitizedValidTimeId = data.validtimes.indexOf(typeSafeValidTimeId) !== -1 ? typeSafeValidTimeId : data.validtimes[0] // Fallback to first valid time if not found
 		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, sanitizedValidTimeId)
 
+		console.log('ForecastSoundingAnimator: data fetched', data)
+
 		setStartFrame(closestValidTimeIndex)
 		setImageInfo(data.imageInfo)
 		setForecastSoundingData(data.frames)
+		setFrameTexts(data.text)
 		setForecastRuns(runs.runs)
 		setFrameValidTimes(data.validtimes)
 		setPlaceholderImage(data.placeholderImage)
@@ -134,6 +140,14 @@ const ForecastSoundingAnimator: React.FC = () => {
 		setForecastSoundingRunId(newRun) // Update the runId in the store
 	}
 
+	const handleFrameTextChange = (frameIndex) => {
+		const soundingTextURL = frameTexts[frameIndex]
+		setSoundingTextURL(soundingTextURL)
+		if (!soundingTextURL) {
+			closeSlideoutPanel()
+		}
+	}
+
 	return (
 		<>
 			<div className={styles.forecastSoundingAnimatorContainer}>
@@ -143,6 +157,7 @@ const ForecastSoundingAnimator: React.FC = () => {
 						frameValidTimes={frameValidTimes}
 						setFrameValidTime={setForecastFrameValidTime}
 						startFrame={startFrame}
+						onFrameUpdate={handleFrameTextChange}
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}
 						activeRun={runId as string}

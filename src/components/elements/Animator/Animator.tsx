@@ -45,6 +45,7 @@ interface IAnimatorProps {
 	scrubberFrameLoadStates?: boolean[]
 	// Simple overlay markers (percent positions inside the image content)
 	overlayMarkers?: { xPercent: number; yPercent: number }[]
+	onFrameUpdate?: (frameIndex: number) => void
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -112,6 +113,9 @@ export const Animator = ({
 	setFullScreen = (fullScreen: boolean) => {
 		console.warn('setFullScreen function not provided, full screen state will not be updated.', fullScreen)
 	},
+	onFrameUpdate = (frameIndex: number) => {
+		console.warn('onFrameUpdate function not provided, frame update will not be handled.', frameIndex)
+	},
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
@@ -163,6 +167,7 @@ export const Animator = ({
 				onSoundingsClickthrough,
 				scrubberPlaceholderImageUrl,
 				scrubberFrameLoadStates,
+				onFrameUpdate,
 			}}
 		>
 			<AnimatorLayout />

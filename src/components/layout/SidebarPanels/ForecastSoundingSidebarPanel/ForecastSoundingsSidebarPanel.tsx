@@ -4,7 +4,7 @@ import { Button } from '@/components/elements/Button/Button'
 import Input from '@/components/elements/Input/Input'
 import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { faFileLines, faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
@@ -21,6 +21,7 @@ import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
+import { SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSoundingsSidebarPanel.module.scss'
 
@@ -50,6 +51,8 @@ const ForecastSoundingsSidebarPanel = () => {
 	const openSoundingPicker = useRootStore.use.openSoundingPicker()
 	const setSoundingPickerFrames = useRootStore.use.setSoundingPickerFrames()
 	const setSoundingPickerImageInfo = useRootStore.use.setSoundingPickerImageInfo()
+	const soundingTextURL = useRootStore.use.soundingTextURL()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
 	const [returnLink, setReturnLink] = useState('')
@@ -214,8 +217,7 @@ const ForecastSoundingsSidebarPanel = () => {
 							title="Pick on map"
 							onClick={async () => {
 								try {
-									const effectiveRunId = forecastSoundingRunId || runId
-									const data = await getForecastData(modelId, effectiveRunId, sectorId, levelId, productId)
+									const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
 									const currentVT = forecastSoundingValidTime || data.validtimes[data.validtimes.length - 1]
 									const index = findClosestValidTimeIndex(data.validtimes, currentVT)
 									setSoundingPickerFrames([data.frames[index]])
@@ -250,6 +252,12 @@ const ForecastSoundingsSidebarPanel = () => {
 						onChange={handleWeatherChange}
 					/>
 					<Button label="Generate Sounding" disabled={!allowGenerateSounding} onClick={handleGenerateSounding} />
+					{soundingTextURL && (
+						<button className={styles.viewSoundingTextButton} onClick={() => openSlideoutPanel(SOUNDING_TEXT_SLIDEOUT)}>
+							<span className={styles.soundingTextLabel}>View Sounding Text</span>
+							<FontAwesomeIcon icon={faFileLines} />
+						</button>
+					)}
 				</div>
 			</div>
 		</ScrollArea>
