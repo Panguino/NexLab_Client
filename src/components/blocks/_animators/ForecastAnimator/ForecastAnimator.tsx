@@ -2,7 +2,6 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
-import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useIsMobile } from '@/hooks/useIsMobile'
@@ -12,30 +11,22 @@ import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
-import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import ForecastAnimatorSettings from '../../_animatorSettingPanels/ForecastAnimatorSettings/ForecastAnimatorSettings'
 import styles from './ForecastAnimator.module.scss'
-
-interface ForecastAnimatorProps {
-	productInfo: ProductInfoProps
-}
 
 interface runsProps {
 	unix: number
 	readable: string
 }
 
-const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
+const ForecastAnimator: React.FC = () => {
 	const { isMobile } = useIsMobile()
 	const router = useRouter()
 	const pathname = usePathname()
 	const { fcstModel: modelId, fcstRun: runId, fcstSector: sectorId, fcstLevel: levelId, fcstProduct: productId } = useParams()
 	const setForecastSoundingRunId = useRootStore.use.setForecastSoundingRunId()
-	const [activeTab, setActiveTab] = useState(-1)
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
@@ -206,17 +197,6 @@ const ForecastAnimator: React.FC<ForecastAnimatorProps> = ({ productInfo }) => {
 						}
 					/>
 				</div>
-				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-						<ProductInfo {...productInfo} />
-					</Tab>
-					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-						Alerts TODO
-					</Tab>
-					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-						Download / Save Gif TODO
-					</Tab>
-				</Tabs>
 			</div>
 			<MobileIconNav tab />
 		</>

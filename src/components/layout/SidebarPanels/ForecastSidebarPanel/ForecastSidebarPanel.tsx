@@ -9,8 +9,9 @@ import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
 import { FORECAST_PRODUCTS } from '@/data/forecast/products'
 import { FORECAST_REGIONS } from '@/data/forecast/regions'
 import { FORECAST_SECTORS } from '@/data/forecast/sectors'
+import { PRODUCT_INFO_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
-import { fetchFloaterSectorData } from '@/util/forecast/common-functions'
+import { fetchFloaterSectorData, getModelProductInfoId } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
@@ -29,6 +30,8 @@ const ForecastSidebarPanel = () => {
 	const { fcstModel: modelId, fcstRun: runId, fcstSector: sectorId, fcstLevel: levelId, fcstProduct: productId } = useParams()
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
 	const openIndexRef = useRef<number | null>(null)
+	const setProductInfoId = useRootStore.use.setProductInfoId()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	useEffect(() => {
 		if (
@@ -177,14 +180,24 @@ const ForecastSidebarPanel = () => {
 						onToggle={() => handleToggle(index)}
 					>
 						<div className={styles.forecastProducts}>
-							{(products as string[]).map((product) => (
-								<SidebarLink
-									key={product}
-									name={FORECAST_PRODUCTS[product].name}
-									active={product === productId && level === levelId}
-									onClick={() => router.push(`/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${level}/${product}`)}
-								/>
-							))}
+							{(products as string[]).map((product) => {
+								const productInfoId = getModelProductInfoId(FORECAST_PRODUCTS[product], level, modelId as string)
+								const sidebarLinkProps: any = {
+									key: product,
+									name: FORECAST_PRODUCTS[product].name,
+									active: product === productId && level === levelId,
+									infoId: productInfoId,
+									linkUrl: `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${level}/${product}`,
+								}
+								if (productInfoId !== false) {
+									console.log('Adding infoId click handler for', product, 'infoId:', productInfoId)
+									sidebarLinkProps.onInfoClick = () => {
+										setProductInfoId(productInfoId)
+										openSlideoutPanel(PRODUCT_INFO_SLIDEOUT)
+									}
+								}
+								return <SidebarLink {...sidebarLinkProps} />
+							})}
 						</div>
 					</Accordian>
 				))}

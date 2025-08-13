@@ -8,6 +8,7 @@ import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { ALL_NEXRAD_GROUPS, DEFAULT_NEXRAD_PRODUCT, NEXRAD_GROUPS, NEXRAD_PRODUCTS } from '@/data/nexrad/products'
 import { DEFAULT_NEXRAD_REGION, NEXRAD_REGIONS } from '@/data/nexrad/regions'
 import { DEFAULT_NEXRAD_SITE, NEXRAD_SITES } from '@/data/nexrad/sites'
+import { PRODUCT_INFO_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect } from 'react'
@@ -23,6 +24,8 @@ const NexradSidebarPanel = () => {
 	const resetNexradZoomState = useRootStore.use.resetNexradZoomState()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const { nexradProductId: productId, nexradSiteId: siteId, nexradRegionId: regionId } = useParams()
+	const setProductInfoId = useRootStore.use.setProductInfoId()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	useEffect(() => {
 		if (!NEXRAD_PRODUCTS[productId as string] || !NEXRAD_REGIONS[regionId as string] || !NEXRAD_SITES[siteId as string]) {
@@ -74,11 +77,15 @@ const NexradSidebarPanel = () => {
 			const group = nexradGroups[groupId]
 			const products = productsArray
 				.filter((productId) => group.products.includes(productId))
-				.map((productId) => ({
-					id: productId,
-					label: nexradProducts[productId].label,
-					limited: NEXRAD_SITES[nexradSite].limited === true ? nexradProducts[productId].limited : false,
-				}))
+				.map((productId) => {
+					const product = nexradProducts[productId]
+					const base = {
+						id: productId,
+						label: product.label,
+						limited: NEXRAD_SITES[nexradSite].limited === true ? product.limited : false,
+					}
+					return product.infoId !== undefined ? { ...base, infoId: product.infoId } : base
+				})
 
 			return {
 				groupId,
@@ -103,15 +110,23 @@ const NexradSidebarPanel = () => {
 				{panelGroupedProducts.map(({ groupId, label, sublabel, columns, products }) => (
 					<SidebarGroup key={groupId} title={label} extraInfo={sublabel && `(${sublabel})`}>
 						<SidebarGrid columns={columns}>
-							{products.map(({ id, label, limited }) => (
-								<SidebarLink
-									key={id}
-									name={label}
-									linkUrl={`/weather-data/nexrad-dual-pol-radar/${id}/${regionId}/${siteId}`}
-									active={id === productId}
-									limited={limited}
-								/>
-							))}
+							{products.map((product) => {
+								const { id, label, limited } = product
+								const sidebarLinkProps: any = {
+									key: id,
+									name: label,
+									active: id === productId,
+									limited: limited,
+									linkUrl: `/weather-data/nexrad-dual-pol-radar/${id}/${regionId}/${siteId}`,
+								}
+								if ('infoId' in product && product.infoId && product.infoId !== '') {
+									sidebarLinkProps.onInfoClick = () => {
+										setProductInfoId(product.infoId)
+										openSlideoutPanel(PRODUCT_INFO_SLIDEOUT)
+									}
+								}
+								return <SidebarLink {...sidebarLinkProps} />
+							})}
 						</SidebarGrid>
 					</SidebarGroup>
 				))}

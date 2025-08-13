@@ -2,32 +2,23 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
-import { Tab, Tabs } from '@/components/elements/Tabs/Tabs'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
 import { useRootStore } from '@/store/useRootStore'
 import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
-import { faDownload, faInfoCircle, faWarning } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams } from 'next/navigation'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import ProductInfo, { ProductInfoProps } from '../../ProductInfo/ProductInfo'
 import NexradAnimatorSettings from '../../_animatorSettingPanels/NexradAnimatorSettings/NexradAnimatorSettings'
 import styles from './NexradAnimator.module.scss'
 
-interface NexradAnimatorProps {
-	productInfo: ProductInfoProps
-}
-
-const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
+const NexradAnimator: React.FC = () => {
 	const { isMobile } = useIsMobile()
 	const nexradRefreshInterval = useRootStore.use.nexradDataRefreshInterval()
 	const userIdle = useIsUserIdle((nexradRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
 	const userIdleRef = useRef(false)
 	const { nexradProductId: productId, nexradSiteId: siteId } = useParams()
-	const [activeTab, setActiveTab] = useState(-1)
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
 	const nexradFrameRate = useRootStore.use.nexradFrameRate()
 	const nexradZoomState = useRootStore.use.nexradZoomState()
@@ -110,17 +101,6 @@ const NexradAnimator: React.FC<NexradAnimatorProps> = ({ productInfo }) => {
 						}
 					/>
 				</div>
-				<Tabs activeTab={activeTab} setActiveTab={setActiveTab}>
-					<Tab label="Product Info" icon={<FontAwesomeIcon icon={faInfoCircle} />}>
-						<ProductInfo {...productInfo} />
-					</Tab>
-					<Tab label="Alerts" icon={<FontAwesomeIcon icon={faWarning} />}>
-						Alerts TODO
-					</Tab>
-					<Tab label="Download" icon={<FontAwesomeIcon icon={faDownload} />}>
-						Download / Save Gif TODO
-					</Tab>
-				</Tabs>
 			</div>
 			<MobileIconNav tab />
 		</>

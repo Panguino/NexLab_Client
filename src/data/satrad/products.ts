@@ -30,34 +30,42 @@ export const SATRAD_PRODUCTS = {
 	[SATRAD_PRODUCT_ABI_01_ID]: {
 		label: '01: Visible (blue)',
 		shortLabel: '01: Visible (blue)',
+		infoId: 'fkhcgyia8jxy1km2ix995lre',
 	},
 	[SATRAD_PRODUCT_ABI_02_ID]: {
 		label: '02: Visible (red)',
 		shortLabel: '02: Visible (red)',
+		infoId: 'vdvffisgz0epy5vw6aqg7jml',
 	},
 	[SATRAD_PRODUCT_ABI_03_ID]: {
 		label: '03: Veggie (green)',
 		shortLabel: '03: Veggie',
+		infoId: 'y9ntd5sjuck1gegqug6nppbt',
 	},
 	[SATRAD_PRODUCT_ABI_04_ID]: {
 		label: '04: Cirrus (Near IR)',
 		shortLabel: '04: Cirrus',
+		infoId: 'xvqk2y4fdnqe7okqvcfhq8fm',
 	},
 	[SATRAD_PRODUCT_ABI_05_ID]: {
 		label: '05: Snow/Ice (Near IR)',
 		shortLabel: '05: Snow/Ice',
+		infoId: 'wdt8duw2g3hwoukar72x6744',
 	},
 	[SATRAD_PRODUCT_ABI_06_ID]: {
 		label: '06: Particle Size (Near IR)',
 		shortLabel: '06: Particle Size',
+		infoId: 'edxg6wtxk45de9bjkjay2u0s',
 	},
 	[SATRAD_PRODUCT_ABI_07_ID]: {
 		label: '07: Shortwave IR',
 		shortLabel: '07: Shortwave IR',
+		infoId: 'q0zos4zr3b4hpi9hzq5ve281',
 	},
 	[SATRAD_PRODUCT_ABI_08_ID]: {
 		label: '08: Upper-Level Water Vapor',
 		shortLabel: '08: UL H20 Vapor',
+		infoId: 'chwykpj6amsilke8grtl376i',
 	},
 	[SATRAD_PRODUCT_ABI_09_ID]: {
 		label: '09: Mid-Level Water Vapor',
@@ -138,7 +146,7 @@ export const ALL_SATRAD_GROUPS = [SATRAD_PRODUCT_GROUP_ABI, SATRAD_PRODUCT_GROUP
 export const SATRAD_GROUPS = {
 	[SATRAD_PRODUCT_GROUP_ABI]: {
 		label: 'ABI Bands',
-		columns: 2,
+		columns: 1,
 		products: [
 			SATRAD_PRODUCT_ABI_01_ID,
 			SATRAD_PRODUCT_ABI_02_ID,
@@ -160,12 +168,12 @@ export const SATRAD_GROUPS = {
 	},
 	[SATRAD_PRODUCT_GROUP_RADAR]: {
 		label: 'Composite Radar',
-		columns: 2,
+		columns: 1,
 		products: [SATRAD_PRODUCT_COMPOSITE_RADAR_ID],
 	},
 	[SATRAD_PRODUCT_GROUP_RGB]: {
 		label: 'RGB Color Products',
-		columns: 2,
+		columns: 1,
 		products: [
 			SATRAD_PRODUCT_TRUE_COLOR_ID,
 			SATRAD_PRODUCT_NATURAL_COLOR_ID,

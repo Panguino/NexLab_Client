@@ -1,9 +1,5 @@
 const Page = () => {
-	return (
-		<div>
-			<h1>Isentropic Maps</h1>
-		</div>
-	)
+	return <div></div>
 }
 
 export default Page
