@@ -214,7 +214,8 @@ const ForecastSoundingsSidebarPanel = () => {
 							title="Pick on map"
 							onClick={async () => {
 								try {
-									const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
+									const effectiveRunId = forecastSoundingRunId || runId
+									const data = await getForecastData(modelId, effectiveRunId, sectorId, levelId, productId)
 									const currentVT = forecastSoundingValidTime || data.validtimes[data.validtimes.length - 1]
 									const index = findClosestValidTimeIndex(data.validtimes, currentVT)
 									setSoundingPickerFrames([data.frames[index]])
