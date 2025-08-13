@@ -4,6 +4,9 @@ import { Button } from '@/components/elements/Button/Button'
 import Input from '@/components/elements/Input/Input'
 import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
+import { faFileLines, faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
 import {
 	DEFAULT_FORECAST_SOUNDING_PARCEL,
@@ -12,9 +15,13 @@ import {
 	FORECAST_SOUNDING_WEATHER_OPTIONS,
 } from '@/data/forecast/soundingOptions'
 import { useRootStore } from '@/store/useRootStore'
+import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
 import { buildProductsByLevel, fetchStationCoordinates } from '@/util/forecast/common-functions'
+import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+
+import { SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSoundingsSidebarPanel.module.scss'
 
@@ -41,6 +48,12 @@ const ForecastSoundingsSidebarPanel = () => {
 	const [internalLocationId, setInternalLocationId] = useState(locationId)
 	const [internalParcelId, setInternalParcelId] = useState(parcelId)
 	const [internalWeatherId, setInternalWeatherId] = useState(weatherId)
+	const openSoundingPicker = useRootStore.use.openSoundingPicker()
+	const setSoundingPickerFrames = useRootStore.use.setSoundingPickerFrames()
+	const setSoundingPickerImageInfo = useRootStore.use.setSoundingPickerImageInfo()
+	const soundingTextURL = useRootStore.use.soundingTextURL()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+
 	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
 	const [returnLink, setReturnLink] = useState('')
 	const forecastSoundingRunId = useRootStore.use.forecastSoundingRunId() // this version from the store helps to keep the sidebar in sync with the animator
@@ -187,30 +200,51 @@ const ForecastSoundingsSidebarPanel = () => {
 			<div className={styles.ForecastSoundingsSidebarPanel}>
 				<SidebarSectionHeader name="Return to Forecast Models" linkUrl={returnLink} />
 				<div className={styles.options}>
+					<label>Model:</label>
 					<Select
 						value={internalModelId}
 						placeholder={internalModelId as string}
-						title="Model:"
 						options={modelOptions}
 						onChange={(model) => {
 							handleModelChange(model)
 						}}
 					/>
-					<Input label="Location" value={internalLocationId} onChange={handleLocationChange} />
+					<label>Location:</label>
+					<div className={styles.locationWithPicker}>
+						<Input value={internalLocationId} onChange={handleLocationChange} />
+						<button
+							className={styles.pickButton}
+							title="Pick on map"
+							onClick={async () => {
+								try {
+									const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
+									const currentVT = forecastSoundingValidTime || data.validtimes[data.validtimes.length - 1]
+									const index = findClosestValidTimeIndex(data.validtimes, currentVT)
+									setSoundingPickerFrames([data.frames[index]])
+									setSoundingPickerImageInfo(data.imageInfo)
+									openSoundingPicker()
+								} catch (e) {
+									console.error('Failed to open sounding picker', e)
+								}
+							}}
+						>
+							<FontAwesomeIcon icon={faLocationDot} />
+						</button>
+					</div>
+					<label>Parcel Type:</label>
 					<Select
 						value={internalParcelId}
 						placeholder={internalParcelId as string}
-						title="Parcel Type:"
 						options={Object.values(FORECAST_SOUNDING_PARCEL_OPTIONS).map((option) => ({
 							value: option.id,
 							label: option.label,
 						}))}
 						onChange={handleParcelChange}
 					/>
+					<label>Weather Type:</label>
 					<Select
 						value={internalWeatherId}
 						placeholder={internalWeatherId as string}
-						title="Weather Type:"
 						options={Object.values(FORECAST_SOUNDING_WEATHER_OPTIONS).map((option) => ({
 							value: option.id,
 							label: option.label,
@@ -218,6 +252,12 @@ const ForecastSoundingsSidebarPanel = () => {
 						onChange={handleWeatherChange}
 					/>
 					<Button label="Generate Sounding" disabled={!allowGenerateSounding} onClick={handleGenerateSounding} />
+					{soundingTextURL && (
+						<button className={styles.viewSoundingTextButton} onClick={() => openSlideoutPanel(SOUNDING_TEXT_SLIDEOUT)}>
+							<span className={styles.soundingTextLabel}>View Sounding Text</span>
+							<FontAwesomeIcon icon={faFileLines} />
+						</button>
+					)}
 				</div>
 			</div>
 		</ScrollArea>

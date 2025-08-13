@@ -5,8 +5,9 @@ import { useEffect, useState } from 'react'
 import HazardsDetailPanel from '@/components/blocks/Hazards/HazardsMap/HazardsDetailPanel/HazardsDetailPanel'
 import { Meilisearch } from '@/components/blocks/Meilisearch/Meilisearch'
 import ProductInfoPanel from '@/components/blocks/ProductInfoPanel/ProductInfoPanel'
+import SoundingTextPanel from '@/components/blocks/SoundingTextPanel/SoundingTextPanel'
 import CloseX from '@/components/elements/icons/CloseX/CloseX'
-import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT, PRODUCT_INFO_SLIDEOUT, SEARCH_RESULTS_SLIDEOUT } from '@/data/vars'
+import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT, PRODUCT_INFO_SLIDEOUT, SEARCH_RESULTS_SLIDEOUT, SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { usePathname } from 'next/navigation'
 import styles from './SlideoutPanel.module.scss'
@@ -34,6 +35,8 @@ const SlideoutPanel = () => {
 				return <Meilisearch />
 			case PRODUCT_INFO_SLIDEOUT:
 				return <ProductInfoPanel />
+			case SOUNDING_TEXT_SLIDEOUT:
+				return <SoundingTextPanel />
 			default:
 				return <></>
 		}

@@ -26,6 +26,7 @@ const AnimatorImageSizer = () => {
 		soundingsPickerMode,
 		setSoundingsPickerMode,
 		onSoundingsClickthrough,
+		overlayMarkers,
 	} = useAnimator()
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
@@ -80,7 +81,9 @@ const AnimatorImageSizer = () => {
 		}
 		// I know this is stupid, but it works
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
+
 	const handleImageClick = () => {
+		console.log('imagePosition', imagePosition, soundingsPickerMode)
 		if (soundingsPickerMode) {
 			onSoundingsClickthrough(imagePosition)
 			setSoundingsPickerMode(false) // Exit pick mode after selection
@@ -133,6 +136,14 @@ const AnimatorImageSizer = () => {
 									/>
 								)
 							})}
+							{/* Overlay markers */}
+							{(Array.isArray(overlayMarkers) ? overlayMarkers : []).map((m, i) => (
+								<div
+									key={`overlay-marker-${i}`}
+									className={styles.overlayMarker}
+									style={{ left: `${m.xPercent * 100}%`, top: `${m.yPercent * 100}%` }}
+								/>
+							))}
 						</TransformComponent>
 						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} onUpdatePosition={setImagePosition} />
 
