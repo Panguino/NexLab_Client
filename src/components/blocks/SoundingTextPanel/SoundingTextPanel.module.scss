@@ -1,32 +1,31 @@
 .soundingTextPanel {
 	padding: 16px;
-	font-family: monospace;
 	white-space: pre-wrap;
 	word-break: break-word;
-}
+	.loadingIndicator {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 100px;
+		color: var(--color-grey8);
+	}
 
-.loadingIndicator {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	min-height: 100px;
-	color: var(--color-grey8);
-}
+	.errorMessage {
+		color: var(--color-error);
+		padding: 16px;
+		border-radius: 4px;
+		background-color: rgba(255, 0, 0, 0.1);
+	}
 
-.errorMessage {
-	color: var(--color-error);
-	padding: 16px;
-	border-radius: 4px;
-	background-color: rgba(255, 0, 0, 0.1);
-}
+	.placeholderMessage {
+		color: var(--color-grey10);
+		text-align: center;
+		padding: 32px 0;
+	}
 
-.placeholderMessage {
-	color: var(--color-grey10);
-	text-align: center;
-	padding: 32px 0;
-}
-
-.soundingText {
-	font-size: 14px;
-	line-height: 1.5;
+	.soundingText {
+		font-family: monospace;
+		font-size: 14px;
+		line-height: 1.5;
+	}
 }
