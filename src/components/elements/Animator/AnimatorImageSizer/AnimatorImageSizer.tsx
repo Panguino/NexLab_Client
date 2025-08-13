@@ -30,8 +30,13 @@ const AnimatorImageSizer = () => {
 	} = useAnimator()
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
+	// retain state for tooltip hover position (not required for click-through)
 	const [imagePosition, setImagePosition] = useState({ xPercent: 0, yPercent: 0 })
 	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }, updateDimensions] = useDimensions(ratio, !zoomFill)
+
+	// Track panning to suppress click-through during/after pan
+	const isPanningRef = useRef(false)
+	const panStopTimeRef = useRef(0)
 
 	const allOverlayImages = useMemo(() => {
 		if (!overlays) return {}
@@ -65,8 +70,14 @@ const AnimatorImageSizer = () => {
 	const handleZoomChange = (e: any) => {
 		setZoomState(e?.state)
 	}
-	const handlePanningChange = (e: any) => {
+	const handlePanningStart = (e: any) => {
 		setZoomState(e?.state)
+		isPanningRef.current = true
+		panStopTimeRef.current = performance.now()
+	}
+	const handlePanningStop = (e: any) => {
+		setZoomState(e?.state)
+		isPanningRef.current = false
 	}
 
 	useEffect(() => {
@@ -83,10 +94,14 @@ const AnimatorImageSizer = () => {
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
 
 	const handleImageClick = () => {
-		console.log('imagePosition', imagePosition, soundingsPickerMode)
+		// Suppress click-through during pan or immediately after a pan
+		const now = performance.now()
+		if (isPanningRef.current || now - panStopTimeRef.current > 120) return
+		if (!soundingsPickerMode || !animatorRef.current) return
+
 		if (soundingsPickerMode) {
 			onSoundingsClickthrough(imagePosition)
-			setSoundingsPickerMode(false) // Exit pick mode after selection
+			setSoundingsPickerMode?.(false)
 		}
 	}
 	return (
@@ -102,7 +117,8 @@ const AnimatorImageSizer = () => {
 				initialPositionX={initialZoomState.positionX}
 				initialPositionY={initialZoomState.positionY}
 				onZoomStop={handleZoomChange}
-				onPanningStop={handlePanningChange}
+				onPanningStart={handlePanningStart}
+				onPanningStop={handlePanningStop}
 				doubleClick={{ disabled: true }}
 				panning={{ velocityDisabled: true }}
 			>

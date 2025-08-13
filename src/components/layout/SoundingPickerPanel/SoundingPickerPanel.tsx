@@ -16,6 +16,8 @@ const SoundingPickerPanel = () => {
 	const closePanel = useRootStore.use.closeSoundingPicker()
 	const frames = useRootStore.use.soundingPickerFrames()
 	const imageInfo = useRootStore.use.soundingPickerImageInfo()
+	const storeRunId = useRootStore.use.forecastSoundingRunId()
+	const storeValidTime = useRootStore.use.forecastFrameValidTime()
 	const router = useRouter()
 	const {
 		fcstModel: modelId,
@@ -69,8 +71,10 @@ const SoundingPickerPanel = () => {
 
 	const onSoundingsClickthrough = ({ xPercent, yPercent }) => {
 		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
-		const baseParmsString = `${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
-		const soundingParmsString = `${validTimeId}/${locationId}/${parcelId}/${weatherId}`
+		const effectiveRunId = storeRunId || runId
+		const effectiveValidTime = storeValidTime || validTimeId
+		const baseParmsString = `${effectiveRunId}/${modelId}/${sectorId}/${levelId}/${productId}`
+		const soundingParmsString = `${effectiveValidTime}/${locationId}/${parcelId}/${weatherId}`
 		router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
 		closePanel()
 	}
