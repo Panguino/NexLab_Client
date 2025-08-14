@@ -20,6 +20,11 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 	const tooltipRef = useRef<HTMLDivElement>(null)
 	const [tooltipPosition, setTooltipPosition] = useState('bottom-right')
 	const [tooltipContent, setTooltipContent] = useState({})
+	// Keep a stable reference to onUpdatePosition to avoid effect loops due to identity changes
+	const onUpdateRef = useRef(onUpdatePosition)
+	useEffect(() => {
+		onUpdateRef.current = onUpdatePosition
+	}, [onUpdatePosition])
 
 	useEffect(() => {
 		// Check conditions for requesting data
@@ -101,7 +106,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 		const percentageX = Math.max(0, Math.min(0.999, rawPercentageX))
 		const percentageY = Math.max(0, Math.min(0.999, rawPercentageY))
 		setPercentagePosition({ xPercent: percentageX, yPercent: percentageY, rawPercentageX, rawPercentageY })
-		onUpdatePosition({ xPercent: rawPercentageX, yPercent: rawPercentageY })
+		onUpdateRef.current?.({ xPercent: rawPercentageX, yPercent: rawPercentageY })
 
 		if (frameReadoutData?.dataTypes?.length) {
 			try {
