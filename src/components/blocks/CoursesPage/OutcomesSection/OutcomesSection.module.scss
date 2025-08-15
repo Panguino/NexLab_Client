@@ -1,0 +1,51 @@
+@import '/src/styles/vars';
+
+.outcomes {
+	padding: 80px 0;
+	background-color: var(--color-grey1-grey20);
+	transition: background-color var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 60px 0;
+	}
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.content {
+	text-align: center;
+	max-width: 800px;
+	margin: 0 auto;
+
+	h2 {
+		color: var(--color-grey20-grey0);
+		font-weight: 700;
+		margin: 0 0 24px 0;
+		transition: color var(--themeChange);
+		font-family: var(--font-secondary);
+		font-size: 50px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 120%;
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 28px;
+		}
+	}
+
+	p {
+		color: var(--color-grey16-grey5);
+		font-size: 18px;
+		line-height: 1.6;
+		margin: 0;
+		transition: color var(--themeChange);
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 16px;
+		}
+	}
+}

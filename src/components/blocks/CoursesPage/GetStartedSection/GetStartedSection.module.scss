@@ -1,0 +1,78 @@
+@import '/src/styles/vars';
+
+.getStarted {
+	padding: 80px 0;
+	background: linear-gradient(135deg, var(--color-blue3-blue5) 0%, var(--color-blue5-blue3) 100%);
+	transition: background var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 60px 0;
+	}
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.content {
+	text-align: center;
+
+	h2 {
+		color: var(--color-white);
+		font-weight: 700;
+		margin: 0 0 60px 0;
+		font-family: var(--font-secondary);
+		font-size: 50px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 120%;
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 28px;
+			margin-bottom: 40px;
+		}
+	}
+}
+
+.ctaGrid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 32px;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+}
+
+.ctaCard {
+	background-color: var(--color-white-grey19);
+	border-radius: 12px;
+	padding: 32px 24px;
+	text-align: center;
+	transition: all 0.3s ease;
+	border: 1px solid var(--color-grey3-grey16);
+
+	&:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+	}
+
+	h3 {
+		color: var(--color-grey20-grey0);
+		font-size: 20px;
+		font-weight: 600;
+		margin: 0 0 12px 0;
+		transition: color var(--themeChange);
+	}
+
+	p {
+		color: var(--color-grey16-grey5);
+		font-size: 14px;
+		line-height: 1.6;
+		margin: 0 0 24px 0;
+		transition: color var(--themeChange);
+	}
+}
