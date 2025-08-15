@@ -32,6 +32,8 @@ const ForecastSidebarPanel = () => {
 	const openIndexRef = useRef<number | null>(null)
 	const setProductInfoId = useRootStore.use.setProductInfoId()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+	const frameValidTime = useRootStore.use.forecastFrameValidTime()
+	const checkTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
 	useEffect(() => {
 		if (
@@ -67,6 +69,28 @@ const ForecastSidebarPanel = () => {
 			setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		}
 	}, [runId, modelId, sectorId, levelId, productId, router])
+
+	useEffect(() => {
+		// Clear any pending check
+		if (checkTimeoutRef.current) clearTimeout(checkTimeoutRef.current)
+
+		// Wait 2 seconds after the latest change
+		checkTimeoutRef.current = setTimeout(() => {
+			console.log('Ready to perform comparison checks', {
+				runId,
+				modelId,
+				sectorId,
+				levelId,
+				productId,
+				frameValidTime,
+			})
+		}, 2000)
+
+		// Cleanup on unmount or before next schedule
+		return () => {
+			if (checkTimeoutRef.current) clearTimeout(checkTimeoutRef.current)
+		}
+	}, [runId, modelId, sectorId, levelId, productId, frameValidTime])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
@@ -170,6 +194,12 @@ const ForecastSidebarPanel = () => {
 						label="Selected Sector:"
 						labelValue={FORECAST_SECTORS[sectorId as string]?.name ?? 'Unknown Sector'}
 					/>
+					<div className={styles.comparisonSelector}>
+						<div className={styles.label}>Compare:</div>
+						<button>Height</button>
+						<button>Runs</button>
+						<button>Models</button>
+					</div>
 				</div>
 				{sortedProductEntries.map(({ level, products }, index) => (
 					<Accordian
@@ -183,20 +213,18 @@ const ForecastSidebarPanel = () => {
 							{(products as string[]).map((product) => {
 								const productInfoId = getModelProductInfoId(FORECAST_PRODUCTS[product], level, modelId as string)
 								const sidebarLinkProps: any = {
-									key: product,
 									name: FORECAST_PRODUCTS[product].name,
 									active: product === productId && level === levelId,
 									infoId: productInfoId,
 									linkUrl: `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${level}/${product}`,
 								}
 								if (productInfoId !== false) {
-									console.log('Adding infoId click handler for', product, 'infoId:', productInfoId)
 									sidebarLinkProps.onInfoClick = () => {
 										setProductInfoId(productInfoId)
 										openSlideoutPanel(PRODUCT_INFO_SLIDEOUT)
 									}
 								}
-								return <SidebarLink {...sidebarLinkProps} />
+								return <SidebarLink key={product} {...sidebarLinkProps} />
 							})}
 						</div>
 					</Accordian>

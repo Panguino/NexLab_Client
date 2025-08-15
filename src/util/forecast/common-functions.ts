@@ -104,7 +104,6 @@ export const forecastHourFromUnixValidtime = (runId: number, validtimeId: number
  * @returns The found infoId string or false if not found
  */
 export const getModelProductInfoId = (obj: any, level: string, model: string): string | false => {
-	console.log('product object being evaluated', obj)
 	// Base case: if infoId doesn't exist, return false immediately
 	if (!obj.infoId) {
 		return false
@@ -130,7 +129,6 @@ export const getModelProductInfoId = (obj: any, level: string, model: string): s
 
 	// Case 2b: level value is an object - check for model
 	// Model is only checked within a valid level object
-	console.log('model in levelValue', levelValue[model], 'levelValue:', levelValue)
 	const modelValue = levelValue[model] || levelValue.general
 
 	// Return model value if it's a string, otherwise false
