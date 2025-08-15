@@ -127,7 +127,6 @@ const SatradSidebarPanel = () => {
 							{products.map((product) => {
 								const { id, label } = product
 								const sidebarLinkProps: any = {
-									key: id,
 									name: label,
 									active: id === productId,
 									linkUrl: `/weather-data/satellite-mosaic-radar/${id}/${regionId}/${sectorId}`,
@@ -139,7 +138,7 @@ const SatradSidebarPanel = () => {
 									}
 								}
 
-								return <SidebarLink {...sidebarLinkProps} />
+								return <SidebarLink key={id} {...sidebarLinkProps} />
 							})}
 						</SidebarGrid>
 					</SidebarGroup>

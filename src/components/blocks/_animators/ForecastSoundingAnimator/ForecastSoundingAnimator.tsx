@@ -12,6 +12,7 @@ import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ForecastSoundingAnimatorSettings from '../../_animatorSettingPanels/ForecastSoundingAnimatorSettings/ForecastSoundingAnimatorSettings'
+import LoadingPanel from '../../LoadingPanel/LoadingPanel'
 import styles from './ForecastSoundingAnimator.module.scss'
 
 interface runsProps {
@@ -57,9 +58,11 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const [frameTexts, setFrameTexts] = useState<string[]>([])
 	const setSoundingTextURL = useRootStore.use.setSoundingTextURL()
 	const closeSlideoutPanel = useRootStore.use.closeSlideoutPanel()
+	const [isLoading, setIsLoading] = useState(false)
 
 	const getData = useCallback(async () => {
 		// Location need special handling as it can accept either station ID or lat,lon format
+		setIsLoading(true)
 		let sanitizedLocationId = locationId
 		if (isStationId) {
 			sanitizedLocationId = await fetchStationCoordinates(locationId)
@@ -97,6 +100,7 @@ const ForecastSoundingAnimator: React.FC = () => {
 		setForecastRuns(runs.runs)
 		setFrameValidTimes(data.validtimes)
 		setPlaceholderImage(data.placeholderImage)
+		setIsLoading(false)
 	}, [
 		runId,
 		modelId,
@@ -150,39 +154,45 @@ const ForecastSoundingAnimator: React.FC = () => {
 
 	return (
 		<>
-			<div className={styles.forecastSoundingAnimatorContainer}>
-				<div className={styles.forecastSoundingAnimator}>
-					<Animator
-						frames={forecastSoundingData}
-						frameValidTimes={frameValidTimes}
-						setFrameValidTime={setForecastFrameValidTime}
-						startFrame={startFrame}
-						onFrameUpdate={handleFrameTextChange}
-						runs={transformedRuns}
-						runsPerRow={runsPerRow}
-						activeRun={runId as string}
-						setActiveRun={handleRunChange}
-						imageInfo={imageInfo}
-						initialZoomState={forecastSoundingZoomState}
-						setZoomState={setForecastSoundingZoomState}
-						zoomFill={forecastSoundingZoomFill}
-						setZoomFill={setForecastSoundingZoomFill}
-						fullScreen={forecastSoundingMapFullScreen}
-						setFullScreen={setForecastSoundingMapFullScreen}
-						interval={1000 / forecastSoundingFrameRate}
-						lastFrameDwell={forecastSoundingLastFrameDwell}
-						lastFrameDwellTime={forecastSoundingLastFrameDwellTime * 1000}
-						scrubberPlaceholderImageUrl={placeholderImage}
-						scrubberFrameLoadStates={forecastSoundingData.map((frame) => frame !== placeholderImage)}
-						settingsComponent={
-							<AnimatorSettings title="Settings">
-								<ForecastSoundingAnimatorSettings />
-							</AnimatorSettings>
-						}
-					/>
-				</div>
-			</div>
-			<MobileIconNav tab />
+			{isLoading ? (
+				<LoadingPanel />
+			) : (
+				<>
+					<div className={styles.forecastSoundingAnimatorContainer}>
+						<div className={styles.forecastSoundingAnimator}>
+							<Animator
+								frames={forecastSoundingData}
+								frameValidTimes={frameValidTimes}
+								setFrameValidTime={setForecastFrameValidTime}
+								startFrame={startFrame}
+								onFrameUpdate={handleFrameTextChange}
+								runs={transformedRuns}
+								runsPerRow={runsPerRow}
+								activeRun={runId as string}
+								setActiveRun={handleRunChange}
+								imageInfo={imageInfo}
+								initialZoomState={forecastSoundingZoomState}
+								setZoomState={setForecastSoundingZoomState}
+								zoomFill={forecastSoundingZoomFill}
+								setZoomFill={setForecastSoundingZoomFill}
+								fullScreen={forecastSoundingMapFullScreen}
+								setFullScreen={setForecastSoundingMapFullScreen}
+								interval={1000 / forecastSoundingFrameRate}
+								lastFrameDwell={forecastSoundingLastFrameDwell}
+								lastFrameDwellTime={forecastSoundingLastFrameDwellTime * 1000}
+								scrubberPlaceholderImageUrl={placeholderImage}
+								scrubberFrameLoadStates={forecastSoundingData.map((frame) => frame !== placeholderImage)}
+								settingsComponent={
+									<AnimatorSettings title="Settings">
+										<ForecastSoundingAnimatorSettings />
+									</AnimatorSettings>
+								}
+							/>
+						</div>
+					</div>
+					<MobileIconNav tab />
+				</>
+			)}
 		</>
 	)
 }
