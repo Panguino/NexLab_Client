@@ -11,6 +11,7 @@ import { FORECAST_REGIONS } from '@/data/forecast/regions'
 import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import { PRODUCT_INFO_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
+import { getCompareHeightData, getCompareModelsData, getCompareRunsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { fetchFloaterSectorData, getModelProductInfoId } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -34,6 +35,9 @@ const ForecastSidebarPanel = () => {
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 	const frameValidTime = useRootStore.use.forecastFrameValidTime()
 	const checkTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+	const [heightDisabled, setHeightDisabled] = useState(false)
+	const [runsDisabled, setRunsDisabled] = useState(false)
+	const [modelsDisabled, setModelsDisabled] = useState(false)
 
 	useEffect(() => {
 		if (
@@ -71,22 +75,33 @@ const ForecastSidebarPanel = () => {
 	}, [runId, modelId, sectorId, levelId, productId, router])
 
 	useEffect(() => {
-		// Clear any pending check
 		if (checkTimeoutRef.current) clearTimeout(checkTimeoutRef.current)
 
-		// Wait 2 seconds after the latest change
-		checkTimeoutRef.current = setTimeout(() => {
-			console.log('Ready to perform comparison checks', {
-				runId,
-				modelId,
-				sectorId,
-				levelId,
-				productId,
-				frameValidTime,
-			})
+		checkTimeoutRef.current = setTimeout(async () => {
+			// Height comparison
+			setHeightDisabled(true) // Optimistically disable while loading
+			setRunsDisabled(true)
+			setModelsDisabled(true)
+
+			// You may want to handle errors more gracefully in production
+			try {
+				const [height, runs, models] = await Promise.all([
+					getCompareHeightData(modelId, runId, sectorId, productId, frameValidTime),
+					getCompareRunsData(modelId, sectorId, levelId, productId, frameValidTime),
+					getCompareModelsData(runId, sectorId, levelId, productId, frameValidTime),
+				])
+
+				setHeightDisabled(!height.frames || height.frames.length < 2)
+				setRunsDisabled(!runs.frames || runs.frames.length < 2)
+				setModelsDisabled(!models.frames || models.frames.length < 2)
+			} catch (err) {
+				// On error, keep all disabled
+				setHeightDisabled(true)
+				setRunsDisabled(true)
+				setModelsDisabled(true)
+			}
 		}, 2000)
 
-		// Cleanup on unmount or before next schedule
 		return () => {
 			if (checkTimeoutRef.current) clearTimeout(checkTimeoutRef.current)
 		}
@@ -196,9 +211,24 @@ const ForecastSidebarPanel = () => {
 					/>
 					<div className={styles.comparisonSelector}>
 						<div className={styles.label}>Compare:</div>
-						<button>Height</button>
-						<button>Runs</button>
-						<button>Models</button>
+						<button
+							className={heightDisabled ? styles.disabled : ''}
+							// onClick={...}
+						>
+							Height
+						</button>
+						<button
+							className={runsDisabled ? styles.disabled : ''}
+							// onClick={...}
+						>
+							Runs
+						</button>
+						<button
+							className={modelsDisabled ? styles.disabled : ''}
+							// onClick={...}
+						>
+							Models
+						</button>
 					</div>
 				</div>
 				{sortedProductEntries.map(({ level, products }, index) => (
