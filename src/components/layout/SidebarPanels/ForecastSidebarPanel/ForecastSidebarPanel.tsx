@@ -76,13 +76,11 @@ const ForecastSidebarPanel = () => {
 
 	useEffect(() => {
 		if (checkTimeoutRef.current) clearTimeout(checkTimeoutRef.current)
+		setHeightDisabled(true) // Optimistically disable while loading
+		setRunsDisabled(true)
+		setModelsDisabled(true)
 
 		checkTimeoutRef.current = setTimeout(async () => {
-			// Height comparison
-			setHeightDisabled(true) // Optimistically disable while loading
-			setRunsDisabled(true)
-			setModelsDisabled(true)
-
 			// You may want to handle errors more gracefully in production
 			try {
 				const [height, runs, models] = await Promise.all([
@@ -90,7 +88,6 @@ const ForecastSidebarPanel = () => {
 					getCompareRunsData(modelId, sectorId, levelId, productId, frameValidTime),
 					getCompareModelsData(runId, sectorId, levelId, productId, frameValidTime),
 				])
-
 				setHeightDisabled(!height.frames || height.frames.length < 2)
 				setRunsDisabled(!runs.frames || runs.frames.length < 2)
 				setModelsDisabled(!models.frames || models.frames.length < 2)
@@ -155,6 +152,27 @@ const ForecastSidebarPanel = () => {
 		}
 		openSectorSelectorPanel()
 	}
+	const handleHeightComparison = () => {
+		if (heightDisabled) return
+		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
+		const route = `/weather-data/forecast-models/${baseParams}/compare-height/${frameValidTime}`
+		console.log(route)
+		// router.push(route)
+	}
+	const handleRunsComparison = () => {
+		if (runsDisabled) return
+		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
+		const route = `/weather-data/forecast-models/${baseParams}/compare-runs/${frameValidTime}`
+		console.log(route)
+		// router.push(route)
+	}
+	const handleModelsComparison = () => {
+		if (modelsDisabled) return
+		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
+		const route = `/weather-data/forecast-models/${baseParams}/compare-models/${frameValidTime}`
+		console.log(route)
+		// router.push(route)
+	}
 
 	// get products grouped by level to build the sidebar
 	const buildProductsByLevel = (modelId: string, sectorId: string) => {
@@ -211,22 +229,13 @@ const ForecastSidebarPanel = () => {
 					/>
 					<div className={styles.comparisonSelector}>
 						<div className={styles.label}>Compare:</div>
-						<button
-							className={heightDisabled ? styles.disabled : ''}
-							// onClick={...}
-						>
+						<button className={heightDisabled ? styles.disabled : ''} onClick={handleHeightComparison}>
 							Height
 						</button>
-						<button
-							className={runsDisabled ? styles.disabled : ''}
-							// onClick={...}
-						>
+						<button className={runsDisabled ? styles.disabled : ''} onClick={handleRunsComparison}>
 							Runs
 						</button>
-						<button
-							className={modelsDisabled ? styles.disabled : ''}
-							// onClick={...}
-						>
+						<button className={modelsDisabled ? styles.disabled : ''} onClick={handleModelsComparison}>
 							Models
 						</button>
 					</div>
