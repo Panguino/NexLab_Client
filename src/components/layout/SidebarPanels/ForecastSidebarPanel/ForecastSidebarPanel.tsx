@@ -11,6 +11,7 @@ import { FORECAST_REGIONS } from '@/data/forecast/regions'
 import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import { PRODUCT_INFO_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
+import { getCompareHeightData, getCompareModelsData, getCompareRunsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { fetchFloaterSectorData, getModelProductInfoId } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
@@ -32,6 +33,11 @@ const ForecastSidebarPanel = () => {
 	const openIndexRef = useRef<number | null>(null)
 	const setProductInfoId = useRootStore.use.setProductInfoId()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+	const frameValidTime = useRootStore.use.forecastFrameValidTime()
+	const checkTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+	const [heightDisabled, setHeightDisabled] = useState(false)
+	const [runsDisabled, setRunsDisabled] = useState(false)
+	const [modelsDisabled, setModelsDisabled] = useState(false)
 
 	useEffect(() => {
 		if (
@@ -67,6 +73,36 @@ const ForecastSidebarPanel = () => {
 			setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		}
 	}, [runId, modelId, sectorId, levelId, productId, router])
+
+	useEffect(() => {
+		if (checkTimeoutRef.current) clearTimeout(checkTimeoutRef.current)
+		setHeightDisabled(true) // Optimistically disable while loading
+		setRunsDisabled(true)
+		setModelsDisabled(true)
+
+		checkTimeoutRef.current = setTimeout(async () => {
+			// You may want to handle errors more gracefully in production
+			try {
+				const [height, runs, models] = await Promise.all([
+					getCompareHeightData(modelId, runId, sectorId, productId, frameValidTime),
+					getCompareRunsData(modelId, sectorId, levelId, productId, frameValidTime),
+					getCompareModelsData(runId, sectorId, levelId, productId, frameValidTime),
+				])
+				setHeightDisabled(!height.frames || height.frames.length < 2)
+				setRunsDisabled(!runs.frames || runs.frames.length < 2)
+				setModelsDisabled(!models.frames || models.frames.length < 2)
+			} catch (err) {
+				// On error, keep all disabled
+				setHeightDisabled(true)
+				setRunsDisabled(true)
+				setModelsDisabled(true)
+			}
+		}, 2000)
+
+		return () => {
+			if (checkTimeoutRef.current) clearTimeout(checkTimeoutRef.current)
+		}
+	}, [runId, modelId, sectorId, levelId, productId, frameValidTime])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {
@@ -115,6 +151,27 @@ const ForecastSidebarPanel = () => {
 			setRegionId(FORECAST_SECTORS[sectorId as string].region)
 		}
 		openSectorSelectorPanel()
+	}
+	const handleHeightComparison = () => {
+		if (heightDisabled) return
+		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
+		const route = `/weather-data/forecast-models/${baseParams}/compare-height/${frameValidTime}`
+		console.log(route)
+		// router.push(route)
+	}
+	const handleRunsComparison = () => {
+		if (runsDisabled) return
+		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
+		const route = `/weather-data/forecast-models/${baseParams}/compare-runs/${frameValidTime}`
+		console.log(route)
+		// router.push(route)
+	}
+	const handleModelsComparison = () => {
+		if (modelsDisabled) return
+		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
+		const route = `/weather-data/forecast-models/${baseParams}/compare-models/${frameValidTime}`
+		console.log(route)
+		// router.push(route)
 	}
 
 	// get products grouped by level to build the sidebar
@@ -170,6 +227,18 @@ const ForecastSidebarPanel = () => {
 						label="Selected Sector:"
 						labelValue={FORECAST_SECTORS[sectorId as string]?.name ?? 'Unknown Sector'}
 					/>
+					<div className={styles.comparisonSelector}>
+						<div className={styles.label}>Compare:</div>
+						<button className={heightDisabled ? styles.disabled : ''} onClick={handleHeightComparison}>
+							Height
+						</button>
+						<button className={runsDisabled ? styles.disabled : ''} onClick={handleRunsComparison}>
+							Runs
+						</button>
+						<button className={modelsDisabled ? styles.disabled : ''} onClick={handleModelsComparison}>
+							Models
+						</button>
+					</div>
 				</div>
 				{sortedProductEntries.map(({ level, products }, index) => (
 					<Accordian
@@ -183,20 +252,18 @@ const ForecastSidebarPanel = () => {
 							{(products as string[]).map((product) => {
 								const productInfoId = getModelProductInfoId(FORECAST_PRODUCTS[product], level, modelId as string)
 								const sidebarLinkProps: any = {
-									key: product,
 									name: FORECAST_PRODUCTS[product].name,
 									active: product === productId && level === levelId,
 									infoId: productInfoId,
 									linkUrl: `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${level}/${product}`,
 								}
 								if (productInfoId !== false) {
-									console.log('Adding infoId click handler for', product, 'infoId:', productInfoId)
 									sidebarLinkProps.onInfoClick = () => {
 										setProductInfoId(productInfoId)
 										openSlideoutPanel(PRODUCT_INFO_SLIDEOUT)
 									}
 								}
-								return <SidebarLink {...sidebarLinkProps} />
+								return <SidebarLink key={product} {...sidebarLinkProps} />
 							})}
 						</div>
 					</Accordian>
