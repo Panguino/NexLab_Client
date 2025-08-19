@@ -156,22 +156,22 @@ const ForecastSidebarPanel = () => {
 		if (heightDisabled) return
 		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
 		const route = `/weather-data/forecast-models/${baseParams}/compare-height/${frameValidTime}`
-		console.log(route)
-		// router.push(route)
+		// console.log(route)
+		router.push(route)
 	}
 	const handleRunsComparison = () => {
 		if (runsDisabled) return
 		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
 		const route = `/weather-data/forecast-models/${baseParams}/compare-runs/${frameValidTime}`
-		console.log(route)
-		// router.push(route)
+		// console.log(route)
+		router.push(route)
 	}
 	const handleModelsComparison = () => {
 		if (modelsDisabled) return
 		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
 		const route = `/weather-data/forecast-models/${baseParams}/compare-models/${frameValidTime}`
-		console.log(route)
-		// router.push(route)
+		// console.log(route)
+		router.push(route)
 	}
 
 	// get products grouped by level to build the sidebar
