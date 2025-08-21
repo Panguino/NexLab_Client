@@ -14,10 +14,17 @@ $frame-indicator-border: var(--color-grey3-white);
   display: flex;
   flex-direction: column;
   justify-content: center;
+  &.singleLabelPadding {
+    padding-top: 22px; // make space for single active label above
+  }
 
   input[type='range'] {
     -webkit-appearance: none;
     appearance: none;
+    &.singleLabelPadding {
+      padding-top: 22px; // make space for single active label above
+    }
+
     margin: 13px 0;
     width: 100%;
 
@@ -187,6 +194,18 @@ $frame-indicator-border: var(--color-grey3-white);
     border-bottom: 5px solid $thumb-color; // small white arrow
   }
 
+  // remove active segment effect — the tab indicates selection now
+  .activeFrameLabel {
+    position: absolute;
+    top: -18px; // above the bar
+    transform: translateX(-50%);
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
   .frameIndicator {
     flex: 1;
     height: 100%;
@@ -207,7 +226,6 @@ $frame-indicator-border: var(--color-grey3-white);
       background-color: $unloaded-frame-color;
     }
 
-    // remove active segment effect — the tab indicates selection now
     &.active {
       opacity: 1;
     }

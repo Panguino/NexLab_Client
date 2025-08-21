@@ -1,7 +1,8 @@
 import Providers from '@/components/providers/Providers/Providers'
+import { formatRunToZDate } from '@/util/dateFormat'
 import { Meta, StoryFn } from '@storybook/react'
 import { Animator } from './Animator'
-import { testDataFrameLabels, testDataWithOverlays, testFrames, testFrames16x9, testFrames8x6 } from './AnimatorTestData'
+import { testDataFrameLabels, testDataFrameLabels2, testDataWithOverlays, testFrames, testFrames16x9, testFrames8x6 } from './AnimatorTestData'
 
 const meta: Meta<typeof Animator> = {
 	title: 'Components/Animator/Animator',
@@ -107,4 +108,13 @@ withFrameLabels.args = {
 	imageInfo: { width: testDataFrameLabels.img.width, height: testDataFrameLabels.img.height },
 	frameLabels: testDataFrameLabels.levels,
 	scrubberFrameLoadStates: new Array(testDataFrameLabels.frames.length).fill(true),
+}
+export const withActiveFrameLabel: StoryFn<typeof Animator> = TemplateFactory()
+withActiveFrameLabel.args = {
+	interval: 0.25,
+	frames: testDataFrameLabels2.frames,
+	imageInfo: { width: testDataFrameLabels2.img.width, height: testDataFrameLabels2.img.height },
+	frameLabels: testDataFrameLabels2.runs.map(formatRunToZDate),
+	displayAllLabels: false,
+	scrubberFrameLoadStates: new Array(testDataFrameLabels2.frames.length).fill(true),
 }

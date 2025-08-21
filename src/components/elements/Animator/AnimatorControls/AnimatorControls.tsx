@@ -32,6 +32,7 @@ const AnimatorControls = () => {
 		scrubberPlaceholderImageUrl,
 		scrubberFrameLoadStates,
 		frameLabels,
+		displayAllLabels,
 		onFrameUpdate,
 	} = useAnimator()
 
@@ -154,6 +155,7 @@ const AnimatorControls = () => {
 					placeholderImageUrl={scrubberPlaceholderImageUrl}
 					frameLoadStates={scrubberFrameLoadStates}
 					frameLabels={frameLabels}
+					displayAllLabels={displayAllLabels}
 				/>
 				<BasicPlaybackControls
 					isPlaying={isPlaying}
