@@ -37,8 +37,14 @@ const ForecastCompareHeightSidebarPanel = () => {
 	// keep product entries grouped by level and update whenever model or internal sector change
 	const [sortedProductEntries, setSortedProductEntries] = useState<Array<{ level: string; products: string[] }>>([])
 
+	// models to omit from the Model Select
+	const OMIT_MODELS = ['HRRR', 'NAMNST', 'CFS', 'SREF', 'GEFS']
+	const allowedModelKeys = Object.keys(FORECAST_MODELS).filter((m) => !OMIT_MODELS.includes(m))
+
 	// internal model id (user can change model in this panel without immediately routing)
-	const [internalModelId, setInternalModelId] = useState<string>(modelId as string)
+	const [internalModelId, setInternalModelId] = useState<string>(() =>
+		allowedModelKeys.includes(modelId as string) ? (modelId as string) : allowedModelKeys[0] ?? (modelId as string),
+	)
 
 	// region/sector state (used by the sector selector)
 	const regionInitial = (FORECAST_SECTORS as any)[sectorId as string]?.region || ''
@@ -159,7 +165,7 @@ const ForecastCompareHeightSidebarPanel = () => {
 					<Select
 						value={internalModelId}
 						placeholder={internalModelId as string}
-						options={Object.keys(FORECAST_MODELS).map((m) => ({ value: m, label: (FORECAST_MODELS as any)[m].name }))}
+						options={allowedModelKeys.map((m) => ({ value: m, label: (FORECAST_MODELS as any)[m].name }))}
 						onChange={(m) => setInternalModelId(m)}
 					/>
 					<label>Sector Size:</label>
