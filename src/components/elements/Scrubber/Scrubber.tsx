@@ -10,9 +10,20 @@ interface IScrubberProps {
 	frameLoadStates?: boolean[] // Array indicating which frames are loaded
 	placeholderImageUrl?: string // URL of placeholder image to check against
 	frames?: string[] // Array of frame URLs to check loading state
+	frameLabels?: string[] // Optional labels per frame, displayed above the scrubber
 }
 
-const Scrubber: React.FC<IScrubberProps> = ({ minValue, maxValue, value, onChange, unitStep = 1, frameLoadStates, placeholderImageUrl, frames }) => {
+const Scrubber: React.FC<IScrubberProps> = ({
+	minValue,
+	maxValue,
+	value,
+	onChange,
+	unitStep = 1,
+	frameLoadStates,
+	placeholderImageUrl,
+	frames,
+	frameLabels,
+}) => {
 	const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newValue = parseInt(event.target.value, 10)
 		onChange(newValue)
@@ -23,7 +34,7 @@ const Scrubber: React.FC<IScrubberProps> = ({ minValue, maxValue, value, onChang
 	}
 
 	// Determine if we should show the enhanced scrubber with frame indicators
-	const showFrameIndicators = frameLoadStates || (frames && placeholderImageUrl)
+	const showFrameIndicators = frameLoadStates || (frames && placeholderImageUrl) || (frameLabels && frameLabels.length > 0)
 
 	// Calculate frame load states if not provided but we have frames and placeholder URL
 	const getFrameLoadStates = (): boolean[] => {
@@ -31,15 +42,28 @@ const Scrubber: React.FC<IScrubberProps> = ({ minValue, maxValue, value, onChang
 		if (frames && placeholderImageUrl) {
 			return frames.map((frame) => frame !== placeholderImageUrl)
 		}
+		// If labels are provided without load states, assume all loaded for display purposes
+		if (frameLabels && frameLabels.length > 0) {
+			return new Array(frameLabels.length).fill(true)
+		}
 		return []
 	}
 
 	const loadStates = getFrameLoadStates()
 
 	if (showFrameIndicators && loadStates.length > 0) {
-		// Enhanced scrubber with frame indicators
+		// Enhanced scrubber with frame indicators and optional labels
 		return (
 			<div className={styles.timelineScrubber}>
+				{frameLabels && frameLabels.length === loadStates.length && (
+					<div className={styles.frameLabels}>
+						{frameLabels.map((label, index) => (
+							<div key={index} className={styles.frameLabel} onClick={() => handleFrameClick(index)} title={label}>
+								{label}
+							</div>
+						))}
+					</div>
+				)}
 				<div className={styles.enhancedScrubber}>
 					<div className={styles.frameIndicators}>
 						{(() => {

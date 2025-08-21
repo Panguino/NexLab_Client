@@ -1,7 +1,7 @@
 import Providers from '@/components/providers/Providers/Providers'
 import { Meta, StoryFn } from '@storybook/react'
 import { Animator } from './Animator'
-import { testDataWithOverlays, testFrames, testFrames16x9, testFrames8x6 } from './AnimatorTestData'
+import { testDataFrameLabels, testDataWithOverlays, testFrames, testFrames16x9, testFrames8x6 } from './AnimatorTestData'
 
 const meta: Meta<typeof Animator> = {
 	title: 'Components/Animator/Animator',
@@ -99,4 +99,12 @@ withScrubberPlaceholder.args = {
 		'/img/vertical-lines.png', // placeholder
 	],
 	scrubberPlaceholderImageUrl: '/img/vertical-lines.png',
+}
+export const withFrameLabels: StoryFn<typeof Animator> = TemplateFactory()
+withFrameLabels.args = {
+	interval: 0.25,
+	frames: testDataFrameLabels.frames,
+	imageInfo: { width: testDataFrameLabels.img.width, height: testDataFrameLabels.img.height },
+	frameLabels: testDataFrameLabels.levels,
+	scrubberFrameLoadStates: new Array(testDataFrameLabels.frames.length).fill(true),
 }

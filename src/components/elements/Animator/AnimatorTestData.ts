@@ -456,3 +456,22 @@ export const testDataWithOverlays = {
 		},
 	},
 }
+export const testDataFrameLabels = {
+	frames: [
+		'https://weather.cod.edu/wxdata/forecast/NAM/2025082106/US/NAMUS_500_temp_000.png',
+		'https://weather.cod.edu/wxdata/forecast/NAM/2025082106/US/NAMUS_700_temp_000.png',
+		'https://weather.cod.edu/wxdata/forecast/NAM/2025082106/US/NAMUS_850_temp_000.png',
+		'https://weather.cod.edu/wxdata/forecast/NAM/2025082106/US/NAMUS_925_temp_000.png',
+		'https://weather.cod.edu/wxdata/forecast/NAM/2025082106/US/NAMUS_sfc_temp_000.png',
+	],
+	levels: ['500', '700', '850', '925', 'sfc'],
+	validtimes: [
+		1755756000, 1755766800, 1755777600, 1755788400, 1755799200, 1755810000, 1755820800, 1755831600, 1755842400, 1755853200, 1755864000,
+		1755874800, 1755885600, 1755896400, 1755907200, 1755918000, 1755928800, 1755939600, 1755950400, 1755961200, 1755972000, 1755982800,
+		1755993600, 1756004400, 1756015200, 1756026000, 1756036800, 1756047600, 1756058400,
+	],
+	img: {
+		width: 800,
+		height: 600,
+	},
+}
