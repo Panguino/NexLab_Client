@@ -8,12 +8,14 @@ export const getCompareHeightData = async (model, run, sector, product, validtim
 		return {
 			frames: data.frames,
 			levels: data.levels,
+			validtimes: data.validtimes,
 			imageInfo: data.img,
 		}
 	} else {
 		return {
 			frames: [],
 			levels: [],
+			validtimes: [],
 			imageInfo: { width: 800, height: 600 },
 			error: data.error,
 		}

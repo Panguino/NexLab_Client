@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from '@/components/elements/Button/Button'
 import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
@@ -9,9 +8,10 @@ import { FORECAST_PRODUCTS } from '@/data/forecast/products'
 import { FORECAST_REGIONS } from '@/data/forecast/regions'
 import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import { useRootStore } from '@/store/useRootStore'
+import { getCompareHeightData } from '@/util/dataCalls/forecast/query-comparisons'
 import { buildProductsByLevel, fetchFloaterSectorData } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastCompareHeightSidebarPanel.module.scss'
 
@@ -25,6 +25,7 @@ const ForecastCompareHeightSidebarPanel = () => {
 		fcstCompareValid: validTimeId,
 	} = useParams()
 	const router = useRouter()
+	const returnLink = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
 
 	// root-store hooks used for opening sector picker and wiring the selector panel
 	const openSectorSelectorPanel = useRootStore.use.openSectorSelectorPanel()
@@ -33,30 +34,27 @@ const ForecastCompareHeightSidebarPanel = () => {
 	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
-
-	// keep product entries grouped by level and update whenever model or internal sector change
-	const [sortedProductEntries, setSortedProductEntries] = useState<Array<{ level: string; products: string[] }>>([])
-
 	// models to omit from the Model Select
 	const OMIT_MODELS = ['HRRR', 'NAMNST', 'CFS', 'SREF', 'GEFS']
 	const allowedModelKeys = Object.keys(FORECAST_MODELS).filter((m) => !OMIT_MODELS.includes(m))
-
-	// internal model id (user can change model in this panel without immediately routing)
-	const [internalModelId, setInternalModelId] = useState<string>(() =>
-		allowedModelKeys.includes(modelId as string) ? (modelId as string) : allowedModelKeys[0] ?? (modelId as string),
-	)
-
 	// region/sector state (used by the sector selector)
 	const regionInitial = (FORECAST_SECTORS as any)[sectorId as string]?.region || ''
 	const [regionId, setRegionId] = useState<string>(regionInitial)
+	// keep product entries grouped by level and update whenever model or internal sector change
+	const [sortedProductEntries, setSortedProductEntries] = useState<Array<{ level: string; products: string[] }>>([])
+	const [validtimes, setValidTimes] = useState<string[]>([])
 
-	// internal sector id (user picks a sector in this panel; we don't immediately route)
-	const [internalSectorId, setInternalSectorId] = useState<string>(sectorId as string)
+	const getData = useCallback(async () => {
+		if (!modelId || !runId || !sectorId || !productId || !validTimeId) return
+		const data = await getCompareHeightData(modelId, runId, sectorId, productId, validTimeId)
+		setValidTimes(data.validtimes)
+		const entries = buildProductsByLevel((modelId as string) || '', (sectorId as string) || '')
+		setSortedProductEntries(entries)
+	}, [modelId, sectorId, productId, validTimeId, runId])
 
 	useEffect(() => {
-		const entries = buildProductsByLevel((internalModelId as string) || '', (internalSectorId as string) || '')
-		setSortedProductEntries(entries)
-	}, [internalModelId, internalSectorId])
+		getData()
+	}, [runId, modelId, sectorId, productId, validTimeId, getData])
 
 	// when the sector selector slideout opens, populate it with sectors and floater data
 	useEffect(() => {
@@ -69,7 +67,7 @@ const ForecastCompareHeightSidebarPanel = () => {
 				}
 				setSectorSelectorD3config(newD3config)
 				const updatedSectorData = await fetchFloaterSectorData()
-				const modelKey = (FORECAST_MODELS as any)[internalModelId as string] ? (internalModelId as string) : DEFAULT_FORECAST_MODEL
+				const modelKey = (FORECAST_MODELS as any)[modelId as string] ? (modelId as string) : DEFAULT_FORECAST_MODEL
 				const selectedSectors = (FORECAST_MODELS as any)[modelKey].sectors
 					.filter((sId: string) => (FORECAST_SECTORS as any)[sId].region === regionId)
 					.map((sId: string) => {
@@ -89,18 +87,15 @@ const ForecastCompareHeightSidebarPanel = () => {
 			}
 			loadSectorData()
 		}
-	}, [sectorSelectorPanelIsOpen, internalModelId, regionId, setSectorSelectorD3config, setSectorSelectorSectors])
+	}, [sectorSelectorPanelIsOpen, modelId, regionId, setSectorSelectorD3config, setSectorSelectorSectors])
 
-	// wire up handler so when a sector is picked in the selector, we close the panel and navigate
 	useEffect(() => {
-		// when the user selects a sector in the selector, update internal sector id and close the panel
 		updateOnChangeSectorSelectorSectorHandler((newSectorId: string) => {
-			setInternalSectorId(newSectorId)
-			// update region to keep selector in sync
-			setRegionId((FORECAST_SECTORS as any)[newSectorId]?.region || '')
 			closeSectorSelectorPanel()
+			const baseParams = [runId, modelId, newSectorId, levelId, productId].join('/')
+			router.push(`/weather-data/forecast-models/${baseParams}/compare-height/${validTimeId}`)
 		})
-	}, [closeSectorSelectorPanel, updateOnChangeSectorSelectorSectorHandler])
+	}, [closeSectorSelectorPanel, updateOnChangeSectorSelectorSectorHandler, runId, modelId, levelId, productId, validTimeId, sectorId, router])
 
 	// derive product options that exist across 2+ levels
 	const productOptions = useMemo(() => {
@@ -119,40 +114,35 @@ const ForecastCompareHeightSidebarPanel = () => {
 		return candidates
 	}, [sortedProductEntries])
 
-	const [selectedProduct, setSelectedProduct] = useState<string>(() => {
-		const first = productOptions[0]
-		// prefer the current route product if it exists in options
-		if (productOptions.find((o) => o.value === (productId as string))) return productId as string
-		return first ? first.value : 'null'
-	})
-
-	useEffect(() => {
-		// keep selection in sync if options change and current selection disappears
-		if (!productOptions.find((o) => o.value === selectedProduct)) {
-			setSelectedProduct(productOptions[0]?.value ?? 'null')
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [productOptions])
-
 	const handleRegionChange = (newRegionId: string) => {
 		setRegionId(newRegionId)
 		openSectorSelectorPanel()
 	}
 
 	const handleSectorChangeButton = () => {
-		// open the sector selector so user can pick a sector visually
 		openSectorSelectorPanel()
 	}
 
-	const returnLink = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
-
-	const handleLoadComparison = () => {
-		if (selectedProduct === 'null') {
-			alert('No products available for comparison with current parameters chosen. Please adjust and select product.')
-			return
-		}
-		const baseParams = [runId, modelId, internalSectorId, levelId, selectedProduct].join('/')
+	const handleProductChange = (newProductId: string) => {
+		if (!newProductId || newProductId === productId) return
+		console.log('Product changed to:', newProductId)
+		const baseParams = [runId, modelId, sectorId, levelId, newProductId].join('/')
 		const route = `/weather-data/forecast-models/${baseParams}/compare-height/${validTimeId}`
+		router.push(route)
+	}
+
+	const handleModelChange = (newModelId: string) => {
+		if (!newModelId || newModelId === modelId) return
+		console.log('Model changed to:', newModelId)
+		const baseParams = [runId, newModelId, sectorId, levelId, productId].join('/')
+		const route = `/weather-data/forecast-models/${baseParams}/compare-height/${validTimeId}`
+		router.push(route)
+	}
+	const handleValidTimeChange = (newValidTimeId: string) => {
+		if (!newValidTimeId || newValidTimeId === validTimeId) return
+		console.log('Valid Time changed to:', newValidTimeId)
+		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
+		const route = `/weather-data/forecast-models/${baseParams}/compare-height/${newValidTimeId}`
 		router.push(route)
 	}
 
@@ -163,10 +153,10 @@ const ForecastCompareHeightSidebarPanel = () => {
 				<div className={styles.options}>
 					<label>Model:</label>
 					<Select
-						value={internalModelId}
-						placeholder={internalModelId as string}
-						options={allowedModelKeys.map((m) => ({ value: m, label: (FORECAST_MODELS as any)[m].name }))}
-						onChange={(m) => setInternalModelId(m)}
+						value={modelId}
+						placeholder={modelId as string}
+						options={allowedModelKeys.map((model) => ({ value: model, label: (FORECAST_MODELS as any)[model].name }))}
+						onChange={(newModelId) => handleModelChange(newModelId)}
 					/>
 					<label>Sector Size:</label>
 					<Select
@@ -178,13 +168,24 @@ const ForecastCompareHeightSidebarPanel = () => {
 					<SectorChangeButton
 						onClick={handleSectorChangeButton}
 						label="Selected Sector:"
-						labelValue={(FORECAST_SECTORS as any)[internalSectorId as string]?.name ?? 'Unknown Sector'}
+						labelValue={(FORECAST_SECTORS as any)[sectorId as string]?.name ?? 'Unknown Sector'}
 					/>
 
 					<label>Product:</label>
-					<Select value={selectedProduct} placeholder={selectedProduct} options={productOptions} onChange={(v) => setSelectedProduct(v)} />
+					<Select
+						value={productId}
+						placeholder={productId as string}
+						options={productOptions}
+						onChange={(newProductId) => handleProductChange(newProductId)}
+					/>
 
-					<Button label="Load Comparison" disabled={false} onClick={handleLoadComparison} />
+					<label>Valid Time:</label>
+					<Select
+						value={validTimeId}
+						placeholder={validTimeId as string}
+						options={validtimes.map((validtime) => ({ value: validtime, label: validtime }))}
+						onChange={(newValidTimeId) => handleValidTimeChange(newValidTimeId)}
+					/>
 				</div>
 			</div>
 		</ScrollArea>

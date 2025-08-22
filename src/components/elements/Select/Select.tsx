@@ -21,7 +21,7 @@ interface SelectProps {
 
 const Select: React.FC<SelectProps> = ({ value, options, onChange, title = null, placeholder = '', optionsEmptyText = 'No options' }) => {
 	const [open, setOpen] = useState(false)
-	const wrapperRef = useRef(null)
+	const wrapperRef = useRef<HTMLDivElement | null>(null)
 	// Random number gen for Unique ID for any instance of Select, used to handle open/close events
 	const idRef = useRef<string>(Math.random().toString(36).slice(2))
 
@@ -79,7 +79,7 @@ const Select: React.FC<SelectProps> = ({ value, options, onChange, title = null,
 	}
 
 	return (
-		<div className={styles.wrapper}>
+		<div ref={wrapperRef} className={styles.wrapper}>
 			{title && <span className={styles.title}>{title}</span>}
 			<div className={`${styles.select} ${title ? styles.withTitle : ''}`} onClick={toggleOpen}>
 				{!foundValue && placeholder && <label>{placeholder}</label>}
