@@ -3,6 +3,7 @@
 import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
+import ValidtimeSelect from '@/components/elements/ValidtimeSelect/ValidtimeSelect'
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
 import { FORECAST_PRODUCTS } from '@/data/forecast/products'
 import { FORECAST_REGIONS } from '@/data/forecast/regions'
@@ -68,10 +69,21 @@ const ForecastCompareHeightSidebarPanel = () => {
 		} else {
 			const data = await getCompareHeightData(sanitizedModelId, sanitizedRunId, sanitizedSectorId, sanitizedProductId, sanitizedValidTimeId)
 			console.log('Comparison Height Data:', data)
+			if (!data.validtimes.includes(sanitizedValidTimeId)) {
+				const closestValidtime = findClosestNumber(Number(sanitizedValidTimeId), data.validtimes)
+				const baseParmsString = `${sanitizedRunId}/${sanitizedModelId}/${sanitizedSectorId}/${levelId}/${sanitizedProductId}`
+				router.push(`/weather-data/forecast-models/${baseParmsString}/compare-height/${closestValidtime}`)
+			}
 			setValidTimes(data.validtimes)
 			setSortedProductEntries(productsByLevel)
 		}
 	}, [modelId, sectorId, productId, runId, validTimeId, levelId, router])
+
+	const findClosestNumber = (num: number, arr: number[]): number => {
+		return arr.reduce((prev, curr) => {
+			return Math.abs(curr - num) < Math.abs(prev - num) ? curr : prev
+		})
+	}
 
 	useEffect(() => {
 		getData()
@@ -137,6 +149,21 @@ const ForecastCompareHeightSidebarPanel = () => {
 	const productOptions = useMemo(() => {
 		return getCompariables(sortedProductEntries)
 	}, [sortedProductEntries])
+
+	// format a unix timestamp (seconds or milliseconds) into 'HHZ MM/DD/YY'
+	const formatValidTimeLabel = (ts: string | number) => {
+		const n = Number(ts)
+		if (Number.isNaN(n)) return String(ts)
+		const ms = n > 1e12 ? n : n * 1000
+		const d = new Date(ms)
+		const hh = String(d.getUTCHours()).padStart(2, '0')
+		const mm = String(d.getUTCMonth() + 1).padStart(2, '0')
+		const dd = String(d.getUTCDate()).padStart(2, '0')
+		const yy = String(d.getUTCFullYear() % 100).padStart(2, '0')
+		return `${hh}Z ${mm}/${dd}/${yy}`
+	}
+
+	// validtimes are passed as flat options (ValidtimeSelect will group and format labels)
 
 	const handleRegionChange = (newRegionId: string) => {
 		setRegionId(newRegionId)
@@ -204,10 +231,10 @@ const ForecastCompareHeightSidebarPanel = () => {
 					/>
 
 					<label>Valid Time:</label>
-					<Select
+					<ValidtimeSelect
 						value={validTimeId}
-						placeholder={validTimeId as string}
-						options={validtimes.map((validtime) => ({ value: validtime, label: validtime }))}
+						placeholder={formatValidTimeLabel(validTimeId as string)}
+						options={validtimes.map((vt) => ({ value: String(vt) }))}
 						onChange={(newValidTimeId) => handleValidTimeChange(newValidTimeId)}
 					/>
 				</div>
