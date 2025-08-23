@@ -45,12 +45,33 @@ const ForecastCompareHeightSidebarPanel = () => {
 	const [validtimes, setValidTimes] = useState<string[]>([])
 
 	const getData = useCallback(async () => {
-		if (!modelId || !runId || !sectorId || !productId || !validTimeId) return
-		const data = await getCompareHeightData(modelId, runId, sectorId, productId, validTimeId)
-		setValidTimes(data.validtimes)
-		const entries = buildProductsByLevel((modelId as string) || '', (sectorId as string) || '')
-		setSortedProductEntries(entries)
-	}, [modelId, sectorId, productId, validTimeId, runId])
+		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
+		const sanitizedSectorId = FORECAST_MODELS[sanitizedModelId as string].sectors.includes(sectorId as string)
+			? sectorId
+			: FORECAST_MODELS[sanitizedModelId as string].defaults.sector
+		const productsByLevel = buildProductsByLevel(sanitizedModelId as string, sanitizedSectorId as string)
+		const productOptions = getCompariables(productsByLevel)
+		const defaultProduct = productOptions[0]?.value || null
+		const sanitizedProductId = productOptions.some((opt) => opt.value === productId) ? productId : defaultProduct
+		// these next two are primarily to prevent URL manipulation from breaking
+		const sanitizedRunId = Number(runId) > 0 && runId.length === 10 ? runId : 0
+		const sanitizedValidTimeId = Number(validTimeId) > 0 ? validTimeId : 0
+		if (
+			sanitizedModelId !== modelId ||
+			sanitizedRunId !== runId ||
+			sanitizedSectorId !== sectorId ||
+			sanitizedProductId !== productId ||
+			sanitizedValidTimeId !== validTimeId
+		) {
+			const baseParmsString = `${sanitizedRunId}/${sanitizedModelId}/${sanitizedSectorId}/${levelId}/${sanitizedProductId}`
+			router.push(`/weather-data/forecast-models/${baseParmsString}/compare-height/${sanitizedValidTimeId}`)
+		} else {
+			const data = await getCompareHeightData(sanitizedModelId, sanitizedRunId, sanitizedSectorId, sanitizedProductId, sanitizedValidTimeId)
+			console.log('Comparison Height Data:', data)
+			setValidTimes(data.validtimes)
+			setSortedProductEntries(productsByLevel)
+		}
+	}, [modelId, sectorId, productId, runId, validTimeId, levelId, router])
 
 	useEffect(() => {
 		getData()
@@ -97,8 +118,7 @@ const ForecastCompareHeightSidebarPanel = () => {
 		})
 	}, [closeSectorSelectorPanel, updateOnChangeSectorSelectorSectorHandler, runId, modelId, levelId, productId, validTimeId, sectorId, router])
 
-	// derive product options that exist across 2+ levels
-	const productOptions = useMemo(() => {
+	const getCompariables = (sortedProductEntries) => {
 		const map = new Map<string, Set<string>>()
 		sortedProductEntries.forEach((entry) => {
 			entry.products.forEach((p) => {
@@ -112,6 +132,10 @@ const ForecastCompareHeightSidebarPanel = () => {
 			.map(([productId]) => ({ value: productId, label: (FORECAST_PRODUCTS as any)[productId]?.name || productId }))
 		if (candidates.length === 0) return [{ value: 'null', label: 'Unavailable' }]
 		return candidates
+	}
+	// derive product options that exist across 2+ levels
+	const productOptions = useMemo(() => {
+		return getCompariables(sortedProductEntries)
 	}, [sortedProductEntries])
 
 	const handleRegionChange = (newRegionId: string) => {
