@@ -3,7 +3,7 @@
 import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
-import ValidtimeSelect from '@/components/elements/ValidtimeSelect/ValidtimeSelect'
+import ValidtimeSelectPanel from '@/components/elements/ValidtimeSelectPanel/ValidtimeSelectPanel'
 import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
 import { FORECAST_PRODUCTS } from '@/data/forecast/products'
 import { FORECAST_REGIONS } from '@/data/forecast/regions'
@@ -151,19 +151,19 @@ const ForecastCompareHeightSidebarPanel = () => {
 	}, [sortedProductEntries])
 
 	// format a unix timestamp (seconds or milliseconds) into 'HHZ MM/DD/YY'
-	const formatValidTimeLabel = (ts: string | number) => {
-		const n = Number(ts)
-		if (Number.isNaN(n)) return String(ts)
-		const ms = n > 1e12 ? n : n * 1000
-		const d = new Date(ms)
-		const hh = String(d.getUTCHours()).padStart(2, '0')
-		const mm = String(d.getUTCMonth() + 1).padStart(2, '0')
-		const dd = String(d.getUTCDate()).padStart(2, '0')
-		const yy = String(d.getUTCFullYear() % 100).padStart(2, '0')
-		return `${hh}Z ${mm}/${dd}/${yy}`
-	}
+	// const formatValidTimeLabel = (ts: string | number) => {
+	// 	const n = Number(ts)
+	// 	if (Number.isNaN(n)) return String(ts)
+	// 	const ms = n > 1e12 ? n : n * 1000
+	// 	const d = new Date(ms)
+	// 	const hh = String(d.getUTCHours()).padStart(2, '0')
+	// 	const mm = String(d.getUTCMonth() + 1).padStart(2, '0')
+	// 	const dd = String(d.getUTCDate()).padStart(2, '0')
+	// 	const yy = String(d.getUTCFullYear() % 100).padStart(2, '0')
+	// 	return `${hh}Z ${mm}/${dd}/${yy}`
+	// }
 
-	// validtimes are passed as flat options (ValidtimeSelect will group and format labels)
+	// validtimes are passed as flat options (ValidtimeSelectPanel will group and format labels)
 
 	const handleRegionChange = (newRegionId: string) => {
 		setRegionId(newRegionId)
@@ -231,11 +231,11 @@ const ForecastCompareHeightSidebarPanel = () => {
 					/>
 
 					<label>Valid Time:</label>
-					<ValidtimeSelect
+					<ValidtimeSelectPanel
 						value={validTimeId}
-						placeholder={formatValidTimeLabel(validTimeId as string)}
 						options={validtimes.map((vt) => ({ value: String(vt) }))}
 						onChange={(newValidTimeId) => handleValidTimeChange(newValidTimeId)}
+						rowCount={FORECAST_MODELS[modelId as string]?.validPerRow || 4}
 					/>
 				</div>
 			</div>
