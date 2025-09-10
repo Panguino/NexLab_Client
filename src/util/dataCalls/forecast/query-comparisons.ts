@@ -3,17 +3,20 @@ import { getData } from '../dataCall-generic'
 export const getCompareHeightData = async (model, run, sector, product, validtime) => {
 	const params = [model, run, sector, product, validtime].join('-')
 	const endpoint = `https://weather.cod.edu/datapoints/forecast/get-compare-height.php?parms=${params}`
+	console.log('getCompareHeightData endpoint:', endpoint)
 	const data = await getData(endpoint)
 	if (!data.err) {
 		return {
 			frames: data.frames,
 			levels: data.levels,
+			validtimes: data.validtimes,
 			imageInfo: data.img,
 		}
 	} else {
 		return {
 			frames: [],
 			levels: [],
+			validtimes: [],
 			imageInfo: { width: 800, height: 600 },
 			error: data.error,
 		}

@@ -1,0 +1,188 @@
+.wrapper {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 10px;
+	&:has(.title) {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+}
+
+.select {
+	cursor: pointer;
+	position: static;
+	display: flex;
+	align-items: center;
+	padding-right: 8px;
+	border-radius: 4px;
+	height: 40px;
+	width: 100%;
+	background-color: var(--color-grey19);
+	border: 1px solid var(--color-grey14);
+	transition: all var(--themeChange);
+
+	&.withTitle {
+		width: 70%;
+	}
+
+	label {
+		font-size: 16px;
+		color: var(--color-grey3);
+		position: absolute;
+		left: 5px;
+		top: 6px;
+		transform: translate(11px, 9px);
+		transition: all linear 0.12s;
+		z-index: 0;
+	}
+}
+.title {
+	width: 30%;
+	flex-shrink: 0;
+	font-size: 14px;
+}
+.value {
+	color: var(--color-grey4-grey3);
+	transition: color var(--themeChange);
+	font-size: 16px;
+	height: 35px;
+	width: 100%;
+	padding: 16px;
+	display: flex;
+	align-content: center;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.options {
+	width: 100%;
+	z-index: 500;
+	position: absolute;
+	top: 38px;
+	left: 0;
+	border-radius: 0 0 4px 4px;
+	border: 1px solid var(--color-grey14);
+	border-top: 0px;
+	filter: drop-shadow(0px 4px 14px rgba(0, 0, 0, 0.11));
+	margin-bottom: 20px;
+	background-color: var(--color-grey19);
+	transition: all var(--themeChange);
+
+	/* cap the menu height and let the ScrollArea child handle scrolling */
+	max-height: 300px;
+	overflow: hidden;
+	> * {
+		max-height: 300px;
+		overflow: auto;
+	}
+
+	.option {
+		font-family: monospace;
+		padding: 6px;
+		transition: all 0.2s ease-out;
+		font-size: 12px;
+		color: var(--color-grey3);
+		border: 1px solid var(--color-grey15);
+		background-color: var(--color-grey18);
+
+		&:hover {
+			background-color: var(--color-blue3);
+			color: var(--color-white);
+		}
+
+		&:last-child {
+			border-bottom: 0;
+		}
+	}
+
+	/* selected state styling */
+	.option.selected,
+	.option[aria-selected='true'] {
+		background-color: var(--color-blue3);
+		color: var(--color-white);
+	}
+}
+.grid {
+	display: grid;
+	grid-template-columns: repeat(6, 1fr);
+	gap: 6px;
+	align-items: center;
+	justify-items: stretch;
+	padding: 6px;
+	> .option {
+		padding: 8px 6px;
+		text-align: center;
+		border-radius: 4px;
+	}
+}
+.group {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 6px 8px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+.groupTitle {
+	font-size: 12px;
+	color: var(--color-grey6);
+	padding: 2px 6px;
+}
+.arrow {
+	color: var(--color-grey10);
+	position: static;
+	margin-left: auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	svg {
+		display: block;
+	}
+}
+
+/* layout for the select with navigation buttons */
+.selectRow {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+	position: relative; /* anchor dropdown to the full row so it can span the sidebar */
+}
+
+.navButton {
+	background: transparent;
+	border: 1px solid transparent;
+	color: var(--color-grey8);
+	width: 34px;
+	height: 34px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 4px;
+	cursor: pointer;
+	transition:
+		background-color 0.12s ease,
+		color 0.12s ease;
+
+	&:hover {
+		background-color: var(--color-grey17);
+		color: var(--color-white);
+	}
+
+	&:disabled {
+		opacity: 0.45;
+		cursor: default;
+		background: transparent;
+		color: var(--color-grey6);
+	}
+}
+
+.selectRow .select {
+	min-width: 0; /* allow flex children to shrink properly */
+	flex: 1 1 auto;
+	width: 0; /* needed to ensure flex growth without overflowing */
+}
+
+/* removed bottom .options override so the primary .options rule above controls positioning and width */
