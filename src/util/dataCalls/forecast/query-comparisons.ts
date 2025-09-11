@@ -31,12 +31,14 @@ export const getCompareRunsData = async (model, sector, level, product, validtim
 		return {
 			frames: data.frames,
 			runs: data.runs,
+			validtimes: data.validtimes,
 			imageInfo: data.img,
 		}
 	} else {
 		return {
 			frames: [],
 			runs: [],
+			validtimes: data.validtimes,
 			imageInfo: { width: 800, height: 600 },
 			error: data.error,
 		}
