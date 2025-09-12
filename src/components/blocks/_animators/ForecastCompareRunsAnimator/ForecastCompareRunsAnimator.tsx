@@ -49,7 +49,6 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 			const currentRun = data.runs[data.runs.length - 1]
 			router.push(`/weather-data/forecast-models/${currentRun}/${modelId}/${sectorId}/${levelId}/${productId}/compare-runs/${validTimeId}`)
 		}
-		console.log('setStartFrame index:', data.runs.indexOf(runId as string), data.runs, runId)
 		setStartFrame(data.runs.indexOf(runId as string) || 0)
 		setForecastRuns(data.runs || [])
 		setImageInfo(data.imageInfo)

@@ -223,6 +223,7 @@ const ForecastCompareRunsSidebarPanel = () => {
 						onChange={(newValidTimeId) => handleValidTimeChange(newValidTimeId)}
 					/>
 
+					<label>Products:</label>
 					{sortedProductEntries.map(({ level, products }, index) => (
 						<Accordian
 							key={level}
