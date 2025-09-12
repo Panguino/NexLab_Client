@@ -77,7 +77,7 @@ const ForecastCompareRunsSidebarPanel = () => {
 			router.push(`/weather-data/forecast-models/${baseParmsString}/compare-runs/${sanitizedValidTimeId}`)
 		} else {
 			const data = await getCompareRunsData(sanitizedModelId, sanitizedSectorId, sanitizedLevelId, sanitizedProductId, sanitizedValidTimeId)
-			console.log('Comparison Height Data:', data)
+			console.log('Comparison Runs Data:', data)
 			if (!data.validtimes.includes(sanitizedValidTimeId)) {
 				const closestValidtime = findClosestNumber(Number(sanitizedValidTimeId), data.validtimes)
 				const baseParmsString = `${sanitizedRunId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`

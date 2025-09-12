@@ -1,6 +1,6 @@
-// import ForecastSoundingAnimator from '@/components/blocks/_animators/ForecastSoundingAnimator/ForecastSoundingAnimator'
+import ForecastCompareRunsAnimator from '@/components/blocks/_animators/ForecastCompareRunsAnimator/ForecastCompareRunsAnimator'
 
 const Page = async () => {
-	return <>Compare Height Landing Page</>
+	return <ForecastCompareRunsAnimator />
 }
 export default Page
