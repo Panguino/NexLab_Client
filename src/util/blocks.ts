@@ -96,6 +96,58 @@ export const convertStrapiBlocksData = (blocksData) => {
 				return {
 					type: 'Staff',
 				}
+			case 'ComponentBlocksFeaturePanels':
+				return {
+					type: 'FeaturePanels',
+					title: blockData.title,
+					description: blockData.description,
+					buttons: blockData.buttons.map((buttonData) => convertButton(buttonData)),
+					featurePanels: blockData.feature_panel.map((panel) => {
+						return {
+							title: panel.title,
+							description: panel.description,
+							href: panel.href,
+							image: panel.image?.url || null,
+							linkText: panel.link_text,
+						}
+					}),
+				}
+			case 'ComponentBlocksAnimatorBackgroundHero':
+				return {
+					type: 'AnimatorBackgroundHero',
+					text: blockData.Text,
+					buttons: blockData.buttons.map((buttonData) => convertButton(buttonData)),
+				}
+			case 'ComponentBlocksStormChasingInfo':
+				return {
+					type: 'StormChasingInfo',
+					name: blockData.Name,
+				}
+			case 'ComponentBlocksSimpleCta':
+				return {
+					type: 'SimpleCta',
+					button: convertButton(blockData.button),
+					introText: blockData.intro_text,
+				}
+			case 'ComponentBlocksClassesOverview':
+				console.log(blockData)
+				return {
+					type: 'ClassesOverview',
+					title: blockData.title,
+					description: blockData.description,
+					classes: blockData.classes_overview.map((classData) => {
+						return {
+							introText: classData.intro_text,
+							classInfo: classData.class_info.map((classInfo) => {
+								return {
+									blueText: classInfo.blue_text,
+									classDescription: classInfo.class_description,
+									className: classInfo.class_name,
+								}
+							}),
+						}
+					}),
+				}
 			default:
 				return null
 		}

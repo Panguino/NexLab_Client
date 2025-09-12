@@ -15,9 +15,9 @@ export const CoursesPage = () => {
 		<ScrollArea>
 			<div className={styles.coursesPage}>
 				<CoursesHero />
+				<YearByYearOverview />
 				<ProgramOverview />
 				<StormChasingSection />
-				<YearByYearOverview />
 				<OutcomesSection />
 				<GetStartedSection />
 			</div>

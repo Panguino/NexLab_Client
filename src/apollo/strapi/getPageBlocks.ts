@@ -102,7 +102,67 @@ export const getPageBlocks = async (id) => {
                             id
                             Name
                         }
-					}
+                        ... on ComponentBlocksFeaturePanels {
+                            buttons {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
+                            description
+                            title
+                            id
+                            feature_panel {
+                                description
+                                href
+                                id
+                                image {
+                                    url
+                                }
+                                link_text
+                                title
+                            }
+                        }
+                        ... on ComponentBlocksAnimatorBackgroundHero {
+                            Text
+                            buttons {
+                                Label
+                                Link
+                                id
+                                target
+                                Style
+                            }
+                        }
+                        ... on ComponentBlocksStormChasingInfo {
+                            Name
+                        }
+                        ... on ComponentBlocksSimpleCta {
+                            button {
+                                Label
+                                Link
+                                Style
+                                id
+                                target
+                            }
+                            id
+                            intro_text
+                        }
+                        ... on ComponentBlocksClassesOverview {
+                            title
+                            id
+                            description
+                            classes_overview {
+                                id
+                                intro_text
+                                class_info {
+                                    blue_text
+                                    class_description
+                                    class_name
+                                    id
+                                }
+                            }
+                        }
+                    }
 				}
 			}
 		`,

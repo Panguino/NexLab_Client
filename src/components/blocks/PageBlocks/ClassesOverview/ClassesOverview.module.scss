@@ -1,0 +1,50 @@
+.classesOverview {
+  padding: 64px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.classGroup {
+  margin-bottom: 40px;
+}
+
+.introText {
+  margin: 0 0 16px 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: var(--color-white-grey19);
+  color: var(--color-grey20-grey0);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.name {
+  margin: 0 0 8px 0;
+}
+
+.blue {
+  color: var(--color-blue); /* Adjust to design token if needed */
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.desc {
+  margin: 0;
+}
+
