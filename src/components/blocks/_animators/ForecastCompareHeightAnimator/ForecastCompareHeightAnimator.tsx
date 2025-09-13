@@ -3,6 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { FORECAST_LEVELS } from '@/data/forecast/levels'
 import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
@@ -78,6 +79,10 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 		label: value.readable,
 	}))
 
+	const transformedLevels = useMemo(() => {
+		return (forecastLevels || []).map((lvl) => (FORECAST_LEVELS as any)[lvl]?.name ?? String(lvl))
+	}, [forecastLevels])
+
 	// Use useMemo to derive the runsPerRow value based on modelId
 	const runsPerRow = useMemo(() => {
 		// Default to 4 if model doesn't exist or doesn't specify runsPerRow
@@ -96,7 +101,7 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 				<div className={styles.forecastAnimator}>
 					<Animator
 						frames={forecastData}
-						frameLabels={forecastLevels}
+						frameLabels={transformedLevels}
 						startFrame={startFrame}
 						runs={transformedRuns}
 						runsPerRow={runsPerRow}

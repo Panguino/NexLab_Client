@@ -7,7 +7,7 @@ import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareRunsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ForecastCompareRunsAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareRunsAnimatorSettings/ForecastCompareRunsAnimatorSettings'
 import styles from './ForecastCompareRunsAnimator.module.scss'
 
@@ -63,13 +63,29 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 		setForecastZoomFill(isMobile)
 	}, [isMobile, setForecastZoomFill])
 
+	const formatRunTimeLabel = (ts: string | number, model: string) => {
+		// expect YYYYMMDDHH as string or number
+		const s = String(ts)
+		// simple guard: must be at least 10 chars (YYYYMMDDHH)
+		if (s.length < 10) return s
+		const mm = s.slice(4, 6)
+		const dd = s.slice(6, 8)
+		const hh = s.slice(8, 10)
+		const manyRunModel = ['HRRR', 'RAP']
+		return manyRunModel.includes(model) ? `${hh}Z` : `${mm}/${dd} ${hh}Z`
+	}
+
+	const transformedRuns = useMemo(() => {
+		return (forecastRuns || []).map((run) => formatRunTimeLabel(run, modelId as string))
+	}, [forecastRuns, modelId])
+
 	return (
 		<>
 			<div className={styles.forecastAnimatorContainer}>
 				<div className={styles.forecastAnimator}>
 					<Animator
 						frames={forecastData}
-						frameLabels={forecastRuns}
+						frameLabels={transformedRuns}
 						startFrame={startFrame}
 						imageInfo={imageInfo}
 						initialZoomState={forecastZoomState}
