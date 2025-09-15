@@ -22,6 +22,9 @@ export default function Layout({ children }) {
 			<SidebarNavigation>
 				<ScrollArea>
 					<div style={{ padding: '10px 20px 30px 20px' }}>
+						<SidebarGroup title="Overview">
+							<SidebarLink name="How the Program Works" linkUrl="/academics/courses/" />
+						</SidebarGroup>
 						{courseCategories.map((courseCategory, index) => {
 							const { Name, courses } = courseCategory
 							// only return category if it has courses inside it

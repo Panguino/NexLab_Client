@@ -21,6 +21,12 @@
     a,
     span {
       color: var(--color-blue4);
+      pointer-events: none;
+      cursor: default;
+      &:hover {
+        color: var(--color-blue4);
+        text-decoration: none;
+      }
     }
   }
   &.limited {
