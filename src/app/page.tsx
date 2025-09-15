@@ -1,9 +1,9 @@
-'use client'
+import { getPageBlocks } from '@/apollo/strapi/getPageBlocks'
+import { PageBlocks } from '@/components/blocks/PageBlocks/PageBlocks'
 
-import { HomePage } from '@/components/blocks/HomePage/HomePage'
-
-const Page = () => {
-	return <HomePage />
+const Page = async () => {
+	const blocks = await getPageBlocks('dvbejd0mgzz2g5qiqesgvooa')
+	return <PageBlocks blocks={blocks} />
 }
 
 export default Page

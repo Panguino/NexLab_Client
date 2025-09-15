@@ -1,4 +1,6 @@
 import { Button } from '@/components/elements/Button/Button'
+import buttonStyles from '@/styles/buttonStyles.module.scss'
+import Link from 'next/link'
 import styles from './FeaturePanels.module.scss'
 
 interface IFeaturePanels {
@@ -11,9 +13,9 @@ interface IFeaturePanels {
 type FeaturePanel = {
 	title: string
 	description: string
-	href: string
+	href?: string
 	image: string | null
-	linkText: string
+	linkText?: string
 }
 
 type ButtonType = {
@@ -29,11 +31,36 @@ export const FeaturePanels = ({ title, description, buttons, featurePanels }: IF
 			<p>{description}</p>
 			<div className={styles.panels}>
 				{featurePanels.map(({ title, description, href, image, linkText }, index) => {
-					return (
-						<div className={styles.panel} key={index} style={{ backgroundImage: `url(${image})` }}>
+					const Inner = (
+						<>
+							{/* Background layer for scale-on-hover */}
+							<div className={styles.panelBg} style={{ backgroundImage: image ? `url(${image})` : undefined }} />
 							<h3>{title}</h3>
 							<p>{description}</p>
-							{href && linkText && <a href={href}>{linkText}</a>}
+							{linkText && (
+								<div className={styles.cta}>
+									<span className={styles.ctaText}>{linkText}</span>
+									<svg className={styles.ctaArrow} width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+										<path
+											d="M13 5l7 7-7 7M5 12h14"
+											stroke="currentColor"
+											strokeWidth="2"
+											strokeLinecap="round"
+											strokeLinejoin="round"
+										/>
+									</svg>
+								</div>
+							)}
+						</>
+					)
+
+					return href ? (
+						<Link className={styles.panel} key={index} href={href}>
+							{Inner}
+						</Link>
+					) : (
+						<div className={styles.panel} key={index}>
+							{Inner}
 						</div>
 					)
 				})}
@@ -41,7 +68,7 @@ export const FeaturePanels = ({ title, description, buttons, featurePanels }: IF
 			{buttons.length > 0 && (
 				<div className={styles.buttons}>
 					{buttons.map((button, index) => {
-						return <Button key={index} {...button} />
+						return <Button variantClassName={buttonStyles.blue} key={index} {...button} />
 					})}
 				</div>
 			)}
