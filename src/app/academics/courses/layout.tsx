@@ -36,7 +36,7 @@ export default function Layout({ children }) {
 												<SidebarLink
 													key={index}
 													linkUrl={`/academics/courses/${documentId}`}
-													name={`E${CourseID} | ${Title}`}
+													name={`EARTH ${CourseID} | ${Title}`}
 												/>
 											)
 										})}
