@@ -130,16 +130,17 @@ export const convertStrapiBlocksData = (blocksData) => {
 					introText: blockData.intro_text,
 				}
 			case 'ComponentBlocksClassesOverview':
-				console.log(blockData)
 				return {
 					type: 'ClassesOverview',
 					title: blockData.title,
 					description: blockData.description,
-					classes: blockData.classes_overview.map((classData) => {
+					classes: (blockData.classes_overview || []).map((classData) => {
 						return {
+							id: classData.id,
 							introText: classData.intro_text,
-							classInfo: classData.class_info.map((classInfo) => {
+							classInfo: (classData.class_info || []).map((classInfo) => {
 								return {
+									id: classInfo.id,
 									blueText: classInfo.blue_text,
 									classDescription: classInfo.class_description,
 									className: classInfo.class_name,

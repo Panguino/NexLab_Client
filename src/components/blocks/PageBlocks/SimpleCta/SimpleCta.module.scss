@@ -18,3 +18,19 @@
   margin-top: 16px;
 }
 
+.button {
+  background: var(--color-blue3-blue5);
+  color: var(--color-white);
+  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-blue5-blue3);
+  }
+}

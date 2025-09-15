@@ -14,11 +14,11 @@ import { StormChasingSchedule } from './StormChasingSchedule/StormChasingSchedul
 import { TwoPanelIconInfo } from './TwoPanelIconInfo/TwoPanelIconInfo'
 
 export const PageBlocks = ({ blocks }) => {
-	console.log('PageBlocks', blocks)
+	//console.log('PageBlocks', blocks)
 	return (
 		<ScrollArea>
 			{blocks.map((block, index) => {
-				console.log('block', block)
+				//console.log('block', block)
 				switch (block?.type) {
 					case 'FeaturePanels':
 						return <FeaturePanels key={index} {...block} />

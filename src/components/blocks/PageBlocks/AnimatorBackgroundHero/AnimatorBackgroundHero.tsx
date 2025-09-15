@@ -10,7 +10,7 @@ export const AnimatorBackgroundHero = ({ text, buttons = [] }: IAnimatorBackgrou
 	return (
 		<section className={styles.hero}>
 			<div className={styles.inner}>
-				{text && <div className={styles.text} dangerouslySetInnerHTML={{ __html: text }} />}
+				{text && <div className={styles.text} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: text || '' }} />}
 				{buttons && buttons.length > 0 && (
 					<div className={styles.buttons}>
 						{buttons.map((b, i) => (

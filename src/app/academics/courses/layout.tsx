@@ -24,7 +24,6 @@ export default function Layout({ children }) {
 					<div style={{ padding: '10px 20px 30px 20px' }}>
 						{courseCategories.map((courseCategory, index) => {
 							const { Name, courses } = courseCategory
-							console.log('courses', courses)
 							// only return category if it has courses inside it
 							if (courses.length > 0) {
 								return (
