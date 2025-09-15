@@ -150,21 +150,6 @@ const ForecastCompareHeightSidebarPanel = () => {
 		return getCompariables(sortedProductEntries)
 	}, [sortedProductEntries])
 
-	// format a unix timestamp (seconds or milliseconds) into 'HHZ MM/DD/YY'
-	// const formatValidTimeLabel = (ts: string | number) => {
-	// 	const n = Number(ts)
-	// 	if (Number.isNaN(n)) return String(ts)
-	// 	const ms = n > 1e12 ? n : n * 1000
-	// 	const d = new Date(ms)
-	// 	const hh = String(d.getUTCHours()).padStart(2, '0')
-	// 	const mm = String(d.getUTCMonth() + 1).padStart(2, '0')
-	// 	const dd = String(d.getUTCDate()).padStart(2, '0')
-	// 	const yy = String(d.getUTCFullYear() % 100).padStart(2, '0')
-	// 	return `${hh}Z ${mm}/${dd}/${yy}`
-	// }
-
-	// validtimes are passed as flat options (ValidtimeSelectPanel will group and format labels)
-
 	const handleRegionChange = (newRegionId: string) => {
 		setRegionId(newRegionId)
 		openSectorSelectorPanel()
