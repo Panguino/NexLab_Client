@@ -46,7 +46,6 @@
   border-radius: 12px 12px 0 0;
   overflow: hidden;
   padding: 28px 24px;
-  border: 1px solid var(--color-grey6-grey14);
   border-bottom: none;
   text-align: center;
 
@@ -91,7 +90,7 @@
   gap: 18px 18px;
   background: transparent;
   padding: 20px 20px 24px;
-  border: 1px solid var(--color-grey6-grey14);
+  border: 1px solid var(--color-grey3-grey17);
   border-top: none;
   border-radius: 0 0 12px 12px;
   background: var(--color-white-grey20);
@@ -101,25 +100,6 @@
   }
   @media (max-width: 680px) {
     grid-template-columns: 1fr;
-  }
-}
-
-.card {
-  background: var(--color-white-grey19);
-  color: var(--color-grey20-grey0);
-  border-radius: 12px;
-  border: 1px solid var(--color-grey6-grey14);
-  padding: 14px 14px 16px;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
-  transition:
-    border-color var(--hoverChange),
-    box-shadow var(--hoverChange),
-    transform var(--hoverChange);
-
-  &:hover {
-    border-color: var(--color-blue3-blue4);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-    transform: translateY(-2px);
   }
 }
 
