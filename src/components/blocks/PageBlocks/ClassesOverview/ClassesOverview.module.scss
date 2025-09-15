@@ -41,17 +41,17 @@
 
 /* Dark intro panel per group */
 .introText {
-  background: var(--color-blue2-blue6);
+  background: var(--color-blue6);
   color: var(--color-white);
   border-radius: 12px 12px 0 0;
   overflow: hidden;
   padding: 28px 24px;
   border: 1px solid var(--color-grey6-grey14);
   border-bottom: none;
+  text-align: center;
 
   h3,
-  h4,
-  strong {
+  h4 {
     color: var(--color-white);
     font-family: var(--font-secondary);
     font-size: 32px;
@@ -60,6 +60,14 @@
     line-height: 100%;
     text-transform: uppercase;
     margin: 0 0 8px 0;
+    strong {
+      color: var(--color-blue4);
+      font-family: var(--font-secondary);
+      font-size: 32px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 100%;
+    }
   }
 
   em,
@@ -72,7 +80,8 @@
 
   p {
     color: var(--color-grey3);
-    margin: 8px 0 0 0;
+    margin: 8px auto 0;
+    max-width: 800px;
   }
 }
 
