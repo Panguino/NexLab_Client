@@ -178,7 +178,7 @@ const ForecastCompareModelsSidebarPanel = () => {
 		if (!newValidTimeId || newValidTimeId === validTimeId) return
 		console.log('Valid Time changed to:', newValidTimeId)
 		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
-		const route = `/weather-data/forecast-models/${baseParams}/compare-runs/${newValidTimeId}`
+		const route = `/weather-data/forecast-models/${baseParams}/compare-models/${newValidTimeId}`
 		router.push(route)
 	}
 

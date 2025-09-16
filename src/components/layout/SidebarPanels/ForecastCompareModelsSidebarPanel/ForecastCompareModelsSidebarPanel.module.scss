@@ -8,8 +8,21 @@
 	gap: 10px;
 	label {
 		font-size: 12px;
-		color: var(--color-grey3);
+		color: white;
 		margin: 0 0 -5px;
+	}
+	.runPreferenceToggle {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		font-size: 14px;
+		color: var(--color-grey3);
+		.blurb {
+			flex: 1 1 auto;
+			font-size: 13px;
+			color: var(--color-grey3);
+		}
 	}
 }
 .siteSelector {
