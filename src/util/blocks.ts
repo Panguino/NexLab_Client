@@ -1,9 +1,14 @@
+const normalizeTarget = (t?: string | null) => {
+	if (!t) return t
+	return t.startsWith('_') ? t : `_${t}`
+}
+
 const convertButton = (buttonData) => {
 	return {
 		label: buttonData.Label,
 		link: buttonData.Link,
 		style: buttonData.Style,
-		target: buttonData.target,
+		target: normalizeTarget(buttonData.target),
 	}
 }
 const convertButtons = (buttons = []) => (buttons || []).map((b) => convertButton(b))

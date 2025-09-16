@@ -1,13 +1,9 @@
-import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
-import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import { getPageBlocks } from '@/apollo/strapi/getPageBlocks'
+import { PageBlocks } from '@/components/blocks/PageBlocks/PageBlocks'
 
 const Page = async () => {
-	return (
-		<ScrollArea>
-			FAQs
-			<Footer />
-		</ScrollArea>
-	)
+	const blocks = await getPageBlocks('uyfk1etrm17cpcvdync1i87l')
+	return <PageBlocks blocks={blocks} />
 }
 
 export default Page
