@@ -35,9 +35,6 @@ const Navigation = ({ mobileMenuItems }) => {
 					<Link href="/storm-chasing/">
 						<div className={styles.NavItem}>Storm Chasing</div>
 					</Link>
-					<Link href="/campus-weather/">
-						<div className={styles.NavItem}>Local Weather</div>
-					</Link>
 					<Link href="/donate/">
 						<div className={styles.NavItem}>Donate</div>
 					</Link>

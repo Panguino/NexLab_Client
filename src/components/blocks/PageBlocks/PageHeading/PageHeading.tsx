@@ -35,7 +35,7 @@ export const PageHeading = ({ heading, body, buttons, image }: IPageHeading) => 
 					{body && <RichText text={body} />}
 					<div className={styles.buttons}>
 						{buttons.map((button, index) => {
-							const buttonTarget = `_${button.target}`
+							const buttonTarget = button?.target ? `_${button.target}` : undefined
 							return <Button key={index} {...button} target={buttonTarget} />
 						})}
 					</div>
