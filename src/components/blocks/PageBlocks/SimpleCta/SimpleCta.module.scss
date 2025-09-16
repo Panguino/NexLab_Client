@@ -1,45 +1,96 @@
 .simpleCta {
+  position: relative;
   padding: 64px 0;
 }
 
-.container {
-  max-width: 820px;
-  margin: 0 auto;
-  padding: 0 24px;
-  text-align: center;
+/* background_full fills the entire block edge to edge */
+.full {
+  padding: 0;
 }
 
+/* flag that an image is present */
+.hasBg {
+}
+
+/* full-bleed background image layer */
+.bgFull {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+/* Square hero media for non-full mode */
+.heroBox {
+  position: relative;
+  width: 100%;
+  margin: 0 auto; /* centered square */
+}
+
+.bgSquare {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  z-index: 1;
+}
+
+/* Dark blue overlay over the image */
+.hasBg .bgFull::after,
+.hasBg .bgSquare::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-blue6);
+  opacity: 0.8; /* blue-ish overlay */
+}
+
+.container {
+  position: relative;
+  max-width: 1024px;
+  margin: 0 auto;
+  text-align: center;
+  z-index: 2;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.content {
+  /* default text color */
+  color: var(--color-grey18-grey1);
+  z-index: 2;
+  position: relative;
+  padding: 50px 24px;
+}
+
+/* If image present, force dark-mode color tokens for text for contrast */
+.overImage {
+  color: var(--color-grey0);
+  z-index: 2;
+  position: relative;
+}
+.overImage h1,
+.overImage h2,
+.overImage h3,
+.overImage p {
+  color: var(--color-grey0);
+}
+
+/* Make bold text blue */
+.intro :is(b, strong) {
+  color: var(--color-blue3);
+}
 .intro {
-  font-size: 20px;
-  line-height: 1.6;
-  h1 {
-    text-align: center;
-    font-family: var(--font-secondary);
-    font-size: 60px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: var(--Line-height-display-md, 44px); /* 73.333% */
-    letter-spacing: -1.2px;
-  }
+  max-width: 750px;
+  margin: 0 auto;
 }
 
 .action {
   margin-top: 16px;
-}
-
-.button {
-  background: var(--color-blue3-blue5);
-  color: var(--color-white);
-  border-radius: 6px;
-  padding: 12px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.2s;
-  display: inline-block;
-  cursor: pointer;
-
-  &:hover {
-    background: var(--color-blue5-blue3);
-  }
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
 }

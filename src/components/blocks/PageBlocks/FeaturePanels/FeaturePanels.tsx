@@ -55,12 +55,13 @@ export const FeaturePanels = ({ title, description, buttons, featurePanels }: IF
 							</>
 						)
 
+						const panelClass = href ? styles.panel : `${styles.panel} ${styles.noHover}`
 						return href ? (
-							<Link className={styles.panel} key={index} href={href}>
+							<Link className={panelClass} key={index} href={href}>
 								{Inner}
 							</Link>
 						) : (
-							<div className={styles.panel} key={index}>
+							<div className={panelClass} key={index}>
 								{Inner}
 							</div>
 						)

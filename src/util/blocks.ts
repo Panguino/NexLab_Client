@@ -131,8 +131,10 @@ export const convertStrapiBlocksData = (blocksData) => {
 			case 'ComponentBlocksSimpleCta':
 				return {
 					type: 'SimpleCta',
-					button: convertButton(blockData.button),
+					buttons: convertButtons(blockData.buttons),
 					introText: blockData.intro_text,
+					background: blockData.background ? { url: blockData.background?.url || null, size: blockData.background?.size || null } : null,
+					backgroundFull: Boolean(blockData.background_full),
 				}
 			case 'ComponentBlocksClassesOverview':
 				return {

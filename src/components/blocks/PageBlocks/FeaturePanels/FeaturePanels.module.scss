@@ -126,12 +126,51 @@
             transition: transform var(--hoverChange);
         }
 
-        &:hover {
+        &:not(.noHover):hover {
             .panelBg {
                 transform: scale(1.2);
             }
             .ctaArrow {
                 transform: translateX(6px);
+            }
+        }
+
+        &.noHover {
+            .panelBg {
+                transform: none !important;
+            }
+            &:hover {
+                .panelBg {
+                    transform: none !important;
+                }
+                .ctaArrow {
+                    transform: none !important;
+                }
+            }
+        }
+    }
+
+    /* Explicitly disable hover zoom when noHover is present */
+    .panels .panel.noHover .panelBg {
+        transform: none !important;
+    }
+    .panels .panel.noHover:hover .panelBg {
+        transform: none !important;
+    }
+    .panels .panel.noHover:hover .ctaArrow {
+        transform: none !important;
+    }
+
+    &.noHover {
+        .panelBg {
+            transform: none !important;
+        }
+        &:hover {
+            .panelBg {
+                transform: none !important;
+            }
+            .ctaArrow {
+                transform: none !important;
             }
         }
     }

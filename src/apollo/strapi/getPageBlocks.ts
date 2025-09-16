@@ -133,11 +133,10 @@ export const getPageBlocks = async (id) => {
                             Name
                         }
                         ... on ComponentBlocksSimpleCta {
-                            button {
+                            buttons {
                                 Label
                                 Link
                                 Style
-                                id
                                 target
                             }
                             intro_text
@@ -215,23 +214,23 @@ export const getPageBlocks = async (id) => {
                                 author
                                 Quote
                             }
-                      }
-                      ... on ComponentBlocksTwoColumnRichText {
-                        left_buttons {
-                            Label
-                            Link
-                            Style
-                            target
                         }
-                        left_text
-                        right_text
-                        right_buttons {
-                            Label
-                            Link
-                            Style
-                            target
+                        ... on ComponentBlocksTwoColumnRichText {
+                            left_buttons {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
+                            left_text
+                            right_text
+                            right_buttons {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
                         }
-                      }
                     }
 				}
 			}
