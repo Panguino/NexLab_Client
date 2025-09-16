@@ -26,6 +26,7 @@ const ForecastSidebarPanel = () => {
 	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
+	const runFlag = useRootStore.use.runFlag()
 	const [sortedProductEntries, setSortedProductEntries] = useState([])
 	const [regionId, setRegionId] = useState('')
 	const { fcstModel: modelId, fcstRun: runId, fcstSector: sectorId, fcstLevel: levelId, fcstProduct: productId } = useParams()
@@ -86,7 +87,7 @@ const ForecastSidebarPanel = () => {
 				const [height, runs, models] = await Promise.all([
 					getCompareHeightData(modelId, runId, sectorId, productId, frameValidTime),
 					getCompareRunsData(modelId, sectorId, levelId, productId, frameValidTime),
-					getCompareModelsData(runId, sectorId, levelId, productId, frameValidTime, 'similar'),
+					getCompareModelsData(runId, sectorId, levelId, productId, frameValidTime, runFlag),
 				])
 				setHeightDisabled(!height.frames || height.frames.length < 2)
 				setRunsDisabled(!runs.frames || runs.frames.length < 2)
@@ -102,7 +103,7 @@ const ForecastSidebarPanel = () => {
 		return () => {
 			if (checkTimeoutRef.current) clearTimeout(checkTimeoutRef.current)
 		}
-	}, [runId, modelId, sectorId, levelId, productId, frameValidTime])
+	}, [runId, modelId, sectorId, levelId, productId, frameValidTime, runFlag])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((sectorId) => {

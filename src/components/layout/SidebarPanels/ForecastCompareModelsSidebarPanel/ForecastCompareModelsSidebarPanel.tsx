@@ -42,6 +42,8 @@ const ForecastCompareModelsSidebarPanel = () => {
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	const setProductInfoId = useRootStore.use.setProductInfoId()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+	const runFlag = useRootStore.use.runFlag()
+	const setRunFlag = useRootStore.use.setRunFlag()
 	// for functioning accordian
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
 	const openIndexRef = useRef<number | null>(null)
@@ -51,8 +53,6 @@ const ForecastCompareModelsSidebarPanel = () => {
 	// keep product entries grouped by level and update whenever model or internal sector change
 	const [sortedProductEntries, setSortedProductEntries] = useState<Array<{ level: string; products: string[] }>>([])
 	const [validtimes, setValidTimes] = useState<string[]>([])
-	// get set runflag for data retrieval
-	const [runFlag, setRunFlag] = useState<string>('similar')
 
 	const getData = useCallback(async () => {
 		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
@@ -88,7 +88,7 @@ const ForecastCompareModelsSidebarPanel = () => {
 				sanitizedValidTimeId,
 				runFlag,
 			)
-			console.log('Comparison Runs Data:', data)
+			console.log('Comparison Models Data:', data)
 			if (!data.validtimes.includes(sanitizedValidTimeId)) {
 				const closestValidtime = findClosestNumber(Number(sanitizedValidTimeId), data.validtimes)
 				const baseParmsString = `${sanitizedRunId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`
@@ -150,7 +150,7 @@ const ForecastCompareModelsSidebarPanel = () => {
 		updateOnChangeSectorSelectorSectorHandler((newSectorId: string) => {
 			closeSectorSelectorPanel()
 			const baseParams = [runId, modelId, newSectorId, levelId, productId].join('/')
-			router.push(`/weather-data/forecast-models/${baseParams}/compare-runs/${validTimeId}`)
+			router.push(`/weather-data/forecast-models/${baseParams}/compare-models/${validTimeId}`)
 		})
 	}, [closeSectorSelectorPanel, updateOnChangeSectorSelectorSectorHandler, runId, modelId, levelId, productId, validTimeId, sectorId, router])
 

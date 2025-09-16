@@ -45,6 +45,9 @@ export interface IForecastSlice {
 	setForecastSoundingLastFrameDwell: (dwell: boolean) => void
 	forecastSoundingLastFrameDwellTime?: number
 	setForecastSoundingLastFrameDwellTime?: (dwellTime: number) => void
+	// forecast comparison state
+	runFlag: string
+	setRunFlag: (flag: string) => void
 }
 
 export const createForecastSlice: ZustandStateSlice<IForecastSlice> = (set) => ({
@@ -85,4 +88,7 @@ export const createForecastSlice: ZustandStateSlice<IForecastSlice> = (set) => (
 	setForecastSoundingLastFrameDwell: (dwell: boolean) => set(() => ({ forecastSoundingLastFrameDwell: dwell })),
 	forecastSoundingLastFrameDwellTime: 1,
 	setForecastSoundingLastFrameDwellTime: (dwellTime: number) => set(() => ({ forecastSoundingLastFrameDwellTime: dwellTime })),
+	// forecast comparison state
+	runFlag: 'similar',
+	setRunFlag: (flag: string) => set(() => ({ runFlag: flag })),
 })
