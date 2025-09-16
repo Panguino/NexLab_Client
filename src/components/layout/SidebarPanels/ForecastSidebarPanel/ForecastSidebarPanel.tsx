@@ -86,7 +86,7 @@ const ForecastSidebarPanel = () => {
 				const [height, runs, models] = await Promise.all([
 					getCompareHeightData(modelId, runId, sectorId, productId, frameValidTime),
 					getCompareRunsData(modelId, sectorId, levelId, productId, frameValidTime),
-					getCompareModelsData(runId, sectorId, levelId, productId, frameValidTime),
+					getCompareModelsData(runId, sectorId, levelId, productId, frameValidTime, 'similar'),
 				])
 				setHeightDisabled(!height.frames || height.frames.length < 2)
 				setRunsDisabled(!runs.frames || runs.frames.length < 2)

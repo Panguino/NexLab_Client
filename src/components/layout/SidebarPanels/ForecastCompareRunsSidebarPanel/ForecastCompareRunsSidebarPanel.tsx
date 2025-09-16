@@ -70,6 +70,7 @@ const ForecastCompareRunsSidebarPanel = () => {
 			sanitizedModelId !== modelId ||
 			sanitizedRunId !== runId ||
 			sanitizedSectorId !== sectorId ||
+			sanitizedLevelId !== levelId ||
 			sanitizedProductId !== productId ||
 			sanitizedValidTimeId !== validTimeId
 		) {
@@ -100,7 +101,7 @@ const ForecastCompareRunsSidebarPanel = () => {
 
 	useEffect(() => {
 		getData()
-	}, [runId, modelId, sectorId, productId, validTimeId, getData])
+	}, [runId, modelId, sectorId, levelId, productId, validTimeId, getData])
 
 	// when the sector selector slideout opens, populate it with sectors and floater data
 	useEffect(() => {
@@ -143,16 +144,24 @@ const ForecastCompareRunsSidebarPanel = () => {
 		})
 	}, [closeSectorSelectorPanel, updateOnChangeSectorSelectorSectorHandler, runId, modelId, levelId, productId, validTimeId, sectorId, router])
 
-	const modelOptions = Object.keys(FORECAST_MODELS).map((modelId) => ({
-		value: modelId,
-		label: FORECAST_MODELS[modelId].name,
-	}))
 	const handleRegionChange = (newRegionId: string) => {
 		setRegionId(newRegionId)
 		openSectorSelectorPanel()
 	}
 	const handleSectorChangeButton = () => {
 		openSectorSelectorPanel()
+	}
+	const modelOptions = Object.keys(FORECAST_MODELS).map((modelId) => ({
+		value: modelId,
+		label: FORECAST_MODELS[modelId].name,
+	}))
+
+	const handleModelChange = (newModelId: string) => {
+		if (!newModelId || newModelId === modelId) return
+		console.log('Model changed to:', newModelId)
+		const baseParams = [runId, newModelId, sectorId, levelId, productId].join('/')
+		const route = `/weather-data/forecast-models/${baseParams}/compare-runs/${validTimeId}`
+		router.push(route)
 	}
 
 	// format a unix timestamp (seconds or milliseconds) into 'HHZ MM/DD/YY'
@@ -167,6 +176,13 @@ const ForecastCompareRunsSidebarPanel = () => {
 		const yy = String(d.getUTCFullYear() % 100).padStart(2, '0')
 		return `${hh}Z ${mm}/${dd}/${yy}`
 	}
+	const handleValidTimeChange = (newValidTimeId: string) => {
+		if (!newValidTimeId || newValidTimeId === validTimeId) return
+		console.log('Valid Time changed to:', newValidTimeId)
+		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
+		const route = `/weather-data/forecast-models/${baseParams}/compare-runs/${newValidTimeId}`
+		router.push(route)
+	}
 
 	useEffect(() => {
 		openIndexRef.current = openIndex
@@ -174,21 +190,6 @@ const ForecastCompareRunsSidebarPanel = () => {
 
 	const handleToggle = (index: number) => {
 		setOpenIndex(openIndex === index ? null : index) // Close if already open, otherwise open the clicked accordion
-	}
-
-	const handleModelChange = (newModelId: string) => {
-		if (!newModelId || newModelId === modelId) return
-		console.log('Model changed to:', newModelId)
-		const baseParams = [runId, newModelId, sectorId, levelId, productId].join('/')
-		const route = `/weather-data/forecast-models/${baseParams}/compare-runs/${validTimeId}`
-		router.push(route)
-	}
-	const handleValidTimeChange = (newValidTimeId: string) => {
-		if (!newValidTimeId || newValidTimeId === validTimeId) return
-		console.log('Valid Time changed to:', newValidTimeId)
-		const baseParams = [runId, modelId, sectorId, levelId, productId].join('/')
-		const route = `/weather-data/forecast-models/${baseParams}/compare-runs/${newValidTimeId}`
-		router.push(route)
 	}
 
 	return (

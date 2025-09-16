@@ -45,8 +45,8 @@ export const getCompareRunsData = async (model, sector, level, product, validtim
 	}
 }
 
-export const getCompareModelsData = async (run, sector, level, product, validtime) => {
-	const params = [run, sector, level, product, validtime].join('-')
+export const getCompareModelsData = async (run, sector, level, product, validtime, runFlag) => {
+	const params = [run, sector, level, product, validtime, runFlag].join('-')
 	const endpoint = `https://weather.cod.edu/datapoints/forecast/get-compare-models.php?parms=${params}`
 	const data = await getData(endpoint)
 	// capture data.warn for more information if needed for debugging
@@ -54,12 +54,14 @@ export const getCompareModelsData = async (run, sector, level, product, validtim
 		return {
 			frames: data.frames,
 			models: data.models,
+			validtimes: data.validtimes,
 			imageInfo: data.img,
 		}
 	} else {
 		return {
 			frames: [],
 			models: [],
+			validtimes: [],
 			imageInfo: { width: 800, height: 600 },
 			error: data.error,
 		}
