@@ -1,6 +1,9 @@
+'use client'
+
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import styles from './SidebarLink.module.scss'
 
 interface ISidebarLinkProps {
@@ -14,14 +17,19 @@ interface ISidebarLinkProps {
 }
 
 export const SidebarLink = ({ name, linkUrl, target = '_self', onClick, active, limited, onInfoClick }: ISidebarLinkProps) => {
+	const pathname = usePathname()
+	const normalize = (p?: string) => (p ? p.replace(/\/+$/, '') || '/' : '')
+	const isActive = Boolean(active ?? (linkUrl && normalize(pathname) === normalize(linkUrl)))
+	const spanStyle = !isActive && onClick ? ({ cursor: 'pointer' } as const) : undefined
+
 	return (
-		<div className={`${styles.SidebarLink} ${active ? styles.active : ''} ${limited ? styles.limited : ''}`}>
-			{linkUrl ? (
+		<div className={`${styles.SidebarLink} ${isActive ? styles.active : ''} ${limited ? styles.limited : ''}`}>
+			{linkUrl && !isActive ? (
 				<Link href={linkUrl} target={target}>
 					{name}
 				</Link>
 			) : (
-				<span onClick={onClick} style={{ cursor: 'pointer' }}>
+				<span aria-current={isActive ? 'page' : undefined} onClick={!isActive ? onClick : undefined} style={spanStyle}>
 					{name}
 				</span>
 			)}

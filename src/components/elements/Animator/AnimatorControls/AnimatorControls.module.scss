@@ -10,6 +10,17 @@
   background: var(--color-white-grey19);
   min-height: 47px;
 }
+
+/* When the animator is used in backgrounds or places that must keep logic mounted,
+   but visually hide controls, the parent can add .hideControls to the animator wrapper. */
+:global(.hideControls) .controlsContainer {
+  visibility: hidden; /* keep layout impact minimal while preserving logic & events */
+  pointer-events: none;
+  height: 0; /* collapse height */
+  min-height: 0;
+  padding: 0;
+}
+
 .controls {
   width: 70%;
   display: flex;

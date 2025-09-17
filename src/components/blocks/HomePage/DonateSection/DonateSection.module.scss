@@ -1,0 +1,41 @@
+@import '/src/styles/vars';
+
+.donate {
+	padding: 80px 0;
+	background: linear-gradient(135deg, var(--color-blue3-blue5) 0%, var(--color-blue5-blue3) 100%);
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.header {
+	text-align: center;
+	margin-bottom: 24px;
+	h2 {
+		color: var(--color-white);
+		font-family: var(--font-secondary);
+		font-size: 50px;
+		font-weight: 400;
+		line-height: 120%;
+		margin: 0 0 12px 0;
+	}
+	p {
+		color: var(--color-grey1);
+		margin: 0;
+	}
+}
+
+.panel {
+	background-color: var(--color-white-grey19);
+	border-radius: 12px;
+	padding: 24px;
+}
+
+.buttonRow {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+}

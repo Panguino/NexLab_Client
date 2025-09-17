@@ -1,10 +1,9 @@
+'use client'
+
+import { AnalysisPage } from '@/components/blocks/AnalysisPage/AnalysisPage'
+
 const Page = () => {
-	return (
-		<div>
-			<h1>Analysis Landing Page</h1>
-			Content
-		</div>
-	)
+	return <AnalysisPage />
 }
 
 export default Page

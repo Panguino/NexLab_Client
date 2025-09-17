@@ -13,6 +13,7 @@ export default function Layout({ children }) {
 				<SubNavigationItem name="NEXRAD Dual-Pol" link="/weather-data/nexrad-dual-pol-radar/" />
 				<SubNavigationItem name="Numerical Models" link="/weather-data/forecast-models/" />
 				<SubNavigationItem name="Text Products" link="/weather-data/text-hazards-outlooks/" />
+				<SubNavigationItem name="Campus Weather" link="/weather-data/campus-weather/" />
 			</SubNavigation>
 			<SoundingPickerPanel />
 

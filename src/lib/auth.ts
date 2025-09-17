@@ -3,6 +3,8 @@ import { NextAuthOptions, getServerSession } from 'next-auth'
 import FacebookProvider from 'next-auth/providers/facebook'
 import GoogleProvider from 'next-auth/providers/google'
 
+const isSecureCookie = Boolean(process.env.NEXTAUTH_URL?.startsWith('https://') || process.env.VERCEL_URL)
+
 const authConfig: NextAuthOptions = {
 	providers: [
 		GoogleProvider({
@@ -95,6 +97,18 @@ const authConfig: NextAuthOptions = {
 		},
 	},
 	secret: process.env.NEXTAUTH_SECRET as string,
+	cookies: {
+		// Namespace cookie to avoid collisions across projects on same origin
+		sessionToken: {
+			name: 'nexlab-next-auth.session-token',
+			options: {
+				httpOnly: true,
+				path: '/',
+				sameSite: 'lax',
+				secure: isSecureCookie,
+			},
+		},
+	},
 }
 
 function auth(...args: [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']] | [NextApiRequest, NextApiResponse] | []) {

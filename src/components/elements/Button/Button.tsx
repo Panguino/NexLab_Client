@@ -12,13 +12,10 @@ export type ButtonType = {
 	onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 export const Button = ({ label, link, target, variantClassName, disabled, className, onClick }: ButtonType) => {
-	if (!link && !onClick) {
-		throw new Error("Either 'link' or 'onClick' must be defined.")
-	}
-
+	const isClickable = Boolean(link) || Boolean(onClick)
 	const buttonContent = (
 		<div
-			className={`${styles.button} ${variantClassName ? variantClassName : ''} ${disabled ? styles.disabled : ''} ${className ? className : ''}`}
+			className={`${styles.button} ${variantClassName ? variantClassName : ''} ${disabled || !isClickable ? styles.disabled : ''} ${className ? className : ''}`}
 			onClick={!disabled ? onClick : undefined}
 		>
 			{label}
@@ -27,7 +24,7 @@ export const Button = ({ label, link, target, variantClassName, disabled, classN
 	return (
 		<div className={styles.buttonWrapper}>
 			{link ? (
-				<Link href={link} target={target}>
+				<Link href={link} target={target || undefined}>
 					{buttonContent}
 				</Link>
 			) : (
