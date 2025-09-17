@@ -2,40 +2,126 @@
   padding: 48px 0;
 }
 .container {
-  max-width: 1200px;
+  max-width: 1120px;
   margin: 0 auto;
   padding: 0 16px;
 }
 .intro {
   font-size: 18px;
   color: var(--color-grey14-grey6);
-  margin: 0 0 20px;
+  margin: 0 0 24px;
+  text-align: center;
 }
-.grid {
+
+/* Rows layout: left visual panel + right featured products list */
+.rows {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+  grid-template-columns: 1fr;
+  gap: 28px;
 }
-.card {
+.row {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  /* Single container with one outline around both sections */
+  gap: 0;
+  align-items: stretch;
   background: var(--color-white-grey19);
   border: 1px solid var(--color-grey6-grey14);
   border-radius: 12px;
   overflow: hidden;
 }
+
+/* Visual card (left) */
+.card {
+  position: relative;
+  overflow: hidden;
+  min-height: 320px;
+  color: var(--color-white);
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* Solid overlay instead of gradient */
+  background: rgba(2, 17, 32, 0.8);
+  z-index: 2;
+}
 .media {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: center;
-  aspect-ratio: 16/9;
+  background-repeat: no-repeat;
+  z-index: 1;
 }
 .body {
-  padding: 16px;
+  position: relative;
+  z-index: 3;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.body h3 {
+  margin: 0;
+  font-family: var(--font-primary);
+  font-size: 26px;
+  line-height: 120%;
 }
 .desc {
-  color: var(--color-grey14-grey6);
-  margin: 8px 0 12px;
+  color: var(--color-grey6);
 }
-.mainButton { margin-top: 8px; }
-.buttonsWrap { margin-top: 8px; }
-.buttonsTitle { font-weight: 600; margin-bottom: 8px; }
-.buttons { display: flex; flex-wrap: wrap; gap: 8px; }
 
+/* Ensure main CTA button sizes to its content */
+.inlineButton {
+  display: inline-flex;
+}
+.mainButton {
+  margin-top: 12px;
+}
+
+/* Sidebar (right) - now part of the same container, no separate border */
+.side {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  padding: 25px;
+  align-self: stretch;
+}
+.buttonsTitle {
+  color: var(--color-grey16-grey5);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.buttons {
+  display: grid;
+  gap: 10px;
+}
+/* Make the list buttons full-width with arrow */
+.listButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.listButton::after {
+  content: '→';
+  font-size: 18px;
+  line-height: 1;
+}
+@media (max-width: 980px) {
+  .side {
+    border-left: 0;
+    border-top: 1px solid var(--color-grey6-grey14);
+  }
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
