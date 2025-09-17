@@ -1,0 +1,132 @@
+@import '/src/styles/vars';
+
+.classesOverview {
+  padding: 80px 0;
+  overflow: hidden;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  overflow: hidden;
+}
+
+.header {
+  text-align: center;
+  margin: 0 0 36px 0;
+
+  h2 {
+    color: var(--color-blue2-blue0);
+    font-family: var(--font-secondary);
+    font-size: 56px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+  }
+
+  p {
+    color: var(--color-grey13-grey4);
+    max-width: 720px;
+    margin: 0 auto;
+  }
+}
+
+.classGroup {
+  margin-bottom: 56px;
+}
+
+/* Dark intro panel per group */
+.introText {
+  background: var(--color-blue6);
+  color: var(--color-white);
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  padding: 28px 24px;
+  border-bottom: none;
+  text-align: center;
+
+  h3,
+  h4 {
+    color: var(--color-white);
+    font-family: var(--font-secondary);
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 100%;
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+    strong {
+      color: var(--color-blue4);
+      font-family: var(--font-secondary);
+      font-size: 32px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 100%;
+    }
+  }
+
+  em,
+  a,
+  span {
+    color: var(--color-blue3-blue4);
+    font-style: normal;
+    text-decoration: none;
+  }
+
+  p {
+    color: var(--color-grey3);
+    margin: 8px auto 0;
+    max-width: 800px;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px 18px;
+  background: transparent;
+  padding: 20px 20px 24px;
+  border: 1px solid var(--color-grey3-grey17);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  background: var(--color-white-grey20);
+
+  @media (max-width: 1000px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (max-width: 680px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Course code pill */
+.blue {
+  display: inline-block;
+  background: var(--color-blue0-blue6);
+  color: var(--color-blue5-blue3);
+  border: 1px solid var(--color-blue0-blue6);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 6px 8px;
+  line-height: 1;
+  margin: 0 0 10px 0;
+}
+
+.name {
+  margin: 0 0 6px 0;
+  color: var(--color-grey17-grey2);
+  font-size: 16px;
+  line-height: 130%;
+  font-weight: 700;
+}
+
+.desc {
+  margin: 0;
+  color: var(--color-grey12-grey7);
+}

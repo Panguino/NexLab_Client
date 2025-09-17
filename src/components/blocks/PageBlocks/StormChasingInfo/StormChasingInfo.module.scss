@@ -1,0 +1,133 @@
+@import '/src/styles/vars';
+
+.stormChasingInfo {
+  padding: 40px 0 60px;
+  background: var(--color-white-grey19);
+}
+
+.card {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-white-grey20);
+  border: 1px solid var(--color-grey6-grey14);
+}
+
+.hero {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.heroContent {
+  position: relative;
+  display: grid;
+  grid-template-columns: 0.8fr 1.1fr;
+  gap: 24px;
+  padding: 28px;
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kicker {
+  color: #69a6ff;
+  text-transform: uppercase;
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  margin: 0 0 6px 0;
+  font-family: var(--font-secondary);
+}
+
+.heroTitle {
+  color: var(--color-white);
+  font-family: var(--font-secondary);
+  font-size: 74px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  margin: 0;
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    font-size: 40px;
+  }
+}
+
+.heroRight {
+  p {
+    color: var(--color-grey3);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+.bodySection {
+  padding: 28px;
+}
+
+.columns {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+
+  @media (max-width: 1000px) {
+    flex-direction: column;
+  }
+}
+
+.leftCol {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  h3 {
+    margin: 0;
+  }
+}
+
+.rightCol {
+  flex: 1 1 45%;
+}
+
+.sectionTitle {
+  color: var(--color-grey14-grey1);
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 120%;
+  text-transform: uppercase;
+  margin: 0 0 12px 0;
+}
+
+.bulletList {
+  list-style: disc;
+  padding-left: 18px;
+  margin: 0 0 20px 0;
+
+  li {
+    color: var(--color-grey14-grey1);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    + li {
+      margin-top: 8px;
+    }
+  }
+}
+
+.noteText {
+  color: var(--color-grey12-grey7);
+  margin: 0;
+}

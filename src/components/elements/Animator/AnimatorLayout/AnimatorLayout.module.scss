@@ -11,3 +11,14 @@
   overflow: hidden;
   flex-grow: 1;
 }
+
+/* Utility class to hide controls visually while keeping them mounted */
+.hideControls {
+  .controlsContainer {
+    visibility: hidden;
+    pointer-events: none;
+    height: 0;
+    min-height: 0;
+    padding: 0;
+  }
+}

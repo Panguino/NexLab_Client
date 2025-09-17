@@ -91,18 +91,147 @@ export const getPageBlocks = async (id) => {
                             }
                         }
                         ... on ComponentBlocksVideo {
-                            id
                             Name
                         }
                         ... on ComponentBlocksStaff {
-                            id
                             Name
                         }
                         ... on ComponentBlocksGallery {
-                            id
                             Name
                         }
-					}
+                        ... on ComponentBlocksFeaturePanels {
+                            buttons {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
+                            description
+                            title
+                            feature_panel {
+                                description
+                                href
+                                id
+                                image {
+                                    url
+                                }
+                                link_text
+                                title
+                            }
+                        }
+                        ... on ComponentBlocksAnimatorBackgroundHero {
+                            Text
+                            buttons {
+                                Label
+                                Link
+                                id
+                                target
+                                Style
+                            }
+                        }
+                        ... on ComponentBlocksStormChasingInfo {
+                            Name
+                        }
+                        ... on ComponentBlocksSimpleCta {
+                            buttons {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
+                            intro_text
+                            background {
+                                url
+                                size
+                            }
+                            background_full
+                        }
+                        ... on ComponentBlocksClassesOverview {
+                            title
+                            description
+                            classes_overview {
+                                id
+                                intro_text
+                                class_info {
+                                    blue_text
+                                    class_description
+                                    class_name
+                                    id
+                                }
+                            }
+                        }
+                        ... on ComponentBlocksImage {
+                            Image {
+                                url
+                                size
+                            }
+                        }
+                        ... on ComponentBlocksFeatureData {
+                            intro_text
+                            data_info_panels {
+                                background {
+                                    url
+                                    size
+                                }
+                                title
+                                main_button {
+                                    Style
+                                    target
+                                    Link
+                                    Label
+                                }
+                                id
+                                description
+                                buttons_title
+                                buttons {
+                                    Label
+                                    Link
+                                    Style
+                                    target
+                                }
+                            }
+                        }
+                        ... on ComponentBlocksFaqs {
+                            intro_text
+                            faq_tags {
+                                Name
+                                documentId
+                            }
+                            buttons {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
+                        }
+                        ... on ComponentBlocksTestimonials {
+                            testimonials {
+                                avatar {
+                                        url
+                                        size
+                                }
+                                author_title
+                                author
+                                Quote
+                            }
+                        }
+                        ... on ComponentBlocksTwoColumnRichText {
+                            left_buttons {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
+                            left_text
+                            right_text
+                            right_buttons {
+                                Label
+                                Link
+                                Style
+                                target
+                            }
+                        }
+                    }
 				}
 			}
 		`,

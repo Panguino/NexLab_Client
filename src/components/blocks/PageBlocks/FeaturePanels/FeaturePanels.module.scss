@@ -1,0 +1,222 @@
+.featurePanels {
+    background-color: var(--color-white-grey19);
+    padding: 80px 0;
+    color: var(--color-grey20-grey0);
+    transition: background-color var(--themeChange);
+
+    h2 {
+        color: var(--color-grey20-grey0);
+        font-family: var(--font-secondary);
+        text-align: center;
+        font-size: 60px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 120%;
+        transition: color var(--themeChange);
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    p {
+        color: var(--color-grey16-grey5);
+        text-align: center;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 30px;
+        transition: color var(--themeChange);
+        max-width: 800px;
+        margin: 0 auto 50px;
+    }
+}
+/* A wrapping container to center rows but avoid panels stretching too wide */
+.featurePanelsInner {
+    max-width: 1088px; /* 1048 + 2*20 padding */
+    margin: 0 auto;
+}
+
+.panels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    max-width: 1088px;
+    margin: 0 auto;
+    padding: 32px 20px; /* maintain 20px inset on left/right; top/bottom match gap */
+    justify-content: center; /* center last row when not full */
+
+    .panel {
+        box-sizing: border-box;
+        flex: 0 1 320px; /* prevent stretching; target ~>=320px width */
+        max-width: 520px; /* prevent overly wide single panels on large screens */
+
+        position: relative;
+        padding: 30px;
+        border-radius: 12px;
+        /* margin-bottom removed; use flex gap for vertical rhythm */
+        border-radius: var(--Numbers-Radius---Primary, 10px);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        min-height: 350px;
+        overflow: hidden;
+        text-decoration: none;
+        transition: transform var(--hoverChange);
+
+        h3 {
+            text-align: left;
+            padding: 0 0 5px;
+            margin: 0;
+            color: #fff;
+            font-family: var(--font-primary);
+            font-size: 22px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 120%;
+        }
+        p {
+            text-align: left;
+            color: var(--color-grey6);
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 130%;
+            padding: 0;
+            margin: 0;
+        }
+        * {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Background layer that scales on hover */
+        .panelBg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transform: scale(1);
+            transition: transform 0.5s ease;
+            z-index: 1;
+        }
+        /* Gradient overlay on top of the bg */
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(2, 37, 73, 0.18) 0%, rgba(2, 17, 32, 0.9) 55.44%);
+            z-index: 2;
+        }
+
+        /* CTA styling with arrow */
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            color: var(--color-blue3);
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .ctaText {
+            color: var(--color-blue3);
+        }
+        .ctaArrow {
+            color: var(--color-blue3);
+            transition: transform var(--hoverChange);
+        }
+
+        &:not(.noHover):hover {
+            .panelBg {
+                transform: scale(1.2);
+            }
+            .ctaArrow {
+                transform: translateX(6px);
+            }
+        }
+
+        &.noHover {
+            .panelBg {
+                transform: none !important;
+            }
+            &:hover {
+                .panelBg {
+                    transform: none !important;
+                }
+                .ctaArrow {
+                    transform: none !important;
+                }
+            }
+        }
+    }
+
+    /* Explicitly disable hover zoom when noHover is present */
+    .panels .panel.noHover .panelBg {
+        transform: none !important;
+    }
+    .panels .panel.noHover:hover .panelBg {
+        transform: none !important;
+    }
+    .panels .panel.noHover:hover .ctaArrow {
+        transform: none !important;
+    }
+
+    &.noHover {
+        .panelBg {
+            transform: none !important;
+        }
+        &:hover {
+            .panelBg {
+                transform: none !important;
+            }
+            .ctaArrow {
+                transform: none !important;
+            }
+        }
+    }
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 32px 0;
+    justify-content: center;
+}
+
+/* Responsive breakpoints to stack panels and enforce min widths */
+@media (max-width: 1100px) {
+    .panels {
+        gap: 24px;
+    }
+}
+@media (max-width: 900px) {
+    .panels {
+        gap: 20px;
+    }
+    .panels .panel {
+        flex: 1 1 360px;
+    }
+}
+@media (max-width: 760px) {
+    .panels {
+        gap: 16px;
+    }
+    .panels .panel {
+        flex: 1 1 320px;
+    }
+
+    /* Cap desktop to max 3 items per row */
+    @media (min-width: 1100px) {
+        .panels .panel {
+            flex: 0 0 calc((100% - 64px) / 3);
+            max-width: calc((100% - 64px) / 3);
+        }
+    }
+}
+@media (max-width: 680px) {
+    .panels .panel {
+        flex: 1 1 100%;
+        max-width: 540px;
+    }
+}

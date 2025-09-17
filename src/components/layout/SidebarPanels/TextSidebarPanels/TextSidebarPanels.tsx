@@ -45,14 +45,55 @@ const TextSidebarPanels = () => {
 			<SidebarSubPanel matchesPath={`${basepath}/active-weather-hazards`} activeX="0%" inactiveX="100%">
 				<HazardsPanel basepath={basepath} />
 			</SidebarSubPanel>
-			<SidebarSubPanel matchesPath={`${basepath}/analysis-and-forecast`} activeX="0%" inactiveX="100%">
+
+			{/* Analysis & Forecast */}
+			<SidebarSubPanel matchesPath={`${basepath}/analysis-forecast`} activeX="0%" inactiveX="100%">
 				<SidebarSectionHeader name="Analysis & Forecast" linkUrl={basepath} />
-				<SidebarPanelPad>
-					<SidebarGroup title="Select Highlights">
-						<SidebarLink name="MCD/MPB" linkUrl={''} />
-						<SidebarLink name="MRMS" linkUrl={''} />
-					</SidebarGroup>
-				</SidebarPanelPad>
+			</SidebarSubPanel>
+
+			{/* Climatology */}
+			<SidebarSubPanel matchesPath={`${basepath}/cpc-climate`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Climatology" linkUrl={basepath} />
+			</SidebarSubPanel>
+
+			{/* Convective */}
+			<SidebarSubPanel matchesPath={`${basepath}/spc-convective-weather`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Convective" linkUrl={basepath} />
+			</SidebarSubPanel>
+
+			{/* Tropical */}
+			<SidebarSubPanel matchesPath={`${basepath}/nhc-tropical-hurricane-weather`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Tropical" linkUrl={basepath} />
+			</SidebarSubPanel>
+
+			{/* Winter */}
+			<SidebarSubPanel matchesPath={`${basepath}/wpc-winter-weather`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Winter" linkUrl={basepath} />
+			</SidebarSubPanel>
+
+			{/* Hydrological */}
+			<SidebarSubPanel matchesPath={`${basepath}/nws-rfc-hydrological`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Hydrological" linkUrl={basepath} />
+			</SidebarSubPanel>
+
+			{/* Fire & Drought */}
+			<SidebarSubPanel matchesPath={`${basepath}/spc-usdm-fire-weather-drought`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Fire & Drought" linkUrl={basepath} />
+			</SidebarSubPanel>
+
+			{/* Marine */}
+			<SidebarSubPanel matchesPath={`${basepath}/nws-opc-nhc-marine-weather`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Marine" linkUrl={basepath} />
+			</SidebarSubPanel>
+
+			{/* Space */}
+			<SidebarSubPanel matchesPath={`${basepath}/swpc-space-weather`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="Space" linkUrl={basepath} />
+			</SidebarSubPanel>
+
+			{/* NWS WFO */}
+			<SidebarSubPanel matchesPath={`${basepath}/nws-wfo-national-weather-service-forecast-offices`} activeX="0%" inactiveX="100%">
+				<SidebarSectionHeader name="NWS WFO" linkUrl={basepath} />
 			</SidebarSubPanel>
 		</div>
 	)

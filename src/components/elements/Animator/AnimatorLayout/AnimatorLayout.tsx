@@ -6,10 +6,10 @@ import styles from './AnimatorLayout.module.scss'
 
 const AnimatorLayout = () => {
 	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
-	const { hideControls } = useAnimator()
+	const { hideControls } = useAnimator() || { hideControls: false }
 	return (
 		<div
-			className={styles.animator}
+			className={`${styles.animator} ${hideControls ? 'hideControls' : ''}`}
 			onClick={() => {
 				closeMobileSidebarMenu()
 			}}
@@ -17,7 +17,7 @@ const AnimatorLayout = () => {
 			<div className={styles.animatorOuterImageContainer}>
 				<AnimatorImageSizer />
 			</div>
-			{!hideControls && <AnimatorControls />}
+			<AnimatorControls />
 		</div>
 	)
 }

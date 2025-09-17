@@ -2,7 +2,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  background: var(--color-blue3-blue5);
+  background: var(--color-blue6-blue5);
   transition: var(--themeChange);
   overflow: hidden;
 }
@@ -51,6 +51,9 @@
         line-height: 24px;
         text-align: center;
       }
+    }
+    li {
+      color: var(--color-white);
     }
   }
   .image {

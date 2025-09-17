@@ -1,8 +1,13 @@
+import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+
 const Page = () => {
 	return (
-		<div>
-			<h1>Convective</h1>
-		</div>
+		<ComingSoon
+			fullWidth
+			pageName="Convective Weather Products"
+			purpose="SPC convective outlooks, mesoscale discussions, and related products in one view."
+			etaText="This section is being implemented."
+		/>
 	)
 }
 

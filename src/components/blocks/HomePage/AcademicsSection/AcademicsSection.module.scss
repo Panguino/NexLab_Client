@@ -1,0 +1,62 @@
+@import '/src/styles/vars';
+
+.academics {
+	padding: 80px 0;
+	background-color: var(--color-grey1-grey20);
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.header {
+	text-align: center;
+	margin-bottom: 40px;
+
+	h2 {
+		color: var(--color-grey20-grey0);
+		font-family: var(--font-secondary);
+		font-size: 50px;
+		font-weight: 400;
+		line-height: 120%;
+		margin: 0 0 12px 0;
+	}
+
+	p {
+		color: var(--color-grey16-grey5);
+		font-size: 16px;
+		margin: 0;
+	}
+}
+
+.featureSplit {
+	display: flex;
+	gap: 32px;
+}
+
+.featureBody {
+	flex: 1;
+	p {
+		color: var(--color-grey16-grey5);
+		font-size: 16px;
+		line-height: 1.6;
+		margin: 0 0 16px 0;
+	}
+}
+
+.checklist {
+	margin: 0 0 16px 0;
+	padding-left: 20px;
+	li {
+		color: var(--color-grey16-grey5);
+		margin: 4px 0;
+	}
+}
+
+.buttonRow {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+}
