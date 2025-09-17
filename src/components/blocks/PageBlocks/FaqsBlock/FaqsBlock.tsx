@@ -1,4 +1,6 @@
-import { getFAQsByTagIds } from '@/apollo/strapi/getFAQsByTags'
+// Note: avoid importing server-only modules at the top level to keep Storybook/Chromatic happy
+// We'll dynamically import getFAQsByTagIds inside the async server component.
+
 import { Accordian } from '@/components/elements/Accordian/Accordian'
 import { Button, ButtonType } from '@/components/elements/Button/Button'
 import { RichText } from '@/components/elements/RichText/RichText'
@@ -60,9 +62,15 @@ export const FaqsBlockView = ({ introText, buttons, faqs }: FaqsBlockViewProps) 
 	)
 }
 
+// In Storybook, alias '@/components/blocks/PageBlocks/FaqsBlock/FaqsBlock' -> './FaqsBlock.storybook'
+// The async server component below will not be executed in Storybook thanks to webpack aliasing.
 export const FaqsBlock = async ({ introText, tags, buttons }: FaqsBlockProps) => {
 	const tagIds = (tags || []).map((t) => t.documentId).filter(Boolean)
-	const faqs: FaqItem[] = tagIds.length ? await getFAQsByTagIds(tagIds) : []
+	let faqs: FaqItem[] = []
+	if (tagIds.length) {
+		const { getFAQsByTagIds } = await import('@/apollo/strapi/getFAQsByTags')
+		faqs = await getFAQsByTagIds(tagIds)
+	}
 	return <FaqsBlockView introText={introText} buttons={buttons} faqs={faqs} />
 }
 
