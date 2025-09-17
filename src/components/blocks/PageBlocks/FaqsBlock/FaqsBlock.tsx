@@ -63,7 +63,7 @@ export const FaqsBlockView = ({ introText, buttons, faqs }: FaqsBlockViewProps) 
 export const FaqsBlock = async ({ introText, tags, buttons }: FaqsBlockProps) => {
 	const tagIds = (tags || []).map((t) => t.documentId).filter(Boolean)
 	const faqs: FaqItem[] = tagIds.length ? await getFAQsByTagIds(tagIds) : []
-	return <FaqsBlockView introText={introText} tags={tags} buttons={buttons} faqs={faqs} />
+	return <FaqsBlockView introText={introText} buttons={buttons} faqs={faqs} />
 }
 
 export default FaqsBlock
