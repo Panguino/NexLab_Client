@@ -46,6 +46,10 @@ export const getCompareRunsData = async (model, sector, level, product, validtim
 }
 
 export const getCompareModelsData = async (run, sector, level, product, validtime, runFlag) => {
+	// note to dev: it is likely possible and perhaps useful to extract compariable "runs" from the endpoint
+	// this would allow for a run selector in the compare-models animator
+	// doing so would add value to the runflag param by allowing users to select specific/preferred runs
+	// it would also help sanitize runId value
 	const params = [run, sector, level, product, validtime, runFlag].join('-')
 	const endpoint = `https://weather.cod.edu/datapoints/forecast/get-compare-models.php?parms=${params}`
 	const data = await getData(endpoint)

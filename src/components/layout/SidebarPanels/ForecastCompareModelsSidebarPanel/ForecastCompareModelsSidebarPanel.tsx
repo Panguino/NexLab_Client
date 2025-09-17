@@ -53,53 +53,42 @@ const ForecastCompareModelsSidebarPanel = () => {
 	// keep product entries grouped by level and update whenever model or internal sector change
 	const [sortedProductEntries, setSortedProductEntries] = useState<Array<{ level: string; products: string[] }>>([])
 	const [validtimes, setValidTimes] = useState<string[]>([])
+	// track active models to build proper sector and product options
+	const [activeModels, setActiveModels] = useState<string[]>([])
+	const [sectorOptions, setSectorOptions] = useState<string[]>([])
 
 	const getData = useCallback(async () => {
-		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
-		const sanitizedSectorId = FORECAST_MODELS[sanitizedModelId as string].sectors.includes(sectorId as string)
-			? sectorId
-			: FORECAST_MODELS[sanitizedModelId as string].defaults.sector
-		const productsByLevel = buildProductsByLevel(sanitizedModelId as string, sanitizedSectorId as string)
-		const sanitizedLevelId = productsByLevel.some((entry) => entry.level === levelId)
-			? levelId
-			: productsByLevel[productsByLevel.length - 1]?.level || ''
-		const productOptions = productsByLevel.find((entry) => entry.level === sanitizedLevelId)?.products || []
-		const defaultProduct = productOptions[0] || null
-		const sanitizedProductId = productOptions.some((opt) => opt === productId) ? productId : defaultProduct
-		// these next two are primarily to prevent URL manipulation from breaking -- we don't expect this page to ever change runId
-		const sanitizedRunId = Number(runId) > 0 && runId.length === 10 ? runId : 0
-		const sanitizedValidTimeId = Number(validTimeId) > 0 ? validTimeId : 0
-		if (
-			sanitizedModelId !== modelId ||
-			sanitizedRunId !== runId ||
-			sanitizedSectorId !== sectorId ||
-			sanitizedLevelId !== levelId ||
-			sanitizedProductId !== productId ||
-			sanitizedValidTimeId !== validTimeId
-		) {
-			const baseParmsString = `${sanitizedRunId}/${sanitizedModelId}/${sanitizedSectorId}/${levelId}/${sanitizedProductId}`
-			router.push(`/weather-data/forecast-models/${baseParmsString}/compare-models/${sanitizedValidTimeId}`)
+		const data = await getCompareModelsData(runId, sectorId, levelId, productId, validTimeId, runFlag)
+		console.log('Comparison Models Data:', data)
+		if (data.frames.length === 0) {
+			const sanitizedModelId = FORECAST_MODELS[modelId as string] || DEFAULT_FORECAST_MODEL
+			const sanitizedSectorId = FORECAST_MODELS[sanitizedModelId as string].sectors.includes(sectorId as string)
+				? sectorId
+				: FORECAST_MODELS[sanitizedModelId as string].defaults.sector
+			const productsByLevel = buildProductsByLevel(sanitizedModelId as string, sanitizedSectorId as string)
+			const sanitizedLevelId = productsByLevel.some((entry) => entry.level === levelId)
+				? levelId
+				: productsByLevel[productsByLevel.length - 1]?.level || ''
+			const productOptions = productsByLevel.find((entry) => entry.level === sanitizedLevelId)?.products || []
+			const defaultProduct = productOptions[0] || null
+			const sanitizedProductId = productOptions.some((opt) => opt === productId) ? productId : defaultProduct
+			const sanitizedValidTimeId = !data.validtimes.includes(validTimeId)
+				? findClosestNumber(Number(validTimeId), data.validtimes)
+				: validTimeId
+			if (
+				modelId !== sanitizedModelId ||
+				sectorId !== sanitizedSectorId ||
+				levelId !== sanitizedLevelId ||
+				productId !== sanitizedProductId ||
+				validTimeId !== sanitizedValidTimeId
+			) {
+				const baseParmsString = `${runId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`
+				console.log('ForecastCompareModelsSidebarPanel: redirecting to closest validtime - second push')
+				router.push(`/weather-data/forecast-models/${baseParmsString}/compare-models/${sanitizedValidTimeId}`)
+			}
 		} else {
-			const data = await getCompareModelsData(
-				sanitizedRunId,
-				sanitizedSectorId,
-				sanitizedLevelId,
-				sanitizedProductId,
-				sanitizedValidTimeId,
-				runFlag,
-			)
-			console.log('Comparison Models Data:', data)
-			if (!data.validtimes.includes(sanitizedValidTimeId)) {
-				const closestValidtime = findClosestNumber(Number(sanitizedValidTimeId), data.validtimes)
-				const baseParmsString = `${sanitizedRunId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`
-				router.push(`/weather-data/forecast-models/${baseParmsString}/compare-models/${closestValidtime}`)
-			}
+			setActiveModels(data.models)
 			setValidTimes(data.validtimes)
-			setSortedProductEntries(productsByLevel)
-			const levelIndex = productsByLevel.findIndex((item) => item.level === sanitizedLevelId)
-			if (openIndexRef.current !== levelIndex) {
-				setOpenIndex(levelIndex)
-			}
 		}
 	}, [runId, sectorId, levelId, productId, validTimeId, runFlag, router, modelId])
 
@@ -113,9 +102,83 @@ const ForecastCompareModelsSidebarPanel = () => {
 		getData()
 	}, [runId, sectorId, levelId, productId, validTimeId, runFlag, getData])
 
+	const comparableProductsByLevel = useCallback(() => {
+		// build a count map keyed by level -> product -> number of models that include that (count each model once)
+		const levelProductCount: Record<string, Record<string, number>> = {}
+
+		for (const modelKey of activeModels) {
+			const model = (FORECAST_MODELS as any)[modelKey]
+			if (!model || !Array.isArray(model.sectors)) continue
+			// skip models that don't include the currently selected sector
+			if (!model.sectors.includes(sectorId as string)) continue
+
+			const modelProductsByLevel = model.products[sectorId as string] || model.products['general']
+			// per-model seen set to avoid double-counting the same level+product for one model
+			const seenThisModel = new Set<string>()
+
+			for (const [level, products] of Object.entries(modelProductsByLevel)) {
+				for (const p of products as string[]) {
+					const key = `${level}::${p}`
+					if (seenThisModel.has(key)) continue
+					seenThisModel.add(key)
+
+					if (!levelProductCount[level]) levelProductCount[level] = {}
+					levelProductCount[level][p] = (levelProductCount[level][p] || 0) + 1
+				}
+			}
+		}
+
+		// produce productsByLevel containing only products that appear in 2+ models at the same level
+		const productsByLevel = Object.entries(levelProductCount)
+			.map(([level, prodCounts]) => {
+				const products = Object.entries(prodCounts)
+					.filter(([, count]) => count >= 2)
+					.map(([product]) => product)
+				return { level, products }
+			})
+			.filter((entry) => entry.products.length > 0)
+
+		return productsByLevel
+	}, [sectorId, activeModels])
+
+	useEffect(() => {
+		if (activeModels.length === 0) return
+		if (!activeModels.includes(modelId as string)) {
+			// first step, ensure the current model is in the active list
+			const newModelId = activeModels[0]
+			const baseParams = [runId, newModelId, sectorId, levelId, productId].join('/')
+			router.push(`/weather-data/forecast-models/${baseParams}/compare-models/${validTimeId}`)
+			return
+		}
+		// create an array of common sectors across all active models (appear in 2+ models)
+		const sectorCounts: Record<string, number> = {}
+		for (const modelKey of activeModels) {
+			const model = (FORECAST_MODELS as any)[modelKey]
+			if (!model || !Array.isArray(model.sectors)) continue
+			for (const sId of Array.from(new Set(model.sectors)) as string[]) {
+				sectorCounts[sId] = (sectorCounts[sId] || 0) + 1
+			}
+		}
+		const sectorOptions = Object.keys(sectorCounts).filter((sId) => sectorCounts[sId] >= 2)
+		if (!sectorOptions.includes(sectorId as string)) {
+			const newSectorId = sectorOptions[0]
+			const baseParams = [runId, modelId, newSectorId, levelId, productId].join('/')
+			router.push(`/weather-data/forecast-models/${baseParams}/compare-models/${validTimeId}`)
+			return
+		}
+		setSectorOptions(sectorOptions)
+
+		const productsByLevel = comparableProductsByLevel()
+		const levelIndex = productsByLevel.findIndex((item) => item.level === levelId)
+		if (openIndexRef.current !== levelIndex) {
+			setOpenIndex(levelIndex)
+		}
+		setSortedProductEntries(productsByLevel)
+	}, [activeModels, sectorId, modelId, levelId, productId, runId, validTimeId, router, comparableProductsByLevel])
+
 	// when the sector selector slideout opens, populate it with sectors and floater data
 	useEffect(() => {
-		if (sectorSelectorPanelIsOpen) {
+		if (sectorSelectorPanelIsOpen && sectorOptions.length > 0) {
 			const loadSectorData = async () => {
 				const region = (FORECAST_REGIONS as any)[regionId as string]
 				const newD3config = {
@@ -124,8 +187,7 @@ const ForecastCompareModelsSidebarPanel = () => {
 				}
 				setSectorSelectorD3config(newD3config)
 				const updatedSectorData = await fetchFloaterSectorData()
-				const modelKey = (FORECAST_MODELS as any)[modelId as string] ? (modelId as string) : DEFAULT_FORECAST_MODEL
-				const selectedSectors = (FORECAST_MODELS as any)[modelKey].sectors
+				const selectedSectors = sectorOptions
 					.filter((sId: string) => (FORECAST_SECTORS as any)[sId].region === regionId)
 					.map((sId: string) => {
 						if (updatedSectorData && updatedSectorData[sId] && updatedSectorData[sId].coordinates) {
@@ -144,7 +206,7 @@ const ForecastCompareModelsSidebarPanel = () => {
 			}
 			loadSectorData()
 		}
-	}, [sectorSelectorPanelIsOpen, modelId, regionId, setSectorSelectorD3config, setSectorSelectorSectors])
+	}, [sectorSelectorPanelIsOpen, regionId, setSectorSelectorD3config, setSectorSelectorSectors, sectorOptions])
 
 	useEffect(() => {
 		updateOnChangeSectorSelectorSectorHandler((newSectorId: string) => {
