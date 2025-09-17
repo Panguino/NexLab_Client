@@ -23,7 +23,10 @@ export const Testimonials = ({ testimonials, rotateMs = 6000 }: TestimonialsProp
 
 	// Auto-rotate
 	useEffect(() => {
-		if (paused || items.length <= 1) return
+		if (paused || items.length <= 1) {
+			// Return a no-op cleanup to satisfy noImplicitReturns
+			return () => {}
+		}
 		const id = setInterval(() => setIndex((i) => (i + 1) % items.length), Math.max(2000, rotateMs))
 		return () => clearInterval(id)
 	}, [paused, items.length, rotateMs])
