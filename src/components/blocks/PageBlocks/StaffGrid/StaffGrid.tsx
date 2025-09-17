@@ -1,8 +1,13 @@
-import { getStaff } from '@/apollo/strapi/getStaff'
 import styles from './StaffGrid.module.scss'
 
-export const StaffGrid = async () => {
-	const staff = await getStaff()
+export interface StaffMember {
+	Name: string
+	Photo?: { url?: string }
+	Position?: string
+	ShortBio?: string
+}
+
+export const StaffGridView = ({ staff }: { staff: StaffMember[] }) => {
 	return (
 		<div className={styles.StaffGrid}>
 			<div className={styles.StaffWrapper}>
@@ -22,4 +27,11 @@ export const StaffGrid = async () => {
 			</div>
 		</div>
 	)
+}
+
+// Server-wrapper that fetches data, used in app pages (not Storybook)
+export const StaffGrid = async () => {
+	const { getStaff } = await import('@/apollo/strapi/getStaff')
+	const staff = await getStaff()
+	return <StaffGridView staff={staff} />
 }
