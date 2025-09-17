@@ -1,4 +1,4 @@
-@import "/src/styles/vars";
+@import '/src/styles/vars';
 
 .MobileMenuItem {
   display: flex;
@@ -34,4 +34,15 @@
   svg {
     transform: rotate(90deg);
   }
+}
+
+.footerVariant .label {
+  padding: 14px 20px;
+  font-size: 14px;
+  color: var(--color-grey6);
+}
+.footerVariant .arrow {
+  padding: 10px;
+  width: 52px;
+  height: 52px;
 }

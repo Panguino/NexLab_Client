@@ -2,10 +2,11 @@ import Navigation from '@/components/layout/Navigation/Navigation'
 import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
 import Providers from '@/components/providers/Providers/Providers'
 import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
-import { mobileMenuItems } from '@/data/mobileMenuItems'
 import '@/lib/fontawesome'
 import '@/styles/global.scss'
 import { Viewport } from 'next'
+
+import { buildMobileMenuItems } from './buildMobileMenu'
 
 export default async function RootLayout({ children }) {
 	return (
@@ -32,7 +33,7 @@ export default async function RootLayout({ children }) {
 					<NextAuthProvider>
 						<Providers>
 							<SlideoutPanel />
-							<Navigation mobileMenuItems={mobileMenuItems} />
+							<Navigation mobileMenuItems={await buildMobileMenuItems()} />
 							{children}
 						</Providers>
 					</NextAuthProvider>
