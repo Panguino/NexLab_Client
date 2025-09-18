@@ -8,9 +8,10 @@ import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareHeightData } from '@/util/dataCalls/forecast/query-comparisons'
+import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { useParams, usePathname, useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ForecastCompareHeightAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareHeightAnimatorSettings/ForecastCompareHeightAnimatorSettings'
 import styles from './ForecastCompareHeightAnimator.module.scss'
 
@@ -45,6 +46,11 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 	const [forecastLevels, setForecastLevels] = useState<string[]>([])
 	const [startFrame, setStartFrame] = useState(0)
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
+
+	// Readout state (mirrors main ForecastAnimator behavior)
+	const [frameReadoutData, setFrameReadoutData] = useState<any>(null)
+	const [isLoadingReadoutData, setIsLoadingReadoutData] = useState<boolean>(false)
+	const frameDataTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
 	const getData = useCallback(async () => {
 		console.log('ForecastCompareHeightAnimator: Fetching data', modelId, runId, sectorId, productId, validTimeId)
@@ -95,6 +101,48 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 		router.push(currentURL.join('/'))
 	}
 
+	// Request readout data for the given frame (level). Debounced like main viewer.
+	const handleReadoutDataRequest = useCallback(
+		async (frameIndex: number) => {
+			// Clear any existing timeout
+			if (frameDataTimeoutRef.current) {
+				clearTimeout(frameDataTimeoutRef.current)
+				frameDataTimeoutRef.current = null
+			}
+
+			// Reset state
+			setFrameReadoutData(null)
+
+			// Validate required params
+			if (!(modelId && runId && sectorId && productId && validTimeId)) {
+				console.log('Missing required parameters for readout data')
+				return
+			}
+
+			// Map frame index to the corresponding level
+			const levelForFrame = forecastLevels?.[frameIndex]
+			if (!levelForFrame) {
+				console.log('No level found for frame index', frameIndex)
+				return
+			}
+
+			setIsLoadingReadoutData(true)
+			frameDataTimeoutRef.current = setTimeout(async () => {
+				try {
+					const data = await getFrameReadoutData(modelId as string, runId as string, sectorId as string, levelForFrame as string, productId as string, validTimeId as string)
+					const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
+					setFrameReadoutData(readoutDataObj)
+				} catch (error) {
+					console.error('Error fetching frame readout data:', error)
+				} finally {
+					setIsLoadingReadoutData(false)
+					frameDataTimeoutRef.current = null
+				}
+			}, 1000)
+		},
+		[modelId, runId, sectorId, productId, validTimeId, forecastLevels]
+	)
+
 	return (
 		<>
 			<div className={styles.forecastAnimatorContainer}>
@@ -107,6 +155,10 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 						runsPerRow={runsPerRow}
 						activeRun={runId as string}
 						setActiveRun={handleRunChange}
+						enableReadouts={true}
+						frameReadoutData={frameReadoutData}
+						isLoadingReadoutData={isLoadingReadoutData}
+						requestReadoutData={handleReadoutDataRequest}
 						imageInfo={imageInfo}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}
