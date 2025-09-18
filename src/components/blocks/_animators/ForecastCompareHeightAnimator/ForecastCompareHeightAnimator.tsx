@@ -8,9 +8,10 @@ import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareHeightData } from '@/util/dataCalls/forecast/query-comparisons'
+import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { useParams, usePathname, useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ForecastCompareHeightAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareHeightAnimatorSettings/ForecastCompareHeightAnimatorSettings'
 import styles from './ForecastCompareHeightAnimator.module.scss'
 
@@ -45,6 +46,10 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 	const [forecastLevels, setForecastLevels] = useState<string[]>([])
 	const [startFrame, setStartFrame] = useState(0)
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
+	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
+	const [frameReadoutData, setFrameReadoutData] = useState<any>(null)
+	const [isLoadingReadoutData, setIsLoadingReadoutData] = useState(false)
+	const frameDataTimeoutRef = useRef<any>(null)
 
 	const getData = useCallback(async () => {
 		console.log('ForecastCompareHeightAnimator: Fetching data', modelId, runId, sectorId, productId, validTimeId)
@@ -64,6 +69,7 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 		setImageInfo(data.imageInfo)
 		setForecastData(data.frames)
 		setForecastRuns(runs.runs)
+		setFrameValidTimes(data.validtimes || [])
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, setForecastData, setForecastRuns, router])
 
 	useEffect(() => {
@@ -95,6 +101,50 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 		router.push(currentURL.join('/'))
 	}
 
+	// Request readout data for the current frame (level) at the selected valid time
+	const handleReadoutDataRequest = useCallback(
+		(frameIndex: number) => {
+			// Clear any existing timeout
+			if (frameDataTimeoutRef.current) {
+				clearTimeout(frameDataTimeoutRef.current)
+				frameDataTimeoutRef.current = null
+			}
+
+			// Reset state
+			setFrameReadoutData(null)
+
+			// Only fetch if we have all required parameters
+			if (!(modelId && runId && sectorId && productId)) {
+				console.log('Missing required parameters for readout data')
+				return
+			}
+
+			// Determine level from frame index and validtime index from route param
+			const levelForFrame = forecastLevels?.[frameIndex]
+			if (!levelForFrame) {
+				console.warn('No level found for frame index', frameIndex)
+				return
+			}
+			const vt = Number(validTimeId)
+			const validtimeIndex = frameValidTimes?.length ? Math.max(0, frameValidTimes.indexOf(vt)) : 0
+
+			setIsLoadingReadoutData(true)
+			frameDataTimeoutRef.current = setTimeout(async () => {
+				try {
+					const data = await getFrameReadoutData(modelId, runId, sectorId, levelForFrame, productId, validtimeIndex)
+					const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
+					setFrameReadoutData(readoutDataObj)
+				} catch (error) {
+					console.error('Error fetching frame readout data (compare-height):', error)
+				} finally {
+					setIsLoadingReadoutData(false)
+					frameDataTimeoutRef.current = null
+				}
+			}, 1000)
+		},
+		[modelId, runId, sectorId, productId, forecastLevels, frameValidTimes, validTimeId],
+	)
+
 	return (
 		<>
 			<div className={styles.forecastAnimatorContainer}>
@@ -107,6 +157,10 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 						runsPerRow={runsPerRow}
 						activeRun={runId as string}
 						setActiveRun={handleRunChange}
+						enableReadouts={true}
+						frameReadoutData={frameReadoutData}
+						isLoadingReadoutData={isLoadingReadoutData}
+						requestReadoutData={handleReadoutDataRequest}
 						imageInfo={imageInfo}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}
