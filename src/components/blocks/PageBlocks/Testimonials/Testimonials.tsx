@@ -19,7 +19,8 @@ export const Testimonials = ({ testimonials, rotateMs = 6000 }: TestimonialsProp
 	const items = useMemo(() => testimonials || [], [testimonials])
 	const [index, setIndex] = useState(0)
 	const [paused, setPaused] = useState(false)
-	const tallestRef = useRef<HTMLDivElement | null>(null)
+	const measureRefs = useRef<Array<HTMLDivElement | null>>([])
+	const [containerHeight, setContainerHeight] = useState<number | undefined>(undefined)
 
 	// Auto-rotate
 	useEffect(() => {
@@ -31,15 +32,38 @@ export const Testimonials = ({ testimonials, rotateMs = 6000 }: TestimonialsProp
 		return () => clearInterval(id)
 	}, [paused, items.length, rotateMs])
 
+	// Recalculate tallest slide and lock container height
+	useEffect(() => {
+		const recalc = () => {
+			const heights = measureRefs.current.map((el) => (el ? el.clientHeight : 0))
+			const max = heights.length ? Math.max(...heights) : 0
+			if (max && max !== containerHeight) setContainerHeight(max)
+		}
+		// schedule after paint
+		const id = window.setTimeout(recalc, 0)
+		const onResize = () => recalc()
+		window.addEventListener('resize', onResize)
+		return () => {
+			window.clearTimeout(id)
+			window.removeEventListener('resize', onResize)
+		}
+	}, [items, containerHeight])
+
 	if (!items || items.length === 0) return null
 
 	return (
 		<section className={styles.testimonials} onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
 			<div className={styles.container}>
-				{/* Hidden measurement stack to establish min height based on tallest slide */}
-				<div className={styles.measure} aria-hidden="true" ref={tallestRef}>
+				{/* Hidden measurement stack to determine tallest height */}
+				<div className={styles.measure} aria-hidden="true">
 					{items.map((t, i) => (
-						<div key={`m-${i}`} className={styles.measureItem}>
+						<div
+							key={`m-${i}`}
+							className={styles.measureItem}
+							ref={(el) => {
+								measureRefs.current[i] = el
+							}}
+						>
 							<blockquote className={styles.quote}>“{t.quote}”</blockquote>
 							{t.avatar && <img className={styles.avatar} src={t.avatar} alt="" />}
 							{t.author && <div className={styles.author}>{t.author}</div>}
@@ -48,7 +72,7 @@ export const Testimonials = ({ testimonials, rotateMs = 6000 }: TestimonialsProp
 					))}
 				</div>
 
-				<div className={styles.slides} aria-live="polite">
+				<div className={styles.slides} aria-live="polite" style={{ minHeight: containerHeight || 280 }}>
 					{items.map((t, i) => (
 						<div
 							key={i}
