@@ -1,6 +1,6 @@
 'use client'
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import styles from './AnimatorImageMachine.module.scss'
 
 interface IAnimatorImageMachineProps {
@@ -20,11 +20,16 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
 
+		// track whether localStorage caching should be disabled for this session
+		// (set to true if a QuotaExceededError or other storage error occurs)
+		const disableLocalStorageRef = useRef(false)
+
 		useEffect(() => {
 			if (frames && frames.length === 0) {
 				setIsLoading(false)
 				return
 			}
+
 			const loadImages = async () => {
 				setIsLoading(true)
 				const validFrames = []
@@ -41,7 +46,19 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 								img.src = frame
 								img.onload = () => {
 									validFrames.push(img)
-									localStorage.setItem(frame, img.src)
+									// attempt to cache the image in localStorage; if quota is exceeded
+									// we stop trying for the rest of this session to avoid repeated errors
+									if (!disableLocalStorageRef.current) {
+										try {
+											// avoid storing large data: URLs in localStorage
+											if (typeof img.src === 'string' && !img.src.startsWith('data:')) {
+												localStorage.setItem(frame, img.src)
+											}
+										} catch (err) {
+											console.warn('localStorage caching failed, disabling further caching for this session', err)
+											disableLocalStorageRef.current = true
+										}
+									}
 									resolve()
 								}
 								img.onerror = () => reject()
