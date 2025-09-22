@@ -31,6 +31,42 @@
   overflow: hidden;
 }
 
+/* Variant: when there are no buttons/buttonsTitle (simple layout) */
+.rowSimple {
+  /* Image takes ~35% of overall width; content takes the rest */
+  grid-template-columns: 40% 60%;
+}
+/* Remove dark overlay on the image when in simple layout */
+.rowSimple .card::before {
+  display: none;
+}
+.cardVisualOnly::before {
+  /* Fallback if used outside of .rowSimple; otherwise it's removed above */
+  background: rgba(2, 17, 32, 0.25);
+}
+.sideSimple {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+.linkCTA {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--color-blue3-blue5);
+  text-decoration: none;
+}
+.linkCTA::after {
+  content: '→';
+  font-size: 18px;
+  line-height: 1;
+}
+.linkCTA:hover {
+  color: var(--color-blue5-blue3);
+}
+
 /* Visual card (left) */
 .card {
   position: relative;
