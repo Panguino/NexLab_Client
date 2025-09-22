@@ -1,14 +1,14 @@
 import SubNavigation from '@/components/layout/SubNavigation/SubNavigation'
 import SubNavigationItem from '@/components/layout/SubNavigation/SubNavigationItem/SubNavigationItem'
+import { stormChasingSubnav } from './subnav.config'
 
 export default function Layout({ children }) {
 	return (
 		<>
 			<SubNavigation>
-				<SubNavigationItem name="Trips & Registration" link="/storm-chasing/trips-and-registration/" />
-				<SubNavigationItem name="Materials" link="/storm-chasing/materials/" />
-				<SubNavigationItem name="Media" link="/storm-chasing/media/" />
-				<SubNavigationItem name="Tracker" link="/storm-chasing/tracker/" />
+				{stormChasingSubnav.map((item) => (
+					<SubNavigationItem key={item.href} name={item.title} link={item.href} />
+				))}
 			</SubNavigation>
 			{children}
 		</>

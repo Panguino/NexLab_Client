@@ -43,6 +43,8 @@ interface IAnimatorProps {
 	// Scrubber enhancements
 	scrubberPlaceholderImageUrl?: string
 	scrubberFrameLoadStates?: boolean[]
+	frameLabels?: string[]
+	displayAllLabels?: boolean // true = show all labels row; false = show only active label above handle
 	// Simple overlay markers (percent positions inside the image content)
 	overlayMarkers?: { xPercent: number; yPercent: number }[]
 	onFrameUpdate?: (frameIndex: number) => void
@@ -98,6 +100,8 @@ export const Animator = ({
 	},
 	scrubberPlaceholderImageUrl,
 	scrubberFrameLoadStates,
+	frameLabels,
+	displayAllLabels = true,
 	setFrameValidTime = (validtime: number) => {
 		console.warn('setFrameValidTime function not provided, frame valid time will not be updated.', validtime)
 	},
@@ -167,6 +171,8 @@ export const Animator = ({
 				onSoundingsClickthrough,
 				scrubberPlaceholderImageUrl,
 				scrubberFrameLoadStates,
+				frameLabels,
+				displayAllLabels,
 				onFrameUpdate,
 			}}
 		>

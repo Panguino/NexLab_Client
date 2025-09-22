@@ -92,41 +92,38 @@ const ForecastAnimator: React.FC = () => {
 	}
 
 	// Add this handler function
-	const handleReadoutDataRequest = useCallback(
-		(frameIndex) => {
-			// Clear any existing timeout
-			if (frameDataTimeoutRef.current) {
-				clearTimeout(frameDataTimeoutRef.current)
+	const handleReadoutDataRequest = useCallback(() => {
+		// Clear any existing timeout
+		if (frameDataTimeoutRef.current) {
+			clearTimeout(frameDataTimeoutRef.current)
+			frameDataTimeoutRef.current = null
+		}
+
+		// Reset state
+		setFrameReadoutData(null)
+
+		// Only fetch if we have all required parameters
+		if (!(modelId && runId && sectorId && levelId && productId)) {
+			console.log('Missing required parameters for readout data')
+			return
+		}
+
+		// Set a timeout to fetch data after 1 seconds
+		setIsLoadingReadoutData(true)
+		frameDataTimeoutRef.current = setTimeout(async () => {
+			try {
+				const data = await getFrameReadoutData(modelId, runId, sectorId, levelId, productId, forecastFrameValidTime)
+				const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
+				//console.log('READOUT TIMEOUT - Fetched frame readout data:', readoutDataObj)
+				setFrameReadoutData(readoutDataObj)
+			} catch (error) {
+				console.error('Error fetching frame readout data:', error)
+			} finally {
+				setIsLoadingReadoutData(false)
 				frameDataTimeoutRef.current = null
 			}
-
-			// Reset state
-			setFrameReadoutData(null)
-
-			// Only fetch if we have all required parameters
-			if (!(modelId && runId && sectorId && levelId && productId)) {
-				console.log('Missing required parameters for readout data')
-				return
-			}
-
-			// Set a timeout to fetch data after 1 seconds
-			setIsLoadingReadoutData(true)
-			frameDataTimeoutRef.current = setTimeout(async () => {
-				try {
-					const data = await getFrameReadoutData(modelId, runId, sectorId, levelId, productId, frameIndex)
-					const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
-					//console.log('READOUT TIMEOUT - Fetched frame readout data:', readoutDataObj)
-					setFrameReadoutData(readoutDataObj)
-				} catch (error) {
-					console.error('Error fetching frame readout data:', error)
-				} finally {
-					setIsLoadingReadoutData(false)
-					frameDataTimeoutRef.current = null
-				}
-			}, 1000) // 1-second delay
-		},
-		[modelId, runId, sectorId, levelId, productId],
-	)
+		}, 1000) // 1-second delay
+	}, [modelId, runId, sectorId, levelId, productId, forecastFrameValidTime])
 
 	// Add a cleanup effect
 	useEffect(() => {

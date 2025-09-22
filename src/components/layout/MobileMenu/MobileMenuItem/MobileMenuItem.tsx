@@ -4,9 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import styles from './MobileMenuItem.module.scss'
 
-const MobileMenuItem = ({ title, url, target = '_self', onArrowClick = null, leftArrow = false }) => {
+const MobileMenuItem = ({ title, url, target = '_self', onArrowClick = null, leftArrow = false, variant = 'default' }) => {
 	return (
-		<div className={styles.MobileMenuItem}>
+		<div className={`${styles.MobileMenuItem} ${variant === 'footer' ? styles.footerVariant : ''}`}>
 			{onArrowClick && leftArrow && (
 				<div className={`${styles.arrow} ${styles.leftArrow}`} onClick={onArrowClick}>
 					<FontAwesomeIcon icon={faChevronDown} />

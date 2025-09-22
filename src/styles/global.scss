@@ -169,6 +169,9 @@ p {
 ul,
 ol {
 	font-family: var(--font-primary);
+	li {
+		color: var(--color-grey16-grey5);
+	}
 }
 table {
 	font-family: var(--font-primary);

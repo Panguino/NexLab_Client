@@ -80,13 +80,14 @@ const MobileMenu = ({ children, navItems }) => {
 						)}
 						{navItems
 							.filter(({ parentId }) => parentId === menuId)
-							.map(({ title, target, id }) => {
+							.map(({ title, target, id, variant }) => {
 								return (
 									<MobileMenuItem
 										key={id}
 										title={title}
 										url={buildFullUrl(id)}
 										target={`${target}`}
+										variant={variant}
 										onArrowClick={
 											ifMenuItemHasChildren(id)
 												? () => {

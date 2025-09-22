@@ -90,7 +90,7 @@
     "@types/react-fontawesome": "^1.6.8",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
-    "chromatic": "^11.7.1",
+    "chromatic": "^13.1.5",
     "concurrently": "^8.2.2",
     "eslint": "^8.46.0",
     "eslint-config-prettier": "^9.1.0",

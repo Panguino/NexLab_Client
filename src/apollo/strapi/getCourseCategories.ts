@@ -12,6 +12,7 @@ export const getCourseCategories = async () => {
 					courses {
 						documentId
 						CourseID
+						Title
 					}
 				}
 			}

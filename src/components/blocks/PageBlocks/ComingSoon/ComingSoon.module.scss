@@ -1,0 +1,68 @@
+.comingSoon {
+  background: var(--color-white-grey19);
+  color: var(--color-grey20-grey0);
+  transition:
+    background-color var(--themeChange),
+    color var(--themeChange);
+  padding: 64px 20px;
+}
+/* fullWidth variant integrates with Sidebar layouts */
+.fullWidth {
+  width: 100%;
+}
+.inner {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+.eyebrow {
+  color: var(--color-blue3);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+}
+.title {
+  font-family: var(--font-secondary);
+  font-size: 54px;
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 8px 0 12px;
+}
+.purpose {
+  color: var(--color-grey16-grey5);
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 0 auto 20px;
+}
+.eta {
+  color: var(--color-grey14-grey7);
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+.card {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--color-white-grey18);
+  border: 1px solid var(--color-grey6-grey14);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+}
+.iconWrap {
+  color: var(--color-blue3);
+}
+.cardText {
+  color: var(--color-grey16-grey5);
+  font-size: 14px;
+}
+
+@media (max-width: 700px) {
+  .title {
+    font-size: 40px;
+  }
+  .purpose {
+    font-size: 16px;
+  }
+}
