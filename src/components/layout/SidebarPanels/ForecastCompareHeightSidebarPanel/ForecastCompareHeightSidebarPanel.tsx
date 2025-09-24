@@ -231,7 +231,6 @@ const ForecastCompareHeightSidebarPanel = () => {
 					levelId={levelId as string}
 					productId={productId as string}
 					validTimeId={validTimeId as string}
-					returnLink={returnLink}
 				/>
 			</div>
 		</ScrollArea>

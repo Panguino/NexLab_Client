@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '@/components/elements/Button/Button'
+import { Button } from '@/components/elements/Button/Button'
 import Input from '@/components/elements/Input/Input'
 import Select from '@/components/elements/Select/Select'
 import { FORECAST_MODELS } from '@/data/forecast/models'
@@ -14,7 +14,7 @@ import { useRootStore } from '@/store/useRootStore'
 import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import styles from './ForecastSoundingPicker.module.scss'
 
 interface ForecastSoundingPickerProps {
@@ -24,7 +24,6 @@ interface ForecastSoundingPickerProps {
 	levelId: string
 	productId: string
 	validTimeId: string
-	returnLink: string
 	className?: string
 }
 
@@ -35,7 +34,6 @@ const ForecastSoundingPicker = ({
 	levelId,
 	productId,
 	validTimeId,
-	returnLink,
 	className,
 }: ForecastSoundingPickerProps) => {
 	const router = useRouter()
@@ -66,6 +64,17 @@ const ForecastSoundingPicker = ({
 			label: FORECAST_MODELS[model].name,
 		}))
 
+	// Convert sounding options objects to arrays for Select component
+	const parcelOptions = Object.values(FORECAST_SOUNDING_PARCEL_OPTIONS).map((option) => ({
+		value: option.id,
+		label: option.label,
+	}))
+
+	const weatherOptions = Object.values(FORECAST_SOUNDING_WEATHER_OPTIONS).map((option) => ({
+		value: option.id,
+		label: option.label,
+	}))
+
 	const handleModelChange = (model: string) => {
 		if (model !== internalModelId) {
 			setInternalModelId(model)
@@ -73,8 +82,8 @@ const ForecastSoundingPicker = ({
 		}
 	}
 
-	const handleLocationChange = useCallback((location: string) => {
-		setInternalLocationId(location)
+	const handleLocationChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+		setInternalLocationId(e.target.value)
 		setAllowGenerateSounding(true)
 	}, [])
 
@@ -140,14 +149,14 @@ const ForecastSoundingPicker = ({
 					<Select
 						value={internalParcelId}
 						placeholder={internalParcelId}
-						options={FORECAST_SOUNDING_PARCEL_OPTIONS}
+						options={parcelOptions}
 						onChange={handleParcelChange}
 					/>
 					<label>Weather Type:</label>
 					<Select
 						value={internalWeatherId}
 						placeholder={internalWeatherId}
-						options={FORECAST_SOUNDING_WEATHER_OPTIONS}
+						options={weatherOptions}
 						onChange={handleWeatherChange}
 					/>
 					<Button label="Generate Sounding" disabled={!allowGenerateSounding} onClick={handleGenerateSounding} />
