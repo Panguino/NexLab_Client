@@ -65,7 +65,7 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 	}, [validTimeId, setForecastFrameValidTime])
 
 	// Sounding clickthrough handler
-	const onSoundingsClickthrough = useCallback(({ xPercent, yPercent }) => {
+	const onSoundingsClickthrough = useCallback(({ xPercent, yPercent }: { xPercent: number; yPercent: number }) => {
 		if (!currentActiveModel || !soundingsSupported) return
 
 		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
@@ -81,7 +81,7 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 
 		console.log('ForecastCompareModelsAnimator: Data fetched', data)
 
-		const initialFrame = data.models.indexOf(modelId as string) || 0
+		const initialFrame = Math.max(0, data.models.indexOf(modelId as string))
 		setStartFrame(initialFrame)
 		setCurrentFrame(initialFrame)
 		setForecastModels(data.models || [])

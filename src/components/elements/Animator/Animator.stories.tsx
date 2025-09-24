@@ -127,7 +127,7 @@ soundingPickerEnabled.args = {
 	soundingsPicker: true,
 	soundingsPickerMode: false,
 	soundingsPickerDisabled: false,
-	onSoundingsClickthrough: ({ xPercent, yPercent }) => {
+	onSoundingsClickthrough: ({ xPercent, yPercent }: { xPercent: number; yPercent: number }) => {
 		console.log('Sounding clicked at:', { xPercent, yPercent })
 	},
 }
@@ -140,7 +140,7 @@ soundingPickerDisabled.args = {
 	soundingsPicker: true,
 	soundingsPickerMode: false,
 	soundingsPickerDisabled: true,
-	onSoundingsClickthrough: ({ xPercent, yPercent }) => {
+	onSoundingsClickthrough: ({ xPercent, yPercent }: { xPercent: number; yPercent: number }) => {
 		console.log('Sounding clicked at:', { xPercent, yPercent })
 	},
 }
@@ -154,7 +154,7 @@ soundingPickerModelComparison.args = {
 	soundingsPicker: true,
 	soundingsPickerMode: false,
 	soundingsPickerDisabled: false, // This would be dynamically controlled in real implementation
-	onSoundingsClickthrough: ({ xPercent, yPercent }) => {
+	onSoundingsClickthrough: ({ xPercent, yPercent }: { xPercent: number; yPercent: number }) => {
 		console.log('Sounding clicked at:', { xPercent, yPercent })
 	},
 	onFrameUpdate: (frameIndex) => {

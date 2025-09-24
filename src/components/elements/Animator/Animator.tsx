@@ -40,7 +40,7 @@ interface IAnimatorProps {
 	soundingsPickerMode?: boolean
 	soundingsPickerDisabled?: boolean
 	setSoundingsPickerMode?: (mode: boolean) => void
-	onSoundingsClickthrough?: (event: any) => void
+	onSoundingsClickthrough?: (event: { xPercent: number; yPercent: number }) => void
 	// Scrubber enhancements
 	scrubberPlaceholderImageUrl?: string
 	scrubberFrameLoadStates?: boolean[]
@@ -97,7 +97,7 @@ export const Animator = ({
 	setSoundingsPickerMode = (mode: boolean) => {
 		console.warn('setSoundingsPickerMode function not provided, soundings picker mode will not be updated.', mode)
 	},
-	onSoundingsClickthrough = (event: any) => {
+	onSoundingsClickthrough = (event: { xPercent: number; yPercent: number }) => {
 		console.warn('onSoundingsClickthrough function not provided, soundings click-through will not be handled.', event)
 	},
 	scrubberPlaceholderImageUrl,
