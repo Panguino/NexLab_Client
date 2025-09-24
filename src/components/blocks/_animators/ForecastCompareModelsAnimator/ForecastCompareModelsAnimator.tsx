@@ -9,7 +9,7 @@ import { useRootStore } from '@/store/useRootStore'
 import { getCompareModelsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ForecastCompareModelsAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareModelsAnimatorSettings/ForecastCompareModelsAnimatorSettings'
 import styles from './ForecastCompareModelsAnimator.module.scss'
 
@@ -54,7 +54,8 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 
 	const soundingsSupported = useMemo(() => {
 		if (!currentActiveModel) return false
-		return FORECAST_MODELS[currentActiveModel]?.allowForecastSounding === true
+		const modelConfig = FORECAST_MODELS[currentActiveModel]
+		return modelConfig?.allowForecastSounding === true
 	}, [currentActiveModel])
 
 	// Handle frame updates to track current active model
@@ -65,9 +66,10 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 	}, [validTimeId, setForecastFrameValidTime])
 
 	// Sounding clickthrough handler
-	const onSoundingsClickthrough = useCallback(({ xPercent, yPercent }: { xPercent: number; yPercent: number }) => {
+	const onSoundingsClickthrough = useCallback((event: { xPercent: number; yPercent: number }) => {
 		if (!currentActiveModel || !soundingsSupported) return
 
+		const { xPercent, yPercent } = event
 		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
 		const baseParams = `/weather-data/forecast-models/${runId}/${currentActiveModel}/${sectorId}/${levelId}/${productId}`
 		const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
@@ -126,11 +128,7 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 						soundingsPicker={true}
 						soundingsPickerMode={forecastSoundingsPickMode && soundingsSupported}
 						soundingsPickerDisabled={!soundingsSupported}
-						setSoundingsPickerMode={(mode: boolean) => {
-							// Only allow enabling if current model supports soundings
-							if (mode && !soundingsSupported) return
-							setForecastSoundingsPickMode(mode)
-						}}
+						setSoundingsPickerMode={setForecastSoundingsPickMode}
 						onSoundingsClickthrough={onSoundingsClickthrough}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
