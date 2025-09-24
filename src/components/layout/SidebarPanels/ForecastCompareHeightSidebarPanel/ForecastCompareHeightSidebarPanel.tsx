@@ -1,5 +1,6 @@
 'use client'
 
+import ForecastSoundingPicker from '@/components/elements/ForecastSoundingPicker/ForecastSoundingPicker'
 import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import Select from '@/components/elements/Select/Select'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
@@ -223,6 +224,15 @@ const ForecastCompareHeightSidebarPanel = () => {
 						rowCount={FORECAST_MODELS[modelId as string]?.validPerRow || 4}
 					/>
 				</div>
+				<ForecastSoundingPicker
+					modelId={modelId as string}
+					runId={runId as string}
+					sectorId={sectorId as string}
+					levelId={levelId as string}
+					productId={productId as string}
+					validTimeId={validTimeId as string}
+					returnLink={returnLink}
+				/>
 			</div>
 		</ScrollArea>
 	)
