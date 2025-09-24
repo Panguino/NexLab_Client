@@ -27,6 +27,7 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 		soundingsPickerMode,
 		setSoundingsPickerMode,
 		soundingsPicker,
+		soundingsPickerDisabled,
 	} = useAnimator()
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
 	const expandToggle = () => {
@@ -67,8 +68,13 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 				<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
 			</button>
 			{soundingsPicker && (
-				<button onClick={() => setSoundingsPickerMode(!soundingsPickerMode)}>
-					<WeatherBalloonIcon className={soundingsPickerMode ? styles.active : ''} />
+				<button
+					onClick={() => !soundingsPickerDisabled && setSoundingsPickerMode(!soundingsPickerMode)}
+					className={soundingsPickerDisabled ? styles.disabled : ''}
+					disabled={soundingsPickerDisabled}
+					title={soundingsPickerDisabled ? 'Soundings not supported for current model' : 'Toggle sounding picker'}
+				>
+					<WeatherBalloonIcon className={soundingsPickerMode && !soundingsPickerDisabled ? styles.active : ''} />
 				</button>
 			)}
 		</div>

@@ -38,6 +38,7 @@ interface IAnimatorProps {
 	setFullScreen?: (fullScreen: boolean) => void
 	soundingsPicker?: boolean
 	soundingsPickerMode?: boolean
+	soundingsPickerDisabled?: boolean
 	setSoundingsPickerMode?: (mode: boolean) => void
 	onSoundingsClickthrough?: (event: any) => void
 	// Scrubber enhancements
@@ -92,6 +93,7 @@ export const Animator = ({
 	fullScreen = false,
 	soundingsPicker = false,
 	soundingsPickerMode = false,
+	soundingsPickerDisabled = false,
 	setSoundingsPickerMode = (mode: boolean) => {
 		console.warn('setSoundingsPickerMode function not provided, soundings picker mode will not be updated.', mode)
 	},
@@ -167,6 +169,7 @@ export const Animator = ({
 				setFullScreen,
 				soundingsPicker,
 				soundingsPickerMode,
+				soundingsPickerDisabled,
 				setSoundingsPickerMode,
 				onSoundingsClickthrough,
 				scrubberPlaceholderImageUrl,
