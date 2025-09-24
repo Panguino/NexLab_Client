@@ -38,8 +38,8 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const forecastSoundingFrameRate = useRootStore.use.forecastSoundingFrameRate()
 	const forecastSoundingZoomState = useRootStore.use.forecastSoundingZoomState()
 	const setForecastSoundingZoomState = useRootStore.use.setForecastSoundingZoomState()
-	const forecastSoundingZoomFill = useRootStore.use.forecastSoundingZoomFill()
-	const setForecastSoundingZoomFill = useRootStore.use.setForecastSoundingZoomFill()
+	const globalZoomFill = useRootStore.use.globalZoomFill()
+	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
 	const forecastSoundingMapFullScreen = useRootStore.use.forecastSoundingMapFullScreen()
 	const setForecastSoundingMapFullScreen = useRootStore.use.setForecastSoundingMapFullScreen()
 	const forecastSoundingLastFrameDwell = useRootStore.use.forecastSoundingLastFrameDwell()
@@ -123,8 +123,8 @@ const ForecastSoundingAnimator: React.FC = () => {
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, getData])
 
 	useEffect(() => {
-		setForecastSoundingZoomFill(isMobile)
-	}, [isMobile, setForecastSoundingZoomFill])
+		setGlobalZoomFill(isMobile)
+	}, [isMobile, setGlobalZoomFill])
 
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,
@@ -173,8 +173,8 @@ const ForecastSoundingAnimator: React.FC = () => {
 								imageInfo={imageInfo}
 								initialZoomState={forecastSoundingZoomState}
 								setZoomState={setForecastSoundingZoomState}
-								zoomFill={forecastSoundingZoomFill}
-								setZoomFill={setForecastSoundingZoomFill}
+								zoomFill={globalZoomFill}
+								setZoomFill={setGlobalZoomFill}
 								fullScreen={forecastSoundingMapFullScreen}
 								setFullScreen={setForecastSoundingMapFullScreen}
 								interval={1000 / forecastSoundingFrameRate}

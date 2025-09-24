@@ -24,8 +24,8 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
-	const forecastZoomFill = useRootStore.use.forecastZoomFill()
-	const setForecastZoomFill = useRootStore.use.setForecastZoomFill()
+	const globalZoomFill = useRootStore.use.globalZoomFill()
+	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
 	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
@@ -53,8 +53,8 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, runFlag, getData])
 
 	useEffect(() => {
-		setForecastZoomFill(isMobile)
-	}, [isMobile, setForecastZoomFill])
+		setGlobalZoomFill(isMobile)
+	}, [isMobile, setGlobalZoomFill])
 
 	return (
 		<>
@@ -67,8 +67,8 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 						imageInfo={imageInfo}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}
-						zoomFill={forecastZoomFill}
-						setZoomFill={setForecastZoomFill}
+						zoomFill={globalZoomFill}
+						setZoomFill={setGlobalZoomFill}
 						fullScreen={forecastMapFullScreen}
 						setFullScreen={setForecastMapFullScreen}
 						interval={1000 / forecastFrameRate}

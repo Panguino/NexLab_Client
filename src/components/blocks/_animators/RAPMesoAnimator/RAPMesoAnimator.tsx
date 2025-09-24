@@ -23,8 +23,8 @@ const RAPMesoAnimator: React.FC = () => {
 	const [RAPMesoData, setRAPMesoData] = useState([])
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
-	const analysisZoomFill = useRootStore.use.nexradZoomFill()
-	const setAnalysisZoomFill = useRootStore.use.setNexradZoomFill()
+	const globalZoomFill = useRootStore.use.globalZoomFill()
+	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
 	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const analysisFrameRate = useRootStore.use.analysisFrameRate()
@@ -70,8 +70,8 @@ const RAPMesoAnimator: React.FC = () => {
 	}, [rapMesoFrameValidTime])
 
 	useEffect(() => {
-		setAnalysisZoomFill(isMobile)
-	}, [isMobile, setAnalysisZoomFill])
+		setGlobalZoomFill(isMobile)
+	}, [isMobile, setGlobalZoomFill])
 
 	return (
 		<>
@@ -85,8 +85,8 @@ const RAPMesoAnimator: React.FC = () => {
 						imageInfo={imageInfo}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
-						zoomFill={analysisZoomFill}
-						setZoomFill={setAnalysisZoomFill}
+						zoomFill={globalZoomFill}
+						setZoomFill={setGlobalZoomFill}
 						fullScreen={analysisMapFullScreen}
 						setFullScreen={setAnalysisMapFullScreen}
 						interval={1000 / analysisFrameRate}
