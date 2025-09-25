@@ -83,11 +83,6 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 		router.push(route)
 	}, [currentActiveModel, soundingsSupported, sectorId, runId, levelId, productId, validTimeId, router])
 
-	// Readout state (mirrors ForecastCompareHeightAnimator behavior)
-	const [frameReadoutData, setFrameReadoutData] = useState<any>(null)
-	const [isLoadingReadoutData, setIsLoadingReadoutData] = useState<boolean>(false)
-	const frameDataTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-
 	const getData = useCallback(async () => {
 		console.log('ForecastCompareModelsAnimator: Fetching data', runId, sectorId, levelId, productId, validTimeId, runFlag)
 		const data = await getCompareModelsData(runId, sectorId, levelId, productId, validTimeId, runFlag)
@@ -181,7 +176,11 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 						soundingsPicker={true}
 						soundingsPickerMode={forecastSoundingsPickMode && soundingsSupported}
 						soundingsPickerDisabled={!soundingsSupported}
-						setSoundingsPickerMode={setForecastSoundingsPickMode}
+						setSoundingsPickerMode={(mode: boolean) => {
+							// Only allow enabling if current model supports soundings
+							if (mode && !soundingsSupported) return
+							setForecastSoundingsPickMode(mode)
+						}}
 						onSoundingsClickthrough={onSoundingsClickthrough}
 						enableReadouts={true}
 						frameReadoutData={frameReadoutData}
