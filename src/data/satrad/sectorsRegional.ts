@@ -1,4 +1,11 @@
-import { SATRAD_PRODUCTS } from './products'
+import { SATRAD_PRODUCTS, SATRAD_PRODUCT_ABI_11_ID, SATRAD_PRODUCT_ABI_12_ID, SATRAD_PRODUCT_ABI_14_ID, SATRAD_PRODUCT_ABI_16_ID } from './products'
+
+// Filtered product set for sectors needing omission of specific ABI bands
+const SATRAD_PRODUCTS_NO_ABI_11_12_14_16 = Object.fromEntries(
+	Object.entries(SATRAD_PRODUCTS).filter(
+		([key]) => ![SATRAD_PRODUCT_ABI_11_ID, SATRAD_PRODUCT_ABI_12_ID, SATRAD_PRODUCT_ABI_14_ID, SATRAD_PRODUCT_ABI_16_ID].includes(key),
+	),
+)
 
 // Regional Sectors
 const SATRAD_SECTOR_REGIONAL_BERING_SEA_ID = 'BeringSea'
@@ -191,7 +198,7 @@ export const SATRAD_SECTORS_REGIONAL_NAMER = {
 			[-76.25, 9.5],
 			[-59.5, 25.0],
 		],
-		products: SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS_NO_ABI_11_12_14_16,
 	},
 	[SATRAD_SECTOR_REGIONAL_SOUTH_CENTRAL_ID]: {
 		name: 'South Central US',

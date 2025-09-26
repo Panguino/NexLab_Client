@@ -31,11 +31,37 @@ const SatradSidebarPanel = () => {
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	useEffect(() => {
-		if (!SATRAD_PRODUCTS[productId as string] || !SATRAD_SCALE_REGIONS[regionId as string] || !ALL_SATRAD_SECTORS[sectorId as string]) {
+		const currentRegionId = regionId as string
+		const currentSectorId = sectorId as string
+		const currentProductId = productId as string
+
+		// 1. Region sanitization
+		const sanitizedRegionId = SATRAD_SCALE_REGIONS[currentRegionId] ? currentRegionId : DEFAULT_SATRAD_REGION
+
+		// 2. Sector sanitization (must belong to sanitizedRegionId's sectors list)
+		const regionSectors = SATRAD_SCALE_REGIONS[sanitizedRegionId].sectors
+		const sanitizedSectorId = regionSectors.includes(currentSectorId)
+			? currentSectorId
+			: regionSectors.includes(DEFAULT_SATRAD_SECTOR)
+				? DEFAULT_SATRAD_SECTOR
+				: regionSectors[0]
+
+		// 3. Product sanitization (must exist inside the sanitized sector's product set)
+		const sectorProductsObj = ALL_SATRAD_SECTORS[sanitizedSectorId]?.products || {}
+		const sanitizedProductId = sectorProductsObj[currentProductId]
+			? currentProductId
+			: sectorProductsObj[DEFAULT_SATRAD_PRODUCT]
+				? DEFAULT_SATRAD_PRODUCT
+				: Object.keys(sectorProductsObj).sort((a, b) => parseInt(a, 10) - parseInt(b, 10))[0]
+
+		// 4. If any param changed, push sanitized route
+		if (currentRegionId !== sanitizedRegionId || currentSectorId !== sanitizedSectorId || currentProductId !== sanitizedProductId) {
 			resetSatradZoomState()
-			router.push(`/weather-data/satellite-mosaic-radar/${DEFAULT_SATRAD_PRODUCT}/${DEFAULT_SATRAD_REGION}/${DEFAULT_SATRAD_SECTOR}`)
-		} else if (tempRegionIdRef.current !== regionId) {
-			tempRegionIdRef.current = regionId as string
+			router.push(`/weather-data/satellite-mosaic-radar/${sanitizedProductId}/${sanitizedRegionId}/${sanitizedSectorId}`)
+			tempRegionIdRef.current = sanitizedRegionId
+		} else if (tempRegionIdRef.current !== sanitizedRegionId) {
+			// Keep tempRegionIdRef synced for sector selector logic
+			tempRegionIdRef.current = sanitizedRegionId
 		}
 	}, [productId, regionId, sectorId, router, resetSatradZoomState])
 
