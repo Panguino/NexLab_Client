@@ -128,36 +128,71 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo, onUpdatePosition])
 
 	useEffect(() => {
-		const handleMouseMove = (e) => {
+		// Helper function to extract client coordinates from mouse or touch events
+		const getClientCoordinates = (e: MouseEvent | TouchEvent) => {
+			if ('touches' in e && e.touches.length > 0) {
+				// Touch event
+				return {
+					clientX: e.touches[0].clientX,
+					clientY: e.touches[0].clientY,
+				}
+			} else if ('clientX' in e) {
+				// Mouse event
+				return {
+					clientX: e.clientX,
+					clientY: e.clientY,
+				}
+			}
+			return null
+		}
+
+		const handleMove = (e: MouseEvent | TouchEvent) => {
+			const coords = getClientCoordinates(e)
+			if (!coords || !hoverRef.current) return
+
 			const rect = hoverRef.current.getBoundingClientRect()
-			const x = e.clientX - rect.left
-			const y = e.clientY - rect.top
+			const x = coords.clientX - rect.left
+			const y = coords.clientY - rect.top
 			setRelativePosition({ x, y })
-			setMousePosition({ x: e.clientX, y: e.clientY })
+			setMousePosition({ x: coords.clientX, y: coords.clientY })
 			calculateTooltipPosition()
 		}
 
-		const handleMouseEnter = () => {
+		const handleEnter = () => {
 			setIsHovering(true)
 		}
 
-		const handleMouseLeave = () => {
+		const handleLeave = () => {
 			setIsHovering(false)
 		}
 
 		const element = hoverRef.current
 
 		if (element) {
-			element.addEventListener('mousemove', handleMouseMove)
-			element.addEventListener('mouseenter', handleMouseEnter)
-			element.addEventListener('mouseleave', handleMouseLeave)
+			// Mouse events
+			element.addEventListener('mousemove', handleMove)
+			element.addEventListener('mouseenter', handleEnter)
+			element.addEventListener('mouseleave', handleLeave)
+
+			// Touch events
+			element.addEventListener('touchstart', handleEnter)
+			element.addEventListener('touchmove', handleMove)
+			element.addEventListener('touchend', handleLeave)
+			element.addEventListener('touchcancel', handleLeave)
 		}
 
 		return () => {
 			if (element) {
-				element.removeEventListener('mousemove', handleMouseMove)
-				element.removeEventListener('mouseenter', handleMouseEnter)
-				element.removeEventListener('mouseleave', handleMouseLeave)
+				// Mouse events
+				element.removeEventListener('mousemove', handleMove)
+				element.removeEventListener('mouseenter', handleEnter)
+				element.removeEventListener('mouseleave', handleLeave)
+
+				// Touch events
+				element.removeEventListener('touchstart', handleEnter)
+				element.removeEventListener('touchmove', handleMove)
+				element.removeEventListener('touchend', handleLeave)
+				element.removeEventListener('touchcancel', handleLeave)
 			}
 		}
 	}, [hoverRef, calculateTooltipPosition])
