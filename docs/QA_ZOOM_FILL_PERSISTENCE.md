@@ -11,12 +11,14 @@ This checklist verifies that the Expand/Contract (Fit/Fill) display setting pers
 
 ## Test Cases
 
-### 1. Button State Sync Test (Primary Fix)
-- [ ] **Set Preference**: Navigate to any weather data product and change zoom fill setting
+### 1. Button State Sync Test (Primary Fix) ⭐ **CRITICAL TEST**
+- [ ] **Set Preference**: Navigate to any weather data product and change zoom fill setting to "Fill" (expand)
 - [ ] **Refresh Page**: Refresh the browser page
-- [ ] **Verify Immediate State**: Button/icon should immediately show correct state (no flicker or wrong state)
+- [ ] **Verify Immediate State**: Button/icon should immediately show "Compress" icon (indicating Fill mode is active)
+- [ ] **No Wrong State**: Should NOT show "Expand" icon initially then change to "Compress"
 - [ ] **Navigate Products**: Switch to other weather data products
-- [ ] **Verify Consistency**: Button state should remain consistent across all products
+- [ ] **Verify Consistency**: Button state should remain "Compress" across all products
+- [ ] **Test Reverse**: Change to "Fit" mode, refresh, verify button shows "Expand" icon immediately
 
 ### 2. Default Behavior (First Time Users)
 - [ ] **Clear localStorage**: Clear browser localStorage or use incognito mode
