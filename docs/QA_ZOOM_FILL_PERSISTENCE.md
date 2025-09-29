@@ -11,7 +11,14 @@ This checklist verifies that the Expand/Contract (Fit/Fill) display setting pers
 
 ## Test Cases
 
-### 1. Default Behavior (First Time Users)
+### 1. Button State Sync Test (Primary Fix)
+- [ ] **Set Preference**: Navigate to any weather data product and change zoom fill setting
+- [ ] **Refresh Page**: Refresh the browser page
+- [ ] **Verify Immediate State**: Button/icon should immediately show correct state (no flicker or wrong state)
+- [ ] **Navigate Products**: Switch to other weather data products
+- [ ] **Verify Consistency**: Button state should remain consistent across all products
+
+### 2. Default Behavior (First Time Users)
 - [ ] **Clear localStorage**: Clear browser localStorage or use incognito mode
 - [ ] **Desktop Initial Load**: Navigate to any weather data product
 - [ ] **Verify**: Default setting should be "Fit" (not expanded) on desktop
@@ -20,7 +27,7 @@ This checklist verifies that the Expand/Contract (Fit/Fill) display setting pers
 - [ ] **Verify**: Default setting should be "Fill" (expanded) on mobile
 - [ ] **Expected**: Image should fill the container on mobile
 
-### 2. Setting Persistence - Desktop
+### 3. Setting Persistence - Desktop
 - [ ] **Step 1**: Navigate to NEXRAD weather data
 - [ ] **Step 2**: Click the Expand/Contract button to change from "Fit" to "Fill" (expand)
 - [ ] **Step 3**: Verify the image expands to fill the container
@@ -31,21 +38,21 @@ This checklist verifies that the Expand/Contract (Fit/Fill) display setting pers
 - [ ] **Step 6**: Navigate to Analysis weather data
 - [ ] **Expected**: Setting should remain "Fill" (expanded)
 
-### 3. Setting Persistence - Reverse Direction
+### 4. Setting Persistence - Reverse Direction
 - [ ] **Step 1**: Start with "Fill" setting from previous test
 - [ ] **Step 2**: Navigate to any weather data product
 - [ ] **Step 3**: Click the Expand/Contract button to change from "Fill" to "Fit"
 - [ ] **Step 4**: Navigate to different weather data products
 - [ ] **Expected**: Setting should remain "Fit" across all products
 
-### 4. Mobile Behavior
+### 5. Mobile Behavior
 - [ ] **Step 1**: Access the application on a mobile device
 - [ ] **Step 2**: Navigate to any weather data product
 - [ ] **Expected**: Should automatically use "Fill" setting on mobile
 - [ ] **Step 3**: Switch between different weather data products
 - [ ] **Expected**: Should maintain "Fill" setting across all products on mobile
 
-### 5. LocalStorage Persistence
+### 6. LocalStorage Persistence
 - [ ] **Step 1**: Set zoom fill to "Fill" on any weather data product
 - [ ] **Step 2**: Navigate to a different weather data product
 - [ ] **Step 3**: Refresh the browser page
@@ -55,7 +62,7 @@ This checklist verifies that the Expand/Contract (Fit/Fill) display setting pers
 - [ ] **Step 5**: Open browser developer tools and check localStorage
 - [ ] **Expected**: Should see `nexlab-global-zoom-fill` key with boolean value
 
-### 6. Cross-Product Consistency
+### 7. Cross-Product Consistency
 Test the following weather data products to ensure consistency:
 - [ ] **NEXRAD**: Navigate and verify zoom fill setting
 - [ ] **Satrad**: Navigate and verify zoom fill setting  
@@ -69,12 +76,12 @@ Test the following weather data products to ensure consistency:
 - [ ] **Forecast Compare Runs**: Navigate and verify zoom fill setting
 - [ ] **Forecast Sounding**: Navigate and verify zoom fill setting
 
-### 7. UI Consistency
+### 8. UI Consistency
 - [ ] **Button State**: Verify the expand/contract button shows correct icon state
 - [ ] **Visual Feedback**: Ensure smooth transitions when toggling setting
 - [ ] **No Regression**: Verify other animator controls still work (zoom, pan, play/pause)
 
-### 8. Edge Cases
+### 9. Edge Cases
 - [ ] **Multiple Tabs**: Open multiple browser tabs, change setting in one, refresh other tabs to see updated setting
 - [ ] **Different Sectors**: Change geographic sectors and verify setting persists
 - [ ] **Different Products**: Change product types within same category and verify setting persists
