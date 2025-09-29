@@ -139,14 +139,7 @@ export const SoundingsPanel = ({ basepath, isActive }: soundingsPanelProps) => {
 				{productsArray.map(({ id, label }) => {
 					// Handle text product differently - use custom handler instead of routing
 					if (id === SOUNDING_PRODUCT_TEXT) {
-						return (
-							<SidebarLink
-								key={id}
-								name={label}
-								active={id === productId}
-								onClick={handleSoundingText}
-							/>
-						)
+						return <SidebarLink key={id} name={label} active={id === productId} onClick={handleSoundingText} />
 					}
 
 					// All other products use normal routing
