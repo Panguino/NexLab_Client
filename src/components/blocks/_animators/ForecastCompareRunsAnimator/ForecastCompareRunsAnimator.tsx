@@ -3,6 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareRunsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
@@ -12,6 +13,9 @@ import ForecastCompareRunsAnimatorSettings from '../../_animatorSettingPanels/Fo
 import styles from './ForecastCompareRunsAnimator.module.scss'
 
 const ForecastCompareRunsAnimator: React.FC = () => {
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const router = useRouter()
 	const {
 		fcstModel: modelId,

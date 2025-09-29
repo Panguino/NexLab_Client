@@ -8,24 +8,7 @@ const getIsMobile = (): boolean => {
 	return window.innerWidth <= 900 // Same breakpoint as useIsMobile hook
 }
 
-// Helper function to get initial zoom fill value from localStorage
-const getInitialZoomFill = (): boolean => {
-	if (typeof window === 'undefined') return false // SSR safety
 
-	const stored = localStorage.getItem(ZOOM_FILL_STORAGE_KEY)
-	if (stored !== null) {
-		return JSON.parse(stored)
-	}
-
-	// If no stored value exists, use mobile detection to set appropriate default
-	const isMobile = getIsMobile()
-	const initialValue = isMobile
-
-	// Save the initial value to localStorage immediately
-	localStorage.setItem(ZOOM_FILL_STORAGE_KEY, JSON.stringify(initialValue))
-
-	return initialValue
-}
 
 // Helper function to save zoom fill value to localStorage
 const saveZoomFillToStorage = (zoomFill: boolean) => {
@@ -38,14 +21,30 @@ export interface IGlobalSettingsSlice {
 	setTemperatureUnit: (unit: '°F' | '°C') => void
 	globalZoomFill: boolean
 	setGlobalZoomFill: (zoomFill: boolean) => void
+	initializeZoomFillFromStorage: () => void
 }
 
 export const createGlobalSettingsSlice: ZustandStateSlice<IGlobalSettingsSlice> = (set) => ({
 	temperatureUnit: '°F',
 	setTemperatureUnit: (unit: '°F' | '°C') => set(() => ({ temperatureUnit: unit })),
-	globalZoomFill: getInitialZoomFill(),
+	globalZoomFill: false, // Start with false to avoid hydration mismatch
 	setGlobalZoomFill: (zoomFill: boolean) => {
 		saveZoomFillToStorage(zoomFill)
 		set(() => ({ globalZoomFill: zoomFill }))
+	},
+	initializeZoomFillFromStorage: () => {
+		if (typeof window === 'undefined') return
+
+		const stored = localStorage.getItem(ZOOM_FILL_STORAGE_KEY)
+		if (stored !== null) {
+			const storedValue = JSON.parse(stored)
+			set(() => ({ globalZoomFill: storedValue }))
+		} else {
+			// First time - use mobile detection
+			const isMobile = getIsMobile()
+			const initialValue = isMobile
+			saveZoomFillToStorage(initialValue)
+			set(() => ({ globalZoomFill: initialValue }))
+		}
 	},
 })

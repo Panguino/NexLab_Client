@@ -4,6 +4,7 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getSatradData } from '@/util/dataCalls/satrad/query-satrad'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
@@ -13,6 +14,9 @@ import SatradAnimatorSettings from '../../_animatorSettingPanels/SatradAnimatorS
 import styles from './SatradAnimator.module.scss'
 
 const SatradAnimator: React.FC = () => {
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const satradRefreshInterval = useRootStore.use.satradDataRefreshInterval()
 	const userIdle = useIsUserIdle((satradRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
 	const userIdleRef = useRef(false)
