@@ -3,8 +3,8 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getIsentropicData } from '@/util/dataCalls/analysis/query-isentropic'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
@@ -14,7 +14,9 @@ import AnalysisAnimatorSettings from '../../_animatorSettingPanels/AnalysisAnima
 import styles from './IsentropicAnimator.module.scss'
 
 const IsentropicAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const analysisRefreshInterval = useRootStore.use.analysisDataRefreshInterval()
 	const userIdle = useIsUserIdle((analysisRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
 	const userIdleRef = useRef(false)
@@ -23,8 +25,8 @@ const IsentropicAnimator: React.FC = () => {
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
-	const analysisZoomFill = useRootStore.use.analysisZoomFill()
-	const setAnalysisZoomFill = useRootStore.use.setAnalysisZoomFill()
+	const globalZoomFill = useRootStore.use.globalZoomFill()
+	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
 	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const analysisFrameRate = useRootStore.use.analysisFrameRate()
@@ -69,9 +71,6 @@ const IsentropicAnimator: React.FC = () => {
 		frameValidTimeRef.current = isentropicFrameValidTime
 	}, [isentropicFrameValidTime])
 
-	useEffect(() => {
-		setAnalysisZoomFill(isMobile)
-	}, [isMobile, setAnalysisZoomFill])
 
 	return (
 		<>
@@ -85,8 +84,8 @@ const IsentropicAnimator: React.FC = () => {
 						imageInfo={imageInfo}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
-						zoomFill={analysisZoomFill}
-						setZoomFill={setAnalysisZoomFill}
+						zoomFill={globalZoomFill}
+						setZoomFill={setGlobalZoomFill}
 						fullScreen={analysisMapFullScreen}
 						setFullScreen={setAnalysisMapFullScreen}
 						interval={1000 / analysisFrameRate}
