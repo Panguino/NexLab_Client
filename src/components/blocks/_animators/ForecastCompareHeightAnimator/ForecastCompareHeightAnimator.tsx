@@ -5,7 +5,7 @@ import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSet
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { FORECAST_LEVELS } from '@/data/forecast/levels'
 import { FORECAST_MODELS } from '@/data/forecast/models'
-import { useIsMobile } from '@/hooks/useIsMobile'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareHeightData } from '@/util/dataCalls/forecast/query-comparisons'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
@@ -21,7 +21,9 @@ interface runsProps {
 }
 
 const ForecastCompareHeightAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const router = useRouter()
 	const pathname = usePathname()
 	const {
@@ -35,8 +37,8 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
-	const forecastZoomFill = useRootStore.use.forecastZoomFill()
-	const setForecastZoomFill = useRootStore.use.setForecastZoomFill()
+	const globalZoomFill = useRootStore.use.globalZoomFill()
+	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
 	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
@@ -76,9 +78,6 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, getData])
 
-	useEffect(() => {
-		setForecastZoomFill(isMobile)
-	}, [isMobile, setForecastZoomFill])
 
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,
@@ -162,8 +161,8 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 						imageInfo={imageInfo}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}
-						zoomFill={forecastZoomFill}
-						setZoomFill={setForecastZoomFill}
+						zoomFill={globalZoomFill}
+						setZoomFill={setGlobalZoomFill}
 						fullScreen={forecastMapFullScreen}
 						setFullScreen={setForecastMapFullScreen}
 						interval={1000 / forecastFrameRate}

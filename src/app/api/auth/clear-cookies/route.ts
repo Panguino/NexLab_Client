@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
-export async function POST(_req: NextRequest) {
+export async function POST() {
 	const response = NextResponse.json({ message: 'Cookies cleared' })
 
 	// Clear all NextAuth cookies

@@ -4,7 +4,7 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { FORECAST_MODELS } from '@/data/forecast/models'
-import { useIsMobile } from '@/hooks/useIsMobile'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareModelsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
@@ -15,7 +15,9 @@ import ForecastCompareModelsAnimatorSettings from '../../_animatorSettingPanels/
 import styles from './ForecastCompareModelsAnimator.module.scss'
 
 const ForecastCompareModelsAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const router = useRouter()
 	const {
 		fcstModel: modelId,
@@ -28,8 +30,8 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
-	const forecastZoomFill = useRootStore.use.forecastZoomFill()
-	const setForecastZoomFill = useRootStore.use.setForecastZoomFill()
+	const globalZoomFill = useRootStore.use.globalZoomFill()
+	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
 	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
@@ -101,9 +103,6 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, runFlag, getData])
 
-	useEffect(() => {
-		setForecastZoomFill(isMobile)
-	}, [isMobile, setForecastZoomFill])
 
 	// Update sounding picker mode based on current model support
 	useEffect(() => {
@@ -165,8 +164,8 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 						imageInfo={imageInfo}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}
-						zoomFill={forecastZoomFill}
-						setZoomFill={setForecastZoomFill}
+						zoomFill={globalZoomFill}
+						setZoomFill={setGlobalZoomFill}
 						fullScreen={forecastMapFullScreen}
 						setFullScreen={setForecastMapFullScreen}
 						interval={1000 / forecastFrameRate}
