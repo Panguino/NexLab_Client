@@ -1,0 +1,177 @@
+.requirements {
+  padding: 80px 20px;
+  background: var(--color-white-grey19);
+  color: var(--color-grey20-grey0);
+  transition:
+    background-color var(--themeChange),
+    color var(--themeChange);
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.header h2 {
+  font-family: var(--font-secondary);
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 0 16px;
+  color: var(--color-grey20-grey0);
+}
+
+.header p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--color-grey16-grey5);
+  margin: 0;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+.step {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  padding: 32px;
+  background: var(--color-white-grey18);
+  border: 1px solid var(--color-grey6-grey14);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+.step:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.stepIcon {
+  flex: 0 0 60px;
+  height: 60px;
+  background: var(--color-blue3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  font-size: 24px;
+}
+
+.stepContent {
+  flex: 1;
+}
+
+.stepContent h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: var(--color-grey20-grey0);
+}
+
+.stepContent p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-grey16-grey5);
+  margin: 0 0 20px;
+}
+
+.guidelines {
+  background: var(--color-white-grey18);
+  border: 1px solid var(--color-grey6-grey14);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 40px;
+}
+
+.guidelines h3 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 20px;
+  color: var(--color-grey20-grey0);
+}
+
+.guidelines ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.guidelines li {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-grey16-grey5);
+  margin-bottom: 8px;
+}
+
+.callToAction {
+  text-align: center;
+  padding: 40px;
+  background: linear-gradient(135deg, var(--color-blue3) 0%, var(--color-blue5) 100%);
+  border-radius: 12px;
+  color: var(--color-white);
+}
+
+.callToAction h3 {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.callToAction p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 0 0 24px;
+  opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+  .requirements {
+    padding: 60px 20px;
+  }
+  
+  .header h2 {
+    font-size: 32px;
+  }
+  
+  .header p {
+    font-size: 16px;
+  }
+  
+  .step {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+    padding: 24px;
+  }
+  
+  .stepIcon {
+    margin: 0 auto;
+  }
+  
+  .stepContent h3 {
+    font-size: 20px;
+  }
+  
+  .guidelines {
+    padding: 24px;
+  }
+  
+  .callToAction {
+    padding: 32px 24px;
+  }
+  
+  .callToAction h3 {
+    font-size: 24px;
+  }
+}
