@@ -36,6 +36,7 @@ const SurfaceMapsAnimator: React.FC = () => {
 	const [startFrame, setStartFrame] = useState(0)
 	const frameValidTimeRef = useRef<number | null>(null)
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
+	const [pdfs, setPdfs] = useState<string[]>([])
 
 	// Keep userIdleRef in sync with userIdle state
 	useEffect(() => {
@@ -60,6 +61,7 @@ const SurfaceMapsAnimator: React.FC = () => {
 		setImageInfo(data.imageInfo)
 		setSurfaceMapsData(data.frames)
 		setFrameValidTimes(data.validtimes)
+		setPdfs((data as any).pdfs || [])
 	}, [productId, regionId, siteId, surfaceMapsNumberOfFrames, setSurfaceMapsData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
@@ -73,6 +75,10 @@ const SurfaceMapsAnimator: React.FC = () => {
 	useEffect(() => {
 		setAnalysisZoomFill(isMobile)
 	}, [isMobile, setAnalysisZoomFill])
+
+	const handlePdfButtonClick = (pdfUrl: string) => {
+		console.log('PDF button clicked for URL:', pdfUrl)
+	}
 
 	return (
 		<>
@@ -93,6 +99,8 @@ const SurfaceMapsAnimator: React.FC = () => {
 						interval={1000 / analysisFrameRate}
 						lastFrameDwell={analysisLastFrameDwell}
 						lastFrameDwellTime={analysisLastFrameDwellTime * 1000}
+						pdfs={pdfs}
+						pdfButtonClick={handlePdfButtonClick}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<AnalysisAnimatorSettings refreshData={getData} />

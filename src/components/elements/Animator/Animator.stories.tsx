@@ -165,3 +165,32 @@ soundingPickerModelComparison.args = {
 		console.log(`Frame ${frameIndex}: ${currentModel} - Soundings ${isSupported ? 'supported' : 'not supported'}`)
 	},
 }
+
+export const pdfButtonEnabled: StoryFn<typeof Animator> = TemplateFactory()
+pdfButtonEnabled.args = {
+	interval: 0.25,
+	frames: testFrames8x6,
+	imageInfo: { width: 800, height: 600 },
+	pdfs: [
+		'https://example.com/pdf1.pdf',
+		'https://example.com/pdf2.pdf',
+		'https://example.com/pdf3.pdf',
+		'https://example.com/pdf4.pdf',
+		'https://example.com/pdf5.pdf',
+		'https://example.com/pdf6.pdf',
+	],
+	pdfButtonClick: (pdfUrl: string) => {
+		console.log('PDF button clicked for URL:', pdfUrl)
+	},
+}
+
+export const pdfButtonDisabled: StoryFn<typeof Animator> = TemplateFactory()
+pdfButtonDisabled.args = {
+	interval: 0.25,
+	frames: testFrames8x6,
+	imageInfo: { width: 800, height: 600 },
+	pdfs: [], // Empty array - button should not appear
+	pdfButtonClick: (pdfUrl: string) => {
+		console.log('PDF button clicked for URL:', pdfUrl)
+	},
+}

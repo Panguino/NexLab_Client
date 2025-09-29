@@ -3,6 +3,7 @@ import {
 	faCompress,
 	faDownLeftAndUpRightToCenter,
 	faExpand,
+	faFilePdf,
 	faLayerGroup,
 	faSearchMinus,
 	faSearchPlus,
@@ -28,6 +29,9 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 		setSoundingsPickerMode,
 		soundingsPicker,
 		soundingsPickerDisabled,
+		pdfs,
+		pdfButtonClick,
+		currentFrame,
 	} = useAnimator()
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
 	const expandToggle = () => {
@@ -36,6 +40,16 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 
 	const fullScreenToggle = () => {
 		setFullScreen(!fullScreen)
+	}
+
+	const handlePdfButtonClick = () => {
+		if (pdfs && pdfs.length > 0 && currentFrame < pdfs.length) {
+			const pdfUrl = pdfs[currentFrame]
+			if (pdfUrl) {
+				window.open(pdfUrl, '_blank')
+				pdfButtonClick?.(pdfUrl)
+			}
+		}
 	}
 
 	return (
@@ -75,6 +89,14 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 					title={soundingsPickerDisabled ? 'Soundings not supported for current model' : 'Toggle sounding picker'}
 				>
 					<WeatherBalloonIcon className={soundingsPickerMode && !soundingsPickerDisabled ? styles.active : ''} />
+				</button>
+			)}
+			{pdfs && pdfs.length > 0 && (
+				<button
+					onClick={handlePdfButtonClick}
+					title="Open PDF for current frame"
+				>
+					<FontAwesomeIcon icon={faFilePdf} />
 				</button>
 			)}
 		</div>
