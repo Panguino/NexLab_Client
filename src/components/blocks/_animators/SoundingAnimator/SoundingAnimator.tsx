@@ -36,6 +36,9 @@ const SoundingAnimator: React.FC = () => {
 	const frameValidTimeRef = useRef<number | null>(null)
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
+	const [frameTextFiles, setFrameTextFiles] = useState<string[]>([])
+	const setSoundingTextURL = useRootStore.use.setSoundingTextURL()
+	const closeSlideoutPanel = useRootStore.use.closeSlideoutPanel()
 
 	// Keep userIdleRef in sync with userIdle state
 	useEffect(() => {
@@ -60,6 +63,11 @@ const SoundingAnimator: React.FC = () => {
 		setImageInfo(data.imageInfo)
 		setSoundingData(data.frames)
 		setFrameValidTimes(data.validtimes)
+
+		// Store textfiles if available for sounding text functionality
+		if (data.textfiles) {
+			setFrameTextFiles(data.textfiles)
+		}
 	}, [siteId, productId, soundingNumberOfFrames, setSoundingData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
@@ -74,6 +82,17 @@ const SoundingAnimator: React.FC = () => {
 		setAnalysisZoomFill(isMobile)
 	}, [isMobile, setAnalysisZoomFill])
 
+	// Handle frame changes for sounding text
+	const handleFrameTextChange = (frameIndex) => {
+		if (frameTextFiles.length > 0) {
+			const soundingTextURL = frameTextFiles[frameIndex]
+			setSoundingTextURL(soundingTextURL)
+			if (!soundingTextURL) {
+				closeSlideoutPanel()
+			}
+		}
+	}
+
 	return (
 		<>
 			<div className={styles.soundingAnimatorContainer}>
@@ -83,6 +102,8 @@ const SoundingAnimator: React.FC = () => {
 						frameValidTimes={frameValidTimes}
 						setFrameValidTime={setSoundingFrameValidTime}
 						startFrame={startFrame}
+						onFrameUpdate={handleFrameTextChange}
+						imageInfo={imageInfo}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
 						zoomFill={analysisZoomFill}
@@ -97,7 +118,6 @@ const SoundingAnimator: React.FC = () => {
 								<AnalysisAnimatorSettings refreshData={getData} />
 							</AnimatorSettings>
 						}
-						imageInfo={imageInfo}
 					/>
 				</div>
 			</div>

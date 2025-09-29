@@ -10,7 +10,10 @@ import { useEffect, useMemo } from 'react'
 
 import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
-import { SOUNDING_PRODUCT_DEFAULT } from '@/data/analysis/soundings/products'
+import { SOUNDING_PRODUCT_DEFAULT, SOUNDING_PRODUCT_TEXT } from '@/data/analysis/soundings/products'
+import { SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
+import { getSoundingData } from '@/util/dataCalls/analysis/query-soundings'
+import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import styles from './SoundingsPanel.module.scss'
 
 interface soundingsPanelProps {
@@ -25,6 +28,12 @@ export const SoundingsPanel = ({ basepath, isActive }: soundingsPanelProps) => {
 	const setSectorSelectorSectors = useRootStore.use.setSectorSelectorSectors()
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
+
+	// Slideout panel state for sounding text
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+	const setSoundingTextURL = useRootStore.use.setSoundingTextURL()
+	const soundingFrameValidTime = useRootStore.use.soundingFrameValidTime()
+	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
 
 	const { soundingProductId: paramProductId, soundingSiteId: paramSiteId, soundingRegionId: paramRegionId } = useParams()
 	const siteId = paramSiteId ?? SOUNDING_SITE_DEFAULT
@@ -81,6 +90,35 @@ export const SoundingsPanel = ({ basepath, isActive }: soundingsPanelProps) => {
 		})
 	}, [])
 
+	// Handler for sounding text link
+	const handleSoundingText = async () => {
+		try {
+			// Call getSoundingData just like the SoundingAnimator does
+			const data = await getSoundingData(siteId, SOUNDING_PRODUCT_TEXT, soundingNumberOfFrames)
+
+			if (data.textfiles && data.textfiles.length > 0) {
+				// Find the current frame index based on soundingFrameValidTime
+				let frameIndex = 0
+				if (data.validtimes && soundingFrameValidTime) {
+					frameIndex = findClosestValidTimeIndex(data.validtimes, soundingFrameValidTime)
+				}
+
+				// Select the URL from textfiles that corresponds to the current frame
+				const textURL = data.textfiles[frameIndex] || data.textfiles[0]
+
+				// Update the soundingTextURL in the store
+				setSoundingTextURL(textURL)
+
+				// Open the slideout panel
+				openSlideoutPanel(SOUNDING_TEXT_SLIDEOUT)
+			} else {
+				console.warn('No textfiles available in sounding data response')
+			}
+		} catch (error) {
+			console.error('Error fetching sounding text data:', error)
+		}
+	}
+
 	const productsArray = useMemo(() => {
 		if (siteId && ALL_SOUNDING_SITES[siteId as string]) {
 			return Object.keys(ALL_SOUNDING_SITES[siteId as string].products).map((productId) => {
@@ -98,14 +136,29 @@ export const SoundingsPanel = ({ basepath, isActive }: soundingsPanelProps) => {
 				<SectorChangeButton onClick={openSectorSelectorPanel} label="Selected Site:" labelValue={ALL_SOUNDING_SITES[siteId as string].name} />
 			</div>
 			<div className={styles.products}>
-				{productsArray.map(({ id, label }) => (
-					<SidebarLink
-						key={id}
-						name={label}
-						active={id === productId}
-						linkUrl={`/weather-data/analysis/soundings/${id}/${regionId}/${siteId}`}
-					/>
-				))}
+				{productsArray.map(({ id, label }) => {
+					// Handle text product differently - use custom handler instead of routing
+					if (id === SOUNDING_PRODUCT_TEXT) {
+						return (
+							<SidebarLink
+								key={id}
+								name={label}
+								active={id === productId}
+								onClick={handleSoundingText}
+							/>
+						)
+					}
+
+					// All other products use normal routing
+					return (
+						<SidebarLink
+							key={id}
+							name={label}
+							active={id === productId}
+							linkUrl={`/weather-data/analysis/soundings/${id}/${regionId}/${siteId}`}
+						/>
+					)
+				})}
 			</div>
 		</div>
 	)
