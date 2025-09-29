@@ -3,7 +3,6 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
 import { useRootStore } from '@/store/useRootStore'
 import { getRapMesoData } from '@/util/dataCalls/analysis/query-rap-mesoanalysis'
@@ -14,7 +13,6 @@ import AnalysisAnimatorSettings from '../../_animatorSettingPanels/AnalysisAnima
 import styles from './RAPMesoAnimator.module.scss'
 
 const RAPMesoAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
 	const analysisRefreshInterval = useRootStore.use.analysisDataRefreshInterval()
 	const userIdle = useIsUserIdle((analysisRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
 	const userIdleRef = useRef(false)
@@ -25,7 +23,6 @@ const RAPMesoAnimator: React.FC = () => {
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
-	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const analysisFrameRate = useRootStore.use.analysisFrameRate()
@@ -70,9 +67,6 @@ const RAPMesoAnimator: React.FC = () => {
 		frameValidTimeRef.current = rapMesoFrameValidTime
 	}, [rapMesoFrameValidTime])
 
-	useEffect(() => {
-		initializeGlobalZoomFill(isMobile)
-	}, [isMobile, initializeGlobalZoomFill])
 
 	return (
 		<>

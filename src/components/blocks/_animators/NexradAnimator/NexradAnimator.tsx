@@ -3,7 +3,6 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
 import { useRootStore } from '@/store/useRootStore'
 import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
@@ -14,7 +13,6 @@ import NexradAnimatorSettings from '../../_animatorSettingPanels/NexradAnimatorS
 import styles from './NexradAnimator.module.scss'
 
 const NexradAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
 	const nexradRefreshInterval = useRootStore.use.nexradDataRefreshInterval()
 	const userIdle = useIsUserIdle((nexradRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
 	const userIdleRef = useRef(false)
@@ -25,7 +23,6 @@ const NexradAnimator: React.FC = () => {
 	const setNexradZoomState = useRootStore.use.setNexradZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
-	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
 	const setNexradMapFullScreen = useRootStore.use.setNexradMapFullScreen()
 	const nexradLastFrameDwell = useRootStore.use.nexradLastFrameDwell()
@@ -72,9 +69,7 @@ const NexradAnimator: React.FC = () => {
 		frameValidTimeRef.current = nexradFrameValidTime
 	}, [nexradFrameValidTime])
 
-	useEffect(() => {
-		initializeGlobalZoomFill(isMobile)
-	}, [isMobile, initializeGlobalZoomFill])
+
 
 	return (
 		<>

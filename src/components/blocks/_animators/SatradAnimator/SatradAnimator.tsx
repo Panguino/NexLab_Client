@@ -3,7 +3,6 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
 import { useRootStore } from '@/store/useRootStore'
 import { getSatradData } from '@/util/dataCalls/satrad/query-satrad'
@@ -14,7 +13,6 @@ import SatradAnimatorSettings from '../../_animatorSettingPanels/SatradAnimatorS
 import styles from './SatradAnimator.module.scss'
 
 const SatradAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
 	const satradRefreshInterval = useRootStore.use.satradDataRefreshInterval()
 	const userIdle = useIsUserIdle((satradRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
 	const userIdleRef = useRef(false)
@@ -28,7 +26,6 @@ const SatradAnimator: React.FC = () => {
 	const setSatradZoomState = useRootStore.use.setSatradZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
-	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const satradMapFullScreen = useRootStore.use.satradMapFullScreen()
 	const setSatradMapFullScreen = useRootStore.use.setSatradMapFullScreen()
 	const satradLastFrameDwell = useRootStore.use.satradLastFrameDwell()
@@ -79,9 +76,6 @@ const SatradAnimator: React.FC = () => {
 		frameValidTimeRef.current = satradFrameValidTime
 	}, [satradFrameValidTime])
 
-	useEffect(() => {
-		initializeGlobalZoomFill(isMobile)
-	}, [isMobile, initializeGlobalZoomFill])
 
 	return (
 		<>

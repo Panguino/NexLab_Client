@@ -4,7 +4,6 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { FORECAST_MODELS } from '@/data/forecast/models'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData, getSoundingRuns } from '@/util/dataCalls/forecast/query-sounding'
 import { fetchStationCoordinates, forecastHourFromUnixValidtime } from '@/util/forecast/common-functions'
@@ -21,7 +20,6 @@ interface runsProps {
 }
 
 const ForecastSoundingAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
 	const router = useRouter()
 	const pathname = usePathname()
 	const {
@@ -40,7 +38,6 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const setForecastSoundingZoomState = useRootStore.use.setForecastSoundingZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
-	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const forecastSoundingMapFullScreen = useRootStore.use.forecastSoundingMapFullScreen()
 	const setForecastSoundingMapFullScreen = useRootStore.use.setForecastSoundingMapFullScreen()
 	const forecastSoundingLastFrameDwell = useRootStore.use.forecastSoundingLastFrameDwell()
@@ -123,9 +120,6 @@ const ForecastSoundingAnimator: React.FC = () => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, getData])
 
-	useEffect(() => {
-		initializeGlobalZoomFill(isMobile)
-	}, [isMobile, initializeGlobalZoomFill])
 
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,

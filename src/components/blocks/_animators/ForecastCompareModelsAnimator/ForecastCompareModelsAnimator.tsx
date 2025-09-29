@@ -3,7 +3,6 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareModelsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { useParams } from 'next/navigation'
@@ -12,7 +11,6 @@ import ForecastCompareModelsAnimatorSettings from '../../_animatorSettingPanels/
 import styles from './ForecastCompareModelsAnimator.module.scss'
 
 const ForecastCompareModelsAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
 	const {
 		fcstModel: modelId,
 		fcstRun: runId,
@@ -26,7 +24,6 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
-	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
@@ -53,9 +50,6 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, runFlag, getData])
 
-	useEffect(() => {
-		initializeGlobalZoomFill(isMobile)
-	}, [isMobile, initializeGlobalZoomFill])
 
 	return (
 		<>

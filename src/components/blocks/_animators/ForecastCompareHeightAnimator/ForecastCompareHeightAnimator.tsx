@@ -5,7 +5,6 @@ import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSet
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { FORECAST_LEVELS } from '@/data/forecast/levels'
 import { FORECAST_MODELS } from '@/data/forecast/models'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareHeightData } from '@/util/dataCalls/forecast/query-comparisons'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
@@ -21,7 +20,6 @@ interface runsProps {
 }
 
 const ForecastCompareHeightAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
 	const router = useRouter()
 	const pathname = usePathname()
 	const {
@@ -37,7 +35,6 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
-	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
@@ -77,9 +74,6 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, getData])
 
-	useEffect(() => {
-		initializeGlobalZoomFill(isMobile)
-	}, [isMobile, initializeGlobalZoomFill])
 
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,
