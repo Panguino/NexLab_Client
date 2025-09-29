@@ -27,6 +27,7 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
+	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
@@ -60,8 +61,8 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	}, [runId, modelId, sectorId, levelId, productId, getData])
 
 	useEffect(() => {
-		setGlobalZoomFill(isMobile)
-	}, [isMobile, setGlobalZoomFill])
+		initializeGlobalZoomFill(isMobile)
+	}, [isMobile, initializeGlobalZoomFill])
 
 	const formatRunTimeLabel = (ts: string | number, model: string) => {
 		// expect YYYYMMDDHH as string or number

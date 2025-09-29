@@ -25,6 +25,7 @@ const IsentropicAnimator: React.FC = () => {
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
+	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const analysisFrameRate = useRootStore.use.analysisFrameRate()
@@ -70,8 +71,8 @@ const IsentropicAnimator: React.FC = () => {
 	}, [isentropicFrameValidTime])
 
 	useEffect(() => {
-		setGlobalZoomFill(isMobile)
-	}, [isMobile, setGlobalZoomFill])
+		initializeGlobalZoomFill(isMobile)
+	}, [isMobile, initializeGlobalZoomFill])
 
 	return (
 		<>

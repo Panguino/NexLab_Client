@@ -32,6 +32,7 @@ const ForecastAnimator: React.FC = () => {
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
+	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
@@ -135,8 +136,8 @@ const ForecastAnimator: React.FC = () => {
 	}, [])
 
 	useEffect(() => {
-		setGlobalZoomFill(isMobile)
-	}, [isMobile, setGlobalZoomFill])
+		initializeGlobalZoomFill(isMobile)
+	}, [isMobile, initializeGlobalZoomFill])
 
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,

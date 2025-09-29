@@ -24,6 +24,7 @@ const SoundingAnimator: React.FC = () => {
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
+	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
@@ -71,8 +72,8 @@ const SoundingAnimator: React.FC = () => {
 	}, [soundingFrameValidTime])
 
 	useEffect(() => {
-		setGlobalZoomFill(isMobile)
-	}, [isMobile, setGlobalZoomFill])
+		initializeGlobalZoomFill(isMobile)
+	}, [isMobile, initializeGlobalZoomFill])
 
 	return (
 		<>

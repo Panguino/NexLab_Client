@@ -28,6 +28,7 @@ const SatradAnimator: React.FC = () => {
 	const setSatradZoomState = useRootStore.use.setSatradZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
+	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const satradMapFullScreen = useRootStore.use.satradMapFullScreen()
 	const setSatradMapFullScreen = useRootStore.use.setSatradMapFullScreen()
 	const satradLastFrameDwell = useRootStore.use.satradLastFrameDwell()
@@ -79,8 +80,8 @@ const SatradAnimator: React.FC = () => {
 	}, [satradFrameValidTime])
 
 	useEffect(() => {
-		setGlobalZoomFill(isMobile)
-	}, [isMobile, setGlobalZoomFill])
+		initializeGlobalZoomFill(isMobile)
+	}, [isMobile, initializeGlobalZoomFill])
 
 	return (
 		<>

@@ -7,13 +7,18 @@ This checklist verifies that the Expand/Contract (Fit/Fill) display setting pers
 - [ ] Ensure you have access to multiple weather data products (NEXRAD, Satrad, Forecast, etc.)
 - [ ] Clear browser cache/localStorage to start with default settings
 - [ ] Test on both desktop and mobile devices
+- [ ] Note: Settings are now stored in localStorage under key `nexlab-global-zoom-fill`
 
 ## Test Cases
 
-### 1. Default Behavior
-- [ ] **Initial Load**: Navigate to any weather data product
-- [ ] **Verify**: Default setting should be "Fit" (not expanded)
+### 1. Default Behavior (First Time Users)
+- [ ] **Clear localStorage**: Clear browser localStorage or use incognito mode
+- [ ] **Desktop Initial Load**: Navigate to any weather data product
+- [ ] **Verify**: Default setting should be "Fit" (not expanded) on desktop
 - [ ] **Expected**: Image should fit within the container bounds
+- [ ] **Mobile Initial Load**: Navigate to any weather data product on mobile
+- [ ] **Verify**: Default setting should be "Fill" (expanded) on mobile
+- [ ] **Expected**: Image should fill the container on mobile
 
 ### 2. Setting Persistence - Desktop
 - [ ] **Step 1**: Navigate to NEXRAD weather data
@@ -40,13 +45,15 @@ This checklist verifies that the Expand/Contract (Fit/Fill) display setting pers
 - [ ] **Step 3**: Switch between different weather data products
 - [ ] **Expected**: Should maintain "Fill" setting across all products on mobile
 
-### 5. Session Persistence
+### 5. LocalStorage Persistence
 - [ ] **Step 1**: Set zoom fill to "Fill" on any weather data product
 - [ ] **Step 2**: Navigate to a different weather data product
 - [ ] **Step 3**: Refresh the browser page
-- [ ] **Expected**: Setting should persist after page refresh
+- [ ] **Expected**: Setting should persist after page refresh (stored in localStorage)
 - [ ] **Step 4**: Navigate to another weather data product
 - [ ] **Expected**: Setting should still be "Fill"
+- [ ] **Step 5**: Open browser developer tools and check localStorage
+- [ ] **Expected**: Should see `nexlab-global-zoom-fill` key with boolean value
 
 ### 6. Cross-Product Consistency
 Test the following weather data products to ensure consistency:
@@ -68,9 +75,11 @@ Test the following weather data products to ensure consistency:
 - [ ] **No Regression**: Verify other animator controls still work (zoom, pan, play/pause)
 
 ### 8. Edge Cases
-- [ ] **Multiple Tabs**: Open multiple browser tabs, change setting in one, verify it updates in others
+- [ ] **Multiple Tabs**: Open multiple browser tabs, change setting in one, refresh other tabs to see updated setting
 - [ ] **Different Sectors**: Change geographic sectors and verify setting persists
 - [ ] **Different Products**: Change product types within same category and verify setting persists
+- [ ] **LocalStorage Clearing**: Clear localStorage and verify first-time behavior (mobile vs desktop defaults)
+- [ ] **Browser Restart**: Close and reopen browser, verify setting persists from localStorage
 
 ## Bug Reporting
 If any test case fails, report with:

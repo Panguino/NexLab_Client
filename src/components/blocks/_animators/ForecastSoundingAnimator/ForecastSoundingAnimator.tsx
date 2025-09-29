@@ -40,6 +40,7 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const setForecastSoundingZoomState = useRootStore.use.setForecastSoundingZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
+	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const forecastSoundingMapFullScreen = useRootStore.use.forecastSoundingMapFullScreen()
 	const setForecastSoundingMapFullScreen = useRootStore.use.setForecastSoundingMapFullScreen()
 	const forecastSoundingLastFrameDwell = useRootStore.use.forecastSoundingLastFrameDwell()
@@ -123,8 +124,8 @@ const ForecastSoundingAnimator: React.FC = () => {
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, getData])
 
 	useEffect(() => {
-		setGlobalZoomFill(isMobile)
-	}, [isMobile, setGlobalZoomFill])
+		initializeGlobalZoomFill(isMobile)
+	}, [isMobile, initializeGlobalZoomFill])
 
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,

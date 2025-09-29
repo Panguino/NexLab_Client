@@ -25,6 +25,7 @@ const NexradAnimator: React.FC = () => {
 	const setNexradZoomState = useRootStore.use.setNexradZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
 	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
+	const initializeGlobalZoomFill = useRootStore.use.initializeGlobalZoomFill()
 	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
 	const setNexradMapFullScreen = useRootStore.use.setNexradMapFullScreen()
 	const nexradLastFrameDwell = useRootStore.use.nexradLastFrameDwell()
@@ -72,8 +73,8 @@ const NexradAnimator: React.FC = () => {
 	}, [nexradFrameValidTime])
 
 	useEffect(() => {
-		setGlobalZoomFill(isMobile)
-	}, [isMobile, setGlobalZoomFill])
+		initializeGlobalZoomFill(isMobile)
+	}, [isMobile, initializeGlobalZoomFill])
 
 	return (
 		<>
