@@ -1,5 +1,6 @@
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
+import { calculateAnimatorPosition } from '@/util/animatorPositionCalculator'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { useAnimator } from '../Animator'
@@ -133,9 +134,8 @@ const AnimatorImageSizer = () => {
 			}
 
 			// Calculate position relative to container
-			let relativeX = coords.clientX - rect.left
-			let relativeY = coords.clientY - rect.top
-			console.log('  📍 Click position relative to container:', { relativeX, relativeY })
+			let clientX = coords.clientX
+			let clientY = coords.clientY
 
 			// If there's a transform (zoom/pan), we need to reverse it to get the actual position on the image
 			if (currentTransform && currentTransform.scale !== 1) {
@@ -143,35 +143,21 @@ const AnimatorImageSizer = () => {
 				console.log('  🔄 Reversing transform:', { scale, positionX, positionY })
 
 				// Reverse the transform: (clickPos - translation) / scale
-				relativeX = (relativeX - positionX) / scale
-				relativeY = (relativeY - positionY) / scale
-				console.log('  📍 Position after reversing transform:', { relativeX, relativeY })
+				// We need to adjust the client coordinates to account for the transform
+				const relativeX = clientX - rect.left
+				const relativeY = clientY - rect.top
+				const unscaledX = (relativeX - positionX) / scale
+				const unscaledY = (relativeY - positionY) / scale
+
+				// Convert back to client coordinates
+				clientX = unscaledX + rect.left
+				clientY = unscaledY + rect.top
+				console.log('  📍 Adjusted client coords after reversing transform:', { clientX, clientY })
 			}
 
-			// Now calculate the percentage position using the adjusted coordinates
-			// We need to account for the image scaling and padding
-			const { width: nativeWidth, height: nativeHeight } = imageInfo
-			const scaleFactorX = rect.width / nativeWidth
-			const scaleFactorY = rect.height / nativeHeight
-			console.log('  📏 Scale factors:', { scaleFactorX, scaleFactorY })
-
-			// Scale padding based on the scale factor (26px top/bottom padding from AnimatorImageMachine)
-			const scaledPaddingTop = 26 * scaleFactorY
-			const scaledPaddingBottom = 26 * scaleFactorY
-			console.log('  📐 Scaled padding:', { top: scaledPaddingTop, bottom: scaledPaddingBottom })
-
-			// Adjust dimensions and position based on scaled padding
-			const adjustedWidth = rect.width
-			const adjustedHeight = rect.height - scaledPaddingTop - scaledPaddingBottom
-			const adjustedX = relativeX
-			const adjustedY = relativeY - scaledPaddingTop
-			console.log('  🎯 Adjusted dimensions:', { adjustedWidth, adjustedHeight })
-			console.log('  🎯 Adjusted position:', { adjustedX, adjustedY })
-
-			// Calculate percentages
-			const xPercent = adjustedX / adjustedWidth
-			const yPercent = adjustedY / adjustedHeight
-			console.log('  ✅ Final percentages:', { xPercent, yPercent })
+			// Use the utility function to calculate percentages (same as DataTooltip)
+			const { xPercent, yPercent } = calculateAnimatorPosition(clientX, clientY, rect, imageInfo)
+			console.log('  ✅ Final percentages from utility:', { xPercent, yPercent })
 
 			onSoundingsClickthrough({ xPercent, yPercent })
 			setSoundingsPickerMode?.(false)
