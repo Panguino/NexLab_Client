@@ -106,9 +106,6 @@ const AnimatorImageSizer = () => {
 			console.log('🖱️ [AnimatorImageSizer] handleImageClick triggered')
 			console.log('  📊 Last hover position (imagePosition state):', imagePosition)
 
-			// Get current transform state
-			const currentTransform = transformRef.current?.instance?.transformState
-
 			// Calculate position directly from the click/tap event to avoid race condition
 			const rect = animatorRef.current.getBoundingClientRect()
 
@@ -122,8 +119,10 @@ const AnimatorImageSizer = () => {
 			console.log('  📍 Click coordinates:', coords)
 			console.log('  📦 Container rect:', { left: rect.left, top: rect.top, width: rect.width, height: rect.height })
 
-			// Use the utility function to calculate percentages (handles transforms automatically)
-			const { xPercent, yPercent } = calculateAnimatorPosition(coords.clientX, coords.clientY, rect, imageInfo, currentTransform)
+			// Use the utility function to calculate percentages
+			// NOTE: Do NOT pass transform state - the click coordinates are already in transformed space
+			// This matches how DataTooltip calculates hover positions
+			const { xPercent, yPercent } = calculateAnimatorPosition(coords.clientX, coords.clientY, rect, imageInfo)
 
 			console.log('  ✅ Click percentages:', { xPercent, yPercent })
 			console.log('  ⚠️  Difference from hover:', {
