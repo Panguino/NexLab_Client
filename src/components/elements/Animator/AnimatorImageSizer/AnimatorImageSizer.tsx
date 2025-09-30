@@ -125,6 +125,7 @@ const AnimatorImageSizer = () => {
 			const { xPercent, yPercent } = calculateAnimatorPosition(coords.clientX, coords.clientY, rect, imageInfo, currentTransform)
 
 			console.log('  ✅ Click percentages:', { xPercent, yPercent })
+			console.log('  🎯 Calling onSoundingsClickthrough with:', { xPercent, yPercent })
 
 			onSoundingsClickthrough({ xPercent, yPercent })
 			setSoundingsPickerMode?.(false)
