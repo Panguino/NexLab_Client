@@ -6,8 +6,8 @@ import { useRootStore } from '@/store/useRootStore'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useParams, useRouter } from 'next/navigation'
-import { useMemo } from 'react'
+import { useParams, usePathname, useRouter } from 'next/navigation'
+import { useEffect, useMemo, useRef } from 'react'
 
 import styles from './SoundingPickerPanel.module.scss'
 
@@ -20,6 +20,8 @@ const SoundingPickerPanel = () => {
 	const storeRunId = useRootStore.use.forecastSoundingRunId()
 	const storeValidTime = useRootStore.use.forecastFrameValidTime()
 	const router = useRouter()
+	const pathname = usePathname()
+	const panelRef = useRef<HTMLDivElement>(null)
 	const {
 		fcstModel: modelId,
 		fcstRun: runId,
@@ -93,13 +95,43 @@ const SoundingPickerPanel = () => {
 		setForecastSoundingsPickMode(false) // Also deactivate soundings picker mode
 	}
 
+	// Close panel on route change
+	useEffect(() => {
+		if (panelIsOpen) {
+			closePanel()
+			setForecastSoundingsPickMode(false)
+		}
+	}, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
+
+	// Close panel on click outside
+	useEffect(() => {
+		if (!panelIsOpen) return
+
+		const handleClickOutside = (event: MouseEvent) => {
+			if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+				closePanel()
+				setForecastSoundingsPickMode(false)
+			}
+		}
+
+		// Add a small delay to prevent immediate closing when opening
+		const timeoutId = setTimeout(() => {
+			document.addEventListener('mousedown', handleClickOutside)
+		}, 100)
+
+		return () => {
+			clearTimeout(timeoutId)
+			document.removeEventListener('mousedown', handleClickOutside)
+		}
+	}, [panelIsOpen, closePanel, setForecastSoundingsPickMode])
+
 	console.log('currentMarker', currentMarker)
 
 	return (
 		<>
 			{panelIsOpen && (
 				<div className={styles.soundingPickerPanel}>
-					<div className={styles.soundingPickerPanelWrapper}>
+					<div className={styles.soundingPickerPanelWrapper} ref={panelRef}>
 						<div
 							className={styles.closeButton}
 							onClick={(e) => {
