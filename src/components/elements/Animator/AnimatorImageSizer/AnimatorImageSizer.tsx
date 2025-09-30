@@ -139,6 +139,21 @@ const AnimatorImageSizer = () => {
 				return
 			}
 
+			// Mobile debugging: log viewport and scroll info
+			console.log('  📱 Mobile Debug Info:')
+			console.log('    - Event type:', e.type)
+			console.log('    - Is touch event:', 'touches' in e || 'changedTouches' in e)
+			console.log('    - Window size:', { width: window.innerWidth, height: window.innerHeight })
+			console.log('    - Visual viewport:', {
+				width: window.visualViewport?.width,
+				height: window.visualViewport?.height,
+				offsetLeft: window.visualViewport?.offsetLeft,
+				offsetTop: window.visualViewport?.offsetTop,
+				scale: window.visualViewport?.scale,
+			})
+			console.log('    - Scroll position:', { scrollX: window.scrollX, scrollY: window.scrollY })
+			console.log('    - Document scroll:', { scrollLeft: document.documentElement.scrollLeft, scrollTop: document.documentElement.scrollTop })
+
 			console.log('  📍 Click coordinates:', coords)
 			console.log('  📦 Container rect:', { left: rect.left, top: rect.top, width: rect.width, height: rect.height })
 
