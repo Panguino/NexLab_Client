@@ -104,6 +104,19 @@ const AnimatorImageSizer = () => {
 		console.log('  🔍 isPanningRef.current:', isPanningRef.current)
 		console.log('  🔍 panStopTimeRef.current:', panStopTimeRef.current)
 
+		// Always show a basic debug panel on ANY click to verify handler is working
+		const coords = getClientCoordinates(e)
+		if (coords && !soundingsPickerMode) {
+			setDebugInfo({
+				eventType: e.type,
+				message: 'Click detected but NOT in picker mode',
+				soundingsPickerMode,
+				clientX: coords.clientX,
+				clientY: coords.clientY,
+			})
+			setTimeout(() => setDebugInfo(null), 3000) // Auto-close after 3 seconds
+		}
+
 		// Suppress click-through during pan or immediately after a pan
 		const now = performance.now()
 		const timeSincePanStop = now - panStopTimeRef.current
@@ -264,7 +277,7 @@ const AnimatorImageSizer = () => {
 						{!hideZoomControls && !disableZoom && <ImageControls zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />}
 
 						{/* Debug panel for mobile testing */}
-						{debugInfo && soundingsPickerMode && (
+						{debugInfo && (
 							<div
 								style={{
 									position: 'fixed',
@@ -288,35 +301,60 @@ const AnimatorImageSizer = () => {
 								}}
 							>
 								<div style={{ marginBottom: '8px', fontWeight: 'bold', color: '#ff0' }}>🐛 DEBUG (tap to close)</div>
+								{debugInfo.message && <div style={{ color: '#f00', marginBottom: '8px' }}>{debugInfo.message}</div>}
 								<div>Event: {debugInfo.eventType}</div>
-								<div>Touch: {debugInfo.isTouchEvent ? 'YES' : 'NO'}</div>
+								{debugInfo.isTouchEvent !== undefined && <div>Touch: {debugInfo.isTouchEvent ? 'YES' : 'NO'}</div>}
 								<div style={{ marginTop: '8px', color: '#0ff' }}>Click Coords:</div>
 								<div>clientX: {debugInfo.clientX}</div>
 								<div>clientY: {debugInfo.clientY}</div>
-								<div style={{ marginTop: '8px', color: '#0ff' }}>Container Rect:</div>
-								<div>left: {debugInfo.rectLeft.toFixed(1)}</div>
-								<div>top: {debugInfo.rectTop.toFixed(1)}</div>
-								<div>width: {debugInfo.rectWidth.toFixed(1)}</div>
-								<div>height: {debugInfo.rectHeight.toFixed(1)}</div>
-								<div style={{ marginTop: '8px', color: '#0ff' }}>Click %:</div>
-								<div>x: {debugInfo.xPercent}</div>
-								<div>y: {debugInfo.yPercent}</div>
-								<div style={{ marginTop: '8px', color: '#f0f' }}>Hover %:</div>
-								<div>x: {debugInfo.hoverXPercent}</div>
-								<div>y: {debugInfo.hoverYPercent}</div>
-								<div style={{ marginTop: '8px', color: '#f00' }}>Diff:</div>
-								<div>Δx: {debugInfo.xDiff}</div>
-								<div>Δy: {debugInfo.yDiff}</div>
-								<div style={{ marginTop: '8px', color: '#ff0' }}>Lat/Lon:</div>
-								<div>{debugInfo.latLon || 'N/A'}</div>
-								<div style={{ marginTop: '8px', color: '#0ff' }}>Window:</div>
-								<div>
-									{debugInfo.windowWidth} x {debugInfo.windowHeight}
-								</div>
-								<div>Scale: {debugInfo.visualViewportScale?.toFixed(2) || 'N/A'}</div>
-								<div>
-									Scroll: {debugInfo.scrollX}, {debugInfo.scrollY}
-								</div>
+								{debugInfo.rectLeft !== undefined && (
+									<>
+										<div style={{ marginTop: '8px', color: '#0ff' }}>Container Rect:</div>
+										<div>left: {debugInfo.rectLeft.toFixed(1)}</div>
+										<div>top: {debugInfo.rectTop.toFixed(1)}</div>
+										<div>width: {debugInfo.rectWidth.toFixed(1)}</div>
+										<div>height: {debugInfo.rectHeight.toFixed(1)}</div>
+									</>
+								)}
+								{debugInfo.xPercent !== undefined && (
+									<>
+										<div style={{ marginTop: '8px', color: '#0ff' }}>Click %:</div>
+										<div>x: {debugInfo.xPercent}</div>
+										<div>y: {debugInfo.yPercent}</div>
+									</>
+								)}
+								{debugInfo.hoverXPercent !== undefined && (
+									<>
+										<div style={{ marginTop: '8px', color: '#f0f' }}>Hover %:</div>
+										<div>x: {debugInfo.hoverXPercent}</div>
+										<div>y: {debugInfo.hoverYPercent}</div>
+									</>
+								)}
+								{debugInfo.xDiff !== undefined && (
+									<>
+										<div style={{ marginTop: '8px', color: '#f00' }}>Diff:</div>
+										<div>Δx: {debugInfo.xDiff}</div>
+										<div>Δy: {debugInfo.yDiff}</div>
+									</>
+								)}
+								{debugInfo.latLon !== undefined && (
+									<>
+										<div style={{ marginTop: '8px', color: '#ff0' }}>Lat/Lon:</div>
+										<div>{debugInfo.latLon || 'N/A'}</div>
+									</>
+								)}
+								{debugInfo.windowWidth !== undefined && (
+									<>
+										<div style={{ marginTop: '8px', color: '#0ff' }}>Window:</div>
+										<div>
+											{debugInfo.windowWidth} x {debugInfo.windowHeight}
+										</div>
+										<div>Scale: {debugInfo.visualViewportScale?.toFixed(2) || 'N/A'}</div>
+										<div>
+											Scroll: {debugInfo.scrollX}, {debugInfo.scrollY}
+										</div>
+									</>
+								)}
 							</div>
 						)}
 					</>
