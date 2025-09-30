@@ -31,9 +31,6 @@ const AnimatorImageSizer = () => {
 		imageInfo,
 		sectorId,
 	} = useAnimator()
-
-	console.log('🔍 [AnimatorImageSizer] sectorId from context:', sectorId)
-
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
 	// retain state for tooltip hover position (not required for click-through)

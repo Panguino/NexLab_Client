@@ -136,7 +136,6 @@ const ForecastAnimator: React.FC = () => {
 		}
 	}, [])
 
-
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,
 		label: value.readable,
@@ -186,6 +185,7 @@ const ForecastAnimator: React.FC = () => {
 						soundingsPickerMode={forecastSoundingsPickMode}
 						setSoundingsPickerMode={setForecastSoundingsPickMode}
 						onSoundingsClickthrough={onSoundingsClickthrough}
+						sectorId={sectorId as string}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastAnimatorSettings refreshData={getData} />
