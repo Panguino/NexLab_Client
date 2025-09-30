@@ -96,30 +96,30 @@ const AnimatorImageSizer = () => {
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
 
 	const handleImageClick = (e: React.MouseEvent | React.TouchEvent) => {
-		console.log('🖱️ Click handler called')
+		// console.log('🖱️ Click handler called')
 
 		// Suppress click-through during pan or immediately after a pan
 		const now = performance.now()
 		const timeSincePanStop = now - panStopTimeRef.current
 
 		if (isPanningRef.current) {
-			console.log('⛔ Blocked: panning')
+			// console.log('⛔ Blocked: panning')
 			return
 		}
 		if (timeSincePanStop > 120) {
-			console.log('⛔ Blocked: too soon after pan', timeSincePanStop)
+			// console.log('⛔ Blocked: too soon after pan', timeSincePanStop)
 			return
 		}
 		if (!soundingsPickerMode) {
-			console.log('⛔ Blocked: not in picker mode')
+			// console.log('⛔ Blocked: not in picker mode')
 			return
 		}
 		if (!ImageMachineRef.current) {
-			console.log('⛔ Blocked: no ref')
+			// console.log('⛔ Blocked: no ref')
 			return
 		}
 
-		console.log('✅ Processing click...')
+		// console.log('✅ Processing click...')
 
 		// Calculate position directly from the click/tap event
 		// IMPORTANT: Use ImageMachineRef (same as hover) not animatorRef
@@ -128,7 +128,7 @@ const AnimatorImageSizer = () => {
 		// Extract coordinates from event
 		const coords = getClientCoordinates(e)
 		if (!coords) {
-			console.log('⛔ No coordinates')
+			// console.log('⛔ No coordinates')
 			return
 		}
 
@@ -137,7 +137,7 @@ const AnimatorImageSizer = () => {
 		// This matches how DataTooltip calculates hover positions
 		const { xPercent, yPercent } = calculateAnimatorPosition(coords.clientX, coords.clientY, rect, imageInfo)
 
-		console.log('📍 Calling clickthrough with:', { xPercent, yPercent })
+		// console.log('📍 Calling clickthrough with:', { xPercent, yPercent })
 		onSoundingsClickthrough({ xPercent, yPercent })
 	}
 	return (
