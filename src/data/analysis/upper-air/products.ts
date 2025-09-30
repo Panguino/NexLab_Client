@@ -20,9 +20,6 @@ export const ALL_UPPERAIR_PRODUCTS = {
 	[UPPERAIR_PRODUCT_JET]: {
 		label: 'Jet Stream',
 	},
-	[UPPERAIR_PRODUCT_PDF]: {
-		label: 'PDF',
-	},
 	[UPPERAIR_PRODUCT_VORTICITY]: {
 		label: 'Vorticity',
 	},

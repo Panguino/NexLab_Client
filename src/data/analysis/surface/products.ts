@@ -24,7 +24,4 @@ export const ALL_SURFACE_PRODUCTS = {
 	[SURFACE_PRODUCT_TEMPERATURE_SLP]: {
 		label: 'Temperature and SLP',
 	},
-	[SURFACE_PRODUCT_PDF]: {
-		label: 'PDF',
-	},
 }

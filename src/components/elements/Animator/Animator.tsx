@@ -49,6 +49,9 @@ interface IAnimatorProps {
 	// Simple overlay markers (percent positions inside the image content)
 	overlayMarkers?: { xPercent: number; yPercent: number }[]
 	onFrameUpdate?: (frameIndex: number) => void
+	// PDF functionality
+	pdfs?: string[]
+	pdfButtonClick?: (pdfUrl: string) => void
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -122,6 +125,10 @@ export const Animator = ({
 	onFrameUpdate = (frameIndex: number) => {
 		console.warn('onFrameUpdate function not provided, frame update will not be handled.', frameIndex)
 	},
+	pdfs = [],
+	pdfButtonClick = (pdfUrl: string) => {
+		console.warn('pdfButtonClick function not provided, PDF button click will not be handled.', pdfUrl)
+	},
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
@@ -177,6 +184,8 @@ export const Animator = ({
 				frameLabels,
 				displayAllLabels,
 				onFrameUpdate,
+				pdfs,
+				pdfButtonClick,
 			}}
 		>
 			<AnimatorLayout />
