@@ -99,7 +99,7 @@ const AnimatorImageSizer = () => {
 	const handleImageClick = (e: React.MouseEvent | React.TouchEvent) => {
 		// Suppress click-through during pan or immediately after a pan
 		const now = performance.now()
-		if (isPanningRef.current || now - panStopTimeRef.current > 120) return
+		if (isPanningRef.current || now - panStopTimeRef.current < 120) return
 		if (!soundingsPickerMode || !animatorRef.current) return
 
 		if (soundingsPickerMode) {
@@ -118,8 +118,13 @@ const AnimatorImageSizer = () => {
 				return
 			}
 
+			console.log('  📍 Click coordinates:', coords)
+			console.log('  📦 Container rect:', { left: rect.left, top: rect.top, width: rect.width, height: rect.height })
+
 			// Use the utility function to calculate percentages (handles transforms automatically)
 			const { xPercent, yPercent } = calculateAnimatorPosition(coords.clientX, coords.clientY, rect, imageInfo, currentTransform)
+
+			console.log('  ✅ Click percentages:', { xPercent, yPercent })
 
 			onSoundingsClickthrough({ xPercent, yPercent })
 			setSoundingsPickerMode?.(false)
