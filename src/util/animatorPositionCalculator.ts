@@ -48,20 +48,27 @@ export const getClientCoordinates = (e: MouseEvent | TouchEvent | React.MouseEve
  * @param imageInfo - Native image dimensions (width and height)
  * @returns Object with xPercent and yPercent (0-1 range, can be outside for clicks outside image bounds)
  */
-export const calculateAnimatorPosition = (
-	clientX: number,
-	clientY: number,
-	containerRect: DOMRect,
-	imageInfo: ImageInfo
-): PositionResult => {
+export const calculateAnimatorPosition = (clientX: number, clientY: number, containerRect: DOMRect, imageInfo: ImageInfo): PositionResult => {
+	console.log('🧮 [calculateAnimatorPosition] Starting calculation')
+	console.log('  📥 Inputs:', { clientX, clientY })
+	console.log('  📦 Container:', {
+		left: containerRect.left,
+		top: containerRect.top,
+		width: containerRect.width,
+		height: containerRect.height,
+	})
+	console.log('  🖼️  Image info:', imageInfo)
+
 	// Calculate relative position within container
 	const relativeX = clientX - containerRect.left
 	const relativeY = clientY - containerRect.top
+	console.log('  📍 Relative position:', { relativeX, relativeY })
 
 	// Calculate scale factors
 	const { width: nativeWidth, height: nativeHeight } = imageInfo
 	const scaleFactorX = containerRect.width / nativeWidth
 	const scaleFactorY = containerRect.height / nativeHeight
+	console.log('  📏 Scale factors:', { scaleFactorX, scaleFactorY })
 
 	// Scale padding based on the scale factor (26px top/bottom padding from AnimatorImageMachine)
 	const basePadding = {
@@ -76,18 +83,22 @@ export const calculateAnimatorPosition = (
 		right: basePadding.right * scaleFactorX,
 		bottom: basePadding.bottom * scaleFactorY,
 	}
+	console.log('  📐 Padding:', { basePadding, scaledPadding })
 
 	// Adjust dimensions based on scaled padding
 	const adjustedWidth = containerRect.width - scaledPadding.left - scaledPadding.right
 	const adjustedHeight = containerRect.height - scaledPadding.top - scaledPadding.bottom
+	console.log('  📊 Adjusted dimensions:', { adjustedWidth, adjustedHeight })
 
 	// Adjust position based on scaled padding
 	const adjustedX = relativeX - scaledPadding.left
 	const adjustedY = relativeY - scaledPadding.top
+	console.log('  🎯 Adjusted position:', { adjustedX, adjustedY })
 
 	// Calculate percentages (can be outside 0-1 range if click is outside image bounds)
 	const xPercent = adjustedX / adjustedWidth
 	const yPercent = adjustedY / adjustedHeight
+	console.log('  ✅ Final percentages:', { xPercent, yPercent })
 
 	return { xPercent, yPercent }
 }
@@ -103,11 +114,10 @@ export const calculateAnimatorPosition = (
 export const calculatePositionFromEvent = (
 	e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent,
 	containerRect: DOMRect,
-	imageInfo: ImageInfo
+	imageInfo: ImageInfo,
 ): PositionResult | null => {
 	const coords = getClientCoordinates(e)
 	if (!coords) return null
 
 	return calculateAnimatorPosition(coords.clientX, coords.clientY, containerRect, imageInfo)
 }
-

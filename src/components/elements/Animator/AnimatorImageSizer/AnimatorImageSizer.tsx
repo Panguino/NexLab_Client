@@ -102,13 +102,26 @@ const AnimatorImageSizer = () => {
 		if (!soundingsPickerMode || !animatorRef.current) return
 
 		if (soundingsPickerMode) {
+			console.log('🖱️ [AnimatorImageSizer] handleImageClick triggered')
+
 			// Calculate position directly from the click/tap event to avoid race condition
 			const rect = animatorRef.current.getBoundingClientRect()
+			console.log('  📐 Container rect:', {
+				left: rect.left,
+				top: rect.top,
+				width: rect.width,
+				height: rect.height,
+			})
+			console.log('  🖼️  Image info:', imageInfo)
+
 			const position = calculatePositionFromEvent(e, rect, imageInfo)
+			console.log('  📍 Calculated position:', position)
 
 			if (position) {
+				console.log('  ✅ Using calculated position')
 				onSoundingsClickthrough(position)
 			} else {
+				console.log('  ⚠️  Fallback to stored imagePosition:', imagePosition)
 				// Fallback to stored position if we can't get coordinates from event
 				onSoundingsClickthrough(imagePosition)
 			}

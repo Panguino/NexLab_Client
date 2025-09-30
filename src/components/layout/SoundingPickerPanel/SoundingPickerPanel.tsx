@@ -70,12 +70,21 @@ const SoundingPickerPanel = () => {
 	}, [loc, sectorId, imageInfo])
 
 	const onSoundingsClickthrough = ({ xPercent, yPercent }) => {
+		console.log('🎯 [SoundingPickerPanel] onSoundingsClickthrough called')
+		console.log('  📍 Input percentages:', { xPercent, yPercent })
+		console.log('  🗺️  Sector:', sectorId)
+
 		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+		console.log('  📌 Calculated locationId:', locationId)
+
 		const effectiveRunId = storeRunId || runId
 		const effectiveValidTime = storeValidTime || validTimeId
 		const baseParmsString = `${effectiveRunId}/${modelId}/${sectorId}/${levelId}/${productId}`
 		const soundingParmsString = `${effectiveValidTime}/${locationId}/${parcelId}/${weatherId}`
-		router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
+		const fullRoute = `/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`
+
+		console.log('  🔗 Full route:', fullRoute)
+		router.push(fullRoute)
 		closePanel()
 	}
 

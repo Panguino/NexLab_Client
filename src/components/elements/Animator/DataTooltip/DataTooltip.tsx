@@ -1,5 +1,6 @@
 import { calculateAnimatorPosition } from '@/util/animatorPositionCalculator'
 import { createReadout } from '@/util/createForecastReadout'
+import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useAnimator } from '../Animator'
 import styles from './DataTooltip.module.scss' // Import tooltip-specific styles
@@ -9,9 +10,10 @@ interface DataTooltipProps {
 	frameRef: React.RefObject<HTMLDivElement>
 	onUpdatePosition: (position: { xPercent: number; yPercent: number }) => void
 	debug?: boolean
+	sectorId?: string // Add sectorId to show lat/lon
 }
 
-const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdatePosition, debug = false }) => {
+const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdatePosition, debug = false, sectorId }) => {
 	const { loadedFrames, currentFrame, requestReadoutData, enableReadouts, isPlaying, isLoadingReadoutData, frameReadoutData, imageInfo } =
 		useAnimator()
 	const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
@@ -20,7 +22,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 	const [isHovering, setIsHovering] = useState(false)
 	const tooltipRef = useRef<HTMLDivElement>(null)
 	const [tooltipPosition, setTooltipPosition] = useState('bottom-right')
-	const [tooltipContent, setTooltipContent] = useState({})
+	const [tooltipContent, setTooltipContent] = useState<Record<string, any>>({})
 	// Keep a stable reference to onUpdatePosition to avoid effect loops due to identity changes
 	const onUpdateRef = useRef(onUpdatePosition)
 	useEffect(() => {
@@ -88,7 +90,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 
 		if (frameReadoutData?.dataTypes?.length) {
 			try {
-				const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc, dataType) => {
+				const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc: Record<string, any>, dataType: string) => {
 					const type2DArray = frameReadoutData.readoutData[dataType]
 					const typeYIndex = Math.floor(percentageY * type2DArray.length)
 					const typeXIndex = Math.floor(percentageX * type2DArray[typeYIndex].length)
@@ -200,6 +202,11 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 							</p>
 							<p>Percentage Position X: {Math.floor(100 * percentagePosition.xPercent)}%</p>
 							<p>Percentage Position Y: {Math.floor(100 * percentagePosition.yPercent)}%</p>
+							{sectorId && (
+								<p style={{ color: '#0ec5ff', fontWeight: 'bold' }}>
+									Lat/Lon: {getLatLonFromXYandSector(percentagePosition.xPercent, percentagePosition.yPercent, sectorId) || 'N/A'}
+								</p>
+							)}
 						</div>
 					)}
 
