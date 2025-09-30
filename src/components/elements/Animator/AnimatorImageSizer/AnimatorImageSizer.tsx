@@ -154,7 +154,7 @@ const AnimatorImageSizer = () => {
 			console.log('  🎯 Calling onSoundingsClickthrough with:', { xPercent, yPercent })
 
 			onSoundingsClickthrough({ xPercent, yPercent })
-			setSoundingsPickerMode?.(false)
+			// Note: Don't close picker here - let the clickthrough handler decide when to close
 		}
 	}
 	return (
