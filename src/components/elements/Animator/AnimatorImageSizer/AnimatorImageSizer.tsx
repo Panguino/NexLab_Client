@@ -133,31 +133,53 @@ const AnimatorImageSizer = () => {
 				return
 			}
 
-			// Calculate position relative to container
-			let clientX = coords.clientX
-			let clientY = coords.clientY
+			let xPercent: number
+			let yPercent: number
 
-			// If there's a transform (zoom/pan), we need to reverse it to get the actual position on the image
+			// If there's a transform (zoom/pan), we need to calculate percentages differently
 			if (currentTransform && currentTransform.scale !== 1) {
 				const { scale, positionX, positionY } = currentTransform
-				console.log('  🔄 Reversing transform:', { scale, positionX, positionY })
+				console.log('  🔄 Transform detected:', { scale, positionX, positionY })
 
-				// Reverse the transform: (clickPos - translation) / scale
-				// We need to adjust the client coordinates to account for the transform
-				const relativeX = clientX - rect.left
-				const relativeY = clientY - rect.top
+				// Calculate position relative to container
+				const relativeX = coords.clientX - rect.left
+				const relativeY = coords.clientY - rect.top
+				console.log('  📍 Click relative to container:', { relativeX, relativeY })
+
+				// Reverse the transform to get position on the original (unzoomed) image
+				// Formula: (displayPos - translation) / scale
 				const unscaledX = (relativeX - positionX) / scale
 				const unscaledY = (relativeY - positionY) / scale
+				console.log('  📐 Unscaled position:', { unscaledX, unscaledY })
 
-				// Convert back to client coordinates
-				clientX = unscaledX + rect.left
-				clientY = unscaledY + rect.top
-				console.log('  📍 Adjusted client coords after reversing transform:', { clientX, clientY })
+				// Now calculate percentages based on the container dimensions and padding
+				// The container dimensions represent the full image size (with padding)
+				const { width: nativeWidth, height: nativeHeight } = imageInfo
+				const scaleFactorX = rect.width / nativeWidth
+				const scaleFactorY = rect.height / nativeHeight
+
+				// Account for 26px top/bottom padding (scaled)
+				const scaledPaddingTop = 26 * scaleFactorY
+				const scaledPaddingBottom = 26 * scaleFactorY
+				const adjustedHeight = rect.height - scaledPaddingTop - scaledPaddingBottom
+				const adjustedWidth = rect.width // No horizontal padding
+
+				// Adjust for padding
+				const adjustedX = unscaledX
+				const adjustedY = unscaledY - scaledPaddingTop
+
+				// Calculate percentages
+				xPercent = adjustedX / adjustedWidth
+				yPercent = adjustedY / adjustedHeight
+
+				console.log('  🎯 Calculated percentages (with transform):', { xPercent, yPercent })
+			} else {
+				// No transform - use the utility function (same as DataTooltip)
+				const result = calculateAnimatorPosition(coords.clientX, coords.clientY, rect, imageInfo)
+				xPercent = result.xPercent
+				yPercent = result.yPercent
+				console.log('  ✅ Calculated percentages (no transform):', { xPercent, yPercent })
 			}
-
-			// Use the utility function to calculate percentages (same as DataTooltip)
-			const { xPercent, yPercent } = calculateAnimatorPosition(clientX, clientY, rect, imageInfo)
-			console.log('  ✅ Final percentages from utility:', { xPercent, yPercent })
 
 			onSoundingsClickthrough({ xPercent, yPercent })
 			setSoundingsPickerMode?.(false)
