@@ -6,19 +6,22 @@ import { useRootStore } from '@/store/useRootStore'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useParams, useRouter } from 'next/navigation'
-import { useMemo } from 'react'
+import { useParams, usePathname, useRouter } from 'next/navigation'
+import { useEffect, useMemo, useRef } from 'react'
 
 import styles from './SoundingPickerPanel.module.scss'
 
 const SoundingPickerPanel = () => {
 	const panelIsOpen = useRootStore.use.soundingPickerIsOpen()
 	const closePanel = useRootStore.use.closeSoundingPicker()
+	const setForecastSoundingsPickMode = useRootStore.use.setForecastSoundingsPickMode()
 	const frames = useRootStore.use.soundingPickerFrames()
 	const imageInfo = useRootStore.use.soundingPickerImageInfo()
 	const storeRunId = useRootStore.use.forecastSoundingRunId()
 	const storeValidTime = useRootStore.use.forecastFrameValidTime()
 	const router = useRouter()
+	const pathname = usePathname()
+	const panelRef = useRef<HTMLDivElement>(null)
 	const {
 		fcstModel: modelId,
 		fcstRun: runId,
@@ -31,8 +34,11 @@ const SoundingPickerPanel = () => {
 		fcstSndLoc: loc,
 	} = useParams()
 
+	// console.log('🔍 [SoundingPickerPanel] URL params:', { modelId, runId, sectorId, levelId, productId, validTimeId, parcelId, weatherId, loc })
+	// console.log('🔍 [SoundingPickerPanel] sectorId value:', sectorId, 'type:', typeof sectorId)
+
 	const currentMarker = useMemo(() => {
-		console.log('loc', loc)
+		// console.log('loc', loc)
 		if (!loc || typeof loc !== 'string') return null
 		let decodedLoc: string
 		try {
@@ -44,8 +50,8 @@ const SoundingPickerPanel = () => {
 		const [latStr, lonStr] = decodedLoc.split(',')
 		const lat = parseFloat(latStr)
 		const lon = parseFloat(lonStr)
-		console.log('lat, lon', lat, lon)
-		console.log('sectorId', sectorId)
+		// console.log('lat, lon', lat, lon)
+		// console.log('sectorId', sectorId)
 		const bounds = FORECAST_SECTORS[sectorId as string]?.coordinates
 		if (!bounds) {
 			console.debug('[SoundingPicker] No bounds for sector', { sectorId })
@@ -70,23 +76,70 @@ const SoundingPickerPanel = () => {
 	}, [loc, sectorId, imageInfo])
 
 	const onSoundingsClickthrough = ({ xPercent, yPercent }) => {
+		// console.log('🎯 [SoundingPickerPanel] onSoundingsClickthrough called')
+		// console.log('  📍 Input percentages:', { xPercent, yPercent })
+		// console.log('  🗺️  Sector:', sectorId)
+
 		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+		// console.log('  📌 Calculated locationId:', locationId)
+
 		const effectiveRunId = storeRunId || runId
 		const effectiveValidTime = storeValidTime || validTimeId
 		const baseParmsString = `${effectiveRunId}/${modelId}/${sectorId}/${levelId}/${productId}`
 		const soundingParmsString = `${effectiveValidTime}/${locationId}/${parcelId}/${weatherId}`
-		router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
+		const fullRoute = `/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`
+
+		// console.log('  🔗 Full route:', fullRoute)
+		router.push(fullRoute)
 		closePanel()
+		setForecastSoundingsPickMode(false) // Also deactivate soundings picker mode
 	}
 
-	console.log('currentMarker', currentMarker)
+	// Close panel on route change
+	useEffect(() => {
+		if (panelIsOpen) {
+			closePanel()
+			setForecastSoundingsPickMode(false)
+		}
+	}, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
+
+	// Close panel on click outside
+	useEffect(() => {
+		if (!panelIsOpen) return undefined
+
+		const handleClickOutside = (event: MouseEvent) => {
+			if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+				closePanel()
+				setForecastSoundingsPickMode(false)
+			}
+		}
+
+		// Add a small delay to prevent immediate closing when opening
+		const timeoutId = setTimeout(() => {
+			document.addEventListener('mousedown', handleClickOutside)
+		}, 100)
+
+		return () => {
+			clearTimeout(timeoutId)
+			document.removeEventListener('mousedown', handleClickOutside)
+		}
+	}, [panelIsOpen, closePanel, setForecastSoundingsPickMode])
+
+	// console.log('currentMarker', currentMarker)
 
 	return (
 		<>
 			{panelIsOpen && (
 				<div className={styles.soundingPickerPanel}>
-					<div className={styles.soundingPickerPanelWrapper}>
-						<div className={styles.closeButton} onClick={closePanel}>
+					<div className={styles.soundingPickerPanelWrapper} ref={panelRef}>
+						<div
+							className={styles.closeButton}
+							onClick={(e) => {
+								e.stopPropagation()
+								closePanel()
+								setForecastSoundingsPickMode(false) // Also deactivate soundings picker mode
+							}}
+						>
 							<FontAwesomeIcon icon={faClose} />
 						</div>
 						<div className={styles.soundingPickerContent}>
@@ -105,6 +158,7 @@ const SoundingPickerPanel = () => {
 										onSoundingsClickthrough={onSoundingsClickthrough}
 										zoomFill={false}
 										overlayMarkers={currentMarker ? [currentMarker] : []}
+										sectorId={sectorId as string}
 									/>
 								</div>
 							) : (

@@ -86,11 +86,20 @@ const ForecastAnimator: React.FC = () => {
 	}, [forecastFrameValidTime])
 
 	const onSoundingsClickthrough = ({ xPercent, yPercent }) => {
+		// console.log('🎯 [ForecastAnimator] onSoundingsClickthrough called')
+		// console.log('  📍 Input percentages:', { xPercent, yPercent })
+		// console.log('  🗺️  Sector:', sectorId)
+
 		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+		// console.log('  📌 Calculated locationId:', locationId)
+
 		const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
 		const soundingParams = `/sounding/${frameValidTimeRef.current}/${locationId}/ml/severe`
 		const route = `${baseParams}${soundingParams}`
+		// console.log('  🔗 Full route:', route)
+
 		router.push(route)
+		setForecastSoundingsPickMode(false) // Deactivate soundings picker mode after navigation
 	}
 
 	// Add this handler function
@@ -135,7 +144,6 @@ const ForecastAnimator: React.FC = () => {
 			}
 		}
 	}, [])
-
 
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,
@@ -186,6 +194,7 @@ const ForecastAnimator: React.FC = () => {
 						soundingsPickerMode={forecastSoundingsPickMode}
 						setSoundingsPickerMode={setForecastSoundingsPickMode}
 						onSoundingsClickthrough={onSoundingsClickthrough}
+						sectorId={sectorId as string}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastAnimatorSettings refreshData={getData} />

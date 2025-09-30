@@ -27,6 +27,14 @@
   right: 10px;
   z-index: 90;
   font-size: 23px;
+  padding: 10px;
+  cursor: pointer;
+  color: var(--color-white);
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--color-blue4);
+  }
 }
 .soundingPickerContent {
   width: 100%;
@@ -35,4 +43,3 @@
   align-items: center;
   justify-content: center;
 }
-
