@@ -31,6 +31,9 @@ const SoundingPickerPanel = () => {
 		fcstSndLoc: loc,
 	} = useParams()
 
+	console.log('🔍 [SoundingPickerPanel] URL params:', { modelId, runId, sectorId, levelId, productId, validTimeId, parcelId, weatherId, loc })
+	console.log('🔍 [SoundingPickerPanel] sectorId value:', sectorId, 'type:', typeof sectorId)
+
 	const currentMarker = useMemo(() => {
 		console.log('loc', loc)
 		if (!loc || typeof loc !== 'string') return null
