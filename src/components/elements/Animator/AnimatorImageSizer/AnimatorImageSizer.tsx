@@ -29,6 +29,7 @@ const AnimatorImageSizer = () => {
 		onSoundingsClickthrough,
 		overlayMarkers,
 		imageInfo,
+		sectorId,
 	} = useAnimator()
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
@@ -181,7 +182,7 @@ const AnimatorImageSizer = () => {
 								/>
 							))}
 						</TransformComponent>
-						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} onUpdatePosition={setImagePosition} />
+						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} onUpdatePosition={setImagePosition} sectorId={sectorId} />
 
 						{!hideZoomControls && !disableZoom && <ImageControls zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />}
 					</>

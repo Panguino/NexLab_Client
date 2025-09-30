@@ -88,6 +88,12 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 		setPercentagePosition({ xPercent: percentageX, yPercent: percentageY, rawPercentageX, rawPercentageY })
 		onUpdateRef.current?.({ xPercent: rawPercentageX, yPercent: rawPercentageY })
 
+		// Log lat/lon conversion if sectorId is provided
+		if (sectorId) {
+			const latLon = getLatLonFromXYandSector(rawPercentageX, rawPercentageY, sectorId)
+			console.log('🗺️  [DataTooltip] Hover position → Lat/Lon:', latLon)
+		}
+
 		if (frameReadoutData?.dataTypes?.length) {
 			try {
 				const dataAtMousePosition = frameReadoutData.dataTypes.reduce((acc: Record<string, any>, dataType: string) => {
@@ -105,7 +111,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 				console.error('Error processing readout data:', error)
 			}
 		}
-	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo, onUpdatePosition])
+	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo, onUpdatePosition, sectorId])
 
 	useEffect(() => {
 		const handleMove = (e: MouseEvent | TouchEvent) => {

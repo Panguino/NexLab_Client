@@ -41,6 +41,7 @@ interface IAnimatorProps {
 	soundingsPickerDisabled?: boolean
 	setSoundingsPickerMode?: (mode: boolean) => void
 	onSoundingsClickthrough?: (event: { xPercent: number; yPercent: number }) => void
+	sectorId?: string // For lat/lon conversion in DataTooltip
 	// Scrubber enhancements
 	scrubberPlaceholderImageUrl?: string
 	scrubberFrameLoadStates?: boolean[]
@@ -100,6 +101,7 @@ export const Animator = ({
 	onSoundingsClickthrough = (event: { xPercent: number; yPercent: number }) => {
 		console.warn('onSoundingsClickthrough function not provided, soundings click-through will not be handled.', event)
 	},
+	sectorId,
 	scrubberPlaceholderImageUrl,
 	scrubberFrameLoadStates,
 	frameLabels,
@@ -172,6 +174,7 @@ export const Animator = ({
 				soundingsPickerDisabled,
 				setSoundingsPickerMode,
 				onSoundingsClickthrough,
+				sectorId,
 				scrubberPlaceholderImageUrl,
 				scrubberFrameLoadStates,
 				frameLabels,

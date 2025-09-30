@@ -120,6 +120,7 @@ const SoundingPickerPanel = () => {
 										onSoundingsClickthrough={onSoundingsClickthrough}
 										zoomFill={false}
 										overlayMarkers={currentMarker ? [currentMarker] : []}
+										sectorId={sectorId as string}
 									/>
 								</div>
 							) : (
