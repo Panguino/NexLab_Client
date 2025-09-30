@@ -242,6 +242,9 @@ const AnimatorImageSizer = () => {
 							}}
 							contentClass={styles.animatorImagesContainer}
 							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
+							wrapperProps={{
+								onClick: handleImageClick,
+							}}
 						>
 							<AnimatorImageMachine
 								ref={ImageMachineRef}
