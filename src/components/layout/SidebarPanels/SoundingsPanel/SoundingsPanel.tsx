@@ -94,7 +94,7 @@ export const SoundingsPanel = ({ basepath, isActive }: soundingsPanelProps) => {
 	const handleSoundingText = async () => {
 		try {
 			// Call getSoundingData just like the SoundingAnimator does
-			const data = await getSoundingData(siteId, SOUNDING_PRODUCT_TEXT, soundingNumberOfFrames)
+			const data = await getSoundingData(siteId, productId, soundingNumberOfFrames)
 
 			if (data.textfiles && data.textfiles.length > 0) {
 				// Find the current frame index based on soundingFrameValidTime
