@@ -3,10 +3,12 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareRunsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
+import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ForecastCompareRunsAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareRunsAnimatorSettings/ForecastCompareRunsAnimatorSettings'
@@ -34,6 +36,11 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
 	const forecastLastFrameDwellTime = useRootStore.use.forecastLastFrameDwellTime()
+
+	// Sounding picker state
+	const forecastSoundingsPickMode = useRootStore.use.forecastSoundingsPickMode()
+	const setForecastSoundingsPickMode = useRootStore.use.setForecastSoundingsPickMode()
+
 	const [forecastData, setForecastData] = useState([])
 	const [forecastRuns, setForecastRuns] = useState<string[]>([])
 	const [startFrame, setStartFrame] = useState(0)
@@ -43,6 +50,12 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	const [frameReadoutData, setFrameReadoutData] = useState<any>(null)
 	const [isLoadingReadoutData, setIsLoadingReadoutData] = useState<boolean>(false)
 	const frameDataTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+	// Determine if the current model supports soundings
+	const soundingsSupported = useMemo(() => {
+		const modelConfig = FORECAST_MODELS[modelId as string]
+		return modelConfig?.allowForecastSounding === true
+	}, [modelId])
 
 	const getData = useCallback(async () => {
 		console.log('ForecastCompareRunsAnimator: Fetching data', modelId, sectorId, levelId, productId, validTimeId)
@@ -83,6 +96,18 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	const transformedRuns = useMemo(() => {
 		return (forecastRuns || []).map((run) => formatRunTimeLabel(run, modelId as string))
 	}, [forecastRuns, modelId])
+
+	// Sounding clickthrough handler
+	const onSoundingsClickthrough = useCallback((event: { xPercent: number; yPercent: number }) => {
+		if (!soundingsSupported) return
+
+		const { xPercent, yPercent } = event
+		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+		const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
+		const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
+		const route = `${baseParams}${soundingParams}`
+		router.push(route)
+	}, [soundingsSupported, sectorId, runId, modelId, levelId, productId, validTimeId, router])
 
 	// Request readout data for the given frame (run). Debounced like main viewer.
 	const handleReadoutDataRequest = useCallback(
@@ -148,6 +173,15 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 						frameReadoutData={frameReadoutData}
 						isLoadingReadoutData={isLoadingReadoutData}
 						requestReadoutData={handleReadoutDataRequest}
+						soundingsPicker={true}
+						soundingsPickerMode={forecastSoundingsPickMode && soundingsSupported}
+						soundingsPickerDisabled={!soundingsSupported}
+						setSoundingsPickerMode={(mode: boolean) => {
+							// Only allow enabling if current model supports soundings
+							if (mode && !soundingsSupported) return
+							setForecastSoundingsPickMode(mode)
+						}}
+						onSoundingsClickthrough={onSoundingsClickthrough}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastCompareRunsAnimatorSettings />
