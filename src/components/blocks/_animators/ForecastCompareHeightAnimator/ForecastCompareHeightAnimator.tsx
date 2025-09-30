@@ -10,6 +10,7 @@ import { useRootStore } from '@/store/useRootStore'
 import { getCompareHeightData } from '@/util/dataCalls/forecast/query-comparisons'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
+import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ForecastCompareHeightAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareHeightAnimatorSettings/ForecastCompareHeightAnimatorSettings'
@@ -48,6 +49,10 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 	const [forecastLevels, setForecastLevels] = useState<string[]>([])
 	const [startFrame, setStartFrame] = useState(0)
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
+
+	// Sounding state management
+	const forecastSoundingsPickMode = useRootStore.use.forecastSoundingsPickMode()
+	const setForecastSoundingsPickMode = useRootStore.use.setForecastSoundingsPickMode()
 
 	// Readout state (mirrors main ForecastAnimator behavior)
 	const [frameReadoutData, setFrameReadoutData] = useState<any>(null)
@@ -94,11 +99,28 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 		return FORECAST_MODELS[modelId as string]?.runsPerRow || 4
 	}, [modelId])
 
+	// Check if current model supports soundings
+	const soundingsSupported = useMemo(() => {
+		return FORECAST_MODELS[modelId as string]?.allowForecastSounding || false
+	}, [modelId])
+
 	const handleRunChange = (newRun) => {
 		const currentURL = pathname.split('/')
 		currentURL[3] = newRun
 		router.push(currentURL.join('/'))
 	}
+
+	// Sounding clickthrough handler
+	const onSoundingsClickthrough = useCallback((event: { xPercent: number; yPercent: number }) => {
+		if (!soundingsSupported) return
+
+		const { xPercent, yPercent } = event
+		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+		const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
+		const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
+		const route = `${baseParams}${soundingParams}`
+		router.push(route)
+	}, [soundingsSupported, sectorId, runId, modelId, levelId, productId, validTimeId, router])
 
 	// Request readout data for the given frame (level). Debounced like main viewer.
 	const handleReadoutDataRequest = useCallback(
@@ -168,6 +190,15 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 						interval={1000 / forecastFrameRate}
 						lastFrameDwell={forecastLastFrameDwell}
 						lastFrameDwellTime={forecastLastFrameDwellTime * 1000}
+						soundingsPicker={true}
+						soundingsPickerMode={forecastSoundingsPickMode && soundingsSupported}
+						soundingsPickerDisabled={!soundingsSupported}
+						setSoundingsPickerMode={(mode: boolean) => {
+							// Only allow enabling if current model supports soundings
+							if (mode && !soundingsSupported) return
+							setForecastSoundingsPickMode(mode)
+						}}
+						onSoundingsClickthrough={onSoundingsClickthrough}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastCompareHeightAnimatorSettings />
