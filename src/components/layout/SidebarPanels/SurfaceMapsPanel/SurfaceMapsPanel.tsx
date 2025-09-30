@@ -13,7 +13,8 @@ import { useEffect, useMemo, useRef } from 'react'
 import { SectorChangeButton } from '@/components/elements/SectorChangeButton/SectorChangeButton'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SURFACE_PRODUCT_DEFAULT } from '@/data/analysis/surface/products'
-import { PRODUCT_INFO_SLIDEOUT } from '@/data/vars'
+import { METAR_TEXT_SLIDEOUT, PRODUCT_INFO_SLIDEOUT } from '@/data/vars'
+import { getMetarData } from '@/util/dataCalls/analysis/query-metars'
 import styles from './SurfaceMapsPanel.module.scss'
 
 interface SurfaceMapsPanelProps {
@@ -36,6 +37,8 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 	const tempRegionIdRef = useRef<string | null>(null)
 	const resetAnalysisZoomState = useRootStore.use.resetAnalysisZoomState()
 	const setProductInfoId = useRootStore.use.setProductInfoId()
+	const setMetarContent = useRootStore.use.setMetarContent()
+	const setMetarLoading = useRootStore.use.setMetarLoading()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	useEffect(() => {
@@ -97,6 +100,23 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 		})
 	}, [])
 
+	const handleMetarLinks = async (productId: string) => {
+		setMetarLoading(true)
+		setMetarContent(null)
+		setProductInfoId('')
+		openSlideoutPanel(METAR_TEXT_SLIDEOUT)
+		try {
+			const data = await getMetarData(siteId, productId)
+			const content = data?.content ?? ''
+			setMetarContent(content ? (typeof content === 'string' ? content : JSON.stringify(content, null, 2)) : null)
+		} catch (error) {
+			console.error('Error fetching METAR data:', error)
+			setMetarContent(null)
+		} finally {
+			setMetarLoading(false)
+		}
+	}
+
 	const productsArray = useMemo(() => {
 		if (siteId && ALL_SURFACE_SECTORS[siteId as string]) {
 			return Object.keys(ALL_SURFACE_SECTORS[siteId as string].products).map((productId) => {
@@ -123,18 +143,24 @@ export const SurfaceMapsPanel = ({ basepath, isActive }: SurfaceMapsPanelProps) 
 				{productsArray.map((product) => {
 					const { id, label } = product
 					const sidebarLinkProps: any = {
-						key: id,
 						name: label,
 						active: id === productId,
-						linkUrl: `/weather-data/analysis/surface-maps/${id}/${regionId}/${siteId}`,
 					}
+
+					// For metar and cooked products, use custom callback instead of linkUrl
+					if (id === 'metar' || id === 'cooked') {
+						sidebarLinkProps.onClick = () => handleMetarLinks(id)
+					} else {
+						sidebarLinkProps.linkUrl = `/weather-data/analysis/surface-maps/${id}/${regionId}/${siteId}`
+					}
+
 					if ('infoId' in product && product.infoId && product.infoId !== '') {
 						sidebarLinkProps.onInfoClick = () => {
 							setProductInfoId(product.infoId)
 							openSlideoutPanel(PRODUCT_INFO_SLIDEOUT)
 						}
 					}
-					return <SidebarLink {...sidebarLinkProps} />
+					return <SidebarLink key={id} {...sidebarLinkProps} />
 				})}
 			</div>
 		</div>

@@ -1,0 +1,24 @@
+.metarTextPanel {
+	padding: 16px;
+	white-space: pre-wrap;
+	word-break: break-word;
+	color: var(--color-grey18-white);
+
+	.loadingIndicator {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 100px;
+	}
+
+	.placeholderMessage {
+		text-align: center;
+		padding: 32px 0;
+	}
+
+	.metarText {
+		font-family: monospace;
+		font-size: 14px;
+		line-height: 1.5;
+	}
+}
