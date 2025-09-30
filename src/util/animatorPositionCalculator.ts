@@ -12,6 +12,12 @@ interface PositionResult {
 	yPercent: number
 }
 
+interface TransformState {
+	scale: number
+	positionX: number
+	positionY: number
+}
+
 /**
  * Extracts client coordinates from mouse or touch events
  * @param e - Mouse or Touch event
@@ -41,14 +47,21 @@ export const getClientCoordinates = (e: MouseEvent | TouchEvent | React.MouseEve
 }
 
 /**
- * Calculates the percentage position within an animator image, accounting for padding and scaling
+ * Calculates the percentage position within an animator image, accounting for padding, scaling, and transforms
  * @param clientX - Client X coordinate from event
  * @param clientY - Client Y coordinate from event
  * @param containerRect - DOMRect of the container element
  * @param imageInfo - Native image dimensions (width and height)
+ * @param transformState - Optional transform state (scale, positionX, positionY) from react-zoom-pan-pinch
  * @returns Object with xPercent and yPercent (0-1 range, can be outside for clicks outside image bounds)
  */
-export const calculateAnimatorPosition = (clientX: number, clientY: number, containerRect: DOMRect, imageInfo: ImageInfo): PositionResult => {
+export const calculateAnimatorPosition = (
+	clientX: number,
+	clientY: number,
+	containerRect: DOMRect,
+	imageInfo: ImageInfo,
+	transformState?: TransformState | null,
+): PositionResult => {
 	console.log('🧮 [calculateAnimatorPosition] Starting calculation')
 	console.log('  📥 Inputs:', { clientX, clientY })
 	console.log('  📦 Container:', {
@@ -58,13 +71,25 @@ export const calculateAnimatorPosition = (clientX: number, clientY: number, cont
 		height: containerRect.height,
 	})
 	console.log('  🖼️  Image info:', imageInfo)
+	console.log('  🔄 Transform state:', transformState)
 
-	// Calculate relative position within container
-	const relativeX = clientX - containerRect.left
-	const relativeY = clientY - containerRect.top
-	console.log('  📍 Relative position:', { relativeX, relativeY })
+	// Calculate position relative to container
+	let relativeX = clientX - containerRect.left
+	let relativeY = clientY - containerRect.top
+	console.log('  📍 Initial relative position:', { relativeX, relativeY })
 
-	// Calculate scale factors
+	// If there's a transform (zoom/pan), reverse it to get position on the original image
+	if (transformState && transformState.scale !== 1) {
+		const { scale, positionX, positionY } = transformState
+		console.log('  🔄 Reversing transform:', { scale, positionX, positionY })
+
+		// Reverse the transform: (displayPos - translation) / scale
+		relativeX = (relativeX - positionX) / scale
+		relativeY = (relativeY - positionY) / scale
+		console.log('  📐 Unscaled relative position:', { relativeX, relativeY })
+	}
+
+	// Calculate scale factors (for padding calculation)
 	const { width: nativeWidth, height: nativeHeight } = imageInfo
 	const scaleFactorX = containerRect.width / nativeWidth
 	const scaleFactorY = containerRect.height / nativeHeight
@@ -109,15 +134,17 @@ export const calculateAnimatorPosition = (clientX: number, clientY: number, cont
  * @param e - Mouse or Touch event
  * @param containerRect - DOMRect of the container element
  * @param imageInfo - Native image dimensions (width and height)
+ * @param transformState - Optional transform state (scale, positionX, positionY) from react-zoom-pan-pinch
  * @returns Object with xPercent and yPercent, or null if coordinates cannot be extracted
  */
 export const calculatePositionFromEvent = (
 	e: MouseEvent | TouchEvent | React.MouseEvent | React.TouchEvent,
 	containerRect: DOMRect,
 	imageInfo: ImageInfo,
+	transformState?: TransformState | null,
 ): PositionResult | null => {
 	const coords = getClientCoordinates(e)
 	if (!coords) return null
 
-	return calculateAnimatorPosition(coords.clientX, coords.clientY, containerRect, imageInfo)
+	return calculateAnimatorPosition(coords.clientX, coords.clientY, containerRect, imageInfo, transformState)
 }
