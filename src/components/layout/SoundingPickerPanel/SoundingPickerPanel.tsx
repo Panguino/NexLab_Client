@@ -86,7 +86,13 @@ const SoundingPickerPanel = () => {
 			{panelIsOpen && (
 				<div className={styles.soundingPickerPanel}>
 					<div className={styles.soundingPickerPanelWrapper}>
-						<div className={styles.closeButton} onClick={closePanel}>
+						<div
+							className={styles.closeButton}
+							onClick={(e) => {
+								e.stopPropagation()
+								closePanel()
+							}}
+						>
 							<FontAwesomeIcon icon={faClose} />
 						</div>
 						<div className={styles.soundingPickerContent}>
