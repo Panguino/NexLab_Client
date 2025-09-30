@@ -89,9 +89,12 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 		onUpdateRef.current?.({ xPercent: rawPercentageX, yPercent: rawPercentageY })
 
 		// Log lat/lon conversion if sectorId is provided
+		console.log('🔍 [DataTooltip] sectorId:', sectorId)
 		if (sectorId) {
 			const latLon = getLatLonFromXYandSector(rawPercentageX, rawPercentageY, sectorId)
 			console.log('🗺️  [DataTooltip] Hover position → Lat/Lon:', latLon)
+		} else {
+			console.log('⚠️  [DataTooltip] No sectorId provided, cannot calculate lat/lon')
 		}
 
 		if (frameReadoutData?.dataTypes?.length) {
