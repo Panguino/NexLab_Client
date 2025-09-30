@@ -42,6 +42,7 @@ const AnimatorImageSizer = () => {
 	const isPanningRef = useRef(false)
 	const panStopTimeRef = useRef(0)
 	const [debugInfo, setDebugInfo] = useState<any>(null)
+	const [debugMode, setDebugMode] = useState(true) // Set to false to enable normal navigation
 
 	const allOverlayImages = useMemo(() => {
 		if (!overlays) return {}
@@ -209,9 +210,13 @@ const AnimatorImageSizer = () => {
 				visualViewportScale: window.visualViewport?.scale,
 				scrollX: window.scrollX,
 				scrollY: window.scrollY,
+				debugMode,
 			})
 
-			onSoundingsClickthrough({ xPercent, yPercent })
+			// Only navigate if not in debug mode
+			if (!debugMode) {
+				onSoundingsClickthrough({ xPercent, yPercent })
+			}
 			// Note: Don't close picker here - let the clickthrough handler decide when to close
 		}
 	}
@@ -298,12 +303,48 @@ const AnimatorImageSizer = () => {
 									overflow: 'auto',
 									border: '2px solid #0f0',
 								}}
-								onClick={(e) => {
-									e.stopPropagation()
-									setDebugInfo(null)
-								}}
 							>
-								<div style={{ marginBottom: '8px', fontWeight: 'bold', color: '#ff0' }}>🐛 DEBUG (tap to close)</div>
+								<div style={{ marginBottom: '8px', fontWeight: 'bold', color: '#ff0' }}>
+									🐛 DEBUG MODE: {debugMode ? 'ON' : 'OFF'}
+								</div>
+								<div style={{ marginBottom: '8px', display: 'flex', gap: '5px' }}>
+									<button
+										onClick={(e) => {
+											e.stopPropagation()
+											setDebugMode(!debugMode)
+										}}
+										style={{
+											padding: '5px 10px',
+											backgroundColor: debugMode ? '#f00' : '#0f0',
+											color: '#000',
+											border: 'none',
+											borderRadius: '3px',
+											cursor: 'pointer',
+											fontSize: '10px',
+											fontWeight: 'bold',
+										}}
+									>
+										{debugMode ? 'Enable Nav' : 'Disable Nav'}
+									</button>
+									<button
+										onClick={(e) => {
+											e.stopPropagation()
+											setDebugInfo(null)
+										}}
+										style={{
+											padding: '5px 10px',
+											backgroundColor: '#ff0',
+											color: '#000',
+											border: 'none',
+											borderRadius: '3px',
+											cursor: 'pointer',
+											fontSize: '10px',
+											fontWeight: 'bold',
+										}}
+									>
+										Close
+									</button>
+								</div>
 								{debugInfo.message && <div style={{ color: '#f00', marginBottom: '8px' }}>{debugInfo.message}</div>}
 								<div>Event: {debugInfo.eventType}</div>
 								{debugInfo.isTouchEvent !== undefined && <div>Touch: {debugInfo.isTouchEvent ? 'YES' : 'NO'}</div>}
