@@ -1,6 +1,5 @@
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
-import { calculatePositionFromEvent } from '@/util/animatorPositionCalculator'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { useAnimator } from '../Animator'
@@ -104,6 +103,10 @@ const AnimatorImageSizer = () => {
 		if (soundingsPickerMode) {
 			console.log('🖱️ [AnimatorImageSizer] handleImageClick triggered')
 
+			// Get current transform state
+			const currentTransform = transformRef.current?.instance?.transformState
+			console.log('  🔍 Current transform state:', currentTransform)
+
 			// Calculate position directly from the click/tap event to avoid race condition
 			const rect = animatorRef.current.getBoundingClientRect()
 			console.log('  📐 Container rect:', {
@@ -114,18 +117,63 @@ const AnimatorImageSizer = () => {
 			})
 			console.log('  🖼️  Image info:', imageInfo)
 
-			const position = calculatePositionFromEvent(e, rect, imageInfo)
-			console.log('  📍 Calculated position:', position)
+			// Get client coordinates from event
+			const coords =
+				'touches' in e && e.touches.length > 0
+					? { clientX: e.touches[0].clientX, clientY: e.touches[0].clientY }
+					: 'changedTouches' in e && e.changedTouches.length > 0
+						? { clientX: e.changedTouches[0].clientX, clientY: e.changedTouches[0].clientY }
+						: 'clientX' in e
+							? { clientX: e.clientX, clientY: e.clientY }
+							: null
 
-			if (position) {
-				console.log('  ✅ Using calculated position')
-				onSoundingsClickthrough(position)
-			} else {
-				console.log('  ⚠️  Fallback to stored imagePosition:', imagePosition)
-				// Fallback to stored position if we can't get coordinates from event
-				onSoundingsClickthrough(imagePosition)
+			if (!coords) {
+				console.log('  ⚠️  Could not extract coordinates from event')
+				return
 			}
 
+			// Calculate position relative to container
+			let relativeX = coords.clientX - rect.left
+			let relativeY = coords.clientY - rect.top
+			console.log('  📍 Click position relative to container:', { relativeX, relativeY })
+
+			// If there's a transform (zoom/pan), we need to reverse it to get the actual position on the image
+			if (currentTransform && currentTransform.scale !== 1) {
+				const { scale, positionX, positionY } = currentTransform
+				console.log('  🔄 Reversing transform:', { scale, positionX, positionY })
+
+				// Reverse the transform: (clickPos - translation) / scale
+				relativeX = (relativeX - positionX) / scale
+				relativeY = (relativeY - positionY) / scale
+				console.log('  📍 Position after reversing transform:', { relativeX, relativeY })
+			}
+
+			// Now calculate the percentage position using the adjusted coordinates
+			// We need to account for the image scaling and padding
+			const { width: nativeWidth, height: nativeHeight } = imageInfo
+			const scaleFactorX = rect.width / nativeWidth
+			const scaleFactorY = rect.height / nativeHeight
+			console.log('  📏 Scale factors:', { scaleFactorX, scaleFactorY })
+
+			// Scale padding based on the scale factor (26px top/bottom padding from AnimatorImageMachine)
+			const scaledPaddingTop = 26 * scaleFactorY
+			const scaledPaddingBottom = 26 * scaleFactorY
+			console.log('  📐 Scaled padding:', { top: scaledPaddingTop, bottom: scaledPaddingBottom })
+
+			// Adjust dimensions and position based on scaled padding
+			const adjustedWidth = rect.width
+			const adjustedHeight = rect.height - scaledPaddingTop - scaledPaddingBottom
+			const adjustedX = relativeX
+			const adjustedY = relativeY - scaledPaddingTop
+			console.log('  🎯 Adjusted dimensions:', { adjustedWidth, adjustedHeight })
+			console.log('  🎯 Adjusted position:', { adjustedX, adjustedY })
+
+			// Calculate percentages
+			const xPercent = adjustedX / adjustedWidth
+			const yPercent = adjustedY / adjustedHeight
+			console.log('  ✅ Final percentages:', { xPercent, yPercent })
+
+			onSoundingsClickthrough({ xPercent, yPercent })
 			setSoundingsPickerMode?.(false)
 		}
 	}
