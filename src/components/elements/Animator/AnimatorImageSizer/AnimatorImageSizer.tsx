@@ -114,7 +114,7 @@ const AnimatorImageSizer = () => {
 				clientX: coords.clientX,
 				clientY: coords.clientY,
 			})
-			setTimeout(() => setDebugInfo(null), 3000) // Auto-close after 3 seconds
+			// Don't auto-close - let user tap to close
 		}
 
 		// Suppress click-through during pan or immediately after a pan
