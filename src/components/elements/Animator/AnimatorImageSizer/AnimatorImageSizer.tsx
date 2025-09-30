@@ -97,13 +97,35 @@ const AnimatorImageSizer = () => {
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
 
 	const handleImageClick = (e: React.MouseEvent | React.TouchEvent) => {
+		console.log('🖱️ [AnimatorImageSizer] handleImageClick called')
+		console.log('  🔍 soundingsPickerMode:', soundingsPickerMode)
+		console.log('  🔍 isPanningRef.current:', isPanningRef.current)
+		console.log('  🔍 panStopTimeRef.current:', panStopTimeRef.current)
+
 		// Suppress click-through during pan or immediately after a pan
 		const now = performance.now()
-		if (isPanningRef.current || now - panStopTimeRef.current < 120) return
-		if (!soundingsPickerMode || !animatorRef.current) return
+		const timeSincePanStop = now - panStopTimeRef.current
+		console.log('  🔍 timeSincePanStop:', timeSincePanStop)
+
+		if (isPanningRef.current) {
+			console.log('  ⛔ Blocked: Currently panning')
+			return
+		}
+		if (timeSincePanStop < 120) {
+			console.log('  ⛔ Blocked: Too soon after pan stop (', timeSincePanStop, 'ms )')
+			return
+		}
+		if (!soundingsPickerMode) {
+			console.log('  ⛔ Blocked: Not in soundings picker mode')
+			return
+		}
+		if (!animatorRef.current) {
+			console.log('  ⛔ Blocked: No animator ref')
+			return
+		}
 
 		if (soundingsPickerMode) {
-			console.log('🖱️ [AnimatorImageSizer] handleImageClick triggered')
+			console.log('  ✅ Click allowed - processing...')
 			console.log('  📊 Last hover position (imagePosition state):', imagePosition)
 
 			// Calculate position directly from the click/tap event to avoid race condition
