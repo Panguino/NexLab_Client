@@ -31,7 +31,6 @@ export const getData = async (url) => {
 			runs: data_data.runs || {},
 			dataTypes: data_data.dataTypes || [],
 			readoutData: data_data.readoutData || [],
-			textfiles: data_data.textfiles || [],
 		}
 	} catch (error) {
 		console.error('Error fetching data:', error)
