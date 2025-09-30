@@ -1,6 +1,7 @@
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
 import { calculateAnimatorPosition, getClientCoordinates } from '@/util/animatorPositionCalculator'
+import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { useAnimator } from '../Animator'
@@ -40,6 +41,7 @@ const AnimatorImageSizer = () => {
 	// Track panning to suppress click-through during/after pan
 	const isPanningRef = useRef(false)
 	const panStopTimeRef = useRef(0)
+	const [debugInfo, setDebugInfo] = useState<any>(null)
 
 	const allOverlayImages = useMemo(() => {
 		if (!overlays) return {}
@@ -169,6 +171,33 @@ const AnimatorImageSizer = () => {
 			})
 			console.log('  🎯 Calling onSoundingsClickthrough with:', { xPercent, yPercent })
 
+			// Calculate lat/lon for debug display
+			const latLon = sectorId ? getLatLonFromXYandSector(xPercent, yPercent, sectorId) : null
+
+			// Set debug info for visual display
+			setDebugInfo({
+				eventType: e.type,
+				isTouchEvent: 'touches' in e || 'changedTouches' in e,
+				clientX: coords.clientX,
+				clientY: coords.clientY,
+				rectLeft: rect.left,
+				rectTop: rect.top,
+				rectWidth: rect.width,
+				rectHeight: rect.height,
+				xPercent: xPercent.toFixed(4),
+				yPercent: yPercent.toFixed(4),
+				latLon,
+				hoverXPercent: imagePosition.xPercent.toFixed(4),
+				hoverYPercent: imagePosition.yPercent.toFixed(4),
+				xDiff: Math.abs(xPercent - imagePosition.xPercent).toFixed(4),
+				yDiff: Math.abs(yPercent - imagePosition.yPercent).toFixed(4),
+				windowWidth: window.innerWidth,
+				windowHeight: window.innerHeight,
+				visualViewportScale: window.visualViewport?.scale,
+				scrollX: window.scrollX,
+				scrollY: window.scrollY,
+			})
+
 			onSoundingsClickthrough({ xPercent, yPercent })
 			// Note: Don't close picker here - let the clickthrough handler decide when to close
 		}
@@ -233,6 +262,63 @@ const AnimatorImageSizer = () => {
 						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} onUpdatePosition={setImagePosition} sectorId={sectorId} />
 
 						{!hideZoomControls && !disableZoom && <ImageControls zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />}
+
+						{/* Debug panel for mobile testing */}
+						{debugInfo && soundingsPickerMode && (
+							<div
+								style={{
+									position: 'fixed',
+									top: '10px',
+									right: '10px',
+									backgroundColor: 'rgba(0, 0, 0, 0.9)',
+									color: '#0f0',
+									padding: '10px',
+									borderRadius: '5px',
+									fontSize: '11px',
+									fontFamily: 'monospace',
+									zIndex: 99999,
+									maxWidth: '300px',
+									maxHeight: '90vh',
+									overflow: 'auto',
+									border: '2px solid #0f0',
+								}}
+								onClick={(e) => {
+									e.stopPropagation()
+									setDebugInfo(null)
+								}}
+							>
+								<div style={{ marginBottom: '8px', fontWeight: 'bold', color: '#ff0' }}>🐛 DEBUG (tap to close)</div>
+								<div>Event: {debugInfo.eventType}</div>
+								<div>Touch: {debugInfo.isTouchEvent ? 'YES' : 'NO'}</div>
+								<div style={{ marginTop: '8px', color: '#0ff' }}>Click Coords:</div>
+								<div>clientX: {debugInfo.clientX}</div>
+								<div>clientY: {debugInfo.clientY}</div>
+								<div style={{ marginTop: '8px', color: '#0ff' }}>Container Rect:</div>
+								<div>left: {debugInfo.rectLeft.toFixed(1)}</div>
+								<div>top: {debugInfo.rectTop.toFixed(1)}</div>
+								<div>width: {debugInfo.rectWidth.toFixed(1)}</div>
+								<div>height: {debugInfo.rectHeight.toFixed(1)}</div>
+								<div style={{ marginTop: '8px', color: '#0ff' }}>Click %:</div>
+								<div>x: {debugInfo.xPercent}</div>
+								<div>y: {debugInfo.yPercent}</div>
+								<div style={{ marginTop: '8px', color: '#f0f' }}>Hover %:</div>
+								<div>x: {debugInfo.hoverXPercent}</div>
+								<div>y: {debugInfo.hoverYPercent}</div>
+								<div style={{ marginTop: '8px', color: '#f00' }}>Diff:</div>
+								<div>Δx: {debugInfo.xDiff}</div>
+								<div>Δy: {debugInfo.yDiff}</div>
+								<div style={{ marginTop: '8px', color: '#ff0' }}>Lat/Lon:</div>
+								<div>{debugInfo.latLon || 'N/A'}</div>
+								<div style={{ marginTop: '8px', color: '#0ff' }}>Window:</div>
+								<div>
+									{debugInfo.windowWidth} x {debugInfo.windowHeight}
+								</div>
+								<div>Scale: {debugInfo.visualViewportScale?.toFixed(2) || 'N/A'}</div>
+								<div>
+									Scroll: {debugInfo.scrollX}, {debugInfo.scrollY}
+								</div>
+							</div>
+						)}
 					</>
 				)}
 			</TransformWrapper>
