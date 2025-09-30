@@ -105,7 +105,7 @@ const SoundingPickerPanel = () => {
 
 	// Close panel on click outside
 	useEffect(() => {
-		if (!panelIsOpen) return
+		if (!panelIsOpen) return undefined
 
 		const handleClickOutside = (event: MouseEvent) => {
 			if (panelRef.current && !panelRef.current.contains(event.target as Node)) {

@@ -26,7 +26,6 @@ const AnimatorImageSizer = () => {
 		frames,
 		hideZoomControls,
 		soundingsPickerMode,
-		setSoundingsPickerMode,
 		onSoundingsClickthrough,
 		overlayMarkers,
 		imageInfo,
