@@ -104,6 +104,7 @@ const AnimatorImageSizer = () => {
 
 		if (soundingsPickerMode) {
 			console.log('🖱️ [AnimatorImageSizer] handleImageClick triggered')
+			console.log('  📊 Last hover position (imagePosition state):', imagePosition)
 
 			// Get current transform state
 			const currentTransform = transformRef.current?.instance?.transformState
@@ -125,6 +126,10 @@ const AnimatorImageSizer = () => {
 			const { xPercent, yPercent } = calculateAnimatorPosition(coords.clientX, coords.clientY, rect, imageInfo, currentTransform)
 
 			console.log('  ✅ Click percentages:', { xPercent, yPercent })
+			console.log('  ⚠️  Difference from hover:', {
+				xDiff: Math.abs(xPercent - imagePosition.xPercent),
+				yDiff: Math.abs(yPercent - imagePosition.yPercent),
+			})
 			console.log('  🎯 Calling onSoundingsClickthrough with:', { xPercent, yPercent })
 
 			onSoundingsClickthrough({ xPercent, yPercent })
