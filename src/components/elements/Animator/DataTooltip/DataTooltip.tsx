@@ -1,3 +1,4 @@
+import { calculateAnimatorPosition } from '@/util/animatorPositionCalculator'
 import { createReadout } from '@/util/createForecastReadout'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useAnimator } from '../Animator'
@@ -70,39 +71,16 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 	useEffect(() => {
 		if (!hoverRef.current || !isHovering || isPlaying) return
 
-		// Retrieve native image size and current size
-		const { width: nativeWidth, height: nativeHeight } = imageInfo
 		const containerRect = hoverRef.current.getBoundingClientRect()
 
-		// Calculate scale factors
-		const scaleFactorX = containerRect.width / nativeWidth
-		const scaleFactorY = containerRect.height / nativeHeight
+		// Use utility function to calculate position
+		const { xPercent: rawPercentageX, yPercent: rawPercentageY } = calculateAnimatorPosition(
+			relativePosition.x + containerRect.left,
+			relativePosition.y + containerRect.top,
+			containerRect,
+			imageInfo,
+		)
 
-		// Scale padding based on the scale factor
-		const basePadding = {
-			top: 26,
-			left: 0,
-			right: 0,
-			bottom: 26,
-		}
-		const scaledPadding = {
-			top: basePadding.top * scaleFactorY,
-			left: basePadding.left * scaleFactorX,
-			right: basePadding.right * scaleFactorX,
-			bottom: basePadding.bottom * scaleFactorY,
-		}
-
-		// Adjust dimensions based on scaled padding
-		const adjustedWidth = containerRect.width - scaledPadding.left - scaledPadding.right
-		const adjustedHeight = containerRect.height - scaledPadding.top - scaledPadding.bottom
-
-		// Adjust position based on scaled padding
-		const adjustedX = relativePosition.x - scaledPadding.left
-		const adjustedY = relativePosition.y - scaledPadding.top
-
-		// Calculate percentages based on adjusted dimensions and positions
-		const rawPercentageX = adjustedX / adjustedWidth
-		const rawPercentageY = adjustedY / adjustedHeight
 		const percentageX = Math.max(0, Math.min(0.999, rawPercentageX))
 		const percentageY = Math.max(0, Math.min(0.999, rawPercentageY))
 		setPercentagePosition({ xPercent: percentageX, yPercent: percentageY, rawPercentageX, rawPercentageY })
@@ -128,33 +106,28 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo, onUpdatePosition])
 
 	useEffect(() => {
-		// Helper function to extract client coordinates from mouse or touch events
-		const getClientCoordinates = (e: MouseEvent | TouchEvent) => {
+		const handleMove = (e: MouseEvent | TouchEvent) => {
+			// Extract coordinates from mouse or touch event
+			let clientX: number, clientY: number
 			if ('touches' in e && e.touches.length > 0) {
 				// Touch event
-				return {
-					clientX: e.touches[0].clientX,
-					clientY: e.touches[0].clientY,
-				}
+				clientX = e.touches[0].clientX
+				clientY = e.touches[0].clientY
 			} else if ('clientX' in e) {
 				// Mouse event
-				return {
-					clientX: e.clientX,
-					clientY: e.clientY,
-				}
+				clientX = e.clientX
+				clientY = e.clientY
+			} else {
+				return
 			}
-			return null
-		}
 
-		const handleMove = (e: MouseEvent | TouchEvent) => {
-			const coords = getClientCoordinates(e)
-			if (!coords || !hoverRef.current) return
+			if (!hoverRef.current) return
 
 			const rect = hoverRef.current.getBoundingClientRect()
-			const x = coords.clientX - rect.left
-			const y = coords.clientY - rect.top
+			const x = clientX - rect.left
+			const y = clientY - rect.top
 			setRelativePosition({ x, y })
-			setMousePosition({ x: coords.clientX, y: coords.clientY })
+			setMousePosition({ x: clientX, y: clientY })
 			calculateTooltipPosition()
 		}
 

@@ -1,5 +1,6 @@
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
+import { calculatePositionFromEvent } from '@/util/animatorPositionCalculator'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { useAnimator } from '../Animator'
@@ -103,63 +104,15 @@ const AnimatorImageSizer = () => {
 		if (soundingsPickerMode) {
 			// Calculate position directly from the click/tap event to avoid race condition
 			const rect = animatorRef.current.getBoundingClientRect()
+			const position = calculatePositionFromEvent(e, rect, imageInfo)
 
-			// Extract coordinates from mouse or touch event
-			let clientX: number, clientY: number
-			if ('touches' in e && e.touches.length > 0) {
-				// Touch event
-				clientX = e.touches[0].clientX
-				clientY = e.touches[0].clientY
-			} else if ('changedTouches' in e && e.changedTouches.length > 0) {
-				// Touch end event
-				clientX = e.changedTouches[0].clientX
-				clientY = e.changedTouches[0].clientY
-			} else if ('clientX' in e) {
-				// Mouse event
-				clientX = e.clientX
-				clientY = e.clientY
+			if (position) {
+				onSoundingsClickthrough(position)
 			} else {
-				// Fallback to stored position if we can't get coordinates
+				// Fallback to stored position if we can't get coordinates from event
 				onSoundingsClickthrough(imagePosition)
-				setSoundingsPickerMode?.(false)
-				return
 			}
 
-			const relativeX = clientX - rect.left
-			const relativeY = clientY - rect.top
-
-			// Calculate scale factors (same logic as DataTooltip)
-			const { width: nativeWidth, height: nativeHeight } = imageInfo
-			const scaleFactorX = rect.width / nativeWidth
-			const scaleFactorY = rect.height / nativeHeight
-
-			// Scale padding based on the scale factor (26px top/bottom padding)
-			const basePadding = {
-				top: 26,
-				left: 0,
-				right: 0,
-				bottom: 26,
-			}
-			const scaledPadding = {
-				top: basePadding.top * scaleFactorY,
-				left: basePadding.left * scaleFactorX,
-				right: basePadding.right * scaleFactorX,
-				bottom: basePadding.bottom * scaleFactorY,
-			}
-
-			// Adjust dimensions based on scaled padding
-			const adjustedWidth = rect.width - scaledPadding.left - scaledPadding.right
-			const adjustedHeight = rect.height - scaledPadding.top - scaledPadding.bottom
-
-			// Adjust position based on scaled padding
-			const adjustedX = relativeX - scaledPadding.left
-			const adjustedY = relativeY - scaledPadding.top
-
-			// Calculate percentages
-			const xPercent = adjustedX / adjustedWidth
-			const yPercent = adjustedY / adjustedHeight
-
-			onSoundingsClickthrough({ xPercent, yPercent })
 			setSoundingsPickerMode?.(false)
 		}
 	}
