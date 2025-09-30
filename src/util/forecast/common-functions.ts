@@ -24,21 +24,42 @@ export const fetchStationCoordinates = async (stationId: string): Promise<string
 	}
 }
 export const getLatLonFromXYandSector = (x: number, y: number, sectorId: string): string | null => {
+	console.log('🌍 [getLatLonFromXYandSector] Converting percentages to lat/lon')
+	console.log('  📊 Input:', { x, y, sectorId })
+
 	const sectorBounds = FORECAST_SECTORS[sectorId]?.coordinates
-	if (!sectorBounds) return null
+	if (!sectorBounds) {
+		console.error('  ❌ No bounds found for sector:', sectorId)
+		return null
+	}
+
+	console.log('  🗺️  Sector bounds:', sectorBounds)
+	console.log('    SW corner (bounds[0]):', sectorBounds[0], '(lon, lat)')
+	console.log('    NE corner (bounds[1]):', sectorBounds[1], '(lon, lat)')
 
 	const westCorrection = sectorBounds[0][0] < -180 ? true : false
 	const eastCorrection = sectorBounds[1][0] > 180 ? true : false
 
 	const longSpan = sectorBounds[1][0] - sectorBounds[0][0]
 	const latSpan = sectorBounds[1][1] - sectorBounds[0][1]
+	console.log('  📏 Spans:', { longSpan, latSpan })
+
 	const lonRaw = sectorBounds[0][0] + longSpan * x
 	const latRaw = sectorBounds[0][1] + latSpan * (1 - y)
+	console.log('  🧮 Raw calculations:')
+	console.log('    lonRaw = bounds[0][0] + longSpan * x =', sectorBounds[0][0], '+', longSpan, '*', x, '=', lonRaw)
+	console.log('    latRaw = bounds[0][1] + latSpan * (1 - y) =', sectorBounds[0][1], '+', latSpan, '* (1 -', y, ') =', latRaw)
+
 	const lonCorrected = eastCorrection ? lonRaw - 360 : westCorrection ? lonRaw + 360 : lonRaw
+	console.log('  🔧 Corrections:', { westCorrection, eastCorrection, lonCorrected })
+
 	const longitude = lonCorrected.toFixed(1)
 	const latitude = latRaw.toFixed(1)
+	const result = `${latitude},${longitude}`
 
-	return `${latitude},${longitude}`
+	console.log('  ✅ Final result:', result)
+
+	return result
 }
 
 export const fetchFloaterSectorData = async () => {
