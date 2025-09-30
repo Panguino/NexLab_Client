@@ -50,6 +50,7 @@
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: all 0.3s ease;
+  justify-content: flex-start;
 }
 
 .step:hover {
@@ -75,7 +76,7 @@
 
 .stepContent h3 {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 500;
   margin: 0 0 12px;
   color: var(--color-grey20-grey0);
 }
@@ -85,6 +86,9 @@
   line-height: 1.6;
   color: var(--color-grey16-grey5);
   margin: 0 0 20px;
+}
+.stepContent > div {
+  display: table;
 }
 
 .guidelines {
@@ -97,7 +101,7 @@
 
 .guidelines h3 {
   font-size: 24px;
-  font-weight: 600;
+  font-weight: 500;
   margin: 0 0 20px;
   color: var(--color-grey20-grey0);
 }
@@ -124,7 +128,7 @@
 
 .callToAction h3 {
   font-size: 28px;
-  font-weight: 600;
+  font-weight: 500;
   margin: 0 0 12px;
 }
 
@@ -133,44 +137,49 @@
   line-height: 1.6;
   margin: 0 0 24px;
   opacity: 0.9;
+  color: var(--color-grey3);
+}
+.callToAction > div {
+  display: table;
+  margin: 0 auto;
 }
 
 @media (max-width: 768px) {
   .requirements {
     padding: 60px 20px;
   }
-  
+
   .header h2 {
     font-size: 32px;
   }
-  
+
   .header p {
     font-size: 16px;
   }
-  
+
   .step {
     flex-direction: column;
     text-align: center;
     gap: 16px;
     padding: 24px;
   }
-  
+
   .stepIcon {
     margin: 0 auto;
   }
-  
+
   .stepContent h3 {
     font-size: 20px;
   }
-  
+
   .guidelines {
     padding: 24px;
   }
-  
+
   .callToAction {
     padding: 32px 24px;
   }
-  
+
   .callToAction h3 {
     font-size: 24px;
   }

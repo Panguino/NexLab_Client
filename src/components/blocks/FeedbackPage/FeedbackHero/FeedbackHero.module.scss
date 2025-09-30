@@ -1,5 +1,5 @@
 .hero {
-  background: linear-gradient(135deg, var(--color-blue3) 0%, var(--color-blue5) 100%);
+  background: linear-gradient(135deg, var(--color-blue5) 0%, var(--color-blue5) 100%);
   color: var(--color-white);
   padding: 80px 20px;
   position: relative;
@@ -28,8 +28,8 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 25px;
   padding: 8px 16px;
   margin-bottom: 24px;
@@ -40,7 +40,7 @@
 
 .discordIcon {
   font-size: 18px;
-  color: #5865F2;
+  color: #5865f2;
 }
 
 .heroContent h1 {
@@ -56,6 +56,7 @@
   line-height: 1.6;
   margin: 0 0 32px;
   opacity: 0.9;
+  color: var(--color-grey3);
 }
 
 .heroActions {
@@ -73,6 +74,7 @@
   max-width: 100%;
   height: auto;
   filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
+  border-radius: 25px;
 }
 
 @media (max-width: 900px) {
@@ -81,15 +83,15 @@
     text-align: center;
     gap: 40px;
   }
-  
+
   .heroImage {
     flex: none;
   }
-  
+
   .heroContent h1 {
     font-size: 40px;
   }
-  
+
   .heroContent p {
     font-size: 16px;
   }
@@ -99,11 +101,11 @@
   .hero {
     padding: 60px 20px;
   }
-  
+
   .heroActions {
     flex-direction: column;
   }
-  
+
   .discordBanner {
     font-size: 12px;
     padding: 6px 12px;

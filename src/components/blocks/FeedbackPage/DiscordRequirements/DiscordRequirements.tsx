@@ -1,6 +1,6 @@
 import { Button } from '@/components/elements/Button/Button'
-import { faUser, faComments } from '@fortawesome/free-solid-svg-icons'
 import { faDiscord } from '@fortawesome/free-brands-svg-icons'
+import { faComments, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './DiscordRequirements.module.scss'
 
@@ -21,14 +21,10 @@ export const DiscordRequirements = () => {
 						<div className={styles.stepContent}>
 							<h3>1. Join Our Discord</h3>
 							<p>
-								Click the link below to join our Discord community. You'll get access to exclusive channels 
-								and direct communication with our development team.
+								Click the link below to join our Discord community. You'll get access to exclusive channels and direct communication
+								with our development team.
 							</p>
-							<Button 
-								label="Join Discord: https://discord.gg/8NKZKEXpMv" 
-								link="https://discord.gg/8NKZKEXpMv" 
-								target="_blank" 
-							/>
+							<Button label="Join Discord: https://discord.gg/8NKZKEXpMv" link="https://discord.gg/8NKZKEXpMv" target="_blank" />
 						</div>
 					</div>
 
@@ -39,14 +35,10 @@ export const DiscordRequirements = () => {
 						<div className={styles.stepContent}>
 							<h3>2. Login & Link Your Account</h3>
 							<p>
-								Make sure you're logged into your NexLab account and have linked it with Discord. 
-								This helps us track feedback and follow up with you directly.
+								Make sure you're logged into your NexLab account and have linked it with Discord. This helps us track feedback and
+								follow up with you directly.
 							</p>
-							<Button 
-								label="Go to Dashboard Settings" 
-								link="/dashboard" 
-								target="_self" 
-							/>
+							<Button label="Go to Dashboard Settings" link="/dashboard" target="_self" />
 						</div>
 					</div>
 
@@ -57,8 +49,8 @@ export const DiscordRequirements = () => {
 						<div className={styles.stepContent}>
 							<h3>3. Post in NexLab Beta Test Channel</h3>
 							<p>
-								Navigate to the <strong>#nexlab-beta-test</strong> channel in our Discord server. 
-								This is where all feedback, bug reports, and feature requests should be posted.
+								Navigate to the <strong>#nexlab-beta-test</strong> channel in our Discord server. This is where all feedback, bug
+								reports, and feature requests should be posted.
 							</p>
 						</div>
 					</div>
@@ -78,11 +70,7 @@ export const DiscordRequirements = () => {
 				<div className={styles.callToAction}>
 					<h3>Ready to Share Your Feedback?</h3>
 					<p>Join our community and help us make NexLab even better!</p>
-					<Button 
-						label="Join Discord Community" 
-						link="https://discord.gg/8NKZKEXpMv" 
-						target="_blank" 
-					/>
+					<Button label="Join Discord Community" link="https://discord.gg/8NKZKEXpMv" target="_blank" />
 				</div>
 			</div>
 		</section>

@@ -15,29 +15,17 @@ export const FeedbackHero = () => {
 						</div>
 						<h1>Share Your Feedback</h1>
 						<p>
-							We've moved all feedback collection to our Discord community to foster better collaboration and faster responses. 
-							Join our Discord server and share your thoughts in the NexLab Beta Test channel.
+							We've moved all feedback collection to our Discord community to foster better collaboration and faster responses. Discord
+							server and share your thoughts in the NexLab Beta Test channel.
 						</p>
 						<div className={styles.heroActions}>
-							<Button 
-								label="Join Discord Community" 
-								link="https://discord.gg/8NKZKEXpMv" 
-								target="_blank" 
-							/>
-							<Button 
-								label="Learn More About Requirements" 
-								link="#requirements" 
-								target="_self" 
-							/>
+							<Button label="Join Discord Community" link="https://discord.gg/8NKZKEXpMv" target="_blank" />
+							<Button label="Learn More About Requirements" link="#requirements" target="_self" />
 						</div>
 					</div>
 				</div>
 				<div className={styles.heroImage}>
-					<img
-						src="/img/discord-community.svg"
-						alt="Discord Community"
-						className={styles.image}
-					/>
+					<img src="/img/discord_community.png" alt="Discord Community" className={styles.image} />
 				</div>
 			</div>
 		</section>
