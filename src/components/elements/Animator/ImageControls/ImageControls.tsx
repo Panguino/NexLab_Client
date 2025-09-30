@@ -46,7 +46,6 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 		if (pdfs && pdfs.length > 0 && currentFrame < pdfs.length) {
 			const pdfUrl = pdfs[currentFrame]
 			if (pdfUrl) {
-				window.open(pdfUrl, '_blank')
 				pdfButtonClick?.(pdfUrl)
 			}
 		}
@@ -92,10 +91,7 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 				</button>
 			)}
 			{pdfs && pdfs.length > 0 && (
-				<button
-					onClick={handlePdfButtonClick}
-					title="Open PDF for current frame"
-				>
+				<button onClick={handlePdfButtonClick}>
 					<FontAwesomeIcon icon={faFilePdf} />
 				</button>
 			)}

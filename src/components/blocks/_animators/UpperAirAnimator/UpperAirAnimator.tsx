@@ -21,6 +21,7 @@ const UpperAirAnimator: React.FC = () => {
 	const { upperairLevelId: levelId, upperairProductId: productId, upperairSiteId: siteId } = useParams()
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
 	const [upperAirData, setUpperAirData] = useState([])
+	const [pdfs, setPdfs] = useState<string[]>([])
 
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
@@ -60,6 +61,7 @@ const UpperAirAnimator: React.FC = () => {
 		setImageInfo(data.imageInfo)
 		setUpperAirData(data.frames)
 		setFrameValidTimes(data.validtimes)
+		setPdfs(data.pdfs)
 	}, [siteId, levelId, productId, setUpperAirData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
@@ -73,6 +75,11 @@ const UpperAirAnimator: React.FC = () => {
 	useEffect(() => {
 		setAnalysisZoomFill(isMobile)
 	}, [isMobile, setAnalysisZoomFill])
+
+	const handlePdfButtonClick = (pdfUrl: string) => {
+		console.log('PDF button clicked for URL:', pdfUrl)
+		window.open(pdfUrl, '_blank')
+	}
 
 	return (
 		<>
@@ -93,6 +100,8 @@ const UpperAirAnimator: React.FC = () => {
 						interval={1000 / analysisFrameRate}
 						lastFrameDwell={analysisLastFrameDwell}
 						lastFrameDwellTime={analysisLastFrameDwellTime * 1000}
+						pdfs={pdfs}
+						pdfButtonClick={handlePdfButtonClick}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<AnalysisAnimatorSettings refreshData={getData} />
