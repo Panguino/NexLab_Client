@@ -119,8 +119,8 @@ const AnimatorImageSizer = () => {
 			console.log('  ⛔ Blocked: Not in soundings picker mode')
 			return
 		}
-		if (!animatorRef.current) {
-			console.log('  ⛔ Blocked: No animator ref')
+		if (!ImageMachineRef.current) {
+			console.log('  ⛔ Blocked: No ImageMachine ref')
 			return
 		}
 
@@ -129,7 +129,8 @@ const AnimatorImageSizer = () => {
 			console.log('  📊 Last hover position (imagePosition state):', imagePosition)
 
 			// Calculate position directly from the click/tap event to avoid race condition
-			const rect = animatorRef.current.getBoundingClientRect()
+			// IMPORTANT: Use ImageMachineRef (same as hover) not animatorRef
+			const rect = ImageMachineRef.current.getBoundingClientRect()
 
 			// Extract coordinates from event
 			const coords = getClientCoordinates(e)
