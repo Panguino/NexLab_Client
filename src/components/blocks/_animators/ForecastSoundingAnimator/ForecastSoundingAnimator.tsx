@@ -4,7 +4,7 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { FORECAST_MODELS } from '@/data/forecast/models'
-import { useIsMobile } from '@/hooks/useIsMobile'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData, getSoundingRuns } from '@/util/dataCalls/forecast/query-sounding'
 import { fetchStationCoordinates, forecastHourFromUnixValidtime } from '@/util/forecast/common-functions'
@@ -21,7 +21,9 @@ interface runsProps {
 }
 
 const ForecastSoundingAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const router = useRouter()
 	const pathname = usePathname()
 	const {
@@ -38,8 +40,8 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const forecastSoundingFrameRate = useRootStore.use.forecastSoundingFrameRate()
 	const forecastSoundingZoomState = useRootStore.use.forecastSoundingZoomState()
 	const setForecastSoundingZoomState = useRootStore.use.setForecastSoundingZoomState()
-	const forecastSoundingZoomFill = useRootStore.use.forecastSoundingZoomFill()
-	const setForecastSoundingZoomFill = useRootStore.use.setForecastSoundingZoomFill()
+	const globalZoomFill = useRootStore.use.globalZoomFill()
+	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
 	const forecastSoundingMapFullScreen = useRootStore.use.forecastSoundingMapFullScreen()
 	const setForecastSoundingMapFullScreen = useRootStore.use.setForecastSoundingMapFullScreen()
 	const forecastSoundingLastFrameDwell = useRootStore.use.forecastSoundingLastFrameDwell()
@@ -122,9 +124,6 @@ const ForecastSoundingAnimator: React.FC = () => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, getData])
 
-	useEffect(() => {
-		setForecastSoundingZoomFill(isMobile)
-	}, [isMobile, setForecastSoundingZoomFill])
 
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,
@@ -173,8 +172,8 @@ const ForecastSoundingAnimator: React.FC = () => {
 								imageInfo={imageInfo}
 								initialZoomState={forecastSoundingZoomState}
 								setZoomState={setForecastSoundingZoomState}
-								zoomFill={forecastSoundingZoomFill}
-								setZoomFill={setForecastSoundingZoomFill}
+								zoomFill={globalZoomFill}
+								setZoomFill={setGlobalZoomFill}
 								fullScreen={forecastSoundingMapFullScreen}
 								setFullScreen={setForecastSoundingMapFullScreen}
 								interval={1000 / forecastSoundingFrameRate}

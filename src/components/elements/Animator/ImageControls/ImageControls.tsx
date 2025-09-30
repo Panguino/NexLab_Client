@@ -3,6 +3,7 @@ import {
 	faCompress,
 	faDownLeftAndUpRightToCenter,
 	faExpand,
+	faFilePdf,
 	faLayerGroup,
 	faSearchMinus,
 	faSearchPlus,
@@ -27,6 +28,10 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 		soundingsPickerMode,
 		setSoundingsPickerMode,
 		soundingsPicker,
+		soundingsPickerDisabled,
+		pdfs,
+		pdfButtonClick,
+		currentFrame,
 	} = useAnimator()
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
 	const expandToggle = () => {
@@ -35,6 +40,15 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 
 	const fullScreenToggle = () => {
 		setFullScreen(!fullScreen)
+	}
+
+	const handlePdfButtonClick = () => {
+		if (pdfs && pdfs.length > 0 && currentFrame < pdfs.length) {
+			const pdfUrl = pdfs[currentFrame]
+			if (pdfUrl) {
+				pdfButtonClick?.(pdfUrl)
+			}
+		}
 	}
 
 	return (
@@ -67,8 +81,18 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 				<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
 			</button>
 			{soundingsPicker && (
-				<button onClick={() => setSoundingsPickerMode(!soundingsPickerMode)}>
-					<WeatherBalloonIcon className={soundingsPickerMode ? styles.active : ''} />
+				<button
+					onClick={() => !soundingsPickerDisabled && setSoundingsPickerMode(!soundingsPickerMode)}
+					className={soundingsPickerDisabled ? styles.disabled : ''}
+					disabled={soundingsPickerDisabled}
+					title={soundingsPickerDisabled ? 'Soundings not supported for current model' : 'Toggle sounding picker'}
+				>
+					<WeatherBalloonIcon className={soundingsPickerMode && !soundingsPickerDisabled ? styles.active : ''} />
+				</button>
+			)}
+			{pdfs && pdfs.length > 0 && (
+				<button onClick={handlePdfButtonClick}>
+					<FontAwesomeIcon icon={faFilePdf} />
 				</button>
 			)}
 		</div>

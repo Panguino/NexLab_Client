@@ -3,16 +3,19 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { useIsMobile } from '@/hooks/useIsMobile'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareRunsData } from '@/util/dataCalls/forecast/query-comparisons'
+import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ForecastCompareRunsAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareRunsAnimatorSettings/ForecastCompareRunsAnimatorSettings'
 import styles from './ForecastCompareRunsAnimator.module.scss'
 
 const ForecastCompareRunsAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const router = useRouter()
 	const {
 		fcstModel: modelId,
@@ -25,8 +28,8 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
-	const forecastZoomFill = useRootStore.use.forecastZoomFill()
-	const setForecastZoomFill = useRootStore.use.setForecastZoomFill()
+	const globalZoomFill = useRootStore.use.globalZoomFill()
+	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
 	const forecastMapFullScreen = useRootStore.use.forecastMapFullScreen()
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
@@ -35,6 +38,11 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	const [forecastRuns, setForecastRuns] = useState<string[]>([])
 	const [startFrame, setStartFrame] = useState(0)
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
+
+	// Readout state (mirrors ForecastCompareHeightAnimator behavior)
+	const [frameReadoutData, setFrameReadoutData] = useState<any>(null)
+	const [isLoadingReadoutData, setIsLoadingReadoutData] = useState<boolean>(false)
+	const frameDataTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
 	const getData = useCallback(async () => {
 		console.log('ForecastCompareRunsAnimator: Fetching data', modelId, sectorId, levelId, productId, validTimeId)
@@ -59,9 +67,6 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, getData])
 
-	useEffect(() => {
-		setForecastZoomFill(isMobile)
-	}, [isMobile, setForecastZoomFill])
 
 	const formatRunTimeLabel = (ts: string | number, model: string) => {
 		// expect YYYYMMDDHH as string or number
@@ -79,6 +84,48 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 		return (forecastRuns || []).map((run) => formatRunTimeLabel(run, modelId as string))
 	}, [forecastRuns, modelId])
 
+	// Request readout data for the given frame (run). Debounced like main viewer.
+	const handleReadoutDataRequest = useCallback(
+		async (frameIndex: number) => {
+			// Clear any existing timeout
+			if (frameDataTimeoutRef.current) {
+				clearTimeout(frameDataTimeoutRef.current)
+				frameDataTimeoutRef.current = null
+			}
+
+			// Reset state
+			setFrameReadoutData(null)
+
+			// Validate required params
+			if (!(modelId && sectorId && levelId && productId && validTimeId)) {
+				console.log('Missing required parameters for readout data')
+				return
+			}
+
+			// Map frame index to the corresponding run
+			const runForFrame = forecastRuns?.[frameIndex]
+			if (!runForFrame) {
+				console.log('No run found for frame index', frameIndex)
+				return
+			}
+
+			setIsLoadingReadoutData(true)
+			frameDataTimeoutRef.current = setTimeout(async () => {
+				try {
+					const data = await getFrameReadoutData(modelId as string, runForFrame as string, sectorId as string, levelId as string, productId as string, validTimeId as string)
+					const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
+					setFrameReadoutData(readoutDataObj)
+				} catch (error) {
+					console.error('Error fetching frame readout data:', error)
+				} finally {
+					setIsLoadingReadoutData(false)
+					frameDataTimeoutRef.current = null
+				}
+			}, 1000)
+		},
+		[modelId, sectorId, levelId, productId, validTimeId, forecastRuns]
+	)
+
 	return (
 		<>
 			<div className={styles.forecastAnimatorContainer}>
@@ -90,13 +137,17 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 						imageInfo={imageInfo}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}
-						zoomFill={forecastZoomFill}
-						setZoomFill={setForecastZoomFill}
+						zoomFill={globalZoomFill}
+						setZoomFill={setGlobalZoomFill}
 						fullScreen={forecastMapFullScreen}
 						setFullScreen={setForecastMapFullScreen}
 						interval={1000 / forecastFrameRate}
 						lastFrameDwell={forecastLastFrameDwell}
 						lastFrameDwellTime={forecastLastFrameDwellTime * 1000}
+						enableReadouts={true}
+						frameReadoutData={frameReadoutData}
+						isLoadingReadoutData={isLoadingReadoutData}
+						requestReadoutData={handleReadoutDataRequest}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastCompareRunsAnimatorSettings />

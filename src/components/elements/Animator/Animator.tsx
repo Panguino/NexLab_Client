@@ -38,8 +38,9 @@ interface IAnimatorProps {
 	setFullScreen?: (fullScreen: boolean) => void
 	soundingsPicker?: boolean
 	soundingsPickerMode?: boolean
+	soundingsPickerDisabled?: boolean
 	setSoundingsPickerMode?: (mode: boolean) => void
-	onSoundingsClickthrough?: (event: any) => void
+	onSoundingsClickthrough?: (event: { xPercent: number; yPercent: number }) => void
 	// Scrubber enhancements
 	scrubberPlaceholderImageUrl?: string
 	scrubberFrameLoadStates?: boolean[]
@@ -48,6 +49,9 @@ interface IAnimatorProps {
 	// Simple overlay markers (percent positions inside the image content)
 	overlayMarkers?: { xPercent: number; yPercent: number }[]
 	onFrameUpdate?: (frameIndex: number) => void
+	// PDF functionality
+	pdfs?: string[]
+	pdfButtonClick?: (pdfUrl: string) => void
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -92,10 +96,11 @@ export const Animator = ({
 	fullScreen = false,
 	soundingsPicker = false,
 	soundingsPickerMode = false,
+	soundingsPickerDisabled = false,
 	setSoundingsPickerMode = (mode: boolean) => {
 		console.warn('setSoundingsPickerMode function not provided, soundings picker mode will not be updated.', mode)
 	},
-	onSoundingsClickthrough = (event: any) => {
+	onSoundingsClickthrough = (event: { xPercent: number; yPercent: number }) => {
 		console.warn('onSoundingsClickthrough function not provided, soundings click-through will not be handled.', event)
 	},
 	scrubberPlaceholderImageUrl,
@@ -119,6 +124,10 @@ export const Animator = ({
 	},
 	onFrameUpdate = (frameIndex: number) => {
 		console.warn('onFrameUpdate function not provided, frame update will not be handled.', frameIndex)
+	},
+	pdfs = [],
+	pdfButtonClick = (pdfUrl: string) => {
+		console.warn('pdfButtonClick function not provided, PDF button click will not be handled.', pdfUrl)
 	},
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
@@ -167,6 +176,7 @@ export const Animator = ({
 				setFullScreen,
 				soundingsPicker,
 				soundingsPickerMode,
+				soundingsPickerDisabled,
 				setSoundingsPickerMode,
 				onSoundingsClickthrough,
 				scrubberPlaceholderImageUrl,
@@ -174,6 +184,8 @@ export const Animator = ({
 				frameLabels,
 				displayAllLabels,
 				onFrameUpdate,
+				pdfs,
+				pdfButtonClick,
 			}}
 		>
 			<AnimatorLayout />
