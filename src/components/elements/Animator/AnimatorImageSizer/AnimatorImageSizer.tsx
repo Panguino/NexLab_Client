@@ -111,7 +111,7 @@ const AnimatorImageSizer = () => {
 			console.log('  ⛔ Blocked: Currently panning')
 			return
 		}
-		if (timeSincePanStop < 120) {
+		if (timeSincePanStop > 210) {
 			console.log('  ⛔ Blocked: Too soon after pan stop (', timeSincePanStop, 'ms )')
 			return
 		}

@@ -99,6 +99,7 @@ const ForecastAnimator: React.FC = () => {
 		console.log('  🔗 Full route:', route)
 
 		router.push(route)
+		setForecastSoundingsPickMode(false) // Deactivate soundings picker mode after navigation
 	}
 
 	// Add this handler function

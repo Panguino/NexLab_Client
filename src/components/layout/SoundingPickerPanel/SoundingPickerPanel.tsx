@@ -14,6 +14,7 @@ import styles from './SoundingPickerPanel.module.scss'
 const SoundingPickerPanel = () => {
 	const panelIsOpen = useRootStore.use.soundingPickerIsOpen()
 	const closePanel = useRootStore.use.closeSoundingPicker()
+	const setForecastSoundingsPickMode = useRootStore.use.setForecastSoundingsPickMode()
 	const frames = useRootStore.use.soundingPickerFrames()
 	const imageInfo = useRootStore.use.soundingPickerImageInfo()
 	const storeRunId = useRootStore.use.forecastSoundingRunId()
@@ -89,6 +90,7 @@ const SoundingPickerPanel = () => {
 		console.log('  🔗 Full route:', fullRoute)
 		router.push(fullRoute)
 		closePanel()
+		setForecastSoundingsPickMode(false) // Also deactivate soundings picker mode
 	}
 
 	console.log('currentMarker', currentMarker)
@@ -103,6 +105,7 @@ const SoundingPickerPanel = () => {
 							onClick={(e) => {
 								e.stopPropagation()
 								closePanel()
+								setForecastSoundingsPickMode(false) // Also deactivate soundings picker mode
 							}}
 						>
 							<FontAwesomeIcon icon={faClose} />
