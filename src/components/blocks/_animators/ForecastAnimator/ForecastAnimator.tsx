@@ -98,6 +98,11 @@ const ForecastAnimator: React.FC = () => {
 		const route = `${baseParams}${soundingParams}`
 		// console.log('  🔗 Full route:', route)
 
+		// Store current page as referrer for the sounding page
+		if (typeof window !== 'undefined') {
+			sessionStorage.setItem('forecastSoundingReferrer', window.location.pathname)
+		}
+
 		router.push(route)
 		setForecastSoundingsPickMode(false) // Deactivate soundings picker mode after navigation
 	}

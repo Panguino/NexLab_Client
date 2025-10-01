@@ -121,6 +121,12 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 			const baseParams = `/weather-data/forecast-models/${currentActiveRun}/${modelId}/${sectorId}/${levelId}/${productId}`
 			const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
 			const route = `${baseParams}${soundingParams}`
+
+			// Store current page as referrer for the sounding page
+			if (typeof window !== 'undefined') {
+				sessionStorage.setItem('forecastSoundingReferrer', window.location.pathname)
+			}
+
 			router.push(route)
 		},
 		[soundingsSupported, currentActiveRun, sectorId, modelId, levelId, productId, validTimeId, router],
