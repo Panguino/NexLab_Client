@@ -67,23 +67,29 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 	}, [currentActiveModel])
 
 	// Handle frame updates to track current active model
-	const handleFrameUpdate = useCallback((frameIndex: number) => {
-		setCurrentFrame(frameIndex)
-		// Update the frame valid time for sounding picker
-		setForecastFrameValidTime(parseInt(validTimeId as string))
-	}, [validTimeId, setForecastFrameValidTime])
+	const handleFrameUpdate = useCallback(
+		(frameIndex: number) => {
+			setCurrentFrame(frameIndex)
+			// Update the frame valid time for sounding picker
+			setForecastFrameValidTime(parseInt(validTimeId as string))
+		},
+		[validTimeId, setForecastFrameValidTime],
+	)
 
 	// Sounding clickthrough handler
-	const onSoundingsClickthrough = useCallback((event: { xPercent: number; yPercent: number }) => {
-		if (!currentActiveModel || !soundingsSupported) return
+	const onSoundingsClickthrough = useCallback(
+		(event: { xPercent: number; yPercent: number }) => {
+			if (!currentActiveModel || !soundingsSupported) return
 
-		const { xPercent, yPercent } = event
-		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
-		const baseParams = `/weather-data/forecast-models/${runId}/${currentActiveModel}/${sectorId}/${levelId}/${productId}`
-		const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
-		const route = `${baseParams}${soundingParams}`
-		router.push(route)
-	}, [currentActiveModel, soundingsSupported, sectorId, runId, levelId, productId, validTimeId, router])
+			const { xPercent, yPercent } = event
+			const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+			const baseParams = `/weather-data/forecast-models/${runId}/${currentActiveModel}/${sectorId}/${levelId}/${productId}`
+			const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
+			const route = `${baseParams}${soundingParams}`
+			router.push(route)
+		},
+		[currentActiveModel, soundingsSupported, sectorId, runId, levelId, productId, validTimeId, router],
+	)
 
 	const getData = useCallback(async () => {
 		console.log('ForecastCompareModelsAnimator: Fetching data', runId, sectorId, levelId, productId, validTimeId, runFlag)
@@ -102,7 +108,6 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 	useEffect(() => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, runFlag, getData])
-
 
 	// Update sounding picker mode based on current model support
 	useEffect(() => {
@@ -139,7 +144,14 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 			setIsLoadingReadoutData(true)
 			frameDataTimeoutRef.current = setTimeout(async () => {
 				try {
-					const data = await getFrameReadoutData(modelForFrame as string, runId as string, sectorId as string, levelId as string, productId as string, validTimeId as string)
+					const data = await getFrameReadoutData(
+						modelForFrame as string,
+						runId as string,
+						sectorId as string,
+						levelId as string,
+						productId as string,
+						validTimeId as string,
+					)
 					const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
 					setFrameReadoutData(readoutDataObj)
 				} catch (error) {
@@ -150,7 +162,7 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 				}
 			}, 1000)
 		},
-		[runId, sectorId, levelId, productId, validTimeId, forecastModels]
+		[runId, sectorId, levelId, productId, validTimeId, forecastModels],
 	)
 
 	return (

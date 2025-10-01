@@ -45,6 +45,8 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	const [forecastRuns, setForecastRuns] = useState<string[]>([])
 	const [startFrame, setStartFrame] = useState(0)
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
+	// Track current frame index (active run)
+	const [currentFrame, setCurrentFrame] = useState(0)
 
 	// Readout state (mirrors ForecastCompareHeightAnimator behavior)
 	const [frameReadoutData, setFrameReadoutData] = useState<any>(null)
@@ -70,7 +72,9 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 			const currentRun = data.runs[data.runs.length - 1]
 			router.push(`/weather-data/forecast-models/${currentRun}/${modelId}/${sectorId}/${levelId}/${productId}/compare-runs/${validTimeId}`)
 		}
-		setStartFrame(data.runs.indexOf(runId as string) || 0)
+		const initialFrame = Math.max(0, data.runs.indexOf(runId as string))
+		setStartFrame(initialFrame)
+		setCurrentFrame(initialFrame)
 		setForecastRuns(data.runs || [])
 		setImageInfo(data.imageInfo)
 		setForecastData(data.frames)
@@ -79,7 +83,6 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	useEffect(() => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, getData])
-
 
 	const formatRunTimeLabel = (ts: string | number, model: string) => {
 		// expect YYYYMMDDHH as string or number
@@ -97,17 +100,31 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 		return (forecastRuns || []).map((run) => formatRunTimeLabel(run, modelId as string))
 	}, [forecastRuns, modelId])
 
-	// Sounding clickthrough handler
-	const onSoundingsClickthrough = useCallback((event: { xPercent: number; yPercent: number }) => {
-		if (!soundingsSupported) return
+	// Current active run derived from frame index
+	const currentActiveRun = useMemo(() => {
+		if (!forecastRuns.length || currentFrame >= forecastRuns.length) return null
+		return forecastRuns[currentFrame]
+	}, [forecastRuns, currentFrame])
 
-		const { xPercent, yPercent } = event
-		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
-		const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
-		const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
-		const route = `${baseParams}${soundingParams}`
-		router.push(route)
-	}, [soundingsSupported, sectorId, runId, modelId, levelId, productId, validTimeId, router])
+	// Handle frame updates to track current active run
+	const handleFrameUpdate = useCallback((frameIndex: number) => {
+		setCurrentFrame(frameIndex)
+	}, [])
+
+	// Sounding clickthrough handler
+	const onSoundingsClickthrough = useCallback(
+		(event: { xPercent: number; yPercent: number }) => {
+			if (!soundingsSupported || !currentActiveRun) return
+
+			const { xPercent, yPercent } = event
+			const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+			const baseParams = `/weather-data/forecast-models/${currentActiveRun}/${modelId}/${sectorId}/${levelId}/${productId}`
+			const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
+			const route = `${baseParams}${soundingParams}`
+			router.push(route)
+		},
+		[soundingsSupported, currentActiveRun, sectorId, modelId, levelId, productId, validTimeId, router],
+	)
 
 	// Request readout data for the given frame (run). Debounced like main viewer.
 	const handleReadoutDataRequest = useCallback(
@@ -137,7 +154,14 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 			setIsLoadingReadoutData(true)
 			frameDataTimeoutRef.current = setTimeout(async () => {
 				try {
-					const data = await getFrameReadoutData(modelId as string, runForFrame as string, sectorId as string, levelId as string, productId as string, validTimeId as string)
+					const data = await getFrameReadoutData(
+						modelId as string,
+						runForFrame as string,
+						sectorId as string,
+						levelId as string,
+						productId as string,
+						validTimeId as string,
+					)
 					const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
 					setFrameReadoutData(readoutDataObj)
 				} catch (error) {
@@ -148,7 +172,7 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 				}
 			}, 1000)
 		},
-		[modelId, sectorId, levelId, productId, validTimeId, forecastRuns]
+		[modelId, sectorId, levelId, productId, validTimeId, forecastRuns],
 	)
 
 	return (
@@ -160,6 +184,7 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 						frameLabels={transformedRuns}
 						startFrame={startFrame}
 						imageInfo={imageInfo}
+						onFrameUpdate={handleFrameUpdate}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}
 						zoomFill={globalZoomFill}
