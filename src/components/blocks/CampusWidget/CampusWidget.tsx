@@ -43,7 +43,7 @@ export const CampusWidget = ({ campusDetails, weatherData }) => {
 				))}
 			</div>
 			<div className={styles.buttonContainer}>
-				<a href={`/campus-weather/${campusDetails.documentId}`} target="_self">
+				<a href={`/weather-data/campus-weather/${campusDetails.documentId}`} target="_self">
 					More Details
 				</a>
 			</div>
