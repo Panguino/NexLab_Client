@@ -13,6 +13,7 @@ import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigationOrigin } from '@/hooks/useNavigationOrigin'
 import ForecastCompareHeightAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareHeightAnimatorSettings/ForecastCompareHeightAnimatorSettings'
 import styles from './ForecastCompareHeightAnimator.module.scss'
 
@@ -27,6 +28,9 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 
 	const router = useRouter()
 	const pathname = usePathname()
+
+	// Track navigation origin for sounding navigation
+	useNavigationOrigin()
 	const {
 		fcstModel: modelId,
 		fcstRun: runId,

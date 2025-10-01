@@ -11,12 +11,16 @@ import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigationOrigin } from '@/hooks/useNavigationOrigin'
 import ForecastCompareRunsAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareRunsAnimatorSettings/ForecastCompareRunsAnimatorSettings'
 import styles from './ForecastCompareRunsAnimator.module.scss'
 
 const ForecastCompareRunsAnimator: React.FC = () => {
 	// Initialize zoom fill from localStorage on client side
 	useZoomFillHydration()
+
+	// Track navigation origin for sounding navigation
+	useNavigationOrigin()
 
 	const router = useRouter()
 	const {

@@ -13,6 +13,7 @@ import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigationOrigin } from '@/hooks/useNavigationOrigin'
 import ForecastAnimatorSettings from '../../_animatorSettingPanels/ForecastAnimatorSettings/ForecastAnimatorSettings'
 import styles from './ForecastAnimator.module.scss'
 
@@ -28,6 +29,9 @@ const ForecastAnimator: React.FC = () => {
 	const router = useRouter()
 	const pathname = usePathname()
 	const { fcstModel: modelId, fcstRun: runId, fcstSector: sectorId, fcstLevel: levelId, fcstProduct: productId } = useParams()
+
+	// Track navigation origin for sounding navigation
+	useNavigationOrigin()
 	const setForecastSoundingRunId = useRootStore.use.setForecastSoundingRunId()
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()

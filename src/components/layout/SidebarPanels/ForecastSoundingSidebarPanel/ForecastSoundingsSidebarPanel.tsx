@@ -3,7 +3,7 @@
 import { Button } from '@/components/elements/Button/Button'
 import Input from '@/components/elements/Input/Input'
 import Select from '@/components/elements/Select/Select'
-import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
+import { ContextualBackButton } from '@/components/elements/ContextualBackButton/ContextualBackButton'
 import { faFileLines, faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -20,6 +20,7 @@ import { buildProductsByLevel, fetchStationCoordinates } from '@/util/forecast/c
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+import { useNavigationOrigin } from '@/hooks/useNavigationOrigin'
 
 import { SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
 import ScrollArea from '../../ScrollArea/ScrollArea'
@@ -38,6 +39,9 @@ const ForecastSoundingsSidebarPanel = () => {
 		fcstSndWeather: weatherId,
 	} = useParams()
 	const router = useRouter()
+
+	// Track navigation origin for contextual back button
+	useNavigationOrigin()
 	// sounding location prep
 	const locationId = tempLocId ? decodeURIComponent(tempLocId as string) : null // removes encoding from URL, specifically commas
 	const isStationId = locationId?.length === 4 && !locationId?.includes(',')
@@ -198,7 +202,10 @@ const ForecastSoundingsSidebarPanel = () => {
 	return (
 		<ScrollArea>
 			<div className={styles.ForecastSoundingsSidebarPanel}>
-				<SidebarSectionHeader name="Return to Forecast Models" linkUrl={returnLink} />
+				<ContextualBackButton
+					fallbackUrl={returnLink}
+					fallbackLabel="Forecast Models"
+				/>
 				<div className={styles.options}>
 					<label>Model:</label>
 					<Select

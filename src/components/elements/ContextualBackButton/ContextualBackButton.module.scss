@@ -1,0 +1,117 @@
+@import '/src/styles/vars';
+
+.ContextualBackButton {
+  background: #000;
+  width: 100%;
+  
+  .backButton {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-family: var(--font-primary);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 13px;
+    padding: 12px 30px;
+    color: #c9c9c9;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.25s ease;
+    text-align: left;
+    
+    &:hover:not(:disabled) {
+      color: #fff;
+      text-decoration: none;
+      
+      .backIcon path {
+        fill: #fff;
+      }
+    }
+    
+    &:focus {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      
+      &:hover {
+        color: #c9c9c9;
+        
+        .backIcon path {
+          fill: #c9c9c9;
+        }
+      }
+    }
+  }
+  
+  .backIcon {
+    position: absolute;
+    left: 12px;
+    top: 13px;
+    transform: rotate(180deg);
+    transform-origin: 50% 50%;
+    flex-shrink: 0;
+    
+    path {
+      transition: fill 0.25s ease;
+      fill: #c9c9c9;
+    }
+  }
+  
+  .buttonText {
+    flex: 1;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .ContextualBackButton {
+    .backButton {
+      color: #c9c9c9;
+      
+      &:hover:not(:disabled) {
+        color: #fff;
+      }
+      
+      &:disabled {
+        color: #666;
+      }
+    }
+    
+    .backIcon path {
+      fill: #c9c9c9;
+    }
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .ContextualBackButton {
+    .backButton {
+      border: 1px solid currentColor;
+      
+      &:focus {
+        outline: 3px solid var(--color-primary);
+      }
+    }
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .ContextualBackButton {
+    .backButton {
+      transition: none;
+    }
+    
+    .backIcon path {
+      transition: none;
+    }
+  }
+}

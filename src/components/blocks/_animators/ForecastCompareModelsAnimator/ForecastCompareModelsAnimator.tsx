@@ -11,6 +11,7 @@ import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigationOrigin } from '@/hooks/useNavigationOrigin'
 import ForecastCompareModelsAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareModelsAnimatorSettings/ForecastCompareModelsAnimatorSettings'
 import styles from './ForecastCompareModelsAnimator.module.scss'
 
@@ -19,6 +20,9 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 	useZoomFillHydration()
 
 	const router = useRouter()
+
+	// Track navigation origin for sounding navigation
+	useNavigationOrigin()
 	const {
 		fcstModel: modelId,
 		fcstRun: runId,
