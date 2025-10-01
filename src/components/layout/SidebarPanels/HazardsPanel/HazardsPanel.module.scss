@@ -1,0 +1,39 @@
+.regionSelector {
+  padding: 10px 0 0;
+}
+.HazardsPanel {
+  position: relative;
+  display: grid;
+  grid-template-columns: [title] 32% [statment] 17% [watch] 17% [advisory] 17% [warning] 17% [end];
+  grid-template-rows: 100px auto;
+}
+.gridItem {
+  font-size: 14px;
+  position: relative;
+  cursor: pointer;
+}
+.rotatedTitle {
+  transform: translateX(17px) rotate(-65deg);
+  position: absolute;
+  width: 85px;
+  transform-origin: 0 50%;
+  bottom: 0;
+  left: 0;
+  cursor: pointer;
+  font-size: 13px;
+  text-transform: uppercase;
+  color: var(--color-grey3);
+}
+.rowTitle {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--color-grey3);
+}
+.bigRow {
+  height: 130px;
+}

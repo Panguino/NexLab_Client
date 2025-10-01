@@ -1,0 +1,52 @@
+'use client'
+
+import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/SidebarSectionLink'
+import { usePathname } from 'next/navigation' // Import useRouter for path detection
+import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
+import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
+
+import IsentropicPanel from '../IsentropicPanel/IsentropicPanel'
+import RAPMesoPanel from '../RAPMesoPanel/RAPMesoPanel'
+import SoundingsPanel from '../SoundingsPanel/SoundingsPanel'
+import SurfaceMapsPanel from '../SurfaceMapsPanel/SurfaceMapsPanel'
+import UpperAirPanel from '../UpperAirPanel/UpperAirPanel'
+import styles from './AnalysisSidebarPanels.module.scss'
+
+const AnalysisSidebarPanels = () => {
+	const currentPath = usePathname()
+	const basepath = '/weather-data/analysis'
+
+	// Helper function to check if a panel is active
+	const isActive = (path: string) => currentPath === path || currentPath.startsWith(path)
+
+	return (
+		<div className={styles.AnalysisSidebarPanels}>
+			<SidebarSubPanel matchesPath={basepath} activeX="0%" inactiveX="-100%">
+				<SidebarPanelPad>
+					<SidebarSectionLink name="Surface Maps" linkUrl={`${basepath}/surface-maps`} />
+					<SidebarSectionLink name="Upper Air maps" linkUrl={`${basepath}/upper-air`} />
+					<SidebarSectionLink name="Soundings" linkUrl={`${basepath}/soundings`} />
+					<SidebarSectionLink name="RAP Mesoanalysis" linkUrl={`${basepath}/RAP-mesoanalysis`} />
+					<SidebarSectionLink name="Isentropic Analysis" linkUrl={`${basepath}/isentropic-maps`} />
+				</SidebarPanelPad>
+			</SidebarSubPanel>
+			<SidebarSubPanel includesPath={`${basepath}/surface-maps`} activeX="0%" inactiveX="100%">
+				<SurfaceMapsPanel basepath={basepath} isActive={isActive(`${basepath}/surface-maps`)} />
+			</SidebarSubPanel>
+			<SidebarSubPanel includesPath={`${basepath}/upper-air`} activeX="0%" inactiveX="100%">
+				<UpperAirPanel basepath={basepath} isActive={isActive(`${basepath}/upper-air`)} />
+			</SidebarSubPanel>
+			<SidebarSubPanel includesPath={`${basepath}/soundings`} activeX="0%" inactiveX="100%">
+				<SoundingsPanel basepath={basepath} isActive={isActive(`${basepath}/soundings`)} />
+			</SidebarSubPanel>
+			<SidebarSubPanel includesPath={`${basepath}/RAP-mesoanalysis`} activeX="0%" inactiveX="100%">
+				<RAPMesoPanel basepath={basepath} isActive={isActive(`${basepath}/RAP-mesoanalysis`)} />
+			</SidebarSubPanel>
+			<SidebarSubPanel includesPath={`${basepath}/isentropic-maps`} activeX="0%" inactiveX="100%">
+				<IsentropicPanel basepath={basepath} isActive={isActive(`${basepath}/isentropic-maps`)} />
+			</SidebarSubPanel>
+		</div>
+	)
+}
+
+export default AnalysisSidebarPanels

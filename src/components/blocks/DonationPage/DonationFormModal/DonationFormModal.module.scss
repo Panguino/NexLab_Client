@@ -1,0 +1,289 @@
+// Hide modal overlay and content when not open
+.hidden {
+	display: none !important;
+}
+@import '/src/styles/vars';
+
+.modalOverlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.75);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+	padding: 20px;
+	backdrop-filter: blur(4px);
+}
+
+.modalContent {
+	background-color: var(--color-white-grey19);
+	border-radius: 16px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+	max-width: 800px;
+	width: 100%;
+	max-height: 90vh;
+	overflow: hidden;
+	position: relative;
+	transition: all var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		max-width: 95vw;
+		max-height: 95vh;
+		border-radius: 12px;
+	}
+}
+
+.modalHeader {
+	padding: 24px 32px;
+	border-bottom: 1px solid var(--color-grey3-grey15);
+	background-color: var(--color-grey1-grey18);
+	position: relative;
+	transition: all var(--themeChange);
+
+	h2 {
+		color: var(--color-grey20-grey0);
+		font-size: 24px;
+		font-weight: 700;
+		margin: 0 0 8px 0;
+		transition: color var(--themeChange);
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 20px;
+		}
+	}
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 20px 24px;
+	}
+}
+
+.tierInfo,
+.amountInfo {
+	color: var(--color-grey16-grey4);
+	font-size: 14px;
+	margin: 4px 0 0 0;
+	transition: color var(--themeChange);
+
+	strong {
+		color: var(--color-blue3-blue4);
+		font-weight: 600;
+	}
+}
+
+.closeButton {
+	position: absolute;
+	top: 24px;
+	right: 32px;
+	background: none;
+	border: none;
+	color: var(--color-grey14-grey6);
+	font-size: 20px;
+	cursor: pointer;
+	padding: 8px;
+	border-radius: 8px;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background-color: var(--color-grey3-grey15);
+		color: var(--color-grey18-grey2);
+	}
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		top: 20px;
+		right: 24px;
+		font-size: 18px;
+	}
+}
+
+.modalBody {
+	padding: 32px;
+	max-height: calc(90vh - 120px);
+	overflow-y: auto;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 24px;
+		max-height: calc(95vh - 100px);
+	}
+}
+
+.formContainer {
+	min-height: 400px;
+	:global {
+		.BBFormSection.BBDFormSectionGiftInfo {
+			display: none;
+		}
+		.BBFormSectionRecurrenceInfo {
+			display: none;
+		}
+		#bboxdonation_gift_txtAmountGift {
+			color: black;
+			background: white;
+			border: 1px solid var(--color-grey3-grey15);
+		}
+		#bboxdonation_BBEmbeddedForm {
+			padding: 0;
+			margin: 0;
+		}
+		.BBFormSectionHeading {
+			padding: 0 !important;
+			margin: 0;
+		}
+		.BBFormFieldContainer {
+			padding: 0 0 0 10px !important;
+			margin: 0 !important;
+			label,
+			span {
+				font-family: var(--font-primary);
+				color: var(--color-grey17-grey4);
+			}
+			input {
+				font-family: var(--font-primary) !important;
+				color: var(--color-grey20-grey0) !important;
+				border: 1px solid var(--color-grey3-grey15) !important;
+				background: transparent !important;
+				border-radius: 5px;
+				padding: 10px;
+				font-size: 16px;
+				line-height: 24px;
+				transition: border-color var(--themeChange);
+				box-shadow: none !important;
+				&:focus {
+					border-color: var(--color-blue3-blue4) !important;
+					outline: none;
+				}
+			}
+			textarea {
+				font-family: var(--font-primary) !important;
+				color: var(--color-grey20-grey0) !important;
+				border: 1px solid var(--color-grey3-grey15) !important;
+				background: transparent !important;
+				border-radius: 5px;
+				padding: 10px !important;
+				font-size: 16px;
+				line-height: 24px;
+				transition: border-color var(--themeChange);
+				box-shadow: none !important;
+				resize: vertical;
+				min-height: 80px;
+				&:focus {
+					border-color: var(--color-blue3-blue4) !important;
+					outline: none;
+				}
+			}
+			select {
+				font-family: var(--font-primary) !important;
+				color: var(--color-grey20-grey0) !important;
+				border: 1px solid var(--color-grey3-grey15) !important;
+				background: transparent !important;
+				border-radius: 5px;
+				padding: 10px 40px 10px 10px !important;
+				font-size: 16px;
+				line-height: 24px;
+				height: 44px;
+				min-height: 44px;
+				transition: border-color var(--themeChange);
+				box-shadow: none !important;
+				appearance: none;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 6L8 10L12 6' stroke='%23677' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+				background-repeat: no-repeat;
+				background-position: right 12px center;
+				background-size: 20px 20px;
+				&:focus {
+					border-color: var(--color-blue3-blue4) !important;
+					outline: none;
+				}
+				option {
+					font-family: var(--font-primary) !important;
+					color: var(--color-grey20-grey0) !important;
+					background: var(--color-white-grey19) !important;
+				}
+			}
+			input[type='checkbox'] {
+				width: 18px;
+				height: 18px;
+				border-radius: 4px !important;
+				border: 1px solid var(--color-grey3-grey15) !important;
+				background-color: transparent !important;
+				box-shadow: none !important;
+				accent-color: var(--color-blue3-blue4);
+				margin-right: 8px;
+				vertical-align: middle;
+				&:focus {
+					border-color: var(--color-blue3-blue4) !important;
+					outline: none;
+				}
+			}
+		}
+		#bboxdonation_billing_divBillingHeader {
+			border: none;
+			font-family: var(--font-primary);
+			color: var(--color-grey20-grey0);
+			font-size: 20px;
+		}
+		#bboxdonation_billing_fldAnonymous {
+			padding-top: 15px !important;
+		}
+		#bboxdonation_btnSecurePayment {
+			position: relative;
+			background: var(--color-blue3) !important;
+			border-radius: 5px;
+			padding: 16px 35px;
+			font-size: 16px;
+			line-height: 15px;
+			font-weight: 700;
+			color: var(--color-white) !important;
+			transition: var(--themeChange);
+			cursor: pointer;
+			box-shadow: none;
+			&:hover {
+				background: var(--color-blue5) !important;
+				color: var(--color-white) !important;
+			}
+		}
+		.BBFormConfirmationTransactionDetails {
+			font-family: var(--font-primary);
+			color: var(--color-grey15-grey6);
+			strong {
+				color: var(--color-grey17-grey4);
+			}
+		}
+	}
+}
+
+.loginPrompt {
+	text-align: center;
+	padding: 40px 20px;
+
+	p {
+		font-size: 16px;
+		color: var(--color-grey14-grey6);
+		line-height: 1.5;
+		margin-bottom: 32px;
+		max-width: 400px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+
+.loginActions {
+	display: flex;
+	gap: 16px;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.secondaryButton {
+	background-color: transparent !important;
+	border: 2px solid var(--color-grey6-grey12) !important;
+	color: var(--color-grey14-grey6) !important;
+
+	&:hover {
+		background-color: var(--color-grey2-grey16) !important;
+	}
+}

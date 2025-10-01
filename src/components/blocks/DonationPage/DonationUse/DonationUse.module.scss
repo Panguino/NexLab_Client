@@ -1,0 +1,124 @@
+@import '/src/styles/vars';
+
+.donationUse {
+	padding: 80px 0;
+	background-color: var(--color-grey1-grey20);
+	transition: background-color var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 60px 0;
+	}
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 0 20px;
+}
+
+.header {
+	text-align: center;
+	margin-bottom: 60px;
+
+	h2 {
+		color: var(--color-grey20-grey0);
+		font-weight: 700;
+		margin: 0 0 24px 0;
+		transition: color var(--themeChange);
+		font-family: var(--font-secondary);
+		font-size: 50px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: 120%;
+
+		@media (max-width: $mobile-menu-breakpoint) {
+			font-size: 28px;
+		}
+	}
+
+	p {
+		color: var(--color-grey16-grey5);
+		font-size: 16px;
+		line-height: 1.6;
+		max-width: 800px;
+		margin: 0 auto;
+		transition: color var(--themeChange);
+	}
+}
+
+.useCaseGrid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 32px;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+}
+
+.useCasePanel {
+	background-color: var(--color-white-grey19);
+	border-radius: 16px;
+	padding: 40px 32px;
+	text-align: center;
+	border: 1px solid var(--color-grey3-grey15);
+	transition: all var(--themeChange);
+	position: relative;
+	overflow: hidden;
+
+	&:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+		border-color: var(--color-blue3-blue4);
+	}
+
+	@media (max-width: 480px) {
+		padding: 32px 24px;
+	}
+}
+
+.panelIcon {
+	width: 64px;
+	height: 64px;
+	border: 1px solid var(--color-grey20-white);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 auto 24px auto;
+	color: var(--color-grey20-white);
+	font-size: 24px;
+
+	@media (max-width: 480px) {
+		width: 56px;
+		height: 56px;
+		font-size: 20px;
+		margin-bottom: 20px;
+	}
+}
+
+.useCasePanel {
+	h4 {
+		color: var(--color-grey20-grey0);
+		margin: 0 0 16px 0;
+		font-size: 24px;
+		font-style: normal;
+		font-weight: 600;
+		line-height: 120%;
+		transition: color var(--themeChange);
+		font-family: var(--font-primary);
+
+		@media (max-width: 480px) {
+			font-size: 18px;
+		}
+	}
+
+	p {
+		color: var(--color-grey16-grey5);
+		font-size: 14px;
+		line-height: 1.6;
+		margin: 0;
+		transition: color var(--themeChange);
+	}
+}

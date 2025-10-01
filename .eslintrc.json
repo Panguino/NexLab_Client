@@ -1,0 +1,47 @@
+{
+	"extends": ["./node_modules/gts/"],
+	"plugins": ["react", "react-hooks"],
+	"rules": {
+		"react-hooks/rules-of-hooks": "error",
+		"react-hooks/exhaustive-deps": "error",
+		"@typescript-eslint/no-explicit-any": "off"
+	},
+	"overrides": [
+		{
+			"files": ["src/**/*.test.*", "src/**/*.stories.*", "src/**/*.mdx"],
+			"rules": {
+				"node/no-unpublished-import": ["off"],
+				"@typescript-eslint/no-unused-vars": [
+					"error",
+					{
+						"argsIgnorePattern": "^_",
+						"varsIgnorePattern": "^_",
+						"caughtErrorsIgnorePattern": "^_"
+					}
+				],
+				"prettier/prettier": [
+					"error",
+					{
+						"endOfLine": "auto"
+					}
+				]
+			}
+		},
+		{
+			"files": "*.mdx",
+			"extends": "plugin:mdx/recommended",
+			"rules": {
+				"node/no-unsupported-features/es-syntax": "off",
+				"no-unused-vars": "off"
+			},
+			"settings": {
+				"mdx/code-blocks": true,
+				"mdx/language-mapper": {}
+			}
+		}
+	],
+	"parserOptions": {
+		"sourceType": "module"
+	},
+	"ignorePatterns": ["src/gql/generated/*", "codegen.ts", "codegen-strapi.ts"]
+}

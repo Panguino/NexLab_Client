@@ -1,0 +1,49 @@
+.imageControls {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  button {
+    position: relative;
+    border-radius: 4px;
+    display: block;
+    background-color: var(--color-grey17);
+    outline: none;
+    border: none;
+    padding: 4px;
+    width: 30px;
+    font-size: 15px;
+    text-align: center;
+    height: 30px;
+    color: var(--color-grey5);
+    transition: var(--themeChange);
+    cursor: pointer;
+    &:hover {
+      color: var(--color-white);
+    }
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      &:hover {
+        color: var(--color-grey5);
+      }
+      svg {
+        * {
+          fill: var(--color-grey8) !important;
+        }
+      }
+    }
+    svg {
+      * {
+        fill: var(--color-grey5);
+      }
+      &.active {
+        * {
+          fill: var(--color-blue4);
+        }
+      }
+    }
+  }
+}

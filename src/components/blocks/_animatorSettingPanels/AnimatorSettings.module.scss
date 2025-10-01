@@ -1,0 +1,30 @@
+.animatorSettings {
+  position: relative;
+  p {
+    margin: 0;
+    padding: 12px 0 6px;
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: 500;
+    color: var(--color-grey1);
+  }
+}
+.group {
+  padding-left: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  b {
+    display: block;
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: 400;
+    background-color: var(--color-grey20);
+    padding: 4px 7px;
+    white-space: nowrap;
+    border-radius: 4px;
+  }
+}
+.padding {
+  padding: 10px 0 10px 15px;
+}

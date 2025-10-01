@@ -1,0 +1,25 @@
+.imageBlock {
+  padding: 24px 0;
+}
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+.imageBlock img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* optional size variants if CMS provides */
+.imageBlock.small img {
+  max-width: 560px;
+  margin: 0 auto;
+}
+.imageBlock.medium img {
+  max-width: 860px;
+  margin: 0 auto;
+}
+/* end */

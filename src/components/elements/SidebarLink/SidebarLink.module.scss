@@ -1,0 +1,58 @@
+.SidebarLink {
+  display: flex;
+  a,
+  span {
+    display: block;
+    font-family: var(--font-primary);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 13px;
+    padding: 6px 0;
+    color: var(--color-grey5);
+    text-decoration: none;
+    transition: color 0.25s ease;
+    &:hover {
+      color: var(--color-white);
+      text-decoration: none;
+    }
+  }
+  &.active {
+    a,
+    span {
+      color: var(--color-blue4);
+      pointer-events: none;
+      cursor: default;
+      &:hover {
+        color: var(--color-blue4);
+        text-decoration: none;
+      }
+    }
+  }
+  &.limited {
+    a,
+    span {
+      color: var(--color-steel8);
+    }
+  }
+  .infoIconBtn {
+    background: transparent;
+    border: none;
+    outline: none;
+    display: inline-block;
+    cursor: pointer;
+    svg {
+      path {
+        fill: var(--color-grey9-grey11);
+        transition: fill 0.25s ease;
+      }
+    }
+    &:hover {
+      svg {
+        path {
+          fill: var(--color-white);
+        }
+      }
+    }
+  }
+}

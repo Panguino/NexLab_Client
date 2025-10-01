@@ -1,0 +1,99 @@
+.wrapper {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	&:has(.title) {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+}
+.title {
+	width: 30%;
+	flex-shrink: 0;
+	font-size: 14px;
+}
+.value {
+	color: var(--color-grey4-grey3);
+	transition: color var(--themeChange);
+	font-size: 16px;
+	height: 35px;
+	width: 100%;
+	padding: 16px;
+	display: flex;
+	align-content: center;
+	flex-direction: column;
+	justify-content: center;
+}
+.options {
+	width: 100%;
+	background-color: transparent;
+	max-height: 500px; /* allow the sidebar to scroll the panel if needed */
+	overflow: auto;
+
+	.option {
+		font-family: monospace;
+		transition: all 0.12s ease-out;
+		font-size: 12px;
+		color: var(--color-grey3);
+		border: 1px solid var(--color-grey15);
+		background-color: var(--color-grey18);
+		border-radius: 4px;
+
+		&:hover {
+			background-color: var(--color-blue3);
+			color: var(--color-white);
+		}
+	}
+
+	/* selected state styling */
+	.option.selected,
+	.option[aria-selected='true'] {
+		background-color: var(--color-blue3);
+		color: var(--color-white);
+	}
+}
+.grid {
+	display: grid;
+	gap: 6px;
+	align-items: center;
+	justify-items: stretch;
+
+	&.rows-4 {
+		grid-template-columns: repeat(4, 1fr);
+	}
+	&.rows-6 {
+		grid-template-columns: repeat(6, 1fr);
+	}
+
+	> .option {
+		padding: 8px 6px;
+		text-align: center;
+		border-radius: 4px;
+	}
+}
+.group {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 6px 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+.groupTitle {
+	font-size: 12px;
+	color: var(--color-grey6);
+	padding: 2px 0;
+}
+.arrow {
+	color: var(--color-grey10);
+	position: static;
+	margin-left: auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	svg {
+		display: block;
+	}
+}
+/* layout note: panel renders options inline; nav and dropdown styles removed */

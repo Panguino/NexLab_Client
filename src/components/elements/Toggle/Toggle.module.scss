@@ -1,0 +1,32 @@
+.toggle {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  padding: 4px;
+  min-width: 40px;
+  border-radius: 30px;
+  background-color: var(--color-grey4-grey17);
+  transition: all 0.2s ease-out;
+  font-size: 14px;
+  line-height: 4px;
+  &.active {
+    background-color: var(--color-blue3);
+  }
+}
+.circle {
+  position: relative;
+  display: inline-block;
+  border-radius: 30px;
+  height: 14px;
+  width: 14px;
+  left: 0px;
+  background-color: var(--color-white);
+  transition: all 0.2s ease-out;
+  font-size: 14px;
+  line-height: 4px;
+
+  &.active {
+    background-color: var(--color-white);
+    left: 18px;
+  }
+}

@@ -1,0 +1,27 @@
+.faqs {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 0 50px;
+
+  > div:first-child {
+    width: 40%;
+  }
+  > div:last-child {
+    width: 55%;
+  }
+  @media screen and (max-width: 1000px) {
+    flex-direction: column;
+    > div:first-child {
+      width: 100%;
+    }
+    > div:last-child {
+      width: 100%;
+    }
+  }
+}
+.answer {
+  padding: 0 12px;
+}

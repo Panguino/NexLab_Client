@@ -1,0 +1,88 @@
+@import '/src/styles/vars';
+
+.howFundsUsed {
+    padding: 80px 0;
+    background: linear-gradient(135deg, var(--color-grey1-grey18) 0%, var(--color-white-grey19) 100%);
+    color: var(--color-grey20-grey0);
+    transition:
+        background-color var(--themeChange),
+        color var(--themeChange);
+
+    h2 {
+        text-align: center;
+        font-size: 42px;
+        font-weight: 600;
+        margin: 0 0 24px 0;
+        color: var(--color-blue6-white);
+        transition: color var(--themeChange);
+    }
+
+    > div > p {
+        text-align: center;
+        font-size: 18px;
+        line-height: 1.7;
+        color: var(--color-grey16-grey4);
+        max-width: 800px;
+        margin: 0 auto 48px auto;
+        transition: color var(--themeChange);
+    }
+
+    ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 24px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+            background: var(--color-white-grey17);
+            border: 1px solid var(--color-grey3-grey16);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                background-color var(--themeChange),
+                border-color var(--themeChange);
+            position: relative;
+            padding-left: 56px;
+            color: var(--color-grey16-grey4);
+            line-height: 1.6;
+            margin-bottom: 0;
+
+            &:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            }
+
+            &:before {
+                content: '';
+                position: absolute;
+                left: 24px;
+                top: 32px;
+                width: 8px;
+                height: 8px;
+                background: var(--color-blue5-blue4);
+                border-radius: 50%;
+                transition: background-color var(--themeChange);
+            }
+
+            strong {
+                display: block;
+                color: var(--color-blue6-white);
+                font-size: 18px;
+                font-weight: 600;
+                margin-bottom: 12px;
+                transition: color var(--themeChange);
+            }
+        }
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}

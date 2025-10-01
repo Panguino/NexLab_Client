@@ -1,0 +1,83 @@
+@import "/src/styles/vars";
+
+.HazardsMap {
+  background: #33404d;
+  position: relative;
+  flex-grow: 1;
+  overflow: hidden;
+}
+.svgMap {
+  background-color: var(--color-blue1-blue2);
+  path {
+    transition: var(--themeChange);
+  }
+}
+.mapGroup {
+  position: relative;
+}
+.hazardCounty {
+  transition: fill 0.3s;
+  cursor: pointer;
+  stroke: var(--color-grey18-grey15);
+  stroke-width: 0.2;
+  &:hover {
+    stroke: #fff;
+    stroke-width: 1;
+  }
+  &.activeCounty {
+    stroke: #fff;
+    stroke-width: 1;
+  }
+}
+.otherregions {
+  fill: var(--color-grey2-grey16);
+  stroke: var(--color-white-grey18);
+  stroke-width: 0.3;
+}
+.latlong {
+  stroke: var(--color-grey12-grey8);
+  fill: none;
+  stroke-width: 0.3;
+  stroke-dasharray: 5;
+}
+.usabg {
+  fill: var(--color-white-grey13);
+  //fill: transparent;
+  stroke: none;
+  stroke-width: 0.2;
+}
+.usafg {
+  fill: none;
+  stroke: var(--color-grey6-grey18);
+  stroke-width: 0.2;
+}
+.oceanregions {
+  fill: none;
+  stroke: var(--color-white-grey7);
+  stroke-width: 0.2;
+}
+.fullScreenButton {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 100;
+  background: var(--color-blue1-blue2);
+  color: var(--color-white-grey4);
+  padding: 5px;
+  font-size: 22px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  &:hover {
+    color: var(--color-blue3-white);
+    border-color: var(--color-blue3-white);
+  }
+  svg {
+    display: block;
+    transform: rotate(90deg);
+  }
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    display: none;
+  }
+}

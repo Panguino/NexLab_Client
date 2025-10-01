@@ -1,0 +1,71 @@
+@import "/src/styles/vars";
+
+.header {
+  width: 100%;
+  max-width: 600px;
+  padding: 13px 20px;
+  margin: 3px 0;
+  transition: background-color var(--themeChange);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background-color: var(--color-grey1-grey13);
+  position: relative;
+
+  @media (max-width: $mobile-menu-breakpoint) {
+    font-size: 14px;
+    line-height: 14px;
+    padding: 10px 20px;
+  }
+  .headerText {
+    h4 {
+      margin: 0;
+      padding: 0;
+    }
+    .ends {
+      font-size: 12px;
+      @media (max-width: $mobile-menu-breakpoint) {
+        font-size: 10px;
+      }
+    }
+  }
+  .colorSquare {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    display: inline-block;
+  }
+  .openToggleCarrot {
+    position: absolute;
+    top: 24px;
+    right: 20px;
+    transform-origin: 50% 50%;
+
+    @media (max-width: $mobile-menu-breakpoint) {
+      top: 19px;
+      right: 20px;
+    }
+    svg {
+      path {
+        fill: var(--color-grey17-grey4);
+      }
+    }
+  }
+}
+
+.contentWrapper {
+  flex-grow: 1;
+  overflow: hidden;
+  width: 100%;
+}
+.content {
+  padding: 20px 20px 30px;
+  transition: color var(--themeChange);
+  color: var(--color-grey17-grey4);
+  font-size: 15px;
+  max-width: 600px;
+  width: 100%;
+  @media (max-width: $mobile-menu-breakpoint) {
+    font-size: 12px;
+  }
+}

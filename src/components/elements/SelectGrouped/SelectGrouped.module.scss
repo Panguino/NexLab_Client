@@ -1,0 +1,109 @@
+.SelectGrouped {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.select {
+  cursor: pointer;
+  position: relative;
+  border-radius: 4px;
+  height: 40px;
+  width: 100%;
+  background-color: var(--color-grey19);
+  border: 1px solid var(--color-grey14);
+  transition: all var(--themeChange);
+
+  label {
+    font-size: 16px;
+    color: var(--color-grey3);
+    position: absolute;
+    left: 5px;
+    transform: translate(11px, 9px);
+    transition: all linear 0.12s;
+    z-index: 0;
+  }
+}
+.selectedValue {
+  color: var(--color-grey4-grey3);
+  transition: color var(--themeChange);
+  font-size: 16px;
+  height: 39px;
+  width: 100%;
+  padding: 0px 16px;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  line-height: 12px;
+  b {
+    color: var(--color-white);
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  > span {
+    font-weight: 200;
+    color: var(--color-grey8);
+  }
+  > div {
+    font-weight: 400;
+    color: var(--color-grey4);
+  }
+}
+
+.options {
+  width: 100%;
+  z-index: 500;
+  position: absolute;
+  top: 38px;
+  left: 0;
+  border-radius: 0 0 4px 4px;
+  border: 1px solid var(--color-grey14);
+  border-top: 0px;
+  filter: drop-shadow(0px 4px 14px rgba(0, 0, 0, 0.11));
+  background-color: var(--color-grey19);
+  transition: all var(--themeChange);
+  overflow: hidden;
+}
+.arrow {
+  color: var(--color-grey10);
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  svg {
+    display: block;
+  }
+}
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 8px 0;
+  border-top: 1px solid var(--color-grey18);
+}
+.groupLabel {
+  font-size: 10px;
+  color: var(--color-white);
+  padding: 5px 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: 100%;
+}
+.option {
+  padding: 8px 15px;
+  transition: all 0.2s ease-out;
+  font-size: 12px;
+  color: var(--color-grey8);
+
+  &:hover {
+    background-color: var(--color-blue3);
+    color: var(--color-white);
+  }
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}

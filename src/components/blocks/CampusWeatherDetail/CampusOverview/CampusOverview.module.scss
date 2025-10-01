@@ -1,0 +1,13 @@
+.campusOverview {
+  display: flex;
+  border: 1px solid var(--color-grey2-grey18);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.campusImageContainer {
+  flex-grow: 1;
+  min-height: 100%;
+  min-width: 20%;
+  background-size: cover;
+  background-position: center;
+}

@@ -1,0 +1,329 @@
+'use client'
+
+import { Button } from '@/components/elements/Button/Button'
+import Input from '@/components/elements/Input/Input'
+import Select from '@/components/elements/Select/Select'
+import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
+import { faFileLines, faLocationDot } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+import { DEFAULT_FORECAST_MODEL, FORECAST_MODELS } from '@/data/forecast/models'
+import {
+	DEFAULT_FORECAST_SOUNDING_PARCEL,
+	DEFAULT_FORECAST_SOUNDING_WEATHER,
+	FORECAST_SOUNDING_PARCEL_OPTIONS,
+	FORECAST_SOUNDING_WEATHER_OPTIONS,
+} from '@/data/forecast/soundingOptions'
+import { useRootStore } from '@/store/useRootStore'
+import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
+import { buildProductsByLevel, fetchStationCoordinates } from '@/util/forecast/common-functions'
+import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
+import { useParams, useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
+
+import { SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
+import ScrollArea from '../../ScrollArea/ScrollArea'
+import styles from './ForecastSoundingsSidebarPanel.module.scss'
+
+// Utility function to determine return link and text based on referring page
+const getReturnLinkInfo = (runId: string | string[], modelId: string | string[], sectorId: string | string[], levelId: string | string[], productId: string | string[], validTimeId: string | string[]) => {
+	// Ensure all parameters are strings
+	const runIdStr = Array.isArray(runId) ? runId[0] : runId
+	const modelIdStr = Array.isArray(modelId) ? modelId[0] : modelId
+	const sectorIdStr = Array.isArray(sectorId) ? sectorId[0] : sectorId
+	const levelIdStr = Array.isArray(levelId) ? levelId[0] : levelId
+	const productIdStr = Array.isArray(productId) ? productId[0] : productId
+	const validTimeIdStr = Array.isArray(validTimeId) ? validTimeId[0] : validTimeId
+	// Check if we have a referrer stored in sessionStorage
+	const referrer = typeof window !== 'undefined' ? sessionStorage.getItem('forecastSoundingReferrer') : null
+
+	if (referrer) {
+		if (referrer.includes('/compare-height/')) {
+			return {
+				url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}/compare-height/${validTimeIdStr}`,
+				text: 'Return to Height Comparison'
+			}
+		} else if (referrer.includes('/compare-runs/')) {
+			return {
+				url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}/compare-runs/${validTimeIdStr}`,
+				text: 'Return to Runs Comparison'
+			}
+		} else if (referrer.includes('/compare-models/')) {
+			return {
+				url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}/compare-models/${validTimeIdStr}`,
+				text: 'Return to Models Comparison'
+			}
+		}
+	}
+
+	// Default fallback to regular forecast animator
+	return {
+		url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}`,
+		text: 'Return to Forecast Models'
+	}
+}
+
+const ForecastSoundingsSidebarPanel = () => {
+	const {
+		fcstModel: modelId,
+		fcstRun: runId,
+		fcstSector: sectorId,
+		fcstLevel: levelId,
+		fcstProduct: productId,
+		fcstSndValid: validTimeId,
+		fcstSndLoc: tempLocId,
+		fcstSndParcel: parcelId,
+		fcstSndWeather: weatherId,
+	} = useParams()
+	const router = useRouter()
+	// sounding location prep
+	const locationId = tempLocId ? decodeURIComponent(tempLocId as string) : null // removes encoding from URL, specifically commas
+	const isStationId = locationId?.length === 4 && !locationId?.includes(',')
+
+	// menu prep
+	// these references are specifically to avoid unnecessary re-renders and wait for a button click to update the URL
+	const [internalModelId, setInternalModelId] = useState(modelId)
+	const [internalLocationId, setInternalLocationId] = useState(locationId)
+	const [internalParcelId, setInternalParcelId] = useState(parcelId)
+	const [internalWeatherId, setInternalWeatherId] = useState(weatherId)
+	const openSoundingPicker = useRootStore.use.openSoundingPicker()
+	const setSoundingPickerFrames = useRootStore.use.setSoundingPickerFrames()
+	const setSoundingPickerImageInfo = useRootStore.use.setSoundingPickerImageInfo()
+	const soundingTextURL = useRootStore.use.soundingTextURL()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+
+	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
+	const [returnLink, setReturnLink] = useState('')
+	const [returnText, setReturnText] = useState('Return to Forecast Models')
+	const forecastSoundingRunId = useRootStore.use.forecastSoundingRunId() // this version from the store helps to keep the sidebar in sync with the animator
+	const forecastSoundingValidTime = useRootStore.use.forecastFrameValidTime()
+
+	// Store referrer information when component mounts
+	useEffect(() => {
+		if (typeof window !== 'undefined' && document.referrer) {
+			const referrerUrl = new URL(document.referrer)
+			// Only store if it's from the same origin and contains forecast-models
+			if (referrerUrl.origin === window.location.origin && referrerUrl.pathname.includes('/weather-data/forecast-models/')) {
+				sessionStorage.setItem('forecastSoundingReferrer', referrerUrl.pathname)
+			}
+		}
+	}, [])
+
+	const sanitizeCollectAndSetData = useCallback(async () => {
+		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
+		const sanitizedSectorId = FORECAST_MODELS[sanitizedModelId as string].sectors.includes(sectorId as string)
+			? sectorId
+			: FORECAST_MODELS[sanitizedModelId as string].defaults.sector
+		const productsByLevel = buildProductsByLevel(sanitizedModelId as string, sanitizedSectorId as string)
+
+		// Level and Product have to be evaluated together - so everything below are steps to sanitize them
+		const allProducts = productsByLevel.flatMap((item: { products: string[] }) => item.products)
+		const defaultLevel = FORECAST_MODELS[sanitizedModelId as string].defaults.level
+		const defaultProduct = FORECAST_MODELS[sanitizedModelId as string].defaults.product
+		let sanitizedLevelId, sanitizedProductId
+		if (productsByLevel.find((item) => item.level === levelId && item.products.includes(productId as string))) {
+			// product exists for the level
+			sanitizedLevelId = levelId
+			sanitizedProductId = productId
+		} else if (productsByLevel.some((item) => item.products.includes(productId as string))) {
+			// product exists for some level just not the one requested
+			sanitizedLevelId = productsByLevel.find((item) => item.products.includes(productId as string))?.level
+			sanitizedProductId = productId
+		} else if (
+			allProducts.indexOf(productId as string) < 0 &&
+			productsByLevel.find((item) => item.level === levelId)?.products.includes(defaultProduct)
+		) {
+			// the requested product doesnt exist anywhere, but the default product does exist for the requested level
+			sanitizedLevelId = levelId
+			sanitizedProductId = defaultProduct
+		} else if (allProducts.indexOf(productId as string) < 0) {
+			// product doesnt exist anywhere
+			sanitizedLevelId = defaultLevel
+			sanitizedProductId = defaultProduct
+		}
+		const sanitizedParcelId = FORECAST_SOUNDING_PARCEL_OPTIONS[parcelId as string] ? parcelId : DEFAULT_FORECAST_SOUNDING_PARCEL
+		const sanitizedWeatherId = FORECAST_SOUNDING_WEATHER_OPTIONS[weatherId as string] ? weatherId : DEFAULT_FORECAST_SOUNDING_WEATHER
+
+		// Location need special handling as it can accept either station ID or lat,lon format
+		let sanitizedLocationId = locationId
+		if (isStationId) {
+			sanitizedLocationId = await fetchStationCoordinates(locationId)
+		} else if (locationId && locationId.includes(',') && locationId.split(',').length === 2) {
+			const [lat, lon] = locationId.split(',')
+			if (parseFloat(lat) < -90 || parseFloat(lat) > 90 || parseFloat(lon) < -180 || parseFloat(lon) > 180) {
+				sanitizedLocationId = '0,0' // Default to 0,0 if coordinates are invalid
+			}
+		}
+
+		if (
+			sanitizedModelId !== modelId ||
+			sanitizedSectorId !== sectorId ||
+			sanitizedLevelId !== levelId ||
+			sanitizedProductId !== productId ||
+			sanitizedLocationId !== locationId ||
+			sanitizedParcelId !== parcelId ||
+			sanitizedWeatherId !== weatherId
+		) {
+			// If any of the sanitized parameters differ from the current ones, update the URL to manage state
+			const baseParmsString = `${runId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`
+			const soundingParmsString = `${validTimeId}/${sanitizedLocationId}/${sanitizedParcelId}/${sanitizedWeatherId}`
+			router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
+		}
+		setInternalModelId(sanitizedModelId)
+		setInternalLocationId(sanitizedLocationId)
+		setInternalParcelId(sanitizedParcelId)
+		setInternalWeatherId(sanitizedWeatherId)
+		setAllowGenerateSounding(false) // Reset the generate button state
+
+		// Update return link and text based on referring page and current validtime
+		const currentValidTime = forecastSoundingValidTime || validTimeId
+		const returnLinkInfo = getReturnLinkInfo(
+			forecastSoundingRunId || runId,
+			sanitizedModelId,
+			sanitizedSectorId,
+			sanitizedLevelId,
+			sanitizedProductId,
+			currentValidTime
+		)
+		setReturnLink(returnLinkInfo.url)
+		setReturnText(returnLinkInfo.text)
+	}, [modelId, runId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, router, forecastSoundingRunId, forecastSoundingValidTime])
+
+	useEffect(() => {
+		sanitizeCollectAndSetData()
+	}, [runId, modelId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, sanitizeCollectAndSetData])
+
+	const modelOptions = Object.keys(FORECAST_MODELS)
+		.filter((model) => FORECAST_MODELS[model].allowForecastSounding === true)
+		.map((model) => ({
+			value: model,
+			label: FORECAST_MODELS[model].name,
+		}))
+
+	const handleModelChange = (model: string) => {
+		if (model !== internalModelId) {
+			setInternalModelId(model)
+			setAllowGenerateSounding(true)
+		}
+	}
+	useEffect(() => {
+		if (forecastSoundingRunId && forecastSoundingRunId !== runId) {
+			// serves the same function as these other handlers, but specifically for the runId because it comes from the animator
+			setAllowGenerateSounding(true)
+		}
+	}, [forecastSoundingRunId, runId])
+	useEffect(() => {
+		if (forecastSoundingValidTime && forecastSoundingValidTime !== validTimeId) {
+			// serves the same function as these other handlers, but specifically for the validTimeId because it comes from the animator
+			setAllowGenerateSounding(true)
+		}
+	}, [forecastSoundingValidTime, validTimeId])
+	const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.value !== internalLocationId) {
+			setInternalLocationId(e.target.value)
+			setAllowGenerateSounding(true)
+		}
+	}
+	const handleParcelChange = (parcel: string) => {
+		if (parcel !== internalParcelId) {
+			setInternalParcelId(parcel)
+			setAllowGenerateSounding(true)
+		}
+	}
+	const handleWeatherChange = (weather: string) => {
+		if (weather !== internalWeatherId) {
+			setInternalWeatherId(weather)
+			setAllowGenerateSounding(true)
+		}
+	}
+	const handleGenerateSounding = () => {
+		if (
+			allowGenerateSounding &&
+			(internalModelId !== modelId ||
+				forecastSoundingRunId !== runId ||
+				forecastSoundingValidTime !== validTimeId ||
+				internalLocationId !== locationId ||
+				internalParcelId !== parcelId ||
+				internalWeatherId !== weatherId)
+		) {
+			const baseParmsString = `${forecastSoundingRunId}/${internalModelId}/${sectorId}/${levelId}/${productId}`
+			const soundingParmsString = `${forecastSoundingValidTime}/${internalLocationId}/${internalParcelId}/${internalWeatherId}`
+			router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
+		} else {
+			alert(
+				'Current parameters match existing sounding.\n\nChange any of the following:\nModel, Run, Location, Valid Time, Parcel Type, or Weather Type.',
+			)
+			setAllowGenerateSounding(false) // Reset the button state if no changes were made
+		}
+	}
+
+	return (
+		<ScrollArea>
+			<div className={styles.ForecastSoundingsSidebarPanel}>
+				<SidebarSectionHeader name={returnText} linkUrl={returnLink} />
+				<div className={styles.options}>
+					<label>Model:</label>
+					<Select
+						value={internalModelId}
+						placeholder={internalModelId as string}
+						options={modelOptions}
+						onChange={(model) => {
+							handleModelChange(model)
+						}}
+					/>
+					<label>Location:</label>
+					<div className={styles.locationWithPicker}>
+						<Input value={internalLocationId} onChange={handleLocationChange} />
+						<button
+							className={styles.pickButton}
+							title="Pick on map"
+							onClick={async () => {
+								try {
+									const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
+									const currentVT = forecastSoundingValidTime || data.validtimes[data.validtimes.length - 1]
+									const index = findClosestValidTimeIndex(data.validtimes, currentVT)
+									setSoundingPickerFrames([data.frames[index]])
+									setSoundingPickerImageInfo(data.imageInfo)
+									openSoundingPicker()
+								} catch (e) {
+									console.error('Failed to open sounding picker', e)
+								}
+							}}
+						>
+							<FontAwesomeIcon icon={faLocationDot} />
+						</button>
+					</div>
+					<label>Parcel Type:</label>
+					<Select
+						value={internalParcelId}
+						placeholder={internalParcelId as string}
+						options={Object.values(FORECAST_SOUNDING_PARCEL_OPTIONS).map((option) => ({
+							value: option.id,
+							label: option.label,
+						}))}
+						onChange={handleParcelChange}
+					/>
+					<label>Weather Type:</label>
+					<Select
+						value={internalWeatherId}
+						placeholder={internalWeatherId as string}
+						options={Object.values(FORECAST_SOUNDING_WEATHER_OPTIONS).map((option) => ({
+							value: option.id,
+							label: option.label,
+						}))}
+						onChange={handleWeatherChange}
+					/>
+					<Button label="Generate Sounding" disabled={!allowGenerateSounding} onClick={handleGenerateSounding} />
+					{soundingTextURL && (
+						<button className={styles.viewSoundingTextButton} onClick={() => openSlideoutPanel(SOUNDING_TEXT_SLIDEOUT)}>
+							<span className={styles.soundingTextLabel}>View Sounding Text</span>
+							<FontAwesomeIcon icon={faFileLines} />
+						</button>
+					)}
+				</div>
+			</div>
+		</ScrollArea>
+	)
+}
+
+export default ForecastSoundingsSidebarPanel

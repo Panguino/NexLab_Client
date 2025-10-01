@@ -1,0 +1,39 @@
+.floatingInfoPanel {
+  border: 1px solid var(--color-grey5-grey15);
+  z-index: 1000;
+  width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: var(--color-white-grey18);
+
+    h2 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--color-grey18-grey4);
+    }
+
+    .closeButton {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--color-grey18-grey4);
+      &:hover {
+        color: var(--color-black-white);
+      }
+    }
+  }
+
+  .content {
+    background: var(--color-grey0-grey19);
+    color: var(--color-grey18-grey4);
+    padding: 10px;
+  }
+}

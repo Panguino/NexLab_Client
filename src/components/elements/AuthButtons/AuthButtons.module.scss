@@ -1,0 +1,47 @@
+.authButton {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 24px;
+	border: 1px solid var(--color-grey5-grey15);
+	border-radius: 6px;
+	background-color: var(--color-grey0-grey20);
+	color: var(--color-grey20-grey0);
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	margin: 8px 0;
+	width: 100%;
+	justify-content: center;
+
+	&:hover {
+		background-color: var(--color-grey2-grey18);
+		border-color: var(--color-grey7-grey13);
+	}
+
+	&:active {
+		transform: translateY(1px);
+	}
+
+	svg {
+		width: 16px;
+		height: 16px;
+	}
+}
+
+.googleButton {
+	&:hover {
+		background-color: #4285f4;
+		border-color: #4285f4;
+		color: white;
+	}
+}
+
+.facebookButton {
+	&:hover {
+		background-color: #1877f2;
+		border-color: #1877f2;
+		color: white;
+	}
+}
