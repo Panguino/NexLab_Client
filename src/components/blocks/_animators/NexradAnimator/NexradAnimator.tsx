@@ -3,8 +3,8 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getNexradData } from '@/util/dataCalls/nexrad/query-nexrad'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
@@ -14,7 +14,9 @@ import NexradAnimatorSettings from '../../_animatorSettingPanels/NexradAnimatorS
 import styles from './NexradAnimator.module.scss'
 
 const NexradAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const nexradRefreshInterval = useRootStore.use.nexradDataRefreshInterval()
 	const userIdle = useIsUserIdle((nexradRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
 	const userIdleRef = useRef(false)
@@ -23,8 +25,8 @@ const NexradAnimator: React.FC = () => {
 	const nexradFrameRate = useRootStore.use.nexradFrameRate()
 	const nexradZoomState = useRootStore.use.nexradZoomState()
 	const setNexradZoomState = useRootStore.use.setNexradZoomState()
-	const nexradZoomFill = useRootStore.use.nexradZoomFill()
-	const setNexradZoomFill = useRootStore.use.setNexradZoomFill()
+	const globalZoomFill = useRootStore.use.globalZoomFill()
+	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
 	const nexradMapFullScreen = useRootStore.use.nexradMapFullScreen()
 	const setNexradMapFullScreen = useRootStore.use.setNexradMapFullScreen()
 	const nexradLastFrameDwell = useRootStore.use.nexradLastFrameDwell()
@@ -71,9 +73,7 @@ const NexradAnimator: React.FC = () => {
 		frameValidTimeRef.current = nexradFrameValidTime
 	}, [nexradFrameValidTime])
 
-	useEffect(() => {
-		setNexradZoomFill(isMobile)
-	}, [isMobile, setNexradZoomFill])
+
 
 	return (
 		<>
@@ -87,8 +87,8 @@ const NexradAnimator: React.FC = () => {
 						imageInfo={imageInfo}
 						initialZoomState={nexradZoomState}
 						setZoomState={setNexradZoomState}
-						zoomFill={nexradZoomFill}
-						setZoomFill={setNexradZoomFill}
+						zoomFill={globalZoomFill}
+						setZoomFill={setGlobalZoomFill}
 						fullScreen={nexradMapFullScreen}
 						setFullScreen={setNexradMapFullScreen}
 						interval={1000 / nexradFrameRate}

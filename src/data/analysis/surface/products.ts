@@ -5,6 +5,8 @@ export const SURFACE_PRODUCT_THETAE = 'thte'
 export const SURFACE_PRODUCT_TEMPERATURE_SLP = 'tpsl'
 export const SURFACE_PRODUCT_PRESSURE_FALLS = 'pfalls'
 export const SURFACE_PRODUCT_PDF = 'pdf'
+export const SURFACE_PRODUCT_METARS = 'metar'
+export const SURFACE_PRODUCT_DECODED_OBS = 'cooked'
 export const SURFACE_PRODUCT_DEFAULT = SURFACE_PRODUCT_RAW
 
 export const ALL_SURFACE_PRODUCTS = {
@@ -24,7 +26,10 @@ export const ALL_SURFACE_PRODUCTS = {
 	[SURFACE_PRODUCT_TEMPERATURE_SLP]: {
 		label: 'Temperature and SLP',
 	},
-	[SURFACE_PRODUCT_PDF]: {
-		label: 'PDF',
+	[SURFACE_PRODUCT_METARS]: {
+		label: 'Raw METARs',
+	},
+	[SURFACE_PRODUCT_DECODED_OBS]: {
+		label: 'Decoded Observations',
 	},
 }

@@ -1,5 +1,7 @@
+import { FeedbackPage } from '@/components/blocks/FeedbackPage/FeedbackPage'
+
 const Page = () => {
-	return <>Feedback</>
+	return <FeedbackPage />
 }
 
 export default Page

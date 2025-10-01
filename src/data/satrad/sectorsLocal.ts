@@ -115,6 +115,9 @@ const SATRAD_SECTOR_LOCAL_WISCONSIN_ID = 'Wisconsin'
 const SATRAD_SECTOR_LOCAL_WYOMING_ID = 'Wyoming'
 const SATRAD_SECTOR_LOCAL_YELLOWSTONE_ID = 'Yellowstone'
 const SATRAD_SECTOR_LOCAL_CA_ST_JOHNS_ID = 'ca_stjohns'
+const SATRAD_SECTOR_LOCAL_OTTAWA_ID = 'Ottawa'
+const SATRAD_SECTOR_LOCAL_PENNSYLVANIA_ID = 'Pennsylvania'
+const SATRAD_SECTOR_LOCAL_PANHANDLE_ID = 'Panhandle'
 
 export const SATRAD_SECTORS_LOCAL_NAMER = {
 	[SATRAD_SECTOR_LOCAL_ALABAMA_ID]: {
@@ -1142,6 +1145,33 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 		coordinates: [
 			[-57.05, 45.8],
 			[-48.5, 48.5],
+		],
+		products: SATRAD_PRODUCTS,
+	},
+	[SATRAD_SECTOR_LOCAL_OTTAWA_ID]: {
+		name: 'Ottawa',
+		type: 'Geobox',
+		coordinates: [
+			[-81.8, 44.1],
+			[-71.9, 47.0],
+		],
+		products: SATRAD_PRODUCTS,
+	},
+	[SATRAD_SECTOR_LOCAL_PENNSYLVANIA_ID]: {
+		name: 'Pennsylvania',
+		type: 'Geobox',
+		coordinates: [
+			[-81.9, 39.5],
+			[-72.3, 42.3],
+		],
+		products: SATRAD_PRODUCTS,
+	},
+	[SATRAD_SECTOR_LOCAL_PANHANDLE_ID]: {
+		name: 'TX/OK Panhandle',
+		type: 'Geobox',
+		coordinates: [
+			[-105.3, 33.5],
+			[-96.3, 37.6],
 		],
 		products: SATRAD_PRODUCTS,
 	},

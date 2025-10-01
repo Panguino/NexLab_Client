@@ -3,8 +3,8 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { useIsMobile } from '@/hooks/useIsMobile'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getSoundingData } from '@/util/dataCalls/analysis/query-soundings'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
@@ -14,7 +14,9 @@ import AnalysisAnimatorSettings from '../../_animatorSettingPanels/AnalysisAnima
 import styles from './SoundingAnimator.module.scss'
 
 const SoundingAnimator: React.FC = () => {
-	const { isMobile } = useIsMobile()
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const analysisRefreshInterval = useRootStore.use.analysisDataRefreshInterval()
 	const userIdle = useIsUserIdle((analysisRefreshInterval / 2) * 60 * 1000) // user is idle after half the refresh interval
 	const userIdleRef = useRef(false)
@@ -22,8 +24,8 @@ const SoundingAnimator: React.FC = () => {
 	const [soundingData, setSoundingData] = useState([])
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
-	const analysisZoomFill = useRootStore.use.analysisZoomFill()
-	const setAnalysisZoomFill = useRootStore.use.setAnalysisZoomFill()
+	const globalZoomFill = useRootStore.use.globalZoomFill()
+	const setGlobalZoomFill = useRootStore.use.setGlobalZoomFill()
 	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
@@ -36,6 +38,9 @@ const SoundingAnimator: React.FC = () => {
 	const frameValidTimeRef = useRef<number | null>(null)
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
+	const [frameTextFiles, setFrameTextFiles] = useState<string[]>([])
+	const setSoundingTextURL = useRootStore.use.setSoundingTextURL()
+	const closeSlideoutPanel = useRootStore.use.closeSlideoutPanel()
 
 	// Keep userIdleRef in sync with userIdle state
 	useEffect(() => {
@@ -60,6 +65,11 @@ const SoundingAnimator: React.FC = () => {
 		setImageInfo(data.imageInfo)
 		setSoundingData(data.frames)
 		setFrameValidTimes(data.validtimes)
+
+		// Store textfiles if available for sounding text functionality
+		if (data.textfiles) {
+			setFrameTextFiles(data.textfiles)
+		}
 	}, [siteId, productId, soundingNumberOfFrames, setSoundingData, setStartFrame, setFrameValidTimes])
 
 	useEffect(() => {
@@ -70,9 +80,17 @@ const SoundingAnimator: React.FC = () => {
 		frameValidTimeRef.current = soundingFrameValidTime
 	}, [soundingFrameValidTime])
 
-	useEffect(() => {
-		setAnalysisZoomFill(isMobile)
-	}, [isMobile, setAnalysisZoomFill])
+
+	// Handle frame changes for sounding text
+	const handleFrameTextChange = (frameIndex) => {
+		if (frameTextFiles.length > 0) {
+			const soundingTextURL = frameTextFiles[frameIndex]
+			setSoundingTextURL(soundingTextURL)
+			if (!soundingTextURL) {
+				closeSlideoutPanel()
+			}
+		}
+	}
 
 	return (
 		<>
@@ -83,10 +101,12 @@ const SoundingAnimator: React.FC = () => {
 						frameValidTimes={frameValidTimes}
 						setFrameValidTime={setSoundingFrameValidTime}
 						startFrame={startFrame}
+						onFrameUpdate={handleFrameTextChange}
+						imageInfo={imageInfo}
 						initialZoomState={analysisZoomState}
 						setZoomState={setAnalysisZoomState}
-						zoomFill={analysisZoomFill}
-						setZoomFill={setAnalysisZoomFill}
+						zoomFill={globalZoomFill}
+						setZoomFill={setGlobalZoomFill}
 						fullScreen={analysisMapFullScreen}
 						setFullScreen={setAnalysisMapFullScreen}
 						interval={1000 / analysisFrameRate}
@@ -97,7 +117,6 @@ const SoundingAnimator: React.FC = () => {
 								<AnalysisAnimatorSettings refreshData={getData} />
 							</AnimatorSettings>
 						}
-						imageInfo={imageInfo}
 					/>
 				</div>
 			</div>

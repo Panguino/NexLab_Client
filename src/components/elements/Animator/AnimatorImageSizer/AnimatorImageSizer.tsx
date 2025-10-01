@@ -1,5 +1,6 @@
 import { SATRAD_OVERLAYS } from '@/data/satrad/overlays'
 import useDimensions from '@/hooks/useDimensions'
+import { calculateAnimatorPosition, getClientCoordinates } from '@/util/animatorPositionCalculator'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { useAnimator } from '../Animator'
@@ -24,14 +25,15 @@ const AnimatorImageSizer = () => {
 		frames,
 		hideZoomControls,
 		soundingsPickerMode,
-		setSoundingsPickerMode,
 		onSoundingsClickthrough,
 		overlayMarkers,
+		imageInfo,
+		sectorId,
 	} = useAnimator()
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
 	// retain state for tooltip hover position (not required for click-through)
-	const [imagePosition, setImagePosition] = useState({ xPercent: 0, yPercent: 0 })
+	const [_imagePosition, setImagePosition] = useState({ xPercent: 0, yPercent: 0 })
 	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }, updateDimensions] = useDimensions(ratio, !zoomFill)
 
 	// Track panning to suppress click-through during/after pan
@@ -93,16 +95,50 @@ const AnimatorImageSizer = () => {
 		// I know this is stupid, but it works
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
 
-	const handleImageClick = () => {
+	const handleImageClick = (e: React.MouseEvent | React.TouchEvent) => {
+		// console.log('🖱️ Click handler called')
+
 		// Suppress click-through during pan or immediately after a pan
 		const now = performance.now()
-		if (isPanningRef.current || now - panStopTimeRef.current > 120) return
-		if (!soundingsPickerMode || !animatorRef.current) return
+		const timeSincePanStop = now - panStopTimeRef.current
 
-		if (soundingsPickerMode) {
-			onSoundingsClickthrough(imagePosition)
-			setSoundingsPickerMode?.(false)
+		if (isPanningRef.current) {
+			// console.log('⛔ Blocked: panning')
+			return
 		}
+		if (timeSincePanStop > 120) {
+			// console.log('⛔ Blocked: too soon after pan', timeSincePanStop)
+			return
+		}
+		if (!soundingsPickerMode) {
+			// console.log('⛔ Blocked: not in picker mode')
+			return
+		}
+		if (!ImageMachineRef.current) {
+			// console.log('⛔ Blocked: no ref')
+			return
+		}
+
+		// console.log('✅ Processing click...')
+
+		// Calculate position directly from the click/tap event
+		// IMPORTANT: Use ImageMachineRef (same as hover) not animatorRef
+		const rect = ImageMachineRef.current.getBoundingClientRect()
+
+		// Extract coordinates from event
+		const coords = getClientCoordinates(e)
+		if (!coords) {
+			// console.log('⛔ No coordinates')
+			return
+		}
+
+		// Use the utility function to calculate percentages
+		// NOTE: Do NOT pass transform state - the click coordinates are already in transformed space
+		// This matches how DataTooltip calculates hover positions
+		const { xPercent, yPercent } = calculateAnimatorPosition(coords.clientX, coords.clientY, rect, imageInfo)
+
+		// console.log('📍 Calling clickthrough with:', { xPercent, yPercent })
+		onSoundingsClickthrough({ xPercent, yPercent })
 	}
 	return (
 		<div
@@ -131,6 +167,9 @@ const AnimatorImageSizer = () => {
 							}}
 							contentClass={styles.animatorImagesContainer}
 							contentStyle={{ width: adjustedWidth, height: adjustedHeight }}
+							wrapperProps={{
+								onClick: handleImageClick,
+							}}
 						>
 							<AnimatorImageMachine
 								ref={ImageMachineRef}
@@ -161,7 +200,7 @@ const AnimatorImageSizer = () => {
 								/>
 							))}
 						</TransformComponent>
-						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} onUpdatePosition={setImagePosition} />
+						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} onUpdatePosition={setImagePosition} sectorId={sectorId} />
 
 						{!hideZoomControls && !disableZoom && <ImageControls zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />}
 					</>

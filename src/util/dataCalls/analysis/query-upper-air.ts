@@ -1,4 +1,4 @@
-import { getData } from '../dataCall'
+import { getData } from '../dataCall-generic'
 
 const parmsExceptionTest = (level, product) => {
 	// TODO: see monday 8994171800
@@ -18,5 +18,21 @@ export const getUpperAirData = async (sector, level, product) => {
 	level = tested.level
 	product = tested.product
 	const endpoint = `https://weather.cod.edu/datapoints/analysis/upper-air/get-files.php?parms=${sector}-${level}-${product}`
-	return await getData(endpoint)
+	const data = await getData(endpoint)
+	if (!data.err) {
+		return {
+			frames: data.files,
+			validtimes: data.validtimes,
+			imageInfo: data.img,
+			pdfs: data.pdfs,
+		}
+	} else {
+		return {
+			frames: [],
+			validtimes: [],
+			imageInfo: { width: 800, height: 600 },
+			pdfs: [],
+			error: data.err,
+		}
+	}
 }

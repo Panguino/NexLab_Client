@@ -118,3 +118,79 @@ withActiveFrameLabel.args = {
 	displayAllLabels: false,
 	scrubberFrameLoadStates: new Array(testDataFrameLabels2.frames.length).fill(true),
 }
+
+export const soundingPickerEnabled: StoryFn<typeof Animator> = TemplateFactory()
+soundingPickerEnabled.args = {
+	interval: 0.25,
+	frames: testFrames8x6,
+	imageInfo: { width: 800, height: 600 },
+	soundingsPicker: true,
+	soundingsPickerMode: false,
+	soundingsPickerDisabled: false,
+	onSoundingsClickthrough: ({ xPercent, yPercent }: { xPercent: number; yPercent: number }) => {
+		console.log('Sounding clicked at:', { xPercent, yPercent })
+	},
+}
+
+export const soundingPickerDisabled: StoryFn<typeof Animator> = TemplateFactory()
+soundingPickerDisabled.args = {
+	interval: 0.25,
+	frames: testFrames8x6,
+	imageInfo: { width: 800, height: 600 },
+	soundingsPicker: true,
+	soundingsPickerMode: false,
+	soundingsPickerDisabled: true,
+	onSoundingsClickthrough: ({ xPercent, yPercent }: { xPercent: number; yPercent: number }) => {
+		console.log('Sounding clicked at:', { xPercent, yPercent })
+	},
+}
+
+export const soundingPickerModelComparison: StoryFn<typeof Animator> = TemplateFactory()
+soundingPickerModelComparison.args = {
+	interval: 0.25,
+	frames: testFrames8x6,
+	imageInfo: { width: 800, height: 600 },
+	frameLabels: ['RAP', 'NAM', 'ECMWF', 'GFS', 'HRRR', 'RDPS'], // Mix of supported and unsupported models
+	soundingsPicker: true,
+	soundingsPickerMode: false,
+	soundingsPickerDisabled: false, // This would be dynamically controlled in real implementation
+	onSoundingsClickthrough: ({ xPercent, yPercent }: { xPercent: number; yPercent: number }) => {
+		console.log('Sounding clicked at:', { xPercent, yPercent })
+	},
+	onFrameUpdate: (frameIndex) => {
+		// In real implementation, this would check if the current model supports soundings
+		const supportedModels = ['RAP', 'NAM', 'GFS', 'HRRR']
+		const currentModel = ['RAP', 'NAM', 'ECMWF', 'GFS', 'HRRR', 'RDPS'][frameIndex]
+		const isSupported = supportedModels.includes(currentModel)
+		console.log(`Frame ${frameIndex}: ${currentModel} - Soundings ${isSupported ? 'supported' : 'not supported'}`)
+	},
+}
+
+export const pdfButtonEnabled: StoryFn<typeof Animator> = TemplateFactory()
+pdfButtonEnabled.args = {
+	interval: 0.25,
+	frames: testFrames8x6,
+	imageInfo: { width: 800, height: 600 },
+	pdfs: [
+		'https://example.com/pdf1.pdf',
+		'https://example.com/pdf2.pdf',
+		'https://example.com/pdf3.pdf',
+		'https://example.com/pdf4.pdf',
+		'https://example.com/pdf5.pdf',
+		'https://example.com/pdf6.pdf',
+	],
+	pdfButtonClick: (pdfUrl: string) => {
+		console.log('PDF button clicked for URL:', pdfUrl)
+	},
+}
+
+export const pdfButtonDisabled: StoryFn<typeof Animator> = TemplateFactory()
+pdfButtonDisabled.args = {
+	interval: 0.25,
+	frames: testFrames8x6,
+	imageInfo: { width: 800, height: 600 },
+	pdfs: [], // Empty array - button should not appear
+	pdfButtonClick: (pdfUrl: string) => {
+		console.log('PDF button clicked for URL:', pdfUrl)
+	},
+}

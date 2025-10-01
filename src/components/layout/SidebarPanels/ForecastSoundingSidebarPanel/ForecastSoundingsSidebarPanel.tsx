@@ -25,6 +25,44 @@ import { SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
 import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSoundingsSidebarPanel.module.scss'
 
+// Utility function to determine return link and text based on referring page
+const getReturnLinkInfo = (runId: string | string[], modelId: string | string[], sectorId: string | string[], levelId: string | string[], productId: string | string[], validTimeId: string | string[]) => {
+	// Ensure all parameters are strings
+	const runIdStr = Array.isArray(runId) ? runId[0] : runId
+	const modelIdStr = Array.isArray(modelId) ? modelId[0] : modelId
+	const sectorIdStr = Array.isArray(sectorId) ? sectorId[0] : sectorId
+	const levelIdStr = Array.isArray(levelId) ? levelId[0] : levelId
+	const productIdStr = Array.isArray(productId) ? productId[0] : productId
+	const validTimeIdStr = Array.isArray(validTimeId) ? validTimeId[0] : validTimeId
+	// Check if we have a referrer stored in sessionStorage
+	const referrer = typeof window !== 'undefined' ? sessionStorage.getItem('forecastSoundingReferrer') : null
+
+	if (referrer) {
+		if (referrer.includes('/compare-height/')) {
+			return {
+				url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}/compare-height/${validTimeIdStr}`,
+				text: 'Return to Height Comparison'
+			}
+		} else if (referrer.includes('/compare-runs/')) {
+			return {
+				url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}/compare-runs/${validTimeIdStr}`,
+				text: 'Return to Runs Comparison'
+			}
+		} else if (referrer.includes('/compare-models/')) {
+			return {
+				url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}/compare-models/${validTimeIdStr}`,
+				text: 'Return to Models Comparison'
+			}
+		}
+	}
+
+	// Default fallback to regular forecast animator
+	return {
+		url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}`,
+		text: 'Return to Forecast Models'
+	}
+}
+
 const ForecastSoundingsSidebarPanel = () => {
 	const {
 		fcstModel: modelId,
@@ -56,8 +94,20 @@ const ForecastSoundingsSidebarPanel = () => {
 
 	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
 	const [returnLink, setReturnLink] = useState('')
+	const [returnText, setReturnText] = useState('Return to Forecast Models')
 	const forecastSoundingRunId = useRootStore.use.forecastSoundingRunId() // this version from the store helps to keep the sidebar in sync with the animator
 	const forecastSoundingValidTime = useRootStore.use.forecastFrameValidTime()
+
+	// Store referrer information when component mounts
+	useEffect(() => {
+		if (typeof window !== 'undefined' && document.referrer) {
+			const referrerUrl = new URL(document.referrer)
+			// Only store if it's from the same origin and contains forecast-models
+			if (referrerUrl.origin === window.location.origin && referrerUrl.pathname.includes('/weather-data/forecast-models/')) {
+				sessionStorage.setItem('forecastSoundingReferrer', referrerUrl.pathname)
+			}
+		}
+	}, [])
 
 	const sanitizeCollectAndSetData = useCallback(async () => {
 		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
@@ -124,8 +174,20 @@ const ForecastSoundingsSidebarPanel = () => {
 		setInternalParcelId(sanitizedParcelId)
 		setInternalWeatherId(sanitizedWeatherId)
 		setAllowGenerateSounding(false) // Reset the generate button state
-		setReturnLink(`/weather-data/forecast-models/${runId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`)
-	}, [modelId, runId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, router])
+
+		// Update return link and text based on referring page and current validtime
+		const currentValidTime = forecastSoundingValidTime || validTimeId
+		const returnLinkInfo = getReturnLinkInfo(
+			forecastSoundingRunId || runId,
+			sanitizedModelId,
+			sanitizedSectorId,
+			sanitizedLevelId,
+			sanitizedProductId,
+			currentValidTime
+		)
+		setReturnLink(returnLinkInfo.url)
+		setReturnText(returnLinkInfo.text)
+	}, [modelId, runId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, router, forecastSoundingRunId, forecastSoundingValidTime])
 
 	useEffect(() => {
 		sanitizeCollectAndSetData()
@@ -198,7 +260,7 @@ const ForecastSoundingsSidebarPanel = () => {
 	return (
 		<ScrollArea>
 			<div className={styles.ForecastSoundingsSidebarPanel}>
-				<SidebarSectionHeader name="Return to Forecast Models" linkUrl={returnLink} />
+				<SidebarSectionHeader name={returnText} linkUrl={returnLink} />
 				<div className={styles.options}>
 					<label>Model:</label>
 					<Select

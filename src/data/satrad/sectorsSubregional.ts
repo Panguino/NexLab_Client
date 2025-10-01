@@ -1,4 +1,11 @@
-import { SATRAD_PRODUCTS } from './products'
+import { SATRAD_PRODUCTS, SATRAD_PRODUCT_ABI_11_ID, SATRAD_PRODUCT_ABI_12_ID, SATRAD_PRODUCT_ABI_14_ID, SATRAD_PRODUCT_ABI_16_ID } from './products'
+
+// Puerto Rico region subset: omit ABI 11,12,14,16 (thermal bands not provided in this data region)
+const SATRAD_PRODUCTS_PUERTO = Object.fromEntries(
+	Object.entries(SATRAD_PRODUCTS).filter(
+		([key]) => ![SATRAD_PRODUCT_ABI_11_ID, SATRAD_PRODUCT_ABI_12_ID, SATRAD_PRODUCT_ABI_14_ID, SATRAD_PRODUCT_ABI_16_ID].includes(key),
+	),
+)
 
 // Sub-regional Sectors
 const SATRAD_SECTOR_SUBREGIONAL_BAHAMAS_ID = 'Bahamas_sub'
@@ -198,7 +205,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-75.1, 15.25],
 			[-58.75, 24.25],
 		],
-		products: SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS_PUERTO,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_E_CARIBBEAN_ID]: {
 		name: 'Eastern Caribbean',
@@ -207,7 +214,7 @@ export const SATRAD_SECTORS_SUBREGIONAL_NAMER = {
 			[-74.25, 11.0],
 			[-58.25, 17.9],
 		],
-		products: SATRAD_PRODUCTS,
+		products: SATRAD_PRODUCTS_PUERTO,
 	},
 	[SATRAD_SECTOR_SUBREGIONAL_E_GULF_COAST_ID]: {
 		name: 'East Gulf Coast',
