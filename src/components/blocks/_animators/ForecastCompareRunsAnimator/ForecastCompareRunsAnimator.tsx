@@ -3,10 +3,12 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareRunsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
+import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ForecastCompareRunsAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareRunsAnimatorSettings/ForecastCompareRunsAnimatorSettings'
@@ -34,15 +36,28 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
 	const forecastLastFrameDwellTime = useRootStore.use.forecastLastFrameDwellTime()
+
+	// Sounding picker state
+	const forecastSoundingsPickMode = useRootStore.use.forecastSoundingsPickMode()
+	const setForecastSoundingsPickMode = useRootStore.use.setForecastSoundingsPickMode()
+
 	const [forecastData, setForecastData] = useState([])
 	const [forecastRuns, setForecastRuns] = useState<string[]>([])
 	const [startFrame, setStartFrame] = useState(0)
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
+	// Track current frame index (active run)
+	const [currentFrame, setCurrentFrame] = useState(0)
 
 	// Readout state (mirrors ForecastCompareHeightAnimator behavior)
 	const [frameReadoutData, setFrameReadoutData] = useState<any>(null)
 	const [isLoadingReadoutData, setIsLoadingReadoutData] = useState<boolean>(false)
 	const frameDataTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+	// Determine if the current model supports soundings
+	const soundingsSupported = useMemo(() => {
+		const modelConfig = FORECAST_MODELS[modelId as string]
+		return modelConfig?.allowForecastSounding === true
+	}, [modelId])
 
 	const getData = useCallback(async () => {
 		console.log('ForecastCompareRunsAnimator: Fetching data', modelId, sectorId, levelId, productId, validTimeId)
@@ -57,7 +72,9 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 			const currentRun = data.runs[data.runs.length - 1]
 			router.push(`/weather-data/forecast-models/${currentRun}/${modelId}/${sectorId}/${levelId}/${productId}/compare-runs/${validTimeId}`)
 		}
-		setStartFrame(data.runs.indexOf(runId as string) || 0)
+		const initialFrame = Math.max(0, data.runs.indexOf(runId as string))
+		setStartFrame(initialFrame)
+		setCurrentFrame(initialFrame)
 		setForecastRuns(data.runs || [])
 		setImageInfo(data.imageInfo)
 		setForecastData(data.frames)
@@ -66,7 +83,6 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	useEffect(() => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, getData])
-
 
 	const formatRunTimeLabel = (ts: string | number, model: string) => {
 		// expect YYYYMMDDHH as string or number
@@ -83,6 +99,32 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	const transformedRuns = useMemo(() => {
 		return (forecastRuns || []).map((run) => formatRunTimeLabel(run, modelId as string))
 	}, [forecastRuns, modelId])
+
+	// Current active run derived from frame index
+	const currentActiveRun = useMemo(() => {
+		if (!forecastRuns.length || currentFrame >= forecastRuns.length) return null
+		return forecastRuns[currentFrame]
+	}, [forecastRuns, currentFrame])
+
+	// Handle frame updates to track current active run
+	const handleFrameUpdate = useCallback((frameIndex: number) => {
+		setCurrentFrame(frameIndex)
+	}, [])
+
+	// Sounding clickthrough handler
+	const onSoundingsClickthrough = useCallback(
+		(event: { xPercent: number; yPercent: number }) => {
+			if (!soundingsSupported || !currentActiveRun) return
+
+			const { xPercent, yPercent } = event
+			const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+			const baseParams = `/weather-data/forecast-models/${currentActiveRun}/${modelId}/${sectorId}/${levelId}/${productId}`
+			const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
+			const route = `${baseParams}${soundingParams}`
+			router.push(route)
+		},
+		[soundingsSupported, currentActiveRun, sectorId, modelId, levelId, productId, validTimeId, router],
+	)
 
 	// Request readout data for the given frame (run). Debounced like main viewer.
 	const handleReadoutDataRequest = useCallback(
@@ -112,7 +154,14 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 			setIsLoadingReadoutData(true)
 			frameDataTimeoutRef.current = setTimeout(async () => {
 				try {
-					const data = await getFrameReadoutData(modelId as string, runForFrame as string, sectorId as string, levelId as string, productId as string, validTimeId as string)
+					const data = await getFrameReadoutData(
+						modelId as string,
+						runForFrame as string,
+						sectorId as string,
+						levelId as string,
+						productId as string,
+						validTimeId as string,
+					)
 					const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
 					setFrameReadoutData(readoutDataObj)
 				} catch (error) {
@@ -123,7 +172,7 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 				}
 			}, 1000)
 		},
-		[modelId, sectorId, levelId, productId, validTimeId, forecastRuns]
+		[modelId, sectorId, levelId, productId, validTimeId, forecastRuns],
 	)
 
 	return (
@@ -135,6 +184,7 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 						frameLabels={transformedRuns}
 						startFrame={startFrame}
 						imageInfo={imageInfo}
+						onFrameUpdate={handleFrameUpdate}
 						initialZoomState={forecastZoomState}
 						setZoomState={setForecastZoomState}
 						zoomFill={globalZoomFill}
@@ -148,6 +198,15 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 						frameReadoutData={frameReadoutData}
 						isLoadingReadoutData={isLoadingReadoutData}
 						requestReadoutData={handleReadoutDataRequest}
+						soundingsPicker={true}
+						soundingsPickerMode={forecastSoundingsPickMode && soundingsSupported}
+						soundingsPickerDisabled={!soundingsSupported}
+						setSoundingsPickerMode={(mode: boolean) => {
+							// Only allow enabling if current model supports soundings
+							if (mode && !soundingsSupported) return
+							setForecastSoundingsPickMode(mode)
+						}}
+						onSoundingsClickthrough={onSoundingsClickthrough}
 						settingsComponent={
 							<AnimatorSettings title="Settings">
 								<ForecastCompareRunsAnimatorSettings />
