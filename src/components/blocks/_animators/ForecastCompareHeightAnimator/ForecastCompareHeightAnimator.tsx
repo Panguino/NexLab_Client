@@ -120,7 +120,7 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
 		const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
 		const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
-		const route = `${baseParams}${soundingParams}`
+		const route = `${baseParams}${soundingParams}?source=compare-height`
 		router.push(route)
 	}, [soundingsSupported, sectorId, runId, modelId, levelId, productId, validTimeId, router])
 

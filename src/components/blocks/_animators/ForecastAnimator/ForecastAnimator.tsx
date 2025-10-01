@@ -95,7 +95,7 @@ const ForecastAnimator: React.FC = () => {
 
 		const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
 		const soundingParams = `/sounding/${frameValidTimeRef.current}/${locationId}/ml/severe`
-		const route = `${baseParams}${soundingParams}`
+		const route = `${baseParams}${soundingParams}?source=forecast`
 		// console.log('  🔗 Full route:', route)
 
 		router.push(route)

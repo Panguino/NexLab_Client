@@ -120,7 +120,7 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 			const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
 			const baseParams = `/weather-data/forecast-models/${currentActiveRun}/${modelId}/${sectorId}/${levelId}/${productId}`
 			const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
-			const route = `${baseParams}${soundingParams}`
+			const route = `${baseParams}${soundingParams}?source=compare-runs`
 			router.push(route)
 		},
 		[soundingsSupported, currentActiveRun, sectorId, modelId, levelId, productId, validTimeId, router],

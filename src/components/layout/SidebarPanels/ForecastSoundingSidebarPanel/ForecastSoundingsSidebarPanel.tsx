@@ -18,7 +18,7 @@ import { useRootStore } from '@/store/useRootStore'
 import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
 import { buildProductsByLevel, fetchStationCoordinates } from '@/util/forecast/common-functions'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
 import { SOUNDING_TEXT_SLIDEOUT } from '@/data/vars'
@@ -38,9 +38,22 @@ const ForecastSoundingsSidebarPanel = () => {
 		fcstSndWeather: weatherId,
 	} = useParams()
 	const router = useRouter()
+	const pathname = usePathname()
 	// sounding location prep
 	const locationId = tempLocId ? decodeURIComponent(tempLocId as string) : null // removes encoding from URL, specifically commas
 	const isStationId = locationId?.length === 4 && !locationId?.includes(',')
+
+	// Get source parameter from URL to determine originating animator
+	const [sourceAnimator, setSourceAnimator] = useState<string | null>(null)
+
+	useEffect(() => {
+		// Extract source parameter from current URL
+		if (typeof window !== 'undefined') {
+			const urlParams = new URLSearchParams(window.location.search)
+			const source = urlParams.get('source')
+			setSourceAnimator(source)
+		}
+	}, [pathname])
 
 	// menu prep
 	// these references are specifically to avoid unnecessary re-renders and wait for a button click to update the URL
@@ -58,6 +71,26 @@ const ForecastSoundingsSidebarPanel = () => {
 	const [returnLink, setReturnLink] = useState('')
 	const forecastSoundingRunId = useRootStore.use.forecastSoundingRunId() // this version from the store helps to keep the sidebar in sync with the animator
 	const forecastSoundingValidTime = useRootStore.use.forecastFrameValidTime()
+
+	// Function to generate contextual return link based on originating animator
+	const generateReturnLink = useCallback((baseRunId: string, baseModelId: string, baseSectorId: string, baseLevelId: string, baseProductId: string, currentValidTimeId: string) => {
+		const baseParams = `${baseRunId}/${baseModelId}/${baseSectorId}/${baseLevelId}/${baseProductId}`
+		const basePath = `/weather-data/forecast-models/${baseParams}`
+
+		// Determine which animator the user came from based on the source parameter
+		switch (sourceAnimator) {
+			case 'compare-height':
+				return `${basePath}/compare-height/${currentValidTimeId}`
+			case 'compare-runs':
+				return `${basePath}/compare-runs/${currentValidTimeId}`
+			case 'compare-models':
+				return `${basePath}/compare-models/${currentValidTimeId}`
+			case 'forecast':
+			default:
+				// Default case: return to standard forecast animator
+				return basePath
+		}
+	}, [sourceAnimator])
 
 	const sanitizeCollectAndSetData = useCallback(async () => {
 		const sanitizedModelId = !FORECAST_MODELS[modelId as string] ? DEFAULT_FORECAST_MODEL : modelId
@@ -124,8 +157,17 @@ const ForecastSoundingsSidebarPanel = () => {
 		setInternalParcelId(sanitizedParcelId)
 		setInternalWeatherId(sanitizedWeatherId)
 		setAllowGenerateSounding(false) // Reset the generate button state
-		setReturnLink(`/weather-data/forecast-models/${runId}/${sanitizedModelId}/${sanitizedSectorId}/${sanitizedLevelId}/${sanitizedProductId}`)
-	}, [modelId, runId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, router])
+
+		// Generate contextual return link based on originating animator
+		const runIdString: string = Array.isArray(runId) ? runId[0] : (runId || '')
+		const validTimeIdString: string = Array.isArray(validTimeId) ? validTimeId[0] : (validTimeId || '')
+		const sanitizedModelIdString: string = Array.isArray(sanitizedModelId) ? sanitizedModelId[0] : (sanitizedModelId || '')
+		const sanitizedSectorIdString: string = Array.isArray(sanitizedSectorId) ? sanitizedSectorId[0] : (sanitizedSectorId || '')
+		const sanitizedLevelIdString: string = Array.isArray(sanitizedLevelId) ? sanitizedLevelId[0] : (sanitizedLevelId || '')
+		const sanitizedProductIdString: string = Array.isArray(sanitizedProductId) ? sanitizedProductId[0] : (sanitizedProductId || '')
+		const contextualReturnLink = generateReturnLink(runIdString, sanitizedModelIdString, sanitizedSectorIdString, sanitizedLevelIdString, sanitizedProductIdString, validTimeIdString)
+		setReturnLink(contextualReturnLink)
+	}, [modelId, runId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, router, generateReturnLink])
 
 	useEffect(() => {
 		sanitizeCollectAndSetData()

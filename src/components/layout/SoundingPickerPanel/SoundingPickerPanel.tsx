@@ -87,7 +87,18 @@ const SoundingPickerPanel = () => {
 		const effectiveValidTime = storeValidTime || validTimeId
 		const baseParmsString = `${effectiveRunId}/${modelId}/${sectorId}/${levelId}/${productId}`
 		const soundingParmsString = `${effectiveValidTime}/${locationId}/${parcelId}/${weatherId}`
-		const fullRoute = `/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`
+
+		// Determine source parameter based on current pathname
+		let sourceParam = 'forecast' // default
+		if (pathname.includes('/compare-height/')) {
+			sourceParam = 'compare-height'
+		} else if (pathname.includes('/compare-runs/')) {
+			sourceParam = 'compare-runs'
+		} else if (pathname.includes('/compare-models/')) {
+			sourceParam = 'compare-models'
+		}
+
+		const fullRoute = `/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}?source=${sourceParam}`
 
 		// console.log('  🔗 Full route:', fullRoute)
 		router.push(fullRoute)
