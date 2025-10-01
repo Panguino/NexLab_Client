@@ -121,6 +121,12 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 		const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
 		const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
 		const route = `${baseParams}${soundingParams}`
+
+		// Store current page as referrer for the sounding page
+		if (typeof window !== 'undefined') {
+			sessionStorage.setItem('forecastSoundingReferrer', window.location.pathname)
+		}
+
 		router.push(route)
 	}, [soundingsSupported, sectorId, runId, modelId, levelId, productId, validTimeId, router])
 
