@@ -123,7 +123,7 @@ export const calculateAnimatorPosition = (
 	// Calculate percentages (can be outside 0-1 range if click is outside image bounds)
 	const xPercent = adjustedX / adjustedWidth
 	const yPercent = adjustedY / adjustedHeight
-	console.log('  ✅ Final percentages:', { xPercent, yPercent })
+	// console.log('  ✅ Final percentages:', { xPercent, yPercent }) // Disabled logging for production
 
 	return { xPercent, yPercent }
 }
