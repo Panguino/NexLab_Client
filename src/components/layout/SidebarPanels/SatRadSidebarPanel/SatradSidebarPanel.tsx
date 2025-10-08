@@ -110,12 +110,7 @@ const SatradSidebarPanel = () => {
 						...ALL_SATRAD_SECTORS[sectorId],
 					}
 					// Only override coordinates for meso floater sectors if updated data is available
-					if (
-						['meso1', 'meso2', 'meso3', 'meso4'].includes(sectorId) &&
-						updatedSectorData &&
-						updatedSectorData[sectorId] &&
-						updatedSectorData[sectorId].coordinates
-					) {
+					if (updatedSectorData && updatedSectorData[sectorId] && updatedSectorData[sectorId].coordinates) {
 						return {
 							...base,
 							coordinates: updatedSectorData[sectorId].coordinates,

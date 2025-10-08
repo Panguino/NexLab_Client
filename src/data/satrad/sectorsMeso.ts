@@ -10,13 +10,13 @@ const SATRAD_SECTOR_MESO_MESO4 = 'meso4'
 
 export const SATRAD_SECTORS_MESO_GOES_EAST = {
 	[SATRAD_SECTOR_MESO_MESO1]: {
-		name: 'Meso 1',
+		name: 'GOES-East Meso 1',
 		type: 'Point',
 		coordinates: [0, 0],
 		products: SATRAD_PRODUCTS_NO_RADAR,
 	},
 	[SATRAD_SECTOR_MESO_MESO2]: {
-		name: 'Meso 2',
+		name: 'GOES-East Meso 2',
 		type: 'Point',
 		coordinates: [0, 0],
 		products: SATRAD_PRODUCTS_NO_RADAR,
@@ -24,13 +24,13 @@ export const SATRAD_SECTORS_MESO_GOES_EAST = {
 }
 export const SATRAD_SECTORS_MESO_GOES_WEST = {
 	[SATRAD_SECTOR_MESO_MESO3]: {
-		name: 'Meso 3',
+		name: 'GOES-West Meso 1',
 		type: 'Point',
 		coordinates: [0, 0],
 		products: SATRAD_PRODUCTS_NO_RADAR,
 	},
 	[SATRAD_SECTOR_MESO_MESO4]: {
-		name: 'Meso 4',
+		name: 'GOES-West Meso 2',
 		type: 'Point',
 		coordinates: [0, 0],
 		products: SATRAD_PRODUCTS_NO_RADAR,
