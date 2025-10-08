@@ -80,7 +80,6 @@ const SatradAnimator: React.FC = () => {
 		frameValidTimeRef.current = satradFrameValidTime
 	}, [satradFrameValidTime])
 
-
 	return (
 		<>
 			<div className={styles.satradAnimatorContainer}>

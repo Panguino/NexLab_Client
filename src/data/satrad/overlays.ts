@@ -1,3 +1,4 @@
+// standard static mapping overlays
 const SATRAD_OVERLAY_STATIC_MAP_ID = 'map'
 const SATRAD_OVERLAY_STATIC_LATLON_ID = 'latlon'
 const SATRAD_OVERLAY_STATIC_RIVERS_ID = 'rivers'
@@ -10,6 +11,20 @@ const SATRAD_OVERLAY_STATIC_COUNTY_WARNING_AREA_ID = 'cwa'
 const SATRAD_OVERLAY_STATIC_RANGES_ID = 'ranges'
 const SATRAD_OVERLAY_STATIC_ARTCC_ID = 'artcc'
 
+// special dynamic mapping overlays for mesoanalysis sectors
+const SATRAD_OVERLAY_DYNAMIC_MAP_ID = 'meso-map'
+const SATRAD_OVERLAY_DYNAMIC_LATLON_ID = 'meso-latlon'
+const SATRAD_OVERLAY_DYNAMIC_RIVERS_ID = 'meso-rivers'
+const SATRAD_OVERLAY_DYNAMIC_COUNTIES_ID = 'meso-counties'
+const SATRAD_OVERLAY_DYNAMIC_US_HIGHWAYS_ID = 'meso-ushw'
+const SATRAD_OVERLAY_DYNAMIC_US_INTERSTATES_ID = 'meso-usint'
+const SATRAD_OVERLAY_DYNAMIC_US_STATE_ROAD_ID = 'meso-usstrd'
+const SATRAD_OVERLAY_DYNAMIC_STATION_IDS_ID = 'meso-id'
+const SATRAD_OVERLAY_DYNAMIC_COUNTY_WARNING_AREA_ID = 'meso-cwa'
+const SATRAD_OVERLAY_DYNAMIC_RANGES_ID = 'meso-ranges'
+const SATRAD_OVERLAY_DYNAMIC_ARTCC_ID = 'meso-artcc'
+
+// standard dynamic overlays
 const SATRAD_OVERLAY_DYNAMIC_CAPE_ID = 'cape'
 const SATRAD_OVERLAY_DYNAMIC_CIN_ID = 'cin'
 const SATRAD_OVERLAY_DYNAMIC_DEW_ID = 'dew'
@@ -67,6 +82,17 @@ export const SATRAD_OVERLAY_MAPPING_GROUP = [
 	SATRAD_OVERLAY_STATIC_COUNTY_WARNING_AREA_ID,
 	SATRAD_OVERLAY_STATIC_RANGES_ID,
 	SATRAD_OVERLAY_STATIC_ARTCC_ID,
+	SATRAD_OVERLAY_DYNAMIC_MAP_ID,
+	SATRAD_OVERLAY_DYNAMIC_LATLON_ID,
+	SATRAD_OVERLAY_DYNAMIC_RIVERS_ID,
+	SATRAD_OVERLAY_DYNAMIC_COUNTIES_ID,
+	SATRAD_OVERLAY_DYNAMIC_US_HIGHWAYS_ID,
+	SATRAD_OVERLAY_DYNAMIC_US_INTERSTATES_ID,
+	SATRAD_OVERLAY_DYNAMIC_US_STATE_ROAD_ID,
+	SATRAD_OVERLAY_DYNAMIC_STATION_IDS_ID,
+	SATRAD_OVERLAY_DYNAMIC_COUNTY_WARNING_AREA_ID,
+	SATRAD_OVERLAY_DYNAMIC_RANGES_ID,
+	SATRAD_OVERLAY_DYNAMIC_ARTCC_ID,
 ]
 export const SATRAD_OVERLAY_MESO_GROUP = [
 	SATRAD_OVERLAY_DYNAMIC_CAPE_ID,
@@ -139,6 +165,7 @@ export const ALL_SATRAD_OVERLAY_GROUPS = {
 }
 
 export const SATRAD_OVERLAYS = {
+	// standard static mapping overlays
 	[SATRAD_OVERLAY_STATIC_MAP_ID]: {
 		name: 'Political & State Borders',
 		opacity: 1,
@@ -194,6 +221,63 @@ export const SATRAD_OVERLAYS = {
 		opacity: 1,
 		zIndex: 90,
 	},
+	// special dynamic mapping overlays for mesoanalysis sectors
+	[SATRAD_OVERLAY_DYNAMIC_MAP_ID]: {
+		name: 'Political & State Borders',
+		opacity: 1,
+		zIndex: 100,
+	},
+	[SATRAD_OVERLAY_DYNAMIC_LATLON_ID]: {
+		name: 'Latitude and Longitude',
+		opacity: 1,
+		zIndex: 90,
+	},
+	[SATRAD_OVERLAY_DYNAMIC_RIVERS_ID]: {
+		name: 'Rivers',
+		opacity: 1,
+		zIndex: 90,
+	},
+	[SATRAD_OVERLAY_DYNAMIC_COUNTIES_ID]: {
+		name: 'Counties',
+		opacity: 1,
+		zIndex: 90,
+	},
+	[SATRAD_OVERLAY_DYNAMIC_US_HIGHWAYS_ID]: {
+		name: 'U.S. Highways',
+		opacity: 1,
+		zIndex: 90,
+	},
+	[SATRAD_OVERLAY_DYNAMIC_US_INTERSTATES_ID]: {
+		name: 'U.S. Interstates',
+		opacity: 1,
+		zIndex: 90,
+	},
+	[SATRAD_OVERLAY_DYNAMIC_US_STATE_ROAD_ID]: {
+		name: 'U.S. State Routes',
+		opacity: 1,
+		zIndex: 90,
+	},
+	[SATRAD_OVERLAY_DYNAMIC_STATION_IDS_ID]: {
+		name: 'Station I.D.s',
+		opacity: 1,
+		zIndex: 110,
+	},
+	[SATRAD_OVERLAY_DYNAMIC_COUNTY_WARNING_AREA_ID]: {
+		name: 'CWA Outlines',
+		opacity: 1,
+		zIndex: 90,
+	},
+	[SATRAD_OVERLAY_DYNAMIC_RANGES_ID]: {
+		name: 'Ranges',
+		opacity: 1,
+		zIndex: 90,
+	},
+	[SATRAD_OVERLAY_DYNAMIC_ARTCC_ID]: {
+		name: 'ARTCC Zones',
+		opacity: 1,
+		zIndex: 90,
+	},
+	// standard dynamic overlays
 	[SATRAD_OVERLAY_DYNAMIC_CAPE_ID]: {
 		name: 'CAPE',
 		opacity: 1,
