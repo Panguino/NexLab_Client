@@ -1,0 +1,61 @@
+.formContainer {
+	padding: 60px 20px;
+	background: var(--color-white-grey19);
+	min-height: 100vh;
+	transition:
+		background-color var(--themeChange),
+		color var(--themeChange);
+}
+
+.embedWrapper {
+	max-width: 900px;
+	margin: 0 auto;
+	background: var(--color-white-grey18);
+	border: 1px solid var(--color-grey6-grey14);
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Placeholder styling - remove when actual embed is added */
+.placeholder {
+	padding: 100px 40px;
+	text-align: center;
+	color: var(--color-grey16-grey5);
+}
+
+.placeholder p {
+	font-size: 18px;
+	margin: 0 0 12px;
+}
+
+.instruction {
+	font-size: 14px !important;
+	color: var(--color-grey12-grey8) !important;
+	font-style: italic;
+}
+
+/* Styling for the actual Google Form iframe */
+.embedWrapper iframe {
+	width: 100%;
+	min-height: 800px;
+	border: none;
+}
+
+@media (max-width: 768px) {
+	.formContainer {
+		padding: 40px 15px;
+	}
+
+	.placeholder {
+		padding: 60px 20px;
+	}
+
+	.placeholder p {
+		font-size: 16px;
+	}
+
+	.embedWrapper iframe {
+		min-height: 600px;
+	}
+}
