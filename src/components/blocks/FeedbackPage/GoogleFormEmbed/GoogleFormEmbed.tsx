@@ -7,10 +7,16 @@ export const GoogleFormEmbed = () => {
 		<section className={styles.formContainer}>
 			<div className={styles.embedWrapper}>
 				{/* PLACEHOLDER: Insert Google Form embed code here */}
-				<div className={styles.placeholder}>
-					<p>Google Form embed code will be inserted here</p>
-					<p className={styles.instruction}>Replace this placeholder with the iframe embed code from your Google Form</p>
-				</div>
+				<iframe
+					src="https://docs.google.com/forms/d/e/1FAIpQLSeE2AE8OXMqkQYCJUf_NCOP6f6oRWrOnJvv2oAIBOYArOUA1g/viewform?embedded=true"
+					width="600"
+					height="900"
+					frameBorder="0"
+					marginHeight={0}
+					marginWidth={0}
+				>
+					Loading…
+				</iframe>
 			</div>
 		</section>
 	)
