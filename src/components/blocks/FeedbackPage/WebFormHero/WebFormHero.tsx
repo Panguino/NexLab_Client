@@ -8,7 +8,7 @@ export const WebFormHero = () => {
 		<section className={styles.hero}>
 			<div className={styles.container}>
 				<div className={styles.heroContent}>
-					<h1>Feedback Form</h1>
+					<h1>Contact NEXLAB</h1>
 					<p>
 						Submit your feedback using the form below. For a more collaborative experience with faster responses and community
 						interaction, we recommend joining our Discord community.
