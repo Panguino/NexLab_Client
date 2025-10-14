@@ -1,9 +1,11 @@
+import '@/lib/fontawesome'
+import '@/styles/global.scss'
+import { GoogleAnalytics } from '@next/third-parties/google'
+
 import Navigation from '@/components/layout/Navigation/Navigation'
 import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'
 import Providers from '@/components/providers/Providers/Providers'
 import { NextAuthProvider } from '@/components/providers/SessionProvider/SessionProvider'
-import '@/lib/fontawesome'
-import '@/styles/global.scss'
 import { Viewport } from 'next'
 
 import { buildMobileMenuItems } from './buildMobileMenu'
@@ -38,6 +40,7 @@ export default async function RootLayout({ children }) {
 						</Providers>
 					</NextAuthProvider>
 				</div>
+				<GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''} />
 			</body>
 		</html>
 	)
