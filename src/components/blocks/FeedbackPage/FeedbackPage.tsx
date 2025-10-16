@@ -5,6 +5,7 @@ import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { DiscordRequirements } from './DiscordRequirements/DiscordRequirements'
 import { FeedbackHero } from './FeedbackHero/FeedbackHero'
 import styles from './FeedbackPage.module.scss'
+import { WebFormAlternative } from './WebFormAlternative/WebFormAlternative'
 
 export const FeedbackPage = () => {
 	return (
@@ -12,6 +13,7 @@ export const FeedbackPage = () => {
 			<div className={styles.feedbackPage}>
 				<FeedbackHero />
 				<DiscordRequirements />
+				<WebFormAlternative />
 			</div>
 			<Footer />
 		</ScrollArea>

@@ -1,0 +1,74 @@
+.hero {
+	background: linear-gradient(135deg, var(--color-grey12) 0%, var(--color-grey14) 100%);
+	color: var(--color-white);
+	padding: 60px 20px;
+	position: relative;
+	overflow: hidden;
+}
+
+.container {
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+.heroContent {
+	text-align: center;
+}
+
+.heroContent h1 {
+	font-family: var(--font-secondary);
+	font-size: 48px;
+	font-weight: 400;
+	line-height: 1.1;
+	margin: 0 0 20px;
+}
+
+.heroContent p {
+	font-size: 18px;
+	line-height: 1.6;
+	margin: 0 0 32px;
+	opacity: 0.9;
+	color: var(--color-grey3);
+}
+
+.discordCTA {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	background: rgba(0, 0, 0, 0.15);
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-radius: 25px;
+	padding: 12px 20px;
+	backdrop-filter: blur(10px);
+}
+
+.discordIcon {
+	font-size: 20px;
+	color: #5865f2;
+}
+
+.discordCTA span {
+	font-size: 15px;
+	font-weight: 500;
+	color: var(--color-white);
+}
+
+@media (max-width: 768px) {
+	.hero {
+		padding: 40px 20px;
+	}
+
+	.heroContent h1 {
+		font-size: 36px;
+	}
+
+	.heroContent p {
+		font-size: 16px;
+	}
+
+	.discordCTA {
+		flex-direction: column;
+		gap: 10px;
+		padding: 16px;
+	}
+}
