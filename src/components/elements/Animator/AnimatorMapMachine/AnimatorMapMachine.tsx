@@ -3,6 +3,7 @@
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
 import statesData from '@/data/d3Map/states.json'
 import { GeoJsonLayer } from '@deck.gl/layers'
+import worldData from '@/data/d3Map/world.json'
 import DeckGL from '@deck.gl/react'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
@@ -106,15 +107,24 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					getFillColor: [30, 144, 255, 255], // Dodger blue for ocean
 					opacity: 1,
 				}),
-				// Land layer with states
+				// World layer - faded background for all countries
 				new GeoJsonLayer({
-					id: 'land-layer',
+					id: 'world-layer',
+					data: worldData as any,
+					filled: true,
+					stroked: false,
+					getFillColor: [144, 238, 144, 255], // Light green for world
+					opacity: 0.3, // Faded/subtle
+				}),
+				// US States layer - bright green
+				new GeoJsonLayer({
+					id: 'states-layer',
 					data: statesData as any,
 					filled: true,
 					stroked: true,
 					lineWidthMinPixels: 1,
 					lineWidthMaxPixels: 2,
-					getFillColor: [34, 139, 34, 255], // Forest green for land
+					getFillColor: [34, 139, 34, 255], // Forest green for US states
 					getLineColor: [0, 100, 0, 255], // Dark green for borders
 					opacity: _baseOpacity,
 				}),
