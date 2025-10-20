@@ -5,7 +5,6 @@ import statesData from '@/data/d3Map/states.json'
 import worldData from '@/data/d3Map/world.json'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from '@deck.gl/react'
-import { useTheme } from 'next-themes'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
 import { IAnimatorMapMachineProps, MapFrame, MapViewState } from './types'
@@ -39,7 +38,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		},
 		ref,
 	) => {
-		const { theme } = useTheme()
 		const [isLoading, setIsLoading] = useState(true)
 		const [localLoadedFrames, setLocalLoadedFrames] = useState<MapFrame[]>([])
 		const [viewState, setViewState] = useState<MapViewState>({
@@ -47,12 +45,29 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			latitude: 37,
 			zoom: 3,
 		})
+		const [isDarkMode, setIsDarkMode] = useState(false)
 
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
 
+		// Detect dark mode from DOM class
+		useEffect(() => {
+			const checkDarkMode = () => {
+				const isDark = document.documentElement.classList.contains('dark')
+				setIsDarkMode(isDark)
+			}
+
+			checkDarkMode()
+
+			// Watch for theme changes
+			const observer = new MutationObserver(checkDarkMode)
+			observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+
+			return () => observer.disconnect()
+		}, [])
+
 		// Theme-aware colors (RGBA format)
-		const isDark = theme === 'dark'
+		const isDark = isDarkMode
 		// Ocean: blue1 (#8aadcf) light / blue2 (#233544) dark
 		const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
 		// World: grey2 (#d8d8d8) light / grey16 (#484848) dark
@@ -61,12 +76,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255]
 		// Borders: grey18 (#232323) light / grey15 (#505050) dark
 		const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
-
-		// Debug: log colors to verify they're correct
-		useEffect(() => {
-			console.log('Theme:', theme, 'isDark:', isDark)
-			console.log('Colors - Ocean:', oceanColor, 'World:', worldColor, 'States:', statesColor, 'Border:', borderColor)
-		}, [theme, isDark, oceanColor, worldColor, statesColor, borderColor])
 
 		// Load frames
 		useEffect(() => {
@@ -208,7 +217,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			}
 
 			return baseLayers
-		}, [loadedFrames, currentFrame, _baseOpacity, onFrameChange, theme])
+		}, [loadedFrames, currentFrame, _baseOpacity, onFrameChange, isDarkMode, oceanColor, worldColor, statesColor, borderColor])
 
 		const handleViewStateChange = (viewState: any) => {
 			setViewState(viewState.viewState)
