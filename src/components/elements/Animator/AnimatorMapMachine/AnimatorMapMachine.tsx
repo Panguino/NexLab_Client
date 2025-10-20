@@ -5,6 +5,7 @@ import statesData from '@/data/d3Map/states.json'
 import worldData from '@/data/d3Map/world.json'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from '@deck.gl/react'
+import { useTheme } from 'next-themes'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
 import { IAnimatorMapMachineProps, MapFrame, MapViewState } from './types'
@@ -38,6 +39,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		},
 		ref,
 	) => {
+		const { theme } = useTheme()
 		const [isLoading, setIsLoading] = useState(true)
 		const [localLoadedFrames, setLocalLoadedFrames] = useState<MapFrame[]>([])
 		const [viewState, setViewState] = useState<MapViewState>({
@@ -48,6 +50,13 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
+
+		// Theme-aware colors
+		const isDark = theme === 'dark'
+		const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255] // blue2 : blue1
+		const worldColor = isDark ? [72, 72, 72, 255] : [216, 216, 216, 255] // grey16 : grey2
+		const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255] // grey13 : white
+		const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255] // grey15 : grey18
 
 		// Load frames
 		useEffect(() => {
@@ -105,7 +114,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					} as any,
 					filled: true,
 					stroked: false,
-					getFillColor: [138, 173, 207, 255], // Light blue (#8aadcf) - will adapt to dark mode via CSS
+					getFillColor: oceanColor as any,
 					opacity: 1,
 				}),
 				// World layer - faded background for all countries
@@ -115,7 +124,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					data: worldData as any,
 					filled: true,
 					stroked: false,
-					getFillColor: [216, 216, 216, 255], // Light grey (#d8d8d8)
+					getFillColor: worldColor as any,
 					opacity: 0.4, // Faded/subtle
 				}),
 				// US States layer - using theme color white-grey13
@@ -127,8 +136,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					stroked: true,
 					lineWidthMinPixels: 1,
 					lineWidthMaxPixels: 2,
-					getFillColor: [255, 255, 255, 255], // White (#fff) for US states
-					getLineColor: [35, 35, 35, 255], // Dark grey for borders (grey18-grey15)
+					getFillColor: statesColor as any,
+					getLineColor: borderColor as any,
 					opacity: _baseOpacity,
 				}),
 			]
@@ -177,7 +186,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			}
 
 			return baseLayers
-		}, [loadedFrames, currentFrame, _baseOpacity, onFrameChange])
+		}, [loadedFrames, currentFrame, _baseOpacity, onFrameChange, theme])
 
 		const handleViewStateChange = (viewState: any) => {
 			setViewState(viewState.viewState)
