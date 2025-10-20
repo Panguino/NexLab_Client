@@ -62,6 +62,12 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		// Borders: grey18 (#232323) light / grey15 (#505050) dark
 		const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
 
+		// Debug: log colors to verify they're correct
+		useEffect(() => {
+			console.log('Theme:', theme, 'isDark:', isDark)
+			console.log('Colors - Ocean:', oceanColor, 'World:', worldColor, 'States:', statesColor, 'Border:', borderColor)
+		}, [theme, isDark, oceanColor, worldColor, statesColor, borderColor])
+
 		// Load frames
 		useEffect(() => {
 			const loadFrames = async () => {
@@ -129,7 +135,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					filled: true,
 					stroked: false,
 					getFillColor: worldColor as any,
-					opacity: 0.4, // Faded/subtle
+					opacity: 0.3, // Faded/subtle - reduced to prevent covering states
+					pickable: false,
 				}),
 				// US States layer - using theme color white-grey13
 				// Light mode: #fff (255, 255, 255), Dark mode: #5f5f5f (95, 95, 95)
