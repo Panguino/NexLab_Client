@@ -126,6 +126,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					stroked: false,
 					getFillColor: oceanColor as any,
 					opacity: 1,
+					updateTriggers: {
+						getFillColor: [oceanColor],
+					},
 				}),
 				// World layer - faded background for all countries
 				// Using theme color grey2-grey16: Light mode: #d8d8d8 (216, 216, 216), Dark mode: #484848 (72, 72, 72)
@@ -137,6 +140,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					getFillColor: worldColor as any,
 					opacity: 0.3, // Faded/subtle - reduced to prevent covering states
 					pickable: false,
+					updateTriggers: {
+						getFillColor: [worldColor],
+					},
 				}),
 				// US States layer - using theme color white-grey13
 				// Light mode: #fff (255, 255, 255), Dark mode: #5f5f5f (95, 95, 95)
@@ -151,6 +157,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					getLineColor: borderColor as any,
 					opacity: _baseOpacity,
 					pickable: false,
+					updateTriggers: {
+						getFillColor: [statesColor],
+						getLineColor: [borderColor],
+					},
 				}),
 			]
 
