@@ -20,14 +20,6 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
 
-		// Debug logging
-		const isUsingExternalFrames = externalLoadedFrames !== undefined
-		const hasFramesLoaded = loadedFrames && loadedFrames.length > 0
-
-		console.log(
-			`[AnimatorImageMachine] Props: frames=${frames?.length}, currentFrame=${currentFrame}, loadedFrames=${loadedFrames?.length}, baseOpacity=${baseOpacity}, isUsingExternal=${isUsingExternalFrames}, isLoading=${isLoading}`,
-		)
-
 		// track whether localStorage caching should be disabled for this session
 		// (set to true if a QuotaExceededError or other storage error occurs)
 		const disableLocalStorageRef = useRef(false)
@@ -90,11 +82,7 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
 
 			// Return the base opacity if the index matches the active frame, otherwise 0
-			const opacity = index === activeFrame ? baseOpacity : 0
-			console.log(
-				`[AnimatorImageMachine] Frame ${index}: activeFrame=${activeFrame}, currentFrame=${currentFrame}, opacity=${opacity}, baseOpacity=${baseOpacity}`,
-			)
-			return opacity
+			return index === activeFrame ? baseOpacity : 0
 		}
 
 		return (
