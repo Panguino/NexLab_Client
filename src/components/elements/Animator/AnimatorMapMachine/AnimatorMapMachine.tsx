@@ -51,12 +51,16 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
 
-		// Theme-aware colors
+		// Theme-aware colors (RGBA format)
 		const isDark = theme === 'dark'
-		const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255] // blue2 : blue1
-		const worldColor = isDark ? [72, 72, 72, 255] : [216, 216, 216, 255] // grey16 : grey2
-		const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255] // grey13 : white
-		const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255] // grey15 : grey18
+		// Ocean: blue1 (#8aadcf) light / blue2 (#233544) dark
+		const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
+		// World: grey2 (#d8d8d8) light / grey16 (#484848) dark
+		const worldColor = isDark ? [72, 72, 72, 255] : [216, 216, 216, 255]
+		// US States: white (#ffffff) light / grey13 (#5f5f5f) dark
+		const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255]
+		// Borders: grey18 (#232323) light / grey15 (#505050) dark
+		const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
 
 		// Load frames
 		useEffect(() => {
@@ -139,6 +143,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					getFillColor: statesColor as any,
 					getLineColor: borderColor as any,
 					opacity: _baseOpacity,
+					pickable: false,
 				}),
 			]
 
@@ -158,7 +163,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							lineWidthMaxPixels: 10,
 							getLineColor: [255, 0, 0, 255],
 							getFillColor: [255, 0, 0, 128],
-							opacity: _baseOpacity,
+							opacity: 0, // Hide frame data layer for now
 						}),
 					)
 				}
