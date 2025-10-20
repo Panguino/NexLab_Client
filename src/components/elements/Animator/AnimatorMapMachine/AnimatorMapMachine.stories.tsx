@@ -4,7 +4,7 @@ import { AnimatorMapMachine } from './AnimatorMapMachine'
 import { SAMPLE_HURRICANE_PATHS } from './staticMapData'
 
 const meta = {
-	title: 'Elements/Animator/AnimatorMapMachine',
+	title: 'Components/Animator/AnimatorMapMachine',
 	component: AnimatorMapMachine,
 	parameters: {
 		layout: 'fullscreen',
