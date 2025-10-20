@@ -3,77 +3,15 @@
  * Contains sample GeoJSON data for US states, counties, and hurricane paths
  */
 
-import { MapFrame, StaticMapData } from './types'
+import statesData from '@/data/d3Map/states.json'
 import { FeatureCollection } from 'geojson'
+import { MapFrame, StaticMapData } from './types'
 
 /**
- * Simplified US States GeoJSON for demo purposes
- * This is a minimal version - in production, use the full states.json from src/data/d3Map/
+ * US States GeoJSON from src/data/d3Map/states.json
+ * Contains all US states with proper boundaries
  */
-export const SAMPLE_STATES_GEOJSON: FeatureCollection = {
-	type: 'FeatureCollection',
-	features: [
-		{
-			type: 'Feature',
-			properties: { id: '06000', name: 'California' },
-			geometry: {
-				type: 'Polygon',
-				coordinates: [
-					[
-						[-124.482003, 42.009517],
-						[-120.038202, 41.942745],
-						[-119.999999, 38.994746],
-						[-118.69541, 34.418165],
-						[-117.127997, 32.534994],
-						[-114.131211, 32.708946],
-						[-114.717998, 34.565443],
-						[-114.888701, 35.001035],
-						[-117.126437, 37.002075],
-						[-119.999999, 38.994746],
-						[-120.038202, 41.942745],
-						[-124.482003, 42.009517],
-					],
-				],
-			},
-		},
-		{
-			type: 'Feature',
-			properties: { id: '48000', name: 'Texas' },
-			geometry: {
-				type: 'Polygon',
-				coordinates: [
-					[
-						[-93.507, 29.63],
-						[-93.507, 36.5],
-						[-102.042, 36.5],
-						[-106.645, 31.783],
-						[-106.645, 26.984],
-						[-97.438, 26.984],
-						[-93.507, 29.63],
-					],
-				],
-			},
-		},
-		{
-			type: 'Feature',
-			properties: { id: '12000', name: 'Florida' },
-			geometry: {
-				type: 'Polygon',
-				coordinates: [
-					[
-						[-87.359296, 30.274670],
-						[-87.359296, 29.696737],
-						[-85.605165, 29.696737],
-						[-80.751665, 25.130622],
-						[-80.751665, 24.523096],
-						[-81.761963, 24.523096],
-						[-87.359296, 30.274670],
-					],
-				],
-			},
-		},
-	],
-}
+export const SAMPLE_STATES_GEOJSON: FeatureCollection = statesData as FeatureCollection
 
 /**
  * Simplified US Counties GeoJSON for demo purposes
@@ -358,4 +296,3 @@ export const STATIC_MAP_DATA: StaticMapData = {
 	states: SAMPLE_STATES_GEOJSON,
 	hurricanePaths: SAMPLE_HURRICANE_PATHS,
 }
-

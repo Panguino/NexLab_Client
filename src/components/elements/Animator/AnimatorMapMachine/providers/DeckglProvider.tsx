@@ -3,11 +3,11 @@
  * GPU-accelerated map rendering with excellent performance
  */
 
-import { MapProvider } from './MapProvider'
-import { MapProviderConfig, MapViewState, DeckglLayerConfig } from '../types'
-import { FeatureCollection, Feature } from 'geojson'
-import { GeoJsonLayer } from '@deck.gl/layers'
 import { Deck } from '@deck.gl/core'
+import { GeoJsonLayer } from '@deck.gl/layers'
+import { Feature, FeatureCollection } from 'geojson'
+import { DeckglLayerConfig, MapProviderConfig, MapViewState } from '../types'
+import { MapProvider } from './MapProvider'
 
 /**
  * Deck.gl-based map provider
@@ -25,6 +25,53 @@ export class DeckglProvider extends MapProvider {
 		this.validateContainer(config.container)
 
 		try {
+			// Import states data for land layer
+			const statesData = await import('@/data/d3Map/states.json').then((m) => m.default)
+
+			// Create base layers (background)
+			const baseLayers = [
+				// Ocean background layer
+				new GeoJsonLayer({
+					id: 'ocean-background',
+					data: {
+						type: 'FeatureCollection',
+						features: [
+							{
+								type: 'Feature',
+								geometry: {
+									type: 'Polygon',
+									coordinates: [
+										[
+											[-180, -90],
+											[180, -90],
+											[180, 90],
+											[-180, 90],
+											[-180, -90],
+										],
+									],
+								},
+							},
+						],
+					},
+					filled: true,
+					stroked: false,
+					getFillColor: [30, 144, 255, 255], // Dodger blue for ocean
+					opacity: 1,
+				}),
+				// Land layer with green color
+				new GeoJsonLayer({
+					id: 'land-layer',
+					data: statesData,
+					filled: true,
+					stroked: true,
+					lineWidthMinPixels: 1,
+					lineWidthMaxPixels: 2,
+					getFillColor: [34, 139, 34, 255], // Forest green for land
+					getLineColor: [0, 100, 0, 255], // Dark green for borders
+					opacity: 1,
+				}),
+			]
+
 			// Create Deck.gl instance
 			this.deck = new Deck({
 				canvas: config.container,
@@ -38,7 +85,7 @@ export class DeckglProvider extends MapProvider {
 					bearing: config.initialViewState.bearing || 0,
 				},
 				controller: true,
-				layers: [],
+				layers: baseLayers,
 				onViewStateChange: (viewState: any) => {
 					this.updateViewState({
 						longitude: viewState.viewState.longitude,
@@ -193,4 +240,3 @@ export class DeckglProvider extends MapProvider {
 		this.viewStateChangeCallback = null
 	}
 }
-
