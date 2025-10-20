@@ -124,8 +124,8 @@ export const Animator = ({
 	},
 	setZoomFill,
 	setFullScreen,
-	onFrameUpdate = (frameIndex: number) => {
-		// console.warn('onFrameUpdate function not provided, frame update will not be handled.', frameIndex)
+	onFrameUpdate = (_frameIndex: number) => {
+		// console.warn('onFrameUpdate function not provided, frame update will not be handled.', _frameIndex)
 	},
 	pdfs = [],
 	pdfButtonClick = (pdfUrl: string) => {

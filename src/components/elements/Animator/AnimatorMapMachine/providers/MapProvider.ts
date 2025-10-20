@@ -3,8 +3,8 @@
  * Allows swapping between different map rendering backends (Deck.gl, Canvas-D3, Mapbox)
  */
 
-import { IMapProvider, MapProviderConfig, MapViewState, DeckglLayerConfig } from '../types'
-import { FeatureCollection, Feature } from 'geojson'
+import { Feature, FeatureCollection } from 'geojson'
+import { DeckglLayerConfig, IMapProvider, MapProviderConfig, MapViewState } from '../types'
 
 /**
  * Base class for map provider implementations
@@ -96,13 +96,12 @@ export function createMapProvider(type: 'deckgl' | 'canvas-d3' | 'mapbox'): MapP
 			const { DeckglProvider } = require('./DeckglProvider')
 			return new DeckglProvider()
 		case 'canvas-d3':
-			const { CanvasD3Provider } = require('./CanvasD3Provider')
-			return new CanvasD3Provider()
+			// Canvas-D3 provider not yet implemented
+			throw new Error('Canvas-D3 provider is not yet implemented. Use deckgl instead.')
 		case 'mapbox':
-			const { MapboxProvider } = require('./MapboxProvider')
-			return new MapboxProvider()
+			// Mapbox provider not yet implemented
+			throw new Error('Mapbox provider is not yet implemented. Use deckgl instead.')
 		default:
 			throw new Error(`Unknown map provider type: ${type}`)
 	}
 }
-
