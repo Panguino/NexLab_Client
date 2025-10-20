@@ -106,6 +106,13 @@ export class DeckglProvider extends MapProvider {
 				},
 			})
 
+			// Move Deck.gl overlay into our container if it was appended to body
+			const deckglOverlay = document.querySelector('.deckgl-overlay')
+			if (deckglOverlay && deckglOverlay.parentElement !== container) {
+				console.log('Moving deckgl-overlay from body to container')
+				container.appendChild(deckglOverlay)
+			}
+
 			// Verify canvas is in the right place
 			const canvas = container.querySelector('canvas')
 			console.log(`Canvas found in container:`, canvas)
