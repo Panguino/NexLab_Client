@@ -25,6 +25,14 @@ export class DeckglProvider extends MapProvider {
 		this.validateContainer(config.container)
 
 		try {
+			// Ensure container has proper dimensions
+			const container = config.container as HTMLElement
+			const rect = container.getBoundingClientRect()
+			const width = rect.width || container.clientWidth || 800
+			const height = rect.height || container.clientHeight || 600
+
+			console.log(`Initializing Deck.gl with dimensions: ${width}x${height}`)
+
 			// Create base layers (background)
 			const baseLayers: any[] = [
 				// Ocean background layer
@@ -62,8 +70,8 @@ export class DeckglProvider extends MapProvider {
 			// Create Deck.gl instance
 			this.deck = new Deck({
 				container: config.container,
-				width: '100%',
-				height: '100%',
+				width: width,
+				height: height,
 				initialViewState: {
 					longitude: config.initialViewState.longitude,
 					latitude: config.initialViewState.latitude,
