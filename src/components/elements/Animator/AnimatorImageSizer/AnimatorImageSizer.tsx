@@ -177,7 +177,7 @@ const AnimatorImageSizer = () => {
 								currentFrame={currentFrame}
 								loadedFrames={loadedFrames}
 								setLoadedFrames={setLoadedFrames}
-								baseOpacity={activeOverlays && Array.isArray(activeOverlays) && activeOverlays.includes('data') ? 1 : 0}
+								baseOpacity={1}
 							/>
 							{activeOverlays &&
 								Array.isArray(activeOverlays) &&
