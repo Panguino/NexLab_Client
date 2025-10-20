@@ -177,20 +177,22 @@ const AnimatorImageSizer = () => {
 								currentFrame={currentFrame}
 								loadedFrames={loadedFrames}
 								setLoadedFrames={setLoadedFrames}
-								baseOpacity={activeOverlays.includes('data') ? 1 : 0}
+								baseOpacity={activeOverlays && Array.isArray(activeOverlays) && activeOverlays.includes('data') ? 1 : 0}
 							/>
-							{activeOverlays.map((overlay, index) => {
-								if (overlay === 'data') return null
-								return (
-									<AnimatorImageMachine
-										key={index}
-										baseOpacity={SATRAD_OVERLAYS[overlay].opacity} // TODO FIX THIS Satrad shouldn't be hard coded into animator
-										zIndex={SATRAD_OVERLAYS[overlay].zIndex}
-										frames={allOverlayImages[overlay] || []}
-										currentFrame={currentFrame}
-									/>
-								)
-							})}
+							{activeOverlays &&
+								Array.isArray(activeOverlays) &&
+								activeOverlays.map((overlay, index) => {
+									if (overlay === 'data') return null
+									return (
+										<AnimatorImageMachine
+											key={index}
+											baseOpacity={SATRAD_OVERLAYS[overlay].opacity} // TODO FIX THIS Satrad shouldn't be hard coded into animator
+											zIndex={SATRAD_OVERLAYS[overlay].zIndex}
+											frames={allOverlayImages[overlay] || []}
+											currentFrame={currentFrame}
+										/>
+									)
+								})}
 							{/* Overlay markers */}
 							{(Array.isArray(overlayMarkers) ? overlayMarkers : []).map((m, i) => (
 								<div

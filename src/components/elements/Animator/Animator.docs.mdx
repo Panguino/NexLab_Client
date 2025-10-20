@@ -1,0 +1,273 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Components/Animator/Documentation" />
+
+# Animator Component
+
+A comprehensive, feature-rich animation player for displaying sequences of images with advanced controls, overlays, zoom capabilities, and interactive features.
+
+## Overview
+
+The Animator component is designed to handle weather data visualization, satellite imagery, radar data, and other time-series image sequences. It provides a complete solution for:
+
+- **Frame Animation**: Play/pause/step through image sequences with configurable playback speed
+- **Zoom & Pan**: Interactive zoom and pan using react-zoom-pan-pinch library
+- **Overlays**: Support for static and dynamic overlay layers with toggle controls
+- **Scrubber**: Timeline with frame labels, load states, and valid times
+- **Run Selection**: Dropdown for selecting different model runs or data sources
+- **Soundings Picker**: Interactive click-through mode for selecting geographic points
+- **Data Readout**: Hover tooltips with data values and lat/lon coordinates
+- **PDF Support**: Frame-specific PDF links
+- **Responsive**: Adapts to container size with configurable aspect ratios
+
+## Architecture
+
+### Component Hierarchy
+
+```
+Animator (Context Provider)
+├── AnimatorLayout
+│   ├── AnimatorImageSizer
+│   │   ├── TransformWrapper (react-zoom-pan-pinch)
+│   │   │   ├── AnimatorImageMachine (main frames)
+│   │   │   ├── AnimatorImageMachine (overlay layers)
+│   │   │   ├── Overlay Markers
+│   │   │   └── ImageControls
+│   │   └── DataTooltip
+│   └── AnimatorControls
+│       ├── RunSelector
+│       ├── Scrubber
+│       └── BasicPlaybackControls
+```
+
+### Core Components
+
+#### **Animator** (Main Component)
+- **Purpose**: Root component that provides context to all child components
+- **Responsibilities**: 
+  - Creates AnimatorContext for state management
+  - Manages playback state (isPlaying, currentFrame)
+  - Manages loaded frames cache
+  - Provides all props to child components via context
+
+#### **AnimatorLayout**
+- **Purpose**: Main layout wrapper
+- **Responsibilities**: Arranges image display and controls
+
+#### **AnimatorImageSizer**
+- **Purpose**: Handles image sizing, zoom, pan, and click-through interactions
+- **Key Features**:
+  - Responsive sizing based on aspect ratio
+  - Zoom and pan using react-zoom-pan-pinch
+  - Soundings picker mode for interactive selection
+  - Overlay rendering
+  - Data tooltip positioning
+
+#### **AnimatorImageMachine**
+- **Purpose**: Renders image frames with opacity-based transitions
+- **Key Features**:
+  - Lazy loads frames
+  - Caches frames in localStorage
+  - Manages frame loading states
+  - Handles opacity calculations for smooth transitions
+
+#### **AnimatorControls**
+- **Purpose**: Playback and navigation controls
+- **Sub-components**:
+  - **RunSelector**: Dropdown for selecting different model runs
+  - **Scrubber**: Timeline scrubber with frame labels
+  - **BasicPlaybackControls**: Play/pause, step, loop controls
+
+#### **ImageControls**
+- **Purpose**: Image manipulation controls
+- **Features**:
+  - Zoom in/out buttons
+  - Reset zoom
+  - Expand/compress toggle
+  - Fullscreen toggle
+  - Overlay panel toggle
+  - Soundings picker toggle
+  - PDF button
+
+#### **DataTooltip**
+- **Purpose**: Displays data values on hover
+- **Features**:
+  - Shows pixel coordinates
+  - Displays lat/lon (if sectorId provided)
+  - Shows forecast readout data
+  - Smart positioning to avoid edges
+
+#### **OverlayPanel**
+- **Purpose**: Modal for selecting active overlays
+- **Features**: Toggle visibility of overlay layers
+
+#### **RunSelector**
+- **Purpose**: Dropdown selector for model runs
+- **Features**: Groups runs by date, customizable grid layout
+
+## Context API
+
+The `useAnimator()` hook provides access to all animator state and functions:
+
+```typescript
+import { useAnimator } from '@/components/elements/Animator/Animator'
+
+const MyComponent = () => {
+  const animator = useAnimator()
+  
+  // Access state
+  const { currentFrame, isPlaying, frames, loadedFrames } = animator
+  
+  // Call functions
+  const { setCurrentFrame, setIsPlaying, setActiveOverlays } = animator
+  
+  return (
+    <div>
+      Current Frame: {currentFrame} / {frames.length}
+      Status: {isPlaying ? 'Playing' : 'Paused'}
+    </div>
+  )
+}
+```
+
+## Usage Patterns
+
+### Basic Usage
+
+```typescript
+<Animator
+  frames={imageUrls}
+  imageInfo={{ width: 800, height: 600 }}
+  interval={250}
+  autoPlay={true}
+/>
+```
+
+### With Overlays
+
+```typescript
+<Animator
+  frames={mainFrames}
+  imageInfo={{ width: 1600, height: 900 }}
+  overlays={{
+    static: { 'borders': borderImageUrl },
+    dynamic: { 'radar': radarFrames }
+  }}
+  activeOverlays={['borders', 'radar']}
+  setActiveOverlays={setActiveOverlays}
+/>
+```
+
+### With Soundings Picker
+
+```typescript
+<Animator
+  frames={imageUrls}
+  imageInfo={{ width: 800, height: 600 }}
+  soundingsPicker={true}
+  soundingsPickerMode={pickerMode}
+  setSoundingsPickerMode={setPickerMode}
+  onSoundingsClickthrough={({ xPercent, yPercent }) => {
+    // Handle sounding selection
+    fetchSoundingData(xPercent, yPercent)
+  }}
+/>
+```
+
+### With Data Readout
+
+```typescript
+<Animator
+  frames={imageUrls}
+  imageInfo={{ width: 800, height: 600 }}
+  enableReadouts={true}
+  frameReadoutData={currentReadoutData}
+  isLoadingReadoutData={isLoading}
+  requestReadoutData={(frameIndex) => {
+    // Fetch data for frame
+    fetchReadoutData(frameIndex)
+  }}
+  sectorId="sector-1"
+/>
+```
+
+## Key Features Explained
+
+### Playback Control
+- **autoPlay**: Start animation automatically
+- **interval**: Milliseconds between frames
+- **lastFrameDwell**: Pause on last frame
+- **lastFrameDwellTime**: Duration of pause
+
+### Zoom & Pan
+- **zoomFill**: Fill container with image (vs. fit)
+- **initialZoomState**: Starting zoom/pan position
+- **disableZoom**: Disable zoom functionality
+- **hideZoomControls**: Hide zoom buttons
+
+### Frame Management
+- **startFrame**: Initial frame index
+- **frameValidTimes**: Valid times for each frame
+- **frameLabels**: Display labels for frames
+- **displayAllLabels**: Show all labels or only active
+
+### Overlay System
+- **overlays**: Define static and dynamic layers
+- **activeOverlays**: Currently visible layers
+- **setActiveOverlays**: Update visible layers
+
+### Interactive Features
+- **soundingsPicker**: Enable picker button
+- **soundingsPickerMode**: Toggle picker mode
+- **onSoundingsClickthrough**: Handle picker clicks
+- **pdfs**: PDF URLs for each frame
+- **pdfButtonClick**: Handle PDF button clicks
+
+## Performance Considerations
+
+1. **Frame Caching**: AnimatorImageMachine caches frames in localStorage for faster loading
+2. **Lazy Loading**: Frames are loaded on-demand as needed
+3. **Opacity Transitions**: Uses CSS opacity for smooth frame transitions
+4. **Memoization**: useMemo used for overlay calculations
+
+## Styling
+
+The component uses CSS modules for styling:
+- `Animator.module.scss`: Main layout
+- `AnimatorImageSizer.module.scss`: Image container
+- `AnimatorControls.module.scss`: Control panel
+- `ImageControls.module.scss`: Image buttons
+- `DataTooltip.module.scss`: Tooltip styling
+
+## Testing
+
+See `Animator.stories.tsx` for comprehensive examples covering:
+- Basic playback modes
+- Different aspect ratios
+- Overlay functionality
+- Scrubber with frame states
+- Soundings picker
+- PDF functionality
+- Frame labels and valid times
+
+## Common Issues & Solutions
+
+### Issue: Storybook Error "Cannot read properties of undefined"
+**Solution**: Ensure `activeOverlays` is defined and is an array before calling `.includes()` or `.map()`
+
+### Issue: Frames not loading
+**Solution**: Check that frame URLs are accessible and `imageInfo` dimensions match actual image dimensions
+
+### Issue: Zoom not working
+**Solution**: Ensure `disableZoom` is false and `hideZoomControls` is false
+
+### Issue: Soundings picker not responding
+**Solution**: Verify `soundingsPickerMode` is true and `onSoundingsClickthrough` callback is provided
+
+## Related Components
+
+- **BasicPlaybackControls**: Playback buttons (play/pause, step, loop)
+- **Scrubber**: Timeline scrubber with frame selection
+- **LoadingPanel**: Loading indicator
+- **TransformWrapper**: Zoom/pan library wrapper
+
