@@ -74,9 +74,11 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 			<button onClick={() => resetTransform()}>
 				<FontAwesomeIcon icon={faUndo} />
 			</button>
-			<button onClick={() => expandToggle()}>
-				<FontAwesomeIcon icon={zoomFill ? faCompress : faExpand} />
-			</button>
+			{setZoomFill && (
+				<button onClick={() => expandToggle()} title={zoomFill ? 'Fit to container' : 'Fill container'}>
+					<FontAwesomeIcon icon={zoomFill ? faCompress : faExpand} />
+				</button>
+			)}
 			<button onClick={() => fullScreenToggle()}>
 				<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
 			</button>
