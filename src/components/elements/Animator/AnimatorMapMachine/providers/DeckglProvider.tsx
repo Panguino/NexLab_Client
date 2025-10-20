@@ -61,7 +61,7 @@ export class DeckglProvider extends MapProvider {
 
 			// Create Deck.gl instance
 			this.deck = new Deck({
-				canvas: config.container as HTMLCanvasElement,
+				container: config.container,
 				width: '100%',
 				height: '100%',
 				initialViewState: {
