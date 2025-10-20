@@ -15,10 +15,14 @@ interface IAnimatorImageMachineProps {
 export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMachineProps>(
 	({ frames, currentFrame, loadedFrames: externalLoadedFrames, setLoadedFrames: externalSetLoadedFrames, baseOpacity = 1, zIndex = 30 }, ref) => {
 		const [isLoading, setIsLoading] = useState(true)
-		const [localLoadedFrames, setLocalLoadedFrames] = useState<number[]>([])
+		const [localLoadedFrames, setLocalLoadedFrames] = useState<any[]>([])
 
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
+
+		// Debug logging
+		const isUsingExternalFrames = externalLoadedFrames !== undefined
+		const hasFramesLoaded = loadedFrames && loadedFrames.length > 0
 
 		// track whether localStorage caching should be disabled for this session
 		// (set to true if a QuotaExceededError or other storage error occurs)
@@ -78,8 +82,8 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 
 		// Helper function to calculate opacity
 		const calculateOpacity = (index: number, currentFrame: number, loadedFrames: any[], baseOpacity: number): number => {
-			// If the current frame is out of bounds, use the first frame (index 0)
-			const activeFrame = currentFrame >= loadedFrames.length ? 0 : currentFrame
+			// Ensure currentFrame is within bounds
+			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
 
 			// Return the base opacity if the index matches the active frame, otherwise 0
 			return index === activeFrame ? baseOpacity : 0
@@ -87,20 +91,21 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 
 		return (
 			<div ref={ref} className={styles.animatorImageMachine} style={{ zIndex: zIndex }}>
-				{isLoading ? (
+				{isLoading && loadedFrames.length === 0 ? (
 					<LoadingPanel size={0.35} hideText />
-				) : (
-					loadedFrames.length > 0 &&
+				) : loadedFrames.length > 0 ? (
 					loadedFrames.map((frame, index) => (
 						<img
-							key={index}
+							key={`frame-${index}`}
 							src={frame.src}
+							alt={`Frame ${index}`}
 							style={{
 								opacity: calculateOpacity(index, currentFrame, loadedFrames, baseOpacity),
+								transition: 'opacity 0.1s ease-in-out',
 							}}
 						/>
 					))
-				)}
+				) : null}
 			</div>
 		)
 	},
