@@ -25,13 +25,23 @@ export class DeckglProvider extends MapProvider {
 		this.validateContainer(config.container)
 
 		try {
-			// Ensure container has proper dimensions
+			// Ensure container has proper dimensions and styling
 			const container = config.container as HTMLElement
+
+			// Clear any existing content
+			container.innerHTML = ''
+
+			// Ensure container has proper positioning
+			if (container.style.position !== 'absolute' && container.style.position !== 'relative') {
+				container.style.position = 'relative'
+			}
+
 			const rect = container.getBoundingClientRect()
 			const width = rect.width || container.clientWidth || 800
 			const height = rect.height || container.clientHeight || 600
 
 			console.log(`Initializing Deck.gl with dimensions: ${width}x${height}`)
+			console.log(`Container element:`, container)
 
 			// Create base layers (background)
 			const baseLayers: any[] = [
@@ -95,6 +105,13 @@ export class DeckglProvider extends MapProvider {
 					}
 				},
 			})
+
+			// Verify canvas is in the right place
+			const canvas = container.querySelector('canvas')
+			console.log(`Canvas found in container:`, canvas)
+			if (!canvas) {
+				console.warn('Canvas not found in container after Deck.gl initialization')
+			}
 
 			// Add land layer with states data
 			try {
