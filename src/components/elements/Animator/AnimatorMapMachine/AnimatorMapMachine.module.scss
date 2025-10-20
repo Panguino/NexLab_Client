@@ -1,3 +1,5 @@
+@import '/src/styles/vars';
+
 .animatorMapMachine {
   position: relative;
   display: flex;
@@ -5,7 +7,7 @@
   align-items: center;
   width: 100%;
   height: 100%;
-  background-color: #f5f5f5;
+  background-color: var(--color-blue1-blue2);
   overflow: hidden;
 
   .mapContainer {
@@ -14,7 +16,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #ffffff;
+    background-color: var(--color-blue1-blue2);
 
     // Deck.gl canvas styling
     canvas {

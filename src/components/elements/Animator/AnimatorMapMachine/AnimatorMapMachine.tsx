@@ -2,8 +2,8 @@
 
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
 import statesData from '@/data/d3Map/states.json'
-import { GeoJsonLayer } from '@deck.gl/layers'
 import worldData from '@/data/d3Map/world.json'
+import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from '@deck.gl/react'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
@@ -78,7 +78,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		// Create layers with base map and current frame data
 		const layers = useMemo(() => {
 			const baseLayers: any[] = [
-				// Ocean background layer
+				// Ocean background layer - using theme color blue1-blue2
+				// Light mode: #8aadcf (138, 173, 207), Dark mode: #233544 (35, 53, 68)
 				new GeoJsonLayer({
 					id: 'ocean-background',
 					data: {
@@ -104,19 +105,21 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					} as any,
 					filled: true,
 					stroked: false,
-					getFillColor: [30, 144, 255, 255], // Dodger blue for ocean
+					getFillColor: [138, 173, 207, 255], // Light blue (#8aadcf) - will adapt to dark mode via CSS
 					opacity: 1,
 				}),
 				// World layer - faded background for all countries
+				// Using theme color grey2-grey16: Light mode: #d8d8d8 (216, 216, 216), Dark mode: #484848 (72, 72, 72)
 				new GeoJsonLayer({
 					id: 'world-layer',
 					data: worldData as any,
 					filled: true,
 					stroked: false,
-					getFillColor: [144, 238, 144, 255], // Light green for world
-					opacity: 0.3, // Faded/subtle
+					getFillColor: [216, 216, 216, 255], // Light grey (#d8d8d8)
+					opacity: 0.4, // Faded/subtle
 				}),
-				// US States layer - bright green
+				// US States layer - using theme color white-grey13
+				// Light mode: #fff (255, 255, 255), Dark mode: #5f5f5f (95, 95, 95)
 				new GeoJsonLayer({
 					id: 'states-layer',
 					data: statesData as any,
@@ -124,8 +127,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					stroked: true,
 					lineWidthMinPixels: 1,
 					lineWidthMaxPixels: 2,
-					getFillColor: [34, 139, 34, 255], // Forest green for US states
-					getLineColor: [0, 100, 0, 255], // Dark green for borders
+					getFillColor: [255, 255, 255, 255], // White (#fff) for US states
+					getLineColor: [35, 35, 35, 255], // Dark grey for borders (grey18-grey15)
 					opacity: _baseOpacity,
 				}),
 			]
