@@ -25,21 +25,18 @@ export class DeckglProvider extends MapProvider {
 		this.validateContainer(config.container)
 
 		try {
-			// Import states data for land layer
-			const statesData = await import('@/data/d3Map/states.json').then((m) => m.default)
-
 			// Create base layers (background)
-			const baseLayers = [
+			const baseLayers: any[] = [
 				// Ocean background layer
 				new GeoJsonLayer({
 					id: 'ocean-background',
 					data: {
-						type: 'FeatureCollection',
+						type: 'FeatureCollection' as const,
 						features: [
 							{
-								type: 'Feature',
+								type: 'Feature' as const,
 								geometry: {
-									type: 'Polygon',
+									type: 'Polygon' as const,
 									coordinates: [
 										[
 											[-180, -90],
@@ -50,31 +47,21 @@ export class DeckglProvider extends MapProvider {
 										],
 									],
 								},
+								properties: {},
 							},
 						],
-					},
+					} as any,
 					filled: true,
 					stroked: false,
 					getFillColor: [30, 144, 255, 255], // Dodger blue for ocean
 					opacity: 1,
 				}),
-				// Land layer with green color
-				new GeoJsonLayer({
-					id: 'land-layer',
-					data: statesData,
-					filled: true,
-					stroked: true,
-					lineWidthMinPixels: 1,
-					lineWidthMaxPixels: 2,
-					getFillColor: [34, 139, 34, 255], // Forest green for land
-					getLineColor: [0, 100, 0, 255], // Dark green for borders
-					opacity: 1,
-				}),
+				// Land layer with green color - will be added after initialization
 			]
 
 			// Create Deck.gl instance
 			this.deck = new Deck({
-				canvas: config.container,
+				canvas: config.container as HTMLCanvasElement,
 				width: '100%',
 				height: '100%',
 				initialViewState: {
@@ -100,6 +87,26 @@ export class DeckglProvider extends MapProvider {
 					}
 				},
 			})
+
+			// Add land layer with states data
+			try {
+				const statesData = await import('@/data/d3Map/states.json').then((m) => m.default)
+				const landLayer = new GeoJsonLayer({
+					id: 'land-layer',
+					data: statesData as any,
+					filled: true,
+					stroked: true,
+					lineWidthMinPixels: 1,
+					lineWidthMaxPixels: 2,
+					getFillColor: [34, 139, 34, 255], // Forest green for land
+					getLineColor: [0, 100, 0, 255], // Dark green for borders
+					opacity: 1,
+				})
+				baseLayers.push(landLayer)
+				this.deck.setProps({ layers: baseLayers })
+			} catch (error) {
+				console.warn('Failed to load states data for land layer:', error)
+			}
 
 			console.log('Deck.gl provider initialized successfully')
 		} catch (error) {

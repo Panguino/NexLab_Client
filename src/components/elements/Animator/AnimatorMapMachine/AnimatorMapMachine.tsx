@@ -1,11 +1,10 @@
 'use client'
 
-import { forwardRef, useEffect, useRef, useState } from 'react'
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
-import { IAnimatorMapMachineProps, MapFrame, MapViewState } from './types'
-import { createMapProvider } from './providers/MapProvider'
-import { IMapProvider } from './types'
+import { forwardRef, useEffect, useRef, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
+import { createMapProvider } from './providers/MapProvider'
+import { IAnimatorMapMachineProps, IMapProvider, MapFrame, MapViewState } from './types'
 
 /**
  * AnimatorMapMachine Component
@@ -27,12 +26,12 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			currentFrame,
 			loadedFrames: externalLoadedFrames,
 			setLoadedFrames: externalSetLoadedFrames,
-			baseOpacity = 1,
+			_baseOpacity = 1,
 			zIndex = 30,
 			region = 'conus',
 			mapProvider = 'deckgl',
 			onFrameChange,
-			onViewStateChange,
+			_onViewStateChange,
 			containerStyle,
 		},
 		ref,
@@ -124,7 +123,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 				// Update overlays if present
 				if (frame.overlays) {
-					frame.overlays.forEach((overlay, index) => {
+					frame.overlays.forEach((overlay) => {
 						const layerId = `overlay-${overlay.id}`
 						mapProviderInstance.updateData(layerId, overlay.data)
 						if (overlay.opacity !== undefined) {
@@ -141,37 +140,28 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			}
 		}, [currentFrame, loadedFrames, mapProviderInstance, onFrameChange])
 
-		// Handle view state changes
-		const handleViewStateChange = (newViewState: MapViewState) => {
-			setViewState(newViewState)
-			if (onViewStateChange) {
-				onViewStateChange(newViewState)
-			}
-		}
-
 		return (
-		<div
-			ref={ref}
-			className={styles.animatorMapMachine}
-			style={{
-				zIndex,
-				...containerStyle,
-			}}
-		>
 			<div
-				ref={containerRef}
-				className={styles.mapContainer}
+				ref={ref}
+				className={styles.animatorMapMachine}
 				style={{
-					width: '100%',
-					height: '100%',
+					zIndex,
+					...containerStyle,
 				}}
 			>
-				{isLoading && <LoadingPanel size={0.35} hideText />}
+				<div
+					ref={containerRef}
+					className={styles.mapContainer}
+					style={{
+						width: '100%',
+						height: '100%',
+					}}
+				>
+					{isLoading && <LoadingPanel size={0.35} hideText />}
+				</div>
 			</div>
-		</div>
 		)
 	},
 )
 
 AnimatorMapMachine.displayName = 'AnimatorMapMachine'
-

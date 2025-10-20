@@ -59,7 +59,9 @@ export const AutoPlayAnimation: Story = {
 
 		// Auto-play effect
 		React.useEffect(() => {
-			if (!isPlaying) return
+			if (!isPlaying) {
+				return
+			}
 
 			const interval = setInterval(() => {
 				setCurrentFrame((prev) => {
