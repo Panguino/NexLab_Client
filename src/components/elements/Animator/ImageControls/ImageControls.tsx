@@ -79,9 +79,11 @@ const ImageControls = ({ zoomIn, zoomOut, resetTransform }) => {
 					<FontAwesomeIcon icon={zoomFill ? faCompress : faExpand} />
 				</button>
 			)}
-			<button onClick={() => fullScreenToggle()}>
-				<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
-			</button>
+			{setFullScreen && (
+				<button onClick={() => fullScreenToggle()} title={fullScreen ? 'Exit fullscreen' : 'Enter fullscreen'}>
+					<FontAwesomeIcon icon={fullScreen ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter} />
+				</button>
+			)}
 			{soundingsPicker && (
 				<button
 					onClick={() => !soundingsPickerDisabled && setSoundingsPickerMode(!soundingsPickerMode)}

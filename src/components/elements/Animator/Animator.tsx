@@ -119,9 +119,7 @@ export const Animator = ({
 		console.warn('setZoomState function not provided, zoom state will not be updated.', zoomState)
 	},
 	setZoomFill,
-	setFullScreen = (fullScreen: boolean) => {
-		console.warn('setFullScreen function not provided, full screen state will not be updated.', fullScreen)
-	},
+	setFullScreen,
 	onFrameUpdate = (frameIndex: number) => {
 		// console.warn('onFrameUpdate function not provided, frame update will not be handled.', frameIndex)
 	},
