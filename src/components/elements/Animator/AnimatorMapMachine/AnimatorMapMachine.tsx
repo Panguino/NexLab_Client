@@ -1,10 +1,12 @@
 'use client'
 
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
-import { forwardRef, useEffect, useRef, useState } from 'react'
+import statesData from '@/data/d3Map/states.json'
+import { GeoJsonLayer } from '@deck.gl/layers'
+import DeckGL from '@deck.gl/react'
+import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
-import { createMapProvider } from './providers/MapProvider'
-import { IAnimatorMapMachineProps, IMapProvider, MapFrame, MapViewState } from './types'
+import { IAnimatorMapMachineProps, MapFrame, MapViewState } from './types'
 
 /**
  * AnimatorMapMachine Component
@@ -14,7 +16,7 @@ import { IAnimatorMapMachineProps, IMapProvider, MapFrame, MapViewState } from '
  *
  * Features:
  * - Frame-based animation with opacity transitions
- * - Deck.gl provider for GPU-accelerated rendering
+ * - Deck.gl for GPU-accelerated rendering
  * - Support for multiple map regions
  * - Customizable overlays and styling
  * - Mobile-optimized performance
@@ -29,7 +31,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			_baseOpacity = 1,
 			zIndex = 30,
 			region = 'conus',
-			mapProvider = 'deckgl',
 			onFrameChange,
 			_onViewStateChange,
 			containerStyle,
@@ -38,50 +39,14 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 	) => {
 		const [isLoading, setIsLoading] = useState(true)
 		const [localLoadedFrames, setLocalLoadedFrames] = useState<MapFrame[]>([])
-		const [mapProviderInstance, setMapProviderInstance] = useState<IMapProvider | null>(null)
 		const [viewState, setViewState] = useState<MapViewState>({
 			longitude: -95,
 			latitude: 37,
 			zoom: 3,
 		})
 
-		const containerRef = useRef<HTMLDivElement>(null)
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
-
-		// Initialize map provider
-		useEffect(() => {
-			const initializeProvider = async () => {
-				try {
-					setIsLoading(true)
-
-					// Create provider instance
-					const provider = createMapProvider(mapProvider)
-					setMapProviderInstance(provider)
-
-					// Initialize provider
-					if (containerRef.current) {
-						await provider.initialize({
-							container: containerRef.current,
-							initialViewState: viewState,
-							region,
-						})
-
-						console.log(`${mapProvider} provider initialized`)
-					}
-				} catch (error) {
-					console.error('Failed to initialize map provider:', error)
-				}
-			}
-
-			initializeProvider()
-
-			return () => {
-				if (mapProviderInstance) {
-					mapProviderInstance.destroy()
-				}
-			}
-		}, [mapProvider, region])
 
 		// Load frames
 		useEffect(() => {
@@ -109,36 +74,101 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			loadFrames()
 		}, [frames, setLoadedFrames])
 
-		// Update map when current frame changes
-		useEffect(() => {
-			if (!mapProviderInstance || loadedFrames.length === 0) return
+		// Create layers with base map and current frame data
+		const layers = useMemo(() => {
+			const baseLayers: any[] = [
+				// Ocean background layer
+				new GeoJsonLayer({
+					id: 'ocean-background',
+					data: {
+						type: 'FeatureCollection' as const,
+						features: [
+							{
+								type: 'Feature' as const,
+								geometry: {
+									type: 'Polygon' as const,
+									coordinates: [
+										[
+											[-180, -90],
+											[180, -90],
+											[180, 90],
+											[-180, 90],
+											[-180, -90],
+										],
+									],
+								},
+								properties: {},
+							},
+						],
+					} as any,
+					filled: true,
+					stroked: false,
+					getFillColor: [30, 144, 255, 255], // Dodger blue for ocean
+					opacity: 1,
+				}),
+				// Land layer with states
+				new GeoJsonLayer({
+					id: 'land-layer',
+					data: statesData as any,
+					filled: true,
+					stroked: true,
+					lineWidthMinPixels: 1,
+					lineWidthMaxPixels: 2,
+					getFillColor: [34, 139, 34, 255], // Forest green for land
+					getLineColor: [0, 100, 0, 255], // Dark green for borders
+					opacity: _baseOpacity,
+				}),
+			]
 
-			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+			// Add current frame data if available
+			if (loadedFrames.length > 0) {
+				const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+				const frame = loadedFrames[activeFrame]
 
-			const frame = loadedFrames[activeFrame]
+				if (frame && frame.data) {
+					baseLayers.push(
+						new GeoJsonLayer({
+							id: 'main-layer',
+							data: frame.data as any,
+							stroked: true,
+							filled: true,
+							lineWidthMinPixels: 1,
+							lineWidthMaxPixels: 10,
+							getLineColor: [255, 0, 0, 255],
+							getFillColor: [255, 0, 0, 128],
+							opacity: _baseOpacity,
+						}),
+					)
+				}
 
-			try {
-				// Update main layer with current frame data
-				mapProviderInstance.updateData('main-layer', frame.data)
-
-				// Update overlays if present
-				if (frame.overlays) {
+				// Add overlays if present
+				if (frame && frame.overlays) {
 					frame.overlays.forEach((overlay) => {
-						const layerId = `overlay-${overlay.id}`
-						mapProviderInstance.updateData(layerId, overlay.data)
-						if (overlay.opacity !== undefined) {
-							mapProviderInstance.setOpacity(layerId, overlay.opacity)
-						}
+						baseLayers.push(
+							new GeoJsonLayer({
+								id: `overlay-${overlay.id}`,
+								data: overlay.data as any,
+								stroked: true,
+								filled: true,
+								getLineColor: [0, 0, 255, 255],
+								getFillColor: [0, 0, 255, 128],
+								opacity: overlay.opacity ?? _baseOpacity,
+							}),
+						)
 					})
 				}
 
 				if (onFrameChange) {
 					onFrameChange(activeFrame)
 				}
-			} catch (error) {
-				console.error('Failed to update frame:', error)
 			}
-		}, [currentFrame, loadedFrames, mapProviderInstance, onFrameChange])
+
+			return baseLayers
+		}, [loadedFrames, currentFrame, _baseOpacity, onFrameChange])
+
+		const handleViewStateChange = (viewState: any) => {
+			setViewState(viewState.viewState)
+		}
 
 		return (
 			<div
@@ -149,16 +179,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					...containerStyle,
 				}}
 			>
-				<div
-					ref={containerRef}
-					className={styles.mapContainer}
-					style={{
-						width: '100%',
-						height: '100%',
-					}}
-				>
-					{isLoading && <LoadingPanel size={0.35} hideText />}
-				</div>
+				{isLoading && <LoadingPanel size={0.35} hideText />}
+				<DeckGL initialViewState={viewState} controller={true} layers={layers} onViewStateChange={handleViewStateChange} />
 			</div>
 		)
 	},
