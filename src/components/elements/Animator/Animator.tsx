@@ -4,7 +4,7 @@ import { createContext, Dispatch, SetStateAction, useContext, useState } from 'r
 import AnimatorLayout from './AnimatorLayout/AnimatorLayout'
 
 interface IAnimatorProps {
-	frames: string[]
+	frames: string[] | any[] // Can be image URLs or MapFrame objects
 	frameValidTimes?: number[]
 	setFrameValidTime?: (validtime: number) => void
 	startFrame?: number
@@ -53,6 +53,9 @@ interface IAnimatorProps {
 	// PDF functionality
 	pdfs?: string[]
 	pdfButtonClick?: (pdfUrl: string) => void
+	// Map mode support
+	mode?: 'image' | 'map' // 'image' for images, 'map' for geographic data
+	mapRegion?: 'conus' | 'alaska' | 'hawaii' | 'namer' // Region for map mode
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -62,6 +65,7 @@ interface IAnimatorProvider extends IAnimatorProps {
 	isPlaying: boolean
 	setIsPlaying: Dispatch<SetStateAction<boolean>>
 	ratio: number
+	mode: 'image' | 'map'
 }
 
 const AnimatorContext = createContext<IAnimatorProvider | undefined>(undefined)
@@ -127,6 +131,8 @@ export const Animator = ({
 	pdfButtonClick = (pdfUrl: string) => {
 		console.warn('pdfButtonClick function not provided, PDF button click will not be handled.', pdfUrl)
 	},
+	mode = 'image',
+	mapRegion = 'conus',
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
@@ -185,6 +191,8 @@ export const Animator = ({
 				onFrameUpdate,
 				pdfs,
 				pdfButtonClick,
+				mode,
+				mapRegion,
 			}}
 		>
 			<AnimatorLayout />
