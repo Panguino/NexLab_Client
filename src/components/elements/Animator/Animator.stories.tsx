@@ -1,6 +1,7 @@
 import Providers from '@/components/providers/Providers/Providers'
 import { formatRunToZDate } from '@/util/dateFormat'
 import { Meta, StoryFn } from '@storybook/react'
+import { useState } from 'react'
 import { Animator } from './Animator'
 import { testDataFrameLabels, testDataFrameLabels2, testDataWithOverlays, testFrames, testFrames16x9, testFrames8x6 } from './AnimatorTestData'
 
@@ -395,6 +396,47 @@ pdfButtonDisabled.parameters = {
 	docs: {
 		description: {
 			story: 'Empty PDF array - button will not appear. Useful when PDFs are not available.',
+		},
+	},
+}
+
+/**
+ * ## Zoom Fill Mode Stories
+ * These stories demonstrate the zoom fill toggle functionality
+ */
+
+export const zoomFillModeEnabled: StoryFn<typeof Animator> = (args) => {
+	const [zoomFill, setZoomFill] = useState(true)
+	return <Animator {...args} zoomFill={zoomFill} setZoomFill={setZoomFill} />
+}
+zoomFillModeEnabled.args = {
+	interval: 250,
+	frames: testFrames16x9,
+	imageInfo: { width: 1600, height: 900 },
+	autoPlay: true,
+}
+zoomFillModeEnabled.parameters = {
+	docs: {
+		description: {
+			story: 'Zoom fill mode enabled (default). Image fills the container, may extend beyond bounds. Click the expand/compress button to toggle between fill and fit modes.',
+		},
+	},
+}
+
+export const zoomFitModeEnabled: StoryFn<typeof Animator> = (args) => {
+	const [zoomFill, setZoomFill] = useState(false)
+	return <Animator {...args} zoomFill={zoomFill} setZoomFill={setZoomFill} />
+}
+zoomFitModeEnabled.args = {
+	interval: 250,
+	frames: testFrames16x9,
+	imageInfo: { width: 1600, height: 900 },
+	autoPlay: true,
+}
+zoomFitModeEnabled.parameters = {
+	docs: {
+		description: {
+			story: 'Zoom fit mode enabled. Image fits within the container bounds. Click the expand/compress button to toggle between fill and fit modes.',
 		},
 	},
 }
