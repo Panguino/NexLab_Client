@@ -36,16 +36,16 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 				for (const frame of frames) {
 					const cachedImage = localStorage.getItem(frame)
 					if (cachedImage) {
-						const img = new Image()
-						img.src = cachedImage
-						validFrames.push(img)
+						// Store the URL string, not the Image object
+						validFrames.push({ src: cachedImage })
 					} else {
 						try {
 							await new Promise<void>((resolve, reject) => {
 								const img = new Image()
 								img.src = frame
 								img.onload = () => {
-									validFrames.push(img)
+									// Store the URL string, not the Image object
+									validFrames.push({ src: frame })
 									// attempt to cache the image in localStorage; if quota is exceeded
 									// we stop trying for the rest of this session to avoid repeated errors
 									if (!disableLocalStorageRef.current) {
