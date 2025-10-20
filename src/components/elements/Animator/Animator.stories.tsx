@@ -440,3 +440,21 @@ zoomFitModeEnabled.parameters = {
 		},
 	},
 }
+
+export const fullscreenModeEnabled: StoryFn<typeof Animator> = (args) => {
+	const [fullScreen, setFullScreen] = useState(false)
+	return <Animator {...args} fullScreen={fullScreen} setFullScreen={setFullScreen} />
+}
+fullscreenModeEnabled.args = {
+	interval: 250,
+	frames: testFrames16x9,
+	imageInfo: { width: 1600, height: 900 },
+	autoPlay: true,
+}
+fullscreenModeEnabled.parameters = {
+	docs: {
+		description: {
+			story: 'Fullscreen mode enabled. Click the fullscreen button to toggle fullscreen mode. The animator will expand to fill the entire viewport.',
+		},
+	},
+}
