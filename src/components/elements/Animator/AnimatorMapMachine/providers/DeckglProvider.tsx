@@ -28,9 +28,6 @@ export class DeckglProvider extends MapProvider {
 			// Ensure container has proper dimensions and styling
 			const container = config.container as HTMLElement
 
-			// Clear any existing content
-			container.innerHTML = ''
-
 			// Ensure container has proper positioning
 			if (container.style.position !== 'absolute' && container.style.position !== 'relative') {
 				container.style.position = 'relative'
@@ -41,7 +38,6 @@ export class DeckglProvider extends MapProvider {
 			const height = rect.height || container.clientHeight || 600
 
 			console.log(`Initializing Deck.gl with dimensions: ${width}x${height}`)
-			console.log(`Container element:`, container)
 
 			// Create base layers (background)
 			const baseLayers: any[] = [
@@ -105,20 +101,6 @@ export class DeckglProvider extends MapProvider {
 					}
 				},
 			})
-
-			// Move Deck.gl overlay into our container if it was appended to body
-			const deckglOverlay = document.querySelector('.deckgl-overlay')
-			if (deckglOverlay && deckglOverlay.parentElement !== container) {
-				console.log('Moving deckgl-overlay from body to container')
-				container.appendChild(deckglOverlay)
-			}
-
-			// Verify canvas is in the right place
-			const canvas = container.querySelector('canvas')
-			console.log(`Canvas found in container:`, canvas)
-			if (!canvas) {
-				console.warn('Canvas not found in container after Deck.gl initialization')
-			}
 
 			// Add land layer with states data
 			try {
