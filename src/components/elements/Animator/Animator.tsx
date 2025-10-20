@@ -125,7 +125,7 @@ export const Animator = ({
 		console.warn('setFullScreen function not provided, full screen state will not be updated.', fullScreen)
 	},
 	onFrameUpdate = (frameIndex: number) => {
-		console.warn('onFrameUpdate function not provided, frame update will not be handled.', frameIndex)
+		// console.warn('onFrameUpdate function not provided, frame update will not be handled.', frameIndex)
 	},
 	pdfs = [],
 	pdfButtonClick = (pdfUrl: string) => {
