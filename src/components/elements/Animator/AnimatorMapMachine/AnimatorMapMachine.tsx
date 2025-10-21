@@ -134,7 +134,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					} as any,
 					filled: true,
 					stroked: false,
-					getFillColor: oceanColor as any,
+					getFillColor: () => oceanColor as any,
 					opacity: 1,
 					updateTriggers: {
 						getFillColor: [oceanColor],
@@ -147,7 +147,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					data: worldData as any,
 					filled: true,
 					stroked: false,
-					getFillColor: worldColor as any,
+					getFillColor: () => worldColor as any,
 					opacity: 0.3, // Faded/subtle - reduced to prevent covering states
 					pickable: false,
 					updateTriggers: {
@@ -163,8 +163,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					stroked: true,
 					lineWidthMinPixels: 1,
 					lineWidthMaxPixels: 2,
-					getFillColor: statesColor as any,
-					getLineColor: borderColor as any,
+					getFillColor: () => statesColor as any,
+					getLineColor: () => borderColor as any,
 					opacity: _baseOpacity,
 					pickable: false,
 					updateTriggers: {
