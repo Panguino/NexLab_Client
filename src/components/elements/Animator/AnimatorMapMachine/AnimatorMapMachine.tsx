@@ -66,17 +66,16 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			return () => observer.disconnect()
 		}, [])
 
-		// Theme-aware colors (ABGR format - Deck.gl uses ABGR not RGBA!)
+		// Theme-aware colors (RGBA format)
 		const isDark = isDarkMode
 		// Ocean: blue1 (#8aadcf) light / blue2 (#233544) dark
-		// ABGR: [Alpha, Blue, Green, Red]
-		const oceanColor = isDark ? [255, 68, 53, 35] : [255, 207, 173, 138]
+		const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
 		// World: grey2 (#d8d8d8) light / grey16 (#484848) dark
-		const worldColor = isDark ? [255, 72, 72, 72] : [255, 216, 216, 216]
+		const worldColor = isDark ? [72, 72, 72, 255] : [216, 216, 216, 255]
 		// US States: white (#ffffff) light / grey13 (#5f5f5f) dark
-		const statesColor = isDark ? [255, 95, 95, 95] : [255, 255, 255, 255]
+		const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255]
 		// Borders: grey18 (#232323) light / grey15 (#505050) dark
-		const borderColor = isDark ? [255, 35, 35, 80] : [255, 35, 35, 35]
+		const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
 
 		// Load frames
 		useEffect(() => {
@@ -134,7 +133,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					} as any,
 					filled: true,
 					stroked: false,
-					getFillColor: () => oceanColor as any,
+					getFillColor: oceanColor as any,
 					opacity: 1,
 					updateTriggers: {
 						getFillColor: [oceanColor],
@@ -147,7 +146,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					data: worldData as any,
 					filled: true,
 					stroked: false,
-					getFillColor: () => worldColor as any,
+					getFillColor: worldColor as any,
 					opacity: 0.3, // Faded/subtle - reduced to prevent covering states
 					pickable: false,
 					updateTriggers: {
@@ -163,8 +162,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					stroked: true,
 					lineWidthMinPixels: 1,
 					lineWidthMaxPixels: 2,
-					getFillColor: () => statesColor as any,
-					getLineColor: () => borderColor as any,
+					getFillColor: statesColor as any,
+					getLineColor: borderColor as any,
 					opacity: _baseOpacity,
 					pickable: false,
 					updateTriggers: {
