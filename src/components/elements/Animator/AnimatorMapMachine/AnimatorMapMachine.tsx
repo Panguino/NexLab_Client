@@ -153,14 +153,13 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					id: 'states-layer',
 					data: statesData as any,
 					filled: true,
-					stroked: true,
+					stroked: false,
 					lineWidthMinPixels: 1,
 					lineWidthMaxPixels: 2,
 					getFillColor: statesColor as any,
 					getLineColor: borderColor as any,
 					opacity: _baseOpacity,
 					pickable: false,
-					// Try without updateTriggers to see if that's causing the issue
 				}),
 			]
 
