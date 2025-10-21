@@ -73,7 +73,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		// World: grey2 (#d8d8d8) light / grey16 (#484848) dark
 		const worldColor = isDark ? [72, 72, 72, 255] : [216, 216, 216, 255]
 		// US States: white (#ffffff) light / grey13 (#5f5f5f) dark
-		const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255]
+		// TEST: Using pure red to debug color rendering
+		const statesColor = [255, 0, 0, 255]
 		// Borders: grey18 (#232323) light / grey15 (#505050) dark
 		const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
 
