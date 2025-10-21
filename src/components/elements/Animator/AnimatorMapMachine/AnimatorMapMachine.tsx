@@ -7,6 +7,7 @@ import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from '@deck.gl/react'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
+import { SAMPLE_COUNTIES_GEOJSON } from './staticMapData'
 import { IAnimatorMapMachineProps, MapFrame, MapViewState } from './types'
 
 /**
@@ -74,8 +75,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const worldColor = isDark ? [72, 72, 72, 255] : [216, 216, 216, 255]
 		// US States: white (#ffffff) light / grey13 (#5f5f5f) dark
 		const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255]
-		// Borders: grey18 (#232323) light / grey15 (#505050) dark
+		// State Borders: grey18 (#232323) light / grey15 (#505050) dark - darker
 		const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
+		// County Borders: grey14 (#6b6b6b) light / grey12 (#7a7a7a) dark - lighter than state borders
+		const countyBorderColor = isDark ? [122, 122, 122, 255] : [107, 107, 107, 255]
 
 		// Load frames
 		useEffect(() => {
@@ -177,11 +180,28 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					lineWidthMinPixels: 1,
 					lineWidthMaxPixels: 2,
 					getLineColor: () => borderColor as any,
-					getLineWidth: () => 1,
+					getLineWidth: () => 2,
 					opacity: 1,
 					pickable: false,
 					updateTriggers: {
 						getLineColor: [borderColor],
+					},
+				}),
+				// US County borders layer - lighter than state borders
+				// Using lighter grey: Light mode: #6b6b6b (107, 107, 107), Dark mode: #7a7a7a (122, 122, 122)
+				new GeoJsonLayer({
+					id: 'county-borders-layer',
+					data: SAMPLE_COUNTIES_GEOJSON as any,
+					filled: false,
+					stroked: true,
+					lineWidthMinPixels: 0.5,
+					lineWidthMaxPixels: 1,
+					getLineColor: () => countyBorderColor as any,
+					getLineWidth: () => 0.5,
+					opacity: 1,
+					pickable: false,
+					updateTriggers: {
+						getLineColor: [countyBorderColor],
 					},
 				}),
 			]
@@ -230,7 +250,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			}
 
 			return baseLayers
-		}, [loadedFrames, currentFrame, _baseOpacity, onFrameChange, isDarkMode, oceanColor, worldColor, statesColor, borderColor])
+		}, [loadedFrames, currentFrame, _baseOpacity, onFrameChange, isDarkMode, oceanColor, worldColor, statesColor, borderColor, countyBorderColor])
 
 		const handleViewStateChange = (viewState: any) => {
 			setViewState(viewState.viewState)
