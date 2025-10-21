@@ -250,7 +250,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			}
 
 			return baseLayers
-		}, [loadedFrames, currentFrame, _baseOpacity, onFrameChange, isDarkMode, oceanColor, worldColor, statesColor, borderColor, countyBorderColor])
+		}, [loadedFrames, currentFrame, onFrameChange, oceanColor, worldColor, statesColor, borderColor, countyBorderColor])
 
 		const handleViewStateChange = (viewState: any) => {
 			setViewState(viewState.viewState)
