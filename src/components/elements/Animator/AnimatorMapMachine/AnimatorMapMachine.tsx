@@ -160,7 +160,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					data: statesData as any,
 					filled: true,
 					stroked: true,
-					lineWidthPixels: 1,
+					lineWidthPixels: 2,
 					getFillColor: () => statesColor as any,
 					getLineColor: () => borderColor as any,
 					opacity: 1,
