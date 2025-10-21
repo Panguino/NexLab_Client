@@ -156,8 +156,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					stroked: true,
 					lineWidthPixels: 1,
 					getFillColor: statesColor as any,
-					getLineColor: borderColor as any,
-					opacity: _baseOpacity,
+					getLineColor: () => borderColor as any,
+					opacity: 1,
 					pickable: false,
 				}),
 			]
@@ -194,7 +194,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 								filled: true,
 								getLineColor: [0, 0, 255, 255],
 								getFillColor: [0, 0, 255, 128],
-								opacity: overlay.opacity ?? _baseOpacity,
+								opacity: 0, //overlay.opacity ?? _baseOpacity,
 							}),
 						)
 					})
