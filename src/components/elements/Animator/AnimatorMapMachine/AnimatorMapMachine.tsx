@@ -170,23 +170,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						getFillColor: [statesColor],
 					},
 				}),
-				// US States borders layer - separate layer for strokes
-				// Using theme color grey18-grey15: Light mode: #232323 (35, 35, 35), Dark mode: #505050 (80, 80, 80)
-				new GeoJsonLayer({
-					id: 'states-borders-layer',
-					data: statesData as any,
-					filled: false,
-					stroked: true,
-					lineWidthMinPixels: 1,
-					lineWidthMaxPixels: 2,
-					getLineColor: () => borderColor as any,
-					getLineWidth: () => 2,
-					opacity: 1,
-					pickable: false,
-					updateTriggers: {
-						getLineColor: [borderColor],
-					},
-				}),
 				// US County borders layer - lighter than state borders
 				// Using lighter grey: Light mode: #6b6b6b (107, 107, 107), Dark mode: #7a7a7a (122, 122, 122)
 				new GeoJsonLayer({
@@ -202,6 +185,23 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					pickable: false,
 					updateTriggers: {
 						getLineColor: [countyBorderColor],
+					},
+				}),
+				// US States borders layer - separate layer for strokes
+				// Using theme color grey18-grey15: Light mode: #232323 (35, 35, 35), Dark mode: #505050 (80, 80, 80)
+				new GeoJsonLayer({
+					id: 'states-borders-layer',
+					data: statesData as any,
+					filled: false,
+					stroked: true,
+					lineWidthMinPixels: 2,
+					lineWidthMaxPixels: 3,
+					getLineColor: () => borderColor as any,
+					getLineWidth: () => 2,
+					opacity: 1,
+					pickable: false,
+					updateTriggers: {
+						getLineColor: [borderColor],
 					},
 				}),
 			]
