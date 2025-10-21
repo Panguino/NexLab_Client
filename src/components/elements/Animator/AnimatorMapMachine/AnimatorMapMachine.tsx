@@ -168,18 +168,21 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					},
 				}),
 				// US States borders layer - separate layer for strokes
-				// Using theme color grey18-grey15
+				// Using theme color grey18-grey15: Light mode: #232323 (35, 35, 35), Dark mode: #505050 (80, 80, 80)
 				new GeoJsonLayer({
 					id: 'states-borders-layer',
 					data: statesData as any,
 					filled: false,
 					stroked: true,
-					lineWidthMinPixels: 2,
-					lineWidthMaxPixels: 5,
-					getLineColor: () => [255, 0, 0, 255] as any, // DEBUG: pure red
-					getLineWidth: () => 2,
+					lineWidthMinPixels: 1,
+					lineWidthMaxPixels: 2,
+					getLineColor: () => borderColor as any,
+					getLineWidth: () => 1,
 					opacity: 1,
 					pickable: false,
+					updateTriggers: {
+						getLineColor: [borderColor],
+					},
 				}),
 			]
 
