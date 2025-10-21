@@ -174,15 +174,12 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					data: statesData as any,
 					filled: false,
 					stroked: true,
-					lineWidthMinPixels: 1,
-					lineWidthMaxPixels: 3,
-					getLineColor: () => borderColor as any,
-					getLineWidth: () => 1,
+					lineWidthMinPixels: 2,
+					lineWidthMaxPixels: 5,
+					getLineColor: () => [255, 0, 0, 255] as any, // DEBUG: pure red
+					getLineWidth: () => 2,
 					opacity: 1,
 					pickable: false,
-					updateTriggers: {
-						getLineColor: [borderColor],
-					},
 				}),
 			]
 
