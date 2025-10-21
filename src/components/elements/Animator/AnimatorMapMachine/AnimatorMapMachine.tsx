@@ -266,7 +266,15 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				}}
 			>
 				{isLoading && <LoadingPanel size={0.35} hideText />}
-				<DeckGL initialViewState={viewState} controller={true} layers={layers} onViewStateChange={handleViewStateChange} />
+				<DeckGL
+					initialViewState={{
+						...viewState,
+						transitionDuration: 300,
+					}}
+					controller={true}
+					layers={layers}
+					onViewStateChange={handleViewStateChange}
+				/>
 			</div>
 		)
 	},
