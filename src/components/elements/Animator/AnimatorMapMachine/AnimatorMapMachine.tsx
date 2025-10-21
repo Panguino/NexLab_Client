@@ -159,14 +159,26 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					id: 'states-layer',
 					data: statesData as any,
 					filled: true,
-					stroked: true,
-					lineWidthPixels: 2,
+					stroked: false,
 					getFillColor: () => statesColor as any,
-					getLineColor: () => borderColor as any,
 					opacity: 1,
 					pickable: false,
 					updateTriggers: {
 						getFillColor: [statesColor],
+					},
+				}),
+				// US States borders layer - separate layer for strokes
+				// Using theme color grey18-grey15
+				new GeoJsonLayer({
+					id: 'states-borders-layer',
+					data: statesData as any,
+					filled: false,
+					stroked: true,
+					lineWidthPixels: 1,
+					getLineColor: () => borderColor as any,
+					opacity: 1,
+					pickable: false,
+					updateTriggers: {
 						getLineColor: [borderColor],
 					},
 				}),
