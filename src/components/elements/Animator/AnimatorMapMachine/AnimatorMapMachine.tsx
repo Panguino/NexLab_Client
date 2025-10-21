@@ -1,13 +1,13 @@
 'use client'
 
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
+import countiesData from '@/data/d3Map/counties.json'
 import statesData from '@/data/d3Map/states.json'
 import worldData from '@/data/d3Map/world.json'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from '@deck.gl/react'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
-import { SAMPLE_COUNTIES_GEOJSON } from './staticMapData'
 import { IAnimatorMapMachineProps, MapFrame, MapViewState } from './types'
 
 /**
@@ -191,13 +191,13 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				// Using lighter grey: Light mode: #6b6b6b (107, 107, 107), Dark mode: #7a7a7a (122, 122, 122)
 				new GeoJsonLayer({
 					id: 'county-borders-layer',
-					data: SAMPLE_COUNTIES_GEOJSON as any,
+					data: countiesData as any,
 					filled: false,
 					stroked: true,
 					lineWidthMinPixels: 0.5,
 					lineWidthMaxPixels: 1,
 					getLineColor: () => countyBorderColor as any,
-					getLineWidth: () => 0.5,
+					getLineWidth: () => 2,
 					opacity: 1,
 					pickable: false,
 					updateTriggers: {
