@@ -1,7 +1,7 @@
 'use client'
 
 import useDimensions from '@/hooks/useDimensions'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useAnimator } from '../Animator'
 import { AnimatorMapMachine } from '../AnimatorMapMachine/AnimatorMapMachine'
 import { MapViewState } from '../AnimatorMapMachine/types'
@@ -14,15 +14,20 @@ import styles from './AnimatorMapSizer.module.scss'
  * Wrapper component for AnimatorMapMachine that handles:
  * - Sizing and responsive layout
  * - Zoom and pan controls
- * - View state management
+ * - View state management with smooth easing
  *
  * Similar to AnimatorImageSizer but for map data
  */
 const DEBUG_INTERACTIONS = true
 
 // Zoom step sizes - adjust these to control zoom speed
-const ZOOM_STEP_BUTTON = 0.5 // Step size for zoom in/out buttons (smaller = slower)
-const ZOOM_STEP_SCROLL = 0.2 // Step size for mouse wheel scroll (smaller = slower)
+const ZOOM_STEP_BUTTON = 0.3 // Step size for zoom in/out buttons (smaller = slower)
+const ZOOM_STEP_SCROLL = 0.001 // Step size for mouse wheel scroll (smaller = slower)
+
+// Easing configuration - adjust these to control animation smoothness
+const EASING_FACTOR = 0.2 // How much of the distance to cover per frame (0.8 = slower, 0.95 = faster)
+const ANIMATION_THRESHOLD = 0.005 // Stop animating when distance is smaller than this
+const ANIMATION_FRAME_RATE = 16 // ms between animation updates (~60fps)
 
 const AnimatorMapSizer = () => {
 	const {
@@ -48,6 +53,16 @@ const AnimatorMapSizer = () => {
 	}, [])
 
 	const mapMachineRef = useRef<HTMLDivElement>(null)
+
+	// Animation state for smooth easing
+	const [targetViewState, setTargetViewState] = useState<MapViewState | null>(null)
+	const animationFrameRef = useRef<NodeJS.Timeout | null>(null)
+	const currentViewStateRef = useRef<MapViewState>(mapZoomState)
+
+	// Keep ref in sync with current state
+	useEffect(() => {
+		currentViewStateRef.current = mapZoomState
+	}, [mapZoomState])
 
 	// For maps, we don't use aspect ratio constraints like images
 	// Maps should fill the container naturally
@@ -75,14 +90,65 @@ const AnimatorMapSizer = () => {
 		updateDimensions()
 	}, [updateDimensions, loadedFrames])
 
+	// Animation loop for smooth easing
+	// When targetViewState is set, smoothly interpolate from current to target
+	useEffect(() => {
+		if (!targetViewState) {
+			// No animation in progress
+			if (animationFrameRef.current) {
+				clearInterval(animationFrameRef.current)
+				animationFrameRef.current = null
+			}
+			return undefined
+		}
+
+		// Start animation loop
+		animationFrameRef.current = setInterval(() => {
+			// Get current state from ref (avoids dependency issues)
+			const current = currentViewStateRef.current
+
+			// Calculate distance to target for each dimension
+			const zoomDistance = Math.abs(targetViewState.zoom - current.zoom)
+			const latDistance = Math.abs(targetViewState.latitude - current.latitude)
+			const lonDistance = Math.abs(targetViewState.longitude - current.longitude)
+
+			// Check if we're close enough to stop animating
+			if (zoomDistance < ANIMATION_THRESHOLD && latDistance < ANIMATION_THRESHOLD && lonDistance < ANIMATION_THRESHOLD) {
+				// Snap to target and stop animation
+				setMapZoomState(targetViewState)
+				setTargetViewState(null)
+				return
+			}
+
+			// Interpolate: move 90% of the remaining distance
+			const newZoom = current.zoom + (targetViewState.zoom - current.zoom) * EASING_FACTOR
+			const newLat = current.latitude + (targetViewState.latitude - current.latitude) * EASING_FACTOR
+			const newLon = current.longitude + (targetViewState.longitude - current.longitude) * EASING_FACTOR
+
+			setMapZoomState({
+				zoom: newZoom,
+				latitude: newLat,
+				longitude: newLon,
+			})
+		}, ANIMATION_FRAME_RATE)
+
+		return () => {
+			if (animationFrameRef.current) {
+				clearInterval(animationFrameRef.current)
+				animationFrameRef.current = null
+			}
+		}
+	}, [targetViewState, setMapZoomState])
+
 	// MOUSE INTERACTIONS: DeckGL handles these internally
-	// We only sync to global state for tracking
+	// Direct updates - no easing for mouse/touch events
 	const handleViewStateChange = useCallback(
 		(newViewState: MapViewState) => {
 			logInteraction(
 				`🖱️ Mouse interaction - zoom: ${newViewState.zoom.toFixed(2)} lat: ${newViewState.latitude.toFixed(2)} lon: ${newViewState.longitude.toFixed(2)}`,
 			)
-			// Sync to global state for tracking/persistence
+
+			// Update directly (no animation) for all mouse/touch interactions
 			setMapZoomState({
 				zoom: newViewState.zoom,
 				longitude: newViewState.longitude,
@@ -92,38 +158,38 @@ const AnimatorMapSizer = () => {
 		[setMapZoomState, logInteraction],
 	)
 
-	// BUTTON INTERACTIONS: Directly update global state
+	// BUTTON INTERACTIONS: Animate to target state
 	// Handle zoom in
 	const handleZoomIn = useCallback(() => {
 		logInteraction('🔘 Button click - Zoom In')
 		const newZoom = Math.min(mapZoomState.zoom + ZOOM_STEP_BUTTON, 20)
-		setMapZoomState({
+		setTargetViewState({
 			zoom: newZoom,
 			longitude: mapZoomState.longitude,
 			latitude: mapZoomState.latitude,
 		})
-	}, [mapZoomState, setMapZoomState, logInteraction])
+	}, [mapZoomState, logInteraction])
 
 	// Handle zoom out
 	const handleZoomOut = useCallback(() => {
 		logInteraction('🔘 Button click - Zoom Out')
 		const newZoom = Math.max(mapZoomState.zoom - ZOOM_STEP_BUTTON, 2)
-		setMapZoomState({
+		setTargetViewState({
 			zoom: newZoom,
 			longitude: mapZoomState.longitude,
 			latitude: mapZoomState.latitude,
 		})
-	}, [mapZoomState, setMapZoomState, logInteraction])
+	}, [mapZoomState, logInteraction])
 
 	// Handle reset view
 	const handleResetView = useCallback(() => {
 		logInteraction('🔘 Button click - Reset View')
-		setMapZoomState({
+		setTargetViewState({
 			longitude: -95,
 			latitude: 37,
 			zoom: 3,
 		})
-	}, [setMapZoomState, logInteraction])
+	}, [logInteraction])
 
 	return (
 		<div className={`${styles.animatorMapSizer} ${fullScreen ? styles.fullScreen : ''}`} ref={mapRef}>
