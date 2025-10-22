@@ -248,3 +248,59 @@ export const WithMetadataDisplay: Story = {
 		)
 	},
 }
+
+/**
+ * Map with zoom and pan constraints
+ * Tests the bounds constraints - try to zoom out or pan beyond the CONUS bounds
+ */
+export const BoundsConstraints: Story = {
+	args: {
+		frames: SAMPLE_HURRICANE_PATHS,
+		currentFrame: 0,
+		region: 'conus',
+		mapProvider: 'deckgl',
+	},
+	render: () => {
+		const [currentFrame, setCurrentFrame] = useState(0)
+		const [viewState, setViewState] = useState({ longitude: -95, latitude: 37, zoom: 3 })
+
+		return (
+			<div style={{ width: '100%', height: '600px' }}>
+				<AnimatorMapMachine
+					frames={SAMPLE_HURRICANE_PATHS}
+					currentFrame={currentFrame}
+					region="conus"
+					mapProvider="deckgl"
+					onViewStateChange={setViewState}
+				/>
+				<div style={{ padding: '20px', background: '#f5f5f5' }}>
+					<h3>Bounds Constraints Test</h3>
+					<p>
+						<strong>Current View State:</strong>
+					</p>
+					<ul>
+						<li>Longitude: {viewState.longitude.toFixed(2)}</li>
+						<li>Latitude: {viewState.latitude.toFixed(2)}</li>
+						<li>Zoom: {viewState.zoom.toFixed(2)}</li>
+					</ul>
+					<p>
+						<strong>Constraints:</strong>
+					</p>
+					<ul>
+						<li>Zoom: 2 - 20</li>
+						<li>Longitude: -130 to -65</li>
+						<li>Latitude: 24 to 50</li>
+					</ul>
+					<p style={{ color: '#666', fontSize: '12px' }}>
+						Try scrolling to zoom out (should stop at zoom 2) or dragging to pan beyond the bounds (should snap back).
+					</p>
+					<p>
+						Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
+					</p>
+					<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
+					<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
+				</div>
+			</div>
+		)
+	},
+}

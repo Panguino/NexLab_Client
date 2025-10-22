@@ -1,5 +1,5 @@
 'use client'
-import { zoomState } from '@/types/general'
+import { mapZoomState, zoomState } from '@/types/general'
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
 import AnimatorLayout from './AnimatorLayout/AnimatorLayout'
 
@@ -56,6 +56,8 @@ interface IAnimatorProps {
 	// Map mode support
 	mode?: 'image' | 'map' // 'image' for images, 'map' for geographic data
 	mapRegion?: 'conus' | 'alaska' | 'hawaii' | 'namer' // Region for map mode
+	initialMapZoomState?: mapZoomState // Initial map zoom state
+	setMapZoomState?: (mapZoomState: mapZoomState) => void // Callback for map zoom state changes
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -66,6 +68,9 @@ interface IAnimatorProvider extends IAnimatorProps {
 	setIsPlaying: Dispatch<SetStateAction<boolean>>
 	ratio: number
 	mode: 'image' | 'map'
+	mapRegion: 'conus' | 'alaska' | 'hawaii' | 'namer'
+	mapZoomState: mapZoomState // Current map zoom state
+	setMapZoomState: (mapZoomState: mapZoomState) => void // Update map zoom state
 }
 
 const AnimatorContext = createContext<IAnimatorProvider | undefined>(undefined)
@@ -119,13 +124,14 @@ export const Animator = ({
 	setActiveOverlays = (overlays: string[]) => {
 		console.warn('setActiveOverlays function not provided, active overlays will not be updated.', overlays)
 	},
-	setZoomState = (zoomState: zoomState) => {
-		console.warn('setZoomState function not provided, zoom state will not be updated.', zoomState)
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	setZoomState = (_zoomState: zoomState) => {
+		// Silently ignore if not provided - this is optional
 	},
 	setZoomFill,
 	setFullScreen,
-	onFrameUpdate = (_frameIndex: number) => {
-		// console.warn('onFrameUpdate function not provided, frame update will not be handled.', _frameIndex)
+	onFrameUpdate = () => {
+		// console.warn('onFrameUpdate function not provided, frame update will not be handled.')
 	},
 	pdfs = [],
 	pdfButtonClick = (pdfUrl: string) => {
@@ -133,10 +139,16 @@ export const Animator = ({
 	},
 	mode = 'image',
 	mapRegion = 'conus',
+	initialMapZoomState = { zoom: 3, latitude: 37, longitude: -95 },
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	setMapZoomState = (_mapZoomState: mapZoomState) => {
+		// Silently ignore if not provided - this is optional
+	},
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
+	const [mapZoomState, setMapZoomStateLocal] = useState<mapZoomState>(initialMapZoomState)
 	return (
 		<AnimatorContext.Provider
 			value={{
@@ -193,6 +205,11 @@ export const Animator = ({
 				pdfButtonClick,
 				mode,
 				mapRegion,
+				mapZoomState,
+				setMapZoomState: (newMapZoomState: mapZoomState) => {
+					setMapZoomStateLocal(newMapZoomState)
+					setMapZoomState(newMapZoomState)
+				},
 			}}
 		>
 			<AnimatorLayout />

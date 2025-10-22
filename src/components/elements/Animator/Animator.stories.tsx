@@ -4,6 +4,7 @@ import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 import { Animator } from './Animator'
 import { testDataFrameLabels, testDataFrameLabels2, testDataWithOverlays, testFrames, testFrames16x9, testFrames8x6 } from './AnimatorTestData'
+import { mockAlaskaFrames, mockHawaiiFrames, mockHurricaneTrackFrames } from './mockMapData'
 
 /**
  * # Animator Component
@@ -455,6 +456,109 @@ fullscreenModeEnabled.parameters = {
 	docs: {
 		description: {
 			story: 'Fullscreen mode enabled. Click the fullscreen button to toggle fullscreen mode. The animator will expand to fill the entire viewport.',
+		},
+	},
+}
+
+/**
+ * ## Map Mode Stories
+ * These stories demonstrate the Animator component in map mode with geographic data
+ */
+
+export const BasicMapAnimator: StoryFn<typeof Animator> = TemplateFactory()
+BasicMapAnimator.args = {
+	frames: mockHurricaneTrackFrames,
+	mode: 'map',
+	mapRegion: 'conus',
+	interval: 500,
+	autoPlay: false,
+	imageInfo: { width: 800, height: 600 },
+}
+BasicMapAnimator.parameters = {
+	docs: {
+		description: {
+			story: 'Basic map animation showing hurricane track data. Use the scrubber to navigate frames, zoom buttons to zoom in/out, and region selector to change regions.',
+		},
+	},
+}
+
+export const MapAnimatorAutoPlay: StoryFn<typeof Animator> = TemplateFactory()
+MapAnimatorAutoPlay.args = {
+	frames: mockHurricaneTrackFrames,
+	mode: 'map',
+	mapRegion: 'conus',
+	interval: 800,
+	autoPlay: true,
+	imageInfo: { width: 800, height: 600 },
+}
+MapAnimatorAutoPlay.parameters = {
+	docs: {
+		description: {
+			story: 'Map animation with auto-play enabled. The animation will start playing automatically. Use zoom controls and region selector while playing.',
+		},
+	},
+}
+
+export const MapAnimatorWithControls: StoryFn<typeof Animator> = TemplateFactory()
+MapAnimatorWithControls.args = {
+	frames: mockHurricaneTrackFrames,
+	mode: 'map',
+	mapRegion: 'namer',
+	interval: 600,
+	autoPlay: false,
+	imageInfo: { width: 800, height: 600 },
+}
+MapAnimatorWithControls.parameters = {
+	docs: {
+		description: {
+			story: 'Map animator with all controls visible. Shows region selector (CONUS, Alaska, Hawaii, NAMER), zoom controls, and playback controls working together.',
+		},
+	},
+}
+
+export const MapAnimatorFullscreen: StoryFn<typeof Animator> = TemplateFactory()
+MapAnimatorFullscreen.args = {
+	frames: mockHurricaneTrackFrames,
+	mode: 'map',
+	mapRegion: 'conus',
+	interval: 500,
+	autoPlay: false,
+	imageInfo: { width: 800, height: 600 },
+	fullScreen: false,
+}
+MapAnimatorFullscreen.parameters = {
+	docs: {
+		description: {
+			story: 'Map animator with fullscreen capability. Click the fullscreen button in the controls to expand the map to fill the viewport.',
+		},
+	},
+}
+
+export const MapAnimatorDifferentRegions: StoryFn<typeof Animator> = (args) => {
+	const [region, setRegion] = useState<'conus' | 'alaska' | 'hawaii' | 'namer'>('conus')
+	const frames = region === 'alaska' ? mockAlaskaFrames : region === 'hawaii' ? mockHawaiiFrames : mockHurricaneTrackFrames
+
+	return (
+		<Animator
+			{...args}
+			frames={frames}
+			mode="map"
+			mapRegion={region}
+			onMapZoomIn={() => console.log('Zoom in')}
+			onMapZoomOut={() => console.log('Zoom out')}
+			onMapResetView={() => console.log('Reset view')}
+		/>
+	)
+}
+MapAnimatorDifferentRegions.args = {
+	interval: 500,
+	autoPlay: false,
+	imageInfo: { width: 800, height: 600 },
+}
+MapAnimatorDifferentRegions.parameters = {
+	docs: {
+		description: {
+			story: 'Map animator demonstrating different regions. Use the region selector to switch between CONUS, Alaska, Hawaii, and NAMER regions. Each region has different data and zoom constraints.',
 		},
 	},
 }

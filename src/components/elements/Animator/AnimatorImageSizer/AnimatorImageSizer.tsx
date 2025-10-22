@@ -6,7 +6,7 @@ import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { useAnimator } from '../Animator'
 import { AnimatorImageMachine } from '../AnimatorImageMachine/AnimatorImageMachine'
 import DataTooltip from '../DataTooltip/DataTooltip'
-import ImageControls from '../ImageControls/ImageControls'
+import ViewControls from '../ViewControls/ViewControls'
 import styles from './AnimatorImageSizer.module.scss'
 
 const AnimatorImageSizer = () => {
@@ -33,7 +33,7 @@ const AnimatorImageSizer = () => {
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
 	// retain state for tooltip hover position (not required for click-through)
-	const [_imagePosition, setImagePosition] = useState({ xPercent: 0, yPercent: 0 })
+	const [, setImagePosition] = useState({ xPercent: 0, yPercent: 0 })
 	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }, updateDimensions] = useDimensions(ratio, !zoomFill)
 
 	// Track panning to suppress click-through during/after pan
@@ -204,7 +204,9 @@ const AnimatorImageSizer = () => {
 						</TransformComponent>
 						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} onUpdatePosition={setImagePosition} sectorId={sectorId} />
 
-						{!hideZoomControls && !disableZoom && <ImageControls zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />}
+						{!hideZoomControls && !disableZoom && (
+							<ViewControls mode="image" zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />
+						)}
 					</>
 				)}
 			</TransformWrapper>

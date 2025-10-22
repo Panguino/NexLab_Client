@@ -3,7 +3,7 @@
  * Deck.gl-based map animation component for rendering geographic data
  */
 
-import { Feature, FeatureCollection, Geometry } from 'geojson'
+import { Feature, FeatureCollection } from 'geojson'
 
 /**
  * Represents a single frame of map data
@@ -86,9 +86,16 @@ export interface IAnimatorMapMachineProps {
 	// Map provider
 	mapProvider?: 'deckgl' | 'canvas-d3' | 'mapbox'
 
+	// View state (controlled component - optional)
+	viewState?: MapViewState
+
+	// Zoom controls
+	zoomStepScroll?: number // Step size for mouse wheel scroll (default: 0.2)
+
 	// Callbacks
 	onFrameChange?: (frameIndex: number) => void
 	onViewStateChange?: (viewState: MapViewState) => void
+	_onViewStateChange?: (viewState: MapViewState) => void
 
 	// Optional styling
 	containerStyle?: React.CSSProperties
@@ -142,4 +149,3 @@ export interface StaticMapData {
 	states: FeatureCollection
 	hurricanePaths: MapFrame[]
 }
-

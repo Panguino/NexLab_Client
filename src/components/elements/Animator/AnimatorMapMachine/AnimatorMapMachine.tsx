@@ -2,13 +2,14 @@
 
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
 import countiesData from '@/data/d3Map/counties.json'
+import lakesData from '@/data/d3Map/lakes.json'
 import statesData from '@/data/d3Map/states.json'
 import worldData from '@/data/d3Map/world.json'
 import { GeoJsonLayer } from '@deck.gl/layers'
-import DeckGL from '@deck.gl/react'
+import DeckGL from 'deck.gl'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
-import { IAnimatorMapMachineProps, MapFrame, MapViewState } from './types'
+import { IAnimatorMapMachineProps, MapFrame } from './types'
 
 /**
  * AnimatorMapMachine Component
@@ -30,26 +31,38 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			currentFrame,
 			loadedFrames: externalLoadedFrames,
 			setLoadedFrames: externalSetLoadedFrames,
-			_baseOpacity = 1,
 			zIndex = 30,
-			region = 'conus',
 			onFrameChange,
 			_onViewStateChange,
 			containerStyle,
+			viewState: externalViewState,
+			zoomStepScroll = 0.2,
 		},
 		ref,
 	) => {
 		const [isLoading, setIsLoading] = useState(true)
 		const [localLoadedFrames, setLocalLoadedFrames] = useState<MapFrame[]>([])
-		const [viewState, setViewState] = useState<MapViewState>({
+		const [isDarkMode, setIsDarkMode] = useState(false)
+
+		// CONTROLLED COMPONENT: Use the global mapZoomState from parent
+		// All state changes (buttons, mouse interactions) update the global state
+		// DeckGL always receives the current viewState from the global state
+		const viewState = externalViewState ?? {
 			longitude: -95,
 			latitude: 37,
 			zoom: 3,
-		})
-		const [isDarkMode, setIsDarkMode] = useState(false)
+		}
 
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
+
+		// Debug logging - only for interactions
+		const DEBUG_INTERACTIONS = true
+		const logInteraction = (message: string, data?: any) => {
+			if (DEBUG_INTERACTIONS) {
+				console.log(`[AnimatorMapMachine] ${message}`, data || '')
+			}
+		}
 
 		// Detect dark mode from DOM class
 		useEffect(() => {
@@ -69,16 +82,20 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 		// Theme-aware colors (RGBA format)
 		const isDark = isDarkMode
-		// Ocean: blue1 (#8aadcf) light / blue2 (#233544) dark
-		const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
-		// World: grey2 (#d8d8d8) light / grey16 (#484848) dark
-		const worldColor = isDark ? [72, 72, 72, 255] : [216, 216, 216, 255]
-		// US States: white (#ffffff) light / grey13 (#5f5f5f) dark
-		const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255]
-		// State Borders: grey18 (#232323) light / grey15 (#505050) dark - darker
-		const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
-		// County Borders: grey14 (#6b6b6b) light / grey12 (#7a7a7a) dark - lighter than state borders
-		const countyBorderColor = isDark ? [122, 122, 122, 255] : [107, 107, 107, 255]
+		// Memoize colors to prevent dependency changes on every render
+		const { oceanColor, worldColor, statesColor, borderColor, countyBorderColor } = useMemo(() => {
+			// Ocean: blue1 (#8aadcf) light / blue2 (#233544) dark
+			const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
+			// World: grey2 (#d8d8d8) light / grey16 (#484848) dark
+			const worldColor = isDark ? [72, 72, 72, 255] : [216, 216, 216, 255]
+			// US States: white (#ffffff) light / grey13 (#5f5f5f) dark
+			const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255]
+			// State Borders: grey18 (#232323) light / grey15 (#505050) dark - darker
+			const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
+			// County Borders: grey14 (#6b6b6b) light / grey12 (#7a7a7a) dark - lighter than state borders
+			const countyBorderColor = isDark ? [122, 122, 122, 255] : [107, 107, 107, 255]
+			return { oceanColor, worldColor, statesColor, borderColor, countyBorderColor }
+		}, [isDark])
 
 		// Load frames
 		useEffect(() => {
@@ -170,6 +187,20 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						getFillColor: [statesColor],
 					},
 				}),
+				// Great Lakes layer - using ocean color to match water
+				// Light mode: #8aadcf (138, 173, 207), Dark mode: #233544 (35, 53, 68)
+				new GeoJsonLayer({
+					id: 'lakes-layer',
+					data: lakesData as any,
+					filled: true,
+					stroked: false,
+					getFillColor: () => oceanColor as any,
+					opacity: 1,
+					pickable: false,
+					updateTriggers: {
+						getFillColor: [oceanColor],
+					},
+				}),
 				// US County borders layer - lighter than state borders
 				// Using lighter grey: Light mode: #6b6b6b (107, 107, 107), Dark mode: #7a7a7a (122, 122, 122)
 				new GeoJsonLayer({
@@ -252,8 +283,47 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			return baseLayers
 		}, [loadedFrames, currentFrame, onFrameChange, oceanColor, worldColor, statesColor, borderColor, countyBorderColor])
 
+		// Map bounds constraints (CONUS - Continental US)
+		// Allows panning but prevents zooming out past these bounds
+		const mapBounds = {
+			minZoom: 2, // Minimum zoom level
+			maxZoom: 20, // Maximum zoom level
+			// Bounds: [minLon, minLat, maxLon, maxLat]
+			// Extended slightly beyond CONUS to allow panning
+			minLongitude: -130,
+			maxLongitude: -65,
+			minLatitude: 24,
+			maxLatitude: 50,
+		}
+
+		const constrainViewState = (vs: any) => {
+			// Constrain zoom level
+			const constrainedZoom = Math.max(mapBounds.minZoom, Math.min(mapBounds.maxZoom, vs.zoom))
+
+			// Constrain pan (longitude and latitude)
+			const constrainedLongitude = Math.max(mapBounds.minLongitude, Math.min(mapBounds.maxLongitude, vs.longitude))
+			const constrainedLatitude = Math.max(mapBounds.minLatitude, Math.min(mapBounds.maxLatitude, vs.latitude))
+
+			return {
+				...vs,
+				zoom: constrainedZoom,
+				longitude: constrainedLongitude,
+				latitude: constrainedLatitude,
+			}
+		}
+
 		const handleViewStateChange = (viewState: any) => {
-			setViewState(viewState.viewState)
+			const constrainedViewState = constrainViewState(viewState.viewState)
+
+			logInteraction(
+				`🖱️ DeckGL event - zoom: ${constrainedViewState.zoom.toFixed(2)} lat: ${constrainedViewState.latitude.toFixed(2)} lon: ${constrainedViewState.longitude.toFixed(2)}`,
+			)
+
+			// Call the callback to sync to global state
+			// This updates the mapZoomState in the Animator context
+			if (_onViewStateChange) {
+				_onViewStateChange(constrainedViewState)
+			}
 		}
 
 		return (
@@ -267,11 +337,18 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			>
 				{isLoading && <LoadingPanel size={0.35} hideText />}
 				<DeckGL
-					initialViewState={{
-						...viewState,
-						transitionDuration: 300,
+					viewState={{
+						...constrainViewState(viewState),
+						//transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
+						//transitionDuration: 'auto',
 					}}
-					controller={true}
+					controller={{
+						scrollZoom: {
+							smooth: true,
+						},
+						// Keyboard controls
+						keyboard: true,
+					}}
 					layers={layers}
 					onViewStateChange={handleViewStateChange}
 				/>
