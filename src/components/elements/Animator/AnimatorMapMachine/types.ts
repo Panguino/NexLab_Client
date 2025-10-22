@@ -14,6 +14,7 @@ export interface MapFrame {
 	timestamp: Date
 	data: FeatureCollection | Feature[] // GeoJSON data
 	overlays?: MapOverlay[]
+	tropicalStorms?: ProcessedStormData[] // Tropical storms for this frame
 	metadata?: {
 		windSpeed?: number
 		category?: number
@@ -91,6 +92,10 @@ export interface IAnimatorMapMachineProps {
 
 	// Zoom controls
 	zoomStepScroll?: number // Step size for mouse wheel scroll (default: 0.2)
+
+	// Tropical storm visualization
+	tropicalStorms?: ProcessedStormData[]
+	onStormHover?: (info: StormHoverInfo | null) => void
 
 	// Callbacks
 	onFrameChange?: (frameIndex: number) => void

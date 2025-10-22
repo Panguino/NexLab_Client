@@ -3,6 +3,7 @@ import { formatRunToZDate } from '@/util/dateFormat'
 import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 import { Animator } from './Animator'
+import { ANIMATED_STORM_FRAMES } from './AnimatorMapMachine/staticMapData/animatedStormTracks'
 import { testDataFrameLabels, testDataFrameLabels2, testDataWithOverlays, testFrames, testFrames16x9, testFrames8x6 } from './AnimatorTestData'
 import { mockAlaskaFrames, mockHawaiiFrames, mockHurricaneTrackFrames } from './mockMapData'
 
@@ -559,6 +560,36 @@ MapAnimatorDifferentRegions.parameters = {
 	docs: {
 		description: {
 			story: 'Map animator demonstrating different regions. Use the region selector to switch between CONUS, Alaska, Hawaii, and NAMER regions. Each region has different data and zoom constraints.',
+		},
+	},
+}
+
+/**
+ * Map animator with animated tropical storm visualization
+ * Displays hurricane icons with intensity-based colors
+ * Shows realistic storm tracks with movement and intensity changes over time
+ */
+export const HurricaneVisualization: StoryFn = () => {
+	const [currentFrame, setCurrentFrame] = useState(0)
+
+	return (
+		<Animator
+			frames={ANIMATED_STORM_FRAMES}
+			mode="map"
+			mapRegion="namer"
+			imageInfo={{ width: 1000, height: 600 }}
+			currentFrame={currentFrame}
+			setCurrentFrame={setCurrentFrame}
+			hideControls={false}
+			hideZoomControls={false}
+			disableZoom={false}
+		/>
+	)
+}
+HurricaneVisualization.parameters = {
+	docs: {
+		description: {
+			story: 'Animated tropical storm visualization showing realistic storm tracks with movement and intensity changes over time. Displays Irma, Jose, and Katia from the 2017 Atlantic hurricane season.',
 		},
 	},
 }

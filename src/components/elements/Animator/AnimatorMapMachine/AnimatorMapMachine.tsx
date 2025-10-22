@@ -9,6 +9,9 @@ import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from 'deck.gl'
 import { forwardRef, useEffect, useMemo, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
+import { StormTooltip } from './components/StormTooltip'
+import { createHurricaneLayer } from './layers/HurricaneLayer'
+import { createStormTrackLayer } from './layers/StormTrackLayer'
 import { IAnimatorMapMachineProps, MapFrame } from './types'
 
 /**
@@ -43,6 +46,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const [isLoading, setIsLoading] = useState(true)
 		const [localLoadedFrames, setLocalLoadedFrames] = useState<MapFrame[]>([])
 		const [isDarkMode, setIsDarkMode] = useState(false)
+		const [stormHoverInfo, setStormHoverInfo] = useState<any>(null)
+		const [showTooltip, setShowTooltip] = useState(false)
 
 		// CONTROLLED COMPONENT: Use the global mapZoomState from parent
 		// All state changes (buttons, mouse interactions) update the global state
@@ -275,6 +280,36 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					})
 				}
 
+				// Add tropical storms from frame if present
+				if (frame && frame.tropicalStorms && frame.tropicalStorms.length > 0) {
+					// Add storm track layer (historical paths)
+					const trackLayer = createStormTrackLayer(frame.tropicalStorms, loadedFrames)
+					baseLayers.push(trackLayer)
+
+					const handleStormHover = (info: any) => {
+						if (info.object) {
+							setStormHoverInfo({
+								stormId: info.object.id,
+								name: info.object.name,
+								classification: info.object.classification,
+								category: info.object.category,
+								intensity: info.object.intensity,
+								pressure: info.object.pressure,
+								movementDir: info.object.movementDir,
+								movementSpeed: info.object.movementSpeed,
+								lastUpdate: info.object.lastUpdate,
+								x: info.x,
+								y: info.y,
+							})
+							setShowTooltip(true)
+						} else {
+							setShowTooltip(false)
+						}
+					}
+					const hurricaneLayer = createHurricaneLayer(frame.tropicalStorms, handleStormHover)
+					baseLayers.push(hurricaneLayer)
+				}
+
 				if (onFrameChange) {
 					onFrameChange(activeFrame)
 				}
@@ -352,6 +387,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					layers={layers}
 					onViewStateChange={handleViewStateChange}
 				/>
+				<StormTooltip info={stormHoverInfo} visible={showTooltip} />
 			</div>
 		)
 	},
