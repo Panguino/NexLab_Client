@@ -25,9 +25,8 @@ const ZOOM_STEP_BUTTON = 0.3 // Step size for zoom in/out buttons (smaller = slo
 const ZOOM_STEP_SCROLL = 0.001 // Step size for mouse wheel scroll (smaller = slower)
 
 // Easing configuration - adjust these to control animation smoothness
-const EASING_FACTOR = 0.2 // How much of the distance to cover per frame (0.8 = slower, 0.95 = faster)
+const EASING_DURATION = 500 // Duration of easing animation in milliseconds
 const ANIMATION_THRESHOLD = 0.005 // Stop animating when distance is smaller than this
-const ANIMATION_FRAME_RATE = 16 // ms between animation updates (~60fps)
 
 const AnimatorMapSizer = () => {
 	const {
@@ -56,8 +55,10 @@ const AnimatorMapSizer = () => {
 
 	// Animation state for smooth easing
 	const [targetViewState, setTargetViewState] = useState<MapViewState | null>(null)
-	const animationFrameRef = useRef<NodeJS.Timeout | null>(null)
+	const animationFrameRef = useRef<number | null>(null)
 	const currentViewStateRef = useRef<MapViewState>(mapZoomState)
+	const animationStartTimeRef = useRef<number | null>(null)
+	const animationStartStateRef = useRef<MapViewState | null>(null)
 
 	// Keep ref in sync with current state
 	useEffect(() => {
@@ -90,51 +91,81 @@ const AnimatorMapSizer = () => {
 		updateDimensions()
 	}, [updateDimensions, loadedFrames])
 
-	// Animation loop for smooth easing
+	// Animation loop for smooth easing using requestAnimationFrame
 	// When targetViewState is set, smoothly interpolate from current to target
+	// Uses delta-based timing for performance-independent animation
 	useEffect(() => {
 		if (!targetViewState) {
 			// No animation in progress
 			if (animationFrameRef.current) {
-				clearInterval(animationFrameRef.current)
+				cancelAnimationFrame(animationFrameRef.current)
 				animationFrameRef.current = null
 			}
+			animationStartTimeRef.current = null
+			animationStartStateRef.current = null
 			return undefined
 		}
 
-		// Start animation loop
-		animationFrameRef.current = setInterval(() => {
-			// Get current state from ref (avoids dependency issues)
-			const current = currentViewStateRef.current
+		// Initialize animation state on first frame
+		if (!animationStartTimeRef.current) {
+			animationStartTimeRef.current = performance.now()
+			animationStartStateRef.current = { ...currentViewStateRef.current }
+		}
+
+		// Animation frame callback using delta-based timing
+		const animate = (currentTime: number) => {
+			const startTime = animationStartTimeRef.current!
+			const startState = animationStartStateRef.current!
+			const elapsed = currentTime - startTime
+			const progress = Math.min(elapsed / EASING_DURATION, 1)
+
+			// Easing function: ease-out cubic for smooth deceleration
+			const easeProgress = 1 - Math.pow(1 - progress, 3)
 
 			// Calculate distance to target for each dimension
-			const zoomDistance = Math.abs(targetViewState.zoom - current.zoom)
-			const latDistance = Math.abs(targetViewState.latitude - current.latitude)
-			const lonDistance = Math.abs(targetViewState.longitude - current.longitude)
+			const zoomDistance = Math.abs(targetViewState.zoom - startState.zoom)
+			const latDistance = Math.abs(targetViewState.latitude - startState.latitude)
+			const lonDistance = Math.abs(targetViewState.longitude - startState.longitude)
 
 			// Check if we're close enough to stop animating
 			if (zoomDistance < ANIMATION_THRESHOLD && latDistance < ANIMATION_THRESHOLD && lonDistance < ANIMATION_THRESHOLD) {
 				// Snap to target and stop animation
 				setMapZoomState(targetViewState)
 				setTargetViewState(null)
+				animationStartTimeRef.current = null
+				animationStartStateRef.current = null
 				return
 			}
 
-			// Interpolate: move 90% of the remaining distance
-			const newZoom = current.zoom + (targetViewState.zoom - current.zoom) * EASING_FACTOR
-			const newLat = current.latitude + (targetViewState.latitude - current.latitude) * EASING_FACTOR
-			const newLon = current.longitude + (targetViewState.longitude - current.longitude) * EASING_FACTOR
+			// Interpolate using eased progress
+			const newZoom = startState.zoom + (targetViewState.zoom - startState.zoom) * easeProgress
+			const newLat = startState.latitude + (targetViewState.latitude - startState.latitude) * easeProgress
+			const newLon = startState.longitude + (targetViewState.longitude - startState.longitude) * easeProgress
 
 			setMapZoomState({
 				zoom: newZoom,
 				latitude: newLat,
 				longitude: newLon,
 			})
-		}, ANIMATION_FRAME_RATE)
+
+			// If animation is complete, stop
+			if (progress < 1) {
+				animationFrameRef.current = requestAnimationFrame(animate)
+			} else {
+				// Final snap to target
+				setMapZoomState(targetViewState)
+				setTargetViewState(null)
+				animationStartTimeRef.current = null
+				animationStartStateRef.current = null
+			}
+		}
+
+		// Start the animation
+		animationFrameRef.current = requestAnimationFrame(animate)
 
 		return () => {
 			if (animationFrameRef.current) {
-				clearInterval(animationFrameRef.current)
+				cancelAnimationFrame(animationFrameRef.current)
 				animationFrameRef.current = null
 			}
 		}
