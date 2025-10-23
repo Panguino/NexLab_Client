@@ -85,6 +85,7 @@ export const DonationTiers = ({ onOpenModal }: DonationTiersProps) => {
 					</p>
 				</div>
 
+				{/* Desktop Table View */}
 				<div className={styles.tableWrapper}>
 					<table className={styles.tiersTable}>
 						<thead>
@@ -121,6 +122,50 @@ export const DonationTiers = ({ onOpenModal }: DonationTiersProps) => {
 							))}
 						</tbody>
 					</table>
+				</div>
+
+				{/* Mobile Card View */}
+				<div className={styles.mobileCardsWrapper}>
+					{tiers.map((tier, tierIndex) => (
+						<div key={tierIndex} className={`${styles.tierCard} ${tier.highlight ? styles.tierCardHighlighted : ''}`}>
+							{tier.highlight && <div className={styles.mostPopularBadge}>Most Popular</div>}
+							<div className={styles.tierCardHeader}>
+								<h3 className={styles.tierCardName}>{tier.name}</h3>
+								<p className={styles.tierCardPrice}>{tier.price}</p>
+							</div>
+
+							<div className={styles.tierCardActions}>
+								<Button
+									label={`$${tier.monthlyAmount} / month`}
+									onClick={() => onOpenModal(tier.monthlyAmount, false, tier.name)}
+									className={styles.tierCardButton}
+								/>
+								<Button
+									label={`$${tier.lifetimeAmount} lifetime`}
+									onClick={() => onOpenModal(tier.lifetimeAmount, true, tier.name)}
+									className={styles.tierCardButton}
+								/>
+							</div>
+
+							<div className={styles.tierCardFeatures}>
+								<h4 className={styles.featuresTitle}>Includes:</h4>
+								<ul className={styles.featuresList}>
+									{features.map((feature, featureIndex) => {
+										const tierKey = tier.name.toLowerCase() as keyof typeof feature
+										const value = feature[tierKey]
+										if (value === false) return null
+
+										return (
+											<li key={featureIndex} className={styles.featureItem}>
+												<span className={styles.featureIcon}>{renderFeatureValue(value)}</span>
+												<span className={styles.featureName}>{feature.name}</span>
+											</li>
+										)
+									})}
+								</ul>
+							</div>
+						</div>
+					))}
 				</div>
 			</div>
 		</section>
