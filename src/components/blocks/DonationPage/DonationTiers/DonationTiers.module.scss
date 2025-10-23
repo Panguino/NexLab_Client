@@ -16,6 +16,8 @@
 	margin: 0 auto;
 	padding: 0 20px;
 	overflow: visible !important;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .header {
@@ -26,13 +28,37 @@
 		color: var(--color-grey20-grey0);
 		font-size: 36px;
 		font-weight: 700;
-		margin: 0;
+		margin: 0 0 20px 0;
 		transition: color var(--themeChange);
 
 		@media (max-width: $mobile-menu-breakpoint) {
 			font-size: 28px;
 		}
 	}
+}
+
+.betaNotice {
+	color: var(--color-grey14-grey6);
+	font-size: 15px;
+	line-height: 1.6;
+	max-width: 900px;
+	margin: 0 auto;
+	font-weight: 400;
+	transition: color var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		font-size: 14px;
+		line-height: 1.5;
+	}
+}
+
+.highlight {
+	font-weight: 700;
+	text-decoration: underline;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 3px;
+	color: var(--color-blue3-blue4);
+	transition: color var(--themeChange);
 }
 
 .tableWrapper {
@@ -42,6 +68,8 @@
 	background-color: var(--color-white-grey17);
 	transition: background-color var(--themeChange);
 	overflow: visible !important;
+	width: 100%;
+	-webkit-overflow-scrolling: touch;
 }
 
 .tiersTable thead {
@@ -208,8 +236,137 @@
 	background-color: var(--color-white-grey18);
 }
 
+// Mobile Card View
+.mobileCardsWrapper {
+	display: none;
+	flex-direction: column;
+	gap: 24px;
+	margin-top: 40px;
+}
+
+.tierCard {
+	background-color: var(--color-white-grey18);
+	border: 2px solid var(--color-grey3-grey15);
+	border-radius: 12px;
+	padding: 24px;
+	transition: all var(--themeChange);
+	position: relative;
+}
+
+.tierCardHighlighted {
+	border-color: var(--color-blue3-blue4);
+	background-color: var(--color-blue0-blue6);
+	box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.mostPopularBadge {
+	position: absolute;
+	top: -12px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: linear-gradient(135deg, var(--color-blue4) 0%, var(--color-blue3) 100%);
+	color: var(--color-white);
+	padding: 4px 12px;
+	border-radius: 12px;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	white-space: nowrap;
+}
+
+.tierCardHeader {
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.tierCardName {
+	margin: 0 0 8px 0;
+	font-size: 24px;
+	font-weight: 700;
+	color: var(--color-grey20-grey0);
+	transition: color var(--themeChange);
+}
+
+.tierCardPrice {
+	margin: 0;
+	font-size: 14px;
+	color: var(--color-grey14-grey6);
+	font-weight: 500;
+	transition: color var(--themeChange);
+}
+
+.tierCardActions {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-bottom: 24px;
+}
+
+.tierCardButton {
+	font-size: 14px !important;
+	padding: 12px 16px !important;
+	min-height: auto !important;
+	width: 100%;
+}
+
+.tierCardFeatures {
+	border-top: 1px solid var(--color-grey6-grey14);
+	padding-top: 20px;
+}
+
+.featuresTitle {
+	margin: 0 0 16px 0;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--color-grey16-grey4);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	transition: color var(--themeChange);
+}
+
+.featuresList {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.featureItem {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	font-size: 14px;
+	color: var(--color-grey14-grey6);
+	line-height: 1.4;
+	transition: color var(--themeChange);
+}
+
+.featureIcon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 20px;
+	height: 20px;
+}
+
+.featureName {
+	flex: 1;
+}
+
 // Mobile responsive adjustments
 @media (max-width: $mobile-menu-breakpoint) {
+	.tableWrapper {
+		display: none;
+	}
+
+	.mobileCardsWrapper {
+		display: flex;
+	}
+
 	.tiersTable {
 		font-size: 12px;
 		min-width: 700px;

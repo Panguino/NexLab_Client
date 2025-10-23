@@ -1,4 +1,4 @@
-import { FacebookSignInButton, GoogleSignInButton } from '@/components/elements/AuthButtons/AuthButtons'
+import { GoogleSignInButton } from '@/components/elements/AuthButtons/AuthButtons'
 
 import styles from './Login.module.scss'
 
@@ -18,7 +18,6 @@ export const Login = () => {
 					<div className={styles.authSection}>
 						<div className={styles.authButtons}>
 							<GoogleSignInButton />
-							<FacebookSignInButton />
 						</div>
 					</div>
 
