@@ -36,7 +36,7 @@ export const HAZARD_COLOR_MAP: Record<string, [number, number, number, number]> 
 }
 
 /**
- * Alert data from API
+ * Alert data from API (old format)
  */
 export interface AlertsAPIResponse {
 	success: boolean
@@ -47,6 +47,44 @@ export interface AlertsAPIResponse {
 			changes: Record<string, string>
 		}>
 	}
+}
+
+/**
+ * Hazard data from new /api/hazards endpoint
+ */
+export interface HazardData {
+	id: string
+	locationId: string
+	locationType: 'county' | 'coast' | 'offshore'
+	locationName: string
+	state: string
+	lat: number
+	lon: number
+	event: string
+	hazardType: string
+	hazardLevel: string
+	color: { hex: string; rgb: string }
+	sent: string
+	effective: string
+	onset: string
+	expires: string
+	ends: string
+	headline: string
+	description: string
+	areaDesc: string
+	severity: string
+	certainty: string
+	urgency: string
+}
+
+/**
+ * Response from /api/hazards endpoint
+ */
+export interface HazardsAPIResponse {
+	success: boolean
+	message: string
+	data: HazardData[]
+	timestamp?: string
 }
 
 /**
@@ -61,6 +99,68 @@ export interface CountyAlertMap {
 }
 
 /**
+ * Fetch real-time hazards from /api/hazards endpoint
+ */
+export const fetchRealTimeHazards = async (filters?: {
+	region?: 'CONUS' | 'ALASKA' | 'HAWAII'
+	state?: string
+	hazardType?: string
+	hazardLevel?: string
+}): Promise<HazardsAPIResponse> => {
+	try {
+		let endpoint = `${ALERTS_API_BASE}/api/hazards`
+		const params = new URLSearchParams()
+
+		if (filters?.region) params.append('region', filters.region)
+		if (filters?.state) params.append('state', filters.state)
+		if (filters?.hazardType) params.append('hazardType', filters.hazardType)
+		if (filters?.hazardLevel) params.append('hazardLevel', filters.hazardLevel)
+
+		if (params.toString()) {
+			endpoint += `?${params.toString()}`
+		}
+
+		const response = await fetch(endpoint, {
+			method: 'GET',
+			headers: { Accept: 'application/json' },
+		})
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`)
+		}
+
+		const data = await response.json()
+		return data as HazardsAPIResponse
+	} catch (error) {
+		console.error('Error fetching real-time hazards:', error)
+		throw error
+	}
+}
+
+/**
+ * Fetch hazards for a specific county by FIPS code
+ */
+export const fetchCountyHazards = async (fipsCode: string): Promise<HazardsAPIResponse> => {
+	try {
+		const endpoint = `${ALERTS_API_BASE}/api/hazards/county/${fipsCode}`
+		const response = await fetch(endpoint, {
+			method: 'GET',
+			headers: { Accept: 'application/json' },
+		})
+
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`)
+		}
+
+		const data = await response.json()
+		return data as HazardsAPIResponse
+	} catch (error) {
+		console.error(`Error fetching hazards for county ${fipsCode}:`, error)
+		throw error
+	}
+}
+
+/**
  * Fetch alerts from the last X hours
  */
 export const fetchCountyAlertsLastHours = async (hours: 1 | 6 | 24 = 24): Promise<AlertsAPIResponse> => {
@@ -68,7 +168,7 @@ export const fetchCountyAlertsLastHours = async (hours: 1 | 6 | 24 = 24): Promis
 		const endpoint = `${ALERTS_API_BASE}/api/alerts/history/last?hours=${hours}`
 		const response = await fetch(endpoint, {
 			method: 'GET',
-			headers: { 'Accept': 'application/json' },
+			headers: { Accept: 'application/json' },
 		})
 
 		if (!response.ok) {
@@ -91,7 +191,7 @@ export const fetchCountyAlertsForDate = async (date: string): Promise<AlertsAPIR
 		const endpoint = `${ALERTS_API_BASE}/api/alerts/history/optimized?date=${date}`
 		const response = await fetch(endpoint, {
 			method: 'GET',
-			headers: { 'Accept': 'application/json' },
+			headers: { Accept: 'application/json' },
 		})
 
 		if (!response.ok) {
@@ -147,7 +247,52 @@ export const extractCountyId = (alert: any): string | null => {
 }
 
 /**
- * Parse API alerts into county-based alert map
+ * Convert hazard data from /api/hazards to county alert map
+ * Groups hazards by county and assigns colors
+ */
+export const parseHazardsToCountyMap = (hazardsResponse: HazardsAPIResponse): CountyAlertMap => {
+	const countyMap: CountyAlertMap = {}
+
+	if (!hazardsResponse.data || !Array.isArray(hazardsResponse.data)) {
+		return countyMap
+	}
+
+	hazardsResponse.data.forEach((hazard: HazardData) => {
+		// Only process county-level hazards
+		if (hazard.locationType !== 'county') return
+
+		const countyId = hazard.locationId
+		if (!countyId) return
+
+		// Parse color from hex or use hazard type/level mapping
+		let color: [number, number, number, number]
+		if (hazard.color?.rgb) {
+			const [r, g, b] = hazard.color.rgb.split(',').map(Number)
+			color = [r, g, b, 255]
+		} else {
+			color = getAlertColor(hazard.event || '')
+		}
+
+		if (!countyMap[countyId]) {
+			countyMap[countyId] = {
+				color,
+				alerts: [],
+				headline: hazard.headline,
+			}
+		}
+
+		countyMap[countyId].alerts.push(hazard)
+		// Update color to the most severe (first one added)
+		if (countyMap[countyId].alerts.length === 1) {
+			countyMap[countyId].color = color
+		}
+	})
+
+	return countyMap
+}
+
+/**
+ * Parse API alerts into county-based alert map (old format)
  * Groups alerts by county and assigns colors
  */
 export const parseAlertsToCountyMap = (apiResponse: AlertsAPIResponse): CountyAlertMap => {
@@ -191,13 +336,23 @@ export const createCountyAlertGeoJSON = (countyAlertMap: CountyAlertMap): Featur
 	const counties = countiesData as FeatureCollection
 
 	const features = counties.features.map((feature: Feature) => {
-		const countyId = feature.properties?.id || feature.properties?.ID
+		// Try multiple property names to find the county ID
+		let countyId = feature.properties?.id || feature.properties?.ID
+
+		// If not found, try FIPS and extract the numeric part
+		if (!countyId && feature.properties?.FIPS) {
+			// FIPS format is "US53073", extract "53073"
+			const fipsMatch = feature.properties.FIPS.match(/(\d{5})/)
+			countyId = fipsMatch ? fipsMatch[1] : null
+		}
+
 		const alertInfo = countyAlertMap[countyId]
 
 		return {
 			...feature,
 			properties: {
 				...feature.properties,
+				id: countyId, // Ensure id is set for reference
 				alertColor: alertInfo?.color || [200, 200, 200, 100], // Default grey for no alerts
 				hasAlert: !!alertInfo,
 				alerts: alertInfo?.alerts || [],
@@ -233,4 +388,3 @@ export const createCountyAlertLayer = (countyAlertMap: CountyAlertMap) => {
 		autoHighlight: true,
 	}
 }
-

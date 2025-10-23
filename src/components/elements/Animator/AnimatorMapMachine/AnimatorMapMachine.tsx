@@ -254,11 +254,17 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							data: frame.data as any,
 							stroked: true,
 							filled: true,
-							lineWidthMinPixels: 1,
-							lineWidthMaxPixels: 10,
-							getLineColor: [255, 0, 0, 255],
-							getFillColor: [255, 0, 0, 128],
-							opacity: 0, // Hide frame data layer for now
+							lineWidthMinPixels: 0.5,
+							lineWidthMaxPixels: 1,
+							getLineColor: (d: any) => [100, 100, 100, 255],
+							getFillColor: (d: any) => d.properties?.alertColor || [200, 200, 200, 100],
+							opacity: 1, // Show frame data layer with county alerts
+							pickable: true,
+							autoHighlight: true,
+							updateTriggers: {
+								getFillColor: [frame.data],
+								getLineColor: [frame.data],
+							},
 						}),
 					)
 				}
