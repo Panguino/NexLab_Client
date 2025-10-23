@@ -47,7 +47,7 @@ export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
 	satradZoomState: { ...defaultSatradZoomState },
 	setSatradZoomState: (satradZoomState) => set(() => ({ satradZoomState })),
 	resetSatradZoomState: () => set(() => ({ satradZoomState: { ...defaultSatradZoomState } })),
-	activeOverlays: ['data', 'map'],
+	activeOverlays: ['data', 'map', 'meso-map', 'meso-latlon'],
 	setActiveOverlays: (overlays: string[]) =>
 		set(() => {
 			console.log('Setting active overlays:', overlays)
