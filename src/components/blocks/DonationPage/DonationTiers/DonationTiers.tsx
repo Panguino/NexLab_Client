@@ -75,8 +75,17 @@ export const DonationTiers = ({ onOpenModal }: DonationTiersProps) => {
 			<div className={styles.container}>
 				<div className={styles.header}>
 					<h2>Become a donating Member</h2>
+					<p className={styles.betaNotice}>
+						NexLab is <span className={styles.highlight}>currently in beta</span>, and we're grateful for your support during this
+						exciting phase of development. As we continue to refine our platform and expand our features,{' '}
+						<span className={styles.highlight}>donation perks, pricing, and access levels may evolve</span>. We're committed to delivering
+						exceptional value to our donors and appreciate your understanding as we optimize the experience. Your contribution today
+						directly supports the development of cutting-edge weather tools and ensures free access to vital data for the entire
+						community.
+					</p>
 				</div>
 
+				{/* Desktop Table View */}
 				<div className={styles.tableWrapper}>
 					<table className={styles.tiersTable}>
 						<thead>
@@ -113,6 +122,50 @@ export const DonationTiers = ({ onOpenModal }: DonationTiersProps) => {
 							))}
 						</tbody>
 					</table>
+				</div>
+
+				{/* Mobile Card View */}
+				<div className={styles.mobileCardsWrapper}>
+					{tiers.map((tier, tierIndex) => (
+						<div key={tierIndex} className={`${styles.tierCard} ${tier.highlight ? styles.tierCardHighlighted : ''}`}>
+							{tier.highlight && <div className={styles.mostPopularBadge}>Most Popular</div>}
+							<div className={styles.tierCardHeader}>
+								<h3 className={styles.tierCardName}>{tier.name}</h3>
+								<p className={styles.tierCardPrice}>{tier.price}</p>
+							</div>
+
+							<div className={styles.tierCardActions}>
+								<Button
+									label={`$${tier.monthlyAmount} / month`}
+									onClick={() => onOpenModal(tier.monthlyAmount, false, tier.name)}
+									className={styles.tierCardButton}
+								/>
+								<Button
+									label={`$${tier.lifetimeAmount} lifetime`}
+									onClick={() => onOpenModal(tier.lifetimeAmount, true, tier.name)}
+									className={styles.tierCardButton}
+								/>
+							</div>
+
+							<div className={styles.tierCardFeatures}>
+								<h4 className={styles.featuresTitle}>Includes:</h4>
+								<ul className={styles.featuresList}>
+									{features.map((feature, featureIndex) => {
+										const tierKey = tier.name.toLowerCase() as keyof typeof feature
+										const value = feature[tierKey]
+										if (value === false) return null
+
+										return (
+											<li key={featureIndex} className={styles.featureItem}>
+												<span className={styles.featureIcon}>{renderFeatureValue(value)}</span>
+												<span className={styles.featureName}>{feature.name}</span>
+											</li>
+										)
+									})}
+								</ul>
+							</div>
+						</div>
+					))}
 				</div>
 			</div>
 		</section>
