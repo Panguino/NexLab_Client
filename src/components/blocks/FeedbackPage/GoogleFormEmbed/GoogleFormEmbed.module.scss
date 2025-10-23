@@ -1,0 +1,40 @@
+.formContainer {
+	padding: 60px 20px;
+	background: var(--color-white-grey19);
+	min-height: 100vh;
+	transition:
+		background-color var(--themeChange),
+		color var(--themeChange);
+}
+
+.embedWrapper {
+	max-width: 900px;
+	margin: 0 auto;
+	background: var(--color-white-grey18);
+	border: 1px solid var(--color-grey6-grey14);
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Styling for the actual Google Form iframe */
+.embedWrapper iframe {
+	width: 100%;
+	min-height: 800px;
+	border: none;
+	display: block;
+}
+
+@media (max-width: 768px) {
+	.formContainer {
+		padding: 40px 15px;
+	}
+
+	.embedWrapper {
+		max-width: 100%;
+	}
+
+	.embedWrapper iframe {
+		min-height: 600px;
+	}
+}

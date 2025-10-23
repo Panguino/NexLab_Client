@@ -30,6 +30,19 @@ const SatradSidebarPanel = () => {
 	const setProductInfoId = useRootStore.use.setProductInfoId()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
+	const fetchFloaterSectorData = async () => {
+		try {
+			const response = await fetch('https://weather.cod.edu/datapoints/satrad/get-floaters.php')
+			if (!response.ok) {
+				throw new Error(`Failed to fetch sector data: ${response.status} ${response.statusText}`)
+			}
+			return await response.json()
+		} catch (error) {
+			console.error('Error fetching sector data:', error)
+			return null
+		}
+	}
+
 	useEffect(() => {
 		const currentRegionId = regionId as string
 		const currentSectorId = sectorId as string
@@ -81,17 +94,33 @@ const SatradSidebarPanel = () => {
 
 	useEffect(() => {
 		if (sectorSelectorPanelIsOpen) {
-			const region = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].region
-			const newD3config = {
-				rotate: region.rotate,
-				scale: region.scale,
+			const loadSectorData = async () => {
+				const region = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].region
+				const newD3config = {
+					rotate: region.rotate,
+					scale: region.scale,
+				}
+				setSectorSelectorD3config(newD3config)
+				// Special case: if mesoanalysis region, fetch floater sector data
+				const updatedSectorData = await fetchFloaterSectorData()
+				console.log('Fetched floater sector data:', updatedSectorData)
+				const selectedSectors = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].sectors.map((sectorId) => {
+					const base = {
+						id: sectorId,
+						...ALL_SATRAD_SECTORS[sectorId],
+					}
+					// Only override coordinates for meso floater sectors if updated data is available
+					if (updatedSectorData && updatedSectorData[sectorId] && updatedSectorData[sectorId].coordinates) {
+						return {
+							...base,
+							coordinates: updatedSectorData[sectorId].coordinates,
+						}
+					}
+					return base
+				})
+				setSectorSelectorSectors(selectedSectors)
 			}
-			setSectorSelectorD3config(newD3config)
-			const selectedSectors = SATRAD_SCALE_REGIONS[tempRegionIdRef.current as string].sectors.map((sectorId) => ({
-				id: sectorId,
-				...ALL_SATRAD_SECTORS[sectorId],
-			}))
-			setSectorSelectorSectors(selectedSectors)
+			loadSectorData()
 		} else {
 			if (tempRegionIdRef.current !== regionId) {
 				tempRegionIdRef.current = regionId as string
