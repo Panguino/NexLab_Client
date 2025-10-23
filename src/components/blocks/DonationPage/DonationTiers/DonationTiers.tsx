@@ -75,6 +75,14 @@ export const DonationTiers = ({ onOpenModal }: DonationTiersProps) => {
 			<div className={styles.container}>
 				<div className={styles.header}>
 					<h2>Become a donating Member</h2>
+					<p className={styles.betaNotice}>
+						NexLab is <span className={styles.highlight}>currently in beta</span>, and we're grateful for your support during this
+						exciting phase of development. As we continue to refine our platform and expand our features,{' '}
+						<span className={styles.highlight}>donation perks, pricing, and access levels may evolve</span>. We're committed to delivering
+						exceptional value to our donors and appreciate your understanding as we optimize the experience. Your contribution today
+						directly supports the development of cutting-edge weather tools and ensures free access to vital data for the entire
+						community.
+					</p>
 				</div>
 
 				<div className={styles.tableWrapper}>

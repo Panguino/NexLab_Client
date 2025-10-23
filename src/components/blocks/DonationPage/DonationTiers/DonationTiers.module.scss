@@ -26,13 +26,37 @@
 		color: var(--color-grey20-grey0);
 		font-size: 36px;
 		font-weight: 700;
-		margin: 0;
+		margin: 0 0 20px 0;
 		transition: color var(--themeChange);
 
 		@media (max-width: $mobile-menu-breakpoint) {
 			font-size: 28px;
 		}
 	}
+}
+
+.betaNotice {
+	color: var(--color-grey14-grey6);
+	font-size: 15px;
+	line-height: 1.6;
+	max-width: 900px;
+	margin: 0 auto;
+	font-weight: 400;
+	transition: color var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		font-size: 14px;
+		line-height: 1.5;
+	}
+}
+
+.highlight {
+	font-weight: 700;
+	text-decoration: underline;
+	text-decoration-thickness: 2px;
+	text-underline-offset: 3px;
+	color: var(--color-blue3-blue4);
+	transition: color var(--themeChange);
 }
 
 .tableWrapper {
