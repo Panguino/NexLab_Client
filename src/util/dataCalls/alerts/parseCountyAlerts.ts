@@ -329,8 +329,30 @@ export const parseAlertsToCountyMap = (apiResponse: AlertsAPIResponse): CountyAl
 }
 
 /**
+ * Create a lightweight alert color map for counties
+ * This maps county IDs to their alert colors without duplicating geometry data
+ * The geometry is already in countiesData, we just need to map colors to it
+ */
+export const createCountyAlertColorMap = (countyAlertMap: CountyAlertMap): Record<string, any> => {
+	const colorMap: Record<string, any> = {}
+
+	// Build a map of county ID -> alert info
+	Object.entries(countyAlertMap).forEach(([countyId, alertInfo]) => {
+		colorMap[countyId] = {
+			color: alertInfo.color,
+			hasAlert: true,
+			alerts: alertInfo.alerts,
+			headline: alertInfo.headline,
+		}
+	})
+
+	return colorMap
+}
+
+/**
  * Create a GeoJSON FeatureCollection with county colors based on alerts
  * This is used as the frame data for AnimatorMapMachine
+ * @deprecated Use createCountyAlertColorMap instead - this duplicates geometry data
  */
 export const createCountyAlertGeoJSON = (countyAlertMap: CountyAlertMap): FeatureCollection => {
 	const counties = countiesData as FeatureCollection

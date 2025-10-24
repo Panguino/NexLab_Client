@@ -7,12 +7,52 @@ import statesData from '@/data/d3Map/states.json'
 import worldData from '@/data/d3Map/world.json'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from 'deck.gl'
-import { forwardRef, useEffect, useMemo, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
 import { StormTooltip } from './components/StormTooltip'
 import { createHurricaneLayer } from './layers/HurricaneLayer'
 import { createStormTrackLayer } from './layers/StormTrackLayer'
 import { IAnimatorMapMachineProps, MapFrame } from './types'
+
+// Import booleanPointInPolygon for point-in-polygon detection
+let booleanPointInPolygon: any = null
+try {
+	const turf = require('@turf/turf')
+	booleanPointInPolygon = turf.booleanPointInPolygon
+} catch (e) {
+	console.warn('Failed to load @turf/turf')
+}
+
+/**
+ * Find which county a given lat/long point is in
+ * Uses point-in-polygon detection with Turf.js
+ */
+function findCountyAtPoint(latitude: number, longitude: number): string | null {
+	if (!booleanPointInPolygon) return null
+
+	const point = [longitude, latitude]
+
+	// Search through counties data
+	const features = (countiesData as any).features || []
+	for (const feature of features) {
+		try {
+			if (booleanPointInPolygon(point, feature)) {
+				// Extract county ID from properties
+				let countyId = feature.properties?.id || feature.properties?.ID
+				if (!countyId && feature.properties?.FIPS) {
+					const fipsMatch = feature.properties.FIPS.match(/(\d{5})/)
+					countyId = fipsMatch ? fipsMatch[1] : null
+				}
+				return countyId || null
+			}
+		} catch (e) {
+			// Skip features that cause errors
+			continue
+		}
+	}
+
+	return null
+}
 
 /**
  * AnimatorMapMachine Component
@@ -48,6 +88,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const [isDarkMode, setIsDarkMode] = useState(false)
 		const [stormHoverInfo, setStormHoverInfo] = useState<any>(null)
 		const [showTooltip, setShowTooltip] = useState(false)
+		const [hoveredCountyId, setHoveredCountyId] = useState<string | null>(null)
+		const deckGLRef = useRef<any>(null)
 
 		// CONTROLLED COMPONENT: Use the global mapZoomState from parent
 		// All state changes (buttons, mouse interactions) update the global state
@@ -128,6 +170,36 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			loadFrames()
 		}, [frames, setLoadedFrames])
 
+		// Extract alert color map from current frame
+		// This creates a lightweight map of county ID -> alert color
+		// without duplicating the geometry data
+		const currentFrameAlertMap = useMemo(() => {
+			if (loadedFrames.length === 0) return {}
+
+			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+			const frame = loadedFrames[activeFrame]
+
+			if (!frame || !frame.data) return {}
+
+			// If frame.data is a FeatureCollection, extract alert info from features
+			if ('features' in frame.data && Array.isArray(frame.data.features)) {
+				const alertMap: Record<string, any> = {}
+				frame.data.features.forEach((feature: any) => {
+					const countyId = feature.properties?.id
+					if (countyId && feature.properties?.alertColor) {
+						alertMap[countyId] = {
+							color: feature.properties.alertColor,
+							hasAlert: feature.properties.hasAlert,
+							alerts: feature.properties.alerts,
+						}
+					}
+				})
+				return alertMap
+			}
+
+			return {}
+		}, [loadedFrames, currentFrame])
+
 		// Create layers with base map and current frame data
 		const layers = useMemo(() => {
 			const baseLayers: any[] = [
@@ -206,21 +278,45 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						getFillColor: [oceanColor],
 					},
 				}),
-				// US County borders layer - lighter than state borders
-				// Using lighter grey: Light mode: #6b6b6b (107, 107, 107), Dark mode: #7a7a7a (122, 122, 122)
+				// US County layer with alert colors
+				// Using countiesData as base, colors are mapped from frame data via county ID
+				// Light mode: #6b6b6b (107, 107, 107), Dark mode: #7a7a7a (122, 122, 122)
 				new GeoJsonLayer({
-					id: 'county-borders-layer',
+					id: 'counties-layer',
 					data: countiesData as any,
-					filled: false,
+					filled: true,
 					stroked: true,
 					lineWidthMinPixels: 0.5,
 					lineWidthMaxPixels: 1,
 					getLineColor: () => countyBorderColor as any,
 					getLineWidth: () => 2,
+					getFillColor: (d: any) => {
+						// Get county ID from feature properties
+						let countyId = d.properties?.id || d.properties?.ID
+						if (!countyId && d.properties?.FIPS) {
+							const fipsMatch = d.properties.FIPS.match(/(\d{5})/)
+							countyId = fipsMatch ? fipsMatch[1] : null
+						}
+
+						// Highlight hovered county in white
+						if (hoveredCountyId && countyId === hoveredCountyId) {
+							return [255, 255, 255, 255] // White for hovered county
+						}
+
+						// Look up alert color from frame data
+						if (currentFrameAlertMap && countyId && currentFrameAlertMap[countyId]) {
+							return currentFrameAlertMap[countyId].color
+						}
+
+						// Default grey for counties without alerts
+						return [200, 200, 200, 100]
+					},
 					opacity: 1,
-					pickable: false,
+					pickable: false, // Disabled for performance - using manual hover detection
+					autoHighlight: false, // Disabled for performance - using manual hover detection
 					updateTriggers: {
 						getLineColor: [countyBorderColor],
+						getFillColor: [currentFrameAlertMap, hoveredCountyId], // Update colors when alert map or hovered county changes
 					},
 				}),
 				// US States borders layer - separate layer for strokes
@@ -242,32 +338,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				}),
 			]
 
-			// Add current frame data if available
+			// Add overlays and tropical storms from current frame if available
 			if (loadedFrames.length > 0) {
 				const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
 				const frame = loadedFrames[activeFrame]
-
-				if (frame && frame.data) {
-					baseLayers.push(
-						new GeoJsonLayer({
-							id: 'main-layer',
-							data: frame.data as any,
-							stroked: true,
-							filled: true,
-							lineWidthMinPixels: 0.5,
-							lineWidthMaxPixels: 1,
-							getLineColor: (d: any) => [100, 100, 100, 255],
-							getFillColor: (d: any) => d.properties?.alertColor || [200, 200, 200, 100],
-							opacity: 1, // Show frame data layer with county alerts
-							pickable: true,
-							autoHighlight: true,
-							updateTriggers: {
-								getFillColor: [frame.data],
-								getLineColor: [frame.data],
-							},
-						}),
-					)
-				}
 
 				// Add overlays if present
 				if (frame && frame.overlays) {
@@ -322,7 +396,18 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			}
 
 			return baseLayers
-		}, [loadedFrames, currentFrame, onFrameChange, oceanColor, worldColor, statesColor, borderColor, countyBorderColor])
+		}, [
+			loadedFrames,
+			currentFrame,
+			onFrameChange,
+			oceanColor,
+			worldColor,
+			statesColor,
+			borderColor,
+			countyBorderColor,
+			currentFrameAlertMap,
+			hoveredCountyId,
+		])
 
 		// Map bounds constraints (CONUS - Continental US)
 		// Allows panning but prevents zooming out past these bounds
@@ -367,6 +452,61 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			}
 		}
 
+		/**
+		 * Handle mouse move to detect which county is being hovered
+		 * Converts screen coordinates to lat/long using DeckGL's unproject and uses point-in-polygon detection
+		 */
+		const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+			if (!ref.current || !deckGLRef.current) return
+
+			// Get the container's bounding rect
+			const rect = ref.current.getBoundingClientRect()
+			const x = e.clientX - rect.left
+			const y = e.clientY - rect.top
+
+			try {
+				// Use DeckGL's unproject to accurately convert screen coordinates to lat/long
+				const deck = deckGLRef.current
+				if (deck && deck.deck && deck.deck.getViewports) {
+					const viewports = deck.deck.getViewports()
+					if (viewports && viewports.length > 0) {
+						const viewport = viewports[0]
+						// unproject converts [x, y] screen coordinates to [lon, lat, z]
+						const [lon, lat] = viewport.unproject([x, y])
+
+						// Find which county this point is in
+						const countyId = findCountyAtPoint(lat, lon)
+						setHoveredCountyId(countyId)
+						return
+					}
+				}
+			} catch (error) {
+				// Fallback if unproject fails
+				console.debug('DeckGL unproject failed, using fallback', error)
+			}
+
+			// Fallback: use approximate conversion if DeckGL unproject is not available
+			const vs = constrainViewState(viewState)
+			const metersPerPixel = (40075000 * Math.cos((vs.latitude * Math.PI) / 180)) / (256 * Math.pow(2, vs.zoom))
+			const pixelsPerDegree = 111320 / metersPerPixel
+
+			const centerLon = vs.longitude
+			const centerLat = vs.latitude
+
+			const offsetLon = (x / rect.width - 0.5) * (rect.width / pixelsPerDegree)
+			const offsetLat = (y / rect.height - 0.5) * (rect.height / pixelsPerDegree) * -1
+
+			const hoverLon = centerLon + offsetLon
+			const hoverLat = centerLat + offsetLat
+
+			const countyId = findCountyAtPoint(hoverLat, hoverLon)
+			setHoveredCountyId(countyId)
+		}
+
+		const handleMouseLeave = () => {
+			setHoveredCountyId(null)
+		}
+
 		return (
 			<div
 				ref={ref}
@@ -375,9 +515,12 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					zIndex,
 					...containerStyle,
 				}}
+				onMouseMove={handleMouseMove}
+				onMouseLeave={handleMouseLeave}
 			>
 				{isLoading && <LoadingPanel size={0.35} hideText />}
 				<DeckGL
+					ref={deckGLRef}
 					viewState={{
 						...constrainViewState(viewState),
 						//transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
