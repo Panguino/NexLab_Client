@@ -4,8 +4,15 @@
  * using real-time hazard data from the NexLab API
  */
 
+import { getHazards } from '@/apollo/data/getHazards'
 import Providers from '@/components/providers/Providers/Providers'
-import { createCountyAlertGeoJSON, fetchRealTimeHazards, parseHazardsToCountyMap } from '@/util/dataCalls/alerts/parseCountyAlerts'
+import {
+	createCoastalAlertGeoJSON,
+	createCountyAlertGeoJSON,
+	fetchRealTimeHazards,
+	parseHazardsToCoastalMap,
+	parseHazardsToCountyMap,
+} from '@/util/dataCalls/alerts/parseCountyAlerts'
 import type { Meta, StoryFn } from '@storybook/react'
 import { useEffect, useState } from 'react'
 import { Animator } from './Animator'
@@ -78,14 +85,73 @@ export const RealTimeHazards: StoryFn<typeof Animator> = () => {
 					)
 				}
 
+				// Parse coastal/offshore hazards
+				const coastalMap = parseHazardsToCoastalMap(hazardsResponse)
+				console.log('Coastal regions with hazards:', Object.keys(coastalMap).length)
+
+				// Fetch coastal geometry from GraphQL API
+				let coastalGeoJSON: any = null
+				try {
+					const graphqlData = await getHazards()
+					const coastalFeatures: any[] = []
+
+					if (graphqlData && graphqlData.getRegions) {
+						graphqlData.getRegions.forEach((region: any) => {
+							// Process coasts
+							if (region && region.coasts) {
+								region.coasts.forEach((coast: any) => {
+									if (coast && coast.type && coast.geometry) {
+										const feature = {
+											type: 'Feature',
+											geometry: coast.geometry,
+											properties: {
+												ID: coast.properties?.ID,
+												NAME: coast.properties?.NAME,
+												type: 'coast',
+											},
+										}
+										coastalFeatures.push(feature)
+									}
+								})
+							}
+							// Process offshores
+							if (region && region.offshores) {
+								region.offshores.forEach((offshore: any) => {
+									if (offshore && offshore.type && offshore.geometry) {
+										const feature = {
+											type: 'Feature',
+											geometry: offshore.geometry,
+											properties: {
+												ID: offshore.properties?.ID,
+												NAME: offshore.properties?.NAME,
+												type: 'offshore',
+											},
+										}
+										coastalFeatures.push(feature)
+									}
+								})
+							}
+						})
+					}
+
+					if (coastalFeatures.length > 0) {
+						coastalGeoJSON = createCoastalAlertGeoJSON(coastalFeatures, coastalMap)
+						console.log('Coastal GeoJSON features:', coastalGeoJSON.features.length)
+					}
+				} catch (err) {
+					console.error('Error fetching coastal geometry from GraphQL:', err)
+				}
+
 				const frame: MapFrame = {
 					id: 'current-hazards',
 					timestamp: new Date(),
 					data: geoJSON,
+					coastalData: coastalGeoJSON || undefined,
 					metadata: {
 						source: 'real-time-hazards',
 						totalHazards: hazardsResponse.data?.length || 0,
 						countiesAffected: Object.keys(countyMap).length,
+						coastalRegionsAffected: Object.keys(coastalMap).length,
 					},
 				}
 

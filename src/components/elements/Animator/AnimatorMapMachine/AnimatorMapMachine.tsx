@@ -9,6 +9,7 @@ import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from 'deck.gl'
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
+import MapAlertTooltip from './components/MapAlertTooltip'
 import { StormTooltip } from './components/StormTooltip'
 import { createHurricaneLayer } from './layers/HurricaneLayer'
 import { createStormTrackLayer } from './layers/StormTrackLayer'
@@ -24,15 +25,34 @@ try {
 }
 
 /**
- * Find which county a given lat/long point is in
+ * Find which county or coastal region a given lat/long point is in
  * Uses point-in-polygon detection with Turf.js
+ * Returns object with id and type ('county' or 'coastal')
  */
-function findCountyAtPoint(latitude: number, longitude: number): string | null {
+function findRegionAtPoint(latitude: number, longitude: number, coastalData?: any): { id: string; type: 'county' | 'coastal' } | null {
 	if (!booleanPointInPolygon) return null
 
 	const point = [longitude, latitude]
 
-	// Search through counties data
+	// First search through coastal data if available
+	if (coastalData && coastalData.features) {
+		const coastalFeatures = coastalData.features || []
+		for (const feature of coastalFeatures) {
+			try {
+				if (booleanPointInPolygon(point, feature)) {
+					const regionId = feature.properties?.id || feature.properties?.ID
+					if (regionId) {
+						return { id: regionId, type: 'coastal' }
+					}
+				}
+			} catch (e) {
+				// Skip features that cause errors
+				continue
+			}
+		}
+	}
+
+	// Then search through counties data
 	const features = (countiesData as any).features || []
 	for (const feature of features) {
 		try {
@@ -43,7 +63,9 @@ function findCountyAtPoint(latitude: number, longitude: number): string | null {
 					const fipsMatch = feature.properties.FIPS.match(/(\d{5})/)
 					countyId = fipsMatch ? fipsMatch[1] : null
 				}
-				return countyId || null
+				if (countyId) {
+					return { id: countyId, type: 'county' }
+				}
 			}
 		} catch (e) {
 			// Skip features that cause errors
@@ -52,6 +74,56 @@ function findCountyAtPoint(latitude: number, longitude: number): string | null {
 	}
 
 	return null
+}
+
+/**
+ * Generate dashed lat-long grid lines
+ * Creates a grid of latitude and longitude lines at regular intervals
+ * Uses short line segments to simulate dashes
+ */
+function generateGridLines(spacing: number = 0.5, dashLength: number = 0.25, gapLength: number = 0.25): any {
+	const features: any[] = []
+
+	// Latitude lines (horizontal)
+	for (let lat = -90; lat <= 90; lat += spacing) {
+		// Create dashed line by generating segments
+		for (let lon = -180; lon < 180; lon += dashLength + gapLength) {
+			features.push({
+				type: 'Feature',
+				geometry: {
+					type: 'LineString',
+					coordinates: [
+						[lon, lat],
+						[Math.min(lon + dashLength, 180), lat],
+					],
+				},
+				properties: { type: 'latitude', value: lat },
+			})
+		}
+	}
+
+	// Longitude lines (vertical)
+	for (let lon = -180; lon <= 180; lon += spacing) {
+		// Create dashed line by generating segments
+		for (let lat = -90; lat < 90; lat += dashLength + gapLength) {
+			features.push({
+				type: 'Feature',
+				geometry: {
+					type: 'LineString',
+					coordinates: [
+						[lon, lat],
+						[lon, Math.min(lat + dashLength, 90)],
+					],
+				},
+				properties: { type: 'longitude', value: lon },
+			})
+		}
+	}
+
+	return {
+		type: 'FeatureCollection',
+		features,
+	}
 }
 
 /**
@@ -89,6 +161,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const [stormHoverInfo, setStormHoverInfo] = useState<any>(null)
 		const [showTooltip, setShowTooltip] = useState(false)
 		const [hoveredCountyId, setHoveredCountyId] = useState<string | null>(null)
+		const [tooltipVisible, setTooltipVisible] = useState(false)
+		const [tooltipTitle, setTooltipTitle] = useState('')
+		const [tooltipAlerts, setTooltipAlerts] = useState<any[]>([])
 		const deckGLRef = useRef<any>(null)
 
 		// CONTROLLED COMPONENT: Use the global mapZoomState from parent
@@ -130,7 +205,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		// Theme-aware colors (RGBA format)
 		const isDark = isDarkMode
 		// Memoize colors to prevent dependency changes on every render
-		const { oceanColor, worldColor, statesColor, borderColor, countyBorderColor } = useMemo(() => {
+		const { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, coastalColor, gridlineColor } = useMemo(() => {
 			// Ocean: blue1 (#8aadcf) light / blue2 (#233544) dark
 			const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
 			// World: grey2 (#d8d8d8) light / grey16 (#484848) dark
@@ -141,7 +216,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
 			// County Borders: grey14 (#6b6b6b) light / grey12 (#7a7a7a) dark - lighter than state borders
 			const countyBorderColor = isDark ? [122, 122, 122, 255] : [107, 107, 107, 255]
-			return { oceanColor, worldColor, statesColor, borderColor, countyBorderColor }
+			// Coastal/Ocean regions: slightly darker ocean color with transparency
+			const coastalColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
+			// Grid lines: more visible grey with higher opacity
+			const gridlineColor = isDark ? [120, 120, 120, 180] : [180, 180, 180, 180]
+			return { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, coastalColor, gridlineColor }
 		}, [isDark])
 
 		// Load frames
@@ -190,6 +269,29 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						alertMap[countyId] = {
 							color: feature.properties.alertColor,
 							hasAlert: feature.properties.hasAlert,
+							alerts: feature.properties.alerts,
+						}
+					}
+				})
+				return alertMap
+			}
+
+			return {}
+		}, [loadedFrames, currentFrame])
+
+		// Extract coastal alert map from current frame
+		const currentFrameCoastalAlertMap = useMemo(() => {
+			if (loadedFrames.length === 0) return {}
+
+			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+			const frame = loadedFrames[activeFrame]
+
+			if (frame && frame.coastalData && frame.coastalData.features) {
+				const alertMap: Record<string, any> = {}
+				frame.coastalData.features.forEach((feature: any) => {
+					if (feature.properties?.alertColor) {
+						alertMap[feature.properties.id || feature.properties.ID] = {
+							color: feature.properties.alertColor,
 							alerts: feature.properties.alerts,
 						}
 					}
@@ -288,9 +390,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					stroked: true,
 					lineWidthMinPixels: 0.5,
 					lineWidthMaxPixels: 1,
-					getLineColor: () => countyBorderColor as any,
-					getLineWidth: () => 2,
-					getFillColor: (d: any) => {
+					getLineColor: (d: any) => {
 						// Get county ID from feature properties
 						let countyId = d.properties?.id || d.properties?.ID
 						if (!countyId && d.properties?.FIPS) {
@@ -298,9 +398,21 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							countyId = fipsMatch ? fipsMatch[1] : null
 						}
 
-						// Highlight hovered county in white
+						// Highlight hovered county with white outline
 						if (hoveredCountyId && countyId === hoveredCountyId) {
 							return [255, 255, 255, 255] // White for hovered county
+						}
+
+						// Default county border color
+						return countyBorderColor as any
+					},
+					getLineWidth: () => 2,
+					getFillColor: (d: any) => {
+						// Get county ID from feature properties
+						let countyId = d.properties?.id || d.properties?.ID
+						if (!countyId && d.properties?.FIPS) {
+							const fipsMatch = d.properties.FIPS.match(/(\d{5})/)
+							countyId = fipsMatch ? fipsMatch[1] : null
 						}
 
 						// Look up alert color from frame data
@@ -315,8 +427,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					pickable: false, // Disabled for performance - using manual hover detection
 					autoHighlight: false, // Disabled for performance - using manual hover detection
 					updateTriggers: {
-						getLineColor: [countyBorderColor],
-						getFillColor: [currentFrameAlertMap, hoveredCountyId], // Update colors when alert map or hovered county changes
+						getLineColor: [countyBorderColor, hoveredCountyId],
+						getFillColor: [currentFrameAlertMap], // Update colors when alert map changes
 					},
 				}),
 				// US States borders layer - separate layer for strokes
@@ -336,6 +448,130 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						getLineColor: [borderColor],
 					},
 				}),
+				// Coastal and ocean regions layer with alert colors
+				// Displays marine zones, coastal areas, and offshore regions
+				...(loadedFrames.length > 0 &&
+				loadedFrames[currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame]?.coastalData
+					? [
+							new GeoJsonLayer({
+								id: 'coastal-layer',
+								data: loadedFrames[
+									currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+								]?.coastalData as any,
+								filled: true,
+								stroked: true,
+								lineWidthMinPixels: 0.5,
+								lineWidthMaxPixels: 1,
+								getLineColor: (d: any) => {
+									// Highlight hovered coastal region with white outline
+									const regionId = d.properties?.id || d.properties?.ID
+									if (hoveredCountyId && regionId === hoveredCountyId) {
+										return [255, 255, 255, 255] // White for hovered region
+									}
+									// Default county border color for coastal regions
+									return countyBorderColor as any
+								},
+								getLineWidth: () => 2,
+								getFillColor: (d: any) => {
+									// Look up alert color from coastal alert map
+									const regionId = d.properties?.id || d.properties?.ID
+									if (currentFrameCoastalAlertMap && regionId && currentFrameCoastalAlertMap[regionId]) {
+										return currentFrameCoastalAlertMap[regionId].color
+									}
+									// Default ocean color for coastal regions without alerts
+									return oceanColor as any
+								},
+								opacity: 1,
+								pickable: false,
+								updateTriggers: {
+									getLineColor: [countyBorderColor, hoveredCountyId],
+									getFillColor: [currentFrameCoastalAlertMap, oceanColor],
+								},
+							}),
+						]
+					: []),
+				// Lat-long grid lines with dashed appearance
+				// More visible for geographic reference
+				new GeoJsonLayer({
+					id: 'gridlines-layer',
+					data: generateGridLines(10) as any,
+					filled: false,
+					stroked: true,
+					lineWidthMinPixels: 1,
+					lineWidthMaxPixels: 2,
+					getLineColor: () => gridlineColor as any,
+					getLineWidth: () => 1.5,
+					opacity: 0.2,
+					pickable: false,
+					updateTriggers: {
+						getLineColor: [gridlineColor],
+					},
+				}),
+				// Hovered region highlight layer - renders on top with white outline
+				// Only shows the currently hovered county or coastal region
+				...(hoveredCountyId && loadedFrames.length > 0
+					? [
+							(() => {
+								const activeFrame =
+									currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+								const frame = loadedFrames[activeFrame]
+								let hoveredFeature: any = null
+
+								// Find hovered feature in counties data
+								if (frame && frame.data && 'features' in frame.data) {
+									hoveredFeature = (frame.data as any).features.find((f: any) => {
+										const fId = f.properties?.id || f.properties?.ID
+										return fId === hoveredCountyId
+									})
+								}
+
+								// If not found in counties, search in coastal data
+								if (!hoveredFeature && frame && frame.coastalData && 'features' in frame.coastalData) {
+									hoveredFeature = (frame.coastalData as any).features.find((f: any) => {
+										const fId = f.properties?.id || f.properties?.ID
+										return fId === hoveredCountyId
+									})
+								}
+
+								// Create a temporary GeoJSON with just the hovered feature
+								if (hoveredFeature) {
+									return new GeoJsonLayer({
+										id: 'hovered-region-layer',
+										data: {
+											type: 'FeatureCollection',
+											features: [hoveredFeature],
+										} as any,
+										filled: true,
+										stroked: true,
+										lineWidthMinPixels: 1,
+										lineWidthMaxPixels: 3,
+										getLineColor: () => [255, 255, 255, 255], // White outline
+										getLineWidth: () => 3, // Thicker outline for visibility
+										getFillColor: (d: any) => {
+											// Keep the original fill color (alert or default)
+											const regionId = d.properties?.id || d.properties?.ID
+											if (currentFrameAlertMap && regionId && currentFrameAlertMap[regionId]) {
+												return currentFrameAlertMap[regionId].color
+											}
+											if (currentFrameCoastalAlertMap && regionId && currentFrameCoastalAlertMap[regionId]) {
+												return currentFrameCoastalAlertMap[regionId].color
+											}
+											// Default color based on type
+											return [200, 200, 200, 100]
+										},
+										opacity: 1,
+										pickable: false,
+										updateTriggers: {
+											getLineColor: [hoveredCountyId],
+											getFillColor: [currentFrameAlertMap, currentFrameCoastalAlertMap],
+										},
+									})
+								}
+
+								return null
+							})(),
+						].filter(Boolean)
+					: []),
 			]
 
 			// Add overlays and tropical storms from current frame if available
@@ -405,7 +641,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			statesColor,
 			borderColor,
 			countyBorderColor,
+			coastalColor,
+			gridlineColor,
 			currentFrameAlertMap,
+			currentFrameCoastalAlertMap,
 			hoveredCountyId,
 		])
 
@@ -453,7 +692,91 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		}
 
 		/**
-		 * Handle mouse move to detect which county is being hovered
+		 * Update tooltip content for a hovered region (county or coastal)
+		 * Extracts region name and alerts from the current frame
+		 */
+		const updateTooltipForRegion = (regionInfo: { id: string; type: 'county' | 'coastal' } | null) => {
+			if (!regionInfo || loadedFrames.length === 0) {
+				setTooltipVisible(false)
+				return
+			}
+
+			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+			const frame = loadedFrames[activeFrame]
+
+			if (!frame) {
+				setTooltipVisible(false)
+				return
+			}
+
+			let feature: any = null
+
+			// Find feature in appropriate data source
+			if (regionInfo.type === 'coastal' && frame.coastalData && 'features' in frame.coastalData) {
+				feature = (frame.coastalData as any).features.find((f: any) => {
+					const fId = f.properties?.id || f.properties?.ID
+					return fId === regionInfo.id
+				})
+			} else if (regionInfo.type === 'county' && frame.data && 'features' in frame.data) {
+				feature = (frame.data as any).features.find((f: any) => {
+					const fId = f.properties?.id || f.properties?.ID
+					return fId === regionInfo.id
+				})
+			}
+
+			if (!feature) {
+				setTooltipVisible(false)
+				return
+			}
+
+			// Extract region name
+			let title = 'Unknown'
+			if (regionInfo.type === 'coastal') {
+				// For coastal regions, use NAME or ID
+				title = feature.properties?.NAME || feature.properties?.name || regionInfo.id
+			} else {
+				// For counties, use COUNTYNAME and STATE
+				const countyName = feature.properties?.COUNTYNAME || feature.properties?.NAME || 'Unknown'
+				const state = feature.properties?.STATE || ''
+				title = state ? `${countyName} county, ${state}` : countyName
+			}
+
+			// Extract alerts
+			const alerts = feature.properties?.alerts || []
+			const formattedAlerts = alerts.map((alert: any) => {
+				// Convert color from HazardData format to RGBA array
+				let color: [number, number, number, number] = [128, 128, 128, 255]
+				if (alert.color) {
+					if (typeof alert.color === 'string') {
+						// If it's already a hex string or CSS color
+						color = alert.color
+					} else if (alert.color.rgb) {
+						// Parse RGB string like "255,0,0"
+						const [r, g, b] = alert.color.rgb.split(',').map(Number)
+						color = [r, g, b, 255]
+					} else if (Array.isArray(alert.color)) {
+						// Already an array
+						color = alert.color
+					}
+				}
+
+				// Use hazardType and hazardLevel as the name if available
+				const name = alert.hazardType || alert.locationName || 'Unknown'
+
+				return {
+					color,
+					name,
+					event: alert.event || 'Alert',
+				}
+			})
+
+			setTooltipTitle(title)
+			setTooltipAlerts(formattedAlerts)
+			setTooltipVisible(formattedAlerts.length > 0)
+		}
+
+		/**
+		 * Handle mouse move to detect which region (county or coastal) is being hovered
 		 * Converts screen coordinates to lat/long using DeckGL's unproject and uses point-in-polygon detection
 		 */
 		const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -463,6 +786,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			const rect = ref.current.getBoundingClientRect()
 			const x = e.clientX - rect.left
 			const y = e.clientY - rect.top
+
+			// Get current frame's coastal data
+			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+			const coastalData = loadedFrames[activeFrame]?.coastalData
 
 			try {
 				// Use DeckGL's unproject to accurately convert screen coordinates to lat/long
@@ -474,9 +801,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						// unproject converts [x, y] screen coordinates to [lon, lat, z]
 						const [lon, lat] = viewport.unproject([x, y])
 
-						// Find which county this point is in
-						const countyId = findCountyAtPoint(lat, lon)
-						setHoveredCountyId(countyId)
+						// Find which region (county or coastal) this point is in
+						const regionInfo = findRegionAtPoint(lat, lon, coastalData)
+						setHoveredCountyId(regionInfo?.id || null)
+						updateTooltipForRegion(regionInfo)
 						return
 					}
 				}
@@ -499,12 +827,14 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			const hoverLon = centerLon + offsetLon
 			const hoverLat = centerLat + offsetLat
 
-			const countyId = findCountyAtPoint(hoverLat, hoverLon)
-			setHoveredCountyId(countyId)
+			const regionInfo = findRegionAtPoint(hoverLat, hoverLon, coastalData)
+			setHoveredCountyId(regionInfo?.id || null)
+			updateTooltipForRegion(regionInfo)
 		}
 
 		const handleMouseLeave = () => {
 			setHoveredCountyId(null)
+			setTooltipVisible(false)
 		}
 
 		return (
@@ -537,6 +867,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					onViewStateChange={handleViewStateChange}
 				/>
 				<StormTooltip info={stormHoverInfo} visible={showTooltip} />
+				<MapAlertTooltip visible={tooltipVisible} title={tooltipTitle} alerts={tooltipAlerts} />
 			</div>
 		)
 	},

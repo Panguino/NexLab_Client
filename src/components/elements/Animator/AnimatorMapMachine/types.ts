@@ -15,6 +15,7 @@ export interface MapFrame {
 	data: FeatureCollection | Feature[] // GeoJSON data
 	overlays?: MapOverlay[]
 	tropicalStorms?: ProcessedStormData[] // Tropical storms for this frame
+	coastalData?: FeatureCollection // Coastal/ocean region data with alert colors
 	metadata?: {
 		windSpeed?: number
 		category?: number

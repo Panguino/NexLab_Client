@@ -99,6 +99,19 @@ export interface CountyAlertMap {
 }
 
 /**
+ * Coastal/Ocean region alert mapping
+ */
+export interface CoastalAlertMap {
+	[regionId: string]: {
+		color: [number, number, number, number]
+		alerts: any[]
+		headline?: string
+		name?: string
+		type: 'coast' | 'offshore'
+	}
+}
+
+/**
  * Fetch real-time hazards from /api/hazards endpoint
  */
 export const fetchRealTimeHazards = async (filters?: {
@@ -292,6 +305,53 @@ export const parseHazardsToCountyMap = (hazardsResponse: HazardsAPIResponse): Co
 }
 
 /**
+ * Convert hazard data from /api/hazards to coastal/ocean alert map
+ * Groups hazards by coastal or offshore region and assigns colors
+ */
+export const parseHazardsToCoastalMap = (hazardsResponse: HazardsAPIResponse): CoastalAlertMap => {
+	const coastalMap: CoastalAlertMap = {}
+
+	if (!hazardsResponse.data || !Array.isArray(hazardsResponse.data)) {
+		return coastalMap
+	}
+
+	hazardsResponse.data.forEach((hazard: HazardData) => {
+		// Only process coastal and offshore hazards
+		if (hazard.locationType !== 'coast' && hazard.locationType !== 'offshore') return
+
+		const regionId = hazard.locationId
+		if (!regionId) return
+
+		// Parse color from hex or use hazard type/level mapping
+		let color: [number, number, number, number]
+		if (hazard.color?.rgb) {
+			const [r, g, b] = hazard.color.rgb.split(',').map(Number)
+			color = [r, g, b, 255]
+		} else {
+			color = getAlertColor(hazard.event || '')
+		}
+
+		if (!coastalMap[regionId]) {
+			coastalMap[regionId] = {
+				color,
+				alerts: [],
+				headline: hazard.headline,
+				name: hazard.locationName,
+				type: hazard.locationType as 'coast' | 'offshore',
+			}
+		}
+
+		coastalMap[regionId].alerts.push(hazard)
+		// Update color to the most severe (first one added)
+		if (coastalMap[regionId].alerts.length === 1) {
+			coastalMap[regionId].color = color
+		}
+	})
+
+	return coastalMap
+}
+
+/**
  * Parse API alerts into county-based alert map (old format)
  * Groups alerts by county and assigns colors
  */
@@ -376,6 +436,35 @@ export const createCountyAlertGeoJSON = (countyAlertMap: CountyAlertMap): Featur
 				...feature.properties,
 				id: countyId, // Ensure id is set for reference
 				alertColor: alertInfo?.color || [200, 200, 200, 100], // Default grey for no alerts
+				hasAlert: !!alertInfo,
+				alerts: alertInfo?.alerts || [],
+			},
+		}
+	})
+
+	return {
+		type: 'FeatureCollection',
+		features,
+	}
+}
+
+/**
+ * Create a GeoJSON FeatureCollection with coastal/offshore region colors based on alerts
+ * Converts coastal region features with alert information into GeoJSON format
+ */
+export const createCoastalAlertGeoJSON = (coastalFeatures: any[], coastalAlertMap: CoastalAlertMap): FeatureCollection => {
+	const features = coastalFeatures.map((feature: any) => {
+		// Get region ID from feature properties
+		const regionId = feature.properties?.ID || feature.properties?.id
+
+		const alertInfo = coastalAlertMap[regionId]
+
+		return {
+			...feature,
+			properties: {
+				...feature.properties,
+				id: regionId, // Ensure id is set for reference
+				alertColor: alertInfo?.color, // Only set if there's an alert
 				hasAlert: !!alertInfo,
 				alerts: alertInfo?.alerts || [],
 			},
