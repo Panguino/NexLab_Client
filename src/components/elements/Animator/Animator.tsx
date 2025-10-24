@@ -93,7 +93,7 @@ export const Animator = ({
 	zoomFill = true,
 	settingsComponent = null,
 	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
-	activeOverlays,
+	activeOverlays = [],
 	fullScreen = false,
 	soundingsPicker = false,
 	soundingsPickerMode = false,
