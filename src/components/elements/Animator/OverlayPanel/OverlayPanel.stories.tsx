@@ -2,7 +2,7 @@ import Providers from '@/components/providers/Providers/Providers'
 import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 import { Animator } from '../Animator'
-import { testFrames8x6, testDataWithOverlays } from '../AnimatorTestData'
+import { testDataWithOverlays, testFrames8x6 } from '../AnimatorTestData'
 
 /**
  * # OverlayPanel Component
@@ -34,17 +34,12 @@ const meta: Meta<typeof Animator> = {
 
 export default meta
 
-export const withStaticOverlays: StoryFn<typeof Animator> = (args) => {
+const WithStaticOverlaysComponent = (args: any) => {
 	const [activeOverlays, setActiveOverlays] = useState<string[]>([])
-
-	return (
-		<Animator
-			{...args}
-			activeOverlays={activeOverlays}
-			setActiveOverlays={setActiveOverlays}
-		/>
-	)
+	return <Animator {...args} activeOverlays={activeOverlays} setActiveOverlays={setActiveOverlays} />
 }
+
+export const withStaticOverlays: StoryFn<typeof Animator> = (args) => <WithStaticOverlaysComponent {...args} />
 withStaticOverlays.args = {
 	frames: testFrames8x6,
 	imageInfo: { width: 800, height: 600 },
@@ -66,33 +61,20 @@ withStaticOverlays.parameters = {
 	},
 }
 
-export const withDynamicOverlays: StoryFn<typeof Animator> = (args) => {
+const WithDynamicOverlaysComponent = (args: any) => {
 	const [activeOverlays, setActiveOverlays] = useState<string[]>([])
-
-	return (
-		<Animator
-			{...args}
-			activeOverlays={activeOverlays}
-			setActiveOverlays={setActiveOverlays}
-		/>
-	)
+	return <Animator {...args} activeOverlays={activeOverlays} setActiveOverlays={setActiveOverlays} />
 }
+
+export const withDynamicOverlays: StoryFn<typeof Animator> = (args) => <WithDynamicOverlaysComponent {...args} />
 withDynamicOverlays.args = {
 	frames: testFrames8x6,
 	imageInfo: { width: 800, height: 600 },
 	overlays: {
 		static: {},
 		dynamic: {
-			radar: [
-				'https://example.com/radar1.png',
-				'https://example.com/radar2.png',
-				'https://example.com/radar3.png',
-			],
-			satellite: [
-				'https://example.com/sat1.png',
-				'https://example.com/sat2.png',
-				'https://example.com/sat3.png',
-			],
+			radar: ['https://example.com/radar1.png', 'https://example.com/radar2.png', 'https://example.com/radar3.png'],
+			satellite: ['https://example.com/sat1.png', 'https://example.com/sat2.png', 'https://example.com/sat3.png'],
 		},
 	},
 	interval: 250,
@@ -106,17 +88,12 @@ withDynamicOverlays.parameters = {
 	},
 }
 
-export const withMixedOverlays: StoryFn<typeof Animator> = (args) => {
+const WithMixedOverlaysComponent = (args: any) => {
 	const [activeOverlays, setActiveOverlays] = useState<string[]>([])
-
-	return (
-		<Animator
-			{...args}
-			activeOverlays={activeOverlays}
-			setActiveOverlays={setActiveOverlays}
-		/>
-	)
+	return <Animator {...args} activeOverlays={activeOverlays} setActiveOverlays={setActiveOverlays} />
 }
+
+export const withMixedOverlays: StoryFn<typeof Animator> = (args) => <WithMixedOverlaysComponent {...args} />
 withMixedOverlays.args = {
 	frames: testDataWithOverlays.files,
 	imageInfo: { width: 1600, height: 900 },
@@ -132,17 +109,12 @@ withMixedOverlays.parameters = {
 	},
 }
 
-export const multipleStaticOverlays: StoryFn<typeof Animator> = (args) => {
+const MultipleStaticOverlaysComponent = (args: any) => {
 	const [activeOverlays, setActiveOverlays] = useState<string[]>([])
-
-	return (
-		<Animator
-			{...args}
-			activeOverlays={activeOverlays}
-			setActiveOverlays={setActiveOverlays}
-		/>
-	)
+	return <Animator {...args} activeOverlays={activeOverlays} setActiveOverlays={setActiveOverlays} />
 }
+
+export const multipleStaticOverlays: StoryFn<typeof Animator> = (args) => <MultipleStaticOverlaysComponent {...args} />
 multipleStaticOverlays.args = {
 	frames: testFrames8x6,
 	imageInfo: { width: 800, height: 600 },
@@ -167,17 +139,12 @@ multipleStaticOverlays.parameters = {
 	},
 }
 
-export const preselectedOverlays: StoryFn<typeof Animator> = (args) => {
+const PreselectedOverlaysComponent = (args: any) => {
 	const [activeOverlays, setActiveOverlays] = useState<string[]>(['borders', 'radar'])
-
-	return (
-		<Animator
-			{...args}
-			activeOverlays={activeOverlays}
-			setActiveOverlays={setActiveOverlays}
-		/>
-	)
+	return <Animator {...args} activeOverlays={activeOverlays} setActiveOverlays={setActiveOverlays} />
 }
+
+export const preselectedOverlays: StoryFn<typeof Animator> = (args) => <PreselectedOverlaysComponent {...args} />
 preselectedOverlays.args = {
 	frames: testDataWithOverlays.files,
 	imageInfo: { width: 1600, height: 900 },
@@ -192,4 +159,3 @@ preselectedOverlays.parameters = {
 		},
 	},
 }
-

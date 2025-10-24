@@ -21,14 +21,7 @@ interface IMapControlsProps {
  * - Reset view button
  * - Zoom level display
  */
-export const MapControls = ({
-	region,
-	onRegionChange,
-	onZoomIn,
-	onZoomOut,
-	onResetView,
-	zoom,
-}: IMapControlsProps) => {
+export const MapControls = ({ region, onRegionChange, onZoomIn, onZoomOut, onResetView, zoom }: IMapControlsProps) => {
 	const [showRegionMenu, setShowRegionMenu] = useState(false)
 
 	const regions = [
@@ -47,29 +40,14 @@ export const MapControls = ({
 		<div className={styles.mapControls}>
 			{/* Zoom Controls */}
 			<div className={styles.zoomControls}>
-				<button
-					className={styles.zoomButton}
-					onClick={onZoomIn}
-					title="Zoom In"
-					aria-label="Zoom In"
-				>
+				<button className={styles.zoomButton} onClick={onZoomIn} title="Zoom In" aria-label="Zoom In">
 					<span>+</span>
 				</button>
 				<div className={styles.zoomLevel}>{zoom.toFixed(1)}</div>
-				<button
-					className={styles.zoomButton}
-					onClick={onZoomOut}
-					title="Zoom Out"
-					aria-label="Zoom Out"
-				>
+				<button className={styles.zoomButton} onClick={onZoomOut} title="Zoom Out" aria-label="Zoom Out">
 					<span>−</span>
 				</button>
-				<button
-					className={styles.resetButton}
-					onClick={onResetView}
-					title="Reset View"
-					aria-label="Reset View"
-				>
+				<button className={styles.resetButton} onClick={onResetView} title="Reset View" aria-label="Reset View">
 					<span>⟲</span>
 				</button>
 			</div>
@@ -105,4 +83,3 @@ export const MapControls = ({
 }
 
 export default MapControls
-

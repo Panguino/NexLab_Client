@@ -75,7 +75,7 @@ export class DeckglProvider extends MapProvider {
 
 			// Create Deck.gl instance
 			this.deck = new Deck({
-				container: config.container,
+				canvas: config.container as any,
 				width: width,
 				height: height,
 				initialViewState: {
@@ -149,8 +149,8 @@ export class DeckglProvider extends MapProvider {
 					filled: true,
 					lineWidthMinPixels: layerConfig.lineWidthMinPixels || 1,
 					lineWidthMaxPixels: layerConfig.lineWidthMaxPixels || 10,
-					getLineColor: layerConfig.getLineColor || [0, 0, 0, 255],
-					getFillColor: layerConfig.getFillColor || [200, 200, 200, 128],
+					getLineColor: (layerConfig.getLineColor || [0, 0, 0, 255]) as any,
+					getFillColor: (layerConfig.getFillColor || [200, 200, 200, 128]) as any,
 					opacity: layerConfig.opacity || 1,
 					...layerConfig,
 				})

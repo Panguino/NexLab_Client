@@ -52,7 +52,9 @@ export function StormTooltip({ info, visible }: StormTooltipProps) {
 
 				<div className={styles.row}>
 					<span className={styles.label}>Movement:</span>
-					<span className={styles.value}>{info.movementDir}° @ {info.movementSpeed} kt</span>
+					<span className={styles.value}>
+						{info.movementDir}° @ {info.movementSpeed} kt
+					</span>
 				</div>
 
 				<div className={styles.row}>
@@ -63,4 +65,3 @@ export function StormTooltip({ info, visible }: StormTooltipProps) {
 		</div>
 	)
 }
-

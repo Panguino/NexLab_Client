@@ -36,14 +36,7 @@ export const createCountyAlertFramesFromAPI = (apiResponse: AlertsAPIResponse): 
 	if (!apiResponse.data?.timeline || apiResponse.data.timeline.length === 0) {
 		// If no timeline, create a single frame with all current alerts
 		const countyMap = parseAlertsToCountyMap(apiResponse)
-		return [
-			createCountyAlertFrame(
-				countyMap,
-				new Date(),
-				'frame-current',
-				{ source: 'current-alerts' },
-			),
-		]
+		return [createCountyAlertFrame(countyMap, new Date(), 'frame-current', { source: 'current-alerts' })]
 	}
 
 	// Create frames for each timeline entry
@@ -58,15 +51,10 @@ export const createCountyAlertFramesFromAPI = (apiResponse: AlertsAPIResponse): 
 		const countyMap = parseAlertsToCountyMap(apiResponse)
 
 		frames.push(
-			createCountyAlertFrame(
-				countyMap,
-				timestamp,
-				`frame-${index}`,
-				{
-					timelineIndex: index,
-					totalFrames: timelineEntries.length,
-				},
-			),
+			createCountyAlertFrame(countyMap, timestamp, `frame-${index}`, {
+				timelineIndex: index,
+				totalFrames: timelineEntries.length,
+			}),
 		)
 	})
 
@@ -136,15 +124,10 @@ export const createMockCountyAlertFrames = (): MapFrame[] => {
 	const now = new Date()
 	return mockCountyMaps.map((countyMap, index) => {
 		const timestamp = new Date(now.getTime() + index * 3600000) // 1 hour apart
-		return createCountyAlertFrame(
-			countyMap,
-			timestamp,
-			`frame-${index}`,
-			{
-				frameNumber: index + 1,
-				totalFrames: mockCountyMaps.length,
-			},
-		)
+		return createCountyAlertFrame(countyMap, timestamp, `frame-${index}`, {
+			frameNumber: index + 1,
+			totalFrames: mockCountyMaps.length,
+		})
 	})
 }
 
@@ -207,4 +190,3 @@ export const interpolateAlertFrames = (frames: MapFrame[], interpolationCount: n
 
 	return result
 }
-

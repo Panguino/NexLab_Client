@@ -368,7 +368,7 @@ export const HistoricalTimeline: StoryFn<typeof Animator> = () => {
 				console.log('Total hazards from API:', hazardsResponse.data?.length || 0)
 
 				// Fetch coastal geometry once
-				let coastalFeatures: any[] = []
+				const coastalFeatures: any[] = []
 				try {
 					const graphqlData = await getHazards()
 					if (graphqlData && graphqlData.getRegions) {

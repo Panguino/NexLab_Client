@@ -8,8 +8,6 @@ const getIsMobile = (): boolean => {
 	return window.innerWidth <= 900 // Same breakpoint as useIsMobile hook
 }
 
-
-
 // Helper function to save zoom fill value to localStorage
 const saveZoomFillToStorage = (zoomFill: boolean) => {
 	if (typeof window === 'undefined') return // SSR safety

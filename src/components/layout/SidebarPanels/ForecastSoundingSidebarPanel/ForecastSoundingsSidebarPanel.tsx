@@ -26,7 +26,14 @@ import ScrollArea from '../../ScrollArea/ScrollArea'
 import styles from './ForecastSoundingsSidebarPanel.module.scss'
 
 // Utility function to determine return link and text based on referring page
-const getReturnLinkInfo = (runId: string | string[], modelId: string | string[], sectorId: string | string[], levelId: string | string[], productId: string | string[], validTimeId: string | string[]) => {
+const getReturnLinkInfo = (
+	runId: string | string[],
+	modelId: string | string[],
+	sectorId: string | string[],
+	levelId: string | string[],
+	productId: string | string[],
+	validTimeId: string | string[],
+) => {
 	// Ensure all parameters are strings
 	const runIdStr = Array.isArray(runId) ? runId[0] : runId
 	const modelIdStr = Array.isArray(modelId) ? modelId[0] : modelId
@@ -41,17 +48,17 @@ const getReturnLinkInfo = (runId: string | string[], modelId: string | string[],
 		if (referrer.includes('/compare-height/')) {
 			return {
 				url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}/compare-height/${validTimeIdStr}`,
-				text: 'Return to Height Comparison'
+				text: 'Return to Height Comparison',
 			}
 		} else if (referrer.includes('/compare-runs/')) {
 			return {
 				url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}/compare-runs/${validTimeIdStr}`,
-				text: 'Return to Runs Comparison'
+				text: 'Return to Runs Comparison',
 			}
 		} else if (referrer.includes('/compare-models/')) {
 			return {
 				url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}/compare-models/${validTimeIdStr}`,
-				text: 'Return to Models Comparison'
+				text: 'Return to Models Comparison',
 			}
 		}
 	}
@@ -59,7 +66,7 @@ const getReturnLinkInfo = (runId: string | string[], modelId: string | string[],
 	// Default fallback to regular forecast animator
 	return {
 		url: `/weather-data/forecast-models/${runIdStr}/${modelIdStr}/${sectorIdStr}/${levelIdStr}/${productIdStr}`,
-		text: 'Return to Forecast Models'
+		text: 'Return to Forecast Models',
 	}
 }
 
@@ -183,11 +190,25 @@ const ForecastSoundingsSidebarPanel = () => {
 			sanitizedSectorId,
 			sanitizedLevelId,
 			sanitizedProductId,
-			currentValidTime
+			currentValidTime,
 		)
 		setReturnLink(returnLinkInfo.url)
 		setReturnText(returnLinkInfo.text)
-	}, [modelId, runId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, isStationId, router, forecastSoundingRunId, forecastSoundingValidTime])
+	}, [
+		modelId,
+		runId,
+		sectorId,
+		levelId,
+		productId,
+		validTimeId,
+		locationId,
+		parcelId,
+		weatherId,
+		isStationId,
+		router,
+		forecastSoundingRunId,
+		forecastSoundingValidTime,
+	])
 
 	useEffect(() => {
 		sanitizeCollectAndSetData()

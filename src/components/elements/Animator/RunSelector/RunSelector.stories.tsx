@@ -33,17 +33,12 @@ const meta: Meta<typeof Animator> = {
 
 export default meta
 
-export const weatherModels: StoryFn<typeof Animator> = (args) => {
+const WeatherModelsComponent = (args: any) => {
 	const [activeRun, setActiveRun] = useState('rap')
-
-	return (
-		<Animator
-			{...args}
-			activeRun={activeRun}
-			setActiveRun={setActiveRun}
-		/>
-	)
+	return <Animator {...args} activeRun={activeRun} setActiveRun={setActiveRun} />
 }
+
+export const weatherModels: StoryFn<typeof Animator> = (args) => <WeatherModelsComponent {...args} />
 weatherModels.args = {
 	frames: testFrames8x6,
 	imageInfo: { width: 800, height: 600 },
@@ -64,17 +59,12 @@ weatherModels.parameters = {
 	},
 }
 
-export const satelliteProducts: StoryFn<typeof Animator> = (args) => {
+const SatelliteProductsComponent = (args: any) => {
 	const [activeRun, setActiveRun] = useState('goes16')
-
-	return (
-		<Animator
-			{...args}
-			activeRun={activeRun}
-			setActiveRun={setActiveRun}
-		/>
-	)
+	return <Animator {...args} activeRun={activeRun} setActiveRun={setActiveRun} />
 }
+
+export const satelliteProducts: StoryFn<typeof Animator> = (args) => <SatelliteProductsComponent {...args} />
 satelliteProducts.args = {
 	frames: testFrames8x6,
 	imageInfo: { width: 800, height: 600 },
@@ -94,17 +84,12 @@ satelliteProducts.parameters = {
 	},
 }
 
-export const radarProducts: StoryFn<typeof Animator> = (args) => {
+const RadarProductsComponent = (args: any) => {
 	const [activeRun, setActiveRun] = useState('reflectivity')
-
-	return (
-		<Animator
-			{...args}
-			activeRun={activeRun}
-			setActiveRun={setActiveRun}
-		/>
-	)
+	return <Animator {...args} activeRun={activeRun} setActiveRun={setActiveRun} />
 }
+
+export const radarProducts: StoryFn<typeof Animator> = (args) => <RadarProductsComponent {...args} />
 radarProducts.args = {
 	frames: testFrames8x6,
 	imageInfo: { width: 800, height: 600 },
@@ -125,17 +110,12 @@ radarProducts.parameters = {
 	},
 }
 
-export const manyOptions: StoryFn<typeof Animator> = (args) => {
+const ManyOptionsComponent = (args: any) => {
 	const [activeRun, setActiveRun] = useState('option1')
-
-	return (
-		<Animator
-			{...args}
-			activeRun={activeRun}
-			setActiveRun={setActiveRun}
-		/>
-	)
+	return <Animator {...args} activeRun={activeRun} setActiveRun={setActiveRun} />
 }
+
+export const manyOptions: StoryFn<typeof Animator> = (args) => <ManyOptionsComponent {...args} />
 manyOptions.args = {
 	frames: testFrames8x6,
 	imageInfo: { width: 800, height: 600 },
@@ -160,18 +140,12 @@ manyOptions.parameters = {
 	},
 }
 
-export const withCustomLayout: StoryFn<typeof Animator> = (args) => {
+const WithCustomLayoutComponent = (args: any) => {
 	const [activeRun, setActiveRun] = useState('rap')
-
-	return (
-		<Animator
-			{...args}
-			activeRun={activeRun}
-			setActiveRun={setActiveRun}
-			runsPerRow={2}
-		/>
-	)
+	return <Animator {...args} activeRun={activeRun} setActiveRun={setActiveRun} runsPerRow={2} />
 }
+
+export const withCustomLayout: StoryFn<typeof Animator> = (args) => <WithCustomLayoutComponent {...args} />
 withCustomLayout.args = {
 	frames: testFrames8x6,
 	imageInfo: { width: 800, height: 600 },
@@ -191,4 +165,3 @@ withCustomLayout.parameters = {
 		},
 	},
 }
-

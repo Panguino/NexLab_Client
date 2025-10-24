@@ -3,7 +3,7 @@
  * Defines different regions and their map settings
  */
 
-import { RegionConfig, RegionType, MapViewState } from '../types'
+import { MapViewState, RegionConfig, RegionType } from '../types'
 
 /**
  * Region configurations for different map areas
@@ -98,11 +98,7 @@ export function getRegionBounds(regionId: RegionType): [[number, number], [numbe
 /**
  * Check if coordinates are within region bounds
  */
-export function isWithinBounds(
-	longitude: number,
-	latitude: number,
-	regionId: RegionType,
-): boolean {
+export function isWithinBounds(longitude: number, latitude: number, regionId: RegionType): boolean {
 	const bounds = getRegionBounds(regionId)
 	const [minLon, minLat] = bounds[0]
 	const [maxLon, maxLat] = bounds[1]
@@ -113,10 +109,7 @@ export function isWithinBounds(
 /**
  * Constrain view state to region bounds
  */
-export function constrainViewStateToBounds(
-	viewState: MapViewState,
-	regionId: RegionType,
-): MapViewState {
+export function constrainViewStateToBounds(viewState: MapViewState, regionId: RegionType): MapViewState {
 	const bounds = getRegionBounds(regionId)
 	const [minLon, minLat] = bounds[0]
 	const [maxLon, maxLat] = bounds[1]
@@ -141,4 +134,3 @@ export function getAvailableRegions(): RegionConfig[] {
 export function getRegionLabel(regionId: RegionType): string {
 	return getRegionConfig(regionId).label
 }
-

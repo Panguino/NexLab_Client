@@ -5,7 +5,7 @@
  */
 
 import { MapFrame } from '../types'
-import { ProcessedStormData, getHurricaneCategory, getCategoryColor, getIconSize } from '../types/tropicalStormTypes'
+import { ProcessedStormData, getCategoryColor, getHurricaneCategory, getIconSize } from '../types/tropicalStormTypes'
 
 /**
  * Create a processed storm data point for a specific frame
@@ -159,4 +159,3 @@ export function generateAnimatedStormFrames(): MapFrame[] {
  * Export the generated frames as a constant
  */
 export const ANIMATED_STORM_FRAMES = generateAnimatedStormFrames()
-

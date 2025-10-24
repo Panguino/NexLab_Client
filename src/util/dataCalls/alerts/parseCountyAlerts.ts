@@ -415,7 +415,7 @@ export const createCountyAlertColorMap = (countyAlertMap: CountyAlertMap): Recor
  * @deprecated Use createCountyAlertColorMap instead - this duplicates geometry data
  */
 export const createCountyAlertGeoJSON = (countyAlertMap: CountyAlertMap): FeatureCollection => {
-	const counties = countiesData as FeatureCollection
+	const counties = countiesData as unknown as FeatureCollection
 
 	const features = counties.features.map((feature: Feature) => {
 		// Try multiple property names to find the county ID

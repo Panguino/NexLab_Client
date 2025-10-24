@@ -48,11 +48,7 @@ export function stormDataToTrackPoint(data: TropicalStormData): StormTrackPoint 
  * Interpolate between two track points
  * Creates intermediate points for smooth animation
  */
-export function interpolateTrackPoints(
-	point1: StormTrackPoint,
-	point2: StormTrackPoint,
-	steps: number,
-): StormTrackPoint[] {
+export function interpolateTrackPoints(point1: StormTrackPoint, point2: StormTrackPoint, steps: number): StormTrackPoint[] {
 	const points: StormTrackPoint[] = []
 
 	for (let i = 0; i <= steps; i++) {
@@ -100,7 +96,6 @@ export function createStormTrack(stormDataPoints: TropicalStormData[]): StormTra
 export function convertTracksToFrames(
 	tracks: StormTrack[],
 	frameIntervalMs: number = 6 * 60 * 60 * 1000, // 6 hours default
-	interpolationSteps: number = 0, // 0 = no interpolation
 ): MapFrame[] {
 	if (tracks.length === 0) {
 		return []
@@ -189,10 +184,7 @@ export function convertTracksToFrames(
  * Convert raw NHC API response to animated frames
  * Main entry point for converting API data
  */
-export function convertNHCDataToFrames(
-	nhcData: Record<string, TropicalStormData>,
-	frameIntervalMs: number = 6 * 60 * 60 * 1000,
-): MapFrame[] {
+export function convertNHCDataToFrames(nhcData: Record<string, TropicalStormData>, frameIntervalMs: number = 6 * 60 * 60 * 1000): MapFrame[] {
 	// Group data by storm ID
 	const stormMap = new Map<string, TropicalStormData[]>()
 
@@ -225,4 +217,3 @@ export function convertNHCDataToFrames(
  * // Use in Animator
  * <Animator frames={frames} mode="map" ... />
  */
-

@@ -17,10 +17,7 @@ interface StormTrackPoint {
  * @param allFrames - All frames to extract historical positions
  * @returns DeckGL PathLayer
  */
-export function createStormTrackLayer(
-	storms: ProcessedStormData[],
-	allFrames: any[],
-): PathLayer {
+export function createStormTrackLayer(storms: ProcessedStormData[], allFrames: any[]): PathLayer {
 	// Build track paths from all frames
 	const trackPaths: StormTrackPoint[][] = []
 	const stormMap = new Map<string, StormTrackPoint[]>()
@@ -71,4 +68,3 @@ export function createStormTrackLayer(
 		},
 	})
 }
-

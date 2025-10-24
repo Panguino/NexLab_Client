@@ -4,6 +4,7 @@
  */
 
 import { Feature, FeatureCollection } from 'geojson'
+import { ProcessedStormData, StormHoverInfo } from './types/tropicalStormTypes'
 
 /**
  * Represents a single frame of map data

@@ -20,7 +20,7 @@ export async function fetchTropicalStormData(url: string): Promise<ProcessedStor
 		const data = await response.json()
 
 		// Convert object of storms to array
-		const stormsArray: TropicalStormData[] = Object.values(data).filter((storm: any) => {
+		const stormsArray: TropicalStormData[] = (Object.values(data) as any[]).filter((storm: any) => {
 			// Validate required fields
 			return (
 				storm &&
@@ -103,21 +103,14 @@ export function getSampleTropicalStorms(): ProcessedStormData[] {
 /**
  * Filter storms by classification
  */
-export function filterStormsByClassification(
-	storms: ProcessedStormData[],
-	classification: string,
-): ProcessedStormData[] {
+export function filterStormsByClassification(storms: ProcessedStormData[], classification: string): ProcessedStormData[] {
 	return storms.filter((storm) => storm.classification === classification)
 }
 
 /**
  * Filter storms by intensity range
  */
-export function filterStormsByIntensity(
-	storms: ProcessedStormData[],
-	minIntensity: number,
-	maxIntensity: number,
-): ProcessedStormData[] {
+export function filterStormsByIntensity(storms: ProcessedStormData[], minIntensity: number, maxIntensity: number): ProcessedStormData[] {
 	return storms.filter((storm) => storm.intensity >= minIntensity && storm.intensity <= maxIntensity)
 }
 
@@ -147,21 +140,13 @@ export function getStrongestStorm(storms: ProcessedStormData[]): ProcessedStormD
  * Calculate distance between two points (lat/lon) in kilometers
  * Uses Haversine formula
  */
-export function calculateDistance(
-	lat1: number,
-	lon1: number,
-	lat2: number,
-	lon2: number,
-): number {
+export function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
 	const R = 6371 // Earth's radius in km
 	const dLat = ((lat2 - lat1) * Math.PI) / 180
 	const dLon = ((lon2 - lon1) * Math.PI) / 180
 	const a =
 		Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-		Math.cos((lat1 * Math.PI) / 180) *
-			Math.cos((lat2 * Math.PI) / 180) *
-			Math.sin(dLon / 2) *
-			Math.sin(dLon / 2)
+		Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
 	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 	return R * c
 }
@@ -169,12 +154,7 @@ export function calculateDistance(
 /**
  * Find storms near a location
  */
-export function findStormsNearLocation(
-	storms: ProcessedStormData[],
-	latitude: number,
-	longitude: number,
-	radiusKm: number,
-): ProcessedStormData[] {
+export function findStormsNearLocation(storms: ProcessedStormData[], latitude: number, longitude: number, radiusKm: number): ProcessedStormData[] {
 	return storms.filter((storm) => {
 		const distance = calculateDistance(latitude, longitude, storm.latitude, storm.longitude)
 		return distance <= radiusKm
@@ -187,4 +167,3 @@ export function findStormsNearLocation(
 export function formatStormInfo(storm: ProcessedStormData): string {
 	return `${storm.name} (${storm.classification}) - ${storm.intensity} kt, ${storm.pressure} mb`
 }
-

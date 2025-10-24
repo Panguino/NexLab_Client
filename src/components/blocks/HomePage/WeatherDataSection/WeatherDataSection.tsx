@@ -1,7 +1,7 @@
 'use client'
 
-import styles from './WeatherDataSection.module.scss'
 import Link from 'next/link'
+import styles from './WeatherDataSection.module.scss'
 
 export const WeatherDataSection = () => {
 	const cards = [

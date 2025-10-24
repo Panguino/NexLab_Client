@@ -151,7 +151,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			_onViewStateChange,
 			containerStyle,
 			viewState: externalViewState,
-			zoomStepScroll = 0.2,
 		},
 		ref,
 	) => {
@@ -165,6 +164,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const [tooltipTitle, setTooltipTitle] = useState('')
 		const [tooltipAlerts, setTooltipAlerts] = useState<any[]>([])
 		const deckGLRef = useRef<any>(null)
+		const containerRef = useRef<HTMLDivElement>(null)
 
 		// CONTROLLED COMPONENT: Use the global mapZoomState from parent
 		// All state changes (buttons, mouse interactions) update the global state
@@ -205,7 +205,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		// Theme-aware colors (RGBA format)
 		const isDark = isDarkMode
 		// Memoize colors to prevent dependency changes on every render
-		const { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, coastalColor, gridlineColor } = useMemo(() => {
+		const { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, gridlineColor } = useMemo(() => {
 			// Ocean: blue1 (#8aadcf) light / blue2 (#233544) dark
 			const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
 			// World: grey2 (#d8d8d8) light / grey16 (#484848) dark
@@ -216,11 +216,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
 			// County Borders: grey14 (#6b6b6b) light / grey12 (#7a7a7a) dark - lighter than state borders
 			const countyBorderColor = isDark ? [122, 122, 122, 255] : [107, 107, 107, 255]
-			// Coastal/Ocean regions: slightly darker ocean color with transparency
-			const coastalColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
 			// Grid lines: more visible grey with higher opacity
 			const gridlineColor = isDark ? [120, 120, 120, 180] : [180, 180, 180, 180]
-			return { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, coastalColor, gridlineColor }
+			return { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, gridlineColor }
 		}, [isDark])
 
 		// Load frames
@@ -641,7 +639,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			statesColor,
 			borderColor,
 			countyBorderColor,
-			coastalColor,
 			gridlineColor,
 			currentFrameAlertMap,
 			currentFrameCoastalAlertMap,
@@ -780,10 +777,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		 * Converts screen coordinates to lat/long using DeckGL's unproject and uses point-in-polygon detection
 		 */
 		const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-			if (!ref.current || !deckGLRef.current) return
+			if (!containerRef.current || !deckGLRef.current) return
 
 			// Get the container's bounding rect
-			const rect = ref.current.getBoundingClientRect()
+			const rect = containerRef.current.getBoundingClientRect()
 			const x = e.clientX - rect.left
 			const y = e.clientY - rect.top
 
@@ -837,9 +834,18 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			setTooltipVisible(false)
 		}
 
+		// Attach both the forwarded ref and the local containerRef
+		useEffect(() => {
+			if (typeof ref === 'function') {
+				ref(containerRef.current)
+			} else if (ref) {
+				ref.current = containerRef.current
+			}
+		}, [ref])
+
 		return (
 			<div
-				ref={ref}
+				ref={containerRef}
 				className={styles.animatorMapMachine}
 				style={{
 					zIndex,

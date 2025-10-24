@@ -1,9 +1,8 @@
 import Providers from '@/components/providers/Providers/Providers'
-import { Meta, StoryFn } from '@storybook/react'
-import { useState } from 'react'
-import { Animator } from '../Animator'
-import { testFrames8x6, testDataFrameLabels2 } from '../AnimatorTestData'
 import { formatRunToZDate } from '@/util/dateFormat'
+import { Meta, StoryFn } from '@storybook/react'
+import { Animator } from '../Animator'
+import { testDataFrameLabels2, testFrames8x6 } from '../AnimatorTestData'
 
 /**
  * # AnimatorControls Component
@@ -170,4 +169,3 @@ manualScrubbing.parameters = {
 		},
 	},
 }
-

@@ -407,10 +407,12 @@ pdfButtonDisabled.parameters = {
  * These stories demonstrate the zoom fill toggle functionality
  */
 
-export const zoomFillModeEnabled: StoryFn<typeof Animator> = (args) => {
+const ZoomFillModeEnabledStory = (args: any) => {
 	const [zoomFill, setZoomFill] = useState(true)
 	return <Animator {...args} zoomFill={zoomFill} setZoomFill={setZoomFill} />
 }
+
+export const zoomFillModeEnabled: StoryFn<typeof Animator> = (args) => <ZoomFillModeEnabledStory {...args} />
 zoomFillModeEnabled.args = {
 	interval: 250,
 	frames: testFrames16x9,
@@ -425,10 +427,12 @@ zoomFillModeEnabled.parameters = {
 	},
 }
 
-export const zoomFitModeEnabled: StoryFn<typeof Animator> = (args) => {
+const ZoomFitModeEnabledStory = (args: any) => {
 	const [zoomFill, setZoomFill] = useState(false)
 	return <Animator {...args} zoomFill={zoomFill} setZoomFill={setZoomFill} />
 }
+
+export const zoomFitModeEnabled: StoryFn<typeof Animator> = (args) => <ZoomFitModeEnabledStory {...args} />
 zoomFitModeEnabled.args = {
 	interval: 250,
 	frames: testFrames16x9,
@@ -443,10 +447,12 @@ zoomFitModeEnabled.parameters = {
 	},
 }
 
-export const fullscreenModeEnabled: StoryFn<typeof Animator> = (args) => {
+const FullscreenModeEnabledStory = (args: any) => {
 	const [fullScreen, setFullScreen] = useState(false)
 	return <Animator {...args} fullScreen={fullScreen} setFullScreen={setFullScreen} />
 }
+
+export const fullscreenModeEnabled: StoryFn<typeof Animator> = (args) => <FullscreenModeEnabledStory {...args} />
 fullscreenModeEnabled.args = {
 	interval: 250,
 	frames: testFrames16x9,
@@ -536,20 +542,10 @@ MapAnimatorFullscreen.parameters = {
 }
 
 export const MapAnimatorDifferentRegions: StoryFn<typeof Animator> = (args) => {
-	const [region, setRegion] = useState<'conus' | 'alaska' | 'hawaii' | 'namer'>('conus')
+	const [region, _setRegion] = useState<'conus' | 'alaska' | 'hawaii' | 'namer'>('conus')
 	const frames = region === 'alaska' ? mockAlaskaFrames : region === 'hawaii' ? mockHawaiiFrames : mockHurricaneTrackFrames
 
-	return (
-		<Animator
-			{...args}
-			frames={frames}
-			mode="map"
-			mapRegion={region}
-			onMapZoomIn={() => console.log('Zoom in')}
-			onMapZoomOut={() => console.log('Zoom out')}
-			onMapResetView={() => console.log('Reset view')}
-		/>
-	)
+	return <Animator {...args} frames={frames} mode="map" mapRegion={region} />
 }
 MapAnimatorDifferentRegions.args = {
 	interval: 500,
@@ -570,16 +566,12 @@ MapAnimatorDifferentRegions.parameters = {
  * Shows realistic storm tracks with movement and intensity changes over time
  */
 export const HurricaneVisualization: StoryFn = () => {
-	const [currentFrame, setCurrentFrame] = useState(0)
-
 	return (
 		<Animator
 			frames={ANIMATED_STORM_FRAMES}
 			mode="map"
 			mapRegion="namer"
 			imageInfo={{ width: 1000, height: 600 }}
-			currentFrame={currentFrame}
-			setCurrentFrame={setCurrentFrame}
 			hideControls={false}
 			hideZoomControls={false}
 			disableZoom={false}

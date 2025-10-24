@@ -2,8 +2,8 @@ import Providers from '@/components/providers/Providers/Providers'
 import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 import { Animator } from '../Animator'
+import { testDataWithOverlays, testFrames8x6 } from '../AnimatorTestData'
 import ImageControls from './ImageControls'
-import { testFrames8x6, testDataWithOverlays } from '../AnimatorTestData'
 
 /**
  * # ImageControls Component
@@ -192,4 +192,3 @@ withPdfButton.parameters = {
 		},
 	},
 }
-

@@ -15,6 +15,23 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+const BasicMapRenderingComponent = () => {
+	const [currentFrame, setCurrentFrame] = useState(0)
+
+	return (
+		<div style={{ width: '100%', height: '600px' }}>
+			<AnimatorMapMachine frames={SAMPLE_HURRICANE_PATHS} currentFrame={currentFrame} region="conus" mapProvider="deckgl" />
+			<div style={{ padding: '20px', background: '#f5f5f5' }}>
+				<p>
+					Current Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
+				</p>
+				<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
+				<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
+			</div>
+		</div>
+	)
+}
+
 /**
  * Basic map rendering with hurricane path data
  */
@@ -25,22 +42,43 @@ export const BasicMapRendering: Story = {
 		region: 'conus',
 		mapProvider: 'deckgl',
 	},
-	render: () => {
-		const [currentFrame, setCurrentFrame] = useState(0)
+	render: () => <BasicMapRenderingComponent />,
+}
 
-		return (
-			<div style={{ width: '100%', height: '600px' }}>
-				<AnimatorMapMachine frames={SAMPLE_HURRICANE_PATHS} currentFrame={currentFrame} region="conus" mapProvider="deckgl" />
-				<div style={{ padding: '20px', background: '#f5f5f5' }}>
-					<p>
-						Current Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
-					</p>
-					<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
-					<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
-				</div>
+const AutoPlayAnimationComponent = () => {
+	const [currentFrame, setCurrentFrame] = useState(0)
+	const [isPlaying, setIsPlaying] = useState(true)
+
+	// Auto-play effect
+	React.useEffect(() => {
+		if (!isPlaying) {
+			return undefined
+		}
+
+		const interval = setInterval(() => {
+			setCurrentFrame((prev) => {
+				if (prev >= SAMPLE_HURRICANE_PATHS.length - 1) {
+					return 0 // Loop back to start
+				}
+				return prev + 1
+			})
+		}, 1000)
+
+		return () => clearInterval(interval)
+	}, [isPlaying])
+
+	return (
+		<div style={{ width: '100%', height: '600px' }}>
+			<AnimatorMapMachine frames={SAMPLE_HURRICANE_PATHS} currentFrame={currentFrame} region="conus" mapProvider="deckgl" />
+			<div style={{ padding: '20px', background: '#f5f5f5' }}>
+				<p>
+					Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
+				</p>
+				<button onClick={() => setIsPlaying(!isPlaying)}>{isPlaying ? 'Pause' : 'Play'}</button>
+				<button onClick={() => setCurrentFrame(0)}>Reset</button>
 			</div>
-		)
-	},
+		</div>
+	)
 }
 
 /**
@@ -53,41 +91,34 @@ export const AutoPlayAnimation: Story = {
 		region: 'conus',
 		mapProvider: 'deckgl',
 	},
-	render: () => {
-		const [currentFrame, setCurrentFrame] = useState(0)
-		const [isPlaying, setIsPlaying] = useState(true)
+	render: () => <AutoPlayAnimationComponent />,
+}
 
-		// Auto-play effect
-		React.useEffect(() => {
-			if (!isPlaying) {
-				return
-			}
+const DifferentRegionsComponent = () => {
+	const [currentFrame, setCurrentFrame] = useState(0)
+	const [region, setRegion] = useState<'conus' | 'alaska' | 'hawaii' | 'namer'>('conus')
 
-			const interval = setInterval(() => {
-				setCurrentFrame((prev) => {
-					if (prev >= SAMPLE_HURRICANE_PATHS.length - 1) {
-						return 0 // Loop back to start
-					}
-					return prev + 1
-				})
-			}, 1000)
-
-			return () => clearInterval(interval)
-		}, [isPlaying])
-
-		return (
-			<div style={{ width: '100%', height: '600px' }}>
-				<AnimatorMapMachine frames={SAMPLE_HURRICANE_PATHS} currentFrame={currentFrame} region="conus" mapProvider="deckgl" />
-				<div style={{ padding: '20px', background: '#f5f5f5' }}>
-					<p>
-						Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
-					</p>
-					<button onClick={() => setIsPlaying(!isPlaying)}>{isPlaying ? 'Pause' : 'Play'}</button>
-					<button onClick={() => setCurrentFrame(0)}>Reset</button>
+	return (
+		<div style={{ width: '100%', height: '600px' }}>
+			<AnimatorMapMachine frames={SAMPLE_HURRICANE_PATHS} currentFrame={currentFrame} region={region} mapProvider="deckgl" />
+			<div style={{ padding: '20px', background: '#f5f5f5' }}>
+				<div>
+					<label>Region: </label>
+					<select value={region} onChange={(e) => setRegion(e.target.value as any)}>
+						<option value="conus">Continental US</option>
+						<option value="alaska">Alaska</option>
+						<option value="hawaii">Hawaii</option>
+						<option value="namer">North America & Mexico</option>
+					</select>
 				</div>
+				<p>
+					Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
+				</p>
+				<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
+				<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
 			</div>
-		)
-	},
+		</div>
+	)
 }
 
 /**
@@ -100,32 +131,36 @@ export const DifferentRegions: Story = {
 		region: 'conus',
 		mapProvider: 'deckgl',
 	},
-	render: () => {
-		const [currentFrame, setCurrentFrame] = useState(0)
-		const [region, setRegion] = useState<'conus' | 'alaska' | 'hawaii' | 'namer'>('conus')
+	render: () => <DifferentRegionsComponent />,
+}
 
-		return (
-			<div style={{ width: '100%', height: '600px' }}>
-				<AnimatorMapMachine frames={SAMPLE_HURRICANE_PATHS} currentFrame={currentFrame} region={region} mapProvider="deckgl" />
-				<div style={{ padding: '20px', background: '#f5f5f5' }}>
-					<div>
-						<label>Region: </label>
-						<select value={region} onChange={(e) => setRegion(e.target.value as any)}>
-							<option value="conus">Continental US</option>
-							<option value="alaska">Alaska</option>
-							<option value="hawaii">Hawaii</option>
-							<option value="namer">North America & Mexico</option>
-						</select>
-					</div>
-					<p>
-						Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
-					</p>
-					<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
-					<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
+const CustomOpacityComponent = () => {
+	const [currentFrame, setCurrentFrame] = useState(0)
+	const [opacity, setOpacity] = useState(1)
+
+	return (
+		<div style={{ width: '100%', height: '600px' }}>
+			<AnimatorMapMachine
+				frames={SAMPLE_HURRICANE_PATHS}
+				currentFrame={currentFrame}
+				region="conus"
+				mapProvider="deckgl"
+				baseOpacity={opacity}
+			/>
+			<div style={{ padding: '20px', background: '#f5f5f5' }}>
+				<div>
+					<label>Opacity: </label>
+					<input type="range" min="0" max="1" step="0.1" value={opacity} onChange={(e) => setOpacity(parseFloat(e.target.value))} />
+					<span>{(opacity * 100).toFixed(0)}%</span>
 				</div>
+				<p>
+					Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
+				</p>
+				<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
+				<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
 			</div>
-		)
-	},
+		</div>
+	)
 }
 
 /**
@@ -139,34 +174,36 @@ export const CustomOpacity: Story = {
 		mapProvider: 'deckgl',
 		baseOpacity: 1,
 	},
-	render: () => {
-		const [currentFrame, setCurrentFrame] = useState(0)
-		const [opacity, setOpacity] = useState(1)
+	render: () => <CustomOpacityComponent />,
+}
 
-		return (
-			<div style={{ width: '100%', height: '600px' }}>
-				<AnimatorMapMachine
-					frames={SAMPLE_HURRICANE_PATHS}
-					currentFrame={currentFrame}
-					region="conus"
-					mapProvider="deckgl"
-					baseOpacity={opacity}
-				/>
-				<div style={{ padding: '20px', background: '#f5f5f5' }}>
-					<div>
-						<label>Opacity: </label>
-						<input type="range" min="0" max="1" step="0.1" value={opacity} onChange={(e) => setOpacity(parseFloat(e.target.value))} />
-						<span>{(opacity * 100).toFixed(0)}%</span>
-					</div>
-					<p>
-						Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
-					</p>
-					<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
-					<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
+const LoadingStateComponent = () => {
+	const [currentFrame, setCurrentFrame] = useState(0)
+	const [isLoading, setIsLoading] = useState(true)
+
+	React.useEffect(() => {
+		const timer = setTimeout(() => setIsLoading(false), 2000)
+		return () => clearTimeout(timer)
+	}, [])
+
+	return (
+		<div style={{ width: '100%', height: '600px' }}>
+			{isLoading ? (
+				<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+					<p>Loading map data...</p>
 				</div>
+			) : (
+				<AnimatorMapMachine frames={SAMPLE_HURRICANE_PATHS} currentFrame={currentFrame} region="conus" mapProvider="deckgl" />
+			)}
+			<div style={{ padding: '20px', background: '#f5f5f5' }}>
+				<p>
+					Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
+				</p>
+				<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
+				<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
 			</div>
-		)
-	},
+		</div>
+	)
 }
 
 /**
@@ -179,34 +216,36 @@ export const LoadingState: Story = {
 		region: 'conus',
 		mapProvider: 'deckgl',
 	},
-	render: () => {
-		const [currentFrame, setCurrentFrame] = useState(0)
-		const [isLoading, setIsLoading] = useState(true)
+	render: () => <LoadingStateComponent />,
+}
 
-		React.useEffect(() => {
-			const timer = setTimeout(() => setIsLoading(false), 2000)
-			return () => clearTimeout(timer)
-		}, [])
+const WithMetadataDisplayComponent = () => {
+	const [currentFrame, setCurrentFrame] = useState(0)
+	const frame = SAMPLE_HURRICANE_PATHS[currentFrame]
 
-		return (
-			<div style={{ width: '100%', height: '600px' }}>
-				{isLoading ? (
-					<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-						<p>Loading map data...</p>
-					</div>
-				) : (
-					<AnimatorMapMachine frames={SAMPLE_HURRICANE_PATHS} currentFrame={currentFrame} region="conus" mapProvider="deckgl" />
-				)}
-				<div style={{ padding: '20px', background: '#f5f5f5' }}>
-					<p>
-						Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
-					</p>
-					<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
-					<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
+	return (
+		<div style={{ width: '100%', height: '600px' }}>
+			<AnimatorMapMachine frames={SAMPLE_HURRICANE_PATHS} currentFrame={currentFrame} region="conus" mapProvider="deckgl" />
+			<div style={{ padding: '20px', background: '#f5f5f5' }}>
+				<div style={{ marginBottom: '10px' }}>
+					<h3>Hurricane Data</h3>
+					{frame.metadata && (
+						<div>
+							<p>Wind Speed: {frame.metadata.windSpeed} mph</p>
+							<p>Category: {frame.metadata.category}</p>
+							<p>Pressure: {frame.metadata.pressure} mb</p>
+							<p>Time: {frame.timestamp.toISOString()}</p>
+						</div>
+					)}
 				</div>
+				<p>
+					Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
+				</p>
+				<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
+				<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
 			</div>
-		)
-	},
+		</div>
+	)
 }
 
 /**
@@ -219,34 +258,51 @@ export const WithMetadataDisplay: Story = {
 		region: 'conus',
 		mapProvider: 'deckgl',
 	},
-	render: () => {
-		const [currentFrame, setCurrentFrame] = useState(0)
-		const frame = SAMPLE_HURRICANE_PATHS[currentFrame]
+	render: () => <WithMetadataDisplayComponent />,
+}
 
-		return (
-			<div style={{ width: '100%', height: '600px' }}>
-				<AnimatorMapMachine frames={SAMPLE_HURRICANE_PATHS} currentFrame={currentFrame} region="conus" mapProvider="deckgl" />
-				<div style={{ padding: '20px', background: '#f5f5f5' }}>
-					<div style={{ marginBottom: '10px' }}>
-						<h3>Hurricane Data</h3>
-						{frame.metadata && (
-							<div>
-								<p>Wind Speed: {frame.metadata.windSpeed} mph</p>
-								<p>Category: {frame.metadata.category}</p>
-								<p>Pressure: {frame.metadata.pressure} mb</p>
-								<p>Time: {frame.timestamp.toISOString()}</p>
-							</div>
-						)}
-					</div>
-					<p>
-						Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
-					</p>
-					<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
-					<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
-				</div>
+const BoundsConstraintsComponent = () => {
+	const [currentFrame, setCurrentFrame] = useState(0)
+	const [viewState, setViewState] = useState({ longitude: -95, latitude: 37, zoom: 3 })
+
+	return (
+		<div style={{ width: '100%', height: '600px' }}>
+			<AnimatorMapMachine
+				frames={SAMPLE_HURRICANE_PATHS}
+				currentFrame={currentFrame}
+				region="conus"
+				mapProvider="deckgl"
+				onViewStateChange={setViewState}
+			/>
+			<div style={{ padding: '20px', background: '#f5f5f5' }}>
+				<h3>Bounds Constraints Test</h3>
+				<p>
+					<strong>Current View State:</strong>
+				</p>
+				<ul>
+					<li>Longitude: {viewState.longitude.toFixed(2)}</li>
+					<li>Latitude: {viewState.latitude.toFixed(2)}</li>
+					<li>Zoom: {viewState.zoom.toFixed(2)}</li>
+				</ul>
+				<p>
+					<strong>Constraints:</strong>
+				</p>
+				<ul>
+					<li>Zoom: 2 - 20</li>
+					<li>Longitude: -130 to -65</li>
+					<li>Latitude: 24 to 50</li>
+				</ul>
+				<p style={{ color: '#666', fontSize: '12px' }}>
+					Try scrolling to zoom out (should stop at zoom 2) or dragging to pan beyond the bounds (should snap back).
+				</p>
+				<p>
+					Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
+				</p>
+				<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
+				<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
 			</div>
-		)
-	},
+		</div>
+	)
 }
 
 /**
@@ -260,47 +316,5 @@ export const BoundsConstraints: Story = {
 		region: 'conus',
 		mapProvider: 'deckgl',
 	},
-	render: () => {
-		const [currentFrame, setCurrentFrame] = useState(0)
-		const [viewState, setViewState] = useState({ longitude: -95, latitude: 37, zoom: 3 })
-
-		return (
-			<div style={{ width: '100%', height: '600px' }}>
-				<AnimatorMapMachine
-					frames={SAMPLE_HURRICANE_PATHS}
-					currentFrame={currentFrame}
-					region="conus"
-					mapProvider="deckgl"
-					onViewStateChange={setViewState}
-				/>
-				<div style={{ padding: '20px', background: '#f5f5f5' }}>
-					<h3>Bounds Constraints Test</h3>
-					<p>
-						<strong>Current View State:</strong>
-					</p>
-					<ul>
-						<li>Longitude: {viewState.longitude.toFixed(2)}</li>
-						<li>Latitude: {viewState.latitude.toFixed(2)}</li>
-						<li>Zoom: {viewState.zoom.toFixed(2)}</li>
-					</ul>
-					<p>
-						<strong>Constraints:</strong>
-					</p>
-					<ul>
-						<li>Zoom: 2 - 20</li>
-						<li>Longitude: -130 to -65</li>
-						<li>Latitude: 24 to 50</li>
-					</ul>
-					<p style={{ color: '#666', fontSize: '12px' }}>
-						Try scrolling to zoom out (should stop at zoom 2) or dragging to pan beyond the bounds (should snap back).
-					</p>
-					<p>
-						Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
-					</p>
-					<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
-					<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
-				</div>
-			</div>
-		)
-	},
+	render: () => <BoundsConstraintsComponent />,
 }

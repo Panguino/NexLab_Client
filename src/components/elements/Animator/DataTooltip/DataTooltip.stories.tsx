@@ -1,9 +1,9 @@
 import Providers from '@/components/providers/Providers/Providers'
 import { Meta, StoryFn } from '@storybook/react'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { Animator } from '../Animator'
-import DataTooltip from './DataTooltip'
 import { testFrames8x6 } from '../AnimatorTestData'
+import DataTooltip from './DataTooltip'
 
 /**
  * # DataTooltip Component
@@ -41,9 +41,7 @@ export default meta
  * Wrapper component to demonstrate DataTooltip with Animator context
  */
 const DataTooltipDemo: StoryFn = (args) => {
-	const hoverRef = useRef<HTMLDivElement>(null)
-	const frameRef = useRef<HTMLDivElement>(null)
-	const [position, setPosition] = useState({ xPercent: 0, yPercent: 0 })
+	const [_position, _setPosition] = useState({ xPercent: 0, yPercent: 0 })
 
 	return (
 		<Animator
@@ -55,39 +53,8 @@ const DataTooltipDemo: StoryFn = (args) => {
 			frameReadoutData={args.frameReadoutData}
 			isLoadingReadoutData={args.isLoadingReadoutData}
 			requestReadoutData={args.requestReadoutData}
-		>
-			<div
-				ref={frameRef}
-				style={{
-					position: 'relative',
-					width: '100%',
-					height: '100%',
-				}}
-			>
-				<div
-					ref={hoverRef}
-					style={{
-						width: '100%',
-						height: '100%',
-						backgroundColor: '#f0f0f0',
-						display: 'flex',
-						alignItems: 'center',
-						justifyContent: 'center',
-						fontSize: '14px',
-						color: '#666',
-					}}
-				>
-					Hover over the animator image to see the tooltip
-				</div>
-				<DataTooltip
-					hoverRef={hoverRef}
-					frameRef={frameRef}
-					onUpdatePosition={setPosition}
-					debug={args.debug}
-					sectorId={args.sectorId}
-				/>
-			</div>
-		</Animator>
+			sectorId={args.sectorId}
+		/>
 	)
 }
 
@@ -236,4 +203,3 @@ debugWithWeatherData.parameters = {
 		},
 	},
 }
-

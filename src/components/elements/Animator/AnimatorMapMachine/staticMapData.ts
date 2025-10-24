@@ -11,7 +11,7 @@ import { MapFrame, StaticMapData } from './types'
  * US States GeoJSON from src/data/d3Map/states.json
  * Contains all US states with proper boundaries
  */
-export const SAMPLE_STATES_GEOJSON: FeatureCollection = statesData as FeatureCollection
+export const SAMPLE_STATES_GEOJSON: FeatureCollection = statesData as unknown as FeatureCollection
 
 /**
  * Simplified US Counties GeoJSON for demo purposes

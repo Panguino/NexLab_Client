@@ -55,7 +55,7 @@ export const CategoriesSection = () => {
 								<div className={styles.cardBody}>
 									<h3 className={styles.cardTitle}>{cat.title}</h3>
 									<p className={styles.cardText}>{cat.text}</p>
-								<span className={styles.cardCTA}>Open →</span>
+									<span className={styles.cardCTA}>Open →</span>
 								</div>
 							</Link>
 						</li>

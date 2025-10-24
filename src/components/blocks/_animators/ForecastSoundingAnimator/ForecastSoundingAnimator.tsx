@@ -124,7 +124,6 @@ const ForecastSoundingAnimator: React.FC = () => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, locationId, parcelId, weatherId, getData])
 
-
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,
 		label: value.readable,

@@ -20,8 +20,8 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 		...storm,
 	}))
 
-	// Get icon image for rendering
-	const iconAtlas = getHurricaneIconImage()
+	// Get icon URL for rendering
+	const iconAtlas = getHurricaneIconURL()
 
 	return new IconLayer({
 		id: 'hurricane-layer',
@@ -31,7 +31,7 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 		sizeMinPixels: 20,
 		sizeMaxPixels: 100,
 		getPosition: (d: any) => d.position,
-		getIcon: (d: any) => 'hurricane',
+		getIcon: () => 'hurricane',
 		getSize: (d: any) => d.iconSize,
 		getColor: (d: any) => d.color,
 		iconAtlas: iconAtlas,

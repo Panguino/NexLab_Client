@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react'
-import { useRef, useState } from 'react'
-import { AnimatorImageMachine } from './AnimatorImageMachine'
+import React, { useRef, useState } from 'react'
 import { testFrames, testFrames8x6 } from '../AnimatorTestData'
+import { AnimatorImageMachine } from './AnimatorImageMachine'
 
 /**
  * # AnimatorImageMachine Component
@@ -27,7 +27,7 @@ const meta: Meta<typeof AnimatorImageMachine> = {
 
 export default meta
 
-export const basicFrameRendering: StoryFn<typeof AnimatorImageMachine> = (args) => {
+const BasicFrameRenderingComponent = () => {
 	const ref = useRef<HTMLDivElement>(null)
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [loadedFrames, setLoadedFrames] = useState<any[]>([])
@@ -52,6 +52,8 @@ export const basicFrameRendering: StoryFn<typeof AnimatorImageMachine> = (args) 
 		</div>
 	)
 }
+
+export const basicFrameRendering: StoryFn<typeof AnimatorImageMachine> = () => <BasicFrameRenderingComponent />
 basicFrameRendering.args = {}
 basicFrameRendering.parameters = {
 	docs: {
@@ -61,7 +63,7 @@ basicFrameRendering.parameters = {
 	},
 }
 
-export const autoPlayFrames: StoryFn<typeof AnimatorImageMachine> = (args) => {
+const AutoPlayFramesComponent = () => {
 	const ref = useRef<HTMLDivElement>(null)
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [loadedFrames, setLoadedFrames] = useState<any[]>([])
@@ -69,7 +71,9 @@ export const autoPlayFrames: StoryFn<typeof AnimatorImageMachine> = (args) => {
 
 	// Auto-advance frames
 	React.useEffect(() => {
-		if (!isPlaying) return
+		if (!isPlaying) {
+			return undefined
+		}
 		const interval = setInterval(() => {
 			setCurrentFrame((prev) => (prev + 1) % testFrames.length)
 		}, 250)
@@ -88,13 +92,17 @@ export const autoPlayFrames: StoryFn<typeof AnimatorImageMachine> = (args) => {
 				zIndex={30}
 			/>
 			<div style={{ position: 'absolute', bottom: '20px', left: '20px', backgroundColor: 'white', padding: '10px', borderRadius: '4px' }}>
-				<p>Current Frame: {currentFrame + 1} / {testFrames.length}</p>
+				<p>
+					Current Frame: {currentFrame + 1} / {testFrames.length}
+				</p>
 				<p>Loaded Frames: {loadedFrames.length}</p>
 				<button onClick={() => setIsPlaying(!isPlaying)}>{isPlaying ? 'Pause' : 'Play'}</button>
 			</div>
 		</div>
 	)
 }
+
+export const autoPlayFrames: StoryFn<typeof AnimatorImageMachine> = () => <AutoPlayFramesComponent />
 autoPlayFrames.args = {}
 autoPlayFrames.parameters = {
 	docs: {
@@ -104,7 +112,7 @@ autoPlayFrames.parameters = {
 	},
 }
 
-export const withReducedOpacity: StoryFn<typeof AnimatorImageMachine> = (args) => {
+const WithReducedOpacityComponent = () => {
 	const ref = useRef<HTMLDivElement>(null)
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [loadedFrames, setLoadedFrames] = useState<any[]>([])
@@ -128,6 +136,8 @@ export const withReducedOpacity: StoryFn<typeof AnimatorImageMachine> = (args) =
 		</div>
 	)
 }
+
+export const withReducedOpacity: StoryFn<typeof AnimatorImageMachine> = () => <WithReducedOpacityComponent />
 withReducedOpacity.args = {}
 withReducedOpacity.parameters = {
 	docs: {
@@ -137,7 +147,7 @@ withReducedOpacity.parameters = {
 	},
 }
 
-export const loadingState: StoryFn<typeof AnimatorImageMachine> = (args) => {
+const LoadingStateComponent = () => {
 	const ref = useRef<HTMLDivElement>(null)
 	const [currentFrame, setCurrentFrame] = useState(0)
 	const [loadedFrames, setLoadedFrames] = useState<any[]>([])
@@ -155,13 +165,17 @@ export const loadingState: StoryFn<typeof AnimatorImageMachine> = (args) => {
 			/>
 			<div style={{ position: 'absolute', bottom: '20px', left: '20px', backgroundColor: 'white', padding: '10px', borderRadius: '4px' }}>
 				<p>Current Frame: {currentFrame}</p>
-				<p>Loaded Frames: {loadedFrames.length} / {testFrames8x6.length}</p>
+				<p>
+					Loaded Frames: {loadedFrames.length} / {testFrames8x6.length}
+				</p>
 				<p>Loading Progress: {Math.round((loadedFrames.length / testFrames8x6.length) * 100)}%</p>
 				<button onClick={() => setCurrentFrame((prev) => (prev + 1) % testFrames8x6.length)}>Next Frame</button>
 			</div>
 		</div>
 	)
 }
+
+export const loadingState: StoryFn<typeof AnimatorImageMachine> = () => <LoadingStateComponent />
 loadingState.args = {}
 loadingState.parameters = {
 	docs: {
@@ -170,4 +184,3 @@ loadingState.parameters = {
 		},
 	},
 }
-

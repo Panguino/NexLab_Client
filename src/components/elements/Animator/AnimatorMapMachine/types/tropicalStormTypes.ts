@@ -182,4 +182,3 @@ export function processStormData(rawData: TropicalStormData): ProcessedStormData
 export function processStormDataArray(rawDataArray: TropicalStormData[]): ProcessedStormData[] {
 	return rawDataArray.map(processStormData)
 }
-

@@ -8,31 +8,30 @@ export { AnimatorMapMachine } from './AnimatorMapMachine'
 
 // Types
 export type {
+	DeckglLayerConfig,
+	IAnimatorMapMachineProps,
+	IMapProvider,
 	MapFrame,
 	MapOverlay,
-	RegionType,
-	RegionConfig,
-	MapViewState,
-	IAnimatorMapMachineProps,
 	MapProviderConfig,
-	IMapProvider,
-	DeckglLayerConfig,
+	MapViewState,
+	RegionConfig,
+	RegionType,
 	StaticMapData,
 } from './types'
 
 // Providers
-export { MapProvider, createMapProvider } from './providers/MapProvider'
 export { DeckglProvider } from './providers/DeckglProvider'
+export { MapProvider, createMapProvider } from './providers/MapProvider'
 
 // Utilities
 export {
 	REGION_CONFIGS,
-	getRegionConfig,
-	getInitialViewState,
-	getRegionBounds,
-	isWithinBounds,
 	constrainViewStateToBounds,
 	getAvailableRegions,
+	getInitialViewState,
+	getRegionBounds,
+	getRegionConfig,
 	getRegionLabel,
+	isWithinBounds,
 } from './utils/projections'
-

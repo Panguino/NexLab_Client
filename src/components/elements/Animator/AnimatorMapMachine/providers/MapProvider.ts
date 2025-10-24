@@ -91,10 +91,11 @@ export abstract class MapProvider implements IMapProvider {
  */
 export function createMapProvider(type: 'deckgl' | 'canvas-d3' | 'mapbox'): MapProvider {
 	switch (type) {
-		case 'deckgl':
+		case 'deckgl': {
 			// Lazy import to avoid circular dependencies
 			const { DeckglProvider } = require('./DeckglProvider')
 			return new DeckglProvider()
+		}
 		case 'canvas-d3':
 			// Canvas-D3 provider not yet implemented
 			throw new Error('Canvas-D3 provider is not yet implemented. Use deckgl instead.')
