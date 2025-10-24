@@ -9,4 +9,5 @@ export const topNav: TopNavItem[] = [
 	{ id: 'academics', title: 'Academics', href: '/academics' },
 	{ id: 'storm-chasing', title: 'Storm Chasing', href: '/storm-chasing' },
 	{ id: 'donate', title: 'Donate', href: '/donate' },
+	{ id: 'feedback', title: 'BETA Feedback', href: '/feedback' },
 ]

@@ -1,6 +1,5 @@
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next'
 import { NextAuthOptions, getServerSession } from 'next-auth'
-import FacebookProvider from 'next-auth/providers/facebook'
 import GoogleProvider from 'next-auth/providers/google'
 
 const isSecureCookie = Boolean(process.env.NEXTAUTH_URL?.startsWith('https://') || process.env.VERCEL_URL)
@@ -10,10 +9,6 @@ const authConfig: NextAuthOptions = {
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID as string,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-		}),
-		FacebookProvider({
-			clientId: process.env.FACEBOOK_CLIENT_ID as string,
-			clientSecret: process.env.FACEBOOK_CLIENT_SECRET as string,
 		}),
 	],
 	session: { strategy: 'jwt' },
