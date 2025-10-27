@@ -357,7 +357,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					id: 'world-layer',
 					data: worldData as any,
 					filled: true,
-					stroked: false,
+					stroked: true,
+					lineWidthMinPixels: 0.5,
+					lineWidthMaxPixels: 1,
+					getLineColor: () => [0, 0, 0, 255], // Black borders
+					getLineWidth: () => 0.5, // 50% size
 					getFillColor: () => worldColor as any,
 					opacity: 0.3, // Faded/subtle - reduced to prevent covering states
 					pickable: false,
