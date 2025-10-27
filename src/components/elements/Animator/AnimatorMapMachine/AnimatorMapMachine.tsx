@@ -723,8 +723,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				if (frame && frame.data && frame.data.features) {
 					try {
 						// Find forecast points in the frame data
+						// Forecast points have datetime and maxwind properties
 						const forecastPointsFeatures = frame.data.features.filter(
-							(f: any) => f.properties?.type === 'forecast-point' || f.geometry?.type === 'Point',
+							(f: any) => f.geometry?.type === 'Point' && (f.properties?.datetime || f.properties?.maxwind !== undefined),
 						)
 
 						if (forecastPointsFeatures.length > 0) {
