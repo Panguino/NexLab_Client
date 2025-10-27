@@ -88,11 +88,39 @@ const getColorFromAlert = (alert: any): [number, number, number, number] => {
 }
 
 /**
+ * Easing function for smooth color transitions
+ * Uses ease-in-out cubic for natural motion
+ */
+const easeInOutCubic = (t: number): number => {
+	return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+}
+
+/**
+ * Interpolate between two colors
+ */
+const interpolateColor = (
+	fromColor: [number, number, number, number],
+	toColor: [number, number, number, number],
+	progress: number,
+): [number, number, number, number] => {
+	const eased = easeInOutCubic(progress)
+	return [
+		Math.round(fromColor[0] + (toColor[0] - fromColor[0]) * eased),
+		Math.round(fromColor[1] + (toColor[1] - fromColor[1]) * eased),
+		Math.round(fromColor[2] + (toColor[2] - fromColor[2]) * eased),
+		255,
+	]
+}
+
+/**
  * Animation state for a single county with multiple alerts
  */
 interface CountyAnimationState {
 	currentAlertIndex: number
 	isAnimating: boolean
+	transitionStartTime?: number
+	fromColor?: [number, number, number, number]
+	toColor?: [number, number, number, number]
 }
 
 /**
@@ -110,9 +138,11 @@ export function useMultiAlertAnimation(currentFrameAlertMap: Record<string, any>
 	// Track animated colors for counties with multiple alerts
 	const [animatedColors, setAnimatedColors] = useState<Record<string, [number, number, number, number]>>({})
 
-	// Refs to track animation intervals
+	// Refs to track animation intervals and RAF
 	const animationIntervalsRef = useRef<Record<string, NodeJS.Timeout>>({})
 	const animationTimersRef = useRef<Record<string, NodeJS.Timeout>>({})
+	const animationFrameRef = useRef<number | null>(null)
+	const lastFrameTimeRef = useRef<number>(0)
 
 	// Initialize animation states when alert map changes
 	useEffect(() => {
@@ -154,32 +184,19 @@ export function useMultiAlertAnimation(currentFrameAlertMap: Record<string, any>
 			const alerts = currentFrameAlertMap[countyId]?.alerts || []
 
 			if (alerts.length >= 2) {
-				// Create a closure that captures the current alerts array
-				const createAnimationLoop = (alertsArray: any[]) => {
-					let currentIndex = 0
+				// Initialize first transition
+				const firstColor = getColorFromAlert(alerts[0])
+				const secondColor = getColorFromAlert(alerts[1])
 
-					const animateToNextAlert = () => {
-						// Move to next alert
-						currentIndex = (currentIndex + 1) % alertsArray.length
-						const nextColor = getColorFromAlert(alertsArray[currentIndex])
-
-						// Update animated color (use API color if available, otherwise calculate)
-						setAnimatedColors((colorPrev) => ({
-							...colorPrev,
-							[countyId]: nextColor,
-						}))
-
-						// Schedule next animation after pause
-						const timer = setTimeout(animateToNextAlert, 1500) // 1.5 second pause
-						animationTimersRef.current[countyId] = timer
-					}
-
-					// Start animation after initial pause
-					const timer = setTimeout(animateToNextAlert, 1500)
-					animationTimersRef.current[countyId] = timer
-				}
-
-				createAnimationLoop(alerts)
+				setAnimationStates((prev) => ({
+					...prev,
+					[countyId]: {
+						...prev[countyId],
+						transitionStartTime: Date.now(),
+						fromColor: firstColor,
+						toColor: secondColor,
+					},
+				}))
 			}
 		})
 
@@ -187,10 +204,87 @@ export function useMultiAlertAnimation(currentFrameAlertMap: Record<string, any>
 		return () => {
 			Object.values(animationIntervalsRef.current).forEach((interval) => clearInterval(interval))
 			Object.values(animationTimersRef.current).forEach((timer) => clearTimeout(timer))
+			if (animationFrameRef.current) {
+				cancelAnimationFrame(animationFrameRef.current)
+			}
 			animationIntervalsRef.current = {}
 			animationTimersRef.current = {}
 		}
 	}, [currentFrameAlertMap, enabled])
+
+	// Animation frame loop for smooth color transitions
+	useEffect(() => {
+		if (!enabled || Object.keys(animationStates).length === 0) return
+
+		const TRANSITION_DURATION = 750 // 0.75 seconds
+		const PAUSE_DURATION = 750 // 0.75 seconds between transitions
+
+		const animate = () => {
+			const now = Date.now()
+			let hasActiveAnimation = false
+
+			setAnimationStates((prevStates) => {
+				const newStates = { ...prevStates }
+				const newColors: Record<string, [number, number, number, number]> = {}
+
+				Object.entries(prevStates).forEach(([countyId, state]) => {
+					if (!state.transitionStartTime || !state.fromColor || !state.toColor) return
+
+					const elapsed = now - state.transitionStartTime
+					const totalCycleDuration = TRANSITION_DURATION + PAUSE_DURATION
+
+					if (elapsed < TRANSITION_DURATION) {
+						// Currently transitioning
+						hasActiveAnimation = true
+						const progress = elapsed / TRANSITION_DURATION
+						const interpolatedColor = interpolateColor(state.fromColor, state.toColor, progress)
+						newColors[countyId] = interpolatedColor
+					} else if (elapsed < totalCycleDuration) {
+						// In pause period - show target color
+						hasActiveAnimation = true
+						newColors[countyId] = state.toColor
+					} else {
+						// Transition complete, move to next alert
+						const alerts = currentFrameAlertMap[countyId]?.alerts || []
+						if (alerts.length >= 2) {
+							const currentIndex = state.currentAlertIndex || 0
+							const nextIndex = (currentIndex + 1) % alerts.length
+							const nextNextIndex = (nextIndex + 1) % alerts.length
+
+							const fromColor = getColorFromAlert(alerts[nextIndex])
+							const toColor = getColorFromAlert(alerts[nextNextIndex])
+
+							newStates[countyId] = {
+								...state,
+								currentAlertIndex: nextIndex,
+								transitionStartTime: now,
+								fromColor,
+								toColor,
+							}
+
+							newColors[countyId] = fromColor
+							hasActiveAnimation = true
+						}
+					}
+				})
+
+				setAnimatedColors(newColors)
+				return newStates
+			})
+
+			if (hasActiveAnimation) {
+				animationFrameRef.current = requestAnimationFrame(animate)
+			}
+		}
+
+		animationFrameRef.current = requestAnimationFrame(animate)
+
+		return () => {
+			if (animationFrameRef.current) {
+				cancelAnimationFrame(animationFrameRef.current)
+			}
+		}
+	}, [enabled, animationStates, currentFrameAlertMap])
 
 	return {
 		animatedColors,
