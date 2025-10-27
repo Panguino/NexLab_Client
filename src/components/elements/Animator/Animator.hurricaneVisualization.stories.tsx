@@ -141,15 +141,17 @@ export const HurricaneVisualization: StoryFn<typeof Animator> = () => {
 	}
 
 	return (
-		<Animator
-			frames={frames}
-			mode="map"
-			mapRegion="conus"
-			imageInfo={{ width: 1200, height: 800 }}
-			autoPlay={false}
-			interval={500}
-			startFrame={0}
-		/>
+		<div style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+			<Animator
+				frames={frames}
+				mode="map"
+				mapRegion="conus"
+				imageInfo={{ width: 1200, height: 800 }}
+				autoPlay={false}
+				interval={500}
+				startFrame={0}
+			/>
+		</div>
 	)
 }
 
@@ -278,15 +280,17 @@ export const HurricaneVisualizationStatic: StoryFn<typeof Animator> = () => {
 	}
 
 	return (
-		<Animator
-			frames={[sampleFrame]}
-			mode="map"
-			mapRegion="conus"
-			imageInfo={{ width: 1200, height: 800 }}
-			autoPlay={false}
-			interval={500}
-			startFrame={0}
-		/>
+		<div style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+			<Animator
+				frames={[sampleFrame]}
+				mode="map"
+				mapRegion="conus"
+				imageInfo={{ width: 1200, height: 800 }}
+				autoPlay={false}
+				interval={500}
+				startFrame={0}
+			/>
+		</div>
 	)
 }
 

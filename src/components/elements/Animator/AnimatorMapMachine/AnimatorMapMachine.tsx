@@ -229,17 +229,24 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				const validFrames: MapFrame[] = []
 
 				try {
+					console.log('[AnimatorMapMachine] Loading frames...', { totalFrames: frames.length })
 					for (const frame of frames) {
 						// Validate frame structure
 						if (frame && frame.id && frame.data) {
 							validFrames.push(frame)
+							console.log('[AnimatorMapMachine] Frame loaded:', {
+								id: frame.id,
+								hasData: !!frame.data,
+								dataType: frame.data?.type,
+								featureCount: frame.data?.features?.length || 0,
+							})
 						}
 					}
 
 					setLoadedFrames(validFrames)
-					console.log(`Loaded ${validFrames.length} map frames`)
+					console.log(`[AnimatorMapMachine] Loaded ${validFrames.length} map frames`)
 				} catch (error) {
-					console.error('Failed to load frames:', error)
+					console.error('[AnimatorMapMachine] Failed to load frames:', error)
 				} finally {
 					setIsLoading(false)
 				}
@@ -596,6 +603,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				// Add frame data as GeoJSON layer if present
 				// This renders features from tropical products data (forecast track, cone, warnings, etc.)
 				if (frame && frame.data) {
+					console.log('[AnimatorMapMachine] Adding frame data layer:', {
+						frameId: frame.id,
+						dataType: frame.data.type,
+						featureCount: frame.data.features?.length || 0,
+					})
 					baseLayers.push(
 						new GeoJsonLayer({
 							id: 'frame-data-layer',
@@ -683,6 +695,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				}
 			}
 
+			console.log('[AnimatorMapMachine] Layers created:', {
+				totalLayers: baseLayers.length,
+				layerIds: baseLayers.map((l: any) => l.id),
+			})
 			return baseLayers
 		}, [
 			loadedFrames,
