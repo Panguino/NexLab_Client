@@ -1,10 +1,10 @@
 'use client'
 
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
-import countiesData from '@/data/d3Map/counties.json'
 import countriesData from '@/data/d3Map/countries.json'
 import lakesData from '@/data/d3Map/lakes.json'
 import statesData from '@/data/d3Map/states.json'
+import worldData from '@/data/d3Map/world.json'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from 'deck.gl'
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
@@ -355,7 +355,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				// Using theme color grey2-grey16: Light mode: #d8d8d8 (216, 216, 216), Dark mode: #484848 (72, 72, 72)
 				new GeoJsonLayer({
 					id: 'world-layer',
-					data: countriesData as any,
+					data: worldData as any,
 					filled: true,
 					stroked: false,
 					getFillColor: () => worldColor as any,
@@ -391,62 +391,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					pickable: false,
 					updateTriggers: {
 						getFillColor: [oceanColor],
-					},
-				}),
-				// US County layer with alert colors
-				// Using countiesData as base, colors are mapped from frame data via county ID
-				// Light mode: #6b6b6b (107, 107, 107), Dark mode: #7a7a7a (122, 122, 122)
-				new GeoJsonLayer({
-					id: 'counties-layer',
-					data: countiesData as any,
-					filled: true,
-					stroked: true,
-					lineWidthMinPixels: 0.5,
-					lineWidthMaxPixels: 1,
-					getLineColor: (d: any) => {
-						// Get county ID from feature properties
-						let countyId = d.properties?.id || d.properties?.ID
-						if (!countyId && d.properties?.FIPS) {
-							const fipsMatch = d.properties.FIPS.match(/(\d{5})/)
-							countyId = fipsMatch ? fipsMatch[1] : null
-						}
-
-						// Highlight hovered county with white outline
-						if (hoveredCountyId && countyId === hoveredCountyId) {
-							return [255, 255, 255, 255] // White for hovered county
-						}
-
-						// Default county border color
-						return countyBorderColor as any
-					},
-					getLineWidth: () => 2,
-					getFillColor: (d: any) => {
-						// Get county ID from feature properties
-						let countyId = d.properties?.id || d.properties?.ID
-						if (!countyId && d.properties?.FIPS) {
-							const fipsMatch = d.properties.FIPS.match(/(\d{5})/)
-							countyId = fipsMatch ? fipsMatch[1] : null
-						}
-
-						// Check for animated color first (counties with 2+ alerts)
-						if (animatedColors && countyId && animatedColors[countyId]) {
-							return animatedColors[countyId]
-						}
-
-						// Look up alert color from frame data
-						if (currentFrameAlertMap && countyId && currentFrameAlertMap[countyId]) {
-							return currentFrameAlertMap[countyId].color
-						}
-
-						// Default grey for counties without alerts
-						return [200, 200, 200, 100]
-					},
-					opacity: 1,
-					pickable: false, // Disabled for performance - using manual hover detection
-					autoHighlight: false, // Disabled for performance - using manual hover detection
-					updateTriggers: {
-						getLineColor: [countyBorderColor, hoveredCountyId],
-						getFillColor: [currentFrameAlertMap, animatedColors], // Update colors when alert map or animated colors change
 					},
 				}),
 				// US States borders layer - separate layer for strokes
@@ -602,8 +546,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				const frame = loadedFrames[activeFrame]
 
 				// Add frame data as GeoJSON layer if present
-				// This renders features from tropical products data (forecast track, cone, etc.)
-				// WARNING POLYGONS are now rendered as colored regions instead (Phase 2)
+				// This renders features from tropical products data (forecast track, cone, warnings, etc.)
 				if (frame && frame.data) {
 					console.log('[AnimatorMapMachine] Adding frame data layer:', {
 						frameId: frame.id,
@@ -611,25 +554,12 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						featureCount: frame.data.features?.length || 0,
 					})
 
-					// Filter out warning polygons - they'll be rendered as colored regions instead
-					const nonWarningFeatures =
-						frame.data.features?.filter((f: any) => {
-							const type = f.properties?.type
-							// Exclude warning/watch polygons (HWA, TWA, HWR, TWR)
-							return type !== 'HWA' && type !== 'TWA' && type !== 'HWR' && type !== 'TWR'
-						}) || []
-
-					// Only add frame data layer if there are non-warning features
-					if (nonWarningFeatures.length > 0) {
-						const filteredData = {
-							type: 'FeatureCollection' as const,
-							features: nonWarningFeatures,
-						}
-
+					// Render all frame data features including warning/watch shapes
+					if (frame.data.features && frame.data.features.length > 0) {
 						baseLayers.push(
 							new GeoJsonLayer({
 								id: 'frame-data-layer',
-								data: filteredData as any,
+								data: frame.data as any,
 								stroked: true,
 								filled: true,
 								lineWidthMinPixels: 1,
@@ -637,6 +567,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 								getLineColor: (d: any) => {
 									// Color based on feature type
 									const type = d.properties?.type
+									if (type === 'HWA') return [255, 0, 0, 255] // Red for Hurricane Warning
+									if (type === 'TWA') return [255, 165, 0, 255] // Orange for Tropical Storm Warning
+									if (type === 'HWR') return [255, 0, 0, 255] // Red for Hurricane Watch
+									if (type === 'TWR') return [255, 165, 0, 255] // Orange for Tropical Storm Watch
 									if (type === 'Forecast Track') return [100, 100, 100, 255] // Gray
 									if (type === 'Best Track') return [150, 150, 150, 255] // Light gray
 									return [100, 100, 100, 255] // Default gray
@@ -644,6 +578,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 								getFillColor: (d: any) => {
 									// Fill color based on feature type
 									const type = d.properties?.type
+									if (type === 'HWA') return [255, 0, 0, 50] // Red with 20% opacity
+									if (type === 'TWA') return [255, 165, 0, 45] // Orange with 18% opacity
+									if (type === 'HWR') return [255, 0, 0, 0] // Transparent fill for watch
+									if (type === 'TWR') return [255, 165, 0, 0] // Transparent fill for watch
 									if (type === 'Cone of Uncertainty') return [100, 150, 255, 50] // Cone - Light blue 20% opacity
 									return [100, 100, 100, 0] // Default transparent
 								},
