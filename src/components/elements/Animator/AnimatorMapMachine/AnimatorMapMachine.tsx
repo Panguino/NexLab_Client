@@ -11,6 +11,7 @@ import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './AnimatorMapMachine.module.scss'
 import MapAlertTooltip from './components/MapAlertTooltip'
 import { StormTooltip } from './components/StormTooltip'
+import { useMultiAlertAnimation } from './hooks/useMultiAlertAnimation'
 import { createHurricaneLayer } from './layers/HurricaneLayer'
 import { createStormTrackLayer } from './layers/StormTrackLayer'
 import { IAnimatorMapMachineProps, MapFrame } from './types'
@@ -261,8 +262,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			// If frame.data is a FeatureCollection, extract alert info from features
 			if ('features' in frame.data && Array.isArray(frame.data.features)) {
 				const alertMap: Record<string, any> = {}
+
 				frame.data.features.forEach((feature: any) => {
 					const countyId = feature.properties?.id
+
 					if (countyId && feature.properties?.alertColor) {
 						alertMap[countyId] = {
 							color: feature.properties.alertColor,
@@ -271,6 +274,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						}
 					}
 				})
+
 				return alertMap
 			}
 
@@ -299,6 +303,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 			return {}
 		}, [loadedFrames, currentFrame])
+
+		// Use multi-alert animation hook for counties with 2+ alerts
+		const { animatedColors } = useMultiAlertAnimation(currentFrameAlertMap, true)
 
 		// Create layers with base map and current frame data
 		const layers = useMemo(() => {
@@ -413,6 +420,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							countyId = fipsMatch ? fipsMatch[1] : null
 						}
 
+						// Check for animated color first (counties with 2+ alerts)
+						if (animatedColors && countyId && animatedColors[countyId]) {
+							return animatedColors[countyId]
+						}
+
 						// Look up alert color from frame data
 						if (currentFrameAlertMap && countyId && currentFrameAlertMap[countyId]) {
 							return currentFrameAlertMap[countyId].color
@@ -426,7 +438,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					autoHighlight: false, // Disabled for performance - using manual hover detection
 					updateTriggers: {
 						getLineColor: [countyBorderColor, hoveredCountyId],
-						getFillColor: [currentFrameAlertMap], // Update colors when alert map changes
+						getFillColor: [currentFrameAlertMap, animatedColors], // Update colors when alert map or animated colors change
 					},
 				}),
 				// US States borders layer - separate layer for strokes
@@ -547,7 +559,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 										getLineWidth: () => 3, // Thicker outline for visibility
 										getFillColor: (d: any) => {
 											// Keep the original fill color (alert or default)
+											// Use animated color if available, otherwise use static alert color
 											const regionId = d.properties?.id || d.properties?.ID
+											if (animatedColors && regionId && animatedColors[regionId]) {
+												return animatedColors[regionId]
+											}
 											if (currentFrameAlertMap && regionId && currentFrameAlertMap[regionId]) {
 												return currentFrameAlertMap[regionId].color
 											}
@@ -561,7 +577,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 										pickable: false,
 										updateTriggers: {
 											getLineColor: [hoveredCountyId],
-											getFillColor: [currentFrameAlertMap, currentFrameCoastalAlertMap],
+											getFillColor: [currentFrameAlertMap, currentFrameCoastalAlertMap, animatedColors],
 										},
 									})
 								}
@@ -643,6 +659,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			currentFrameAlertMap,
 			currentFrameCoastalAlertMap,
 			hoveredCountyId,
+			animatedColors,
 		])
 
 		// Map bounds constraints (CONUS - Continental US)
@@ -676,10 +693,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 		const handleViewStateChange = (viewState: any) => {
 			const constrainedViewState = constrainViewState(viewState.viewState)
-
-			logInteraction(
-				`🖱️ DeckGL event - zoom: ${constrainedViewState.zoom.toFixed(2)} lat: ${constrainedViewState.latitude.toFixed(2)} lon: ${constrainedViewState.longitude.toFixed(2)}`,
-			)
 
 			// Call the callback to sync to global state
 			// This updates the mapZoomState in the Animator context

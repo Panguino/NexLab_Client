@@ -175,10 +175,6 @@ const AnimatorMapSizer = () => {
 	// Direct updates - no easing for mouse/touch events
 	const handleViewStateChange = useCallback(
 		(newViewState: MapViewState) => {
-			logInteraction(
-				`🖱️ Mouse interaction - zoom: ${newViewState.zoom.toFixed(2)} lat: ${newViewState.latitude.toFixed(2)} lon: ${newViewState.longitude.toFixed(2)}`,
-			)
-
 			// Update directly (no animation) for all mouse/touch interactions
 			setMapZoomState({
 				zoom: newViewState.zoom,

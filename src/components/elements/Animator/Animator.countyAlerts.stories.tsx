@@ -6,6 +6,7 @@
 
 import { getHazards } from '@/apollo/data/getHazards'
 import Providers from '@/components/providers/Providers/Providers'
+import { createMockCountyAlertFrames } from '@/util/dataCalls/alerts/createCountyAlertFrames'
 import {
 	createCoastalAlertGeoJSON,
 	createCountyAlertGeoJSON,
@@ -44,6 +45,35 @@ const meta: Meta<typeof Animator> = {
 export default meta
 
 /**
+ * Mock County Alerts - Test with Simulated Data
+ * Uses mock data with Summit County (49053) having 2+ alerts for testing animation
+ * No API required - perfect for testing and debugging
+ */
+export const MockCountyAlerts: StoryFn<typeof Animator> = () => {
+	const frames = createMockCountyAlertFrames()
+
+	return (
+		<Animator
+			frames={frames}
+			mode="map"
+			mapRegion="conus"
+			imageInfo={{ width: 1200, height: 800 }}
+			autoPlay={false}
+			interval={500}
+			startFrame={0}
+		/>
+	)
+}
+
+MockCountyAlerts.parameters = {
+	docs: {
+		description: {
+			story: 'Mock data with simulated county alerts including Summit County, Utah (49053) with 2+ alerts for testing multi-alert animation. No API required.',
+		},
+	},
+}
+
+/**
  * Real-Time Hazards - All Active Hazards
  * Fetches live hazard data from the /api/hazards endpoint
  * Displays all active weather hazards across CONUS on the map
@@ -57,20 +87,14 @@ export const RealTimeHazards: StoryFn<typeof Animator> = () => {
 		const fetchData = async () => {
 			try {
 				setIsLoading(true)
-				console.log('\n' + '='.repeat(80))
-				console.log('=== REAL-TIME HAZARDS - MAPPING DEBUG ===')
-				console.log('='.repeat(80))
 
 				const hazardsResponse = await fetchRealTimeHazards({ region: 'CONUS' })
-				console.log('Total hazards from API:', hazardsResponse.data?.length || 0)
 
 				// Filter to only active alerts (not expired)
 				const now = new Date()
 				const activeHazards = (hazardsResponse.data || []).filter((hazard) => {
 					return isAlertActiveAtTime(hazard, now)
 				})
-				console.log('Active hazards (not expired):', activeHazards.length)
-				console.log('Expired hazards filtered out:', (hazardsResponse.data?.length || 0) - activeHazards.length)
 
 				// Convert active hazards to county map
 				const activeHazardsResponse = {
@@ -78,28 +102,12 @@ export const RealTimeHazards: StoryFn<typeof Animator> = () => {
 					data: activeHazards,
 				}
 				const countyMap = parseHazardsToCountyMap(activeHazardsResponse)
-				console.log('Counties with hazards:', Object.keys(countyMap).length)
-				console.log('Sample county IDs:', Object.keys(countyMap).slice(0, 10))
-				console.log('Sample county map entry:', Object.entries(countyMap)[0])
 
 				// Create a single frame with all current hazards
 				const geoJSON = createCountyAlertGeoJSON(countyMap)
-				if ('features' in geoJSON) {
-					console.log('GeoJSON features:', geoJSON.features.length)
-					console.log('Features with alerts:', geoJSON.features.filter((f: any) => f.properties?.hasAlert).length)
-					console.log(
-						'Sample feature with alert:',
-						geoJSON.features.find((f: any) => f.properties?.hasAlert),
-					)
-					console.log(
-						'Sample feature without alert:',
-						geoJSON.features.find((f: any) => !f.properties?.hasAlert),
-					)
-				}
 
 				// Parse coastal/offshore hazards (using active hazards only)
 				const coastalMap = parseHazardsToCoastalMap(activeHazardsResponse)
-				console.log('Coastal regions with active hazards:', Object.keys(coastalMap).length)
 
 				// Fetch coastal geometry from GraphQL API
 				let coastalGeoJSON: any = null
@@ -148,7 +156,6 @@ export const RealTimeHazards: StoryFn<typeof Animator> = () => {
 
 					if (coastalFeatures.length > 0) {
 						coastalGeoJSON = createCoastalAlertGeoJSON(coastalFeatures, coastalMap)
-						console.log('Coastal GeoJSON features:', coastalGeoJSON.features.length)
 					}
 				} catch (err) {
 					console.error('Error fetching coastal geometry from GraphQL:', err)
@@ -167,16 +174,6 @@ export const RealTimeHazards: StoryFn<typeof Animator> = () => {
 						coastalRegionsAffected: Object.keys(coastalMap).length,
 					},
 				}
-
-				if ('features' in geoJSON) {
-					console.log('Frame created:', {
-						id: frame.id,
-						features: geoJSON.features.length,
-						featuresWithAlerts: geoJSON.features.filter((f: any) => f.properties?.hasAlert).length,
-						metadata: frame.metadata,
-					})
-				}
-				console.log('='.repeat(80) + '\n')
 
 				setFrames([frame])
 				setError(null)
@@ -240,10 +237,6 @@ export const FrostAdvisories: StoryFn<typeof Animator> = () => {
 				// Filter for Frost Advisories only
 				const frostAdvisories =
 					hazardsResponse.data?.filter((hazard) => hazard.event?.toLowerCase().includes('frost') && hazard.hazardLevel === 'ADVISORY') || []
-
-				console.log('Total hazards:', hazardsResponse.data?.length)
-				console.log('Frost Advisories found:', frostAdvisories.length)
-				console.log('Frost Advisories:', frostAdvisories)
 
 				// Create a filtered response
 				const filteredResponse = {
@@ -359,13 +352,9 @@ export const HistoricalTimeline: StoryFn<typeof Animator> = () => {
 		const fetchData = async () => {
 			try {
 				setIsLoading(true)
-				console.log('\n' + '='.repeat(80))
-				console.log('=== HISTORICAL TIMELINE - GENERATING FRAMES ===')
-				console.log('='.repeat(80))
 
 				// Fetch current hazards
 				const hazardsResponse = await fetchRealTimeHazards({ region: 'CONUS' })
-				console.log('Total hazards from API:', hazardsResponse.data?.length || 0)
 
 				// Fetch coastal geometry once
 				const coastalFeatures: any[] = []
@@ -422,8 +411,6 @@ export const HistoricalTimeline: StoryFn<typeof Animator> = () => {
 						return isAlertActiveAtTime(hazard, frameTime)
 					})
 
-					console.log(`Frame ${i} (${frameTime.toISOString()}): ${timeBasedHazards.length} hazards`)
-
 					// Create county map for this frame
 					const filteredResponse = {
 						...hazardsResponse,
@@ -453,9 +440,6 @@ export const HistoricalTimeline: StoryFn<typeof Animator> = () => {
 
 					generatedFrames.push(frame)
 				}
-
-				console.log(`Generated ${generatedFrames.length} frames`)
-				console.log('='.repeat(80) + '\n')
 
 				setFrames(generatedFrames)
 				setError(null)

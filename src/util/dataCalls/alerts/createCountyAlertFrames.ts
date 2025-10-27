@@ -71,51 +71,136 @@ export const createMockCountyAlertFrames = (): MapFrame[] => {
 		{
 			'48001': {
 				color: [255, 0, 0, 255], // Red - Tornado Warning
-				alerts: [{ event: 'Tornado Warning', headline: 'Tornado Warning for Anderson County' }],
+				alerts: [
+					{ event: 'Tornado Warning', headline: 'Tornado Warning for Anderson County', hazardType: 'Tornado', color: [255, 0, 0, 255] },
+					{
+						event: 'Severe Thunderstorm Watch',
+						headline: 'Severe Watch for Anderson County',
+						hazardType: 'Severe Thunderstorm',
+						color: [50, 150, 255, 255],
+					},
+				],
 				headline: 'Tornado Warning for Anderson County',
 			},
 			'40001': {
 				color: [50, 150, 255, 255], // Light blue - Severe Watch
-				alerts: [{ event: 'Severe Thunderstorm Watch', headline: 'Severe Watch for Adair County' }],
+				alerts: [
+					{
+						event: 'Severe Thunderstorm Watch',
+						headline: 'Severe Watch for Adair County',
+						hazardType: 'Severe Thunderstorm',
+						color: [50, 150, 255, 255],
+					},
+				],
 				headline: 'Severe Watch for Adair County',
 			},
+			'49053': {
+				color: [255, 165, 0, 255], // Orange - Winter Storm Watch
+				alerts: [
+					{
+						event: 'Winter Storm Watch',
+						headline: 'Winter Storm Watch for Summit County',
+						hazardType: 'Winter Storm',
+						color: [0, 180, 255, 255],
+					},
+					{ event: 'Wind Advisory', headline: 'Wind Advisory for Summit County', hazardType: 'Wind', color: [255, 180, 0, 255] },
+				],
+				headline: 'Winter Storm Watch for Summit County',
+			},
 		},
-		// Frame 2: More alerts
+		// Frame 2: More alerts with multiple per county
 		{
 			'48001': {
 				color: [255, 0, 0, 255], // Red - Tornado Warning
-				alerts: [{ event: 'Tornado Warning', headline: 'Tornado Warning for Anderson County' }],
+				alerts: [
+					{ event: 'Tornado Warning', headline: 'Tornado Warning for Anderson County', hazardType: 'Tornado', color: [255, 0, 0, 255] },
+					{
+						event: 'Severe Thunderstorm Watch',
+						headline: 'Severe Watch for Anderson County',
+						hazardType: 'Severe Thunderstorm',
+						color: [50, 150, 255, 255],
+					},
+					{ event: 'Fire Weather Advisory', headline: 'Fire Advisory for Anderson County', hazardType: 'Fire', color: [232, 100, 0, 255] },
+				],
 				headline: 'Tornado Warning for Anderson County',
 			},
 			'40001': {
 				color: [0, 100, 225, 255], // Blue - Severe Warning
-				alerts: [{ event: 'Severe Thunderstorm Warning', headline: 'Severe Warning for Adair County' }],
+				alerts: [
+					{
+						event: 'Severe Thunderstorm Warning',
+						headline: 'Severe Warning for Adair County',
+						hazardType: 'Severe Thunderstorm',
+						color: [0, 100, 225, 255],
+					},
+					{ event: 'Winter Storm Watch', headline: 'Winter Watch for Adair County', hazardType: 'Winter Storm', color: [0, 180, 255, 255] },
+				],
 				headline: 'Severe Warning for Adair County',
 			},
 			'20001': {
 				color: [232, 100, 0, 255], // Dark orange - Fire Advisory
-				alerts: [{ event: 'Fire Weather Advisory', headline: 'Fire Advisory for Allen County' }],
+				alerts: [
+					{ event: 'Fire Weather Advisory', headline: 'Fire Advisory for Allen County', hazardType: 'Fire', color: [232, 100, 0, 255] },
+				],
 				headline: 'Fire Advisory for Allen County',
+			},
+			'49053': {
+				color: [255, 165, 0, 255], // Orange - Winter Storm Watch
+				alerts: [
+					{
+						event: 'Winter Storm Watch',
+						headline: 'Winter Storm Watch for Summit County',
+						hazardType: 'Winter Storm',
+						color: [0, 180, 255, 255],
+					},
+					{ event: 'Wind Advisory', headline: 'Wind Advisory for Summit County', hazardType: 'Wind', color: [255, 180, 0, 255] },
+				],
+				headline: 'Winter Storm Watch for Summit County',
 			},
 		},
 		// Frame 3: Alerts clearing
 		{
 			'48001': {
 				color: [255, 100, 100, 255], // Light red - Tornado Watch
-				alerts: [{ event: 'Tornado Watch', headline: 'Tornado Watch for Anderson County' }],
+				alerts: [
+					{ event: 'Tornado Watch', headline: 'Tornado Watch for Anderson County', hazardType: 'Tornado', color: [255, 100, 100, 255] },
+					{
+						event: 'Severe Thunderstorm Watch',
+						headline: 'Severe Watch for Anderson County',
+						hazardType: 'Severe Thunderstorm',
+						color: [50, 150, 255, 255],
+					},
+				],
 				headline: 'Tornado Watch for Anderson County',
 			},
 			'20001': {
 				color: [232, 100, 0, 255], // Dark orange - Fire Advisory
-				alerts: [{ event: 'Fire Weather Advisory', headline: 'Fire Advisory for Allen County' }],
+				alerts: [
+					{ event: 'Fire Weather Advisory', headline: 'Fire Advisory for Allen County', hazardType: 'Fire', color: [232, 100, 0, 255] },
+				],
 				headline: 'Fire Advisory for Allen County',
+			},
+			'49053': {
+				color: [255, 165, 0, 255], // Orange - Winter Storm Watch
+				alerts: [
+					{
+						event: 'Winter Storm Watch',
+						headline: 'Winter Storm Watch for Summit County',
+						hazardType: 'Winter Storm',
+						color: [0, 180, 255, 255],
+					},
+					{ event: 'Wind Advisory', headline: 'Wind Advisory for Summit County', hazardType: 'Wind', color: [255, 180, 0, 255] },
+				],
+				headline: 'Winter Storm Watch for Summit County',
 			},
 		},
 		// Frame 4: Most alerts cleared
 		{
 			'20001': {
 				color: [232, 100, 0, 255], // Dark orange - Fire Advisory
-				alerts: [{ event: 'Fire Weather Advisory', headline: 'Fire Advisory for Allen County' }],
+				alerts: [
+					{ event: 'Fire Weather Advisory', headline: 'Fire Advisory for Allen County', hazardType: 'Fire', color: [232, 100, 0, 255] },
+				],
 				headline: 'Fire Advisory for Allen County',
 			},
 		},
