@@ -1,16 +1,16 @@
 import { StoryFn } from '@storybook/react'
 import { useEffect, useState } from 'react'
-import Animator from './Animator'
+import { Animator } from './Animator'
 import { MapFrame } from './AnimatorMapMachine/types'
 import {
-	fetchTropicalProducts,
-	getLatestAdvisory,
-	forecastTrackToGeoJSON,
-	forecastPointsToGeoJSON,
-	coneToGeoJSON,
-	watchWarningsToGeoJSON,
-	bestTrackToGeoJSON,
 	bestTrackPointsToGeoJSON,
+	bestTrackToGeoJSON,
+	coneToGeoJSON,
+	fetchTropicalProducts,
+	forecastPointsToGeoJSON,
+	forecastTrackToGeoJSON,
+	getLatestAdvisory,
+	watchWarningsToGeoJSON,
 } from './AnimatorMapMachine/utils/tropicalProductsParser'
 
 export default {
@@ -256,4 +256,3 @@ HurricaneVisualizationStatic.parameters = {
 		},
 	},
 }
-
