@@ -4,7 +4,7 @@
  * Uses point-in-polygon and polygon overlap detection for performance
  */
 
-import { booleanOverlap, Feature, Polygon, FeatureCollection } from '@turf/turf'
+import { booleanOverlap, Feature, FeatureCollection, Polygon } from '@turf/turf'
 
 export interface AffectedRegion {
 	id: string
@@ -25,13 +25,18 @@ export interface AffectedRegion {
 export function detectAffectedRegions(
 	warningPolygon: Feature<Polygon>,
 	worldGeoJSON: FeatureCollection,
-	warningType: 'HWA' | 'TWA' | 'HWR' | 'TWR'
+	warningType: 'HWA' | 'TWA' | 'HWR' | 'TWR',
 ): AffectedRegion[] {
 	const affected: AffectedRegion[] = []
+	let checkedCount = 0
+	let errorCount = 0
 
 	try {
+		console.log('[regionDetection] Checking', worldGeoJSON.features.length, 'regions for overlap with', warningType)
+
 		for (const region of worldGeoJSON.features) {
 			try {
+				checkedCount++
 				// Only check if geometry exists and is valid
 				if (!region.geometry || region.geometry.type !== 'Polygon') {
 					continue
@@ -46,13 +51,16 @@ export function detectAffectedRegions(
 						type: 'country',
 						warningType,
 					})
+					console.log('[regionDetection] Found affected region:', region.properties?.name)
 				}
 			} catch (error) {
+				errorCount++
 				// Skip regions that cause errors (invalid geometry, etc.)
 				// This prevents one bad region from breaking the entire detection
 				continue
 			}
 		}
+		console.log('[regionDetection] Checked', checkedCount, 'regions, found', affected.length, 'affected, errors:', errorCount)
 	} catch (error) {
 		console.error('[regionDetection] Error detecting affected regions:', error)
 	}
@@ -70,7 +78,7 @@ export function detectAffectedRegions(
  */
 export function detectAllAffectedRegions(
 	warningPolygons: Array<{ polygon: Feature<Polygon>; type: 'HWA' | 'TWA' | 'HWR' | 'TWR' }>,
-	worldGeoJSON: FeatureCollection
+	worldGeoJSON: FeatureCollection,
 ): Map<string, 'HWA' | 'TWA' | 'HWR' | 'TWR'> {
 	const regionMap = new Map<string, 'HWA' | 'TWA' | 'HWR' | 'TWR'>()
 
@@ -118,7 +126,7 @@ function getSeverity(type: 'HWA' | 'TWA' | 'HWR' | 'TWR'): number {
  */
 export function createAffectedRegionsGeoJSON(
 	affectedRegionMap: Map<string, 'HWA' | 'TWA' | 'HWR' | 'TWR'>,
-	worldGeoJSON: FeatureCollection
+	worldGeoJSON: FeatureCollection,
 ): FeatureCollection {
 	const features = worldGeoJSON.features
 		.filter((region) => {
@@ -146,9 +154,10 @@ export function createAffectedRegionsGeoJSON(
 /**
  * Get color for a warning type
  */
-export function getWarningColor(
-	warningType: 'HWA' | 'TWA' | 'HWR' | 'TWR' | undefined
-): { fill: [number, number, number, number]; outline: [number, number, number, number] } {
+export function getWarningColor(warningType: 'HWA' | 'TWA' | 'HWR' | 'TWR' | undefined): {
+	fill: [number, number, number, number]
+	outline: [number, number, number, number]
+} {
 	switch (warningType) {
 		case 'HWA':
 			// Hurricane Warning - Red fill, 40% opacity
@@ -181,4 +190,3 @@ export function getWarningColor(
 			}
 	}
 }
-
