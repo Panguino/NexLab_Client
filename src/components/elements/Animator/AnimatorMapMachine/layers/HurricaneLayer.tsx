@@ -2,6 +2,7 @@
  * HurricaneLayer Component
  * Renders tropical storm/hurricane icons on the map using DeckGL IconLayer
  * Supports hover tooltips and intensity-based styling
+ * Also renders forecast tracks, cone of uncertainty, and watch/warning areas
  */
 
 import { IconLayer } from '@deck.gl/layers'
@@ -173,4 +174,147 @@ export function getHurricaneIconImage(): HTMLImageElement {
 		cachedIconImage = img
 	}
 	return cachedIconImage
+}
+
+/**
+ * Create a DeckGL LineLayer for the forecast track
+ * Color-coded by Saffir-Simpson category
+ */
+export function createForecastTrackLayer(track: ForecastTrack): LineLayer {
+	const geoJSON = forecastTrackToGeoJSON(track)
+
+	return new LineLayer({
+		id: 'forecast-track-layer',
+		data: [geoJSON],
+		pickable: true,
+		getSourcePosition: (d: any) => d.geometry.coordinates[0],
+		getTargetPosition: (d: any) => d.geometry.coordinates[1],
+		getColor: () => [100, 100, 100, 255], // Gray line
+		getWidth: 3,
+		widthMinPixels: 2,
+		widthMaxPixels: 8,
+	})
+}
+
+/**
+ * Create a DeckGL GeoJsonLayer for forecast points
+ * Shows each forecast point with intensity-based styling
+ */
+export function createForecastPointsLayer(track: ForecastTrack): GeoJsonLayer {
+	const geoJSON = forecastPointsToGeoJSON(track)
+
+	return new GeoJsonLayer({
+		id: 'forecast-points-layer',
+		data: geoJSON,
+		pickable: true,
+		pointRadiusMinPixels: 4,
+		pointRadiusMaxPixels: 15,
+		getPointRadius: (f: any) => {
+			const maxwind = f.properties.maxwind
+			return 4 + (maxwind / 150) * 11 // Scale from 4 to 15 pixels
+		},
+		getFillColor: (f: any) => {
+			const ss = f.properties.ss
+			return getCategoryColor(ss)
+		},
+		getLineColor: [255, 255, 255, 255],
+		getLineWidth: 2,
+		lineWidthMinPixels: 1,
+		lineWidthMaxPixels: 3,
+		updateTriggers: {
+			getPointRadius: [track],
+			getFillColor: [track],
+		},
+	})
+}
+
+/**
+ * Create a DeckGL PolygonLayer for the cone of uncertainty
+ */
+export function createConeLayer(cone: any[]): PolygonLayer {
+	const geoJSON = coneToGeoJSON(cone)
+
+	return new PolygonLayer({
+		id: 'cone-layer',
+		data: [geoJSON],
+		pickable: true,
+		stroked: true,
+		filled: true,
+		getFillColor: [100, 150, 255, 50], // Light blue with 20% opacity
+		getLineColor: [100, 150, 255, 200],
+		getLineWidth: 2,
+		lineWidthMinPixels: 1,
+		lineWidthMaxPixels: 3,
+	})
+}
+
+/**
+ * Create a DeckGL PolygonLayer for watch/warning areas
+ */
+export function createWatchWarningLayer(warnings: any[]): PolygonLayer {
+	const geoJSON = watchWarningsToGeoJSON(warnings)
+
+	return new PolygonLayer({
+		id: 'watch-warning-layer',
+		data: geoJSON,
+		pickable: true,
+		stroked: true,
+		filled: true,
+		getFillColor: (f: any) => {
+			const colors = getWatchWarningColors(f.properties.type)
+			return colors.fill
+		},
+		getLineColor: (f: any) => {
+			const colors = getWatchWarningColors(f.properties.type)
+			return colors.outline
+		},
+		getLineWidth: 2,
+		lineWidthMinPixels: 1,
+		lineWidthMaxPixels: 3,
+		updateTriggers: {
+			getFillColor: [warnings],
+			getLineColor: [warnings],
+		},
+	})
+}
+
+/**
+ * Create a DeckGL LineLayer for best track (historical path)
+ */
+export function createBestTrackLayer(bestTrack: Record<string, any>): LineLayer {
+	const geoJSON = bestTrackToGeoJSON(bestTrack)
+
+	return new LineLayer({
+		id: 'best-track-layer',
+		data: [geoJSON],
+		pickable: true,
+		getSourcePosition: (d: any) => d.geometry.coordinates[0],
+		getTargetPosition: (d: any) => d.geometry.coordinates[1],
+		getColor: [150, 150, 150, 200], // Gray with some transparency
+		getWidth: 2,
+		widthMinPixels: 1,
+		widthMaxPixels: 4,
+		dashArray: [5, 5], // Dashed line for historical
+	})
+}
+
+/**
+ * Create a DeckGL GeoJsonLayer for best track points
+ */
+export function createBestTrackPointsLayer(bestTrack: Record<string, any>): GeoJsonLayer {
+	const geoJSON = bestTrackPointsToGeoJSON(bestTrack)
+
+	return new GeoJsonLayer({
+		id: 'best-track-points-layer',
+		data: geoJSON,
+		pickable: true,
+		pointRadiusMinPixels: 3,
+		pointRadiusMaxPixels: 8,
+		getPointRadius: 4,
+		getFillColor: [150, 150, 150, 200],
+		getLineColor: [100, 100, 100, 255],
+		getLineWidth: 1,
+		lineWidthMinPixels: 1,
+		lineWidthMaxPixels: 2,
+	})
 }
