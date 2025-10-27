@@ -741,12 +741,12 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 									id: 'forecast-points-layer',
 									data: forecastPointsGeoJSON as any,
 									pickable: true,
-									pointRadiusMinPixels: 6,
-									pointRadiusMaxPixels: 20,
+									pointRadiusMinPixels: 5,
+									pointRadiusMaxPixels: 16,
 									getPointRadius: (f: any) => {
 										const maxwind = f.properties?.maxwind || 0
-										// Scale from 8 to 20 pixels based on wind speed
-										return 8 + (maxwind / 150) * 12
+										// Scale from 6.4 to 16 pixels based on wind speed (20% smaller)
+										return 6.4 + (maxwind / 150) * 9.6
 									},
 									getFillColor: (f: any) => {
 										const ss = f.properties?.ss || 0
@@ -762,9 +762,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 										return colors[ss] || [100, 100, 100, 255]
 									},
 									getLineColor: [255, 255, 255, 255],
-									getLineWidth: 3,
-									lineWidthMinPixels: 2,
-									lineWidthMaxPixels: 4,
+									getLineWidth: 1.5,
+									lineWidthMinPixels: 1,
+									lineWidthMaxPixels: 2,
 									updateTriggers: {
 										getPointRadius: [frame.data],
 										getFillColor: [frame.data],
