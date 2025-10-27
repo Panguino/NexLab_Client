@@ -602,46 +602,60 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				const frame = loadedFrames[activeFrame]
 
 				// Add frame data as GeoJSON layer if present
-				// This renders features from tropical products data (forecast track, cone, warnings, etc.)
+				// This renders features from tropical products data (forecast track, cone, etc.)
+				// WARNING POLYGONS are now rendered as colored regions instead (Phase 2)
 				if (frame && frame.data) {
 					console.log('[AnimatorMapMachine] Adding frame data layer:', {
 						frameId: frame.id,
 						dataType: frame.data.type,
 						featureCount: frame.data.features?.length || 0,
 					})
-					baseLayers.push(
-						new GeoJsonLayer({
-							id: 'frame-data-layer',
-							data: frame.data as any,
-							stroked: true,
-							filled: true,
-							lineWidthMinPixels: 1,
-							lineWidthMaxPixels: 3,
-							getLineColor: (d: any) => {
-								// Color based on feature type
-								const type = d.properties?.type
-								if (type === 'HWA') return [255, 0, 0, 255] // Hurricane Warning - Red
-								if (type === 'TWA') return [255, 165, 0, 255] // Tropical Storm Warning - Orange
-								if (type === 'HWR') return [255, 0, 0, 255] // Hurricane Watch - Red
-								if (type === 'TWR') return [255, 165, 0, 255] // Tropical Storm Watch - Orange
-								return [100, 100, 100, 255] // Default gray
-							},
-							getFillColor: (d: any) => {
-								// Fill color based on feature type
-								const type = d.properties?.type
-								if (type === 'HWA') return [255, 0, 0, 76] // Hurricane Warning - Red 30% opacity
-								if (type === 'TWA') return [255, 165, 0, 64] // Tropical Storm Warning - Orange 25% opacity
-								if (type === 'Cone of Uncertainty') return [100, 150, 255, 50] // Cone - Light blue 20% opacity
-								return [100, 100, 100, 0] // Default transparent
-							},
-							opacity: 1,
-							pickable: false,
-							updateTriggers: {
-								getLineColor: [frame.data],
-								getFillColor: [frame.data],
-							},
-						}),
-					)
+
+					// Filter out warning polygons - they'll be rendered as colored regions instead
+					const nonWarningFeatures =
+						frame.data.features?.filter((f: any) => {
+							const type = f.properties?.type
+							// Exclude warning/watch polygons (HWA, TWA, HWR, TWR)
+							return type !== 'HWA' && type !== 'TWA' && type !== 'HWR' && type !== 'TWR'
+						}) || []
+
+					// Only add frame data layer if there are non-warning features
+					if (nonWarningFeatures.length > 0) {
+						const filteredData = {
+							type: 'FeatureCollection' as const,
+							features: nonWarningFeatures,
+						}
+
+						baseLayers.push(
+							new GeoJsonLayer({
+								id: 'frame-data-layer',
+								data: filteredData as any,
+								stroked: true,
+								filled: true,
+								lineWidthMinPixels: 1,
+								lineWidthMaxPixels: 3,
+								getLineColor: (d: any) => {
+									// Color based on feature type
+									const type = d.properties?.type
+									if (type === 'Forecast Track') return [100, 100, 100, 255] // Gray
+									if (type === 'Best Track') return [150, 150, 150, 255] // Light gray
+									return [100, 100, 100, 255] // Default gray
+								},
+								getFillColor: (d: any) => {
+									// Fill color based on feature type
+									const type = d.properties?.type
+									if (type === 'Cone of Uncertainty') return [100, 150, 255, 50] // Cone - Light blue 20% opacity
+									return [100, 100, 100, 0] // Default transparent
+								},
+								opacity: 1,
+								pickable: false,
+								updateTriggers: {
+									getLineColor: [frame.data],
+									getFillColor: [frame.data],
+								},
+							}),
+						)
+					}
 
 					// Phase 2: Add region alert layer for affected countries/regions
 					// Only render regions that are actually affected (performance optimized)
