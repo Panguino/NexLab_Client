@@ -2,9 +2,9 @@
 
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
 import countiesData from '@/data/d3Map/counties.json'
+import countriesData from '@/data/d3Map/countries.json'
 import lakesData from '@/data/d3Map/lakes.json'
 import statesData from '@/data/d3Map/states.json'
-import worldData from '@/data/d3Map/world.json'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from 'deck.gl'
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
@@ -355,7 +355,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				// Using theme color grey2-grey16: Light mode: #d8d8d8 (216, 216, 216), Dark mode: #484848 (72, 72, 72)
 				new GeoJsonLayer({
 					id: 'world-layer',
-					data: worldData as any,
+					data: countriesData as any,
 					filled: true,
 					stroked: false,
 					getFillColor: () => worldColor as any,
@@ -686,14 +686,14 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						// Detect affected regions
 						if (warningPolygons.length > 0) {
 							console.log('[AnimatorMapMachine] Starting region detection...')
-							const affectedRegionMap = detectAllAffectedRegions(warningPolygons, worldData as any)
+							const affectedRegionMap = detectAllAffectedRegions(warningPolygons, countriesData as any)
 
 							console.log('[AnimatorMapMachine] Affected regions detected:', affectedRegionMap.size)
 							if (affectedRegionMap.size > 0) {
 								console.log('[AnimatorMapMachine] Affected region IDs:', Array.from(affectedRegionMap.keys()).slice(0, 5))
 
 								// Create GeoJSON with only affected regions
-								const affectedRegionsGeoJSON = createAffectedRegionsGeoJSON(affectedRegionMap, worldData as any)
+								const affectedRegionsGeoJSON = createAffectedRegionsGeoJSON(affectedRegionMap, countriesData as any)
 								console.log('[AnimatorMapMachine] Affected regions GeoJSON features:', affectedRegionsGeoJSON.features.length)
 
 								// Add region alert layer

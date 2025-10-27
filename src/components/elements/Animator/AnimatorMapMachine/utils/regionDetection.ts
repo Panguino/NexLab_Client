@@ -46,12 +46,12 @@ export function detectAffectedRegions(
 				// This is more efficient than checking every point
 				if (booleanOverlap(warningPolygon, region as Feature<Polygon>)) {
 					affected.push({
-						id: region.properties?.id || region.properties?.name || 'unknown',
-						name: region.properties?.name || 'Unknown Region',
+						id: region.properties?.NAME || region.properties?.id || 'unknown',
+						name: region.properties?.NAME || 'Unknown Region',
 						type: 'country',
 						warningType,
 					})
-					console.log('[regionDetection] Found affected region:', region.properties?.name)
+					console.log('[regionDetection] Found affected region:', region.properties?.NAME)
 				}
 			} catch (error) {
 				errorCount++
@@ -134,7 +134,7 @@ export function createAffectedRegionsGeoJSON(
 			return affectedRegionMap.has(regionId)
 		})
 		.map((region) => {
-			const regionId = region.properties?.id || region.properties?.name
+			const regionId = region.properties?.NAME || region.properties?.id
 			const warningType = affectedRegionMap.get(regionId)
 			return {
 				...region,
