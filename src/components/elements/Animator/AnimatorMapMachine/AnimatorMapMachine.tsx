@@ -593,6 +593,44 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
 				const frame = loadedFrames[activeFrame]
 
+				// Add frame data as GeoJSON layer if present
+				// This renders features from tropical products data (forecast track, cone, warnings, etc.)
+				if (frame && frame.data) {
+					baseLayers.push(
+						new GeoJsonLayer({
+							id: 'frame-data-layer',
+							data: frame.data as any,
+							stroked: true,
+							filled: true,
+							lineWidthMinPixels: 1,
+							lineWidthMaxPixels: 3,
+							getLineColor: (d: any) => {
+								// Color based on feature type
+								const type = d.properties?.type
+								if (type === 'HWA') return [255, 0, 0, 255] // Hurricane Warning - Red
+								if (type === 'TWA') return [255, 165, 0, 255] // Tropical Storm Warning - Orange
+								if (type === 'HWR') return [255, 0, 0, 255] // Hurricane Watch - Red
+								if (type === 'TWR') return [255, 165, 0, 255] // Tropical Storm Watch - Orange
+								return [100, 100, 100, 255] // Default gray
+							},
+							getFillColor: (d: any) => {
+								// Fill color based on feature type
+								const type = d.properties?.type
+								if (type === 'HWA') return [255, 0, 0, 76] // Hurricane Warning - Red 30% opacity
+								if (type === 'TWA') return [255, 165, 0, 64] // Tropical Storm Warning - Orange 25% opacity
+								if (type === 'Cone of Uncertainty') return [100, 150, 255, 50] // Cone - Light blue 20% opacity
+								return [100, 100, 100, 0] // Default transparent
+							},
+							opacity: 1,
+							pickable: false,
+							updateTriggers: {
+								getLineColor: [frame.data],
+								getFillColor: [frame.data],
+							},
+						}),
+					)
+				}
+
 				// Add overlays if present
 				if (frame && frame.overlays) {
 					frame.overlays.forEach((overlay) => {

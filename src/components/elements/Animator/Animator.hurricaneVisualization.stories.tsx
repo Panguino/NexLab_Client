@@ -68,6 +68,8 @@ export const HurricaneVisualization: StoryFn<typeof Animator> = () => {
 				// Add cone of uncertainty
 				if (cone && cone.length > 0) {
 					const coneGeoJSON = coneToGeoJSON(cone)
+					// Add type property for styling
+					coneGeoJSON.properties = { ...coneGeoJSON.properties, type: 'Cone of Uncertainty' }
 					features.push(coneGeoJSON)
 				}
 
@@ -84,6 +86,11 @@ export const HurricaneVisualization: StoryFn<typeof Animator> = () => {
 				// Add watch/warning areas
 				if (ww && ww.length > 0) {
 					const watchWarningGeoJSON = watchWarningsToGeoJSON(ww)
+					// Ensure each feature has type property for styling
+					watchWarningGeoJSON.features.forEach((feature: any) => {
+						if (!feature.properties) feature.properties = {}
+						feature.properties.type = feature.properties.type || 'Unknown'
+					})
 					features.push(...watchWarningGeoJSON.features)
 				}
 
@@ -184,7 +191,7 @@ export const HurricaneVisualizationStatic: StoryFn<typeof Animator> = () => {
 				// Best track line
 				{
 					type: 'Feature',
-					properties: { name: 'Best Track' },
+					properties: { name: 'Best Track', type: 'BestTrack' },
 					geometry: {
 						type: 'LineString',
 						coordinates: [
@@ -198,7 +205,7 @@ export const HurricaneVisualizationStatic: StoryFn<typeof Animator> = () => {
 				// Forecast track line
 				{
 					type: 'Feature',
-					properties: { stormname: 'Hurricane Melissa', advisnum: '25A' },
+					properties: { stormname: 'Hurricane Melissa', advisnum: '25A', type: 'ForecastTrack' },
 					geometry: {
 						type: 'LineString',
 						coordinates: [
@@ -213,7 +220,7 @@ export const HurricaneVisualizationStatic: StoryFn<typeof Animator> = () => {
 				// Cone of uncertainty
 				{
 					type: 'Feature',
-					properties: { name: 'Cone of Uncertainty' },
+					properties: { name: 'Cone of Uncertainty', type: 'Cone of Uncertainty' },
 					geometry: {
 						type: 'Polygon',
 						coordinates: [
@@ -223,6 +230,40 @@ export const HurricaneVisualizationStatic: StoryFn<typeof Animator> = () => {
 								[-77.5, 17.5],
 								[-77.0, 17.0],
 								[-78.0, 16.0],
+							],
+						],
+					},
+				},
+				// Sample hurricane warning area
+				{
+					type: 'Feature',
+					properties: { type: 'HWA', name: 'Hurricane Warning Area' },
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[-76.5, 18.5],
+								[-76.0, 18.5],
+								[-76.0, 19.0],
+								[-76.5, 19.0],
+								[-76.5, 18.5],
+							],
+						],
+					},
+				},
+				// Sample tropical storm warning area
+				{
+					type: 'Feature',
+					properties: { type: 'TWA', name: 'Tropical Storm Warning Area' },
+					geometry: {
+						type: 'Polygon',
+						coordinates: [
+							[
+								[-75.5, 19.5],
+								[-75.0, 19.5],
+								[-75.0, 20.0],
+								[-75.5, 20.0],
+								[-75.5, 19.5],
 							],
 						],
 					},
