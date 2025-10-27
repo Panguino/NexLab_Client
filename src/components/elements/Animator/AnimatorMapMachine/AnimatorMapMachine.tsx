@@ -674,15 +674,27 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							}
 						}
 
+						console.log('[AnimatorMapMachine] Warning polygons found:', warningPolygons.length)
+						if (warningPolygons.length > 0) {
+							console.log(
+								'[AnimatorMapMachine] Warning polygon types:',
+								warningPolygons.map((w) => w.type),
+							)
+							console.log('[AnimatorMapMachine] First warning polygon:', warningPolygons[0].polygon.geometry?.type)
+						}
+
 						// Detect affected regions
 						if (warningPolygons.length > 0) {
+							console.log('[AnimatorMapMachine] Starting region detection...')
 							const affectedRegionMap = detectAllAffectedRegions(warningPolygons, worldData as any)
 
+							console.log('[AnimatorMapMachine] Affected regions detected:', affectedRegionMap.size)
 							if (affectedRegionMap.size > 0) {
-								console.log('[AnimatorMapMachine] Affected regions detected:', affectedRegionMap.size)
+								console.log('[AnimatorMapMachine] Affected region IDs:', Array.from(affectedRegionMap.keys()).slice(0, 5))
 
 								// Create GeoJSON with only affected regions
 								const affectedRegionsGeoJSON = createAffectedRegionsGeoJSON(affectedRegionMap, worldData as any)
+								console.log('[AnimatorMapMachine] Affected regions GeoJSON features:', affectedRegionsGeoJSON.features.length)
 
 								// Add region alert layer
 								baseLayers.push(
@@ -709,7 +721,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 										},
 									}),
 								)
+							} else {
+								console.log('[AnimatorMapMachine] No affected regions found!')
 							}
+						} else {
+							console.log('[AnimatorMapMachine] No warning polygons found in frame data')
 						}
 					} catch (error) {
 						console.error('[AnimatorMapMachine] Error creating region alerts layer:', error)
