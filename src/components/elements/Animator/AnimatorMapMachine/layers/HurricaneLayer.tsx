@@ -199,6 +199,7 @@ export function createForecastTrackLayer(track: ForecastTrack): LineLayer {
 /**
  * Create a DeckGL GeoJsonLayer for forecast points
  * Shows each forecast point with intensity-based styling
+ * Phase 1 Improvement: Larger circles with better visibility
  */
 export function createForecastPointsLayer(track: ForecastTrack): GeoJsonLayer {
 	const geoJSON = forecastPointsToGeoJSON(track)
@@ -207,20 +208,22 @@ export function createForecastPointsLayer(track: ForecastTrack): GeoJsonLayer {
 		id: 'forecast-points-layer',
 		data: geoJSON,
 		pickable: true,
-		pointRadiusMinPixels: 4,
-		pointRadiusMaxPixels: 15,
+		pointRadiusMinPixels: 6,
+		pointRadiusMaxPixels: 20,
 		getPointRadius: (f: any) => {
 			const maxwind = f.properties.maxwind
-			return 4 + (maxwind / 150) * 11 // Scale from 4 to 15 pixels
+			// Scale from 8 to 20 pixels based on wind speed (larger than before)
+			return 8 + (maxwind / 150) * 12
 		},
 		getFillColor: (f: any) => {
 			const ss = f.properties.ss
 			return getCategoryColor(ss)
 		},
+		// Enhanced outline for better visibility
 		getLineColor: [255, 255, 255, 255],
-		getLineWidth: 2,
-		lineWidthMinPixels: 1,
-		lineWidthMaxPixels: 3,
+		getLineWidth: 3, // Increased from 2 to 3 for better outline
+		lineWidthMinPixels: 2,
+		lineWidthMaxPixels: 4,
 		updateTriggers: {
 			getPointRadius: [track],
 			getFillColor: [track],

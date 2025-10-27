@@ -641,6 +641,64 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							},
 						}),
 					)
+
+					// Phase 2: Add region alert layer for affected countries/regions
+					// Only render regions that are actually affected (performance optimized)
+					try {
+						// Extract warning polygons from frame data
+						const warningPolygons: Array<{ polygon: any; type: 'HWA' | 'TWA' | 'HWR' | 'TWR' }> = []
+
+						if (frame.data.features) {
+							for (const feature of frame.data.features) {
+								const type = feature.properties?.type
+								if (type === 'HWA' || type === 'TWA' || type === 'HWR' || type === 'TWR') {
+									if (feature.geometry?.type === 'Polygon' || feature.geometry?.type === 'MultiPolygon') {
+										warningPolygons.push({ polygon: feature, type })
+									}
+								}
+							}
+						}
+
+						// Detect affected regions
+						if (warningPolygons.length > 0) {
+							const affectedRegionMap = detectAllAffectedRegions(warningPolygons, worldData as any)
+
+							if (affectedRegionMap.size > 0) {
+								console.log('[AnimatorMapMachine] Affected regions detected:', affectedRegionMap.size)
+
+								// Create GeoJSON with only affected regions
+								const affectedRegionsGeoJSON = createAffectedRegionsGeoJSON(affectedRegionMap, worldData as any)
+
+								// Add region alert layer
+								baseLayers.push(
+									new GeoJsonLayer({
+										id: 'region-alerts-layer',
+										data: affectedRegionsGeoJSON as any,
+										stroked: true,
+										filled: true,
+										lineWidthMinPixels: 1,
+										lineWidthMaxPixels: 2,
+										getLineColor: (d: any) => {
+											const warningType = d.properties?.warningType
+											return getWarningColor(warningType).outline
+										},
+										getFillColor: (d: any) => {
+											const warningType = d.properties?.warningType
+											return getWarningColor(warningType).fill
+										},
+										opacity: 1,
+										pickable: false,
+										updateTriggers: {
+											getLineColor: [frame.data],
+											getFillColor: [frame.data],
+										},
+									}),
+								)
+							}
+						}
+					} catch (error) {
+						console.error('[AnimatorMapMachine] Error creating region alerts layer:', error)
+					}
 				}
 
 				// Add overlays if present
