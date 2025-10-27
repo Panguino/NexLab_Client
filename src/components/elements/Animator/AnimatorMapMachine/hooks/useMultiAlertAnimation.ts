@@ -217,7 +217,7 @@ export function useMultiAlertAnimation(currentFrameAlertMap: Record<string, any>
 		if (!enabled || Object.keys(animationStates).length === 0) return
 
 		const TRANSITION_DURATION = 750 // 0.75 seconds
-		const PAUSE_DURATION = 2250 // 2.25 seconds between transitions (200% increase)
+		const PAUSE_DURATION = 450 // 0.45 seconds between transitions (80% reduction)
 
 		const animate = () => {
 			const now = Date.now()
