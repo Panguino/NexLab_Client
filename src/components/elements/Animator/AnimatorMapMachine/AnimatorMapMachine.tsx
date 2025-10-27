@@ -15,6 +15,7 @@ import { useMultiAlertAnimation } from './hooks/useMultiAlertAnimation'
 import { createHurricaneLayer } from './layers/HurricaneLayer'
 import { createStormTrackLayer } from './layers/StormTrackLayer'
 import { IAnimatorMapMachineProps, MapFrame } from './types'
+import { createAffectedRegionsGeoJSON, detectAllAffectedRegions, getWarningColor } from './utils/regionDetection'
 
 // Import booleanPointInPolygon for point-in-polygon detection
 let booleanPointInPolygon: any = null
@@ -716,6 +717,64 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							}),
 						)
 					})
+				}
+
+				// Extract and render forecast points from frame data (Phase 1 improvement)
+				if (frame && frame.data && frame.data.features) {
+					try {
+						// Find forecast points in the frame data
+						const forecastPointsFeatures = frame.data.features.filter(
+							(f: any) => f.properties?.type === 'forecast-point' || f.geometry?.type === 'Point',
+						)
+
+						if (forecastPointsFeatures.length > 0) {
+							// Create a GeoJSON with only forecast points
+							const forecastPointsGeoJSON = {
+								type: 'FeatureCollection' as const,
+								features: forecastPointsFeatures,
+							}
+
+							// Add forecast points layer with enhanced styling
+							baseLayers.push(
+								new GeoJsonLayer({
+									id: 'forecast-points-layer',
+									data: forecastPointsGeoJSON as any,
+									pickable: true,
+									pointRadiusMinPixels: 6,
+									pointRadiusMaxPixels: 20,
+									getPointRadius: (f: any) => {
+										const maxwind = f.properties?.maxwind || 0
+										// Scale from 8 to 20 pixels based on wind speed
+										return 8 + (maxwind / 150) * 12
+									},
+									getFillColor: (f: any) => {
+										const ss = f.properties?.ss || 0
+										// Use category colors
+										const colors: Record<number, [number, number, number, number]> = {
+											0: [255, 255, 0, 255], // Yellow - TS
+											1: [255, 200, 0, 255], // Orange - Cat 1
+											2: [255, 100, 0, 255], // Dark Orange - Cat 2
+											3: [255, 0, 0, 255], // Red - Cat 3
+											4: [200, 0, 0, 255], // Dark Red - Cat 4
+											5: [150, 0, 0, 255], // Very Dark Red - Cat 5
+										}
+										return colors[ss] || [100, 100, 100, 255]
+									},
+									getLineColor: [255, 255, 255, 255],
+									getLineWidth: 3,
+									lineWidthMinPixels: 2,
+									lineWidthMaxPixels: 4,
+									updateTriggers: {
+										getPointRadius: [frame.data],
+										getFillColor: [frame.data],
+									},
+								}),
+							)
+							console.log('[AnimatorMapMachine] Added forecast points layer with', forecastPointsFeatures.length, 'points')
+						}
+					} catch (error) {
+						console.error('[AnimatorMapMachine] Error creating forecast points layer:', error)
+					}
 				}
 
 				// Add tropical storms from frame if present
