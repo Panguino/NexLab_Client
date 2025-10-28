@@ -230,24 +230,16 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				const validFrames: MapFrame[] = []
 
 				try {
-					console.log('[AnimatorMapMachine] Loading frames...', { totalFrames: frames.length })
 					for (const frame of frames) {
 						// Validate frame structure
 						if (frame && frame.id && frame.data) {
 							validFrames.push(frame)
-							console.log('[AnimatorMapMachine] Frame loaded:', {
-								id: frame.id,
-								hasData: !!frame.data,
-								dataType: frame.data?.type,
-								featureCount: frame.data?.features?.length || 0,
-							})
 						}
 					}
 
 					setLoadedFrames(validFrames)
-					console.log(`[AnimatorMapMachine] Loaded ${validFrames.length} map frames`)
 				} catch (error) {
-					console.error('[AnimatorMapMachine] Failed to load frames:', error)
+					// Silently catch frame loading errors
 				} finally {
 					setIsLoading(false)
 				}
@@ -552,12 +544,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				// Add frame data as GeoJSON layer if present
 				// This renders features from tropical products data (forecast track, cone, warnings, etc.)
 				if (frame && frame.data) {
-					console.log('[AnimatorMapMachine] Adding frame data layer:', {
-						frameId: frame.id,
-						dataType: frame.data.type,
-						featureCount: frame.data.features?.length || 0,
-					})
-
 					// Render all frame data features including warning/watch shapes
 					if (frame.data.features && frame.data.features.length > 0) {
 						baseLayers.push(
@@ -616,27 +602,13 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							}
 						}
 
-						console.log('[AnimatorMapMachine] Warning polygons found:', warningPolygons.length)
-						if (warningPolygons.length > 0) {
-							console.log(
-								'[AnimatorMapMachine] Warning polygon types:',
-								warningPolygons.map((w) => w.type),
-							)
-							console.log('[AnimatorMapMachine] First warning polygon:', warningPolygons[0].polygon.geometry?.type)
-						}
-
 						// Detect affected regions
 						if (warningPolygons.length > 0) {
-							console.log('[AnimatorMapMachine] Starting region detection...')
 							const affectedRegionMap = detectAllAffectedRegions(warningPolygons, countriesData as any)
 
-							console.log('[AnimatorMapMachine] Affected regions detected:', affectedRegionMap.size)
 							if (affectedRegionMap.size > 0) {
-								console.log('[AnimatorMapMachine] Affected region IDs:', Array.from(affectedRegionMap.keys()).slice(0, 5))
-
 								// Create GeoJSON with only affected regions
 								const affectedRegionsGeoJSON = createAffectedRegionsGeoJSON(affectedRegionMap, countriesData as any)
-								console.log('[AnimatorMapMachine] Affected regions GeoJSON features:', affectedRegionsGeoJSON.features.length)
 
 								// Add region alert layer
 								baseLayers.push(
@@ -663,14 +635,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 										},
 									}),
 								)
-							} else {
-								console.log('[AnimatorMapMachine] No affected regions found!')
 							}
-						} else {
-							console.log('[AnimatorMapMachine] No warning polygons found in frame data')
 						}
 					} catch (error) {
-						console.error('[AnimatorMapMachine] Error creating region alerts layer:', error)
+						// Silently catch errors in region detection
 					}
 				}
 
@@ -743,10 +711,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 									},
 								}),
 							)
-							console.log('[AnimatorMapMachine] Added forecast points layer with', forecastPointsFeatures.length, 'points')
 						}
 					} catch (error) {
-						console.error('[AnimatorMapMachine] Error creating forecast points layer:', error)
+						// Silently catch forecast points layer errors
 					}
 				}
 
@@ -785,10 +752,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				}
 			}
 
-			console.log('[AnimatorMapMachine] Layers created:', {
-				totalLayers: baseLayers.length,
-				layerIds: baseLayers.map((l: any) => l.id),
-			})
 			return baseLayers
 		}, [
 			loadedFrames,
