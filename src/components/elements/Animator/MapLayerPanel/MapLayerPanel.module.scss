@@ -1,4 +1,4 @@
-@import '@/styles/variables';
+@import '/src/styles/vars';
 
 .MapLayerPanel {
 	position: absolute;
@@ -153,4 +153,3 @@
 	color: var(--color-text-tertiary);
 	font-size: 12px;
 }
-
