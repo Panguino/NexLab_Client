@@ -142,11 +142,12 @@ export function useMultiAlertAnimation(currentFrameAlertMap: Record<string, any>
 	const animationIntervalsRef = useRef<Record<string, NodeJS.Timeout>>({})
 	const animationTimersRef = useRef<Record<string, NodeJS.Timeout>>({})
 	const animationFrameRef = useRef<number | null>(null)
-	const lastFrameTimeRef = useRef<number>(0)
 
 	// Initialize animation states when alert map changes
 	useEffect(() => {
-		if (!enabled || !currentFrameAlertMap) return
+		if (!enabled || !currentFrameAlertMap) {
+			return
+		}
 
 		const newAnimationStates: Record<string, CountyAnimationState> = {}
 		const newAnimatedColors: Record<string, [number, number, number, number]> = {}
@@ -214,7 +215,9 @@ export function useMultiAlertAnimation(currentFrameAlertMap: Record<string, any>
 
 	// Animation frame loop for smooth color transitions
 	useEffect(() => {
-		if (!enabled || Object.keys(animationStates).length === 0) return
+		if (!enabled || Object.keys(animationStates).length === 0) {
+			return
+		}
 
 		const TRANSITION_DURATION = 750 // 0.75 seconds
 		const PAUSE_DURATION = 450 // 0.45 seconds between transitions (80% reduction)

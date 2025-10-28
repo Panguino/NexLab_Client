@@ -1,6 +1,7 @@
 'use client'
 
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
+import countiesData from '@/data/d3Map/counties.json'
 import countriesData from '@/data/d3Map/countries.json'
 import lakesData from '@/data/d3Map/lakes.json'
 import statesData from '@/data/d3Map/states.json'
@@ -181,14 +182,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
-
-		// Debug logging - only for interactions
-		const DEBUG_INTERACTIONS = true
-		const logInteraction = (message: string, data?: any) => {
-			if (DEBUG_INTERACTIONS) {
-				console.log(`[AnimatorMapMachine] ${message}`, data || '')
-			}
-		}
 
 		// Detect dark mode from DOM class
 		useEffect(() => {

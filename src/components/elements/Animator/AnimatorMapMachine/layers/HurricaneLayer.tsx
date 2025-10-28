@@ -5,9 +5,17 @@
  * Also renders forecast tracks, cone of uncertainty, and watch/warning areas
  */
 
-import { GeoJsonLayer, IconLayer } from '@deck.gl/layers'
+import { GeoJsonLayer, IconLayer, LineLayer, PolygonLayer } from '@deck.gl/layers'
+import { ForecastTrack } from '../types/tropicalProductsTypes'
 import { ProcessedStormData } from '../types/tropicalStormTypes'
-import { bestTrackPointsToGeoJSON } from '../utils/tropicalProductsParser'
+import {
+	bestTrackPointsToGeoJSON,
+	bestTrackToGeoJSON,
+	coneToGeoJSON,
+	forecastPointsToGeoJSON,
+	forecastTrackToGeoJSON,
+	watchWarningsToGeoJSON,
+} from '../utils/tropicalProductsParser'
 
 /**
  * Create a DeckGL IconLayer for rendering hurricane icons
@@ -321,4 +329,32 @@ export function createBestTrackPointsLayer(bestTrack: Record<string, any>): GeoJ
 		lineWidthMinPixels: 1,
 		lineWidthMaxPixels: 2,
 	})
+}
+
+/**
+ * Get color for hurricane category
+ */
+function getCategoryColor(category: number): [number, number, number, number] {
+	const colors: Record<number, [number, number, number, number]> = {
+		0: [255, 255, 0, 255], // Yellow - TS
+		1: [255, 200, 0, 255], // Orange - Cat 1
+		2: [255, 100, 0, 255], // Dark Orange - Cat 2
+		3: [255, 0, 0, 255], // Red - Cat 3
+		4: [200, 0, 0, 255], // Dark Red - Cat 4
+		5: [150, 0, 0, 255], // Very Dark Red - Cat 5
+	}
+	return colors[category] || [100, 100, 100, 255]
+}
+
+/**
+ * Get colors for watch/warning areas
+ */
+function getWatchWarningColors(type: string): { fill: [number, number, number, number]; line: [number, number, number, number] } {
+	const colors: Record<string, { fill: [number, number, number, number]; line: [number, number, number, number] }> = {
+		HWA: { fill: [255, 0, 0, 50], line: [255, 0, 0, 200] }, // Hurricane Warning - Red
+		TWA: { fill: [255, 165, 0, 50], line: [255, 165, 0, 200] }, // Tropical Storm Warning - Orange
+		HWR: { fill: [255, 0, 0, 30], line: [255, 0, 0, 150] }, // Hurricane Watch - Light Red
+		TWR: { fill: [255, 165, 0, 30], line: [255, 165, 0, 150] }, // Tropical Storm Watch - Light Orange
+	}
+	return colors[type] || { fill: [100, 100, 100, 50], line: [100, 100, 100, 200] }
 }

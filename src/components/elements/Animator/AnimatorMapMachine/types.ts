@@ -13,7 +13,7 @@ import { ProcessedStormData, StormHoverInfo } from './types/tropicalStormTypes'
 export interface MapFrame {
 	id: string
 	timestamp: Date
-	data: FeatureCollection | Feature[] // GeoJSON data
+	data: FeatureCollection // GeoJSON data (always FeatureCollection for consistency)
 	overlays?: MapOverlay[]
 	tropicalStorms?: ProcessedStormData[] // Tropical storms for this frame
 	coastalData?: FeatureCollection // Coastal/ocean region data with alert colors
