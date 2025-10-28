@@ -1,7 +1,4 @@
 'use client'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { DataType, getLayersForDataType, MapLayer } from '../AnimatorMapMachine/config/mapLayers'
 import styles from './MapLayerPanel.module.scss'
@@ -63,54 +60,39 @@ export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibili
 	const generalLayers = availableLayers.filter((l) => l.category === 'general')
 	const dataLayers = availableLayers.filter((l) => l.category === 'data')
 
-	const renderLayerGroup = (title: string, layers: MapLayer[], groupKey: 'general' | 'data') => {
-		const isOpen = groupOpen[groupKey]
-
+	const renderLayerGroup = (layers: MapLayer[], groupKey: 'general' | 'data') => {
 		return (
 			<div key={groupKey} className={styles.layerGroup}>
-				<div className={styles.layerGroupTitle} onClick={() => toggleGroup(groupKey)}>
-					<span>{title}</span>
-					<motion.div animate={{ transform: `${isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}` }}>
-						<FontAwesomeIcon icon={faChevronDown} />
-					</motion.div>
-				</div>
-				<motion.div animate={{ height: isOpen ? 'auto' : 0 }} className={styles.layerItems}>
-					{layers.map((layer) => (
-						<div
-							key={layer.id}
-							className={`${styles.layerItem} ${layerVisibility[layer.id] ? styles.active : ''}`}
-							onClick={() => handleLayerToggle(layer.id)}
-							title={layer.description}
-						>
-							<div className={styles.layerCheckbox}>
-								<input
-									type="checkbox"
-									checked={layerVisibility[layer.id] || false}
-									onChange={() => handleLayerToggle(layer.id)}
-									onClick={(e) => e.stopPropagation()}
-								/>
-							</div>
-							<div className={styles.layerInfo}>
-								<div className={styles.layerName}>{layer.name}</div>
-								{layer.description && <div className={styles.layerDescription}>{layer.description}</div>}
-							</div>
+				{layers.map((layer) => (
+					<div
+						key={layer.id}
+						className={`${styles.layerItem} ${layerVisibility[layer.id] ? styles.active : ''}`}
+						onClick={() => handleLayerToggle(layer.id)}
+						title={layer.description}
+					>
+						<div className={styles.layerCheckbox}>
+							<input
+								type="checkbox"
+								checked={layerVisibility[layer.id] || false}
+								onChange={() => handleLayerToggle(layer.id)}
+								onClick={(e) => e.stopPropagation()}
+							/>
 						</div>
-					))}
-				</motion.div>
+						<div className={styles.layerInfo}>
+							<div className={styles.layerName}>{layer.name}</div>
+							{layer.description && <div className={styles.layerDescription}>{layer.description}</div>}
+						</div>
+					</div>
+				))}
 			</div>
 		)
 	}
 
 	return (
 		<div className={styles.MapLayerPanel} style={{ opacity: open ? 1 : 0, pointerEvents: open ? 'all' : 'none' }}>
-			<div className={styles.panelHeader}>
-				<h3>Map Layers</h3>
-				<span className={styles.dataTypeLabel}>{dataType === 'alerts' ? 'Alerts' : 'Hurricane'}</span>
-			</div>
-
 			<div className={styles.layerGroups}>
-				{generalLayers.length > 0 && renderLayerGroup('General Layers', generalLayers, 'general')}
-				{dataLayers.length > 0 && renderLayerGroup('Data Layers', dataLayers, 'data')}
+				{generalLayers.length > 0 && renderLayerGroup(generalLayers, 'general')}
+				{dataLayers.length > 0 && renderLayerGroup(dataLayers, 'data')}
 			</div>
 
 			{availableLayers.length === 0 && <div className={styles.noLayers}>No layers available for this data type</div>}
