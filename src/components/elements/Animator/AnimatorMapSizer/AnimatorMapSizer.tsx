@@ -41,6 +41,9 @@ const AnimatorMapSizer = () => {
 		mapRegion,
 		mapZoomState,
 		setMapZoomState,
+		mapLayerVisibility,
+		setMapLayerVisibility,
+		mapDataType,
 	} = useAnimator()
 
 	// Debug logging - only for mouse/click interactions
@@ -241,7 +244,16 @@ const AnimatorMapSizer = () => {
 			</div>
 
 			{!hideZoomControls && !disableZoom && (
-				<ViewControls mode="map" zoomIn={handleZoomIn} zoomOut={handleZoomOut} resetTransform={handleResetView} mapZoom={mapZoomState.zoom} />
+				<ViewControls
+					mode="map"
+					zoomIn={handleZoomIn}
+					zoomOut={handleZoomOut}
+					resetTransform={handleResetView}
+					mapZoom={mapZoomState.zoom}
+					mapLayerVisibility={mapLayerVisibility}
+					setMapLayerVisibility={setMapLayerVisibility}
+					mapDataType={mapDataType}
+				/>
 			)}
 		</div>
 	)

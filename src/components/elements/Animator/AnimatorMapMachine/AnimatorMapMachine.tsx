@@ -155,7 +155,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			containerStyle,
 			viewState: externalViewState,
 			layerVisibility = {},
-			mapDataType = 'all',
 		},
 		ref,
 	) => {
@@ -795,7 +794,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			hoveredCountyId,
 			animatedColors,
 			layerVisibility,
-			mapDataType,
 		])
 
 		// Map bounds constraints (CONUS - Continental US)
