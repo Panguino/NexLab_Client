@@ -50,7 +50,7 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		category: 'general',
 		description: 'US state fill colors',
 		visibleFor: ['all'],
-		defaultVisible: false,
+		defaultVisible: true,
 		zIndex: 15,
 	},
 	{
@@ -68,7 +68,7 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		category: 'general',
 		description: 'Lat/long grid lines',
 		visibleFor: ['all'],
-		defaultVisible: false,
+		defaultVisible: true,
 		zIndex: 5,
 	},
 	{
@@ -77,7 +77,7 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		category: 'general',
 		description: 'Borders and fills for coastal regions without alerts',
 		visibleFor: ['all'],
-		defaultVisible: false,
+		defaultVisible: true,
 		zIndex: 18,
 	},
 	{
@@ -86,7 +86,7 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		category: 'general',
 		description: 'Borders and fills for counties without alerts',
 		visibleFor: ['all'],
-		defaultVisible: false,
+		defaultVisible: true,
 		zIndex: 17,
 	},
 ]
