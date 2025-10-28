@@ -387,6 +387,23 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							}),
 						]
 					: []),
+				// State fills layer - optional colored state fills
+				...(shouldShowLayer('states-fill-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'states-fill-layer',
+								data: statesData as any,
+								filled: true,
+								stroked: false,
+								getFillColor: () => [200, 200, 200, 100] as any,
+								opacity: 0.3,
+								pickable: false,
+								updateTriggers: {
+									getFillColor: [statesColor],
+								},
+							}),
+						]
+					: []),
 				// Great Lakes layer - using ocean color to match water
 				// Light mode: #8aadcf (138, 173, 207), Dark mode: #233544 (35, 53, 68)
 				...(shouldShowLayer('lakes-layer')
@@ -407,7 +424,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					: []),
 				// US States borders layer - separate layer for strokes
 				// Using theme color grey18-grey15: Light mode: #232323 (35, 35, 35), Dark mode: #505050 (80, 80, 80)
-				...(shouldShowLayer('states-borders-layer')
+				...(shouldShowLayer('states-layer')
 					? [
 							new GeoJsonLayer({
 								id: 'states-borders-layer',
@@ -419,6 +436,44 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 								getLineColor: () => borderColor as any,
 								getLineWidth: () => 2,
 								opacity: 1,
+								pickable: false,
+								updateTriggers: {
+									getLineColor: [borderColor],
+								},
+							}),
+						]
+					: []),
+				// Counties layer (inactive) - US county boundaries
+				...(shouldShowLayer('counties-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'counties-layer',
+								data: countiesData as any,
+								filled: false,
+								stroked: true,
+								lineWidthMinPixels: 0.5,
+								lineWidthMaxPixels: 1,
+								getLineColor: () => [150, 150, 150, 100] as any,
+								opacity: 0.4,
+								pickable: false,
+								updateTriggers: {
+									getLineColor: [borderColor],
+								},
+							}),
+						]
+					: []),
+				// Coastal regions layer (inactive) - outlines of all coastal regions
+				...(shouldShowLayer('coastal-regions-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'coastal-regions-layer',
+								data: countriesData as any,
+								filled: false,
+								stroked: true,
+								lineWidthMinPixels: 0.5,
+								lineWidthMaxPixels: 1,
+								getLineColor: () => [100, 150, 200, 100] as any,
+								opacity: 0.3,
 								pickable: false,
 								updateTriggers: {
 									getLineColor: [borderColor],
@@ -740,6 +795,113 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						}
 					} catch (error) {
 						// Silently catch forecast points layer errors
+					}
+				}
+
+				// Add cone of uncertainty layer if present
+				if (frame && frame.data && frame.data.features && shouldShowLayer('cone-layer')) {
+					try {
+						// Find cone features (Polygon type with cone properties)
+						const coneFeatures = frame.data.features.filter((f: any) => f.geometry?.type === 'Polygon' && f.properties?.type === 'cone')
+
+						if (coneFeatures.length > 0) {
+							const coneGeoJSON = {
+								type: 'FeatureCollection' as const,
+								features: coneFeatures,
+							}
+
+							baseLayers.push(
+								new GeoJsonLayer({
+									id: 'cone-layer',
+									data: coneGeoJSON as any,
+									stroked: true,
+									filled: true,
+									lineWidthMinPixels: 1,
+									lineWidthMaxPixels: 2,
+									getFillColor: [100, 150, 255, 50], // Light blue with transparency
+									getLineColor: [100, 150, 255, 200],
+									opacity: 1,
+									pickable: false,
+									updateTriggers: {
+										getFillColor: [frame.data],
+									},
+								}),
+							)
+						}
+					} catch (error) {
+						// Silently catch cone layer errors
+					}
+				}
+
+				// Add forecast track layer if present
+				if (frame && frame.data && frame.data.features && shouldShowLayer('forecast-track-layer')) {
+					try {
+						// Find forecast track features (LineString type)
+						const forecastTrackFeatures = frame.data.features.filter(
+							(f: any) => f.geometry?.type === 'LineString' && f.properties?.type === 'forecast_track',
+						)
+
+						if (forecastTrackFeatures.length > 0) {
+							const forecastTrackGeoJSON = {
+								type: 'FeatureCollection' as const,
+								features: forecastTrackFeatures,
+							}
+
+							baseLayers.push(
+								new GeoJsonLayer({
+									id: 'forecast-track-layer',
+									data: forecastTrackGeoJSON as any,
+									stroked: true,
+									filled: false,
+									lineWidthMinPixels: 2,
+									lineWidthMaxPixels: 4,
+									getLineColor: [0, 200, 255, 255], // Cyan for forecast
+									opacity: 1,
+									pickable: false,
+									updateTriggers: {
+										getLineColor: [frame.data],
+									},
+								}),
+							)
+						}
+					} catch (error) {
+						// Silently catch forecast track layer errors
+					}
+				}
+
+				// Add best track (historical path) layer if present
+				if (frame && frame.data && frame.data.features && shouldShowLayer('best-track-layer')) {
+					try {
+						// Find best track features (LineString type with best_track property)
+						const bestTrackFeatures = frame.data.features.filter(
+							(f: any) => f.geometry?.type === 'LineString' && f.properties?.type === 'best_track',
+						)
+
+						if (bestTrackFeatures.length > 0) {
+							const bestTrackGeoJSON = {
+								type: 'FeatureCollection' as const,
+								features: bestTrackFeatures,
+							}
+
+							baseLayers.push(
+								new GeoJsonLayer({
+									id: 'best-track-layer',
+									data: bestTrackGeoJSON as any,
+									stroked: true,
+									filled: false,
+									lineWidthMinPixels: 2,
+									lineWidthMaxPixels: 4,
+									getLineColor: [200, 100, 100, 255], // Red-brown for historical
+									opacity: 1,
+									pickable: false,
+									updateTriggers: {
+										getLineColor: [frame.data],
+									},
+								}),
+							)
+						}
+					} catch (error) {
+						// Silently catch best track layer errors
 					}
 				}
 
