@@ -5,8 +5,9 @@
  * Also renders forecast tracks, cone of uncertainty, and watch/warning areas
  */
 
-import { IconLayer } from '@deck.gl/layers'
+import { GeoJsonLayer, IconLayer } from '@deck.gl/layers'
 import { ProcessedStormData } from '../types/tropicalStormTypes'
+import { bestTrackPointsToGeoJSON } from '../utils/tropicalProductsParser'
 
 /**
  * Create a DeckGL IconLayer for rendering hurricane icons

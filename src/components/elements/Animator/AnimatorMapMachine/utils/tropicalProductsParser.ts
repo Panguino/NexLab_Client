@@ -2,7 +2,7 @@
  * Utility functions for parsing and processing tropical products JSON data
  */
 
-import { TropicalProducts, ForecastTrack, ForecastPoint, BestTrackPoint, Coordinate } from '../types/tropicalProductsTypes'
+import { BestTrackPoint, Coordinate, ForecastTrack, TropicalProducts } from '../types/tropicalProductsTypes'
 
 /**
  * Fetch tropical products data from NHC API
@@ -222,4 +222,3 @@ export function formatTimestamp(timestamp: string): string {
 		timeZoneName: 'short',
 	})
 }
-

@@ -15,6 +15,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import { useAnimator } from '../Animator'
+import { MapLayerPanel } from '../MapLayerPanel'
 import { OverlayPanel } from '../OverlayPanel/OverylayPanel'
 import styles from './ViewControls.module.scss'
 

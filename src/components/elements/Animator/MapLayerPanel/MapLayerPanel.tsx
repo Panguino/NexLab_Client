@@ -3,13 +3,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import {
-	DATA_LAYERS,
-	DataType,
-	GENERAL_LAYERS,
-	getLayersForDataType,
-	MapLayer,
-} from '../AnimatorMapMachine/config/mapLayers'
+import { DataType, getLayersForDataType, MapLayer } from '../AnimatorMapMachine/config/mapLayers'
 import styles from './MapLayerPanel.module.scss'
 
 interface IMapLayerPanelProps {
@@ -26,13 +20,7 @@ interface IMapLayerPanelProps {
  * Provides layer visibility controls for map animator
  * Shows/hides layers based on the current data type being viewed
  */
-export const MapLayerPanel = ({
-	open,
-	onClose,
-	layerVisibility,
-	setLayerVisibility,
-	dataType,
-}: IMapLayerPanelProps) => {
+export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibility, dataType }: IMapLayerPanelProps) => {
 	const [groupOpen, setGroupOpen] = useState<Record<string, boolean>>({
 		general: true,
 		data: true,
@@ -40,17 +28,17 @@ export const MapLayerPanel = ({
 
 	// Close panel when clicking outside
 	useEffect(() => {
+		if (!open) return
+
 		const handleClickOutside = (event: MouseEvent) => {
 			if ((event.target as HTMLElement).closest(`.${styles.MapLayerPanel}`) === null) {
 				onClose()
 			}
 		}
 
-		if (open) {
-			document.addEventListener('mousedown', handleClickOutside)
-			return () => {
-				document.removeEventListener('mousedown', handleClickOutside)
-			}
+		document.addEventListener('mousedown', handleClickOutside)
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside)
 		}
 	}, [open, onClose])
 
@@ -78,10 +66,7 @@ export const MapLayerPanel = ({
 
 		return (
 			<div key={groupKey} className={styles.layerGroup}>
-				<div
-					className={styles.layerGroupTitle}
-					onClick={() => toggleGroup(groupKey)}
-				>
+				<div className={styles.layerGroupTitle} onClick={() => toggleGroup(groupKey)}>
 					<span>{title}</span>
 					<motion.div animate={{ transform: `${isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}` }}>
 						<FontAwesomeIcon icon={faChevronDown} />
@@ -105,9 +90,7 @@ export const MapLayerPanel = ({
 							</div>
 							<div className={styles.layerInfo}>
 								<div className={styles.layerName}>{layer.name}</div>
-								{layer.description && (
-									<div className={styles.layerDescription}>{layer.description}</div>
-								)}
+								{layer.description && <div className={styles.layerDescription}>{layer.description}</div>}
 							</div>
 						</div>
 					))}
@@ -117,10 +100,7 @@ export const MapLayerPanel = ({
 	}
 
 	return (
-		<div
-			className={styles.MapLayerPanel}
-			style={{ opacity: open ? 1 : 0, pointerEvents: open ? 'all' : 'none' }}
-		>
+		<div className={styles.MapLayerPanel} style={{ opacity: open ? 1 : 0, pointerEvents: open ? 'all' : 'none' }}>
 			<div className={styles.panelHeader}>
 				<h3>Map Layers</h3>
 				<span className={styles.dataTypeLabel}>{dataType === 'alerts' ? 'Alerts' : 'Hurricane'}</span>
@@ -131,10 +111,7 @@ export const MapLayerPanel = ({
 				{dataLayers.length > 0 && renderLayerGroup('Data Layers', dataLayers, 'data')}
 			</div>
 
-			{availableLayers.length === 0 && (
-				<div className={styles.noLayers}>No layers available for this data type</div>
-			)}
+			{availableLayers.length === 0 && <div className={styles.noLayers}>No layers available for this data type</div>}
 		</div>
 	)
 }
-
