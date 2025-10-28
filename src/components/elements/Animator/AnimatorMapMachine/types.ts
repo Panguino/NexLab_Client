@@ -104,6 +104,10 @@ export interface IAnimatorMapMachineProps {
 	onViewStateChange?: (viewState: MapViewState) => void
 	_onViewStateChange?: (viewState: MapViewState) => void
 
+	// Layer visibility controls
+	layerVisibility?: Record<string, boolean> // Visibility state for map layers
+	mapDataType?: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
+
 	// Optional styling
 	containerStyle?: React.CSSProperties
 }

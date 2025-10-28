@@ -198,3 +198,23 @@ export function getDefaultLayerVisibility(): Record<string, boolean> {
 	return visibility
 }
 
+/**
+ * Check if a layer should be visible based on visibility state and data type
+ */
+export function isLayerVisible(layerId: string, layerVisibility: Record<string, boolean>, dataType: DataType = 'all'): boolean {
+	// If layer visibility is explicitly set, use that
+	if (layerId in layerVisibility) {
+		return layerVisibility[layerId]
+	}
+
+	// Otherwise, check if layer is available for this data type
+	const allLayers = [...GENERAL_LAYERS, ...DATA_LAYERS]
+	const layer = allLayers.find((l) => l.id === layerId)
+
+	if (!layer) {
+		return false
+	}
+
+	// Layer is visible if it's available for this data type
+	return layer.visibleFor.includes(dataType) || layer.visibleFor.includes('all')
+}

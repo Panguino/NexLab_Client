@@ -153,6 +153,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			_onViewStateChange,
 			containerStyle,
 			viewState: externalViewState,
+			layerVisibility = {},
+			mapDataType = 'all',
 		},
 		ref,
 	) => {
@@ -309,6 +311,16 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 		// Create layers with base map and current frame data
 		const layers = useMemo(() => {
+			// Helper function to check if a layer should be visible
+			const shouldShowLayer = (layerId: string): boolean => {
+				// If layer visibility is explicitly set, use that
+				if (layerId in layerVisibility) {
+					return layerVisibility[layerId]
+				}
+				// Default to true for base layers
+				return true
+			}
+
 			const baseLayers: any[] = [
 				// Ocean background layer - using theme color blue1-blue2
 				// Light mode: #8aadcf (138, 173, 207), Dark mode: #233544 (35, 53, 68)
@@ -345,67 +357,83 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				}),
 				// World layer - faded background for all countries
 				// Using theme color grey2-grey16: Light mode: #d8d8d8 (216, 216, 216), Dark mode: #484848 (72, 72, 72)
-				new GeoJsonLayer({
-					id: 'world-layer',
-					data: worldData as any,
-					filled: true,
-					stroked: true,
-					lineWidthMinPixels: 0.5,
-					lineWidthMaxPixels: 1,
-					getLineColor: () => [0, 0, 0, 255], // Black borders
-					getLineWidth: () => 0.5, // 50% size
-					getFillColor: () => worldColor as any,
-					opacity: 0.3, // Faded/subtle - reduced to prevent covering states
-					pickable: false,
-					updateTriggers: {
-						getFillColor: [worldColor],
-					},
-				}),
+				...(shouldShowLayer('world-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'world-layer',
+								data: worldData as any,
+								filled: true,
+								stroked: true,
+								lineWidthMinPixels: 0.5,
+								lineWidthMaxPixels: 1,
+								getLineColor: () => [0, 0, 0, 255], // Black borders
+								getLineWidth: () => 0.5, // 50% size
+								getFillColor: () => worldColor as any,
+								opacity: 0.3, // Faded/subtle - reduced to prevent covering states
+								pickable: false,
+								updateTriggers: {
+									getFillColor: [worldColor],
+								},
+							}),
+						]
+					: []),
 				// US States layer - using theme color white-grey13
 				// Light mode: #fff (255, 255, 255), Dark mode: #5f5f5f (95, 95, 95)
-				new GeoJsonLayer({
-					id: 'states-layer',
-					data: statesData as any,
-					filled: true,
-					stroked: false,
-					getFillColor: () => statesColor as any,
-					opacity: 1,
-					pickable: false,
-					updateTriggers: {
-						getFillColor: [statesColor],
-					},
-				}),
+				...(shouldShowLayer('states-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'states-layer',
+								data: statesData as any,
+								filled: true,
+								stroked: false,
+								getFillColor: () => statesColor as any,
+								opacity: 1,
+								pickable: false,
+								updateTriggers: {
+									getFillColor: [statesColor],
+								},
+							}),
+						]
+					: []),
 				// Great Lakes layer - using ocean color to match water
 				// Light mode: #8aadcf (138, 173, 207), Dark mode: #233544 (35, 53, 68)
-				new GeoJsonLayer({
-					id: 'lakes-layer',
-					data: lakesData as any,
-					filled: true,
-					stroked: false,
-					getFillColor: () => oceanColor as any,
-					opacity: 1,
-					pickable: false,
-					updateTriggers: {
-						getFillColor: [oceanColor],
-					},
-				}),
+				...(shouldShowLayer('lakes-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'lakes-layer',
+								data: lakesData as any,
+								filled: true,
+								stroked: false,
+								getFillColor: () => oceanColor as any,
+								opacity: 1,
+								pickable: false,
+								updateTriggers: {
+									getFillColor: [oceanColor],
+								},
+							}),
+						]
+					: []),
 				// US States borders layer - separate layer for strokes
 				// Using theme color grey18-grey15: Light mode: #232323 (35, 35, 35), Dark mode: #505050 (80, 80, 80)
-				new GeoJsonLayer({
-					id: 'states-borders-layer',
-					data: statesData as any,
-					filled: false,
-					stroked: true,
-					lineWidthMinPixels: 2,
-					lineWidthMaxPixels: 3,
-					getLineColor: () => borderColor as any,
-					getLineWidth: () => 2,
-					opacity: 1,
-					pickable: false,
-					updateTriggers: {
-						getLineColor: [borderColor],
-					},
-				}),
+				...(shouldShowLayer('states-borders-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'states-borders-layer',
+								data: statesData as any,
+								filled: false,
+								stroked: true,
+								lineWidthMinPixels: 2,
+								lineWidthMaxPixels: 3,
+								getLineColor: () => borderColor as any,
+								getLineWidth: () => 2,
+								opacity: 1,
+								pickable: false,
+								updateTriggers: {
+									getLineColor: [borderColor],
+								},
+							}),
+						]
+					: []),
 				// Coastal and ocean regions layer with alert colors
 				// Displays marine zones, coastal areas, and offshore regions
 				...(loadedFrames.length > 0 &&
@@ -450,21 +478,25 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					: []),
 				// Lat-long grid lines with dashed appearance
 				// More visible for geographic reference
-				new GeoJsonLayer({
-					id: 'gridlines-layer',
-					data: generateGridLines(10) as any,
-					filled: false,
-					stroked: true,
-					lineWidthMinPixels: 1,
-					lineWidthMaxPixels: 2,
-					getLineColor: () => gridlineColor as any,
-					getLineWidth: () => 1.5,
-					opacity: 0.2,
-					pickable: false,
-					updateTriggers: {
-						getLineColor: [gridlineColor],
-					},
-				}),
+				...(shouldShowLayer('latlon-grid-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'latlon-grid-layer',
+								data: generateGridLines(10) as any,
+								filled: false,
+								stroked: true,
+								lineWidthMinPixels: 1,
+								lineWidthMaxPixels: 2,
+								getLineColor: () => gridlineColor as any,
+								getLineWidth: () => 1.5,
+								opacity: 0.2,
+								pickable: false,
+								updateTriggers: {
+									getLineColor: [gridlineColor],
+								},
+							}),
+						]
+					: []),
 				// Hovered region highlight layer - renders on top with white outline
 				// Only shows the currently hovered county or coastal region
 				...(hoveredCountyId && loadedFrames.length > 0
@@ -543,7 +575,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 				// Add frame data as GeoJSON layer if present
 				// This renders features from tropical products data (forecast track, cone, warnings, etc.)
-				if (frame && frame.data) {
+				if (frame && frame.data && shouldShowLayer('frame-data-layer')) {
 					// Render all frame data features including warning/watch shapes
 					if (frame.data.features && frame.data.features.length > 0) {
 						baseLayers.push(
@@ -587,58 +619,60 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 					// Phase 2: Add region alert layer for affected countries/regions
 					// Only render regions that are actually affected (performance optimized)
-					try {
-						// Extract warning polygons from frame data
-						const warningPolygons: Array<{ polygon: any; type: 'HWA' | 'TWA' | 'HWR' | 'TWR' }> = []
+					if (shouldShowLayer('region-alerts-layer')) {
+						try {
+							// Extract warning polygons from frame data
+							const warningPolygons: Array<{ polygon: any; type: 'HWA' | 'TWA' | 'HWR' | 'TWR' }> = []
 
-						if (frame.data.features) {
-							for (const feature of frame.data.features) {
-								const type = feature.properties?.type
-								if (type === 'HWA' || type === 'TWA' || type === 'HWR' || type === 'TWR') {
-									if (feature.geometry?.type === 'Polygon' || feature.geometry?.type === 'MultiPolygon') {
-										warningPolygons.push({ polygon: feature, type })
+							if (frame.data.features) {
+								for (const feature of frame.data.features) {
+									const type = feature.properties?.type
+									if (type === 'HWA' || type === 'TWA' || type === 'HWR' || type === 'TWR') {
+										if (feature.geometry?.type === 'Polygon' || feature.geometry?.type === 'MultiPolygon') {
+											warningPolygons.push({ polygon: feature, type })
+										}
 									}
 								}
 							}
-						}
 
-						// Detect affected regions
-						if (warningPolygons.length > 0) {
-							const affectedRegionMap = detectAllAffectedRegions(warningPolygons, countriesData as any)
+							// Detect affected regions
+							if (warningPolygons.length > 0) {
+								const affectedRegionMap = detectAllAffectedRegions(warningPolygons, countriesData as any)
 
-							if (affectedRegionMap.size > 0) {
-								// Create GeoJSON with only affected regions
-								const affectedRegionsGeoJSON = createAffectedRegionsGeoJSON(affectedRegionMap, countriesData as any)
+								if (affectedRegionMap.size > 0) {
+									// Create GeoJSON with only affected regions
+									const affectedRegionsGeoJSON = createAffectedRegionsGeoJSON(affectedRegionMap, countriesData as any)
 
-								// Add region alert layer
-								baseLayers.push(
-									new GeoJsonLayer({
-										id: 'region-alerts-layer',
-										data: affectedRegionsGeoJSON as any,
-										stroked: true,
-										filled: true,
-										lineWidthMinPixels: 1,
-										lineWidthMaxPixels: 2,
-										getLineColor: (d: any) => {
-											const warningType = d.properties?.warningType
-											return getWarningColor(warningType).outline
-										},
-										getFillColor: (d: any) => {
-											const warningType = d.properties?.warningType
-											return getWarningColor(warningType).fill
-										},
-										opacity: 1,
-										pickable: false,
-										updateTriggers: {
-											getLineColor: [frame.data],
-											getFillColor: [frame.data],
-										},
-									}),
-								)
+									// Add region alert layer
+									baseLayers.push(
+										new GeoJsonLayer({
+											id: 'region-alerts-layer',
+											data: affectedRegionsGeoJSON as any,
+											stroked: true,
+											filled: true,
+											lineWidthMinPixels: 1,
+											lineWidthMaxPixels: 2,
+											getLineColor: (d: any) => {
+												const warningType = d.properties?.warningType
+												return getWarningColor(warningType).outline
+											},
+											getFillColor: (d: any) => {
+												const warningType = d.properties?.warningType
+												return getWarningColor(warningType).fill
+											},
+											opacity: 1,
+											pickable: false,
+											updateTriggers: {
+												getLineColor: [frame.data],
+												getFillColor: [frame.data],
+											},
+										}),
+									)
+								}
 							}
+						} catch (error) {
+							// Silently catch errors in region detection
 						}
-					} catch (error) {
-						// Silently catch errors in region detection
 					}
 				}
 
@@ -660,7 +694,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				}
 
 				// Extract and render forecast points from frame data (Phase 1 improvement)
-				if (frame && frame.data && frame.data.features) {
+				if (frame && frame.data && frame.data.features && shouldShowLayer('forecast-points-layer')) {
 					try {
 						// Find forecast points in the frame data
 						// Forecast points have datetime and maxwind properties
@@ -767,6 +801,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			currentFrameCoastalAlertMap,
 			hoveredCountyId,
 			animatedColors,
+			layerVisibility,
+			mapDataType,
 		])
 
 		// Map bounds constraints (CONUS - Continental US)
