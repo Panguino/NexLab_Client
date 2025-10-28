@@ -2,6 +2,7 @@
 import { mapZoomState, zoomState } from '@/types/general'
 import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
 import AnimatorLayout from './AnimatorLayout/AnimatorLayout'
+import { getDefaultLayerVisibility } from './AnimatorMapMachine/config/mapLayers'
 
 interface IAnimatorProps {
 	frames: string[] | any[] // Can be image URLs or MapFrame objects
@@ -58,6 +59,10 @@ interface IAnimatorProps {
 	mapRegion?: 'conus' | 'alaska' | 'hawaii' | 'namer' // Region for map mode
 	initialMapZoomState?: mapZoomState // Initial map zoom state
 	setMapZoomState?: (mapZoomState: mapZoomState) => void // Callback for map zoom state changes
+	// Map layer visibility
+	mapLayerVisibility?: Record<string, boolean> // Visibility state for map layers
+	setMapLayerVisibility?: (visibility: Record<string, boolean>) => void // Callback for layer visibility changes
+	mapDataType?: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -71,6 +76,9 @@ interface IAnimatorProvider extends IAnimatorProps {
 	mapRegion: 'conus' | 'alaska' | 'hawaii' | 'namer'
 	mapZoomState: mapZoomState // Current map zoom state
 	setMapZoomState: (mapZoomState: mapZoomState) => void // Update map zoom state
+	mapLayerVisibility: Record<string, boolean> // Map layer visibility state
+	setMapLayerVisibility: (visibility: Record<string, boolean>) => void // Update map layer visibility
+	mapDataType: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 }
 
 const AnimatorContext = createContext<IAnimatorProvider | undefined>(undefined)
@@ -144,11 +152,15 @@ export const Animator = ({
 	setMapZoomState = (_mapZoomState: mapZoomState) => {
 		// Silently ignore if not provided - this is optional
 	},
+	mapLayerVisibility,
+	setMapLayerVisibility,
+	mapDataType = 'all',
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
 	const [mapZoomState, setMapZoomStateLocal] = useState<mapZoomState>(initialMapZoomState)
+	const [mapLayerVisibilityLocal, setMapLayerVisibilityLocal] = useState<Record<string, boolean>>(mapLayerVisibility || getDefaultLayerVisibility())
 	return (
 		<AnimatorContext.Provider
 			value={{
@@ -210,6 +222,12 @@ export const Animator = ({
 					setMapZoomStateLocal(newMapZoomState)
 					setMapZoomState(newMapZoomState)
 				},
+				mapLayerVisibility: mapLayerVisibilityLocal,
+				setMapLayerVisibility: (newVisibility: Record<string, boolean>) => {
+					setMapLayerVisibilityLocal(newVisibility)
+					setMapLayerVisibility?.(newVisibility)
+				},
+				mapDataType: mapDataType || 'all',
 			}}
 		>
 			<AnimatorLayout />

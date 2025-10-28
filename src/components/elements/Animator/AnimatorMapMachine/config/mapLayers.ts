@@ -1,0 +1,200 @@
+/**
+ * Map Layer Configuration
+ * Defines all available layers for the map animator with their properties and visibility rules
+ */
+
+export type LayerCategory = 'general' | 'data'
+export type DataType = 'alerts' | 'hurricane' | 'all'
+
+export interface MapLayer {
+	id: string
+	name: string
+	category: LayerCategory
+	description?: string
+	// Which data types should show this layer
+	// 'all' = show for all data types
+	// 'alerts' = only show when viewing alerts data
+	// 'hurricane' = only show when viewing hurricane data
+	visibleFor: DataType[]
+	// Default visibility state
+	defaultVisible: boolean
+	// Z-index for layer ordering
+	zIndex: number
+}
+
+/**
+ * General/Base Layers - Always available when appropriate data is present
+ */
+export const GENERAL_LAYERS: MapLayer[] = [
+	{
+		id: 'world-layer',
+		name: 'Base World Map',
+		category: 'general',
+		description: 'World land shapes with borders',
+		visibleFor: ['all'],
+		defaultVisible: true,
+		zIndex: 10,
+	},
+	{
+		id: 'states-layer',
+		name: 'State Borders',
+		category: 'general',
+		description: 'US state boundaries',
+		visibleFor: ['all'],
+		defaultVisible: true,
+		zIndex: 20,
+	},
+	{
+		id: 'states-fill-layer',
+		name: 'State Fills',
+		category: 'general',
+		description: 'US state fill colors',
+		visibleFor: ['all'],
+		defaultVisible: false,
+		zIndex: 15,
+	},
+	{
+		id: 'lakes-layer',
+		name: 'Great Lakes',
+		category: 'general',
+		description: 'Great Lakes water bodies',
+		visibleFor: ['all'],
+		defaultVisible: true,
+		zIndex: 12,
+	},
+	{
+		id: 'latlon-grid-layer',
+		name: 'Latitude/Longitude Grid',
+		category: 'general',
+		description: 'Lat/long grid lines',
+		visibleFor: ['all'],
+		defaultVisible: false,
+		zIndex: 5,
+	},
+	{
+		id: 'coastal-regions-layer',
+		name: 'Coastal Regions (Inactive)',
+		category: 'general',
+		description: 'Outlines of all coastal regions',
+		visibleFor: ['all'],
+		defaultVisible: false,
+		zIndex: 18,
+	},
+	{
+		id: 'counties-layer',
+		name: 'Counties (Inactive)',
+		category: 'general',
+		description: 'US county boundaries',
+		visibleFor: ['all'],
+		defaultVisible: false,
+		zIndex: 17,
+	},
+]
+
+/**
+ * Data Layers - Only shown when specific data is present
+ */
+export const DATA_LAYERS: MapLayer[] = [
+	{
+		id: 'county-alerts-layer',
+		name: 'County Alerts',
+		category: 'data',
+		description: 'County alert data visualization',
+		visibleFor: ['alerts'],
+		defaultVisible: true,
+		zIndex: 100,
+	},
+	{
+		id: 'coastal-alerts-layer',
+		name: 'Coastal Alerts',
+		category: 'data',
+		description: 'Coastal region alert data',
+		visibleFor: ['alerts'],
+		defaultVisible: true,
+		zIndex: 100,
+	},
+	{
+		id: 'region-alerts-layer',
+		name: 'Region Alerts',
+		category: 'data',
+		description: 'Affected regions from alerts',
+		visibleFor: ['alerts'],
+		defaultVisible: true,
+		zIndex: 95,
+	},
+	{
+		id: 'frame-data-layer',
+		name: 'Hurricane Warnings/Watches',
+		category: 'data',
+		description: 'Hurricane warning and watch polygons',
+		visibleFor: ['hurricane'],
+		defaultVisible: true,
+		zIndex: 90,
+	},
+	{
+		id: 'cone-layer',
+		name: 'Cone of Uncertainty',
+		category: 'data',
+		description: 'Hurricane forecast uncertainty cone',
+		visibleFor: ['hurricane'],
+		defaultVisible: true,
+		zIndex: 85,
+	},
+	{
+		id: 'forecast-track-layer',
+		name: 'Forecast Track',
+		category: 'data',
+		description: 'Predicted hurricane path',
+		visibleFor: ['hurricane'],
+		defaultVisible: true,
+		zIndex: 88,
+	},
+	{
+		id: 'best-track-layer',
+		name: 'Historical Path',
+		category: 'data',
+		description: 'Historical hurricane track',
+		visibleFor: ['hurricane'],
+		defaultVisible: true,
+		zIndex: 87,
+	},
+	{
+		id: 'forecast-points-layer',
+		name: 'Forecast Points',
+		category: 'data',
+		description: 'Hurricane forecast position points',
+		visibleFor: ['hurricane'],
+		defaultVisible: true,
+		zIndex: 89,
+	},
+	{
+		id: 'hovered-region-layer',
+		name: 'Hovered Region',
+		category: 'data',
+		description: 'Currently hovered region highlight',
+		visibleFor: ['all'],
+		defaultVisible: true,
+		zIndex: 200,
+	},
+]
+
+/**
+ * Get all layers for a specific data type
+ */
+export function getLayersForDataType(dataType: DataType): MapLayer[] {
+	const allLayers = [...GENERAL_LAYERS, ...DATA_LAYERS]
+	return allLayers.filter((layer) => layer.visibleFor.includes(dataType) || layer.visibleFor.includes('all'))
+}
+
+/**
+ * Get default visibility state for all layers
+ */
+export function getDefaultLayerVisibility(): Record<string, boolean> {
+	const visibility: Record<string, boolean> = {}
+	const allLayers = [...GENERAL_LAYERS, ...DATA_LAYERS]
+	allLayers.forEach((layer) => {
+		visibility[layer.id] = layer.defaultVisible
+	})
+	return visibility
+}
+

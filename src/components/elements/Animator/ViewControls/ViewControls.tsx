@@ -27,6 +27,10 @@ interface IViewControlsProps {
 	mapZoom?: number
 	// Shared props
 	mode?: 'image' | 'map'
+	// Map layer props
+	mapLayerVisibility?: Record<string, boolean>
+	setMapLayerVisibility?: (visibility: Record<string, boolean>) => void
+	mapDataType?: 'alerts' | 'hurricane' | 'all'
 }
 
 /**
@@ -42,7 +46,16 @@ interface IViewControlsProps {
  * - Soundings picker (image mode)
  * - PDF button (image mode)
  */
-const ViewControls = ({ zoomIn, zoomOut, resetTransform, mapZoom = 3, mode = 'image' }: IViewControlsProps) => {
+const ViewControls = ({
+	zoomIn,
+	zoomOut,
+	resetTransform,
+	mapZoom = 3,
+	mode = 'image',
+	mapLayerVisibility,
+	setMapLayerVisibility,
+	mapDataType = 'all',
+}: IViewControlsProps) => {
 	const {
 		setZoomFill,
 		zoomFill,
@@ -61,6 +74,7 @@ const ViewControls = ({ zoomIn, zoomOut, resetTransform, mapZoom = 3, mode = 'im
 	} = useAnimator()
 
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
+	const [mapLayerPanelOpen, setMapLayerPanelOpen] = useState(false)
 
 	// Debug logging
 	const DEBUG = false
@@ -99,6 +113,20 @@ const ViewControls = ({ zoomIn, zoomOut, resetTransform, mapZoom = 3, mode = 'im
 						overlays={overlays}
 						onClose={() => setOverlayPanelOpen(false)}
 						open={overlayPanelOpen}
+					/>
+				</button>
+			)}
+
+			{/* Map Layer Panel (Map Mode Only) */}
+			{mode === 'map' && mapLayerVisibility && setMapLayerVisibility && (
+				<button onClick={() => setMapLayerPanelOpen(true)} className={styles.controlButton} title="Toggle map layers">
+					<FontAwesomeIcon icon={faLayerGroup} />
+					<MapLayerPanel
+						open={mapLayerPanelOpen}
+						onClose={() => setMapLayerPanelOpen(false)}
+						layerVisibility={mapLayerVisibility}
+						setLayerVisibility={setMapLayerVisibility}
+						dataType={mapDataType as any}
 					/>
 				</button>
 			)}
