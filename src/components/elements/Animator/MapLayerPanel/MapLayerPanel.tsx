@@ -29,7 +29,7 @@ export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibili
 	// Close panel when clicking outside
 	useEffect(() => {
 		if (!open) {
-			return
+			return () => {}
 		}
 
 		const handleClickOutside = (event: MouseEvent) => {

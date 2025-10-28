@@ -146,7 +146,7 @@ export function useMultiAlertAnimation(currentFrameAlertMap: Record<string, any>
 	// Initialize animation states when alert map changes
 	useEffect(() => {
 		if (!enabled || !currentFrameAlertMap) {
-			return
+			return () => {}
 		}
 
 		const newAnimationStates: Record<string, CountyAnimationState> = {}
@@ -216,7 +216,7 @@ export function useMultiAlertAnimation(currentFrameAlertMap: Record<string, any>
 	// Animation frame loop for smooth color transitions
 	useEffect(() => {
 		if (!enabled || Object.keys(animationStates).length === 0) {
-			return
+			return () => {}
 		}
 
 		const TRANSITION_DURATION = 750 // 0.75 seconds

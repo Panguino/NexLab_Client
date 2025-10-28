@@ -268,7 +268,7 @@ export function createWatchWarningLayer(warnings: any[]): PolygonLayer {
 
 	return new PolygonLayer({
 		id: 'watch-warning-layer',
-		data: geoJSON,
+		data: [geoJSON],
 		pickable: true,
 		stroked: true,
 		filled: true,
@@ -278,7 +278,7 @@ export function createWatchWarningLayer(warnings: any[]): PolygonLayer {
 		},
 		getLineColor: (f: any) => {
 			const colors = getWatchWarningColors(f.properties.type)
-			return colors.outline
+			return colors.line
 		},
 		getLineWidth: 2,
 		lineWidthMinPixels: 1,
