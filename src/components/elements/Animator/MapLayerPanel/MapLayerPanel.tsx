@@ -1,4 +1,7 @@
 'use client'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { DataType, getLayersForDataType, MapLayer } from '../AnimatorMapMachine/config/mapLayers'
 import styles from './MapLayerPanel.module.scss'
@@ -16,12 +19,10 @@ interface IMapLayerPanelProps {
  *
  * Provides layer visibility controls for map animator
  * Shows/hides layers based on the current data type being viewed
+ * Organized into collapsible overlay groups matching the satellite/radar animator style
  */
 export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibility, dataType }: IMapLayerPanelProps) => {
-	const [groupOpen, setGroupOpen] = useState<Record<string, boolean>>({
-		general: true,
-		data: true,
-	})
+	const [groupOpen, setGroupOpen] = useState('general')
 
 	// Close panel when clicking outside
 	useEffect(() => {
@@ -48,42 +49,47 @@ export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibili
 		})
 	}
 
-	const toggleGroup = (group: 'general' | 'data') => {
-		setGroupOpen({
-			...groupOpen,
-			[group]: !groupOpen[group],
-		})
-	}
-
 	// Get layers available for current data type
 	const availableLayers = getLayersForDataType(dataType)
 	const generalLayers = availableLayers.filter((l) => l.category === 'general')
 	const dataLayers = availableLayers.filter((l) => l.category === 'data')
 
-	const renderLayerGroup = (layers: MapLayer[], groupKey: 'general' | 'data') => {
+	const renderLayerItem = (layer: MapLayer) => (
+		<div
+			key={layer.id}
+			className={`${styles.layerItem} ${layerVisibility[layer.id] ? styles.active : ''}`}
+			onClick={() => handleLayerToggle(layer.id)}
+			title={layer.description}
+		>
+			<div className={styles.layerCheckbox}>
+				<input
+					type="checkbox"
+					checked={layerVisibility[layer.id] || false}
+					onChange={() => handleLayerToggle(layer.id)}
+					onClick={(e) => e.stopPropagation()}
+				/>
+			</div>
+			<div className={styles.layerInfo}>
+				<div className={styles.layerName}>{layer.name}</div>
+				{layer.description && <div className={styles.layerDescription}>{layer.description}</div>}
+			</div>
+		</div>
+	)
+
+	const renderOverlayGroup = (title: string, layers: MapLayer[], groupKey: 'general' | 'data') => {
+		const isOpen = groupOpen === groupKey
+
 		return (
-			<div key={groupKey} className={styles.layerGroup}>
-				{layers.map((layer) => (
-					<div
-						key={layer.id}
-						className={`${styles.layerItem} ${layerVisibility[layer.id] ? styles.active : ''}`}
-						onClick={() => handleLayerToggle(layer.id)}
-						title={layer.description}
-					>
-						<div className={styles.layerCheckbox}>
-							<input
-								type="checkbox"
-								checked={layerVisibility[layer.id] || false}
-								onChange={() => handleLayerToggle(layer.id)}
-								onClick={(e) => e.stopPropagation()}
-							/>
-						</div>
-						<div className={styles.layerInfo}>
-							<div className={styles.layerName}>{layer.name}</div>
-							{layer.description && <div className={styles.layerDescription}>{layer.description}</div>}
-						</div>
-					</div>
-				))}
+			<div key={groupKey} className={styles.overlayGroup}>
+				<div className={styles.overlayGroupTitle} onClick={() => setGroupOpen(groupKey)}>
+					{title}
+					<motion.div animate={{ transform: `${isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}` }}>
+						<FontAwesomeIcon icon={faChevronDown} />
+					</motion.div>
+				</div>
+				<motion.div animate={{ height: isOpen ? 'auto' : 0 }} className={styles.layerItems}>
+					{layers.map(renderLayerItem)}
+				</motion.div>
 			</div>
 		)
 	}
@@ -96,8 +102,8 @@ export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibili
 			onMouseDown={(e) => e.stopPropagation()}
 		>
 			<div className={styles.layerGroups}>
-				{generalLayers.length > 0 && renderLayerGroup(generalLayers, 'general')}
-				{dataLayers.length > 0 && renderLayerGroup(dataLayers, 'data')}
+				{generalLayers.length > 0 && renderOverlayGroup('Static Map', generalLayers, 'general')}
+				{dataLayers.length > 0 && renderOverlayGroup('Data Layers', dataLayers, 'data')}
 			</div>
 
 			{availableLayers.length === 0 && <div className={styles.noLayers}>No layers available for this data type</div>}

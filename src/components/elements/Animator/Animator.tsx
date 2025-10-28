@@ -1,6 +1,6 @@
 'use client'
 import { mapZoomState, zoomState } from '@/types/general'
-import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import AnimatorLayout from './AnimatorLayout/AnimatorLayout'
 import { getDefaultLayerVisibility } from './AnimatorMapMachine/config/mapLayers'
 
@@ -161,6 +161,13 @@ export const Animator = ({
 	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
 	const [mapZoomState, setMapZoomStateLocal] = useState<mapZoomState>(initialMapZoomState)
 	const [mapLayerVisibilityLocal, setMapLayerVisibilityLocal] = useState<Record<string, boolean>>(mapLayerVisibility || getDefaultLayerVisibility())
+
+	// Sync external mapLayerVisibility prop changes to local state
+	useEffect(() => {
+		if (mapLayerVisibility) {
+			setMapLayerVisibilityLocal(mapLayerVisibility)
+		}
+	}, [mapLayerVisibility])
 	return (
 		<AnimatorContext.Provider
 			value={{

@@ -285,9 +285,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			if (frame && frame.coastalData && frame.coastalData.features) {
 				const alertMap: Record<string, any> = {}
 				frame.coastalData.features.forEach((feature: any) => {
-					if (feature.properties?.alertColor) {
-						alertMap[feature.properties.id || feature.properties.ID] = {
+					const regionId = feature.properties?.id || feature.properties?.ID
+					if (regionId && feature.properties?.alertColor) {
+						alertMap[regionId] = {
 							color: feature.properties.alertColor,
+							hasAlert: feature.properties.hasAlert,
 							alerts: feature.properties.alerts,
 						}
 					}
@@ -369,25 +371,29 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							}),
 						]
 					: []),
-				// US States layer - using theme color white-grey13
-				// Light mode: #fff (255, 255, 255), Dark mode: #5f5f5f (95, 95, 95)
-				...(shouldShowLayer('states-layer')
+				// Lat-long grid lines with dashed appearance
+				// More visible for geographic reference
+				...(shouldShowLayer('latlon-grid-layer')
 					? [
 							new GeoJsonLayer({
-								id: 'states-layer',
-								data: statesData as any,
-								filled: true,
-								stroked: false,
-								getFillColor: () => statesColor as any,
-								opacity: 1,
+								id: 'latlon-grid-layer',
+								data: generateGridLines(10) as any,
+								filled: false,
+								stroked: true,
+								lineWidthMinPixels: 1,
+								lineWidthMaxPixels: 2,
+								getLineColor: () => gridlineColor as any,
+								getLineWidth: () => 1.5,
+								opacity: 0.2,
 								pickable: false,
 								updateTriggers: {
-									getFillColor: [statesColor],
+									getLineColor: [gridlineColor],
 								},
 							}),
 						]
 					: []),
-				// State fills layer - optional colored state fills
+				// State fills layer - fills only
+				// Light mode: white (#ffffff), Dark mode: grey13 (#5f5f5f)
 				...(shouldShowLayer('states-fill-layer')
 					? [
 							new GeoJsonLayer({
@@ -395,8 +401,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 								data: statesData as any,
 								filled: true,
 								stroked: false,
-								getFillColor: () => [200, 200, 200, 100] as any,
-								opacity: 0.3,
+								getFillColor: () => statesColor as any,
+								opacity: 1,
 								pickable: false,
 								updateTriggers: {
 									getFillColor: [statesColor],
@@ -422,72 +428,97 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							}),
 						]
 					: []),
-				// US States borders layer - separate layer for strokes
-				// Using theme color grey18-grey15: Light mode: #232323 (35, 35, 35), Dark mode: #505050 (80, 80, 80)
-				...(shouldShowLayer('states-layer')
-					? [
-							new GeoJsonLayer({
-								id: 'states-borders-layer',
-								data: statesData as any,
-								filled: false,
-								stroked: true,
-								lineWidthMinPixels: 2,
-								lineWidthMaxPixels: 3,
-								getLineColor: () => borderColor as any,
-								getLineWidth: () => 2,
-								opacity: 1,
-								pickable: false,
-								updateTriggers: {
-									getLineColor: [borderColor],
-								},
-							}),
-						]
-					: []),
-				// Counties layer (inactive) - US county boundaries
-				...(shouldShowLayer('counties-layer')
+
+				// Counties layer - single layer with conditional styling
+				// Toggles:
+				// - 'counties-inactive-layer': Controls border opacity for counties without alerts (0 opacity when off, except for hovered)
+				// - 'county-data-regions-layer': Controls whether to show alert colors and hover interactivity (when off, all fills use default color)
+				...(loadedFrames.length > 0 &&
+				loadedFrames[currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame]?.data
 					? [
 							new GeoJsonLayer({
 								id: 'counties-layer',
-								data: countiesData as any,
-								filled: false,
+								data: loadedFrames[
+									currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+								]?.data as any,
+								filled: true,
 								stroked: true,
 								lineWidthMinPixels: 0.5,
 								lineWidthMaxPixels: 1,
-								getLineColor: () => [150, 150, 150, 100] as any,
-								opacity: 0.4,
+								getLineColor: (d: any) => {
+									const regionId = d.properties?.id || d.properties?.ID
+									const showCountyData = shouldShowLayer('county-data-regions-layer')
+									const showInactiveCounties = shouldShowLayer('counties-inactive-layer')
+									const alertInfo = currentFrameAlertMap && regionId && currentFrameAlertMap[regionId]
+									const hasAlert = alertInfo?.hasAlert
+
+									// For counties without alerts, respect the inactive toggle
+									if (!showInactiveCounties) {
+										if (hasAlert && showCountyData) {
+											return countyBorderColor as any
+										}
+										return [0, 0, 0, 0]
+									}
+
+									// Always show white outline for hovered region
+									if (showCountyData && hoveredCountyId && regionId === hoveredCountyId) {
+										return [255, 255, 255, 255]
+									}
+
+									// If county has alert, always show border
+									if (hasAlert) {
+										return countyBorderColor as any
+									}
+
+									// Show border for inactive counties when toggle is on
+									return countyBorderColor as any
+								},
+								getFillColor: (d: any) => {
+									const regionId = d.properties?.id || d.properties?.ID
+									const showCountyData = shouldShowLayer('county-data-regions-layer')
+									const alertInfo = currentFrameAlertMap && regionId && currentFrameAlertMap[regionId]
+									const hasAlert = alertInfo?.hasAlert
+
+									// If county data is disabled, use default color for all counties
+									if (!showCountyData) {
+										return [200, 200, 200, 0]
+									}
+
+									// If county has alert and county data is enabled, show alert color
+									if (animatedColors && regionId && animatedColors[regionId]) {
+										return animatedColors[regionId]
+									}
+									if (hasAlert && alertInfo) {
+										return alertInfo.color
+									}
+
+									// No alert - show default fill
+									return [200, 200, 200, 0]
+								},
+								opacity: 1,
 								pickable: false,
 								updateTriggers: {
-									getLineColor: [borderColor],
+									getLineColor: [
+										countyBorderColor,
+										hoveredCountyId,
+										layerVisibility['counties-inactive-layer'],
+										layerVisibility['county-data-regions-layer'],
+										currentFrameAlertMap,
+									],
+									getFillColor: [layerVisibility['county-data-regions-layer'], currentFrameAlertMap, animatedColors],
 								},
 							}),
 						]
 					: []),
-				// Coastal regions layer (inactive) - outlines of all coastal regions
-				...(shouldShowLayer('coastal-regions-layer')
-					? [
-							new GeoJsonLayer({
-								id: 'coastal-regions-layer',
-								data: countriesData as any,
-								filled: false,
-								stroked: true,
-								lineWidthMinPixels: 0.5,
-								lineWidthMaxPixels: 1,
-								getLineColor: () => [100, 150, 200, 100] as any,
-								opacity: 0.3,
-								pickable: false,
-								updateTriggers: {
-									getLineColor: [borderColor],
-								},
-							}),
-						]
-					: []),
-				// Coastal and ocean regions layer with alert colors
-				// Displays marine zones, coastal areas, and offshore regions
+				// Coastal regions layer - single layer with conditional styling
+				// Toggles:
+				// - 'coastal-regions-inactive-layer': Controls border opacity for regions without alerts (0 opacity when off, except for hovered)
+				// - 'coastal-data-regions-layer': Controls whether to show alert colors and hover interactivity (when off, all fills are ocean color)
 				...(loadedFrames.length > 0 &&
 				loadedFrames[currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame]?.coastalData
 					? [
 							new GeoJsonLayer({
-								id: 'coastal-layer',
+								id: 'coastal-regions-layer',
 								data: loadedFrames[
 									currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
 								]?.coastalData as any,
@@ -496,122 +527,86 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 								lineWidthMinPixels: 0.5,
 								lineWidthMaxPixels: 1,
 								getLineColor: (d: any) => {
-									// Highlight hovered coastal region with white outline
 									const regionId = d.properties?.id || d.properties?.ID
-									if (hoveredCountyId && regionId === hoveredCountyId) {
-										return [255, 255, 255, 255] // White for hovered region
+									const showCoastalData = shouldShowLayer('coastal-data-regions-layer')
+									const showInactiveRegions = shouldShowLayer('coastal-regions-inactive-layer')
+									const alertInfo = currentFrameCoastalAlertMap && regionId && currentFrameCoastalAlertMap[regionId]
+									const hasAlert = alertInfo?.hasAlert
+
+									// Always show white outline for hovered region
+									if (showCoastalData && hoveredCountyId && regionId === hoveredCountyId) {
+										return [255, 255, 255, 255]
 									}
-									// Default county border color for coastal regions
+
+									// For regions without alerts, respect the inactive toggle
+									if (!showInactiveRegions) {
+										if (hasAlert && showCoastalData) {
+											return countyBorderColor as any
+										}
+										return [0, 0, 0, 0]
+									}
+
+									// If region has alert, always show border
+									if (hasAlert) {
+										return countyBorderColor as any
+									}
+
+									// Show border for inactive regions when toggle is on
 									return countyBorderColor as any
 								},
-								getLineWidth: () => 2,
 								getFillColor: (d: any) => {
-									// Look up alert color from coastal alert map
 									const regionId = d.properties?.id || d.properties?.ID
-									if (currentFrameCoastalAlertMap && regionId && currentFrameCoastalAlertMap[regionId]) {
-										return currentFrameCoastalAlertMap[regionId].color
+									const showCoastalData = shouldShowLayer('coastal-data-regions-layer')
+									const alertInfo = currentFrameCoastalAlertMap && regionId && currentFrameCoastalAlertMap[regionId]
+									const hasAlert = alertInfo?.hasAlert
+
+									// If coastal data is disabled, use ocean color for all regions
+									if (!showCoastalData) {
+										return oceanColor as any
 									}
-									// Default ocean color for coastal regions without alerts
+
+									// If region has alert and coastal data is enabled, show alert color
+									if (hasAlert && alertInfo) {
+										return alertInfo.color
+									}
+
+									// No alert - show light fill
 									return oceanColor as any
 								},
 								opacity: 1,
 								pickable: false,
 								updateTriggers: {
-									getLineColor: [countyBorderColor, hoveredCountyId],
-									getFillColor: [currentFrameCoastalAlertMap, oceanColor],
+									getLineColor: [
+										countyBorderColor,
+										hoveredCountyId,
+										layerVisibility['coastal-regions-inactive-layer'],
+										layerVisibility['coastal-data-regions-layer'],
+										currentFrameCoastalAlertMap,
+									],
+									getFillColor: [oceanColor, layerVisibility['coastal-data-regions-layer'], currentFrameCoastalAlertMap],
 								},
 							}),
 						]
 					: []),
-				// Lat-long grid lines with dashed appearance
-				// More visible for geographic reference
-				...(shouldShowLayer('latlon-grid-layer')
+				// US States borders layer - strokes only
+				// Light mode: grey18 (#232323), Dark mode: grey15 (#505050)
+				...(shouldShowLayer('states-layer')
 					? [
 							new GeoJsonLayer({
-								id: 'latlon-grid-layer',
-								data: generateGridLines(10) as any,
+								id: 'states-layer',
+								data: statesData as any,
 								filled: false,
 								stroked: true,
-								lineWidthMinPixels: 1,
-								lineWidthMaxPixels: 2,
-								getLineColor: () => gridlineColor as any,
-								getLineWidth: () => 1.5,
-								opacity: 0.2,
+								lineWidthMinPixels: 0.5,
+								lineWidthMaxPixels: 1,
+								getLineColor: () => borderColor as any,
+								opacity: 1,
 								pickable: false,
 								updateTriggers: {
-									getLineColor: [gridlineColor],
+									getLineColor: [borderColor],
 								},
 							}),
 						]
-					: []),
-				// Hovered region highlight layer - renders on top with white outline
-				// Only shows the currently hovered county or coastal region
-				...(hoveredCountyId && loadedFrames.length > 0
-					? [
-							(() => {
-								const activeFrame =
-									currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
-								const frame = loadedFrames[activeFrame]
-								let hoveredFeature: any = null
-
-								// Find hovered feature in counties data
-								if (frame && frame.data && 'features' in frame.data) {
-									hoveredFeature = (frame.data as any).features.find((f: any) => {
-										const fId = f.properties?.id || f.properties?.ID
-										return fId === hoveredCountyId
-									})
-								}
-
-								// If not found in counties, search in coastal data
-								if (!hoveredFeature && frame && frame.coastalData && 'features' in frame.coastalData) {
-									hoveredFeature = (frame.coastalData as any).features.find((f: any) => {
-										const fId = f.properties?.id || f.properties?.ID
-										return fId === hoveredCountyId
-									})
-								}
-
-								// Create a temporary GeoJSON with just the hovered feature
-								if (hoveredFeature) {
-									return new GeoJsonLayer({
-										id: 'hovered-region-layer',
-										data: {
-											type: 'FeatureCollection',
-											features: [hoveredFeature],
-										} as any,
-										filled: true,
-										stroked: true,
-										lineWidthMinPixels: 1,
-										lineWidthMaxPixels: 3,
-										getLineColor: () => [255, 255, 255, 255], // White outline
-										getLineWidth: () => 3, // Thicker outline for visibility
-										getFillColor: (d: any) => {
-											// Keep the original fill color (alert or default)
-											// Use animated color if available, otherwise use static alert color
-											const regionId = d.properties?.id || d.properties?.ID
-											if (animatedColors && regionId && animatedColors[regionId]) {
-												return animatedColors[regionId]
-											}
-											if (currentFrameAlertMap && regionId && currentFrameAlertMap[regionId]) {
-												return currentFrameAlertMap[regionId].color
-											}
-											if (currentFrameCoastalAlertMap && regionId && currentFrameCoastalAlertMap[regionId]) {
-												return currentFrameCoastalAlertMap[regionId].color
-											}
-											// Default color based on type
-											return [200, 200, 200, 100]
-										},
-										opacity: 1,
-										pickable: false,
-										updateTriggers: {
-											getLineColor: [hoveredCountyId],
-											getFillColor: [currentFrameAlertMap, currentFrameCoastalAlertMap, animatedColors],
-										},
-									})
-								}
-
-								return null
-							})(),
-						].filter(Boolean)
 					: []),
 			]
 
@@ -654,7 +649,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 									if (type === 'Cone of Uncertainty') return [100, 150, 255, 50] // Cone - Light blue 20% opacity
 									return [100, 100, 100, 0] // Default transparent
 								},
-								opacity: 1,
+								opacity: 0,
 								pickable: false,
 								updateTriggers: {
 									getLineColor: [frame.data],

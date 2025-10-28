@@ -29,6 +29,31 @@
 	// No border between groups - continuous list
 }
 
+.overlayGroup {
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.overlayGroupTitle {
+	border-top: 1px solid var(--color-grey15);
+	padding: 4px 10px 4px;
+	color: var(--color-grey1);
+	display: flex;
+	justify-content: space-between;
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background-color: var(--color-grey14);
+		color: var(--color-white);
+	}
+}
+
+.layerItems {
+	overflow: hidden;
+}
+
 .layerItem {
 	font-weight: normal;
 	font-size: 12px;

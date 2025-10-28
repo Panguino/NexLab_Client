@@ -240,6 +240,8 @@ const AnimatorMapSizer = () => {
 					_onViewStateChange={handleViewStateChange}
 					viewState={mapZoomState}
 					zoomStepScroll={ZOOM_STEP_SCROLL}
+					layerVisibility={mapLayerVisibility}
+					mapDataType={mapDataType}
 				/>
 			</div>
 
