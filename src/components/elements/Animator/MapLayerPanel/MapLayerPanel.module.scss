@@ -2,7 +2,7 @@
 
 .MapLayerPanel {
 	position: absolute;
-	top: 40px;
+	top: 8px;
 	left: 40px;
 	width: 250px;
 	text-align: left;
@@ -16,7 +16,7 @@
 
 	@media (max-width: 768px) {
 		width: 240px;
-		top: 35px;
+		top: 8px;
 		left: 35px;
 	}
 }

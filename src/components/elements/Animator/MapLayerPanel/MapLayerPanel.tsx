@@ -89,7 +89,12 @@ export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibili
 	}
 
 	return (
-		<div className={styles.MapLayerPanel} style={{ opacity: open ? 1 : 0, pointerEvents: open ? 'all' : 'none' }}>
+		<div
+			className={styles.MapLayerPanel}
+			style={{ opacity: open ? 1 : 0, pointerEvents: open ? 'all' : 'none' }}
+			onClick={(e) => e.stopPropagation()}
+			onMouseDown={(e) => e.stopPropagation()}
+		>
 			<div className={styles.layerGroups}>
 				{generalLayers.length > 0 && renderLayerGroup(generalLayers, 'general')}
 				{dataLayers.length > 0 && renderLayerGroup(dataLayers, 'data')}
