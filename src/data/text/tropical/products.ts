@@ -22,43 +22,43 @@ const TROPICAL_CYCLONE_MAX_WIND_FORECAST = 'vmax'
 
 export const TROPICAL_PRODUCTS = {
 	[ATLANTIC_TROPICAL_WEATHER_OUTLOOK]: {
-		name: 'Atlantic Tropical Weather Outlook',
+		name: 'Tropical Weather Outlook (Atlantic)',
 		requiresStorm: false,
 	},
 	[EASTERN_PACIFIC_TROPICAL_WEATHER_OUTLOOK]: {
-		name: 'Eastern Pacific Tropical Weather Outlook',
+		name: 'Tropical Weather Outlook (Eastern Pacific)',
 		requiresStorm: false,
 	},
 	[CENTRAL_PACIFIC_TROPICAL_WEATHER_OUTLOOK]: {
-		name: 'Central Pacific Tropical Weather Outlook',
+		name: 'Tropical Weather Outlook (Central Pacific)',
 		requiresStorm: false,
 	},
 	[NORTH_ATLANTIC_TROPICAL_DISCUSSION]: {
-		name: 'North Atlantic Tropical Discussion',
+		name: 'Tropical Discussion (Atlantic)',
 		requiresStorm: false,
 	},
 	[EASTERN_PACIFIC_TROPICAL_DISCUSSION]: {
-		name: 'Eastern Pacific Tropical Discussion',
+		name: 'Tropical Discussion (Eastern Pacific)',
 		requiresStorm: false,
 	},
 	[TROPICAL_CYCLONE_PUBLIC_ADVISORY]: {
-		name: 'Tropical Cyclone Public Advisory',
+		name: 'Public Advisory',
 		requiresStorm: true,
 	},
 	[TROPICAL_CYCLONE_FORECAST_ADVISORY]: {
-		name: 'Tropical Cyclone Forecast Advisory',
+		name: 'Forecast Advisory',
 		requiresStorm: true,
 	},
 	[TROPICAL_CYCLONE_FORECAST_DISCUSSION]: {
-		name: 'Tropical Cyclone Forecast Discussion',
+		name: 'Forecast Discussion',
 		requiresStorm: true,
 	},
 	[TROPICAL_CYCLONE_AVIATION_ADVISORY]: {
-		name: 'Tropical Cyclone Aviation Advisory',
+		name: 'Aviation Advisory',
 		requiresStorm: true,
 	},
 	[TROPICAL_CYCLONE_WIND_SPEED_PROBABILITIES]: {
-		name: 'Tropical Cyclone Wind Speed Probabilities',
+		name: 'Wind Speed Probabilities',
 		requiresStorm: true,
 	},
 	[TROPICAL_CYCLONE_MIN_PRESSURE_FORECAST]: {

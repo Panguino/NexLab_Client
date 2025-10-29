@@ -1,0 +1,21 @@
+.sectionTitle {
+	font-size: 12px;
+	text-transform: uppercase;
+	color: var(--color-grey3);
+	font-weight: 600;
+	padding-bottom: 10px;
+	padding-top: 20px;
+}
+
+.sectionTitle:first-child {
+	padding-top: 0;
+}
+
+.stormSelector {
+	padding-top: 20px;
+	padding-bottom: 10px;
+}
+
+.productsGroup {
+	padding-bottom: 10px;
+}

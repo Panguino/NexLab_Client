@@ -7,6 +7,7 @@ import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/Sid
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
 import HazardsPanel from '../HazardsPanel/HazardsPanel'
+import TropicalPanel from '../TropicalPanel/TropicalPanel'
 import styles from './TextSidebarPanels.module.scss'
 
 const TextSidebarPanels = () => {
@@ -63,7 +64,7 @@ const TextSidebarPanels = () => {
 
 			{/* Tropical */}
 			<SidebarSubPanel matchesPath={`${basepath}/nhc-tropical-hurricane-weather`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Tropical" linkUrl={basepath} />
+				<TropicalPanel basepath={basepath} />
 			</SidebarSubPanel>
 
 			{/* Winter */}
