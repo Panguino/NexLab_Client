@@ -16,7 +16,11 @@ const TROPICAL_CYCLONE_FORECAST_DISCUSSION = 'TCD'
 const TROPICAL_CYCLONE_AVIATION_ADVISORY = 'TCA'
 const TROPICAL_CYCLONE_WIND_SPEED_PROBABILITIES = 'PWS'
 
-export const TROPICAL_TEXT_PRODUCTS = {
+// these are graphical storm specific products
+const TROPICAL_CYCLONE_MIN_PRESSURE_FORECAST = 'pmin'
+const TROPICAL_CYCLONE_MAX_WIND_FORECAST = 'vmax'
+
+export const TROPICAL_PRODUCTS = {
 	[ATLANTIC_TROPICAL_WEATHER_OUTLOOK]: {
 		name: 'Atlantic Tropical Weather Outlook',
 		requiresStorm: false,
@@ -57,6 +61,12 @@ export const TROPICAL_TEXT_PRODUCTS = {
 		name: 'Tropical Cyclone Wind Speed Probabilities',
 		requiresStorm: true,
 	},
+	[TROPICAL_CYCLONE_MIN_PRESSURE_FORECAST]: {
+		name: 'Minimum Pressure Ensemble Forecast',
+		requiresStorm: true,
+	},
+	[TROPICAL_CYCLONE_MAX_WIND_FORECAST]: {
+		name: 'Maximum Wind Ensemble Forecast',
+		requiresStorm: true,
+	},
 }
-
-// these are graphical
