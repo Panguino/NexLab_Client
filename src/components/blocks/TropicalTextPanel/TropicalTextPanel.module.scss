@@ -1,0 +1,21 @@
+.tropicalTextPanel {
+	padding: 20px;
+	min-height: 100%;
+}
+
+.tropicalText {
+	font-family: 'Courier New', Courier, monospace;
+	font-size: 14px;
+	line-height: 1.4;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	color: var(--color-grey3);
+	margin: 0;
+}
+
+.placeholderMessage {
+	color: var(--color-grey10);
+	font-size: 16px;
+	text-align: center;
+	padding: 40px 20px;
+}

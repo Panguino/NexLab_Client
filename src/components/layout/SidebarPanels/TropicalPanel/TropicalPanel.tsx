@@ -1,12 +1,16 @@
 'use client'
 
+import { useParams, useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
+
 import Select from '@/components/elements/Select/Select'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { TROPICAL_PRODUCTS } from '@/data/text/tropical/products'
-import { useParams, useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { TROPICAL_TEXT_SLIDEOUT } from '@/data/vars'
+import { useRootStore } from '@/store/useRootStore'
+import { getTropicalGeneralData } from '@/util/dataCalls/text/tropical/query-tropical-general'
 import styles from './TropicalPanel.module.scss'
 
 interface TropicalPanelProps {
@@ -17,6 +21,8 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	const router = useRouter()
 	const { tropicalProductId, tropicalStormId } = useParams()
 	const [selectedStorm, setSelectedStorm] = useState<string | null>(null)
+	const setTropicalTextContent = useRootStore.use.setTropicalTextContent()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	// Full path to tropical section
 	const tropicalBasePath = `${basepath}/nhc-tropical-hurricane-weather`
@@ -31,10 +37,31 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 		}
 	}, [tropicalStormId])
 
+	// Watch for tropicalProductId changes and fetch/display product data
+	useEffect(() => {
+		const fetchAndDisplayProduct = async () => {
+			if (tropicalProductId && typeof tropicalProductId === 'string') {
+				// Check if this is a valid general product (not a storm-specific product)
+				const product = TROPICAL_PRODUCTS[tropicalProductId]
+				if (product && !product.requiresStorm) {
+					console.log(`Loading tropical product from URL: ${tropicalProductId}`)
+					const productData = await getTropicalGeneralData(tropicalProductId)
+					if (productData && typeof productData !== 'boolean') {
+						setTropicalTextContent(productData.content)
+						openSlideoutPanel(TROPICAL_TEXT_SLIDEOUT)
+					}
+				}
+			}
+		}
+
+		fetchAndDisplayProduct()
+	}, [tropicalProductId, setTropicalTextContent, openSlideoutPanel])
+
 	const handleProductClick = useCallback(
-		(productKey: string, productName: string) => {
+		async (productKey: string, productName: string) => {
 			console.log(`Tropical product clicked: ${productKey} - ${productName}`)
-			// Update URL with new product but stay on same page
+
+			// Just navigate - the useEffect will handle fetching and opening the slideout
 			if (tropicalStormId) {
 				router.push(`${tropicalBasePath}/${productKey}/storm/${tropicalStormId}`)
 			} else {
@@ -58,6 +85,7 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 			console.log(`Storm selected: ${stormValue}`)
 			setSelectedStorm(stormValue)
 			// Navigate to storm viewer page - use product if available, otherwise use 'overview'
+			// developer note: this overview fallback is something copilot suggested - I don't expect it to ever be used
 			const productForUrl = tropicalProductId || 'overview'
 			router.push(`${tropicalBasePath}/${productForUrl}/storm/${stormValue}`)
 		},

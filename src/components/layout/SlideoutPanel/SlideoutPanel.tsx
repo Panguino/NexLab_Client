@@ -7,6 +7,7 @@ import { Meilisearch } from '@/components/blocks/Meilisearch/Meilisearch'
 import MetarTextPanel from '@/components/blocks/MetarTextPanel/MetarTextPanel'
 import ProductInfoPanel from '@/components/blocks/ProductInfoPanel/ProductInfoPanel'
 import SoundingTextPanel from '@/components/blocks/SoundingTextPanel/SoundingTextPanel'
+import TropicalTextPanel from '@/components/blocks/TropicalTextPanel/TropicalTextPanel'
 import CloseX from '@/components/elements/icons/CloseX/CloseX'
 import {
 	DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT,
@@ -14,6 +15,7 @@ import {
 	PRODUCT_INFO_SLIDEOUT,
 	SEARCH_RESULTS_SLIDEOUT,
 	SOUNDING_TEXT_SLIDEOUT,
+	TROPICAL_TEXT_SLIDEOUT,
 } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { usePathname } from 'next/navigation'
@@ -46,6 +48,8 @@ const SlideoutPanel = () => {
 				return <MetarTextPanel />
 			case SOUNDING_TEXT_SLIDEOUT:
 				return <SoundingTextPanel />
+			case TROPICAL_TEXT_SLIDEOUT:
+				return <TropicalTextPanel />
 			default:
 				return <></>
 		}

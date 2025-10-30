@@ -9,6 +9,8 @@ export interface ISlideoutPanelSlice {
 	setMetarContent: (content: string | null) => void
 	metarLoading: boolean
 	setMetarLoading: (loading: boolean) => void
+	tropicalTextContent: string | null
+	setTropicalTextContent: (content: string | null) => void
 	slideoutPanelIsOpen: boolean
 	currentSlideoutPanel: string
 	openSlideoutPanel: (panel: string) => void
@@ -24,6 +26,8 @@ export const createSlideoutPanelSlice: ZustandStateSlice<ISlideoutPanelSlice> = 
 	setMetarContent: (content: string | null) => set(() => ({ metarContent: content })),
 	metarLoading: false,
 	setMetarLoading: (loading: boolean) => set(() => ({ metarLoading: loading })),
+	tropicalTextContent: null,
+	setTropicalTextContent: (content: string | null) => set(() => ({ tropicalTextContent: content })),
 	slideoutPanelIsOpen: false,
 	currentSlideoutPanel: '',
 	openSlideoutPanel: (panel: string) => set(() => ({ slideoutPanelIsOpen: true, currentSlideoutPanel: panel })),
@@ -33,6 +37,7 @@ export const createSlideoutPanelSlice: ZustandStateSlice<ISlideoutPanelSlice> = 
 			slideoutPanelIsOpen: false,
 			metarLoading: false,
 			metarContent: null,
+			tropicalTextContent: null,
 		}))
 	},
 })
