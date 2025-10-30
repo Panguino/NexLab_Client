@@ -1,7 +1,7 @@
 'use client'
 
 import { useParams, useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import Select from '@/components/elements/Select/Select'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
@@ -10,7 +10,8 @@ import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad
 import { TROPICAL_PRODUCTS } from '@/data/text/tropical/products'
 import { TROPICAL_TEXT_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
-import { getTropicalGeneralData } from '@/util/dataCalls/text/tropical/query-tropical-general'
+import { getData } from '@/util/dataCalls/dataCall-generic'
+import { getTropicalGeneralData, getTropicalStormData } from '@/util/dataCalls/text/query-tropical'
 import styles from './TropicalPanel.module.scss'
 
 interface TropicalPanelProps {
@@ -21,11 +22,33 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	const router = useRouter()
 	const { tropicalProductId, tropicalStormId } = useParams()
 	const [selectedStorm, setSelectedStorm] = useState<string | null>(null)
+	const [currentStorms, setCurrentStorms] = useState<any[]>([])
+	const [stormData, setStormData] = useState<any>(null)
 	const setTropicalTextContent = useRootStore.use.setTropicalTextContent()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	// Full path to tropical section
 	const tropicalBasePath = `${basepath}/nhc-tropical-hurricane-weather`
+
+	// Fetch current storms data
+	useEffect(() => {
+		const fetchStorms = async () => {
+			try {
+				const data = await getData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
+				console.log('Raw storm data:', data)
+
+				// Extract storms from the object - each entry is a storm with name and id properties
+				const stormArray = data && typeof data === 'object' ? Object.values(data) : []
+
+				console.log('Processed storm array:', stormArray)
+				setCurrentStorms(stormArray)
+			} catch (error) {
+				console.error('Error fetching current storms:', error)
+				setCurrentStorms([])
+			}
+		}
+		fetchStorms()
+	}, [])
 
 	// Sync selected storm with URL parameter
 	useEffect(() => {
@@ -81,9 +104,15 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	)
 
 	const handleStormChange = useCallback(
-		(stormValue: string) => {
+		async (stormValue: string) => {
 			console.log(`Storm selected: ${stormValue}`)
 			setSelectedStorm(stormValue)
+
+			// Fetch the storm data for this storm ID
+			const data = await getTropicalStormData(stormValue)
+			console.log(`Storm data for ${stormValue}:`, data)
+			setStormData(data)
+
 			// Navigate to storm viewer page - use product if available, otherwise use 'overview'
 			// developer note: this overview fallback is something copilot suggested - I don't expect it to ever be used
 			const productForUrl = tropicalProductId || 'overview'
@@ -102,11 +131,13 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 		.filter(([, product]) => product.requiresStorm)
 		.map(([key, product]) => ({ key, ...product }))
 
-	// Mock storm options - will be fetched later
-	const stormOptions = [
-		{ label: 'Storm One', value: 'st1' },
-		{ label: 'Storm Two', value: 'st2' },
-	]
+	// Transform current storms data into select options
+	const stormOptions = useMemo(() => {
+		return currentStorms.map((storm) => ({
+			label: storm.name,
+			value: storm.id,
+		}))
+	}, [currentStorms])
 
 	return (
 		<>

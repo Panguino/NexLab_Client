@@ -1,4 +1,26 @@
-import { getData } from '../../dataCall-generic'
+import { getData } from '../dataCall-generic'
+
+/**
+ * Fetches a product URL and extracts plain text content from the HTML <pre> tag
+ * @param productLink - The full URL to the product text content
+ * @returns Extracted plain text content from the <pre> tag
+ */
+export const productURLtoText = async (productLink: string) => {
+	// Fetch the raw HTML content (not JSON)
+	const htmlResponse = await fetch(productLink)
+	if (!htmlResponse.ok) {
+		throw new Error(`HTTP error! status: ${htmlResponse.status}`)
+	}
+	const htmlText = await htmlResponse.text()
+
+	// Use DOMParser to safely extract text from <pre> tag
+	const parser = new DOMParser()
+	const doc = parser.parseFromString(htmlText, 'text/html')
+	const preElement = doc.querySelector('pre')
+	const productData = preElement?.textContent || ''
+
+	return productData
+}
 
 export const getTropicalGeneralData = async (productId) => {
 	// eventually we will have to receive valid time, but for now just get the most recent
@@ -38,22 +60,25 @@ export const getTropicalGeneralData = async (productId) => {
 	const latestTimestamp = timestamps.sort().reverse()[0]
 	const productLink = `https://weather.cod.edu/textserv/raw/${productQueryString}/${latestTimestamp}`
 
-	// Fetch the raw HTML content (not JSON)
-	const htmlResponse = await fetch(productLink)
-	if (!htmlResponse.ok) {
-		throw new Error(`HTTP error! status: ${htmlResponse.status}`)
-	}
-	const htmlText = await htmlResponse.text()
-
-	// Use DOMParser to safely extract text from <pre> tag
-	const parser = new DOMParser()
-	const doc = parser.parseFromString(htmlText, 'text/html')
-	const preElement = doc.querySelector('pre')
-	const productData = preElement?.textContent || ''
+	// Use the shared function to fetch and extract content
+	const productData = await productURLtoText(productLink)
 
 	return {
 		timestamp: latestTimestamp,
 		link: productLink,
 		content: productData,
+	}
+}
+
+export const getTropicalStormData = async (stormId) => {
+	// eventually we will have to receive valid time, but for now just get the most recent
+	const endpoint = `https://weather.cod.edu/textserv/dev/tropical/json/${stormId}`
+	const data = await getData(endpoint)
+
+	// make sure this data object isn't empty
+	if (data && Object.keys(data).length > 0) {
+		return data
+	} else {
+		return false
 	}
 }
