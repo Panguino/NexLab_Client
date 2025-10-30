@@ -26,14 +26,16 @@
 	}
 
 	label {
+		color: var(--color-grey4-grey3);
+		transition: color var(--themeChange);
 		font-size: 16px;
-		color: var(--color-grey3);
-		position: absolute;
-		left: 5px;
-		top: 6px;
-		transform: translate(11px, 9px);
-		transition: all linear 0.12s;
-		z-index: 0;
+		height: 35px;
+		width: 100%;
+		padding: 16px;
+		display: flex;
+		align-content: center;
+		flex-direction: column;
+		justify-content: center;
 	}
 }
 .title {

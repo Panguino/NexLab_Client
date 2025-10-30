@@ -63,7 +63,7 @@ const TextSidebarPanels = () => {
 			</SidebarSubPanel>
 
 			{/* Tropical */}
-			<SidebarSubPanel matchesPath={`${basepath}/nhc-tropical-hurricane-weather`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel includesPath={`${basepath}/nhc-tropical-hurricane-weather`} activeX="0%" inactiveX="100%">
 				<TropicalPanel basepath={basepath} />
 			</SidebarSubPanel>
 
