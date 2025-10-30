@@ -6,6 +6,7 @@ import countriesData from '@/data/d3Map/countries.json'
 import lakesData from '@/data/d3Map/lakes.json'
 import statesData from '@/data/d3Map/states.json'
 import worldData from '@/data/d3Map/world.json'
+import { getHazardInfoFromEvent } from '@/util/dataCalls/alerts/parseCountyAlerts'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from 'deck.gl'
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
@@ -1047,6 +1048,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			const formattedAlerts = alerts.map((alert: any) => {
 				// Convert color from HazardData format to RGBA array
 				let color: [number, number, number, number] = [128, 128, 128, 255]
+				let name = 'Unknown'
+
 				if (alert.color) {
 					if (typeof alert.color === 'string') {
 						// If it's already a hex string or CSS color
@@ -1059,10 +1062,15 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						// Already an array
 						color = alert.color
 					}
+					// Use hazardType and hazardLevel as the name if available
+					name = alert.hazardType || alert.locationName || 'Unknown'
+				} else if (alert.event) {
+					// For historical alerts without color field, get complete hazard info from event
+					const hazardInfo = getHazardInfoFromEvent(alert.event)
+					color = hazardInfo.rgba
+					// Format name as "Type Level" (e.g., "Winter Advisory")
+					name = `${hazardInfo.typeName} ${hazardInfo.levelName}`
 				}
-
-				// Use hazardType and hazardLevel as the name if available
-				const name = alert.hazardType || alert.locationName || 'Unknown'
 
 				return {
 					color,

@@ -10,7 +10,10 @@ import { createMockCountyAlertFrames } from '@/util/dataCalls/alerts/createCount
 import {
 	createCoastalAlertGeoJSON,
 	createCountyAlertGeoJSON,
+	fetchCountyAlertsLastHours,
 	fetchRealTimeHazards,
+	parseAlertsToCoastalMap,
+	parseAlertsToCountyMap,
 	parseHazardsToCoastalMap,
 	parseHazardsToCountyMap,
 } from '@/util/dataCalls/alerts/parseCountyAlerts'
@@ -339,9 +342,8 @@ function isAlertActiveAtTime(alert: any, frameTime: Date): boolean {
 
 /**
  * Historical Timeline - Scrubable Hazard History
- * Generates multiple frames of hazard data over time to simulate historical progression
- * Allows scrubbing through the timeline to see how hazards evolved
- * Filters alerts based on their effective/expires times
+ * Fetches 36 hours of alert history and creates 12 animation frames (one per hour for last 12 hours)
+ * Filters alerts to only show those active at each time step based on their effective/expires times
  */
 export const HistoricalTimeline: StoryFn<typeof Animator> = () => {
 	const [frames, setFrames] = useState<MapFrame[]>([])
@@ -353,8 +355,31 @@ export const HistoricalTimeline: StoryFn<typeof Animator> = () => {
 			try {
 				setIsLoading(true)
 
-				// Fetch current hazards
-				const hazardsResponse = await fetchRealTimeHazards({ region: 'CONUS' })
+				// Fetch 36 hours of alert history to have data for the last 12 hours
+				const alertsResponse = await fetchCountyAlertsLastHours(36)
+				console.log('Fetched alerts response:', alertsResponse)
+				console.log('Total alerts in response:', Object.keys(alertsResponse.data?.alerts || {}).length)
+				console.log('Timeline entries:', alertsResponse.data?.timeline?.length || 0)
+
+				// Log sample alert to see structure
+				const sampleAlert = Object.values(alertsResponse.data?.alerts || {})[0]
+				console.log('Sample alert structure:', sampleAlert)
+
+				// Log all unique event types
+				const eventTypes = new Set<string>()
+				Object.values(alertsResponse.data?.alerts || {}).forEach((alert: any) => {
+					if (alert.event) eventTypes.add(alert.event)
+				})
+				console.log('Unique event types:', Array.from(eventTypes).sort())
+
+				// Debug: Check if alerts have locations array
+				const alertsWithLocations = Object.values(alertsResponse.data?.alerts || {}).filter((alert: any) => alert.locations)
+				const alertsWithoutLocations = Object.values(alertsResponse.data?.alerts || {}).filter((alert: any) => !alert.locations)
+				console.log('Alerts with locations array:', alertsWithLocations.length)
+				console.log('Alerts without locations array:', alertsWithoutLocations.length)
+				if (alertsWithoutLocations.length > 0) {
+					console.log('Sample alert without locations:', alertsWithoutLocations[0])
+				}
 
 				// Fetch coastal geometry once
 				const coastalFeatures: any[] = []
@@ -398,26 +423,46 @@ export const HistoricalTimeline: StoryFn<typeof Animator> = () => {
 					console.error('Error fetching coastal geometry:', err)
 				}
 
-				// Generate 24 frames (one for each hour going back)
+				// Generate 12 frames (one for each hour of the last 12 hours)
 				const generatedFrames: MapFrame[] = []
 				const now = new Date()
 
-				for (let i = 0; i < 24; i++) {
+				for (let i = 0; i < 12; i++) {
 					const frameTime = new Date(now.getTime() - i * 60 * 60 * 1000) // Go back i hours
 
-					// Filter hazards based on whether they are active at this frame time
+					// Filter alerts based on whether they are active at this frame time
 					// An alert is active if the frame time falls between its effective/onset and expires/ends times
-					const timeBasedHazards = (hazardsResponse.data || []).filter((hazard) => {
-						return isAlertActiveAtTime(hazard, frameTime)
+					const timeBasedAlerts = (alertsResponse.data?.alerts ? Object.values(alertsResponse.data.alerts) : []).filter((alert: any) => {
+						return isAlertActiveAtTime(alert, frameTime)
 					})
 
 					// Create county map for this frame
 					const filteredResponse = {
-						...hazardsResponse,
-						data: timeBasedHazards,
+						...alertsResponse,
+						data: {
+							...alertsResponse.data,
+							alerts: timeBasedAlerts.reduce((acc: any, alert: any) => {
+								acc[alert.id || alert.event] = alert
+								return acc
+							}, {}),
+						},
 					}
-					const countyMap = parseHazardsToCountyMap(filteredResponse)
-					const coastalMap = parseHazardsToCoastalMap(filteredResponse)
+					const countyMap = parseAlertsToCountyMap(filteredResponse)
+					const coastalMap = parseAlertsToCoastalMap(filteredResponse)
+
+					// Debug: Log first frame details
+					if (i === 0) {
+						// Find counties with multiple alerts
+						const countiesWithMultipleAlerts = Object.entries(countyMap).filter(([_, data]) => data.alerts.length >= 2)
+						console.log(`Frame 0 debug:`, {
+							timeBasedAlerts: timeBasedAlerts.length,
+							countyMapSize: Object.keys(countyMap).length,
+							countiesWithMultipleAlerts: countiesWithMultipleAlerts.length,
+							sampleCountyAlert: Object.entries(countyMap)[0],
+							sampleMultiAlertCounty: countiesWithMultipleAlerts[0],
+							sampleTimeBasedAlert: timeBasedAlerts[0],
+						})
+					}
 
 					// Create GeoJSON for this frame
 					const geoJSON = createCountyAlertGeoJSON(countyMap)
@@ -431,12 +476,19 @@ export const HistoricalTimeline: StoryFn<typeof Animator> = () => {
 						metadata: {
 							source: 'historical-timeline',
 							frameIndex: i,
-							totalHazards: timeBasedHazards.length,
+							totalAlerts: timeBasedAlerts.length,
 							countiesAffected: Object.keys(countyMap).length,
 							coastalRegionsAffected: Object.keys(coastalMap).length,
 							hoursAgo: i,
 						},
 					}
+
+					console.log(`Frame ${i} (${frameTime.toISOString()}):`, {
+						totalAlerts: timeBasedAlerts.length,
+						countiesAffected: Object.keys(countyMap).length,
+						coastalRegionsAffected: Object.keys(coastalMap).length,
+						hoursAgo: i,
+					})
 
 					generatedFrames.push(frame)
 				}

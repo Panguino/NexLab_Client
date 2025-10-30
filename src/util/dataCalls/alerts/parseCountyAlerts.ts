@@ -4,6 +4,8 @@
  */
 
 import countiesData from '@/data/d3Map/counties.json'
+import { HAZARD_COLORS, HAZARD_LEVEL_NAMES, HAZARD_TYPE_NAMES } from '@/data/hazardMapVars'
+import getAlertIdByEvent from '@/util/getAlertIdByEvent'
 import { Feature, FeatureCollection } from 'geojson'
 
 const ALERTS_API_BASE = 'https://api-data-nexlab-staging-1108a5c77b75.herokuapp.com'
@@ -176,7 +178,7 @@ export const fetchCountyHazards = async (fipsCode: string): Promise<HazardsAPIRe
 /**
  * Fetch alerts from the last X hours
  */
-export const fetchCountyAlertsLastHours = async (hours: 1 | 6 | 24 = 24): Promise<AlertsAPIResponse> => {
+export const fetchCountyAlertsLastHours = async (hours: number = 24): Promise<AlertsAPIResponse> => {
 	try {
 		const endpoint = `${ALERTS_API_BASE}/api/alerts/history/last?hours=${hours}`
 		const response = await fetch(endpoint, {
@@ -232,21 +234,143 @@ export const parseAlertEvent = (event: string): { type: string; level: string } 
 }
 
 /**
- * Get color for an alert based on type and level
+ * Get complete hazard info for an alert event
+ * Returns type, level, names, and color - matching the D3 hazards map structure
  */
-export const getAlertColor = (event: string): [number, number, number, number] => {
-	const { type, level } = parseAlertEvent(event)
-	const key = `${type}_${level}`
+export const getHazardInfoFromEvent = (
+	event: string,
+): {
+	type: string
+	typeName: string
+	level: string
+	levelName: string
+	color: string // HEX color
+	rgba: [number, number, number, number]
+} => {
+	const alertInfo = getAlertIdByEvent(event)
+	const { type, level } = alertInfo
 
-	return HAZARD_COLOR_MAP[key] || [128, 128, 128, 255] // Default grey
+	// Get names from the mapping
+	const typeName = HAZARD_TYPE_NAMES[type] || type
+	const levelName = HAZARD_LEVEL_NAMES[level] || level
+
+	// Look up color from HAZARD_COLORS
+	const colorStr = HAZARD_COLORS[type]?.[level]
+	let rgba: [number, number, number, number] = [128, 128, 128, 255]
+	let hexColor = '#808080'
+
+	if (colorStr) {
+		const [r, g, b] = colorStr.split(',').map(Number)
+		rgba = [r, g, b, 255]
+		hexColor = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
+	}
+
+	return {
+		type,
+		typeName,
+		level,
+		levelName,
+		color: hexColor,
+		rgba,
+	}
 }
 
 /**
- * Extract county ID from alert properties
+ * Get color for an alert based on type and level
+ * Uses comprehensive alert event mapping and hazard colors
+ */
+export const getAlertColor = (event: string): [number, number, number, number] => {
+	return getHazardInfoFromEvent(event).rgba
+}
+
+/**
+ * Determine severity level of an alert for prioritization
+ * Higher number = more severe
+ * Used to select the most severe alert color when a county has multiple alerts
+ */
+export const getAlertSeverity = (alert: any): number => {
+	const { level } = parseAlertEvent(alert.event || '')
+
+	// Severity ranking: WARNING > WATCH > ADVISORY > STATEMENT
+	const severityMap: Record<string, number> = {
+		WARNING: 4,
+		WATCH: 3,
+		ADVISORY: 2,
+		STATEMENT: 1,
+	}
+
+	return severityMap[level] || 0
+}
+
+/**
+ * Deduplicate alerts by event type, keeping only the most severe one of each type
+ * Removes duplicate alerts that have the same event name
+ */
+export const deduplicateAlerts = (alerts: any[]): any[] => {
+	const alertsByEvent: Record<string, any> = {}
+
+	alerts.forEach((alert) => {
+		const eventType = alert.event || 'unknown'
+		const existingAlert = alertsByEvent[eventType]
+
+		// Keep the alert with higher severity, or the first one if same severity
+		if (!existingAlert || getAlertSeverity(alert) > getAlertSeverity(existingAlert)) {
+			alertsByEvent[eventType] = alert
+		}
+	})
+
+	return Object.values(alertsByEvent)
+}
+
+/**
+ * Extract county IDs from alert
+ * Alerts have a locations array with county information
+ * Returns array of county IDs (FIPS codes)
+ */
+export const extractCountyIds = (alert: any): string[] => {
+	const countyIds: string[] = []
+
+	// Check if alert has locations array with county data
+	if (alert.locations && Array.isArray(alert.locations)) {
+		alert.locations.forEach((location: any) => {
+			if (location.type === 'county' && location.locationId) {
+				countyIds.push(location.locationId)
+			}
+		})
+	}
+
+	// If no locations array, try fallback methods
+	if (countyIds.length === 0) {
+		// Try direct county ID properties
+		if (alert.countyId) {
+			countyIds.push(alert.countyId)
+		} else if (alert.county_id) {
+			countyIds.push(alert.county_id)
+		} else if (alert.properties?.countyId) {
+			countyIds.push(alert.properties.countyId)
+		} else if (alert.properties?.county_id) {
+			countyIds.push(alert.properties.county_id)
+		} else if (alert.areaDesc) {
+			// Parse from area description like "County, State"
+			const match = alert.areaDesc.match(/(\d{5})/)
+			if (match) {
+				countyIds.push(match[1])
+			}
+		}
+	}
+
+	return countyIds
+}
+
+/**
+ * Extract county ID from alert properties (legacy - returns first county)
  * Alerts may have county ID in different formats
  */
 export const extractCountyId = (alert: any): string | null => {
-	// Try different possible fields
+	const countyIds = extractCountyIds(alert)
+	if (countyIds.length > 0) return countyIds[0]
+
+	// Fallback to old formats
 	if (alert.countyId) return alert.countyId
 	if (alert.county_id) return alert.county_id
 	if (alert.properties?.countyId) return alert.properties.countyId
@@ -294,11 +418,24 @@ export const parseHazardsToCountyMap = (hazardsResponse: HazardsAPIResponse): Co
 			}
 		}
 
-		countyMap[countyId].alerts.push(hazard)
-		// Update color to the most severe (first one added)
-		if (countyMap[countyId].alerts.length === 1) {
+		// Ensure color is attached to hazard object for animation hook to use
+		const hazardWithColor = { ...hazard, color }
+		countyMap[countyId].alerts.push(hazardWithColor)
+
+		// Update color if this hazard is more severe than the most severe hazard already in the county
+		const mostSevereHazard = countyMap[countyId].alerts.reduce((prev: any, curr: any) =>
+			getAlertSeverity(curr) > getAlertSeverity(prev) ? curr : prev,
+		)
+		const mostSevereSeverity = getAlertSeverity(mostSevereHazard)
+		if (getAlertSeverity(hazard) >= mostSevereSeverity) {
 			countyMap[countyId].color = color
+			countyMap[countyId].headline = hazard.headline
 		}
+	})
+
+	// Deduplicate alerts for each county (keep only most severe of each event type)
+	Object.keys(countyMap).forEach((countyId) => {
+		countyMap[countyId].alerts = deduplicateAlerts(countyMap[countyId].alerts)
 	})
 
 	return countyMap
@@ -341,11 +478,24 @@ export const parseHazardsToCoastalMap = (hazardsResponse: HazardsAPIResponse): C
 			}
 		}
 
-		coastalMap[regionId].alerts.push(hazard)
-		// Update color to the most severe (first one added)
-		if (coastalMap[regionId].alerts.length === 1) {
+		// Ensure color is attached to hazard object for animation hook to use
+		const hazardWithColor = { ...hazard, color }
+		coastalMap[regionId].alerts.push(hazardWithColor)
+
+		// Update color if this hazard is more severe than the most severe hazard already in the region
+		const mostSevereHazard = coastalMap[regionId].alerts.reduce((prev: any, curr: any) =>
+			getAlertSeverity(curr) > getAlertSeverity(prev) ? curr : prev,
+		)
+		const mostSevereSeverity = getAlertSeverity(mostSevereHazard)
+		if (getAlertSeverity(hazard) >= mostSevereSeverity) {
 			coastalMap[regionId].color = color
+			coastalMap[regionId].headline = hazard.headline
 		}
+	})
+
+	// Deduplicate alerts for each coastal region (keep only most severe of each event type)
+	Object.keys(coastalMap).forEach((regionId) => {
+		coastalMap[regionId].alerts = deduplicateAlerts(coastalMap[regionId].alerts)
 	})
 
 	return coastalMap
@@ -354,6 +504,7 @@ export const parseHazardsToCoastalMap = (hazardsResponse: HazardsAPIResponse): C
 /**
  * Parse API alerts into county-based alert map (old format)
  * Groups alerts by county and assigns colors
+ * Each alert can affect multiple counties
  */
 export const parseAlertsToCountyMap = (apiResponse: AlertsAPIResponse): CountyAlertMap => {
 	const countyMap: CountyAlertMap = {}
@@ -365,27 +516,108 @@ export const parseAlertsToCountyMap = (apiResponse: AlertsAPIResponse): CountyAl
 	Object.values(apiResponse.data.alerts).forEach((alert: any) => {
 		if (!alert || alert.status === 'expired') return
 
-		const countyId = extractCountyId(alert)
-		if (!countyId) return
+		const countyIds = extractCountyIds(alert)
+		if (countyIds.length === 0) return
 
 		const color = getAlertColor(alert.event || '')
+		const alertSeverity = getAlertSeverity(alert)
 
-		if (!countyMap[countyId]) {
-			countyMap[countyId] = {
-				color,
-				alerts: [],
-				headline: alert.headline,
+		// Add this alert to all affected counties
+		countyIds.forEach((countyId: string) => {
+			if (!countyMap[countyId]) {
+				countyMap[countyId] = {
+					color,
+					alerts: [],
+					headline: alert.headline,
+				}
 			}
-		}
 
-		countyMap[countyId].alerts.push(alert)
-		// Use the first alert's color (could be enhanced to cycle through multiple)
-		if (countyMap[countyId].alerts.length === 1) {
-			countyMap[countyId].color = color
-		}
+			// Attach color to alert object for animation hook to use
+			const alertWithColor = { ...alert, color }
+			countyMap[countyId].alerts.push(alertWithColor)
+
+			// Update color if this alert is more severe than the most severe alert already in the county
+			const mostSevereAlert = countyMap[countyId].alerts.reduce((prev: any, curr: any) =>
+				getAlertSeverity(curr) > getAlertSeverity(prev) ? curr : prev,
+			)
+			const mostSevereSeverity = getAlertSeverity(mostSevereAlert)
+			if (alertSeverity >= mostSevereSeverity) {
+				countyMap[countyId].color = color
+				countyMap[countyId].headline = alert.headline
+			}
+		})
+	})
+
+	// Deduplicate alerts for each county (keep only most severe of each event type)
+	Object.keys(countyMap).forEach((countyId) => {
+		countyMap[countyId].alerts = deduplicateAlerts(countyMap[countyId].alerts)
 	})
 
 	return countyMap
+}
+
+/**
+ * Parse API alerts into coastal/offshore region alert map (old format)
+ * Groups alerts by coastal or offshore region and assigns colors
+ */
+export const parseAlertsToCoastalMap = (apiResponse: AlertsAPIResponse): CoastalAlertMap => {
+	const coastalMap: CoastalAlertMap = {}
+
+	if (!apiResponse.data?.alerts) {
+		return coastalMap
+	}
+
+	Object.values(apiResponse.data.alerts).forEach((alert: any) => {
+		if (!alert || alert.status === 'expired') return
+
+		// Extract coastal/offshore region IDs from locations array
+		const coastalRegionIds: string[] = []
+		if (alert.locations && Array.isArray(alert.locations)) {
+			alert.locations.forEach((location: any) => {
+				if ((location.type === 'coast' || location.type === 'offshore') && location.locationId) {
+					coastalRegionIds.push(location.locationId)
+				}
+			})
+		}
+
+		if (coastalRegionIds.length === 0) return
+
+		const color = getAlertColor(alert.event || '')
+		const alertSeverity = getAlertSeverity(alert)
+
+		// Add this alert to all affected coastal regions
+		coastalRegionIds.forEach((regionId: string) => {
+			if (!coastalMap[regionId]) {
+				coastalMap[regionId] = {
+					color,
+					alerts: [],
+					headline: alert.headline,
+					name: alert.areaDesc,
+				}
+			}
+
+			// Attach color to alert object for animation hook to use
+			const alertWithColor = { ...alert, color }
+			coastalMap[regionId].alerts.push(alertWithColor)
+
+			// Update color if this alert is more severe than the most severe alert already in the region
+			const mostSevereAlert = coastalMap[regionId].alerts.reduce((prev: any, curr: any) =>
+				getAlertSeverity(curr) > getAlertSeverity(prev) ? curr : prev,
+			)
+			const mostSevereSeverity = getAlertSeverity(mostSevereAlert)
+			if (alertSeverity >= mostSevereSeverity) {
+				coastalMap[regionId].color = color
+				coastalMap[regionId].headline = alert.headline
+			}
+		})
+	})
+
+	// Deduplicate alerts for each coastal region (keep only most severe of each event type)
+	Object.keys(coastalMap).forEach((regionId) => {
+		coastalMap[regionId].alerts = deduplicateAlerts(coastalMap[regionId].alerts)
+	})
+
+	return coastalMap
 }
 
 /**

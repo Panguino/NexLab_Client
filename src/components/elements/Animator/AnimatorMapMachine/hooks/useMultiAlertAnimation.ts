@@ -171,6 +171,17 @@ export function useMultiAlertAnimation(currentFrameAlertMap: Record<string, any>
 			}
 		})
 
+		// Debug logging
+		const countiesWithMultiAlerts = Object.keys(newAnimationStates).length
+		if (countiesWithMultiAlerts > 0) {
+			console.log(`[useMultiAlertAnimation] Found ${countiesWithMultiAlerts} counties with 2+ alerts`, {
+				sampleCounty: Object.entries(newAnimationStates)[0],
+				sampleAlerts: Object.entries(currentFrameAlertMap)
+					.find(([id]) => newAnimationStates[id])
+					?.at(1)?.alerts,
+			})
+		}
+
 		setAnimationStates(newAnimationStates)
 		setAnimatedColors(newAnimatedColors)
 
