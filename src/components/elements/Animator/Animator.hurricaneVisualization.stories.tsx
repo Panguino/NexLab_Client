@@ -33,6 +33,7 @@ export const HurricaneVisualization: StoryFn<typeof Animator> = () => {
 	const [frames, setFrames] = useState<MapFrame[]>([])
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
+	const [mapLayerVisibility, setMapLayerVisibility] = useState<Record<string, boolean>>({})
 
 	useEffect(() => {
 		const loadHurricaneData = async () => {
@@ -150,6 +151,9 @@ export const HurricaneVisualization: StoryFn<typeof Animator> = () => {
 				autoPlay={false}
 				interval={500}
 				startFrame={0}
+				mapDataType="hurricane"
+				mapLayerVisibility={mapLayerVisibility}
+				setMapLayerVisibility={setMapLayerVisibility}
 			/>
 		</div>
 	)
@@ -183,6 +187,8 @@ Data Source: https://climate.cod.edu/data/tropical/web/al132025/products.json
  * Uses pre-loaded tropical products data for testing
  */
 export const HurricaneVisualizationStatic: StoryFn<typeof Animator> = () => {
+	const [mapLayerVisibility, setMapLayerVisibility] = useState<Record<string, boolean>>({})
+
 	// Sample tropical products data structure
 	const sampleFrame: MapFrame = {
 		id: 'hurricane-sample',
@@ -289,6 +295,9 @@ export const HurricaneVisualizationStatic: StoryFn<typeof Animator> = () => {
 				autoPlay={false}
 				interval={500}
 				startFrame={0}
+				mapDataType="hurricane"
+				mapLayerVisibility={mapLayerVisibility}
+				setMapLayerVisibility={setMapLayerVisibility}
 			/>
 		</div>
 	)

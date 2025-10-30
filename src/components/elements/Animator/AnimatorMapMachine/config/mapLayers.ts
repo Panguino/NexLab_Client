@@ -11,12 +11,15 @@ export interface MapLayer {
 	name: string
 	category: LayerCategory
 	description?: string
-	// Which data types should show this layer
+	// Which data types should show this layer in the UI
 	// 'all' = show for all data types
 	// 'alerts' = only show when viewing alerts data
 	// 'hurricane' = only show when viewing hurricane data
 	visibleFor: DataType[]
-	// Default visibility state
+	// Whether this layer should appear in the UI for the specified data types
+	// If false, the layer won't appear in the layer panel at all
+	visibleInUI: boolean
+	// Default visibility state (whether the layer is toggled on/off)
 	defaultVisible: boolean
 	// Z-index for layer ordering
 	zIndex: number
@@ -32,6 +35,7 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		category: 'general',
 		description: 'World land shapes with borders',
 		visibleFor: ['all'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 10,
 	},
@@ -41,6 +45,7 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		category: 'general',
 		description: 'US state boundaries',
 		visibleFor: ['all'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 20,
 	},
@@ -50,6 +55,7 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		category: 'general',
 		description: 'US state fill colors',
 		visibleFor: ['all'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 15,
 	},
@@ -59,6 +65,7 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		category: 'general',
 		description: 'Great Lakes water bodies',
 		visibleFor: ['all'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 12,
 	},
@@ -68,6 +75,7 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		category: 'general',
 		description: 'Lat/long grid lines',
 		visibleFor: ['all'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 5,
 	},
@@ -76,7 +84,8 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		name: 'Coastal Regions (Inactive)',
 		category: 'general',
 		description: 'Borders and fills for coastal regions without alerts',
-		visibleFor: ['all'],
+		visibleFor: ['alerts'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 18,
 	},
@@ -85,7 +94,8 @@ export const GENERAL_LAYERS: MapLayer[] = [
 		name: 'Counties (Inactive)',
 		category: 'general',
 		description: 'Borders and fills for counties without alerts',
-		visibleFor: ['all'],
+		visibleFor: ['alerts'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 17,
 	},
@@ -101,6 +111,7 @@ export const DATA_LAYERS: MapLayer[] = [
 		category: 'data',
 		description: 'Coastal regions with active alerts',
 		visibleFor: ['alerts'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 100,
 	},
@@ -109,7 +120,8 @@ export const DATA_LAYERS: MapLayer[] = [
 		name: 'Coastal Data Regions',
 		category: 'data',
 		description: 'Toggle to show/hide coastal region data visualization',
-		visibleFor: ['all'],
+		visibleFor: ['alerts'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 99,
 	},
@@ -119,6 +131,7 @@ export const DATA_LAYERS: MapLayer[] = [
 		category: 'data',
 		description: 'Counties with active alerts',
 		visibleFor: ['alerts'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 98,
 	},
@@ -127,7 +140,8 @@ export const DATA_LAYERS: MapLayer[] = [
 		name: 'County Data Regions',
 		category: 'data',
 		description: 'Toggle to show/hide county data visualization',
-		visibleFor: ['all'],
+		visibleFor: ['alerts'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 96,
 	},
@@ -137,6 +151,7 @@ export const DATA_LAYERS: MapLayer[] = [
 		category: 'data',
 		description: 'Affected regions from alerts',
 		visibleFor: ['alerts'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 95,
 	},
@@ -146,6 +161,7 @@ export const DATA_LAYERS: MapLayer[] = [
 		category: 'data',
 		description: 'Hurricane warning and watch polygons',
 		visibleFor: ['hurricane'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 90,
 	},
@@ -155,6 +171,7 @@ export const DATA_LAYERS: MapLayer[] = [
 		category: 'data',
 		description: 'Hurricane forecast uncertainty cone',
 		visibleFor: ['hurricane'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 85,
 	},
@@ -164,6 +181,7 @@ export const DATA_LAYERS: MapLayer[] = [
 		category: 'data',
 		description: 'Predicted hurricane path',
 		visibleFor: ['hurricane'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 88,
 	},
@@ -173,6 +191,7 @@ export const DATA_LAYERS: MapLayer[] = [
 		category: 'data',
 		description: 'Historical hurricane track',
 		visibleFor: ['hurricane'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 87,
 	},
@@ -182,17 +201,18 @@ export const DATA_LAYERS: MapLayer[] = [
 		category: 'data',
 		description: 'Hurricane forecast position points',
 		visibleFor: ['hurricane'],
+		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 89,
 	},
 ]
 
 /**
- * Get all layers for a specific data type
+ * Get all layers for a specific data type that should appear in the UI
  */
 export function getLayersForDataType(dataType: DataType): MapLayer[] {
 	const allLayers = [...GENERAL_LAYERS, ...DATA_LAYERS]
-	return allLayers.filter((layer) => layer.visibleFor.includes(dataType) || layer.visibleFor.includes('all'))
+	return allLayers.filter((layer) => layer.visibleInUI && (layer.visibleFor.includes(dataType) || layer.visibleFor.includes('all')))
 }
 
 /**
