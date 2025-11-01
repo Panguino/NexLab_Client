@@ -23,7 +23,6 @@ export const productURLtoText = async (productLink: string) => {
 }
 
 export const getTropicalGeneralData = async (productId) => {
-	// eventually we will have to receive valid time, but for now just get the most recent
 	let productQueryString
 	switch (productId) {
 		// there is probably a good case to move this to the data file and have a special query string passed to this function
@@ -54,20 +53,8 @@ export const getTropicalGeneralData = async (productId) => {
 		return false
 	}
 
-	// get the most recent entry from this object
-	// keys are timestamps in YYYYMMDDHHmm format
-	const timestamps = Object.keys(data)
-	const latestTimestamp = timestamps.sort().reverse()[0]
-	const productLink = `https://weather.cod.edu/textserv/raw/${productQueryString}/${latestTimestamp}`
-
-	// Use the shared function to fetch and extract content
-	const productData = await productURLtoText(productLink)
-
-	return {
-		timestamp: latestTimestamp,
-		link: productLink,
-		content: productData,
-	}
+	// Return the data object directly - keys are timestamps (YYYYMMDDHHmm), values are URLs
+	return data
 }
 
 export const getActiveTropicalStorms = async () => {

@@ -10,7 +10,7 @@ import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad
 import { TROPICAL_PRODUCTS } from '@/data/text/tropical/products'
 import { TROPICAL_TEXT_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
-import { getActiveTropicalStorms, getTropicalGeneralData, getTropicalStormData, productURLtoText } from '@/util/dataCalls/text/query-tropical'
+import { getActiveTropicalStorms, getTropicalGeneralData, getTropicalStormData } from '@/util/dataCalls/text/query-tropical'
 import styles from './TropicalPanel.module.scss'
 
 interface TropicalPanelProps {
@@ -68,7 +68,12 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 					console.log(`Loading tropical product from URL: ${tropicalProductId}`)
 					const productData = await getTropicalGeneralData(tropicalProductId)
 					if (productData && typeof productData !== 'boolean') {
-						setTropicalTextContent(productData.content)
+						// Send the full product data object with validtimes
+						setTropicalTextContent({
+							productData,
+							validtimeId,
+							productId: tropicalProductId,
+						})
 						openSlideoutPanel(TROPICAL_TEXT_SLIDEOUT)
 					}
 				}
@@ -76,26 +81,24 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 				else if (product && product.requiresStorm && tropicalStormId && stormData) {
 					console.log(`Loading storm product from URL: ${tropicalProductId} for storm: ${tropicalStormId}`)
 
-					// Get the product URL from stormData
+					// Get the product history from stormData
 					if (stormData[tropicalProductId]) {
-						const productLink = stormData[tropicalProductId]
-						console.log(`Fetching storm product from: ${productLink}`)
-
-						// Use productURLtoText to extract the content
-						const productContent = await productURLtoText(productLink)
-
-						if (productContent) {
-							// Set the content and open the slideout
-							setTropicalTextContent(productContent)
-							openSlideoutPanel(TROPICAL_TEXT_SLIDEOUT)
-						}
+						const productHistory = stormData[tropicalProductId]
+						// Send the full product history object with validtimes
+						setTropicalTextContent({
+							productData: productHistory,
+							validtimeId,
+							productId: tropicalProductId,
+							stormId: tropicalStormId,
+						})
+						openSlideoutPanel(TROPICAL_TEXT_SLIDEOUT)
 					}
 				}
 			}
 		}
 
 		fetchAndDisplayProduct()
-	}, [tropicalProductId, tropicalStormId, stormData, setTropicalTextContent, openSlideoutPanel])
+	}, [tropicalProductId, tropicalStormId, stormData, validtimeId, setTropicalTextContent, openSlideoutPanel])
 
 	const handleProductClick = useCallback(
 		async (productKey: string, productName: string) => {
@@ -132,31 +135,12 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 			const data = await getTropicalStormData(stormValue)
 			console.log(`Storm data for ${stormValue}:`, data)
 
-			// Transform the data to extract the latest product link for each product
+			// Store the raw data without transformation
 			if (data && typeof data === 'object') {
-				const transformedData: Record<string, string> = {}
-
-				// Iterate through each product in the storm data
-				Object.keys(data).forEach((productId) => {
-					const productHistory = data[productId]
-
-					// Get the most recent entry - keys are timestamps in YYYYMMDDHHmm format
-					if (productHistory && typeof productHistory === 'object') {
-						const timestamps = Object.keys(productHistory)
-						if (timestamps.length > 0) {
-							const latestTimestamp = timestamps.sort().reverse()[0]
-							const latestProductLink = productHistory[latestTimestamp]
-							transformedData[productId] = latestProductLink
-						}
-					}
-				})
-
-				console.log('Transformed storm data:', transformedData)
-				setStormData(transformedData)
+				setStormData(data)
 			}
 
 			// Navigate to storm viewer page - use product if available, otherwise use 'overview'
-			// developer note: this overview fallback is something copilot suggested - I don't expect it to ever be used
 			const productForUrl = tropicalProductId || 'overview'
 			router.push(`${tropicalBasePath}/${productForUrl}/${validtimeId}/storm/${stormValue}`)
 		},
