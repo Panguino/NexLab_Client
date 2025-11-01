@@ -72,7 +72,8 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 						setTropicalTextContent({
 							productData,
 							validtimeId,
-							productId: tropicalProductId,
+							productKey: tropicalProductId,
+							productName: product.name,
 						})
 						openSlideoutPanel(TROPICAL_TEXT_SLIDEOUT)
 					}
@@ -81,6 +82,9 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 				else if (product && product.requiresStorm && tropicalStormId && stormData) {
 					console.log(`Loading storm product from URL: ${tropicalProductId} for storm: ${tropicalStormId}`)
 
+					// Get the storm name from stormOptions
+					const stormName = stormOptions.find((s) => s.value === tropicalStormId)?.label
+
 					// Get the product history from stormData
 					if (stormData[tropicalProductId]) {
 						const productHistory = stormData[tropicalProductId]
@@ -88,8 +92,9 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 						setTropicalTextContent({
 							productData: productHistory,
 							validtimeId,
-							productId: tropicalProductId,
-							stormId: tropicalStormId,
+							productKey: tropicalProductId,
+							productName: product.name,
+							stormName,
 						})
 						openSlideoutPanel(TROPICAL_TEXT_SLIDEOUT)
 					}
@@ -98,7 +103,7 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 		}
 
 		fetchAndDisplayProduct()
-	}, [tropicalProductId, tropicalStormId, stormData, validtimeId, setTropicalTextContent, openSlideoutPanel])
+	}, [tropicalProductId, tropicalStormId, stormData, stormOptions, validtimeId, setTropicalTextContent, openSlideoutPanel])
 
 	const handleProductClick = useCallback(
 		async (productKey: string, productName: string) => {
@@ -164,7 +169,13 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 				<div className={styles.productsGroup}>
 					<div className={styles.sectionTitle}>General Products</div>
 					{basinProducts.map((product) => (
-						<SidebarLink key={product.key} name={product.name} linkUrl="" onClick={() => handleProductClick(product.key, product.name)} />
+						<SidebarLink
+							key={product.key}
+							name={product.name}
+							linkUrl=""
+							onClick={() => handleProductClick(product.key, product.name)}
+							active={tropicalProductId === product.key && !tropicalStormId}
+						/>
 					))}
 				</div>
 
@@ -181,6 +192,7 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 								name={product.name}
 								linkUrl=""
 								onClick={() => handleStormProductClick(product.key, product.name, selectedStorm)}
+								active={tropicalProductId === product.key && tropicalStormId === selectedStorm}
 							/>
 						))}
 					</div>

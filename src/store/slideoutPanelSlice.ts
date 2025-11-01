@@ -13,12 +13,16 @@ export interface ISlideoutPanelSlice {
 		productData: Record<string, string>
 		validtimeId: string
 		productKey: string
+		productName?: string
+		stormName?: string
 	} | null
 	setTropicalTextContent: (
 		content: {
 			productData: Record<string, string>
 			validtimeId: string
 			productKey: string
+			productName?: string
+			stormName?: string
 		} | null,
 	) => void
 	slideoutPanelIsOpen: boolean
@@ -42,6 +46,8 @@ export const createSlideoutPanelSlice: ZustandStateSlice<ISlideoutPanelSlice> = 
 			productData: Record<string, string>
 			validtimeId: string
 			productKey: string
+			productName?: string
+			stormName?: string
 		} | null,
 	) => set(() => ({ tropicalTextContent: content })),
 	slideoutPanelIsOpen: false,

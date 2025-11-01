@@ -160,14 +160,18 @@ export const TropicalTextPanel: React.FC = () => {
 	} else if (displayText) {
 		content = (
 			<>
+				<div className={styles.productHeader}>
+					<h2 className={styles.productName}>
+						{tropicalTextContent.productName}
+						{tropicalTextContent.stormName && <span className={styles.stormName}> - {tropicalTextContent.stormName}</span>}
+					</h2>
+				</div>
 				{validtimeOptions.length > 1 && (
 					<div className={styles.validtimeSelector}>
-						<Select
-							title="Product Issuance"
-							value={actualValidtimeId || ''}
-							onChange={handleValidtimeChange}
-							options={validtimeOptions}
-						/>
+						<div className={styles.validtimeLabel}>Product Issuance:</div>
+						<div className={styles.validtimeSelectWrapper}>
+							<Select value={actualValidtimeId || ''} onChange={handleValidtimeChange} options={validtimeOptions} />
+						</div>
 					</div>
 				)}
 				<pre className={styles.tropicalText}>{displayText}</pre>
