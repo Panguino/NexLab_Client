@@ -19,7 +19,7 @@ interface TropicalPanelProps {
 
 const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	const router = useRouter()
-	const { tropicalProductId, tropicalStormId } = useParams()
+	const { tropicalProductId, tropicalValidtimeId, tropicalStormId } = useParams()
 	const [selectedStorm, setSelectedStorm] = useState<string | null>(null)
 	const [stormData, setStormData] = useState<any>(null)
 	const [stormOptions, setStormOptions] = useState<{ label: string; value: string }[]>([])
@@ -28,6 +28,9 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 
 	// Full path to tropical section
 	const tropicalBasePath = `${basepath}/nhc-tropical-hurricane-weather`
+
+	// Use 'latest' as default validtime if not specified in URL
+	const validtimeId = (tropicalValidtimeId as string) || 'latest'
 
 	// Fetch and transform active storms into select options
 	useEffect(() => {
@@ -99,13 +102,14 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 			console.log(`Tropical product clicked: ${productKey} - ${productName}`)
 
 			// Just navigate - the useEffect will handle fetching and opening the slideout
+			// Use 'latest' as the validtime for now
 			if (tropicalStormId) {
-				router.push(`${tropicalBasePath}/${productKey}/storm/${tropicalStormId}`)
+				router.push(`${tropicalBasePath}/${productKey}/${validtimeId}/storm/${tropicalStormId}`)
 			} else {
-				router.push(`${tropicalBasePath}/${productKey}`)
+				router.push(`${tropicalBasePath}/${productKey}/${validtimeId}`)
 			}
 		},
-		[tropicalBasePath, router, tropicalStormId],
+		[tropicalBasePath, router, tropicalStormId, validtimeId],
 	)
 
 	const handleStormProductClick = useCallback(
@@ -113,9 +117,10 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 			console.log(`Storm-specific product clicked: ${productKey} - ${productName} for storm: ${stormId}`)
 
 			// Just navigate - the useEffect will handle fetching and opening the slideout
-			router.push(`${tropicalBasePath}/${productKey}/storm/${stormId}`)
+			// Use 'latest' as the validtime for now
+			router.push(`${tropicalBasePath}/${productKey}/${validtimeId}/storm/${stormId}`)
 		},
-		[tropicalBasePath, router],
+		[tropicalBasePath, router, validtimeId],
 	)
 
 	const handleStormChange = useCallback(
@@ -153,9 +158,9 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 			// Navigate to storm viewer page - use product if available, otherwise use 'overview'
 			// developer note: this overview fallback is something copilot suggested - I don't expect it to ever be used
 			const productForUrl = tropicalProductId || 'overview'
-			router.push(`${tropicalBasePath}/${productForUrl}/storm/${stormValue}`)
+			router.push(`${tropicalBasePath}/${productForUrl}/${validtimeId}/storm/${stormValue}`)
 		},
-		[tropicalBasePath, router, tropicalProductId],
+		[tropicalBasePath, router, tropicalProductId, validtimeId],
 	)
 
 	// Filter products that don't require a storm

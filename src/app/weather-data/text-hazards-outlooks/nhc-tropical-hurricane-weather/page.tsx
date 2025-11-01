@@ -5,7 +5,7 @@ const Page = () => {
 		<ComingSoon
 			fullWidth
 			pageName="Active Tropical Storms"
-			purpose="National Hurricane Center outlooks, advisories, and tropical analyses organized for quick situational access."
+			purpose="This will be a Deck.gl map of active tropical storms."
 			etaText="This section is being implemented."
 		/>
 	)
