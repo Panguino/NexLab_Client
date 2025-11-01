@@ -70,6 +70,19 @@ export const getTropicalGeneralData = async (productId) => {
 	}
 }
 
+export const getActiveTropicalStorms = async () => {
+	// https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510242050.json -- good fallback for testing
+	// const endpoint = 'https://climate.cod.edu/data/tropical/gis/CurrentStorms.json' // original endpoint
+	const endpoint = `https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510242050.json`
+	const data = await getData(endpoint)
+
+	if (data && Object.keys(data).length > 0) {
+		return data
+	} else {
+		return false
+	}
+}
+
 export const getTropicalStormData = async (stormId) => {
 	// eventually we will have to receive valid time, but for now just get the most recent
 	const endpoint = `https://weather.cod.edu/textserv/dev/tropical/json/${stormId}`

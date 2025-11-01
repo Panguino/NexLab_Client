@@ -33,8 +33,13 @@ const SlideoutPanel = () => {
 	//indicates if the registration von successful
 
 	useEffect(() => {
+		// Don't close the tropical panel when navigating between tropical products
+		if (currentSlideoutPanel === TROPICAL_TEXT_SLIDEOUT && pathname.includes('/nhc-tropical-hurricane-weather/')) {
+			// Stay open when moving between tropical products
+			return
+		}
 		closeSlideoutPanel()
-	}, [pathname, closeSlideoutPanel])
+	}, [pathname, closeSlideoutPanel, currentSlideoutPanel])
 
 	const getPanelType = (type: string) => {
 		switch (type) {

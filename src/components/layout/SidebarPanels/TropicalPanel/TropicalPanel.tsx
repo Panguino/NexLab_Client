@@ -1,7 +1,7 @@
 'use client'
 
 import { useParams, useRouter } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import Select from '@/components/elements/Select/Select'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
@@ -10,8 +10,7 @@ import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad
 import { TROPICAL_PRODUCTS } from '@/data/text/tropical/products'
 import { TROPICAL_TEXT_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
-import { getData } from '@/util/dataCalls/dataCall-generic'
-import { getTropicalGeneralData, getTropicalStormData } from '@/util/dataCalls/text/query-tropical'
+import { getActiveTropicalStorms, getTropicalGeneralData, getTropicalStormData, productURLtoText } from '@/util/dataCalls/text/query-tropical'
 import styles from './TropicalPanel.module.scss'
 
 interface TropicalPanelProps {
@@ -22,29 +21,24 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	const router = useRouter()
 	const { tropicalProductId, tropicalStormId } = useParams()
 	const [selectedStorm, setSelectedStorm] = useState<string | null>(null)
-	const [currentStorms, setCurrentStorms] = useState<any[]>([])
 	const [stormData, setStormData] = useState<any>(null)
+	const [stormOptions, setStormOptions] = useState<{ label: string; value: string }[]>([])
 	const setTropicalTextContent = useRootStore.use.setTropicalTextContent()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	// Full path to tropical section
 	const tropicalBasePath = `${basepath}/nhc-tropical-hurricane-weather`
 
-	// Fetch current storms data
+	// Fetch and transform active storms into select options
 	useEffect(() => {
 		const fetchStorms = async () => {
-			try {
-				const data = await getData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
-				console.log('Raw storm data:', data)
-
-				// Extract storms from the object - each entry is a storm with name and id properties
-				const stormArray = data && typeof data === 'object' ? Object.values(data) : []
-
-				console.log('Processed storm array:', stormArray)
-				setCurrentStorms(stormArray)
-			} catch (error) {
-				console.error('Error fetching current storms:', error)
-				setCurrentStorms([])
+			const data = await getActiveTropicalStorms()
+			if (data && typeof data === 'object') {
+				const options = Object.values(data).map((storm: any) => ({
+					label: storm.name,
+					value: storm.id,
+				}))
+				setStormOptions(options)
 			}
 		}
 		fetchStorms()
@@ -64,8 +58,9 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	useEffect(() => {
 		const fetchAndDisplayProduct = async () => {
 			if (tropicalProductId && typeof tropicalProductId === 'string') {
-				// Check if this is a valid general product (not a storm-specific product)
 				const product = TROPICAL_PRODUCTS[tropicalProductId]
+
+				// Check if this is a valid general product (not a storm-specific product)
 				if (product && !product.requiresStorm) {
 					console.log(`Loading tropical product from URL: ${tropicalProductId}`)
 					const productData = await getTropicalGeneralData(tropicalProductId)
@@ -74,11 +69,30 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 						openSlideoutPanel(TROPICAL_TEXT_SLIDEOUT)
 					}
 				}
+				// Check if this is a storm-specific product and we have storm data
+				else if (product && product.requiresStorm && tropicalStormId && stormData) {
+					console.log(`Loading storm product from URL: ${tropicalProductId} for storm: ${tropicalStormId}`)
+
+					// Get the product URL from stormData
+					if (stormData[tropicalProductId]) {
+						const productLink = stormData[tropicalProductId]
+						console.log(`Fetching storm product from: ${productLink}`)
+
+						// Use productURLtoText to extract the content
+						const productContent = await productURLtoText(productLink)
+
+						if (productContent) {
+							// Set the content and open the slideout
+							setTropicalTextContent(productContent)
+							openSlideoutPanel(TROPICAL_TEXT_SLIDEOUT)
+						}
+					}
+				}
 			}
 		}
 
 		fetchAndDisplayProduct()
-	}, [tropicalProductId, setTropicalTextContent, openSlideoutPanel])
+	}, [tropicalProductId, tropicalStormId, stormData, setTropicalTextContent, openSlideoutPanel])
 
 	const handleProductClick = useCallback(
 		async (productKey: string, productName: string) => {
@@ -95,9 +109,10 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	)
 
 	const handleStormProductClick = useCallback(
-		(productKey: string, productName: string, stormId: string) => {
+		async (productKey: string, productName: string, stormId: string) => {
 			console.log(`Storm-specific product clicked: ${productKey} - ${productName} for storm: ${stormId}`)
-			// Update URL with new product but stay on storm page
+
+			// Just navigate - the useEffect will handle fetching and opening the slideout
 			router.push(`${tropicalBasePath}/${productKey}/storm/${stormId}`)
 		},
 		[tropicalBasePath, router],
@@ -111,7 +126,29 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 			// Fetch the storm data for this storm ID
 			const data = await getTropicalStormData(stormValue)
 			console.log(`Storm data for ${stormValue}:`, data)
-			setStormData(data)
+
+			// Transform the data to extract the latest product link for each product
+			if (data && typeof data === 'object') {
+				const transformedData: Record<string, string> = {}
+
+				// Iterate through each product in the storm data
+				Object.keys(data).forEach((productId) => {
+					const productHistory = data[productId]
+
+					// Get the most recent entry - keys are timestamps in YYYYMMDDHHmm format
+					if (productHistory && typeof productHistory === 'object') {
+						const timestamps = Object.keys(productHistory)
+						if (timestamps.length > 0) {
+							const latestTimestamp = timestamps.sort().reverse()[0]
+							const latestProductLink = productHistory[latestTimestamp]
+							transformedData[productId] = latestProductLink
+						}
+					}
+				})
+
+				console.log('Transformed storm data:', transformedData)
+				setStormData(transformedData)
+			}
 
 			// Navigate to storm viewer page - use product if available, otherwise use 'overview'
 			// developer note: this overview fallback is something copilot suggested - I don't expect it to ever be used
@@ -130,14 +167,6 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	const stormProducts = Object.entries(TROPICAL_PRODUCTS)
 		.filter(([, product]) => product.requiresStorm)
 		.map(([key, product]) => ({ key, ...product }))
-
-	// Transform current storms data into select options
-	const stormOptions = useMemo(() => {
-		return currentStorms.map((storm) => ({
-			label: storm.name,
-			value: storm.id,
-		}))
-	}, [currentStorms])
 
 	return (
 		<>
