@@ -162,6 +162,13 @@ let cachedIconCanvas: HTMLCanvasElement | null = null
 export function getHurricaneIconCanvas(): HTMLCanvasElement {
 	if (!cachedIconCanvas) {
 		cachedIconCanvas = createHurricaneIconAtlas()
+		console.log('Created hurricane icon canvas:', cachedIconCanvas.width, 'x', cachedIconCanvas.height)
+		// Test: log canvas data
+		const ctx = cachedIconCanvas.getContext('2d')
+		if (ctx) {
+			const imageData = ctx.getImageData(0, 0, 128, 128)
+			console.log('Canvas has pixel data:', imageData.data.length > 0)
+		}
 	}
 	return cachedIconCanvas
 }
