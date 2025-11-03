@@ -160,7 +160,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		},
 		ref,
 	) => {
-		console.log('AnimatorMapMachine received frames:', frames?.length || 0, 'frames')
 		const [isLoading, setIsLoading] = useState(true)
 		const [localLoadedFrames, setLocalLoadedFrames] = useState<MapFrame[]>([])
 		const [isDarkMode, setIsDarkMode] = useState(false)
@@ -230,12 +229,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					for (const frame of frames) {
 						// Validate frame structure
 						if (frame && frame.id && frame.data) {
-							console.log('Loading frame:', frame.id, 'tropicalStorms:', frame.tropicalStorms?.length || 0)
 							validFrames.push(frame)
 						}
 					}
 
-					console.log('Loaded', validFrames.length, 'frames total')
 					setLoadedFrames(validFrames)
 				} catch (error) {
 					// Silently catch frame loading errors
@@ -907,11 +904,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 				// Add tropical storms from frame if present
 				if (frame && frame.tropicalStorms && frame.tropicalStorms.length > 0) {
-					console.log('Adding tropical storm layers for', frame.tropicalStorms.length, 'storms')
 					// Add storm track layer (historical paths)
 					const trackLayer = createStormTrackLayer(frame.tropicalStorms, loadedFrames)
 					baseLayers.push(trackLayer)
-					console.log('Added track layer, baseLayers count:', baseLayers.length)
 
 					const handleStormHover = (info: any) => {
 						if (info.object) {
@@ -935,7 +930,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					}
 					const hurricaneLayer = createHurricaneLayer(frame.tropicalStorms, handleStormHover)
 					baseLayers.push(hurricaneLayer)
-					console.log('Added hurricane layer, baseLayers count:', baseLayers.length)
 				}
 
 				if (onFrameChange) {
