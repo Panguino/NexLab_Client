@@ -11,27 +11,57 @@ interface DebugOption {
 }
 
 const DEBUG_DATA_KEY = 'tropical_debug_data_url'
+const BASE_URL = 'https://climate.cod.edu/data/tropical/currentstorms'
 
 export const TropicalDebugPanel = () => {
 	const [debugOptions, setDebugOptions] = useState<DebugOption[]>([])
 	const [selectedDebug, setSelectedDebug] = useState<string | null>(null)
 	const [isLoading, setIsLoading] = useState(false)
 
-	// Fetch available debug data files
+	// Fetch available debug data files from the directory listing
 	useEffect(() => {
 		const fetchAvailableFiles = async () => {
 			setIsLoading(true)
 			try {
-				// Create options for all days in October 2025
+				// Fetch the directory listing
+				const response = await fetch(BASE_URL)
+				const html = await response.text()
+
+				// Parse the HTML to extract file names
+				const fileRegex = /CurrentStorms_(\d{12})\.json/g
+				const files = new Set<string>()
+				let match
+
+				while ((match = fileRegex.exec(html)) !== null) {
+					files.add(match[1])
+				}
+
+				// Convert to sorted array and create options
+				const sortedFiles = Array.from(files).sort().reverse() // Most recent first
+
 				const options: DebugOption[] = [{ label: 'No Storms', value: 'none' }]
 
-				// Add all 31 days of October 2025
-				for (let day = 1; day <= 31; day++) {
-					const dayStr = String(day).padStart(2, '0')
-					const dateLabel = `2025-10-${dayStr} 23:40`
-					const url = `https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510${dayStr}2340.json`
-					options.push({ label: dateLabel, value: url })
-				}
+				// Group by day and pick one file per day (the latest one)
+				const dayMap = new Map<string, string>()
+				sortedFiles.forEach((timestamp) => {
+					const day = timestamp.substring(0, 8) // YYYYMMDD
+					if (!dayMap.has(day)) {
+						dayMap.set(day, timestamp)
+					}
+				})
+
+				// Convert to options, sorted by day
+				const sortedDays = Array.from(dayMap.entries()).sort((a, b) => b[0].localeCompare(a[0]))
+
+				sortedDays.forEach(([day, timestamp]) => {
+					const year = day.substring(0, 4)
+					const month = day.substring(4, 6)
+					const dayNum = day.substring(6, 8)
+					const time = timestamp.substring(8, 10) + ':' + timestamp.substring(10, 12)
+					const label = `${year}-${month}-${dayNum} ${time}`
+					const url = `${BASE_URL}/CurrentStorms_${timestamp}.json`
+					options.push({ label, value: url })
+				})
 
 				setDebugOptions(options)
 
@@ -40,6 +70,17 @@ export const TropicalDebugPanel = () => {
 				setSelectedDebug(saved || 'none')
 			} catch (error) {
 				console.error('Error fetching debug options:', error)
+				// Fallback to manual list if fetch fails
+				const options: DebugOption[] = [{ label: 'No Storms', value: 'none' }]
+				for (let day = 1; day <= 31; day++) {
+					const dayStr = String(day).padStart(2, '0')
+					const dateLabel = `2025-10-${dayStr} 00:00`
+					const url = `${BASE_URL}/CurrentStorms_202510${dayStr}0000.json`
+					options.push({ label: dateLabel, value: url })
+				}
+				setDebugOptions(options)
+				const saved = localStorage.getItem(DEBUG_DATA_KEY)
+				setSelectedDebug(saved || 'none')
 			} finally {
 				setIsLoading(false)
 			}
