@@ -44,6 +44,7 @@ const AnimatorMapSizer = () => {
 		mapLayerVisibility,
 		setMapLayerVisibility,
 		mapDataType,
+		layerConfig,
 		onStormClick,
 	} = useAnimator()
 
@@ -257,6 +258,7 @@ const AnimatorMapSizer = () => {
 					mapLayerVisibility={mapLayerVisibility}
 					setMapLayerVisibility={setMapLayerVisibility}
 					mapDataType={mapDataType}
+					layerConfig={layerConfig}
 				/>
 			)}
 		</div>

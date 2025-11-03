@@ -63,6 +63,8 @@ interface IAnimatorProps {
 	mapLayerVisibility?: Record<string, boolean> // Visibility state for map layers
 	setMapLayerVisibility?: (visibility: Record<string, boolean>) => void // Callback for layer visibility changes
 	mapDataType?: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
+	// Layer configuration
+	layerConfig?: any // Layer configuration for filtering which layers are shown (LayerConfig type)
 	// Storm click handler
 	onStormClick?: (stormId: string) => void
 }
@@ -82,6 +84,7 @@ interface IAnimatorProvider extends IAnimatorProps {
 	setMapLayerVisibility: (visibility: Record<string, boolean>) => void // Update map layer visibility
 	onStormClick?: (stormId: string) => void // Storm click handler
 	mapDataType: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
+	layerConfig?: any // Layer configuration for filtering which layers are shown
 }
 
 const AnimatorContext = createContext<IAnimatorProvider | undefined>(undefined)
@@ -158,6 +161,7 @@ export const Animator = ({
 	mapLayerVisibility,
 	setMapLayerVisibility,
 	mapDataType = 'all',
+	layerConfig,
 	onStormClick,
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
@@ -239,6 +243,7 @@ export const Animator = ({
 					setMapLayerVisibility?.(newVisibility)
 				},
 				mapDataType: mapDataType || 'all',
+				layerConfig,
 				onStormClick,
 			}}
 		>

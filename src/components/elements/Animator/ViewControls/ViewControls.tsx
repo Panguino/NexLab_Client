@@ -15,6 +15,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import { useAnimator } from '../Animator'
+import type { LayerConfig } from '../AnimatorMapMachine/config/layerConfigTypes'
 import { MapLayerPanel } from '../MapLayerPanel'
 import { OverlayPanel } from '../OverlayPanel/OverylayPanel'
 import styles from './ViewControls.module.scss'
@@ -32,6 +33,7 @@ interface IViewControlsProps {
 	mapLayerVisibility?: Record<string, boolean>
 	setMapLayerVisibility?: (visibility: Record<string, boolean>) => void
 	mapDataType?: 'alerts' | 'hurricane' | 'all'
+	layerConfig?: LayerConfig // Layer configuration for filtering which layers are shown
 }
 
 /**
@@ -56,6 +58,7 @@ const ViewControls = ({
 	mapLayerVisibility,
 	setMapLayerVisibility,
 	mapDataType = 'all',
+	layerConfig,
 }: IViewControlsProps) => {
 	const {
 		setZoomFill,
@@ -128,6 +131,7 @@ const ViewControls = ({
 						layerVisibility={mapLayerVisibility}
 						setLayerVisibility={setMapLayerVisibility}
 						dataType={mapDataType as any}
+						layerConfig={layerConfig}
 					/>
 				</button>
 			)}
