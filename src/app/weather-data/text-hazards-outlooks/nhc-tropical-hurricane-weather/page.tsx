@@ -1,14 +1,9 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+'use client'
+
+import { TropicalAnimator } from '@/components/elements/TropicalAnimator/TropicalAnimator'
 
 const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Active Tropical Storms"
-			purpose="This will be a Deck.gl map of active tropical storms."
-			etaText="This section is being implemented."
-		/>
-	)
+	return <TropicalAnimator view="overview" />
 }
 
 export default Page

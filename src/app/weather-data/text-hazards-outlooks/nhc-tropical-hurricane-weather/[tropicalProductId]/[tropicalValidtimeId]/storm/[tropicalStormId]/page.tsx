@@ -1,14 +1,12 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+'use client'
+
+import { TropicalAnimator } from '@/components/elements/TropicalAnimator/TropicalAnimator'
+import { useParams } from 'next/navigation'
 
 const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Tropical Storm Product Viewer"
-			purpose="This is the storm specific deck.gl map animator since we have now provided a storm id."
-			etaText="This section is being implemented."
-		/>
-	)
+	const { tropicalStormId } = useParams()
+
+	return <TropicalAnimator selectedStormId={tropicalStormId as string} view="detail" />
 }
 
 export default Page
