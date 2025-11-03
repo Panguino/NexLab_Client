@@ -44,7 +44,10 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 
 				let stormsData: ProcessedStormData[] = []
 
-				if (debugDataUrl) {
+				if (debugDataUrl === 'none') {
+					// Explicitly show no storms
+					stormsData = []
+				} else if (debugDataUrl) {
 					// Load debug data
 					stormsData = await fetchTropicalStormData(debugDataUrl)
 				} else {

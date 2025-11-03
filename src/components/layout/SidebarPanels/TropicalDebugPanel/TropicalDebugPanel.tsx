@@ -22,15 +22,17 @@ export const TropicalDebugPanel = () => {
 		const fetchAvailableFiles = async () => {
 			setIsLoading(true)
 			try {
-				// Create options for different dates
-				const options: DebugOption[] = [
-					{ label: 'No Storms', value: 'none' },
-					{ label: '2025-10-05 23:40', value: 'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510052340.json' },
-					{ label: '2025-10-04 23:40', value: 'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510042340.json' },
-					{ label: '2025-10-03 23:40', value: 'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510032340.json' },
-					{ label: '2025-10-02 23:40', value: 'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510022340.json' },
-					{ label: '2025-10-01 23:40', value: 'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510012340.json' },
-				]
+				// Create options for all days in October 2025
+				const options: DebugOption[] = [{ label: 'No Storms', value: 'none' }]
+
+				// Add all 31 days of October 2025
+				for (let day = 1; day <= 31; day++) {
+					const dayStr = String(day).padStart(2, '0')
+					const dateLabel = `2025-10-${dayStr} 23:40`
+					const url = `https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510${dayStr}2340.json`
+					options.push({ label: dateLabel, value: url })
+				}
+
 				setDebugOptions(options)
 
 				// Load saved debug data from localStorage
@@ -51,7 +53,7 @@ export const TropicalDebugPanel = () => {
 
 		// Save to localStorage
 		if (value === 'none') {
-			localStorage.removeItem(DEBUG_DATA_KEY)
+			localStorage.setItem(DEBUG_DATA_KEY, 'none')
 		} else {
 			localStorage.setItem(DEBUG_DATA_KEY, value)
 		}
