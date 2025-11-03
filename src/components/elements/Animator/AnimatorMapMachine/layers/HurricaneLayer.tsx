@@ -32,28 +32,42 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 
 	console.log('Creating hurricane layer with', data.length, 'storms')
 	data.forEach((d: any) => {
-		console.log(`  Storm: ${d.name}, category: ${d.category}, position: [${d.position[0]}, ${d.position[1]}]`)
+		console.log(
+			`  Storm: ${d.name}, category: ${d.category}, position: [${d.position[0]}, ${d.position[1]}], iconSize: ${d.iconSize}, color: ${d.color}`,
+		)
 	})
 
 	// Get icon canvas for rendering
 	const iconAtlas = getHurricaneIconCanvas()
 	console.log('Icon atlas canvas size:', iconAtlas.width, 'x', iconAtlas.height)
+	console.log('Icon mapping keys:', Object.keys(HURRICANE_ICON_MAPPING))
 
-	return new IconLayer({
+	const layer = new IconLayer({
 		id: 'hurricane-layer',
 		data,
 		pickable: true,
 		sizeScale: 15,
 		sizeMinPixels: 20,
 		sizeMaxPixels: 100,
-		getPosition: (d: any) => d.position,
+		getPosition: (d: any) => {
+			console.log('getPosition called for', d.name, ':', d.position)
+			return d.position
+		},
 		getIcon: (d: any) => {
 			// Use category as icon key (0-5)
 			const category = Math.min(5, Math.max(0, d.category || 0))
-			return category.toString()
+			const iconKey = category.toString()
+			console.log('getIcon called for', d.name, '- category:', category, 'iconKey:', iconKey)
+			return iconKey
 		},
-		getSize: (d: any) => d.iconSize,
-		getColor: (d: any) => d.color,
+		getSize: (d: any) => {
+			console.log('getSize called for', d.name, ':', d.iconSize)
+			return d.iconSize
+		},
+		getColor: (d: any) => {
+			console.log('getColor called for', d.name, ':', d.color)
+			return d.color
+		},
 		iconAtlas: iconAtlas,
 		iconMapping: HURRICANE_ICON_MAPPING,
 		onHover: onHover,
@@ -63,6 +77,9 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 			getIcon: [storms],
 		},
 	})
+
+	console.log('Hurricane layer created:', layer)
+	return layer
 }
 
 /**
