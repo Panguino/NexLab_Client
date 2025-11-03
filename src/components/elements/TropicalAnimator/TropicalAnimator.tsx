@@ -35,6 +35,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 	useEffect(() => {
 		const loadActiveStorms = async () => {
 			try {
+				setIsLoading(true)
 				const stormsData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
 
 				// If no active storms, try historical data for testing
@@ -44,13 +45,16 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 						const historicalData = await fetchTropicalStormData(
 							'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510052340.json',
 						)
+						console.log('Loaded historical data:', historicalData.length, 'storms')
 						setAllStorms(historicalData)
 					} catch (histErr) {
-						console.warn('Could not load historical data, trying sample data...')
+						console.warn('Could not load historical data, trying sample data...', histErr)
 						const sampleData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/SampleStorms.json')
+						console.log('Loaded sample data:', sampleData.length, 'storms')
 						setAllStorms(sampleData)
 					}
 				} else {
+					console.log('Loaded active storms:', stormsData.length, 'storms')
 					setAllStorms(stormsData)
 				}
 			} catch (err) {
@@ -61,16 +65,21 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 					const historicalData = await fetchTropicalStormData(
 						'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510052340.json',
 					)
+					console.log('Loaded historical data:', historicalData.length, 'storms')
 					setAllStorms(historicalData)
 				} catch (histErr) {
-					console.warn('Could not load historical data, trying sample data...')
+					console.warn('Could not load historical data, trying sample data...', histErr)
 					try {
 						const sampleData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/SampleStorms.json')
+						console.log('Loaded sample data:', sampleData.length, 'storms')
 						setAllStorms(sampleData)
 					} catch (sampleErr) {
 						console.error('Error loading sample storms:', sampleErr)
+						setError('Failed to load tropical storm data')
 					}
 				}
+			} finally {
+				setIsLoading(false)
 			}
 		}
 
@@ -222,6 +231,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 					mapDataType="hurricane"
 					mapLayerVisibility={mapLayerVisibility}
 					setMapLayerVisibility={setMapLayerVisibility}
+					hideControls={true}
 				/>
 
 				{isLoading && <div className={styles.loading}>Loading storms...</div>}
