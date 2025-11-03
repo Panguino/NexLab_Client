@@ -4,8 +4,8 @@ const Page = () => {
 	return (
 		<ComingSoon
 			fullWidth
-			pageName="Active Tropical Storms"
-			purpose="This will be a Deck.gl map of active tropical storms."
+			pageName="Tropical Storm Product Viewer"
+			purpose="This is the storm specific deck.gl map animator since we have now provided a storm id."
 			etaText="This section is being implemented."
 		/>
 	)
