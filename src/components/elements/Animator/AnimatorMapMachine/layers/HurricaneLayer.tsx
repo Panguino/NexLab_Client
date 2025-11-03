@@ -98,59 +98,6 @@ export function generateHurricaneIconSVG(): string {
 }
 
 /**
- * Create a single hurricane icon with category number
- * @param category - Hurricane category (0-5)
- * @returns Canvas with hurricane icon
- */
-function createSingleHurricaneIcon(category: number): HTMLCanvasElement {
-	const canvas = document.createElement('canvas')
-	canvas.width = 128
-	canvas.height = 128
-
-	const ctx = canvas.getContext('2d')
-	if (!ctx) return canvas
-
-	const centerX = 64
-	const centerY = 64
-
-	// Draw red spiral bands (like the reference image)
-	ctx.strokeStyle = '#CC0000'
-	ctx.lineWidth = 8
-	ctx.lineCap = 'round'
-	ctx.lineJoin = 'round'
-
-	// Draw spiral arms (4 arms)
-	for (let i = 0; i < 4; i++) {
-		const angle = (i * Math.PI) / 2
-		ctx.beginPath()
-		ctx.arc(centerX, centerY, 45, angle, angle + Math.PI * 0.6, false)
-		ctx.stroke()
-	}
-
-	// Draw center circle (white background for number)
-	ctx.fillStyle = 'white'
-	ctx.beginPath()
-	ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
-	ctx.fill()
-
-	// Draw red circle border
-	ctx.strokeStyle = '#CC0000'
-	ctx.lineWidth = 2
-	ctx.beginPath()
-	ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
-	ctx.stroke()
-
-	// Draw category number in center
-	ctx.fillStyle = '#CC0000'
-	ctx.font = 'bold 24px Arial'
-	ctx.textAlign = 'center'
-	ctx.textBaseline = 'middle'
-	ctx.fillText(category.toString(), centerX, centerY)
-
-	return canvas
-}
-
-/**
  * Create icon atlas for DeckGL with multiple hurricane categories
  * Returns a canvas with hurricane icons for categories 0-5
  */
@@ -162,10 +109,45 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 	const ctx = canvas.getContext('2d')
 	if (!ctx) return canvas
 
-	// Draw each category icon
+	// Draw each category icon (0-5)
 	for (let category = 0; category <= 5; category++) {
-		const iconCanvas = createSingleHurricaneIcon(category)
-		ctx.drawImage(iconCanvas, category * 128, 0)
+		const startX = category * 128
+		const centerX = startX + 64
+		const centerY = 64
+
+		// Draw red spiral bands (like the reference image)
+		ctx.strokeStyle = '#CC0000'
+		ctx.lineWidth = 8
+		ctx.lineCap = 'round'
+		ctx.lineJoin = 'round'
+
+		// Draw spiral arms (4 arms)
+		for (let i = 0; i < 4; i++) {
+			const angle = (i * Math.PI) / 2
+			ctx.beginPath()
+			ctx.arc(centerX, centerY, 45, angle, angle + Math.PI * 0.6, false)
+			ctx.stroke()
+		}
+
+		// Draw center circle (white background for number)
+		ctx.fillStyle = 'white'
+		ctx.beginPath()
+		ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
+		ctx.fill()
+
+		// Draw red circle border
+		ctx.strokeStyle = '#CC0000'
+		ctx.lineWidth = 2
+		ctx.beginPath()
+		ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
+		ctx.stroke()
+
+		// Draw category number in center
+		ctx.fillStyle = '#CC0000'
+		ctx.font = 'bold 24px Arial'
+		ctx.textAlign = 'center'
+		ctx.textBaseline = 'middle'
+		ctx.fillText(category.toString(), centerX, centerY)
 	}
 
 	return canvas
