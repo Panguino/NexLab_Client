@@ -35,9 +35,9 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 		console.log(`  Storm: ${d.name}, category: ${d.category}, position: [${d.position[0]}, ${d.position[1]}]`)
 	})
 
-	// Get icon URL for rendering
-	const iconAtlas = getHurricaneIconURL()
-	console.log('Icon atlas URL length:', iconAtlas.length)
+	// Get icon canvas for rendering
+	const iconAtlas = getHurricaneIconCanvas()
+	console.log('Icon atlas canvas size:', iconAtlas.width, 'x', iconAtlas.height)
 
 	return new IconLayer({
 		id: 'hurricane-layer',
@@ -154,15 +154,27 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 }
 
 /**
+ * Get icon canvas for DeckGL IconLayer
+ * Returns the canvas directly for better compatibility
+ */
+let cachedIconCanvas: HTMLCanvasElement | null = null
+
+export function getHurricaneIconCanvas(): HTMLCanvasElement {
+	if (!cachedIconCanvas) {
+		cachedIconCanvas = createHurricaneIconAtlas()
+	}
+	return cachedIconCanvas
+}
+
+/**
  * Get icon URL for DeckGL IconLayer
  * Uses a data URL for the hurricane icon
  */
 let cachedIconURL: string | null = null
-let cachedIconImage: HTMLImageElement | null = null
 
 export function getHurricaneIconURL(): string {
 	if (!cachedIconURL) {
-		const canvas = createHurricaneIconAtlas()
+		const canvas = getHurricaneIconCanvas()
 		cachedIconURL = canvas.toDataURL()
 	}
 	return cachedIconURL
@@ -172,6 +184,8 @@ export function getHurricaneIconURL(): string {
  * Get icon image for DeckGL IconLayer
  * Returns an Image object that DeckGL can use directly
  */
+let cachedIconImage: HTMLImageElement | null = null
+
 export function getHurricaneIconImage(): HTMLImageElement {
 	if (!cachedIconImage) {
 		const img = new Image()
