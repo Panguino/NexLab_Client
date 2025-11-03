@@ -115,45 +115,62 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 		const centerX = startX + 64
 		const centerY = 64
 
-		// Draw outer spiral ring (red)
-		ctx.fillStyle = '#CC0000'
-		ctx.beginPath()
-		ctx.arc(centerX, centerY, 50, 0, Math.PI * 2)
-		ctx.fill()
-
-		// Draw inner white ring to create spiral effect
-		ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
-		ctx.beginPath()
-		ctx.arc(centerX, centerY, 40, 0, Math.PI * 2)
-		ctx.fill()
-
-		// Draw 4 spiral arms using wedges
+		// Draw 4 spiral arms extending outward
 		ctx.fillStyle = '#CC0000'
 		for (let i = 0; i < 4; i++) {
 			const angle = (i * Math.PI) / 2
+
+			// Draw curved spiral arm using quadratic curves
 			ctx.beginPath()
 			ctx.moveTo(centerX, centerY)
-			ctx.arc(centerX, centerY, 45, angle, angle + Math.PI * 0.5, false)
-			ctx.lineTo(centerX, centerY)
+
+			// Create a curved arm that spirals outward
+			const armLength = 50
+			const endX = centerX + Math.cos(angle) * armLength
+			const endY = centerY + Math.sin(angle) * armLength
+
+			// Control point for curve (offset perpendicular to arm direction)
+			const controlX = centerX + Math.cos(angle + Math.PI / 2) * 15 + Math.cos(angle) * 25
+			const controlY = centerY + Math.sin(angle + Math.PI / 2) * 15 + Math.sin(angle) * 25
+
+			ctx.quadraticCurveTo(controlX, controlY, endX, endY)
+
+			// Draw the other side of the arm
+			const controlX2 = centerX + Math.cos(angle - Math.PI / 2) * 15 + Math.cos(angle) * 25
+			const controlY2 = centerY + Math.sin(angle - Math.PI / 2) * 15 + Math.sin(angle) * 25
+
+			ctx.quadraticCurveTo(controlX2, controlY2, centerX, centerY)
 			ctx.fill()
 		}
+
+		// Draw outer ring around center
+		ctx.fillStyle = '#CC0000'
+		ctx.beginPath()
+		ctx.arc(centerX, centerY, 35, 0, Math.PI * 2)
+		ctx.fill()
+
+		// Draw inner lighter ring for depth
+		ctx.fillStyle = 'rgba(255, 100, 100, 0.6)'
+		ctx.beginPath()
+		ctx.arc(centerX, centerY, 28, 0, Math.PI * 2)
+		ctx.fill()
 
 		// Draw center circle (white background for number)
 		ctx.fillStyle = 'white'
 		ctx.beginPath()
-		ctx.arc(centerX, centerY, 22, 0, Math.PI * 2)
+		ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
 		ctx.fill()
 
 		// Draw red circle border
 		ctx.strokeStyle = '#CC0000'
 		ctx.lineWidth = 3
 		ctx.beginPath()
-		ctx.arc(centerX, centerY, 22, 0, Math.PI * 2)
+		ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
 		ctx.stroke()
 
 		// Draw category number in center
 		ctx.fillStyle = '#CC0000'
-		ctx.font = 'bold 28px Arial'
+		ctx.font = 'bold 26px Arial'
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'middle'
 		ctx.fillText(category.toString(), centerX, centerY)
