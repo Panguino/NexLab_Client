@@ -156,6 +156,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			containerStyle,
 			viewState: externalViewState,
 			layerVisibility = {},
+			onStormClick,
 		},
 		ref,
 	) => {

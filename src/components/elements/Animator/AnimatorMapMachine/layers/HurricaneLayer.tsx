@@ -41,7 +41,11 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 		sizeMinPixels: 20,
 		sizeMaxPixels: 100,
 		getPosition: (d: any) => d.position,
-		getIcon: () => 'hurricane',
+		getIcon: (d: any) => {
+			// Use category as icon key (0-5)
+			const category = Math.min(5, Math.max(0, d.category || 0))
+			return category
+		},
 		getSize: (d: any) => d.iconSize,
 		getColor: (d: any) => d.color,
 		iconAtlas: iconAtlas,
@@ -50,22 +54,22 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 		updateTriggers: {
 			getSize: [storms],
 			getColor: [storms],
+			getIcon: [storms],
 		},
 	})
 }
 
 /**
- * Hurricane icon SVG data for DeckGL
- * Returns icon mapping for use with IconLayer
+ * Hurricane icon mapping for DeckGL
+ * Maps category numbers to icon positions in the atlas
  */
 export const HURRICANE_ICON_MAPPING = {
-	hurricane: {
-		x: 0,
-		y: 0,
-		width: 128,
-		height: 128,
-		mask: true,
-	},
+	0: { x: 0, y: 0, width: 128, height: 128, mask: true }, // TS
+	1: { x: 128, y: 0, width: 128, height: 128, mask: true }, // Cat 1
+	2: { x: 256, y: 0, width: 128, height: 128, mask: true }, // Cat 2
+	3: { x: 384, y: 0, width: 128, height: 128, mask: true }, // Cat 3
+	4: { x: 512, y: 0, width: 128, height: 128, mask: true }, // Cat 4
+	5: { x: 640, y: 0, width: 128, height: 128, mask: true }, // Cat 5
 }
 
 /**
@@ -88,10 +92,11 @@ export function generateHurricaneIconSVG(): string {
 }
 
 /**
- * Create icon atlas for DeckGL
- * Returns a canvas with a realistic hurricane icon
+ * Create a single hurricane icon with category number
+ * @param category - Hurricane category (0-5)
+ * @returns Canvas with hurricane icon
  */
-export function createHurricaneIconAtlas(): HTMLCanvasElement {
+function createSingleHurricaneIcon(category: number): HTMLCanvasElement {
 	const canvas = document.createElement('canvas')
 	canvas.width = 128
 	canvas.height = 128
@@ -102,57 +107,60 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 	const centerX = 64
 	const centerY = 64
 
-	// Draw spiral bands (cloud bands)
-	ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)'
+	// Draw red spiral bands (like the reference image)
+	ctx.strokeStyle = '#CC0000'
+	ctx.lineWidth = 8
+	ctx.lineCap = 'round'
+	ctx.lineJoin = 'round'
+
+	// Draw spiral arms (4 arms)
+	for (let i = 0; i < 4; i++) {
+		const angle = (i * Math.PI) / 2
+		ctx.beginPath()
+		ctx.arc(centerX, centerY, 45, angle, angle + Math.PI * 0.6, false)
+		ctx.stroke()
+	}
+
+	// Draw center circle (white background for number)
+	ctx.fillStyle = 'white'
+	ctx.beginPath()
+	ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
+	ctx.fill()
+
+	// Draw red circle border
+	ctx.strokeStyle = '#CC0000'
 	ctx.lineWidth = 2
-
-	// Outer spiral band
 	ctx.beginPath()
-	ctx.arc(centerX, centerY, 48, 0, Math.PI * 2)
+	ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
 	ctx.stroke()
 
-	// Middle spiral band
-	ctx.beginPath()
-	ctx.arc(centerX, centerY, 36, 0, Math.PI * 2)
-	ctx.stroke()
+	// Draw category number in center
+	ctx.fillStyle = '#CC0000'
+	ctx.font = 'bold 24px Arial'
+	ctx.textAlign = 'center'
+	ctx.textBaseline = 'middle'
+	ctx.fillText(category.toString(), centerX, centerY)
 
-	// Inner spiral band
-	ctx.beginPath()
-	ctx.arc(centerX, centerY, 24, 0, Math.PI * 2)
-	ctx.stroke()
+	return canvas
+}
 
-	// Eye wall (darker ring)
-	ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)'
-	ctx.lineWidth = 3
-	ctx.beginPath()
-	ctx.arc(centerX, centerY, 16, 0, Math.PI * 2)
-	ctx.stroke()
+/**
+ * Create icon atlas for DeckGL with multiple hurricane categories
+ * Returns a canvas with hurricane icons for categories 0-5
+ */
+export function createHurricaneIconAtlas(): HTMLCanvasElement {
+	const canvas = document.createElement('canvas')
+	canvas.width = 128 * 6 // 6 categories (0-5)
+	canvas.height = 128
 
-	// Eye (clear center)
-	ctx.fillStyle = 'rgba(100, 150, 200, 0.3)'
-	ctx.beginPath()
-	ctx.arc(centerX, centerY, 12, 0, Math.PI * 2)
-	ctx.fill()
+	const ctx = canvas.getContext('2d')
+	if (!ctx) return canvas
 
-	// Eye highlight
-	ctx.fillStyle = 'rgba(255, 255, 255, 0.6)'
-	ctx.beginPath()
-	ctx.arc(centerX - 4, centerY - 4, 4, 0, Math.PI * 2)
-	ctx.fill()
-
-	// Add some curved bands to simulate spiral structure
-	ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)'
-	ctx.lineWidth = 1.5
-
-	// Curved band 1
-	ctx.beginPath()
-	ctx.arc(centerX, centerY, 40, 0, Math.PI * 1.5)
-	ctx.stroke()
-
-	// Curved band 2
-	ctx.beginPath()
-	ctx.arc(centerX, centerY, 28, Math.PI * 0.5, Math.PI * 2)
-	ctx.stroke()
+	// Draw each category icon
+	for (let category = 0; category <= 5; category++) {
+		const iconCanvas = createSingleHurricaneIcon(category)
+		ctx.drawImage(iconCanvas, category * 128, 0)
+	}
 
 	return canvas
 }
