@@ -38,8 +38,23 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 				setIsLoading(true)
 				const stormsData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
 
-				console.log('Loaded active storms:', stormsData.length, 'storms')
-				setAllStorms(stormsData)
+				// If no active storms, load historical test data
+				if (stormsData.length === 0) {
+					console.log('No active storms found, loading historical test data...')
+					try {
+						const historicalData = await fetchTropicalStormData(
+							'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510052340.json',
+						)
+						console.log('Loaded historical test data:', historicalData.length, 'storms')
+						setAllStorms(historicalData)
+					} catch (histErr) {
+						console.error('Error loading historical test data:', histErr)
+						setError('Failed to load tropical storm data')
+					}
+				} else {
+					console.log('Loaded active storms:', stormsData.length, 'storms')
+					setAllStorms(stormsData)
+				}
 			} catch (err) {
 				console.error('Error loading active storms:', err)
 				setError('Failed to load tropical storm data')
