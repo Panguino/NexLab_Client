@@ -3,6 +3,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import type { LayerConfig } from '../AnimatorMapMachine/config/layerConfigTypes'
 import { DataType, getLayersForDataType, MapLayer } from '../AnimatorMapMachine/config/mapLayers'
 import styles from './MapLayerPanel.module.scss'
 
@@ -12,6 +13,7 @@ interface IMapLayerPanelProps {
 	layerVisibility: Record<string, boolean>
 	setLayerVisibility: (visibility: Record<string, boolean>) => void
 	dataType: DataType
+	layerConfig?: LayerConfig // Optional layer configuration to filter which layers are shown
 }
 
 /**
@@ -21,7 +23,7 @@ interface IMapLayerPanelProps {
  * Shows/hides layers based on the current data type being viewed
  * Organized into collapsible overlay groups matching the satellite/radar animator style
  */
-export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibility, dataType }: IMapLayerPanelProps) => {
+export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibility, dataType, layerConfig }: IMapLayerPanelProps) => {
 	const [groupOpen, setGroupOpen] = useState('general')
 
 	// Close panel when clicking outside
@@ -51,8 +53,13 @@ export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibili
 
 	// Get layers available for current data type
 	const availableLayers = getLayersForDataType(dataType)
-	const generalLayers = availableLayers.filter((l) => l.category === 'general')
-	const dataLayers = availableLayers.filter((l) => l.category === 'data')
+
+	// If layer config is provided, filter to only show active layers
+	const activeLayers = layerConfig ? getActiveLayers(layerConfig) : availableLayers.map((l) => l.id)
+	const filteredLayers = availableLayers.filter((l) => activeLayers.includes(l.id))
+
+	const generalLayers = filteredLayers.filter((l) => l.category === 'general')
+	const dataLayers = filteredLayers.filter((l) => l.category === 'data')
 
 	const renderLayerItem = (layer: MapLayer) => (
 		<div
