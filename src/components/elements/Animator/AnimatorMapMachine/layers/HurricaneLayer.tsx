@@ -50,7 +50,7 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 		getIcon: (d: any) => {
 			// Use category as icon key (0-5)
 			const category = Math.min(5, Math.max(0, d.category || 0))
-			return category
+			return category.toString()
 		},
 		getSize: (d: any) => d.iconSize,
 		getColor: (d: any) => d.color,
@@ -69,13 +69,13 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
  * Hurricane icon mapping for DeckGL
  * Maps category numbers to icon positions in the atlas
  */
-export const HURRICANE_ICON_MAPPING = {
-	0: { x: 0, y: 0, width: 128, height: 128, mask: true }, // TS
-	1: { x: 128, y: 0, width: 128, height: 128, mask: true }, // Cat 1
-	2: { x: 256, y: 0, width: 128, height: 128, mask: true }, // Cat 2
-	3: { x: 384, y: 0, width: 128, height: 128, mask: true }, // Cat 3
-	4: { x: 512, y: 0, width: 128, height: 128, mask: true }, // Cat 4
-	5: { x: 640, y: 0, width: 128, height: 128, mask: true }, // Cat 5
+export const HURRICANE_ICON_MAPPING: Record<string, any> = {
+	'0': { x: 0, y: 0, width: 128, height: 128, mask: true }, // TS
+	'1': { x: 128, y: 0, width: 128, height: 128, mask: true }, // Cat 1
+	'2': { x: 256, y: 0, width: 128, height: 128, mask: true }, // Cat 2
+	'3': { x: 384, y: 0, width: 128, height: 128, mask: true }, // Cat 3
+	'4': { x: 512, y: 0, width: 128, height: 128, mask: true }, // Cat 4
+	'5': { x: 640, y: 0, width: 128, height: 128, mask: true }, // Cat 5
 }
 
 /**
