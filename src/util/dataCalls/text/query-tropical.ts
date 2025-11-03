@@ -59,12 +59,23 @@ export const getTropicalGeneralData = async (productId) => {
 
 export const getActiveTropicalStorms = async () => {
 	const endpoint = 'https://climate.cod.edu/data/tropical/gis/CurrentStorms.json' // live/operational endpoint
-	// const endpoint = 'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510242050.json' // good fallback for testing
 	const data = await getData(endpoint)
 
 	if (data && Object.keys(data).length > 0) {
 		return data
 	} else {
+		// Fallback to historical test data when no active storms
+		console.log('No active storms found, loading historical test data...')
+		try {
+			const historicalEndpoint = 'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510052340.json'
+			const historicalData = await getData(historicalEndpoint)
+			if (historicalData && Object.keys(historicalData).length > 0) {
+				console.log('Loaded historical test data:', Object.keys(historicalData).length, 'storms')
+				return historicalData
+			}
+		} catch (err) {
+			console.error('Error loading historical test data:', err)
+		}
 		return false
 	}
 }
