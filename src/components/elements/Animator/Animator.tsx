@@ -63,6 +63,8 @@ interface IAnimatorProps {
 	mapLayerVisibility?: Record<string, boolean> // Visibility state for map layers
 	setMapLayerVisibility?: (visibility: Record<string, boolean>) => void // Callback for layer visibility changes
 	mapDataType?: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
+	// Storm click handler
+	onStormClick?: (stormId: string) => void
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -78,6 +80,7 @@ interface IAnimatorProvider extends IAnimatorProps {
 	setMapZoomState: (mapZoomState: mapZoomState) => void // Update map zoom state
 	mapLayerVisibility: Record<string, boolean> // Map layer visibility state
 	setMapLayerVisibility: (visibility: Record<string, boolean>) => void // Update map layer visibility
+	onStormClick?: (stormId: string) => void // Storm click handler
 	mapDataType: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 }
 
@@ -155,6 +158,7 @@ export const Animator = ({
 	mapLayerVisibility,
 	setMapLayerVisibility,
 	mapDataType = 'all',
+	onStormClick,
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
@@ -235,6 +239,7 @@ export const Animator = ({
 					setMapLayerVisibility?.(newVisibility)
 				},
 				mapDataType: mapDataType || 'all',
+				onStormClick,
 			}}
 		>
 			<AnimatorLayout />

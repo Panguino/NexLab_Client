@@ -1146,6 +1146,13 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			setTooltipVisible(false)
 		}
 
+		const handleDeckGLClick = (info: any) => {
+			// Check if a storm icon was clicked
+			if (info && info.object && info.object.id && onStormClick) {
+				onStormClick(info.object.id)
+			}
+		}
+
 		// Attach both the forwarded ref and the local containerRef
 		useEffect(() => {
 			if (typeof ref === 'function') {
@@ -1183,6 +1190,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					}}
 					layers={layers}
 					onViewStateChange={handleViewStateChange}
+					onClick={handleDeckGLClick}
 				/>
 				<StormTooltip info={stormHoverInfo} visible={showTooltip} />
 				<MapAlertTooltip visible={tooltipVisible} title={tooltipTitle} alerts={tooltipAlerts} />

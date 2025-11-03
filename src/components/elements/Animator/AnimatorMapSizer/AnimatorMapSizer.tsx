@@ -44,6 +44,7 @@ const AnimatorMapSizer = () => {
 		mapLayerVisibility,
 		setMapLayerVisibility,
 		mapDataType,
+		onStormClick,
 	} = useAnimator()
 
 	// Debug logging - only for mouse/click interactions
@@ -242,6 +243,7 @@ const AnimatorMapSizer = () => {
 					zoomStepScroll={ZOOM_STEP_SCROLL}
 					layerVisibility={mapLayerVisibility}
 					mapDataType={mapDataType}
+					onStormClick={onStormClick}
 				/>
 			</div>
 

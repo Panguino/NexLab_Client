@@ -98,6 +98,7 @@ export interface IAnimatorMapMachineProps {
 	// Tropical storm visualization
 	tropicalStorms?: ProcessedStormData[]
 	onStormHover?: (info: StormHoverInfo | null) => void
+	onStormClick?: (stormId: string) => void
 
 	// Callbacks
 	onFrameChange?: (frameIndex: number) => void

@@ -172,6 +172,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 						type: 'FeatureCollection',
 						features,
 					},
+					tropicalStorms: currentStorm ? [currentStorm] : [],
 				}
 
 				setFrames([frame])
@@ -190,6 +191,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 
 	// Handle storm selection from map click
 	const handleStormClick = (stormId: string) => {
+		console.log(`Storm clicked on map: ${stormId}`)
 		onStormSelect?.(stormId)
 	}
 
@@ -200,7 +202,16 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 			<div className={styles.tropicalAnimatorOverview}>
 				<Animator
 					frames={
-						hasStorms ? [{ id: 'overview', timestamp: new Date().toISOString(), data: { type: 'FeatureCollection', features: [] } }] : []
+						hasStorms
+							? [
+									{
+										id: 'overview',
+										timestamp: new Date().toISOString(),
+										data: { type: 'FeatureCollection', features: [] },
+										tropicalStorms: allStorms,
+									},
+								]
+							: []
 					}
 					mode="map"
 					mapRegion="namer"
@@ -212,6 +223,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 					mapLayerVisibility={mapLayerVisibility}
 					setMapLayerVisibility={setMapLayerVisibility}
 					hideControls={true}
+					onStormClick={handleStormClick}
 				/>
 
 				{isLoading && <div className={styles.loading}>Loading storms...</div>}
@@ -270,6 +282,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 				mapDataType="hurricane"
 				mapLayerVisibility={mapLayerVisibility}
 				setMapLayerVisibility={setMapLayerVisibility}
+				onStormClick={handleStormClick}
 			/>
 
 			{isLoading && <div className={styles.loading}>Loading storm data...</div>}
