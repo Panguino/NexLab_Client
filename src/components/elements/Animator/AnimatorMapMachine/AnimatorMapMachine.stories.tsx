@@ -359,6 +359,10 @@ const LayerConfigurationComponent = ({ configPreset }: { configPreset: string })
  * Hides county and coastal alert layers
  */
 export const TropicalConfiguration: Story = {
+	args: {
+		frames: SAMPLE_HURRICANE_PATHS,
+		currentFrame: 0,
+	},
 	render: () => <LayerConfigurationComponent configPreset="TROPICAL" />,
 }
 
@@ -368,6 +372,10 @@ export const TropicalConfiguration: Story = {
  * Hides coastal alert and hurricane layers
  */
 export const CountyAlertsConfiguration: Story = {
+	args: {
+		frames: SAMPLE_HURRICANE_PATHS,
+		currentFrame: 0,
+	},
 	render: () => <LayerConfigurationComponent configPreset="COUNTY_ALERTS" />,
 }
 
@@ -377,6 +385,10 @@ export const CountyAlertsConfiguration: Story = {
  * Hides county alert and hurricane layers
  */
 export const CoastalAlertsConfiguration: Story = {
+	args: {
+		frames: SAMPLE_HURRICANE_PATHS,
+		currentFrame: 0,
+	},
 	render: () => <LayerConfigurationComponent configPreset="COASTAL_ALERTS" />,
 }
 
@@ -386,5 +398,9 @@ export const CoastalAlertsConfiguration: Story = {
  * Useful for testing and development
  */
 export const FullConfiguration: Story = {
+	args: {
+		frames: SAMPLE_HURRICANE_PATHS,
+		currentFrame: 0,
+	},
 	render: () => <LayerConfigurationComponent configPreset="FULL" />,
 }

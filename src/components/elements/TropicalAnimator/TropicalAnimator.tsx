@@ -116,7 +116,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 					// Create an empty frame if products can't be fetched
 					const frame: MapFrame = {
 						id: `storm-${selectedStormId}`,
-						timestamp: new Date().toISOString(),
+						timestamp: new Date(),
 						data: {
 							type: 'FeatureCollection',
 							features: [],
@@ -134,7 +134,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 					// Create an empty frame if no advisory data
 					const frame: MapFrame = {
 						id: `storm-${selectedStormId}`,
-						timestamp: new Date().toISOString(),
+						timestamp: new Date(),
 						data: {
 							type: 'FeatureCollection',
 							features: [],

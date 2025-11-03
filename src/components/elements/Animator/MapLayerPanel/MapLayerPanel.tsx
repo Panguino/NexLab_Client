@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import type { LayerConfig } from '../AnimatorMapMachine/config/layerConfigTypes'
+import { getActiveLayers } from '../AnimatorMapMachine/config/layerConfigTypes'
 import { DataType, getLayersForDataType, MapLayer } from '../AnimatorMapMachine/config/mapLayers'
 import styles from './MapLayerPanel.module.scss'
 

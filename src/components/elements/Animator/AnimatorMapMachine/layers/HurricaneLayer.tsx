@@ -65,7 +65,7 @@ export function createHurricaneLayer(storms: ProcessedStormData[], iconAtlas: HT
 		},
 		getSize: (d: any) => d.iconSize,
 		getColor: (d: any) => d.color,
-		iconAtlas: iconAtlas,
+		iconAtlas: iconAtlas as any,
 		iconMapping: HURRICANE_ICON_MAPPING,
 		updateTriggers: {
 			getSize: [storms],
