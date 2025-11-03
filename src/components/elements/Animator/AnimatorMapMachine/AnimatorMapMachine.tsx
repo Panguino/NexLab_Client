@@ -229,10 +229,12 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					for (const frame of frames) {
 						// Validate frame structure
 						if (frame && frame.id && frame.data) {
+							console.log('Loading frame:', frame.id, 'tropicalStorms:', frame.tropicalStorms?.length || 0)
 							validFrames.push(frame)
 						}
 					}
 
+					console.log('Loaded', validFrames.length, 'frames total')
 					setLoadedFrames(validFrames)
 				} catch (error) {
 					// Silently catch frame loading errors
