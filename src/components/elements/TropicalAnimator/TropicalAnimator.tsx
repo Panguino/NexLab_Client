@@ -23,6 +23,8 @@ interface TropicalAnimatorProps {
 	view?: 'overview' | 'detail'
 }
 
+const DEBUG_DATA_KEY = 'tropical_debug_data_url'
+
 export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overview' }: TropicalAnimatorProps) => {
 	const [frames, setFrames] = useState<MapFrame[]>([])
 	const [isLoading, setIsLoading] = useState(true)
@@ -36,27 +38,34 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 		const loadActiveStorms = async () => {
 			try {
 				setIsLoading(true)
-				const stormsData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
 
-				// If no active storms, load historical test data
-				if (stormsData.length === 0) {
-					console.log('No active storms found, loading historical test data...')
-					try {
-						const historicalData = await fetchTropicalStormData(
-							'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510052340.json',
-						)
-						console.log('Loaded historical test data:', historicalData.length, 'storms')
-						setAllStorms(historicalData)
-					} catch (histErr) {
-						console.error('Error loading historical test data:', histErr)
-						setError('Failed to load tropical storm data')
-					}
+				// Check if debug data URL is set
+				const debugDataUrl = typeof window !== 'undefined' ? localStorage.getItem(DEBUG_DATA_KEY) : null
+
+				let stormsData: ProcessedStormData[] = []
+
+				if (debugDataUrl) {
+					// Load debug data
+					stormsData = await fetchTropicalStormData(debugDataUrl)
 				} else {
-					console.log('Loaded active storms:', stormsData.length, 'storms')
-					setAllStorms(stormsData)
+					// Load active storms
+					stormsData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
+
+					// If no active storms, load historical test data
+					if (stormsData.length === 0) {
+						try {
+							const historicalData = await fetchTropicalStormData(
+								'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510052340.json',
+							)
+							stormsData = historicalData
+						} catch (histErr) {
+							setError('Failed to load tropical storm data')
+						}
+					}
 				}
+
+				setAllStorms(stormsData)
 			} catch (err) {
-				console.error('Error loading active storms:', err)
 				setError('Failed to load tropical storm data')
 			} finally {
 				setIsLoading(false)
@@ -88,7 +97,6 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 				try {
 					products = await fetchTropicalProducts(selectedStormId)
 				} catch (err) {
-					console.warn(`Could not fetch tropical products for ${selectedStormId}, creating empty frame`)
 					// Create an empty frame if products can't be fetched
 					const frame: MapFrame = {
 						id: `storm-${selectedStormId}`,
@@ -177,7 +185,6 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 
 				setFrames([frame])
 			} catch (err) {
-				console.error('Error loading storm detail:', err)
 				setError('Failed to load storm data')
 			} finally {
 				setIsLoading(false)
@@ -191,7 +198,6 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 
 	// Handle storm selection from map click
 	const handleStormClick = (stormId: string) => {
-		console.log(`Storm clicked on map: ${stormId}`)
 		onStormSelect?.(stormId)
 	}
 
