@@ -37,6 +37,7 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 		console.log(
 			`[HurricaneLayer] Storm ${idx}: name=${d.name}, category=${d.category}, pos=[${d.position[0]}, ${d.position[1]}], iconSize=${d.iconSize}, color=${d.color}`,
 		)
+		console.log('[HurricaneLayer] Full storm object:', d)
 	})
 
 	// Get icon image for rendering
