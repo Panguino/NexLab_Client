@@ -70,19 +70,28 @@ export const TropicalDebugPanel = () => {
 		}
 	}, [])
 
-	const handleDebugChange = useCallback((value: string) => {
-		setSelectedDebug(value)
+	const handleDebugChange = useCallback(
+		(value: string) => {
+			setSelectedDebug(value)
 
-		// Save to localStorage
-		if (value === 'none') {
-			localStorage.setItem(DEBUG_DATA_KEY, 'none')
-		} else {
-			localStorage.setItem(DEBUG_DATA_KEY, value)
-		}
+			// Save to localStorage
+			if (value === 'none') {
+				localStorage.setItem(DEBUG_DATA_KEY, 'none')
+			} else {
+				localStorage.setItem(DEBUG_DATA_KEY, value)
+			}
 
-		// Reload page to apply changes
-		window.location.reload()
-	}, [])
+			// Dispatch storage event to notify other components
+			window.dispatchEvent(
+				new StorageEvent('storage', {
+					key: DEBUG_DATA_KEY,
+					newValue: value,
+					oldValue: selectedDebug,
+				}),
+			)
+		},
+		[selectedDebug],
+	)
 
 	return (
 		<div className={styles.debugPanel}>
