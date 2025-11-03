@@ -24,30 +24,54 @@ import {
  * @returns DeckGL IconLayer
  */
 export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (info: any) => void): IconLayer {
+	console.log('[HurricaneLayer] createHurricaneLayer called with', storms.length, 'storms')
+
 	// Convert storms to GeoJSON-like format for DeckGL
 	const data = storms.map((storm) => ({
 		position: [storm.longitude, storm.latitude],
 		...storm,
 	}))
 
+	console.log('[HurricaneLayer] Converted data:', data)
+	data.forEach((d: any, idx: number) => {
+		console.log(
+			`[HurricaneLayer] Storm ${idx}: name=${d.name}, category=${d.category}, pos=[${d.position[0]}, ${d.position[1]}], iconSize=${d.iconSize}, color=${d.color}`,
+		)
+	})
+
 	// Get icon image for rendering
 	const iconAtlas = getHurricaneIconImage()
+	console.log('[HurricaneLayer] Icon atlas:', iconAtlas)
+	console.log('[HurricaneLayer] Icon atlas src:', iconAtlas.src)
+	console.log('[HurricaneLayer] Icon atlas complete:', iconAtlas.complete)
+	console.log('[HurricaneLayer] Icon mapping:', HURRICANE_ICON_MAPPING)
 
-	return new IconLayer({
+	const layer = new IconLayer({
 		id: 'hurricane-layer',
 		data,
 		pickable: true,
 		sizeScale: 15,
 		sizeMinPixels: 20,
 		sizeMaxPixels: 100,
-		getPosition: (d: any) => d.position,
+		getPosition: (d: any) => {
+			console.log('[HurricaneLayer] getPosition called for', d.name)
+			return d.position
+		},
 		getIcon: (d: any) => {
 			// Use category as icon key (0-5)
 			const category = Math.min(5, Math.max(0, d.category || 0))
-			return category.toString()
+			const iconKey = category.toString()
+			console.log('[HurricaneLayer] getIcon called for', d.name, '- category:', category, 'iconKey:', iconKey)
+			return iconKey
 		},
-		getSize: (d: any) => d.iconSize,
-		getColor: (d: any) => d.color,
+		getSize: (d: any) => {
+			console.log('[HurricaneLayer] getSize called for', d.name, '- size:', d.iconSize)
+			return d.iconSize
+		},
+		getColor: (d: any) => {
+			console.log('[HurricaneLayer] getColor called for', d.name, '- color:', d.color)
+			return d.color
+		},
 		iconAtlas: iconAtlas,
 		iconMapping: HURRICANE_ICON_MAPPING,
 		onHover: onHover,
@@ -57,6 +81,9 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 			getIcon: [storms],
 		},
 	})
+
+	console.log('[HurricaneLayer] IconLayer created:', layer)
+	return layer
 }
 
 /**
@@ -96,12 +123,18 @@ export function generateHurricaneIconSVG(): string {
  * Returns a canvas with hurricane icons for categories 0-5
  */
 export function createHurricaneIconAtlas(): HTMLCanvasElement {
+	console.log('[HurricaneLayer] createHurricaneIconAtlas called')
 	const canvas = document.createElement('canvas')
 	canvas.width = 128 * 6 // 6 categories (0-5)
 	canvas.height = 128
 
 	const ctx = canvas.getContext('2d')
-	if (!ctx) return canvas
+	if (!ctx) {
+		console.error('[HurricaneLayer] Failed to get canvas 2D context')
+		return canvas
+	}
+
+	console.log('[HurricaneLayer] Canvas created:', canvas.width, 'x', canvas.height)
 
 	// Draw each category icon (0-5)
 	for (let category = 0; category <= 5; category++) {
@@ -144,6 +177,7 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 		ctx.fillText(category.toString(), centerX, centerY)
 	}
 
+	console.log('[HurricaneLayer] Icon atlas canvas created successfully')
 	return canvas
 }
 
@@ -168,8 +202,10 @@ let cachedIconURL: string | null = null
 
 export function getHurricaneIconURL(): string {
 	if (!cachedIconURL) {
+		console.log('[HurricaneLayer] getHurricaneIconURL - creating data URL')
 		const canvas = getHurricaneIconCanvas()
 		cachedIconURL = canvas.toDataURL()
+		console.log('[HurricaneLayer] Data URL created, length:', cachedIconURL.length)
 	}
 	return cachedIconURL
 }
@@ -182,8 +218,21 @@ let cachedIconImage: HTMLImageElement | null = null
 
 export function getHurricaneIconImage(): HTMLImageElement {
 	if (!cachedIconImage) {
+		console.log('[HurricaneLayer] getHurricaneIconImage - creating Image object')
 		const img = new Image()
-		img.src = getHurricaneIconURL()
+		const url = getHurricaneIconURL()
+		console.log('[HurricaneLayer] Setting image src to data URL')
+		img.src = url
+		console.log('[HurricaneLayer] Image object created, src length:', img.src.length)
+
+		// Add load event listener for debugging
+		img.onload = () => {
+			console.log('[HurricaneLayer] Image loaded successfully')
+		}
+		img.onerror = () => {
+			console.error('[HurricaneLayer] Image failed to load')
+		}
+
 		cachedIconImage = img
 	}
 	return cachedIconImage

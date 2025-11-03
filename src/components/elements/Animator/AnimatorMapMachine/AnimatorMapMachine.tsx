@@ -222,6 +222,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		// Load frames
 		useEffect(() => {
 			const loadFrames = async () => {
+				console.log('[AnimatorMapMachine] loadFrames effect triggered, frames:', frames?.length || 0)
 				setIsLoading(true)
 				const validFrames: MapFrame[] = []
 
@@ -229,12 +230,15 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					for (const frame of frames) {
 						// Validate frame structure
 						if (frame && frame.id && frame.data) {
+							console.log('[AnimatorMapMachine] Loading frame:', frame.id, 'tropicalStorms:', frame.tropicalStorms?.length || 0)
 							validFrames.push(frame)
 						}
 					}
 
+					console.log('[AnimatorMapMachine] Loaded', validFrames.length, 'frames total')
 					setLoadedFrames(validFrames)
 				} catch (error) {
+					console.error('[AnimatorMapMachine] Error loading frames:', error)
 					// Silently catch frame loading errors
 				} finally {
 					setIsLoading(false)
@@ -904,9 +908,12 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 				// Add tropical storms from frame if present
 				if (frame && frame.tropicalStorms && frame.tropicalStorms.length > 0) {
+					console.log('[AnimatorMapMachine] Adding tropical storm layers for', frame.tropicalStorms.length, 'storms')
+
 					// Add storm track layer (historical paths)
 					const trackLayer = createStormTrackLayer(frame.tropicalStorms, loadedFrames)
 					baseLayers.push(trackLayer)
+					console.log('[AnimatorMapMachine] Added track layer, baseLayers count:', baseLayers.length)
 
 					const handleStormHover = (info: any) => {
 						if (info.object) {
@@ -930,6 +937,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					}
 					const hurricaneLayer = createHurricaneLayer(frame.tropicalStorms, handleStormHover)
 					baseLayers.push(hurricaneLayer)
+					console.log('[AnimatorMapMachine] Added hurricane layer, baseLayers count:', baseLayers.length)
 				}
 
 				if (onFrameChange) {
