@@ -6,7 +6,7 @@
  */
 
 import { GeoJsonLayer, IconLayer, LineLayer, PolygonLayer } from '@deck.gl/layers'
-import { ForecastTrack } from '../types/tropicalProductsTypes'
+import { CATEGORY_COLORS, ForecastTrack } from '../types/tropicalProductsTypes'
 import { ProcessedStormData } from '../types/tropicalStormTypes'
 import {
 	bestTrackPointsToGeoJSON,
