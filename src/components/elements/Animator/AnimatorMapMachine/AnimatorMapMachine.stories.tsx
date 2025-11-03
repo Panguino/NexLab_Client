@@ -318,3 +318,109 @@ export const BoundsConstraints: Story = {
 	},
 	render: () => <BoundsConstraintsComponent />,
 }
+
+// ============================================================================
+// Layer Configuration Stories
+// ============================================================================
+
+import { MapLayerPanel } from '../MapLayerPanel/MapLayerPanel'
+import { LAYER_CONFIG_PRESETS, layerConfigToVisibility } from './config/layerConfigTypes'
+
+const LayerConfigurationComponent = ({ configPreset }: { configPreset: string }) => {
+	const [currentFrame, setCurrentFrame] = useState(0)
+	const [layerPanelOpen, setLayerPanelOpen] = useState(false)
+	const [layerVisibility, setLayerVisibility] = useState<Record<string, boolean>>(() => {
+		const config = LAYER_CONFIG_PRESETS[configPreset as keyof typeof LAYER_CONFIG_PRESETS]
+		return layerConfigToVisibility(config)
+	})
+
+	const config = LAYER_CONFIG_PRESETS[configPreset as keyof typeof LAYER_CONFIG_PRESETS]
+
+	return (
+		<div style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+			<div style={{ flex: 1, position: 'relative' }}>
+				<AnimatorMapMachine
+					frames={SAMPLE_HURRICANE_PATHS}
+					currentFrame={currentFrame}
+					region="conus"
+					mapProvider="deckgl"
+					layerVisibility={layerVisibility}
+				/>
+				<button
+					onClick={() => setLayerPanelOpen(!layerPanelOpen)}
+					style={{
+						position: 'absolute',
+						top: '20px',
+						right: '20px',
+						padding: '10px 20px',
+						backgroundColor: '#007bff',
+						color: 'white',
+						border: 'none',
+						borderRadius: '4px',
+						cursor: 'pointer',
+						zIndex: 100,
+					}}
+				>
+					{layerPanelOpen ? 'Close' : 'Open'} Layers
+				</button>
+				<MapLayerPanel
+					open={layerPanelOpen}
+					onClose={() => setLayerPanelOpen(false)}
+					layerVisibility={layerVisibility}
+					setLayerVisibility={setLayerVisibility}
+					dataType="all"
+					layerConfig={config}
+				/>
+			</div>
+			<div style={{ padding: '20px', background: '#f5f5f5', borderTop: '1px solid #ddd' }}>
+				<p>
+					<strong>Configuration:</strong> {configPreset}
+				</p>
+				<p>
+					Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
+				</p>
+				<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
+				<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
+				<button onClick={() => setCurrentFrame(0)} style={{ marginLeft: '10px' }}>
+					Reset
+				</button>
+			</div>
+		</div>
+	)
+}
+
+/**
+ * Tropical Hurricane Animator Configuration
+ * Shows only base map layers and hurricane-specific data layers
+ * Hides county and coastal alert layers
+ */
+export const TropicalConfiguration: Story = {
+	render: () => <LayerConfigurationComponent configPreset="TROPICAL" />,
+}
+
+/**
+ * County Alerts Animator Configuration
+ * Shows base map layers and county alert data layers
+ * Hides coastal alert and hurricane layers
+ */
+export const CountyAlertsConfiguration: Story = {
+	render: () => <LayerConfigurationComponent configPreset="COUNTY_ALERTS" />,
+}
+
+/**
+ * Coastal Alerts Animator Configuration
+ * Shows base map layers and coastal alert data layers
+ * Hides county alert and hurricane layers
+ */
+export const CoastalAlertsConfiguration: Story = {
+	render: () => <LayerConfigurationComponent configPreset="COASTAL_ALERTS" />,
+}
+
+/**
+ * Full Animator Configuration
+ * Shows all available layers
+ * Useful for testing and development
+ */
+export const FullConfiguration: Story = {
+	render: () => <LayerConfigurationComponent configPreset="FULL" />,
+}
