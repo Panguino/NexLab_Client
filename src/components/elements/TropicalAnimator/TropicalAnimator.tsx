@@ -38,6 +38,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 		const loadActiveStorms = async () => {
 			try {
 				setIsLoading(true)
+				setError(null)
 
 				// Check if debug data URL is set
 				const debugDataUrl = typeof window !== 'undefined' ? localStorage.getItem(DEBUG_DATA_KEY) : null
@@ -49,7 +50,11 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 					stormsData = []
 				} else if (debugDataUrl) {
 					// Load debug data
-					stormsData = await fetchTropicalStormData(debugDataUrl)
+					try {
+						stormsData = await fetchTropicalStormData(debugDataUrl)
+					} catch (err) {
+						stormsData = []
+					}
 				} else {
 					// Load active storms
 					stormsData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
@@ -62,14 +67,14 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 							)
 							stormsData = historicalData
 						} catch (histErr) {
-							setError('Failed to load tropical storm data')
+							stormsData = []
 						}
 					}
 				}
 
 				setAllStorms(stormsData)
 			} catch (err) {
-				setError('Failed to load tropical storm data')
+				setAllStorms([])
 			} finally {
 				setIsLoading(false)
 			}
@@ -78,6 +83,14 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 		if (view === 'overview') {
 			loadActiveStorms()
 		}
+
+		// Listen for storage changes from debug panel
+		const handleStorageChange = () => {
+			loadActiveStorms()
+		}
+
+		window.addEventListener('storage', handleStorageChange)
+		return () => window.removeEventListener('storage', handleStorageChange)
 	}, [view])
 
 	// Load detail view data when storm is selected

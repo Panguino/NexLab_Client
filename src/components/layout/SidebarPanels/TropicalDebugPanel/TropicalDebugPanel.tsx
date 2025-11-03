@@ -46,7 +46,7 @@ const AVAILABLE_FILES = [
 
 export const TropicalDebugPanel = () => {
 	const [debugOptions, setDebugOptions] = useState<DebugOption[]>([])
-	const [selectedDebug, setSelectedDebug] = useState<string | null>(null)
+	const [selectedDebug, setSelectedDebug] = useState<string>('none')
 	const [isLoading, setIsLoading] = useState(false)
 
 	// Initialize debug options on mount
@@ -64,10 +64,7 @@ export const TropicalDebugPanel = () => {
 			})
 
 			setDebugOptions(options)
-
-			// Load saved debug data from localStorage
-			const saved = localStorage.getItem(DEBUG_DATA_KEY)
-			setSelectedDebug(saved || 'none')
+			setSelectedDebug('none')
 		} finally {
 			setIsLoading(false)
 		}
