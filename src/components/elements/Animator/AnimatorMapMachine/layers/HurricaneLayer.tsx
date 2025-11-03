@@ -101,12 +101,19 @@ export function generateHurricaneIconSVG(): string {
  * Get size multiplier based on category (intensity)
  */
 function getSizeMultiplier(category: number): number {
-	// TS: 0.7x, Cat1: 0.85x, Cat2: 1.0x, Cat3: 1.15x, Cat4: 1.3x, Cat5: 1.45x
-	return 0.7 + category * 0.15
+	// TS: 0.8x, Cat1: 0.9x, Cat2: 1.0x, Cat3: 1.1x, Cat4: 1.2x, Cat5: 1.3x
+	return 0.8 + category * 0.1
 }
 
 /**
- * Draw a rectangular petal/arm for hurricane icon
+ * Convert RGB array to hex color string
+ */
+function rgbToHex(rgb: [number, number, number, number]): string {
+	return `#${rgb[0].toString(16).padStart(2, '0')}${rgb[1].toString(16).padStart(2, '0')}${rgb[2].toString(16).padStart(2, '0')}`
+}
+
+/**
+ * Draw a curved spiral petal for hurricane icon
  */
 function drawPetal(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, angle: number, size: number, color: string): void {
 	ctx.save()
@@ -115,12 +122,23 @@ function drawPetal(ctx: CanvasRenderingContext2D, centerX: number, centerY: numb
 
 	ctx.fillStyle = color
 
-	// Draw a rectangular petal extending upward
-	const petalLength = 40 * size
-	const petalWidth = 14 * size
+	// Draw a curved petal shape using quadratic curves
+	const petalLength = 42 * size
+	const petalWidth = 16 * size
 
-	ctx.fillRect(-petalWidth / 2, 0, petalWidth, petalLength)
+	ctx.beginPath()
+	ctx.moveTo(0, 0)
 
+	// Right side of petal - outer curve
+	ctx.quadraticCurveTo(petalWidth * 0.6, petalLength * 0.4, petalWidth * 0.5, petalLength)
+
+	// Tip of petal
+	ctx.quadraticCurveTo(0, petalLength * 1.05, -petalWidth * 0.5, petalLength)
+
+	// Left side of petal - inner curve
+	ctx.quadraticCurveTo(-petalWidth * 0.6, petalLength * 0.4, 0, 0)
+
+	ctx.fill()
 	ctx.restore()
 }
 
@@ -136,40 +154,51 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 	const ctx = canvas.getContext('2d')
 	if (!ctx) return canvas
 
+	// Category labels and colors
+	const categories = [
+		{ label: 'TS', color: CATEGORY_COLORS[0] },
+		{ label: '1', color: CATEGORY_COLORS[1] },
+		{ label: '2', color: CATEGORY_COLORS[2] },
+		{ label: '3', color: CATEGORY_COLORS[3] },
+		{ label: '4', color: CATEGORY_COLORS[4] },
+		{ label: '5', color: CATEGORY_COLORS[5] },
+	]
+
 	// Draw each category icon (0-5)
 	for (let category = 0; category <= 5; category++) {
 		const startX = category * 128
 		const centerX = startX + 64
 		const centerY = 64
 		const sizeMultiplier = getSizeMultiplier(category)
-		const color = '#CC0000' // Red for all hurricanes
+		const categoryInfo = categories[category]
+		const hexColor = rgbToHex(categoryInfo.color)
 
 		// Draw 4 spiral petals
 		for (let i = 0; i < 4; i++) {
 			const angle = (i * Math.PI) / 2
-			drawPetal(ctx, centerX, centerY, angle, sizeMultiplier, color)
+			drawPetal(ctx, centerX, centerY, angle, sizeMultiplier, hexColor)
 		}
 
 		// Draw center circle (white background for number)
-		const centerCircleRadius = 18 * sizeMultiplier
+		const centerCircleRadius = 16 * sizeMultiplier
 		ctx.fillStyle = 'white'
 		ctx.beginPath()
 		ctx.arc(centerX, centerY, centerCircleRadius, 0, Math.PI * 2)
 		ctx.fill()
 
-		// Draw red circle border
-		ctx.strokeStyle = color
-		ctx.lineWidth = 2.5
+		// Draw colored circle border
+		ctx.strokeStyle = hexColor
+		ctx.lineWidth = 2
 		ctx.beginPath()
 		ctx.arc(centerX, centerY, centerCircleRadius, 0, Math.PI * 2)
 		ctx.stroke()
 
 		// Draw category number in center
-		ctx.fillStyle = color
-		ctx.font = `bold ${Math.round(22 * sizeMultiplier)}px Arial`
+		ctx.fillStyle = hexColor
+		ctx.font = `bold ${Math.round(20 * sizeMultiplier)}px Arial`
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'middle'
-		ctx.fillText(category === 0 ? 'TS' : category.toString(), centerX, centerY)
+		ctx.fillText(categoryInfo.label, centerX, centerY)
 	}
 
 	return canvas
