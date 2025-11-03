@@ -72,7 +72,7 @@ export function createHurricaneLayer(storms: ProcessedStormData[], iconAtlas: HT
 			getColor: [storms],
 			getIcon: [storms],
 		},
-	})
+	}) as any
 }
 
 /**
@@ -123,85 +123,59 @@ function rgbToHex(rgb: [number, number, number, number]): string {
 }
 
 /**
- * Load SVG image and colorize it with the given color
- * Returns a promise that resolves to a canvas with the colored SVG
+ * Draw a hurricane spiral shape
+ * Creates a red spiral that matches the Figma design
  */
-async function loadAndColorizeIcon(svgUrl: string, color: string): Promise<HTMLCanvasElement> {
-	return new Promise((resolve) => {
-		const img = new Image()
-		img.crossOrigin = 'anonymous'
+function drawHurricaneSpiral(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, radius: number, color: string): void {
+	ctx.fillStyle = color
+	ctx.strokeStyle = color
+	ctx.lineWidth = radius * 0.12
 
-		img.onload = () => {
-			const canvas = document.createElement('canvas')
-			canvas.width = 144
-			canvas.height = 144
+	// Draw outer spiral arc
+	ctx.beginPath()
+	ctx.arc(centerX, centerY, radius * 0.65, 0, Math.PI * 1.5, false)
+	ctx.stroke()
 
-			const ctx = canvas.getContext('2d')
-			if (!ctx) {
-				resolve(canvas)
-				return
-			}
+	// Draw inner spiral arc
+	ctx.beginPath()
+	ctx.arc(centerX, centerY, radius * 0.35, Math.PI * 0.5, Math.PI * 2, false)
+	ctx.stroke()
 
-			// Draw the SVG image
-			ctx.drawImage(img, 0, 0, 144, 144)
-
-			// Apply color tint using canvas compositing
-			// This creates a colored overlay effect
-			ctx.globalCompositeOperation = 'multiply'
-			ctx.fillStyle = color
-			ctx.fillRect(0, 0, 144, 144)
-
-			resolve(canvas)
-		}
-
-		img.onerror = () => {
-			// Fallback: create a simple colored circle if SVG fails to load
-			const canvas = document.createElement('canvas')
-			canvas.width = 144
-			canvas.height = 144
-			const ctx = canvas.getContext('2d')
-			if (ctx) {
-				ctx.fillStyle = color
-				ctx.beginPath()
-				ctx.arc(72, 72, 60, 0, Math.PI * 2)
-				ctx.fill()
-			}
-			resolve(canvas)
-		}
-
-		img.src = svgUrl
-	})
+	// Draw center dot
+	ctx.beginPath()
+	ctx.arc(centerX, centerY, radius * 0.12, 0, Math.PI * 2)
+	ctx.fill()
 }
 
 /**
  * Draw category number on top of the icon
  */
-function drawCategoryNumber(ctx: CanvasRenderingContext2D, label: string, color: string, sizeMultiplier: number): void {
+function drawCategoryNumber(ctx: CanvasRenderingContext2D, label: string, color: string): void {
 	// Draw white circle background for number
-	const centerCircleRadius = 16 * sizeMultiplier
+	const centerCircleRadius = 18
 	ctx.fillStyle = 'white'
 	ctx.beginPath()
-	ctx.arc(72, 72, centerCircleRadius, 0, Math.PI * 2)
+	ctx.arc(64, 64, centerCircleRadius, 0, Math.PI * 2)
 	ctx.fill()
 
 	// Draw colored circle border
 	ctx.strokeStyle = color
-	ctx.lineWidth = 2
+	ctx.lineWidth = 2.5
 	ctx.beginPath()
-	ctx.arc(72, 72, centerCircleRadius, 0, Math.PI * 2)
+	ctx.arc(64, 64, centerCircleRadius, 0, Math.PI * 2)
 	ctx.stroke()
 
 	// Draw category number in center
 	ctx.fillStyle = color
-	ctx.font = `bold ${Math.round(20 * sizeMultiplier)}px Arial`
+	ctx.font = 'bold 24px Arial'
 	ctx.textAlign = 'center'
 	ctx.textBaseline = 'middle'
-	ctx.fillText(label, 72, 72)
+	ctx.fillText(label, 64, 64)
 }
 
 /**
  * Create icon atlas for DeckGL with multiple hurricane categories
- * Uses Figma design SVG assets and applies colors + numbering
+ * Draws spiral shapes with custom colors and category numbers
  * Returns a promise that resolves to a canvas with hurricane icons for categories 0-5
  */
 export async function createHurricaneIconAtlas(): Promise<HTMLCanvasElement> {
@@ -212,45 +186,29 @@ export async function createHurricaneIconAtlas(): Promise<HTMLCanvasElement> {
 	const ctx = canvas.getContext('2d')
 	if (!ctx) return canvas
 
-	// Category labels, colors, and Figma SVG assets
+	// Category labels and colors
 	const categories = [
-		{ label: 'TS', color: CATEGORY_COLORS[0], svgUrl: FIGMA_HURRICANE_ICONS.TS },
-		{ label: '1', color: CATEGORY_COLORS[1], svgUrl: FIGMA_HURRICANE_ICONS.CAT1 },
-		{ label: '2', color: CATEGORY_COLORS[2], svgUrl: FIGMA_HURRICANE_ICONS.CAT2 },
-		{ label: '3', color: CATEGORY_COLORS[3], svgUrl: FIGMA_HURRICANE_ICONS.CAT3 },
-		{ label: '4', color: CATEGORY_COLORS[4], svgUrl: FIGMA_HURRICANE_ICONS.CAT4 },
-		{ label: '5', color: CATEGORY_COLORS[5], svgUrl: FIGMA_HURRICANE_ICONS.CAT5 },
+		{ label: 'TS', color: CATEGORY_COLORS[0] },
+		{ label: '1', color: CATEGORY_COLORS[1] },
+		{ label: '2', color: CATEGORY_COLORS[2] },
+		{ label: '3', color: CATEGORY_COLORS[3] },
+		{ label: '4', color: CATEGORY_COLORS[4] },
+		{ label: '5', color: CATEGORY_COLORS[5] },
 	]
 
-	// Load and process each category icon
+	// Draw each category icon
 	for (let category = 0; category <= 5; category++) {
 		const startX = category * 128
 		const centerX = startX + 64
 		const centerY = 64
-		const sizeMultiplier = getSizeMultiplier(category)
 		const categoryInfo = categories[category]
 		const hexColor = rgbToHex(categoryInfo.color)
 
-		try {
-			// Load and colorize the Figma SVG asset
-			const colorizedIcon = await loadAndColorizeIcon(categoryInfo.svgUrl, hexColor)
+		// Draw spiral shape
+		drawHurricaneSpiral(ctx, centerX, centerY, 45, hexColor)
 
-			// Draw the colorized icon on the atlas
-			ctx.drawImage(colorizedIcon, startX, 0, 128, 128)
-
-			// Draw category number overlay
-			ctx.save()
-			ctx.translate(centerX, centerY)
-			drawCategoryNumber(ctx, categoryInfo.label, hexColor, sizeMultiplier)
-			ctx.restore()
-		} catch (error) {
-			console.error(`Failed to load hurricane icon for category ${category}:`, error)
-			// Fallback: draw a simple colored circle
-			ctx.fillStyle = hexColor
-			ctx.beginPath()
-			ctx.arc(centerX, centerY, 40, 0, Math.PI * 2)
-			ctx.fill()
-		}
+		// Draw category number overlay
+		drawCategoryNumber(ctx, categoryInfo.label, hexColor)
 	}
 
 	return canvas
