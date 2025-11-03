@@ -98,26 +98,42 @@ export function generateHurricaneIconSVG(): string {
 }
 
 /**
- * Get color for hurricane category
+ * Get size multiplier based on category (intensity)
  */
-function getCategoryColor(category: number): string {
-	const colors: Record<number, string> = {
-		0: '#1E90FF', // Dodger blue - TS
-		1: '#FFD700', // Gold - Cat 1
-		2: '#FFA500', // Orange - Cat 2
-		3: '#FF8C00', // Dark orange - Cat 3
-		4: '#DC143C', // Crimson - Cat 4
-		5: '#8B0000', // Dark red - Cat 5
-	}
-	return colors[category] || '#666666'
+function getSizeMultiplier(category: number): number {
+	// TS: 0.7x, Cat1: 0.85x, Cat2: 1.0x, Cat3: 1.15x, Cat4: 1.3x, Cat5: 1.45x
+	return 0.7 + category * 0.15
 }
 
 /**
- * Get arm size multiplier based on category
+ * Draw a curved petal/spiral arm for hurricane icon
  */
-function getArmSizeMultiplier(category: number): number {
-	// TS: 0.6x, Cat1: 0.8x, Cat2: 1.0x, Cat3: 1.2x, Cat4: 1.4x, Cat5: 1.6x
-	return 0.6 + category * 0.2
+function drawPetal(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, angle: number, size: number, color: string): void {
+	ctx.save()
+	ctx.translate(centerX, centerY)
+	ctx.rotate(angle)
+
+	ctx.fillStyle = color
+	ctx.beginPath()
+
+	// Draw a curved petal shape using bezier curves
+	const petalLength = 45 * size
+	const petalWidth = 18 * size
+
+	// Start at center
+	ctx.moveTo(0, 0)
+
+	// Outer curve of petal (right side)
+	ctx.bezierCurveTo(petalWidth * 0.5, petalLength * 0.3, petalWidth * 0.8, petalLength * 0.7, petalWidth * 0.6, petalLength)
+
+	// Tip of petal
+	ctx.bezierCurveTo(petalWidth * 0.3, petalLength * 0.85, -petalWidth * 0.3, petalLength * 0.85, -petalWidth * 0.6, petalLength)
+
+	// Inner curve of petal (left side)
+	ctx.bezierCurveTo(-petalWidth * 0.8, petalLength * 0.7, -petalWidth * 0.5, petalLength * 0.3, 0, 0)
+
+	ctx.fill()
+	ctx.restore()
 }
 
 /**
@@ -137,69 +153,32 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 		const startX = category * 128
 		const centerX = startX + 64
 		const centerY = 64
-		const color = getCategoryColor(category)
-		const armMultiplier = getArmSizeMultiplier(category)
+		const sizeMultiplier = getSizeMultiplier(category)
+		const color = '#CC0000' // Red for all hurricanes
 
-		// Draw 4 spiral arms extending outward
-		ctx.fillStyle = color
+		// Draw 4 spiral petals
 		for (let i = 0; i < 4; i++) {
 			const angle = (i * Math.PI) / 2
-
-			// Draw curved spiral arm using quadratic curves
-			ctx.beginPath()
-			ctx.moveTo(centerX, centerY)
-
-			// Create a curved arm that spirals outward - scales with category
-			const armLength = 45 * armMultiplier
-			const armWidth = 12 * armMultiplier
-			const endX = centerX + Math.cos(angle) * armLength
-			const endY = centerY + Math.sin(angle) * armLength
-
-			// Control point for curve (offset perpendicular to arm direction)
-			const controlX = centerX + Math.cos(angle + Math.PI / 2) * armWidth + Math.cos(angle) * (armLength * 0.5)
-			const controlY = centerY + Math.sin(angle + Math.PI / 2) * armWidth + Math.sin(angle) * (armLength * 0.5)
-
-			ctx.quadraticCurveTo(controlX, controlY, endX, endY)
-
-			// Draw the other side of the arm
-			const controlX2 = centerX + Math.cos(angle - Math.PI / 2) * armWidth + Math.cos(angle) * (armLength * 0.5)
-			const controlY2 = centerY + Math.sin(angle - Math.PI / 2) * armWidth + Math.sin(angle) * (armLength * 0.5)
-
-			ctx.quadraticCurveTo(controlX2, controlY2, centerX, centerY)
-			ctx.fill()
+			drawPetal(ctx, centerX, centerY, angle, sizeMultiplier, color)
 		}
 
-		// Draw outer ring around center - scales with category
-		const outerRingRadius = 28 * armMultiplier
-		ctx.fillStyle = color
-		ctx.beginPath()
-		ctx.arc(centerX, centerY, outerRingRadius, 0, Math.PI * 2)
-		ctx.fill()
-
-		// Draw inner lighter ring for depth
-		ctx.fillStyle = color + '99' // Add transparency
-		const innerRingRadius = outerRingRadius * 0.75
-		ctx.beginPath()
-		ctx.arc(centerX, centerY, innerRingRadius, 0, Math.PI * 2)
-		ctx.fill()
-
 		// Draw center circle (white background for number)
-		const centerCircleRadius = 16 * armMultiplier
+		const centerCircleRadius = 18 * sizeMultiplier
 		ctx.fillStyle = 'white'
 		ctx.beginPath()
 		ctx.arc(centerX, centerY, centerCircleRadius, 0, Math.PI * 2)
 		ctx.fill()
 
-		// Draw colored circle border
+		// Draw red circle border
 		ctx.strokeStyle = color
-		ctx.lineWidth = 2
+		ctx.lineWidth = 2.5
 		ctx.beginPath()
 		ctx.arc(centerX, centerY, centerCircleRadius, 0, Math.PI * 2)
 		ctx.stroke()
 
 		// Draw category number in center
 		ctx.fillStyle = color
-		ctx.font = `bold ${Math.round(20 * armMultiplier)}px Arial`
+		ctx.font = `bold ${Math.round(22 * sizeMultiplier)}px Arial`
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'middle'
 		ctx.fillText(category === 0 ? 'TS' : category.toString(), centerX, centerY)
