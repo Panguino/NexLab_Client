@@ -173,6 +173,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const deckGLRef = useRef<any>(null)
 		const containerRef = useRef<HTMLDivElement>(null)
 
+		// Initialize layer visibility with defaults if not provided
+		const initializedLayerVisibility = Object.keys(layerVisibility).length > 0 ? layerVisibility : getDefaultLayerVisibility()
+
 		// CONTROLLED COMPONENT: Use the global mapZoomState from parent
 		// All state changes (buttons, mouse interactions) update the global state
 		// DeckGL always receives the current viewState from the global state
@@ -310,12 +313,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const layers = useMemo(() => {
 			// Helper function to check if a layer should be visible
 			const shouldShowLayer = (layerId: string): boolean => {
-				// If layer visibility is explicitly set, use that
-				if (layerId in layerVisibility) {
-					return layerVisibility[layerId]
-				}
-				// Default to true for base layers
-				return true
+				// Use initialized layer visibility (with defaults applied)
+				return initializedLayerVisibility[layerId] ?? true
 			}
 
 			const baseLayers: any[] = [
@@ -934,7 +933,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			currentFrameCoastalAlertMap,
 			hoveredCountyId,
 			animatedColors,
-			layerVisibility,
+			initializedLayerVisibility,
 		])
 
 		// Map bounds constraints (CONUS - Continental US)
