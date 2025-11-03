@@ -143,6 +143,124 @@ function drawPetal(ctx: CanvasRenderingContext2D, centerX: number, centerY: numb
 }
 
 /**
+ * Draw different hurricane icon shapes based on category
+ * Each category has a unique geometric shape from the Figma design
+ */
+function drawHurricaneShape(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, category: number, size: number, color: string): void {
+	ctx.fillStyle = color
+	ctx.strokeStyle = color
+	ctx.lineWidth = 1.5
+
+	const baseSize = 35 * size
+
+	switch (category) {
+		case 0: // TS - Circle
+			ctx.beginPath()
+			ctx.arc(centerX, centerY, baseSize * 0.6, 0, Math.PI * 2)
+			ctx.fill()
+			break
+
+		case 1: // Cat 1 - Diamond/Square rotated
+			ctx.save()
+			ctx.translate(centerX, centerY)
+			ctx.rotate(Math.PI / 4)
+			ctx.fillRect(-baseSize * 0.5, -baseSize * 0.5, baseSize, baseSize)
+			ctx.restore()
+			break
+
+		case 2: // Cat 2 - Triangle pointing up
+			ctx.beginPath()
+			ctx.moveTo(centerX, centerY - baseSize * 0.7)
+			ctx.lineTo(centerX + baseSize * 0.7, centerY + baseSize * 0.5)
+			ctx.lineTo(centerX - baseSize * 0.7, centerY + baseSize * 0.5)
+			ctx.closePath()
+			ctx.fill()
+			break
+
+		case 3: // Cat 3 - Pentagon
+			drawPolygon(ctx, centerX, centerY, 5, baseSize * 0.65, 0, color)
+			break
+
+		case 4: // Cat 4 - Hexagon
+			drawPolygon(ctx, centerX, centerY, 6, baseSize * 0.65, 0, color)
+			break
+
+		case 5: // Cat 5 - Star (8 points)
+			drawStar(ctx, centerX, centerY, 8, baseSize * 0.7, baseSize * 0.35, color)
+			break
+
+		default:
+			// Fallback to circle
+			ctx.beginPath()
+			ctx.arc(centerX, centerY, baseSize * 0.6, 0, Math.PI * 2)
+			ctx.fill()
+	}
+}
+
+/**
+ * Draw a regular polygon
+ */
+function drawPolygon(
+	ctx: CanvasRenderingContext2D,
+	centerX: number,
+	centerY: number,
+	sides: number,
+	radius: number,
+	rotation: number,
+	color: string,
+): void {
+	ctx.fillStyle = color
+	ctx.beginPath()
+
+	for (let i = 0; i < sides; i++) {
+		const angle = (i * 2 * Math.PI) / sides + rotation
+		const x = centerX + radius * Math.cos(angle)
+		const y = centerY + radius * Math.sin(angle)
+
+		if (i === 0) {
+			ctx.moveTo(x, y)
+		} else {
+			ctx.lineTo(x, y)
+		}
+	}
+
+	ctx.closePath()
+	ctx.fill()
+}
+
+/**
+ * Draw a star shape
+ */
+function drawStar(
+	ctx: CanvasRenderingContext2D,
+	centerX: number,
+	centerY: number,
+	points: number,
+	outerRadius: number,
+	innerRadius: number,
+	color: string,
+): void {
+	ctx.fillStyle = color
+	ctx.beginPath()
+
+	for (let i = 0; i < points * 2; i++) {
+		const radius = i % 2 === 0 ? outerRadius : innerRadius
+		const angle = (i * Math.PI) / points - Math.PI / 2
+		const x = centerX + radius * Math.cos(angle)
+		const y = centerY + radius * Math.sin(angle)
+
+		if (i === 0) {
+			ctx.moveTo(x, y)
+		} else {
+			ctx.lineTo(x, y)
+		}
+	}
+
+	ctx.closePath()
+	ctx.fill()
+}
+
+/**
  * Create icon atlas for DeckGL with multiple hurricane categories
  * Returns a canvas with hurricane icons for categories 0-5
  */
@@ -173,11 +291,8 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 		const categoryInfo = categories[category]
 		const hexColor = rgbToHex(categoryInfo.color)
 
-		// Draw 4 spiral petals
-		for (let i = 0; i < 4; i++) {
-			const angle = (i * Math.PI) / 2
-			drawPetal(ctx, centerX, centerY, angle, sizeMultiplier, hexColor)
-		}
+		// Draw the category-specific shape
+		drawHurricaneShape(ctx, centerX, centerY, category, sizeMultiplier, hexColor)
 
 		// Draw center circle (white background for number)
 		const centerCircleRadius = 16 * sizeMultiplier
