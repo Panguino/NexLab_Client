@@ -59,10 +59,18 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 			return d.position
 		},
 		getIcon: (d: any) => {
-			// Use category as icon key (0-5)
-			const category = Math.min(5, Math.max(0, d.category || 0))
-			const iconKey = category.toString()
-			console.log('[HurricaneLayer] getIcon called for', d.name, '- category:', category, 'iconKey:', iconKey)
+			// Convert category to numeric value
+			// Category can be: 1-5 (numeric), 'TS' (Tropical Storm = 0), 'PTC' (Post-Tropical = 0)
+			let categoryNum = 0
+			if (typeof d.category === 'number') {
+				categoryNum = Math.min(5, Math.max(0, d.category))
+			} else if (d.category === 'TS') {
+				categoryNum = 0 // Tropical Storm
+			} else if (d.category === 'PTC') {
+				categoryNum = 0 // Post-Tropical Cyclone
+			}
+			const iconKey = categoryNum.toString()
+			console.log('[HurricaneLayer] getIcon called for', d.name, '- category:', d.category, 'categoryNum:', categoryNum, 'iconKey:', iconKey)
 			return iconKey
 		},
 		getSize: (d: any) => {
