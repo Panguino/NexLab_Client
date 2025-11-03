@@ -160,6 +160,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		},
 		ref,
 	) => {
+		console.log('AnimatorMapMachine received frames:', frames?.length || 0, 'frames')
 		const [isLoading, setIsLoading] = useState(true)
 		const [localLoadedFrames, setLocalLoadedFrames] = useState<MapFrame[]>([])
 		const [isDarkMode, setIsDarkMode] = useState(false)
