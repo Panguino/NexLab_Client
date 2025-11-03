@@ -72,12 +72,12 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
  * Maps category numbers to icon positions in the atlas
  */
 export const HURRICANE_ICON_MAPPING: Record<string, any> = {
-	'0': { x: 0, y: 0, width: 128, height: 128, mask: true }, // TS
-	'1': { x: 128, y: 0, width: 128, height: 128, mask: true }, // Cat 1
-	'2': { x: 256, y: 0, width: 128, height: 128, mask: true }, // Cat 2
-	'3': { x: 384, y: 0, width: 128, height: 128, mask: true }, // Cat 3
-	'4': { x: 512, y: 0, width: 128, height: 128, mask: true }, // Cat 4
-	'5': { x: 640, y: 0, width: 128, height: 128, mask: true }, // Cat 5
+	'0': { x: 0, y: 0, width: 128, height: 128, mask: false }, // TS
+	'1': { x: 128, y: 0, width: 128, height: 128, mask: false }, // Cat 1
+	'2': { x: 256, y: 0, width: 128, height: 128, mask: false }, // Cat 2
+	'3': { x: 384, y: 0, width: 128, height: 128, mask: false }, // Cat 3
+	'4': { x: 512, y: 0, width: 128, height: 128, mask: false }, // Cat 4
+	'5': { x: 640, y: 0, width: 128, height: 128, mask: false }, // Cat 5
 }
 
 /**
@@ -117,42 +117,45 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 		const centerX = startX + 64
 		const centerY = 64
 
-		// Draw transparent circle behind icon for better hover/click area
-		ctx.fillStyle = 'rgba(0, 0, 0, 0)'
+		// Draw outer spiral ring (red)
+		ctx.fillStyle = '#CC0000'
 		ctx.beginPath()
-		ctx.arc(centerX, centerY, 55, 0, Math.PI * 2)
+		ctx.arc(centerX, centerY, 50, 0, Math.PI * 2)
 		ctx.fill()
 
-		// Draw red spiral bands (like the reference image)
-		ctx.strokeStyle = '#CC0000'
-		ctx.lineWidth = 8
-		ctx.lineCap = 'round'
-		ctx.lineJoin = 'round'
+		// Draw inner white ring to create spiral effect
+		ctx.fillStyle = 'rgba(255, 255, 255, 0.3)'
+		ctx.beginPath()
+		ctx.arc(centerX, centerY, 40, 0, Math.PI * 2)
+		ctx.fill()
 
-		// Draw spiral arms (4 arms)
+		// Draw 4 spiral arms using wedges
+		ctx.fillStyle = '#CC0000'
 		for (let i = 0; i < 4; i++) {
 			const angle = (i * Math.PI) / 2
 			ctx.beginPath()
-			ctx.arc(centerX, centerY, 45, angle, angle + Math.PI * 0.6, false)
-			ctx.stroke()
+			ctx.moveTo(centerX, centerY)
+			ctx.arc(centerX, centerY, 45, angle, angle + Math.PI * 0.5, false)
+			ctx.lineTo(centerX, centerY)
+			ctx.fill()
 		}
 
 		// Draw center circle (white background for number)
 		ctx.fillStyle = 'white'
 		ctx.beginPath()
-		ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
+		ctx.arc(centerX, centerY, 22, 0, Math.PI * 2)
 		ctx.fill()
 
 		// Draw red circle border
 		ctx.strokeStyle = '#CC0000'
-		ctx.lineWidth = 2
+		ctx.lineWidth = 3
 		ctx.beginPath()
-		ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
+		ctx.arc(centerX, centerY, 22, 0, Math.PI * 2)
 		ctx.stroke()
 
 		// Draw category number in center
 		ctx.fillStyle = '#CC0000'
-		ctx.font = 'bold 24px Arial'
+		ctx.font = 'bold 28px Arial'
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'middle'
 		ctx.fillText(category.toString(), centerX, centerY)
