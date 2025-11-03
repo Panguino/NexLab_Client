@@ -37,22 +37,39 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 			try {
 				const stormsData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
 
-				// If no active storms, try sample data for testing
+				// If no active storms, try historical data for testing
 				if (stormsData.length === 0) {
-					console.log('No active storms found, loading sample data for testing...')
-					const sampleData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/SampleStorms.json')
-					setAllStorms(sampleData)
+					console.log('No active storms found, loading historical data for testing...')
+					try {
+						const historicalData = await fetchTropicalStormData(
+							'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510052340.json',
+						)
+						setAllStorms(historicalData)
+					} catch (histErr) {
+						console.warn('Could not load historical data, trying sample data...')
+						const sampleData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/SampleStorms.json')
+						setAllStorms(sampleData)
+					}
 				} else {
 					setAllStorms(stormsData)
 				}
 			} catch (err) {
 				console.error('Error loading active storms:', err)
-				// Fallback to sample data on error
+				// Fallback to historical data on error
 				try {
-					const sampleData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/SampleStorms.json')
-					setAllStorms(sampleData)
-				} catch (sampleErr) {
-					console.error('Error loading sample storms:', sampleErr)
+					console.log('Falling back to historical data...')
+					const historicalData = await fetchTropicalStormData(
+						'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510052340.json',
+					)
+					setAllStorms(historicalData)
+				} catch (histErr) {
+					console.warn('Could not load historical data, trying sample data...')
+					try {
+						const sampleData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/SampleStorms.json')
+						setAllStorms(sampleData)
+					} catch (sampleErr) {
+						console.error('Error loading sample storms:', sampleErr)
+					}
 				}
 			}
 		}
