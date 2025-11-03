@@ -167,7 +167,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 				// Create a single frame with all data
 				const frame: MapFrame = {
 					id: `storm-${selectedStormId}`,
-					timestamp: new Date().toISOString(),
+					timestamp: new Date(),
 					data: {
 						type: 'FeatureCollection',
 						features,
@@ -207,7 +207,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 							? [
 									{
 										id: 'overview',
-										timestamp: new Date().toISOString(),
+										timestamp: new Date(),
 										data: { type: 'FeatureCollection', features: [] },
 										tropicalStorms: allStorms,
 									},
