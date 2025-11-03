@@ -197,7 +197,6 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 
 	if (view === 'overview') {
 		const hasStorms = allStorms.length > 0 && !isLoading
-		console.log('[TropicalAnimator] Overview view: allStorms.length =', allStorms.length, ', isLoading =', isLoading, ', hasStorms =', hasStorms)
 
 		return (
 			<div className={styles.tropicalAnimatorOverview}>
