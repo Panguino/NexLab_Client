@@ -30,8 +30,14 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 		...storm,
 	}))
 
+	console.log('Creating hurricane layer with', data.length, 'storms')
+	data.forEach((d: any) => {
+		console.log(`  Storm: ${d.name}, category: ${d.category}, position: [${d.position[0]}, ${d.position[1]}]`)
+	})
+
 	// Get icon URL for rendering
 	const iconAtlas = getHurricaneIconURL()
+	console.log('Icon atlas URL length:', iconAtlas.length)
 
 	return new IconLayer({
 		id: 'hurricane-layer',
