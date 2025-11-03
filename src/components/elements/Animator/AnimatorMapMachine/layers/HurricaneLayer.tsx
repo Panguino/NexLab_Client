@@ -117,6 +117,12 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 		const centerX = startX + 64
 		const centerY = 64
 
+		// Draw transparent circle behind icon for better hover/click area
+		ctx.fillStyle = 'rgba(0, 0, 0, 0)'
+		ctx.beginPath()
+		ctx.arc(centerX, centerY, 55, 0, Math.PI * 2)
+		ctx.fill()
+
 		// Draw red spiral bands (like the reference image)
 		ctx.strokeStyle = '#CC0000'
 		ctx.lineWidth = 8

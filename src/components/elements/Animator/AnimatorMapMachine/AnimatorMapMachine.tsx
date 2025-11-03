@@ -169,6 +169,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const [tooltipVisible, setTooltipVisible] = useState(false)
 		const [tooltipTitle, setTooltipTitle] = useState('')
 		const [tooltipAlerts, setTooltipAlerts] = useState<any[]>([])
+		const [isHoveringStorm, setIsHoveringStorm] = useState(false)
 		const deckGLRef = useRef<any>(null)
 		const containerRef = useRef<HTMLDivElement>(null)
 
@@ -924,8 +925,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 								y: info.y,
 							})
 							setShowTooltip(true)
+							setIsHoveringStorm(true)
 						} else {
 							setShowTooltip(false)
+							setIsHoveringStorm(false)
 						}
 					}
 					const hurricaneLayer = createHurricaneLayer(frame.tropicalStorms, handleStormHover)
@@ -1169,6 +1172,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				className={styles.animatorMapMachine}
 				style={{
 					zIndex,
+					cursor: isHoveringStorm ? 'pointer' : 'grab',
 					...containerStyle,
 				}}
 				onMouseMove={handleMouseMove}
