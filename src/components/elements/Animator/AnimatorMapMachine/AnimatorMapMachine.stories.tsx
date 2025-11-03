@@ -323,12 +323,11 @@ export const BoundsConstraints: Story = {
 // Layer Configuration Stories
 // ============================================================================
 
-import { MapLayerPanel } from '../MapLayerPanel/MapLayerPanel'
+import { Animator } from '../Animator'
 import { LAYER_CONFIG_PRESETS, layerConfigToVisibility } from './config/layerConfigTypes'
 
 const LayerConfigurationComponent = ({ configPreset }: { configPreset: string }) => {
 	const [currentFrame, setCurrentFrame] = useState(0)
-	const [layerPanelOpen, setLayerPanelOpen] = useState(false)
 	const [layerVisibility, setLayerVisibility] = useState<Record<string, boolean>>(() => {
 		const config = LAYER_CONFIG_PRESETS[configPreset as keyof typeof LAYER_CONFIG_PRESETS]
 		return layerConfigToVisibility(config)
@@ -337,54 +336,19 @@ const LayerConfigurationComponent = ({ configPreset }: { configPreset: string })
 	const config = LAYER_CONFIG_PRESETS[configPreset as keyof typeof LAYER_CONFIG_PRESETS]
 
 	return (
-		<div style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column' }}>
-			<div style={{ flex: 1, position: 'relative' }}>
-				<AnimatorMapMachine
-					frames={SAMPLE_HURRICANE_PATHS}
-					currentFrame={currentFrame}
-					region="conus"
-					mapProvider="deckgl"
-					layerVisibility={layerVisibility}
-				/>
-				<button
-					onClick={() => setLayerPanelOpen(!layerPanelOpen)}
-					style={{
-						position: 'absolute',
-						top: '20px',
-						right: '20px',
-						padding: '10px 20px',
-						backgroundColor: '#007bff',
-						color: 'white',
-						border: 'none',
-						borderRadius: '4px',
-						cursor: 'pointer',
-						zIndex: 100,
-					}}
-				>
-					{layerPanelOpen ? 'Close' : 'Open'} Layers
-				</button>
-				<MapLayerPanel
-					open={layerPanelOpen}
-					onClose={() => setLayerPanelOpen(false)}
-					layerVisibility={layerVisibility}
-					setLayerVisibility={setLayerVisibility}
-					dataType="all"
-					layerConfig={config}
-				/>
-			</div>
-			<div style={{ padding: '20px', background: '#f5f5f5', borderTop: '1px solid #ddd' }}>
-				<p>
-					<strong>Configuration:</strong> {configPreset}
-				</p>
-				<p>
-					Frame: {currentFrame + 1} / {SAMPLE_HURRICANE_PATHS.length}
-				</p>
-				<button onClick={() => setCurrentFrame((prev) => Math.max(0, prev - 1))}>Previous</button>
-				<button onClick={() => setCurrentFrame((prev) => Math.min(SAMPLE_HURRICANE_PATHS.length - 1, prev + 1))}>Next</button>
-				<button onClick={() => setCurrentFrame(0)} style={{ marginLeft: '10px' }}>
-					Reset
-				</button>
-			</div>
+		<div style={{ width: '100%', height: '100vh' }}>
+			<Animator
+				frames={SAMPLE_HURRICANE_PATHS}
+				mode="map"
+				mapRegion="conus"
+				imageInfo={{ width: 1000, height: 600 }}
+				mapLayerVisibility={layerVisibility}
+				setMapLayerVisibility={setLayerVisibility}
+				mapDataType="all"
+				layerConfig={config}
+				autoPlay={false}
+				startFrame={0}
+			/>
 		</div>
 	)
 }
