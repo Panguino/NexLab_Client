@@ -98,6 +98,29 @@ export function generateHurricaneIconSVG(): string {
 }
 
 /**
+ * Get color for hurricane category
+ */
+function getCategoryColor(category: number): string {
+	const colors: Record<number, string> = {
+		0: '#1E90FF', // Dodger blue - TS
+		1: '#FFD700', // Gold - Cat 1
+		2: '#FFA500', // Orange - Cat 2
+		3: '#FF8C00', // Dark orange - Cat 3
+		4: '#DC143C', // Crimson - Cat 4
+		5: '#8B0000', // Dark red - Cat 5
+	}
+	return colors[category] || '#666666'
+}
+
+/**
+ * Get arm size multiplier based on category
+ */
+function getArmSizeMultiplier(category: number): number {
+	// TS: 0.6x, Cat1: 0.8x, Cat2: 1.0x, Cat3: 1.2x, Cat4: 1.4x, Cat5: 1.6x
+	return 0.6 + category * 0.2
+}
+
+/**
  * Create icon atlas for DeckGL with multiple hurricane categories
  * Returns a canvas with hurricane icons for categories 0-5
  */
@@ -114,9 +137,11 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 		const startX = category * 128
 		const centerX = startX + 64
 		const centerY = 64
+		const color = getCategoryColor(category)
+		const armMultiplier = getArmSizeMultiplier(category)
 
 		// Draw 4 spiral arms extending outward
-		ctx.fillStyle = '#CC0000'
+		ctx.fillStyle = color
 		for (let i = 0; i < 4; i++) {
 			const angle = (i * Math.PI) / 2
 
@@ -124,56 +149,60 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 			ctx.beginPath()
 			ctx.moveTo(centerX, centerY)
 
-			// Create a curved arm that spirals outward
-			const armLength = 50
+			// Create a curved arm that spirals outward - scales with category
+			const armLength = 45 * armMultiplier
+			const armWidth = 12 * armMultiplier
 			const endX = centerX + Math.cos(angle) * armLength
 			const endY = centerY + Math.sin(angle) * armLength
 
 			// Control point for curve (offset perpendicular to arm direction)
-			const controlX = centerX + Math.cos(angle + Math.PI / 2) * 15 + Math.cos(angle) * 25
-			const controlY = centerY + Math.sin(angle + Math.PI / 2) * 15 + Math.sin(angle) * 25
+			const controlX = centerX + Math.cos(angle + Math.PI / 2) * armWidth + Math.cos(angle) * (armLength * 0.5)
+			const controlY = centerY + Math.sin(angle + Math.PI / 2) * armWidth + Math.sin(angle) * (armLength * 0.5)
 
 			ctx.quadraticCurveTo(controlX, controlY, endX, endY)
 
 			// Draw the other side of the arm
-			const controlX2 = centerX + Math.cos(angle - Math.PI / 2) * 15 + Math.cos(angle) * 25
-			const controlY2 = centerY + Math.sin(angle - Math.PI / 2) * 15 + Math.sin(angle) * 25
+			const controlX2 = centerX + Math.cos(angle - Math.PI / 2) * armWidth + Math.cos(angle) * (armLength * 0.5)
+			const controlY2 = centerY + Math.sin(angle - Math.PI / 2) * armWidth + Math.sin(angle) * (armLength * 0.5)
 
 			ctx.quadraticCurveTo(controlX2, controlY2, centerX, centerY)
 			ctx.fill()
 		}
 
-		// Draw outer ring around center
-		ctx.fillStyle = '#CC0000'
+		// Draw outer ring around center - scales with category
+		const outerRingRadius = 28 * armMultiplier
+		ctx.fillStyle = color
 		ctx.beginPath()
-		ctx.arc(centerX, centerY, 35, 0, Math.PI * 2)
+		ctx.arc(centerX, centerY, outerRingRadius, 0, Math.PI * 2)
 		ctx.fill()
 
 		// Draw inner lighter ring for depth
-		ctx.fillStyle = 'rgba(255, 100, 100, 0.6)'
+		ctx.fillStyle = color + '99' // Add transparency
+		const innerRingRadius = outerRingRadius * 0.75
 		ctx.beginPath()
-		ctx.arc(centerX, centerY, 28, 0, Math.PI * 2)
+		ctx.arc(centerX, centerY, innerRingRadius, 0, Math.PI * 2)
 		ctx.fill()
 
 		// Draw center circle (white background for number)
+		const centerCircleRadius = 16 * armMultiplier
 		ctx.fillStyle = 'white'
 		ctx.beginPath()
-		ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
+		ctx.arc(centerX, centerY, centerCircleRadius, 0, Math.PI * 2)
 		ctx.fill()
 
-		// Draw red circle border
-		ctx.strokeStyle = '#CC0000'
-		ctx.lineWidth = 3
+		// Draw colored circle border
+		ctx.strokeStyle = color
+		ctx.lineWidth = 2
 		ctx.beginPath()
-		ctx.arc(centerX, centerY, 20, 0, Math.PI * 2)
+		ctx.arc(centerX, centerY, centerCircleRadius, 0, Math.PI * 2)
 		ctx.stroke()
 
 		// Draw category number in center
-		ctx.fillStyle = '#CC0000'
-		ctx.font = 'bold 26px Arial'
+		ctx.fillStyle = color
+		ctx.font = `bold ${Math.round(20 * armMultiplier)}px Arial`
 		ctx.textAlign = 'center'
 		ctx.textBaseline = 'middle'
-		ctx.fillText(category.toString(), centerX, centerY)
+		ctx.fillText(category === 0 ? 'TS' : category.toString(), centerX, centerY)
 	}
 
 	return canvas
