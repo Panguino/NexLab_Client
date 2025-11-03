@@ -20,17 +20,39 @@ export async function fetchTropicalStormData(url: string): Promise<ProcessedStor
 		const data = await response.json()
 
 		// Convert object of storms to array
-		const stormsArray: TropicalStormData[] = (Object.values(data) as any[]).filter((storm: any) => {
-			// Validate required fields
-			return (
-				storm &&
-				storm.id &&
-				storm.name &&
-				storm.latitudeNumeric !== undefined &&
-				storm.longitudeNumeric !== undefined &&
-				storm.intensity !== undefined &&
-				storm.pressure !== undefined
-			)
+		const stormsArray: TropicalStormData[] = (Object.values(data) as any[])
+			.map((storm: any) => {
+				// Convert string values to numbers if needed
+				if (storm && typeof storm.intensity === 'string') {
+					storm.intensity = parseInt(storm.intensity, 10)
+				}
+				if (storm && typeof storm.pressure === 'string') {
+					storm.pressure = parseInt(storm.pressure, 10)
+				}
+				if (storm && typeof storm.movementSpeed === 'string') {
+					storm.movementSpeed = parseInt(storm.movementSpeed, 10)
+				}
+				if (storm && typeof storm.movementDir === 'string') {
+					storm.movementDir = parseInt(storm.movementDir, 10)
+				}
+				return storm
+			})
+			.filter((storm: any) => {
+				// Validate required fields
+				return (
+					storm &&
+					storm.id &&
+					storm.name &&
+					storm.latitudeNumeric !== undefined &&
+					storm.longitudeNumeric !== undefined &&
+					storm.intensity !== undefined &&
+					storm.pressure !== undefined
+				)
+			})
+
+		console.log('Fetched storms from', url, ':', stormsArray.length, 'storms')
+		stormsArray.forEach((storm) => {
+			console.log(`  - ${storm.name} (${storm.id}): intensity=${storm.intensity}, pressure=${storm.pressure}`)
 		})
 
 		// Process and return
