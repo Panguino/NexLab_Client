@@ -30,8 +30,8 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 		...storm,
 	}))
 
-	// Get icon canvas for rendering
-	const iconAtlas = getHurricaneIconCanvas()
+	// Get icon image for rendering
+	const iconAtlas = getHurricaneIconImage()
 
 	return new IconLayer({
 		id: 'hurricane-layer',
