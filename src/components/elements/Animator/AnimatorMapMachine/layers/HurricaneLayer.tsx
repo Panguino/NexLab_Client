@@ -106,7 +106,7 @@ function getSizeMultiplier(category: number): number {
 }
 
 /**
- * Draw a curved petal/spiral arm for hurricane icon
+ * Draw a rectangular petal/arm for hurricane icon
  */
 function drawPetal(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, angle: number, size: number, color: string): void {
 	ctx.save()
@@ -114,25 +114,13 @@ function drawPetal(ctx: CanvasRenderingContext2D, centerX: number, centerY: numb
 	ctx.rotate(angle)
 
 	ctx.fillStyle = color
-	ctx.beginPath()
 
-	// Draw a curved petal shape using bezier curves
-	const petalLength = 45 * size
-	const petalWidth = 18 * size
+	// Draw a rectangular petal extending upward
+	const petalLength = 40 * size
+	const petalWidth = 14 * size
 
-	// Start at center
-	ctx.moveTo(0, 0)
+	ctx.fillRect(-petalWidth / 2, 0, petalWidth, petalLength)
 
-	// Outer curve of petal (right side)
-	ctx.bezierCurveTo(petalWidth * 0.5, petalLength * 0.3, petalWidth * 0.8, petalLength * 0.7, petalWidth * 0.6, petalLength)
-
-	// Tip of petal
-	ctx.bezierCurveTo(petalWidth * 0.3, petalLength * 0.85, -petalWidth * 0.3, petalLength * 0.85, -petalWidth * 0.6, petalLength)
-
-	// Inner curve of petal (left side)
-	ctx.bezierCurveTo(-petalWidth * 0.8, petalLength * 0.7, -petalWidth * 0.5, petalLength * 0.3, 0, 0)
-
-	ctx.fill()
 	ctx.restore()
 }
 
