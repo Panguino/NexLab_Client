@@ -909,29 +909,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					const trackLayer = createStormTrackLayer(frame.tropicalStorms, loadedFrames)
 					baseLayers.push(trackLayer)
 
-					const handleStormHover = (info: any) => {
-						if (info.object) {
-							setStormHoverInfo({
-								stormId: info.object.id,
-								name: info.object.name,
-								classification: info.object.classification,
-								category: info.object.category,
-								intensity: info.object.intensity,
-								pressure: info.object.pressure,
-								movementDir: info.object.movementDir,
-								movementSpeed: info.object.movementSpeed,
-								lastUpdate: info.object.lastUpdate,
-								x: info.x,
-								y: info.y,
-							})
-							setShowTooltip(true)
-							setIsHoveringStorm(true)
-						} else {
-							setShowTooltip(false)
-							setIsHoveringStorm(false)
-						}
-					}
-					const hurricaneLayer = createHurricaneLayer(frame.tropicalStorms, handleStormHover)
+					// Add hurricane layer (icons)
+					const hurricaneLayer = createHurricaneLayer(frame.tropicalStorms)
 					baseLayers.push(hurricaneLayer)
 				}
 
@@ -1157,6 +1136,30 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			}
 		}
 
+		const handleDeckGLHover = (info: any) => {
+			// Check if hovering over a storm icon
+			if (info && info.object && info.object.id) {
+				setStormHoverInfo({
+					stormId: info.object.id,
+					name: info.object.name,
+					classification: info.object.classification,
+					category: info.object.category,
+					intensity: info.object.intensity,
+					pressure: info.object.pressure,
+					movementDir: info.object.movementDir,
+					movementSpeed: info.object.movementSpeed,
+					lastUpdate: info.object.lastUpdate,
+					x: info.x,
+					y: info.y,
+				})
+				setShowTooltip(true)
+				setIsHoveringStorm(true)
+			} else {
+				setShowTooltip(false)
+				setIsHoveringStorm(false)
+			}
+		}
+
 		// Attach both the forwarded ref and the local containerRef
 		useEffect(() => {
 			if (typeof ref === 'function') {
@@ -1196,6 +1199,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					layers={layers}
 					onViewStateChange={handleViewStateChange}
 					onClick={handleDeckGLClick}
+					onHover={handleDeckGLHover}
 				/>
 				<StormTooltip info={stormHoverInfo} visible={showTooltip} />
 				<MapAlertTooltip visible={tooltipVisible} title={tooltipTitle} alerts={tooltipAlerts} />

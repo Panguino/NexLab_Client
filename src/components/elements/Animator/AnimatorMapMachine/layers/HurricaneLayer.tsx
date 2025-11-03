@@ -20,10 +20,9 @@ import {
 /**
  * Create a DeckGL IconLayer for rendering hurricane icons
  * @param storms - Array of processed storm data
- * @param onHover - Callback when hovering over a storm
  * @returns DeckGL IconLayer
  */
-export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (info: any) => void): IconLayer {
+export function createHurricaneLayer(storms: ProcessedStormData[]): IconLayer {
 	// Convert storms to GeoJSON-like format for DeckGL
 	const data = storms.map((storm) => ({
 		position: [storm.longitude, storm.latitude],
@@ -58,7 +57,6 @@ export function createHurricaneLayer(storms: ProcessedStormData[], onHover?: (in
 		getColor: (d: any) => d.color,
 		iconAtlas: iconAtlas,
 		iconMapping: HURRICANE_ICON_MAPPING,
-		onHover: onHover,
 		updateTriggers: {
 			getSize: [storms],
 			getColor: [storms],
