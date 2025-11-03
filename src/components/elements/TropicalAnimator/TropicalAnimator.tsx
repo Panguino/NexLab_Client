@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { Animator } from '@/components/elements/Animator/Animator'
 import { MapFrame } from '@/components/elements/Animator/AnimatorMapMachine/types'
+import { ProcessedStormData } from '@/components/elements/Animator/AnimatorMapMachine/types/tropicalStormTypes'
 import {
 	bestTrackPointsToGeoJSON,
 	bestTrackToGeoJSON,
@@ -14,7 +14,7 @@ import {
 	watchWarningsToGeoJSON,
 } from '@/components/elements/Animator/AnimatorMapMachine/utils/tropicalProductsParser'
 import { fetchTropicalStormData } from '@/components/elements/Animator/AnimatorMapMachine/utils/tropicalStormUtils'
-import { ProcessedStormData, processStormDataArray } from '@/components/elements/Animator/AnimatorMapMachine/types/tropicalStormTypes'
+import { useEffect, useState } from 'react'
 import styles from './TropicalAnimator.module.scss'
 
 interface TropicalAnimatorProps {
@@ -36,9 +36,24 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 		const loadActiveStorms = async () => {
 			try {
 				const stormsData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
-				setAllStorms(stormsData)
+
+				// If no active storms, try sample data for testing
+				if (stormsData.length === 0) {
+					console.log('No active storms found, loading sample data for testing...')
+					const sampleData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/SampleStorms.json')
+					setAllStorms(sampleData)
+				} else {
+					setAllStorms(stormsData)
+				}
 			} catch (err) {
 				console.error('Error loading active storms:', err)
+				// Fallback to sample data on error
+				try {
+					const sampleData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/SampleStorms.json')
+					setAllStorms(sampleData)
+				} catch (sampleErr) {
+					console.error('Error loading sample storms:', sampleErr)
+				}
 			}
 		}
 
@@ -63,12 +78,40 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 				}
 
 				// Fetch tropical products data for this storm
-				const products = await fetchTropicalProducts(selectedStormId)
+				let products
+				try {
+					products = await fetchTropicalProducts(selectedStormId)
+				} catch (err) {
+					console.warn(`Could not fetch tropical products for ${selectedStormId}, creating empty frame`)
+					// Create an empty frame if products can't be fetched
+					const frame: MapFrame = {
+						id: `storm-${selectedStormId}`,
+						timestamp: new Date().toISOString(),
+						data: {
+							type: 'FeatureCollection',
+							features: [],
+						},
+					}
+					setFrames([frame])
+					setIsLoading(false)
+					return
+				}
 
 				// Get the latest advisory
 				const latest = getLatestAdvisory(products)
 				if (!latest) {
-					setError('No tropical products data available for this storm')
+					console.warn('No tropical products data available for this storm')
+					// Create an empty frame if no advisory data
+					const frame: MapFrame = {
+						id: `storm-${selectedStormId}`,
+						timestamp: new Date().toISOString(),
+						data: {
+							type: 'FeatureCollection',
+							features: [],
+						},
+					}
+					setFrames([frame])
+					setIsLoading(false)
 					return
 				}
 
@@ -145,10 +188,14 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 	}
 
 	if (view === 'overview') {
+		const hasStorms = allStorms.length > 0 && !isLoading
+
 		return (
 			<div className={styles.tropicalAnimatorOverview}>
 				<Animator
-					frames={allStorms.length > 0 ? [{ id: 'overview', timestamp: new Date().toISOString(), data: { type: 'FeatureCollection', features: [] } }] : []}
+					frames={
+						hasStorms ? [{ id: 'overview', timestamp: new Date().toISOString(), data: { type: 'FeatureCollection', features: [] } }] : []
+					}
 					mode="map"
 					mapRegion="namer"
 					imageInfo={{ width: 1200, height: 800 }}
@@ -159,8 +206,20 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 					mapLayerVisibility={mapLayerVisibility}
 					setMapLayerVisibility={setMapLayerVisibility}
 				/>
+
 				{isLoading && <div className={styles.loading}>Loading storms...</div>}
 				{error && <div className={styles.error}>{error}</div>}
+
+				{!isLoading && !hasStorms && (
+					<div className={styles.skiesClearOverlay}>
+						<div className={styles.skiesClearContent}>
+							<div className={styles.sunIcon}>☀️</div>
+							<h2>Skies Are Clear</h2>
+							<p>No active tropical storms at this time</p>
+							<p className={styles.subtext}>Check back soon for updates</p>
+						</div>
+					</div>
+				)}
 			</div>
 		)
 	}
@@ -211,4 +270,3 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 		</div>
 	)
 }
-
