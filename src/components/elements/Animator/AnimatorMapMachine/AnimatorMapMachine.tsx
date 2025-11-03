@@ -192,6 +192,13 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
 
+		// Initialize hurricane icons on component mount
+		useEffect(() => {
+			initializeHurricaneIcons().catch((error) => {
+				console.error('Failed to initialize hurricane icons:', error)
+			})
+		}, [])
+
 		// Detect dark mode from DOM class
 		useEffect(() => {
 			const checkDarkMode = () => {
@@ -913,8 +920,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					baseLayers.push(trackLayer)
 
 					// Add hurricane layer (icons)
-					const hurricaneLayer = createHurricaneLayer(frame.tropicalStorms)
-					baseLayers.push(hurricaneLayer)
+					const iconCanvas = getHurricaneIconCanvasSync()
+					if (iconCanvas) {
+						const hurricaneLayer = createHurricaneLayer(frame.tropicalStorms, iconCanvas)
+						baseLayers.push(hurricaneLayer)
+					}
 				}
 
 				if (onFrameChange) {

@@ -3,6 +3,8 @@
  * Renders tropical storm/hurricane icons on the map using DeckGL IconLayer
  * Supports hover tooltips and intensity-based styling
  * Also renders forecast tracks, cone of uncertainty, and watch/warning areas
+ *
+ * Uses SVG assets from Figma design for hurricane icons
  */
 
 import { GeoJsonLayer, IconLayer, LineLayer, PolygonLayer } from '@deck.gl/layers'
@@ -17,20 +19,28 @@ import {
 	watchWarningsToGeoJSON,
 } from '../utils/tropicalProductsParser'
 
+// Figma design SVG assets for hurricane icons
+const FIGMA_HURRICANE_ICONS = {
+	TS: 'http://localhost:3845/assets/73db89ce4bbdfdb542e8d17a70160443250c6a9b.svg', // Tropical Storm
+	CAT1: 'http://localhost:3845/assets/73db89ce4bbdfdb542e8d17a70160443250c6a9b.svg', // Category 1
+	CAT2: 'http://localhost:3845/assets/2a1bbc28941e155d3942c3ee20df8a3c5c567fb0.svg', // Category 2
+	CAT3: 'http://localhost:3845/assets/0d335261204ec0f3222cae98d9d38755757ae577.svg', // Category 3
+	CAT4: 'http://localhost:3845/assets/8555bbcaab87269d27282735732044b64f5f200c.svg', // Category 4
+	CAT5: 'http://localhost:3845/assets/a8777ab22d600b5bb6271d472739f8961e967a17.svg', // Category 5
+}
+
 /**
  * Create a DeckGL IconLayer for rendering hurricane icons
  * @param storms - Array of processed storm data
+ * @param iconAtlas - Pre-loaded icon atlas canvas
  * @returns DeckGL IconLayer
  */
-export function createHurricaneLayer(storms: ProcessedStormData[]): IconLayer {
+export function createHurricaneLayer(storms: ProcessedStormData[], iconAtlas: HTMLCanvasElement): IconLayer {
 	// Convert storms to GeoJSON-like format for DeckGL
 	const data = storms.map((storm) => ({
 		position: [storm.longitude, storm.latitude],
 		...storm,
 	}))
-
-	// Get icon canvas directly for rendering
-	const iconAtlas = getHurricaneIconCanvas()
 
 	return new IconLayer({
 		id: 'hurricane-layer',
@@ -113,158 +123,88 @@ function rgbToHex(rgb: [number, number, number, number]): string {
 }
 
 /**
- * Draw a curved spiral petal for hurricane icon
+ * Load SVG image and colorize it with the given color
+ * Returns a promise that resolves to a canvas with the colored SVG
  */
-function drawPetal(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, angle: number, size: number, color: string): void {
-	ctx.save()
-	ctx.translate(centerX, centerY)
-	ctx.rotate(angle)
+async function loadAndColorizeIcon(svgUrl: string, color: string): Promise<HTMLCanvasElement> {
+	return new Promise((resolve) => {
+		const img = new Image()
+		img.crossOrigin = 'anonymous'
 
-	ctx.fillStyle = color
+		img.onload = () => {
+			const canvas = document.createElement('canvas')
+			canvas.width = 144
+			canvas.height = 144
 
-	// Draw a curved petal shape using quadratic curves
-	const petalLength = 42 * size
-	const petalWidth = 16 * size
+			const ctx = canvas.getContext('2d')
+			if (!ctx) {
+				resolve(canvas)
+				return
+			}
 
-	ctx.beginPath()
-	ctx.moveTo(0, 0)
+			// Draw the SVG image
+			ctx.drawImage(img, 0, 0, 144, 144)
 
-	// Right side of petal - outer curve
-	ctx.quadraticCurveTo(petalWidth * 0.6, petalLength * 0.4, petalWidth * 0.5, petalLength)
+			// Apply color tint using canvas compositing
+			// This creates a colored overlay effect
+			ctx.globalCompositeOperation = 'multiply'
+			ctx.fillStyle = color
+			ctx.fillRect(0, 0, 144, 144)
 
-	// Tip of petal
-	ctx.quadraticCurveTo(0, petalLength * 1.05, -petalWidth * 0.5, petalLength)
+			resolve(canvas)
+		}
 
-	// Left side of petal - inner curve
-	ctx.quadraticCurveTo(-petalWidth * 0.6, petalLength * 0.4, 0, 0)
+		img.onerror = () => {
+			// Fallback: create a simple colored circle if SVG fails to load
+			const canvas = document.createElement('canvas')
+			canvas.width = 144
+			canvas.height = 144
+			const ctx = canvas.getContext('2d')
+			if (ctx) {
+				ctx.fillStyle = color
+				ctx.beginPath()
+				ctx.arc(72, 72, 60, 0, Math.PI * 2)
+				ctx.fill()
+			}
+			resolve(canvas)
+		}
 
-	ctx.fill()
-	ctx.restore()
+		img.src = svgUrl
+	})
 }
 
 /**
- * Draw different hurricane icon shapes based on category
- * Each category has a unique geometric shape from the Figma design
+ * Draw category number on top of the icon
  */
-function drawHurricaneShape(ctx: CanvasRenderingContext2D, centerX: number, centerY: number, category: number, size: number, color: string): void {
-	ctx.fillStyle = color
+function drawCategoryNumber(ctx: CanvasRenderingContext2D, label: string, color: string, sizeMultiplier: number): void {
+	// Draw white circle background for number
+	const centerCircleRadius = 16 * sizeMultiplier
+	ctx.fillStyle = 'white'
+	ctx.beginPath()
+	ctx.arc(72, 72, centerCircleRadius, 0, Math.PI * 2)
+	ctx.fill()
+
+	// Draw colored circle border
 	ctx.strokeStyle = color
-	ctx.lineWidth = 1.5
-
-	const baseSize = 35 * size
-
-	switch (category) {
-		case 0: // TS - Circle
-			ctx.beginPath()
-			ctx.arc(centerX, centerY, baseSize * 0.6, 0, Math.PI * 2)
-			ctx.fill()
-			break
-
-		case 1: // Cat 1 - Diamond/Square rotated
-			ctx.save()
-			ctx.translate(centerX, centerY)
-			ctx.rotate(Math.PI / 4)
-			ctx.fillRect(-baseSize * 0.5, -baseSize * 0.5, baseSize, baseSize)
-			ctx.restore()
-			break
-
-		case 2: // Cat 2 - Triangle pointing up
-			ctx.beginPath()
-			ctx.moveTo(centerX, centerY - baseSize * 0.7)
-			ctx.lineTo(centerX + baseSize * 0.7, centerY + baseSize * 0.5)
-			ctx.lineTo(centerX - baseSize * 0.7, centerY + baseSize * 0.5)
-			ctx.closePath()
-			ctx.fill()
-			break
-
-		case 3: // Cat 3 - Pentagon
-			drawPolygon(ctx, centerX, centerY, 5, baseSize * 0.65, 0, color)
-			break
-
-		case 4: // Cat 4 - Hexagon
-			drawPolygon(ctx, centerX, centerY, 6, baseSize * 0.65, 0, color)
-			break
-
-		case 5: // Cat 5 - Star (8 points)
-			drawStar(ctx, centerX, centerY, 8, baseSize * 0.7, baseSize * 0.35, color)
-			break
-
-		default:
-			// Fallback to circle
-			ctx.beginPath()
-			ctx.arc(centerX, centerY, baseSize * 0.6, 0, Math.PI * 2)
-			ctx.fill()
-	}
-}
-
-/**
- * Draw a regular polygon
- */
-function drawPolygon(
-	ctx: CanvasRenderingContext2D,
-	centerX: number,
-	centerY: number,
-	sides: number,
-	radius: number,
-	rotation: number,
-	color: string,
-): void {
-	ctx.fillStyle = color
+	ctx.lineWidth = 2
 	ctx.beginPath()
+	ctx.arc(72, 72, centerCircleRadius, 0, Math.PI * 2)
+	ctx.stroke()
 
-	for (let i = 0; i < sides; i++) {
-		const angle = (i * 2 * Math.PI) / sides + rotation
-		const x = centerX + radius * Math.cos(angle)
-		const y = centerY + radius * Math.sin(angle)
-
-		if (i === 0) {
-			ctx.moveTo(x, y)
-		} else {
-			ctx.lineTo(x, y)
-		}
-	}
-
-	ctx.closePath()
-	ctx.fill()
-}
-
-/**
- * Draw a star shape
- */
-function drawStar(
-	ctx: CanvasRenderingContext2D,
-	centerX: number,
-	centerY: number,
-	points: number,
-	outerRadius: number,
-	innerRadius: number,
-	color: string,
-): void {
+	// Draw category number in center
 	ctx.fillStyle = color
-	ctx.beginPath()
-
-	for (let i = 0; i < points * 2; i++) {
-		const radius = i % 2 === 0 ? outerRadius : innerRadius
-		const angle = (i * Math.PI) / points - Math.PI / 2
-		const x = centerX + radius * Math.cos(angle)
-		const y = centerY + radius * Math.sin(angle)
-
-		if (i === 0) {
-			ctx.moveTo(x, y)
-		} else {
-			ctx.lineTo(x, y)
-		}
-	}
-
-	ctx.closePath()
-	ctx.fill()
+	ctx.font = `bold ${Math.round(20 * sizeMultiplier)}px Arial`
+	ctx.textAlign = 'center'
+	ctx.textBaseline = 'middle'
+	ctx.fillText(label, 72, 72)
 }
 
 /**
  * Create icon atlas for DeckGL with multiple hurricane categories
- * Returns a canvas with hurricane icons for categories 0-5
+ * Uses Figma design SVG assets and applies colors + numbering
+ * Returns a promise that resolves to a canvas with hurricane icons for categories 0-5
  */
-export function createHurricaneIconAtlas(): HTMLCanvasElement {
+export async function createHurricaneIconAtlas(): Promise<HTMLCanvasElement> {
 	const canvas = document.createElement('canvas')
 	canvas.width = 128 * 6 // 6 categories (0-5)
 	canvas.height = 128
@@ -272,17 +212,17 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 	const ctx = canvas.getContext('2d')
 	if (!ctx) return canvas
 
-	// Category labels and colors
+	// Category labels, colors, and Figma SVG assets
 	const categories = [
-		{ label: 'TS', color: CATEGORY_COLORS[0] },
-		{ label: '1', color: CATEGORY_COLORS[1] },
-		{ label: '2', color: CATEGORY_COLORS[2] },
-		{ label: '3', color: CATEGORY_COLORS[3] },
-		{ label: '4', color: CATEGORY_COLORS[4] },
-		{ label: '5', color: CATEGORY_COLORS[5] },
+		{ label: 'TS', color: CATEGORY_COLORS[0], svgUrl: FIGMA_HURRICANE_ICONS.TS },
+		{ label: '1', color: CATEGORY_COLORS[1], svgUrl: FIGMA_HURRICANE_ICONS.CAT1 },
+		{ label: '2', color: CATEGORY_COLORS[2], svgUrl: FIGMA_HURRICANE_ICONS.CAT2 },
+		{ label: '3', color: CATEGORY_COLORS[3], svgUrl: FIGMA_HURRICANE_ICONS.CAT3 },
+		{ label: '4', color: CATEGORY_COLORS[4], svgUrl: FIGMA_HURRICANE_ICONS.CAT4 },
+		{ label: '5', color: CATEGORY_COLORS[5], svgUrl: FIGMA_HURRICANE_ICONS.CAT5 },
 	]
 
-	// Draw each category icon (0-5)
+	// Load and process each category icon
 	for (let category = 0; category <= 5; category++) {
 		const startX = category * 128
 		const centerX = startX + 64
@@ -291,29 +231,26 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 		const categoryInfo = categories[category]
 		const hexColor = rgbToHex(categoryInfo.color)
 
-		// Draw the category-specific shape
-		drawHurricaneShape(ctx, centerX, centerY, category, sizeMultiplier, hexColor)
+		try {
+			// Load and colorize the Figma SVG asset
+			const colorizedIcon = await loadAndColorizeIcon(categoryInfo.svgUrl, hexColor)
 
-		// Draw center circle (white background for number)
-		const centerCircleRadius = 16 * sizeMultiplier
-		ctx.fillStyle = 'white'
-		ctx.beginPath()
-		ctx.arc(centerX, centerY, centerCircleRadius, 0, Math.PI * 2)
-		ctx.fill()
+			// Draw the colorized icon on the atlas
+			ctx.drawImage(colorizedIcon, startX, 0, 128, 128)
 
-		// Draw colored circle border
-		ctx.strokeStyle = hexColor
-		ctx.lineWidth = 2
-		ctx.beginPath()
-		ctx.arc(centerX, centerY, centerCircleRadius, 0, Math.PI * 2)
-		ctx.stroke()
-
-		// Draw category number in center
-		ctx.fillStyle = hexColor
-		ctx.font = `bold ${Math.round(20 * sizeMultiplier)}px Arial`
-		ctx.textAlign = 'center'
-		ctx.textBaseline = 'middle'
-		ctx.fillText(categoryInfo.label, centerX, centerY)
+			// Draw category number overlay
+			ctx.save()
+			ctx.translate(centerX, centerY)
+			drawCategoryNumber(ctx, categoryInfo.label, hexColor, sizeMultiplier)
+			ctx.restore()
+		} catch (error) {
+			console.error(`Failed to load hurricane icon for category ${category}:`, error)
+			// Fallback: draw a simple colored circle
+			ctx.fillStyle = hexColor
+			ctx.beginPath()
+			ctx.arc(centerX, centerY, 40, 0, Math.PI * 2)
+			ctx.fill()
+		}
 	}
 
 	return canvas
@@ -321,15 +258,35 @@ export function createHurricaneIconAtlas(): HTMLCanvasElement {
 
 /**
  * Get icon canvas for DeckGL IconLayer
- * Returns the canvas directly for better compatibility
+ * Returns a promise that resolves to the canvas
+ * Call this once at component mount to pre-load the icons
  */
+let cachedIconCanvasPromise: Promise<HTMLCanvasElement> | null = null
 let cachedIconCanvas: HTMLCanvasElement | null = null
 
-export function getHurricaneIconCanvas(): HTMLCanvasElement {
-	if (!cachedIconCanvas) {
-		cachedIconCanvas = createHurricaneIconAtlas()
+export function getHurricaneIconCanvasAsync(): Promise<HTMLCanvasElement> {
+	if (!cachedIconCanvasPromise) {
+		cachedIconCanvasPromise = createHurricaneIconAtlas().then((canvas) => {
+			cachedIconCanvas = canvas
+			return canvas
+		})
 	}
+	return cachedIconCanvasPromise
+}
+
+/**
+ * Get icon canvas synchronously (must be pre-loaded via getHurricaneIconCanvasAsync)
+ * Returns null if not yet loaded
+ */
+export function getHurricaneIconCanvasSync(): HTMLCanvasElement | null {
 	return cachedIconCanvas
+}
+
+/**
+ * Initialize hurricane icons (call this at component mount)
+ */
+export async function initializeHurricaneIcons(): Promise<void> {
+	await getHurricaneIconCanvasAsync()
 }
 
 /**
@@ -338,9 +295,9 @@ export function getHurricaneIconCanvas(): HTMLCanvasElement {
  */
 let cachedIconURL: string | null = null
 
-export function getHurricaneIconURL(): string {
+export async function getHurricaneIconURL(): Promise<string> {
 	if (!cachedIconURL) {
-		const canvas = getHurricaneIconCanvas()
+		const canvas = await getHurricaneIconCanvasAsync()
 		cachedIconURL = canvas.toDataURL()
 	}
 	return cachedIconURL
@@ -348,25 +305,25 @@ export function getHurricaneIconURL(): string {
 
 /**
  * Get icon image for DeckGL IconLayer
- * Returns an Image object that DeckGL can use directly
+ * Returns a promise that resolves to an Image object that DeckGL can use
  */
 let cachedIconImage: HTMLImageElement | null = null
-let imageLoadPromise: Promise<HTMLImageElement> | null = null
 
-export function getHurricaneIconImage(): HTMLImageElement {
+export async function getHurricaneIconImage(): Promise<HTMLImageElement> {
 	if (!cachedIconImage) {
 		const img = new Image()
-		img.src = getHurricaneIconURL()
+		img.src = await getHurricaneIconURL()
 		// Ensure image is loaded before returning
-		if (!img.complete) {
+		return new Promise((resolve, reject) => {
 			img.onload = () => {
-				// Image loaded successfully
+				cachedIconImage = img
+				resolve(img)
 			}
 			img.onerror = () => {
 				console.error('Failed to load hurricane icon image')
+				reject(new Error('Failed to load hurricane icon image'))
 			}
-		}
-		cachedIconImage = img
+		})
 	}
 	return cachedIconImage
 }
