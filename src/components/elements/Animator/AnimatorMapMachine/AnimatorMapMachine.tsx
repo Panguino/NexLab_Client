@@ -175,7 +175,12 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const containerRef = useRef<HTMLDivElement>(null)
 
 		// Initialize layer visibility with defaults if not provided
-		const initializedLayerVisibility = Object.keys(layerVisibility).length > 0 ? layerVisibility : getDefaultLayerVisibility()
+		const initializedLayerVisibility = useMemo(() => {
+			const hasValues = Object.keys(layerVisibility).length > 0
+			const result = hasValues ? layerVisibility : getDefaultLayerVisibility()
+			console.log('AnimatorMapMachine - initializedLayerVisibility:', result)
+			return result
+		}, [layerVisibility])
 
 		// CONTROLLED COMPONENT: Use the global mapZoomState from parent
 		// All state changes (buttons, mouse interactions) update the global state
