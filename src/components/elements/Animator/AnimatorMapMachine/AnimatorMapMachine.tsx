@@ -950,42 +950,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			initializedLayerVisibility,
 		])
 
-		// Map bounds constraints (CONUS - Continental US)
-		// Allows panning but prevents zooming out past these bounds
-		const mapBounds = {
-			minZoom: 2, // Minimum zoom level
-			maxZoom: 20, // Maximum zoom level
-			// Bounds: [minLon, minLat, maxLon, maxLat]
-			// Extended slightly beyond CONUS to allow panning
-			minLongitude: -130,
-			maxLongitude: -65,
-			minLatitude: 24,
-			maxLatitude: 50,
-		}
-
-		const constrainViewState = (vs: any) => {
-			// Constrain zoom level
-			const constrainedZoom = Math.max(mapBounds.minZoom, Math.min(mapBounds.maxZoom, vs.zoom))
-
-			// Constrain pan (longitude and latitude)
-			const constrainedLongitude = Math.max(mapBounds.minLongitude, Math.min(mapBounds.maxLongitude, vs.longitude))
-			const constrainedLatitude = Math.max(mapBounds.minLatitude, Math.min(mapBounds.maxLatitude, vs.latitude))
-
-			return {
-				...vs,
-				zoom: constrainedZoom,
-				longitude: constrainedLongitude,
-				latitude: constrainedLatitude,
-			}
-		}
-
 		const handleViewStateChange = (viewState: any) => {
-			const constrainedViewState = constrainViewState(viewState.viewState)
-
 			// Call the callback to sync to global state
 			// This updates the mapZoomState in the Animator context
 			if (_onViewStateChange) {
-				_onViewStateChange(constrainedViewState)
+				_onViewStateChange(viewState.viewState)
 			}
 		}
 
@@ -1119,12 +1088,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			}
 
 			// Fallback: use approximate conversion if DeckGL unproject is not available
-			const vs = constrainViewState(viewState)
-			const metersPerPixel = (40075000 * Math.cos((vs.latitude * Math.PI) / 180)) / (256 * Math.pow(2, vs.zoom))
+			const metersPerPixel = (40075000 * Math.cos((viewState.latitude * Math.PI) / 180)) / (256 * Math.pow(2, viewState.zoom))
 			const pixelsPerDegree = 111320 / metersPerPixel
 
-			const centerLon = vs.longitude
-			const centerLat = vs.latitude
+			const centerLon = viewState.longitude
+			const centerLat = viewState.latitude
 
 			const offsetLon = (x / rect.width - 0.5) * (rect.width / pixelsPerDegree)
 			const offsetLat = (y / rect.height - 0.5) * (rect.height / pixelsPerDegree) * -1
@@ -1198,7 +1166,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				<DeckGL
 					ref={deckGLRef}
 					viewState={{
-						...constrainViewState(viewState),
+						...viewState,
 						//transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
 						//transitionDuration: 'auto',
 					}}
