@@ -1214,7 +1214,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					onClick={handleDeckGLClick}
 					onHover={handleDeckGLHover}
 				/>
-				<StormTooltip info={stormHoverInfo} visible={showTooltip} />
+				<StormTooltip info={stormHoverInfo} visible={showTooltip} containerRef={containerRef} />
 				<MapAlertTooltip visible={tooltipVisible} title={tooltipTitle} alerts={tooltipAlerts} />
 			</div>
 		)
