@@ -11,7 +11,7 @@ export type StormClassification = 'HU' | 'TS' | 'PTC' | 'TD' | 'LO' | 'WV'
 /**
  * Saffir-Simpson Hurricane Category
  */
-export type HurricaneCategory = 1 | 2 | 3 | 4 | 5 | 'TS' | 'PTC'
+export type HurricaneCategory = 1 | 2 | 3 | 4 | 5 | 'TS' | 'TD' | 'PTC'
 
 /**
  * Raw tropical storm data from NHC API
@@ -84,6 +84,7 @@ export const HURRICANE_COLORS: Record<HurricaneCategory, [number, number, number
 	2: [255, 165, 0, 255], // Orange - Cat 2
 	1: [255, 200, 0, 255], // Gold - Cat 1
 	TS: [30, 144, 255, 255], // Dodger blue - Tropical Storm
+	TD: [34, 139, 34, 255], // Forest green - Tropical Depression
 	PTC: [169, 169, 169, 255], // Dark gray - Post-Tropical Cyclone
 }
 
@@ -105,7 +106,8 @@ export const INTENSITY_THRESHOLDS = {
  */
 export function getHurricaneCategory(intensity: number, classification: StormClassification): HurricaneCategory {
 	if (classification === 'PTC') return 'PTC'
-	if (classification === 'TD' || classification === 'LO' || classification === 'WV') return 'PTC'
+	if (classification === 'TD') return 'TD'
+	if (classification === 'LO' || classification === 'WV') return 'PTC'
 
 	if (intensity >= INTENSITY_THRESHOLDS.CAT5) return 5
 	if (intensity >= INTENSITY_THRESHOLDS.CAT4) return 4
@@ -113,7 +115,7 @@ export function getHurricaneCategory(intensity: number, classification: StormCla
 	if (intensity >= INTENSITY_THRESHOLDS.CAT2) return 2
 	if (intensity >= INTENSITY_THRESHOLDS.CAT1) return 1
 	if (intensity >= INTENSITY_THRESHOLDS.TS) return 'TS'
-	return 'PTC'
+	return 'TD' // Default to tropical depression for very low intensity
 }
 
 /**
