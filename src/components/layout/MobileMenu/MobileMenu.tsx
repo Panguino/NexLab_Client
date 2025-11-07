@@ -70,24 +70,22 @@ const MobileMenu = ({ children, navItems }) => {
 				>
 					<ScrollArea>
 						{children}
-						{menuId === null && (
-							<>
-								{session?.user?.email ? (
-									<div className={styles.authSection}>
-										<div className={styles.userInfo}>
-											<div className={styles.userAvatar}>{session.user.email.charAt(0).toUpperCase()}</div>
-											<div className={styles.userEmail}>{session.user.email}</div>
-										</div>
-										<button className={styles.logoutButton} onClick={() => signOut()}>
-											Logout
-										</button>
+						{session?.user?.email ? (
+							<div className={styles.authSection}>
+								<Link href="/dashboard/">
+									<div className={styles.userInfo}>
+										<div className={styles.userAvatar}>{session.user.email.charAt(0).toUpperCase()}</div>
+										<div className={styles.userEmail}>{session.user.email}</div>
 									</div>
-								) : (
-									<Link href="/login/">
-										<div className={styles.loginButton}>Login</div>
-									</Link>
-								)}
-							</>
+								</Link>
+								<button className={styles.logoutButton} onClick={() => signOut()}>
+									Logout
+								</button>
+							</div>
+						) : (
+							<Link href="/login/">
+								<div className={styles.loginButton}>Login</div>
+							</Link>
 						)}
 						{menuId !== null && ifMenuItemHasChildren(menuId) && (
 							<MobileMenuItem
