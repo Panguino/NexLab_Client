@@ -1,4 +1,5 @@
 import Providers from '@/components/providers/Providers/Providers'
+import { ALL_NWSWFOS } from '@/data/text/nwswfo/wfos'
 import { Meta, StoryFn } from '@storybook/react'
 import { useState } from 'react'
 import SelectSearchable from './SelectSearchable'
@@ -150,4 +151,15 @@ WithNumericValues.args = {
 	],
 	placeholder: 'Search or Select an option',
 	optionsEmptyText: 'No options',
+}
+
+// Story with NWS WFO data
+export const SearchingWFOs: any = TemplateFactory('KLOT')
+SearchingWFOs.args = {
+	options: Object.entries(ALL_NWSWFOS).map(([id, wfo]) => ({
+		label: wfo.name,
+		value: id,
+	})),
+	placeholder: 'Search or Select a WFO',
+	optionsEmptyText: 'No WFOs found',
 }
