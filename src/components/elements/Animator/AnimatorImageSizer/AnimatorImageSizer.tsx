@@ -156,7 +156,9 @@ const AnimatorImageSizer = () => {
 				onPanningStart={handlePanningStart}
 				onPanningStop={handlePanningStop}
 				doubleClick={{ disabled: true }}
-				panning={{ velocityDisabled: true }}
+				panning={{ disabled: disableZoom, velocityDisabled: true }}
+				wheel={{ disabled: disableZoom }}
+				pinch={{ disabled: disableZoom }}
 			>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
