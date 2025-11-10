@@ -7,7 +7,6 @@ import Select from '@/components/elements/Select/Select'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
-import { TropicalDebugPanel } from '@/components/layout/SidebarPanels/TropicalDebugPanel/TropicalDebugPanel'
 import { TROPICAL_PRODUCTS } from '@/data/text/tropical/products'
 import { TROPICAL_TEXT_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
@@ -191,7 +190,6 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 						</div>
 					)}
 				</SidebarPanelPad>
-				<TropicalDebugPanel />
 			</div>
 		</>
 	)

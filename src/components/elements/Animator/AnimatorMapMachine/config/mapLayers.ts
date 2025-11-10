@@ -106,51 +106,31 @@ export const GENERAL_LAYERS: MapLayer[] = [
  */
 export const DATA_LAYERS: MapLayer[] = [
 	{
-		id: 'coastal-alerts-active-layer',
+		id: 'coastal-data-regions-layer',
 		name: 'Coastal Alerts (Active)',
 		category: 'data',
-		description: 'Coastal regions with active alerts',
+		description: 'Toggle to show/hide coastal region alert visualization',
 		visibleFor: ['alerts'],
 		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 100,
 	},
 	{
-		id: 'coastal-data-regions-layer',
-		name: 'Coastal Data Regions',
+		id: 'county-data-regions-layer',
+		name: 'County Alerts (Active)',
 		category: 'data',
-		description: 'Toggle to show/hide coastal region data visualization',
+		description: 'Toggle to show/hide county alert visualization',
 		visibleFor: ['alerts'],
 		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 99,
 	},
 	{
-		id: 'county-alerts-active-layer',
-		name: 'County Alerts (Active)',
-		category: 'data',
-		description: 'Counties with active alerts',
-		visibleFor: ['alerts'],
-		visibleInUI: true,
-		defaultVisible: true,
-		zIndex: 98,
-	},
-	{
-		id: 'county-data-regions-layer',
-		name: 'County Data Regions',
-		category: 'data',
-		description: 'Toggle to show/hide county data visualization',
-		visibleFor: ['alerts'],
-		visibleInUI: true,
-		defaultVisible: true,
-		zIndex: 96,
-	},
-	{
 		id: 'region-alerts-layer',
-		name: 'Region Alerts',
+		name: 'Affected Countries',
 		category: 'data',
-		description: 'Affected regions from alerts',
-		visibleFor: ['alerts'],
+		description: 'Countries affected by hurricane warnings/watches',
+		visibleFor: ['hurricane'],
 		visibleInUI: true,
 		defaultVisible: true,
 		zIndex: 95,
@@ -213,6 +193,14 @@ export const DATA_LAYERS: MapLayer[] = [
 export function getLayersForDataType(dataType: DataType): MapLayer[] {
 	const allLayers = [...GENERAL_LAYERS, ...DATA_LAYERS]
 	return allLayers.filter((layer) => layer.visibleInUI && (layer.visibleFor.includes(dataType) || layer.visibleFor.includes('all')))
+}
+
+/**
+ * Get all layer IDs
+ */
+export function getAllLayerIds(): string[] {
+	const allLayers = [...GENERAL_LAYERS, ...DATA_LAYERS]
+	return allLayers.map((layer) => layer.id)
 }
 
 /**

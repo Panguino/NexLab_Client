@@ -80,6 +80,10 @@ const ViewControls = ({
 	const [overlayPanelOpen, setOverlayPanelOpen] = useState(false)
 	const [mapLayerPanelOpen, setMapLayerPanelOpen] = useState(false)
 
+	// Check if there are any active layers in the layer config
+	// If layerConfig is provided and all layers have active: false, hide the layer button
+	const hasActiveLayers = layerConfig ? Object.values(layerConfig).some((config: any) => config.active === true) : true // If no layerConfig, assume layers are available
+
 	// Debug logging
 	const DEBUG = false
 	const log = (message: string, data?: any) => {
@@ -122,7 +126,8 @@ const ViewControls = ({
 			)}
 
 			{/* Map Layer Panel (Map Mode Only) */}
-			{mode === 'map' && mapLayerVisibility && setMapLayerVisibility && (
+			{/* Only show if there are active layers (layers with active: true in layerConfig) */}
+			{mode === 'map' && mapLayerVisibility && setMapLayerVisibility && hasActiveLayers && (
 				<button onClick={() => setMapLayerPanelOpen(true)} className={styles.controlButton} title="Toggle map layers">
 					<FontAwesomeIcon icon={faLayerGroup} />
 					<MapLayerPanel

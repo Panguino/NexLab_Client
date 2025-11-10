@@ -28,15 +28,10 @@ export function detectAffectedRegions(
 	warningType: 'HWA' | 'TWA' | 'HWR' | 'TWR',
 ): AffectedRegion[] {
 	const affected: AffectedRegion[] = []
-	let checkedCount = 0
-	let errorCount = 0
 
 	try {
-		console.log('[regionDetection] Checking', worldGeoJSON.features.length, 'regions for overlap with', warningType)
-
 		for (const region of worldGeoJSON.features) {
 			try {
-				checkedCount++
 				// Only check if geometry exists and is valid
 				if (!region.geometry || region.geometry.type !== 'Polygon') {
 					continue
@@ -51,16 +46,13 @@ export function detectAffectedRegions(
 						type: 'country',
 						warningType,
 					})
-					console.log('[regionDetection] Found affected region:', region.properties?.NAME)
 				}
 			} catch (error) {
-				errorCount++
 				// Skip regions that cause errors (invalid geometry, etc.)
 				// This prevents one bad region from breaking the entire detection
 				continue
 			}
 		}
-		console.log('[regionDetection] Checked', checkedCount, 'regions, found', affected.length, 'affected, errors:', errorCount)
 	} catch (error) {
 		console.error('[regionDetection] Error detecting affected regions:', error)
 	}

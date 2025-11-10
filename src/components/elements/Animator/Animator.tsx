@@ -2,9 +2,8 @@
 import { mapZoomState, zoomState } from '@/types/general'
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import AnimatorLayout from './AnimatorLayout/AnimatorLayout'
-import { getDefaultLayerVisibility } from './AnimatorMapMachine/config/mapLayers'
 
-interface IAnimatorProps {
+export interface IAnimatorProps {
 	frames: string[] | any[] // Can be image URLs or MapFrame objects
 	frameValidTimes?: number[]
 	setFrameValidTime?: (validtime: number) => void
@@ -64,7 +63,7 @@ interface IAnimatorProps {
 	setMapLayerVisibility?: (visibility: Record<string, boolean>) => void // Callback for layer visibility changes
 	mapDataType?: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 	// Layer configuration
-	layerConfig?: any // Layer configuration for filtering which layers are shown (LayerConfig type)
+	layerConfig: any // Layer configuration for filtering which layers are shown (LayerConfig type) - REQUIRED
 	// Storm click handler
 	onStormClick?: (stormId: string) => void
 }
@@ -168,11 +167,44 @@ export const Animator = ({
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
 	const [mapZoomState, setMapZoomStateLocal] = useState<mapZoomState>(initialMapZoomState)
-	const [mapLayerVisibilityLocal, setMapLayerVisibilityLocal] = useState<Record<string, boolean>>(mapLayerVisibility || getDefaultLayerVisibility())
+
+	// Initialize layer visibility from layerConfig (required)
+	// If mapLayerVisibility prop is provided AND has keys, use it (controlled component)
+	// Otherwise, use layerConfig with defaults for missing layers
+	const getInitialLayerVisibility = () => {
+		// Only use mapLayerVisibility if it's provided and has keys
+		if (mapLayerVisibility && Object.keys(mapLayerVisibility).length > 0) {
+			return mapLayerVisibility
+		}
+
+		// Convert layerConfig to visibility state using initialValue
+		// For any layer not in layerConfig, default to false
+		const visibility: Record<string, boolean> = {}
+
+		// Get all possible layer IDs from mapLayers
+		const { getAllLayerIds } = require('./AnimatorMapMachine/config/mapLayers')
+		const allLayerIds = getAllLayerIds()
+
+		// Set visibility for all layers
+		allLayerIds.forEach((layerId: string) => {
+			if (layerConfig && layerId in layerConfig) {
+				// Use initialValue from layerConfig
+				visibility[layerId] = layerConfig[layerId].initialValue
+			} else {
+				// Default to false for layers not in layerConfig
+				visibility[layerId] = false
+			}
+		})
+
+		return visibility
+	}
+
+	const [mapLayerVisibilityLocal, setMapLayerVisibilityLocal] = useState<Record<string, boolean>>(getInitialLayerVisibility())
 
 	// Sync external mapLayerVisibility prop changes to local state
+	// Only sync if mapLayerVisibility has keys (not an empty object)
 	useEffect(() => {
-		if (mapLayerVisibility) {
+		if (mapLayerVisibility && Object.keys(mapLayerVisibility).length > 0) {
 			setMapLayerVisibilityLocal(mapLayerVisibility)
 		}
 	}, [mapLayerVisibility])

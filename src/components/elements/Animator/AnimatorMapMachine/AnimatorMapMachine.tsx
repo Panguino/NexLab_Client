@@ -384,27 +384,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							}),
 						]
 					: []),
-				// Lat-long grid lines with dashed appearance
-				// More visible for geographic reference
-				...(shouldShowLayer('latlon-grid-layer')
-					? [
-							new GeoJsonLayer({
-								id: 'latlon-grid-layer',
-								data: generateGridLines(10) as any,
-								filled: false,
-								stroked: true,
-								lineWidthMinPixels: 1,
-								lineWidthMaxPixels: 2,
-								getLineColor: () => gridlineColor as any,
-								getLineWidth: () => 1.5,
-								opacity: 0.2,
-								pickable: false,
-								updateTriggers: {
-									getLineColor: [gridlineColor],
-								},
-							}),
-						]
-					: []),
 				// State fills layer - fills only
 				// Light mode: white (#ffffff), Dark mode: grey13 (#5f5f5f)
 				...(shouldShowLayer('states-fill-layer')
@@ -597,6 +576,27 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 										currentFrameCoastalAlertMap,
 									],
 									getFillColor: [oceanColor, layerVisibility['coastal-data-regions-layer'], currentFrameCoastalAlertMap],
+								},
+							}),
+						]
+					: []),
+				// Lat-long grid lines with dashed appearance
+				// More visible for geographic reference
+				...(shouldShowLayer('latlon-grid-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'latlon-grid-layer',
+								data: generateGridLines(10) as any,
+								filled: false,
+								stroked: true,
+								lineWidthMinPixels: 1,
+								lineWidthMaxPixels: 2,
+								getLineColor: () => gridlineColor as any,
+								getLineWidth: () => 1.5,
+								opacity: 0.2,
+								pickable: false,
+								updateTriggers: {
+									getLineColor: [gridlineColor],
 								},
 							}),
 						]

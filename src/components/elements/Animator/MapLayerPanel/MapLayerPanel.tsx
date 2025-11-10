@@ -25,7 +25,19 @@ interface IMapLayerPanelProps {
  * Organized into collapsible overlay groups matching the satellite/radar animator style
  */
 export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibility, dataType, layerConfig }: IMapLayerPanelProps) => {
-	const [groupOpen, setGroupOpen] = useState('general')
+	// Get layers available for current data type
+	const availableLayers = getLayersForDataType(dataType)
+
+	// If layer config is provided, filter to only show active layers
+	const activeLayers = layerConfig ? getActiveLayers(layerConfig) : availableLayers.map((l) => l.id)
+	const filteredLayers = availableLayers.filter((l) => activeLayers.includes(l.id))
+
+	const generalLayers = filteredLayers.filter((l) => l.category === 'general')
+	const dataLayers = filteredLayers.filter((l) => l.category === 'data')
+
+	// Default to 'data' accordion if no general layers are active, otherwise 'general'
+	const defaultGroup = generalLayers.length > 0 ? 'general' : 'data'
+	const [groupOpen, setGroupOpen] = useState(defaultGroup)
 
 	// Close panel when clicking outside
 	useEffect(() => {
@@ -51,16 +63,6 @@ export const MapLayerPanel = ({ open, onClose, layerVisibility, setLayerVisibili
 			[layerId]: !layerVisibility[layerId],
 		})
 	}
-
-	// Get layers available for current data type
-	const availableLayers = getLayersForDataType(dataType)
-
-	// If layer config is provided, filter to only show active layers
-	const activeLayers = layerConfig ? getActiveLayers(layerConfig) : availableLayers.map((l) => l.id)
-	const filteredLayers = availableLayers.filter((l) => activeLayers.includes(l.id))
-
-	const generalLayers = filteredLayers.filter((l) => l.category === 'general')
-	const dataLayers = filteredLayers.filter((l) => l.category === 'data')
 
 	const renderLayerItem = (layer: MapLayer) => (
 		<div

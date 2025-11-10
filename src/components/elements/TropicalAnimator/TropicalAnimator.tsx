@@ -23,8 +23,6 @@ interface TropicalAnimatorProps {
 	view?: 'overview' | 'detail'
 }
 
-const DEBUG_DATA_KEY = 'tropical_debug_data_url'
-
 export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overview' }: TropicalAnimatorProps) => {
 	const [frames, setFrames] = useState<MapFrame[]>([])
 	const [isLoading, setIsLoading] = useState(true)
@@ -40,40 +38,12 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 				setIsLoading(true)
 				setError(null)
 
-				// Check if debug data URL is set
-				const debugDataUrl = typeof window !== 'undefined' ? localStorage.getItem(DEBUG_DATA_KEY) : null
-
-				let stormsData: ProcessedStormData[] = []
-
-				if (debugDataUrl === 'none') {
-					// Explicitly show no storms
-					stormsData = []
-				} else if (debugDataUrl) {
-					// Load debug data
-					try {
-						stormsData = await fetchTropicalStormData(debugDataUrl)
-					} catch (err) {
-						stormsData = []
-					}
-				} else {
-					// Load active storms
-					stormsData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
-
-					// If no active storms, load historical test data
-					if (stormsData.length === 0) {
-						try {
-							const historicalData = await fetchTropicalStormData(
-								'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510052340.json',
-							)
-							stormsData = historicalData
-						} catch (histErr) {
-							stormsData = []
-						}
-					}
-				}
+				// Load active storms from live data
+				const stormsData = await fetchTropicalStormData('https://climate.cod.edu/data/tropical/gis/CurrentStorms.json')
 
 				setAllStorms(stormsData)
 			} catch (err) {
+				setError('Failed to load tropical storm data')
 				setAllStorms([])
 			} finally {
 				setIsLoading(false)
@@ -83,14 +53,6 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 		if (view === 'overview') {
 			loadActiveStorms()
 		}
-
-		// Listen for storage changes from debug panel
-		const handleStorageChange = () => {
-			loadActiveStorms()
-		}
-
-		window.addEventListener('storage', handleStorageChange)
-		return () => window.removeEventListener('storage', handleStorageChange)
 	}, [view])
 
 	// Load detail view data when storm is selected
@@ -242,8 +204,11 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 					interval={500}
 					startFrame={0}
 					mapDataType="hurricane"
-					mapLayerVisibility={mapLayerVisibility}
-					setMapLayerVisibility={setMapLayerVisibility}
+					layerConfig={
+						// Import LAYER_CONFIG_PRESETS from '@/components/elements/Animator/AnimatorMapMachine/config/layerConfigTypes'
+						require('@/components/elements/Animator/AnimatorMapMachine/config/layerConfigTypes').LAYER_CONFIG_PRESETS
+							.TROPICAL_STORM_PICKER
+					}
 					hideControls={true}
 					onStormClick={handleStormClick}
 				/>
@@ -302,6 +267,10 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 				interval={500}
 				startFrame={0}
 				mapDataType="hurricane"
+				layerConfig={
+					// Import LAYER_CONFIG_PRESETS from '@/components/elements/Animator/AnimatorMapMachine/config/layerConfigTypes'
+					require('@/components/elements/Animator/AnimatorMapMachine/config/layerConfigTypes').LAYER_CONFIG_PRESETS.TROPICAL
+				}
 				mapLayerVisibility={mapLayerVisibility}
 				setMapLayerVisibility={setMapLayerVisibility}
 				onStormClick={handleStormClick}
