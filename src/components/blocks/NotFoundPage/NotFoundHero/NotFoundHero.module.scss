@@ -1,0 +1,252 @@
+.hero {
+	background: linear-gradient(135deg, var(--color-grey5-grey16) 0%, var(--color-grey2-grey18) 100%);
+	color: var(--color-grey20-grey0);
+	padding: 80px 20px;
+	position: relative;
+	overflow: hidden;
+	transition:
+		background var(--themeChange),
+		color var(--themeChange);
+	width: 100%;
+}
+
+.heroInner {
+	max-width: 1200px;
+	margin: 0 auto;
+	display: flex;
+	align-items: flex-start;
+	gap: 60px;
+	position: relative;
+	z-index: 2;
+}
+
+.errorBannerWrapper {
+	position: absolute;
+	top: -20px;
+	left: 0;
+	z-index: 1;
+}
+
+.container {
+	flex: 1;
+	min-width: 300px;
+	padding-top: 80px;
+}
+
+.heroContent {
+	max-width: 600px;
+}
+
+.errorBanner {
+	display: inline-flex;
+	align-items: center;
+	gap: 16px;
+	background: rgba(0, 0, 0, 0.1);
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 25px;
+	padding: 12px 20px;
+	backdrop-filter: blur(10px);
+}
+
+.warningIcon {
+	font-size: 2rem;
+	color: var(--color-blue3);
+	transition: color var(--themeChange);
+	filter: drop-shadow(0 4px 12px rgba(38, 119, 240, 0.3));
+	animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.8;
+		transform: scale(1.05);
+	}
+}
+
+.errorCode {
+	font-family: var(--font-secondary);
+	font-size: 3rem;
+	line-height: 1;
+	color: var(--color-grey15-grey7);
+	transition: color var(--themeChange);
+	letter-spacing: 0.05em;
+	margin: 0;
+	font-weight: 400;
+}
+
+.heroContent h1 {
+	font-family: var(--font-secondary);
+	font-size: 54px;
+	font-weight: 400;
+	line-height: 1.1;
+	margin: 0 0 20px;
+	color: var(--color-grey20-grey0);
+	transition: color var(--themeChange);
+}
+
+.description {
+	font-size: 18px;
+	line-height: 1.6;
+	margin: 0 0 16px;
+	color: var(--color-grey17-grey5);
+	transition: color var(--themeChange);
+}
+
+.suggestion {
+	font-size: 16px;
+	line-height: 1.6;
+	margin: 0 0 32px;
+	color: var(--color-grey15-grey7);
+	transition: color var(--themeChange);
+}
+
+.heroActions {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.secondaryButton {
+	background: transparent;
+	border: 2px solid var(--color-grey10);
+	color: var(--color-grey15-grey5);
+	transition:
+		background-color var(--hoverChange),
+		border-color var(--hoverChange),
+		color var(--hoverChange);
+
+	&:hover {
+		background: var(--color-grey2-grey18);
+		border-color: var(--color-blue3);
+		color: var(--color-blue3);
+	}
+}
+
+.heroImage {
+	flex: 0 0 400px;
+	text-align: center;
+	position: relative;
+	padding: 10px;
+}
+
+.image {
+	max-width: 100%;
+	height: auto;
+	filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
+	border-radius: 25px;
+}
+
+.imageCredit {
+	position: absolute;
+	bottom: 10px;
+	right: 20px;
+	font-size: 0.75rem;
+	color: var(--color-grey13-grey7);
+	transition: color var(--themeChange);
+	opacity: 0.8;
+
+	a {
+		color: var(--color-grey15-grey5);
+		text-decoration: none;
+		transition: color var(--hoverChange);
+
+		&:hover {
+			color: var(--color-blue3);
+			text-decoration: underline;
+		}
+	}
+}
+
+@media (max-width: 900px) {
+	.hero {
+		max-width: 100%;
+		width: 100%;
+		margin: 0;
+		padding: 80px 20px;
+		min-height: calc(100vh - 200px);
+		display: flex;
+		align-items: center;
+	}
+
+	.heroInner {
+		flex-direction: column;
+		text-align: center;
+		gap: 30px;
+		align-items: center;
+		flex-wrap: wrap;
+		width: 100%;
+	}
+
+	.errorBannerWrapper {
+		position: static;
+		order: 1;
+		flex: 0 0 100%;
+		display: flex;
+		justify-content: center;
+	}
+
+	.heroImage {
+		order: 2;
+		flex: 0 0 auto;
+		max-width: 300px;
+		margin: 0 auto;
+	}
+
+	.container {
+		order: 3;
+		flex: 0 0 100%;
+		min-width: auto;
+		padding-top: 0;
+	}
+
+	.heroContent {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.heroContent h1 {
+		font-size: 40px;
+	}
+
+	.description {
+		font-size: 16px;
+	}
+
+	.suggestion {
+		font-size: 15px;
+	}
+
+	.heroActions {
+		justify-content: center;
+	}
+}
+
+@media (max-width: 600px) {
+	.hero {
+		padding: 60px 20px;
+	}
+
+	.heroActions {
+		flex-direction: column;
+	}
+
+	.errorBanner {
+		font-size: 12px;
+		padding: 8px 16px;
+		gap: 12px;
+	}
+
+	.warningIcon {
+		font-size: 1.5rem;
+	}
+
+	.errorCode {
+		font-size: 2rem;
+	}
+}
