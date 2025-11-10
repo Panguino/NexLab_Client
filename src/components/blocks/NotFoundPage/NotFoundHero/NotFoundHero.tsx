@@ -1,17 +1,24 @@
 'use client'
 
 import { Button } from '@/components/elements/Button/Button'
-import { faCommentDots } from '@fortawesome/free-regular-svg-icons'
+import { SEARCH_RESULTS_SLIDEOUT } from '@/data/vars'
+import { useRootStore } from '@/store/useRootStore'
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useRouter } from 'next/navigation'
 import styles from './NotFoundHero.module.scss'
 
 export const NotFoundHero = () => {
-	const router = useRouter()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
-	const handleGoBack = () => {
-		router.back()
+	const handleSearchSite = () => {
+		openSlideoutPanel(SEARCH_RESULTS_SLIDEOUT)
+	}
+
+	const handleTrySuggestions = () => {
+		const suggestionsSection = document.getElementById('suggestions')
+		if (suggestionsSection) {
+			suggestionsSection.scrollIntoView({ behavior: 'smooth', block: 'start' })
+		}
 	}
 
 	return (
@@ -32,24 +39,14 @@ export const NotFoundHero = () => {
 						</p>
 
 						<p className={styles.suggestion}>
-							Try using your browser's back button to return to the previous page, or visit our homepage to navigate to where you'd like
-							to go.
+							Let's see if we can help you find what you are looking for. Try using our 'Site Search' feature and use partial page
+							titles, product names, or other content keywords to find pages that are available. Otherwise try some of our navigation
+							suggestions.
 						</p>
 
 						<div className={styles.heroActions}>
-							<Button label="Return to Homepage" link="/" target="_self" />
-							<Button label="Go Back" onClick={handleGoBack} variantClassName={styles.secondaryButton} />
-						</div>
-
-						<div className={styles.feedbackSection}>
-							<FontAwesomeIcon icon={faCommentDots} className={styles.feedbackIcon} />
-							<span>
-								If this problem persists, please visit our{' '}
-								<a href="/feedback" className={styles.feedbackLink}>
-									feedback page
-								</a>{' '}
-								to report the issue.
-							</span>
+							<Button label="Search Site" onClick={handleSearchSite} />
+							<Button label="Try Suggestions" onClick={handleTrySuggestions} variantClassName={styles.secondaryButton} />
 						</div>
 					</div>
 				</div>

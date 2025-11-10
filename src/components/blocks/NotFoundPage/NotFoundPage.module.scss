@@ -1,16 +1,9 @@
 .notFoundPage {
+	position: relative;
 	background: var(--color-white-grey19);
 	color: var(--color-grey20-grey0);
 	transition:
 		background-color var(--themeChange),
 		color var(--themeChange);
 	min-height: 100vh;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	@media (max-width: 900px) {
-		align-items: stretch;
-		padding: 0;
-	}
 }

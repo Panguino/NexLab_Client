@@ -7,14 +7,11 @@
 	transition:
 		background var(--themeChange),
 		color var(--themeChange);
-	border-radius: 20px;
-	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-	max-width: 1000px;
-	margin: 0 auto;
+	width: 100%;
 }
 
 .heroInner {
-	max-width: 100%;
+	max-width: 1200px;
 	margin: 0 auto;
 	display: flex;
 	align-items: flex-start;
@@ -165,44 +162,8 @@
 	}
 }
 
-.feedbackSection {
-	margin-top: 2rem;
-	padding-top: 2rem;
-	border-top: 1px solid rgba(0, 0, 0, 0.1);
-	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-
-	span {
-		font-size: 0.875rem;
-		line-height: 1.6;
-		color: var(--color-grey15-grey7);
-		transition: color var(--themeChange);
-	}
-}
-
-.feedbackIcon {
-	font-size: 1.25rem;
-	color: var(--color-grey12);
-	transition: color var(--themeChange);
-}
-
-.feedbackLink {
-	color: var(--color-blue3);
-	text-decoration: none;
-	font-weight: 600;
-	transition: color var(--hoverChange);
-
-	&:hover {
-		color: var(--color-blue4);
-		text-decoration: underline;
-	}
-}
-
 @media (max-width: 900px) {
 	.hero {
-		border-radius: 0;
-		box-shadow: none;
 		max-width: 100%;
 		width: 100%;
 		margin: 0;
@@ -262,10 +223,6 @@
 	}
 
 	.heroActions {
-		justify-content: center;
-	}
-
-	.feedbackSection {
 		justify-content: center;
 	}
 }
