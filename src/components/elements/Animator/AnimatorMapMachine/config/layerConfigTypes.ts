@@ -131,12 +131,6 @@ export const LAYER_CONFIG_PRESETS = {
 		'latlon-grid-layer': { active: true, initialValue: false },
 		'coastal-regions-inactive-layer': { active: true, initialValue: true },
 		'counties-inactive-layer': { active: true, initialValue: true },
-		'coastal-data-regions-layer': { active: true, initialValue: true },
-		'county-data-regions-layer': { active: true, initialValue: true },
-		'counties-active-layer': { active: true, initialValue: true },
-		'region-alerts-layer': { active: true, initialValue: true },
-		'best-track-layer': { active: true, initialValue: true },
-		'forecast-points-layer': { active: true, initialValue: true },
 	} as LayerConfig,
 }
 
