@@ -60,9 +60,21 @@ const SlideoutPanel = () => {
 		}
 	}
 
+	// Determine padding based on page layout
+	// Homepage: 69px (special nav height)
+	// Pages with SubNav (weather-data, academics, storm-chasing): 106px (70px nav + 36px subnav)
+	// Pages without SubNav (not-found, feedback, donate, etc): 70px
+	const getPaddingTop = () => {
+		if (pathname === '/') return '69px'
+		if (pathname.startsWith('/weather-data') || pathname.startsWith('/academics') || pathname.startsWith('/storm-chasing')) {
+			return '106px'
+		}
+		return '70px'
+	}
+
 	return (
 		<div className={styles.SlideoutPanel}>
-			<div className={styles.PanelWrapper} style={{ paddingTop: pathname !== '/' ? '106px' : '69px' }}>
+			<div className={styles.PanelWrapper} style={{ paddingTop: getPaddingTop() }}>
 				<motion.div className={styles.OverflowPanel} animate={{ opacity: slideoutPanelIsOpen && hovering ? 1 : 0 }} />
 				<motion.div
 					className={styles.Panel}
