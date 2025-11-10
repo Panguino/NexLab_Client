@@ -1,12 +1,16 @@
 'use client'
 
+import { useParams, useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
+
 import Select from '@/components/elements/Select/Select'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { TROPICAL_PRODUCTS } from '@/data/text/tropical/products'
-import { useParams, useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { TROPICAL_TEXT_SLIDEOUT } from '@/data/vars'
+import { useRootStore } from '@/store/useRootStore'
+import { getActiveTropicalStorms, getTropicalGeneralData, getTropicalStormData } from '@/util/dataCalls/text/query-tropical'
 import styles from './TropicalPanel.module.scss'
 
 interface TropicalPanelProps {
@@ -15,11 +19,33 @@ interface TropicalPanelProps {
 
 const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	const router = useRouter()
-	const { tropicalProductId, tropicalStormId } = useParams()
+	const { tropicalProductId, tropicalValidtimeId, tropicalStormId } = useParams()
 	const [selectedStorm, setSelectedStorm] = useState<string | null>(null)
+	const [stormData, setStormData] = useState<any>(null)
+	const [stormOptions, setStormOptions] = useState<{ label: string; value: string }[]>([])
+	const setTropicalTextContent = useRootStore.use.setTropicalTextContent()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	// Full path to tropical section
 	const tropicalBasePath = `${basepath}/nhc-tropical-hurricane-weather`
+
+	// Use 'latest' as default validtime if not specified in URL
+	const validtimeId = (tropicalValidtimeId as string) || 'latest'
+
+	// Fetch and transform active storms into select options
+	useEffect(() => {
+		const fetchStorms = async () => {
+			const data = await getActiveTropicalStorms()
+			if (data && typeof data === 'object') {
+				const options = Object.values(data).map((storm: any) => ({
+					label: storm.name,
+					value: storm.id,
+				}))
+				setStormOptions(options)
+			}
+		}
+		fetchStorms()
+	}, [])
 
 	// Sync selected storm with URL parameter
 	useEffect(() => {
@@ -31,37 +57,99 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 		}
 	}, [tropicalStormId])
 
+	// Watch for tropicalProductId changes and fetch/display product data
+	useEffect(() => {
+		const fetchAndDisplayProduct = async () => {
+			if (tropicalProductId && typeof tropicalProductId === 'string') {
+				const product = TROPICAL_PRODUCTS[tropicalProductId]
+
+				// Check if this is a valid general product (not a storm-specific product)
+				if (product && !product.requiresStorm) {
+					console.log(`Loading tropical product from URL: ${tropicalProductId}`)
+					const productData = await getTropicalGeneralData(tropicalProductId)
+					if (productData && typeof productData !== 'boolean') {
+						// Send the full product data object with validtimes
+						setTropicalTextContent({
+							productData,
+							validtimeId,
+							productKey: tropicalProductId,
+							productName: product.name,
+						})
+						openSlideoutPanel(TROPICAL_TEXT_SLIDEOUT)
+					}
+				}
+				// Check if this is a storm-specific product and we have storm data
+				else if (product && product.requiresStorm && tropicalStormId && stormData) {
+					console.log(`Loading storm product from URL: ${tropicalProductId} for storm: ${tropicalStormId}`)
+
+					// Get the storm name from stormOptions
+					const stormName = stormOptions.find((s) => s.value === tropicalStormId)?.label
+
+					// Get the product history from stormData
+					if (stormData[tropicalProductId]) {
+						const productHistory = stormData[tropicalProductId]
+						// Send the full product history object with validtimes
+						setTropicalTextContent({
+							productData: productHistory,
+							validtimeId,
+							productKey: tropicalProductId,
+							productName: product.name,
+							stormName,
+						})
+						openSlideoutPanel(TROPICAL_TEXT_SLIDEOUT)
+					}
+				}
+			}
+		}
+
+		fetchAndDisplayProduct()
+	}, [tropicalProductId, tropicalStormId, stormData, stormOptions, validtimeId, setTropicalTextContent, openSlideoutPanel])
+
 	const handleProductClick = useCallback(
-		(productKey: string, productName: string) => {
+		async (productKey: string, productName: string) => {
 			console.log(`Tropical product clicked: ${productKey} - ${productName}`)
-			// Update URL with new product but stay on same page
+
+			// Just navigate - the useEffect will handle fetching and opening the slideout
+			// Use 'latest' as the validtime for now
 			if (tropicalStormId) {
-				router.push(`${tropicalBasePath}/${productKey}/storm/${tropicalStormId}`)
+				router.push(`${tropicalBasePath}/${productKey}/${validtimeId}/storm/${tropicalStormId}`)
 			} else {
-				router.push(`${tropicalBasePath}/${productKey}`)
+				router.push(`${tropicalBasePath}/${productKey}/${validtimeId}`)
 			}
 		},
-		[tropicalBasePath, router, tropicalStormId],
+		[tropicalBasePath, router, tropicalStormId, validtimeId],
 	)
 
 	const handleStormProductClick = useCallback(
-		(productKey: string, productName: string, stormId: string) => {
+		async (productKey: string, productName: string, stormId: string) => {
 			console.log(`Storm-specific product clicked: ${productKey} - ${productName} for storm: ${stormId}`)
-			// Update URL with new product but stay on storm page
-			router.push(`${tropicalBasePath}/${productKey}/storm/${stormId}`)
+
+			// Just navigate - the useEffect will handle fetching and opening the slideout
+			// Use 'latest' as the validtime for now
+			router.push(`${tropicalBasePath}/${productKey}/${validtimeId}/storm/${stormId}`)
 		},
-		[tropicalBasePath, router],
+		[tropicalBasePath, router, validtimeId],
 	)
 
 	const handleStormChange = useCallback(
-		(stormValue: string) => {
+		async (stormValue: string) => {
 			console.log(`Storm selected: ${stormValue}`)
 			setSelectedStorm(stormValue)
+
+			// Fetch the storm data for this storm ID
+			const data = await getTropicalStormData(stormValue)
+			console.log(`Storm data for ${stormValue}:`, data)
+
+			// Store the raw data without transformation
+			if (data && typeof data === 'object') {
+				setStormData(data)
+			}
+
 			// Navigate to storm viewer page - use product if available, otherwise use 'overview'
 			const productForUrl = tropicalProductId || 'overview'
-			router.push(`${tropicalBasePath}/${productForUrl}/storm/${stormValue}`)
+			router.push(`${tropicalBasePath}/${productForUrl}/${validtimeId}/storm/${stormValue}`)
 		},
-		[tropicalBasePath, router, tropicalProductId],
+		[tropicalBasePath, router, tropicalProductId, validtimeId],
 	)
 
 	// Filter products that don't require a storm
@@ -74,12 +162,6 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 		.filter(([, product]) => product.requiresStorm)
 		.map(([key, product]) => ({ key, ...product }))
 
-	// Mock storm options - will be fetched later
-	const stormOptions = [
-		{ label: 'Storm One', value: 'st1' },
-		{ label: 'Storm Two', value: 'st2' },
-	]
-
 	return (
 		<>
 			<SidebarSectionHeader name="Tropical" linkUrl={basepath} />
@@ -87,7 +169,13 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 				<div className={styles.productsGroup}>
 					<div className={styles.sectionTitle}>General Products</div>
 					{basinProducts.map((product) => (
-						<SidebarLink key={product.key} name={product.name} linkUrl="" onClick={() => handleProductClick(product.key, product.name)} />
+						<SidebarLink
+							key={product.key}
+							name={product.name}
+							linkUrl=""
+							onClick={() => handleProductClick(product.key, product.name)}
+							active={tropicalProductId === product.key && !tropicalStormId}
+						/>
 					))}
 				</div>
 
@@ -104,6 +192,7 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 								name={product.name}
 								linkUrl=""
 								onClick={() => handleStormProductClick(product.key, product.name, selectedStorm)}
+								active={tropicalProductId === product.key && tropicalStormId === selectedStorm}
 							/>
 						))}
 					</div>
