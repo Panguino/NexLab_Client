@@ -44,6 +44,7 @@ const WFOPanel = ({ basepath }: WFOPanelProps) => {
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
 	const setWfoTextContent = useRootStore.use.setWfoTextContent()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+	const closeSlideoutPanel = useRootStore.use.closeSlideoutPanel()
 
 	// Full path to WFO section
 	const wfoBasePath = `${basepath}/nws-wfo-national-weather-service-forecast-offices`
@@ -61,6 +62,8 @@ const WFOPanel = ({ basepath }: WFOPanelProps) => {
 
 	// Sync selected office with URL parameter
 	useEffect(() => {
+		// Close slideout panel when switching WFOs
+		closeSlideoutPanel()
 		if (officeId) {
 			setSelectedOfficeId(officeId as string)
 		} else {
@@ -68,7 +71,7 @@ const WFOPanel = ({ basepath }: WFOPanelProps) => {
 			setSelectedOfficeId(null)
 			setWfoData(null)
 		}
-	}, [officeId])
+	}, [officeId, closeSlideoutPanel])
 
 	// Fetch WFO products when office is selected
 	useEffect(() => {
@@ -91,6 +94,9 @@ const WFOPanel = ({ basepath }: WFOPanelProps) => {
 		(wfoValue: string) => {
 			console.log(`WFO selected: ${wfoValue}`)
 			setSelectedOfficeId(wfoValue)
+
+			// Close the slideout panel when switching WFOs
+			// closeSlideoutPanel()
 
 			// Navigate to WFO page
 			router.push(`${wfoBasePath}/${wfoValue}`)
@@ -152,6 +158,7 @@ const WFOPanel = ({ basepath }: WFOPanelProps) => {
 	return (
 		<>
 			<SidebarSectionHeader name="NWS WFO" linkUrl={basepath} />
+			<div className={styles.selectTitle}>Available Forecast Offices:</div>
 			<div className={styles.wfoSelector}>
 				<SelectSearchable
 					value={selectedOfficeId}
@@ -165,7 +172,9 @@ const WFOPanel = ({ basepath }: WFOPanelProps) => {
 			{wfoData && productCategories.length > 0 && (
 				<>
 					<div className={styles.sectionTitle}>
-						Products issued by: {wfoData.id} - {wfoData.title}
+						Products issued by:
+						<br />
+						{wfoData.id} - {wfoData.title}
 					</div>
 					<div className={styles.productsGroup}>
 						{productCategories.map(({ category, products }, index) => (
