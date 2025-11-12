@@ -19,8 +19,15 @@ export const getWFOproductsById = async (officeId: string) => {
 			const validtime = urlParts[urlParts.length - 1] || ''
 			const id = urlParts[urlParts.length - 2] || ''
 
+			// Transform link: replace 'product/' with 'json/' and remove timestamp
+			// From: https://weather.cod.edu/textserv/product/KLOT/CSUS43_MSMRFD/202511010815
+			// To: https://weather.cod.edu/textserv/json/KLOT/CSUS43_MSMRFD -- these links return a history of the product
+			// all ready for sending to a text slideout
+			const transformedLink = product.link.replace('/product/', '/json/').replace(/\/\d{12}$/, '')
+
 			return {
 				...product,
+				link: transformedLink,
 				id,
 				validtime,
 			}
@@ -33,4 +40,13 @@ export const getWFOproductsById = async (officeId: string) => {
 		title: data.plain_name,
 	}
 	return response
+}
+export const getWFOproductHistory = async (officeId: string, productId: string) => {
+	const endpoint = `https://weather.cod.edu/textserv/json/${officeId}/${productId}`
+	const data = await getData(endpoint)
+
+	if (!data) {
+		throw new Error('No data found for the specified product history')
+	}
+	return data
 }
