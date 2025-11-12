@@ -9,7 +9,9 @@ import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import SidebarPanelPad from '@/components/layout/SidebarPanelPad/SidebarPanelPad'
 import { ALL_NWSWFOS } from '@/data/text/nwswfo/wfos'
-import { getWFOproductsById } from '@/util/dataCalls/text/query-wfo'
+import { WFO_TEXT_SLIDEOUT } from '@/data/vars'
+import { useRootStore } from '@/store/useRootStore'
+import { getWFOproductHistory, getWFOproductsById } from '@/util/dataCalls/text/query-wfo'
 import styles from './WFOPanel.module.scss'
 
 interface WFOPanelProps {
@@ -20,6 +22,8 @@ interface WFOProduct {
 	date: string
 	link: string
 	title: string
+	id: string
+	validtime: string
 }
 
 interface WFOProductCategories {
@@ -34,13 +38,18 @@ interface WFOData {
 
 const WFOPanel = ({ basepath }: WFOPanelProps) => {
 	const router = useRouter()
-	const { WFOofficeId: officeId } = useParams()
+	const { WFOofficeId: officeId, WFOproductId, WFOvalidtimeId } = useParams()
 	const [selectedOfficeId, setSelectedOfficeId] = useState<string | null>(null)
 	const [wfoData, setWfoData] = useState<WFOData | null>(null)
 	const [openIndex, setOpenIndex] = useState<number | null>(null)
+	const setWfoTextContent = useRootStore.use.setWfoTextContent()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	// Full path to WFO section
 	const wfoBasePath = `${basepath}/nws-wfo-national-weather-service-forecast-offices`
+
+	// Use 'latest' as default validtime if not specified in URL
+	const validtimeId = (WFOvalidtimeId as string) || 'latest'
 
 	// Transform ALL_NWSWFOS object into SelectSearchable options array
 	const WFOoptions: Option[] = useMemo(() => {
@@ -93,9 +102,43 @@ const WFOPanel = ({ basepath }: WFOPanelProps) => {
 		setOpenIndex(openIndex === index ? null : index)
 	}
 
-	const handleProductClick = useCallback((product: WFOProduct) => {
-		console.log('Product clicked:', product)
-	}, [])
+	const handleProductClick = useCallback(
+		async (product: WFOProduct, officeId: string) => {
+			console.log('WFO product clicked: ', product)
+
+			// Just navigate - the useEffect will handle fetching and opening the slideout
+			// Always use 'latest' when clicking from sidebar to get most recent product
+			router.push(`${wfoBasePath}/${officeId}/${product.id}/latest`)
+		},
+		[wfoBasePath, router],
+	)
+
+	// Watch for WFOproductId changes and fetch/display product data
+	useEffect(() => {
+		const fetchAndDisplayProduct = async () => {
+			if (WFOproductId && typeof WFOproductId === 'string' && selectedOfficeId && wfoData) {
+				console.log(`Loading WFO product from URL: ${WFOproductId} for office: ${selectedOfficeId}`)
+
+				// Fetch the product history
+				const productHistory = await getWFOproductHistory(selectedOfficeId, WFOproductId)
+
+				if (productHistory && typeof productHistory === 'object') {
+					// Send the full product history object with validtimes
+					setWfoTextContent({
+						productData: productHistory,
+						validtimeId,
+						productKey: WFOproductId,
+						productName: WFOproductId, // Use product ID as name for now
+						officeId: wfoData.id,
+						officeName: wfoData.title,
+					})
+					openSlideoutPanel(WFO_TEXT_SLIDEOUT)
+				}
+			}
+		}
+
+		fetchAndDisplayProduct()
+	}, [WFOproductId, selectedOfficeId, wfoData, validtimeId, setWfoTextContent, openSlideoutPanel])
 
 	// Build categories array from wfoData
 	const productCategories = useMemo(() => {
@@ -140,8 +183,8 @@ const WFOPanel = ({ basepath }: WFOPanelProps) => {
 												key={`${category}-${productIndex}`}
 												name={product.title}
 												linkUrl=""
-												onClick={() => handleProductClick(product)}
-												active={false}
+												onClick={() => handleProductClick(product, wfoData.id)}
+												active={WFOproductId === product.id}
 											/>
 										))}
 									</div>
