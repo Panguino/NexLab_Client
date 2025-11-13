@@ -1,0 +1,27 @@
+.panelContainer {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.sectionTitle {
+	font-size: 12px;
+	text-transform: uppercase;
+	color: var(--color-grey3);
+	font-weight: 600;
+	padding-bottom: 10px;
+	padding-top: 20px;
+}
+
+.sectionTitle:first-child {
+	padding: 10px;
+}
+
+.stormSelector {
+	padding-top: 20px;
+	padding-bottom: 10px;
+}
+
+.productsGroup {
+	padding-bottom: 10px;
+}

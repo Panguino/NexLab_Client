@@ -12,10 +12,10 @@ export const StormChasingSection = () => {
 					<p>Since 1989 — immersive science in motion across the Great Plains.</p>
 				</div>
 
-				<div className={styles.card}> 
+				<div className={styles.card}>
 					<p>
-						Experience severe weather up close while learning to analyze radar, satellite, soundings, and mesoscale environments in
-						real time. Our academic storm-chasing program pairs classroom prep with multi-day fieldwork led by COD faculty.
+						Experience severe weather up close while learning to analyze radar, satellite, soundings, and mesoscale environments in real
+						time. Our academic storm-chasing program pairs classroom prep with multi-day fieldwork led by COD faculty.
 					</p>
 					<div className={styles.buttonRow}>
 						<Button label="Storm Chasing Overview" link="/storm-chasing" target="_self" />

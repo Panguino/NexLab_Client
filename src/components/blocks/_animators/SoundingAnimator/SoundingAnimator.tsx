@@ -80,7 +80,6 @@ const SoundingAnimator: React.FC = () => {
 		frameValidTimeRef.current = soundingFrameValidTime
 	}, [soundingFrameValidTime])
 
-
 	// Handle frame changes for sounding text
 	const handleFrameTextChange = (frameIndex) => {
 		if (frameTextFiles.length > 0) {

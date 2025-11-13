@@ -4,8 +4,8 @@ const Page = () => {
 	return (
 		<ComingSoon
 			fullWidth
-			pageName="Tropical Weather Products"
-			purpose="National Hurricane Center outlooks, advisories, and tropical analyses organized for quick situational access."
+			pageName="NWS WFO Text Products"
+			purpose="WFO Selected without Product & Validtime. Display deck.gl map."
 			etaText="This section is being implemented."
 		/>
 	)

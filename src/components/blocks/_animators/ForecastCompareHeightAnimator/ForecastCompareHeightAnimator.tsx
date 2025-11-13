@@ -90,7 +90,6 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 		getData()
 	}, [runId, modelId, sectorId, levelId, productId, getData])
 
-
 	const transformedRuns = Object.entries(forecastRuns).map(([key, value]) => ({
 		value: key,
 		label: value.readable,
@@ -113,22 +112,25 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 	}
 
 	// Sounding clickthrough handler
-	const onSoundingsClickthrough = useCallback((event: { xPercent: number; yPercent: number }) => {
-		if (!soundingsSupported) return
+	const onSoundingsClickthrough = useCallback(
+		(event: { xPercent: number; yPercent: number }) => {
+			if (!soundingsSupported) return
 
-		const { xPercent, yPercent } = event
-		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
-		const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
-		const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
-		const route = `${baseParams}${soundingParams}`
+			const { xPercent, yPercent } = event
+			const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
+			const baseParams = `/weather-data/forecast-models/${runId}/${modelId}/${sectorId}/${levelId}/${productId}`
+			const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
+			const route = `${baseParams}${soundingParams}`
 
-		// Store current page as referrer for the sounding page
-		if (typeof window !== 'undefined') {
-			sessionStorage.setItem('forecastSoundingReferrer', window.location.pathname)
-		}
+			// Store current page as referrer for the sounding page
+			if (typeof window !== 'undefined') {
+				sessionStorage.setItem('forecastSoundingReferrer', window.location.pathname)
+			}
 
-		router.push(route)
-	}, [soundingsSupported, sectorId, runId, modelId, levelId, productId, validTimeId, router])
+			router.push(route)
+		},
+		[soundingsSupported, sectorId, runId, modelId, levelId, productId, validTimeId, router],
+	)
 
 	// Request readout data for the given frame (level). Debounced like main viewer.
 	const handleReadoutDataRequest = useCallback(
@@ -158,7 +160,14 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 			setIsLoadingReadoutData(true)
 			frameDataTimeoutRef.current = setTimeout(async () => {
 				try {
-					const data = await getFrameReadoutData(modelId as string, runId as string, sectorId as string, levelForFrame as string, productId as string, validTimeId as string)
+					const data = await getFrameReadoutData(
+						modelId as string,
+						runId as string,
+						sectorId as string,
+						levelForFrame as string,
+						productId as string,
+						validTimeId as string,
+					)
 					const readoutDataObj = { dataTypes: data.dataTypes, readoutData: data.readoutData }
 					setFrameReadoutData(readoutDataObj)
 				} catch (error) {
@@ -169,7 +178,7 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 				}
 			}, 1000)
 		},
-		[modelId, runId, sectorId, productId, validTimeId, forecastLevels]
+		[modelId, runId, sectorId, productId, validTimeId, forecastLevels],
 	)
 
 	return (

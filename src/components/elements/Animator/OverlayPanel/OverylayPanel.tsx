@@ -23,19 +23,20 @@ export const OverlayPanel = ({ onClose, overlays, activeOverlays, setActiveOverl
 	}, [onClose])
 
 	const flattenedOverlays = [...Object.keys(overlays.static), ...Object.keys(overlays.dynamic)]
+	const safeActiveOverlays = Array.isArray(activeOverlays) ? activeOverlays : []
 
 	const handleOverlayClick = (id) => {
-		if (activeOverlays.includes(id)) {
-			setActiveOverlays(activeOverlays.filter((overlayId) => overlayId !== id))
+		if (safeActiveOverlays.includes(id)) {
+			setActiveOverlays(safeActiveOverlays.filter((overlayId) => overlayId !== id))
 		} else {
-			setActiveOverlays([...activeOverlays, id])
+			setActiveOverlays([...safeActiveOverlays, id])
 		}
 	}
 
 	return (
 		<div className={styles.OverlayPanel} style={{ opacity: open ? 1 : 0, pointerEvents: open ? 'all' : 'none' }}>
 			<div
-				className={`${styles.overlayItem} ${styles.firstItem} ${activeOverlays.includes('data') ? styles.active : null}`}
+				className={`${styles.overlayItem} ${styles.firstItem} ${safeActiveOverlays.includes('data') ? styles.active : null}`}
 				onClick={() => handleOverlayClick('data')}
 			>
 				Base Data Layer
@@ -65,7 +66,7 @@ export const OverlayPanel = ({ onClose, overlays, activeOverlays, setActiveOverl
 								if (!flattenedOverlays.includes(overlayId)) {
 									return null
 								}
-								const isActive = activeOverlays.includes(overlayId)
+								const isActive = safeActiveOverlays.includes(overlayId)
 								return (
 									<div
 										key={index}

@@ -11,9 +11,9 @@ export const AnalysisHero = () => {
 					<div className={styles.heroContent}>
 						<h1>Weather Analysis</h1>
 						<p>
-							Diagnose the current state of the atmosphere with surface and upper-air maps, observed soundings, RAP mesoanalysis fields, and
-							isentropic tools. Use these products together to understand synoptic and mesoscale patterns, moisture/thermal structure, and
-							vertical motion before you forecast.
+							Diagnose the current state of the atmosphere with surface and upper-air maps, observed soundings, RAP mesoanalysis fields,
+							and isentropic tools. Use these products together to understand synoptic and mesoscale patterns, moisture/thermal
+							structure, and vertical motion before you forecast.
 						</p>
 						<div className={styles.heroActions}>
 							<Button label="Back to Weather Data" link="/weather-data" target="_self" />

@@ -71,7 +71,6 @@ const IsentropicAnimator: React.FC = () => {
 		frameValidTimeRef.current = isentropicFrameValidTime
 	}, [isentropicFrameValidTime])
 
-
 	return (
 		<>
 			<div className={styles.IsentropicAnimatorContainer}>

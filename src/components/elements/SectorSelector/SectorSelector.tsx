@@ -27,8 +27,8 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 		if (!d3config) return
 		const { width, height, scale, rotate } = d3config
 		const svg = d3.select(svgRef.current)
-		const center = [-rotate[0], -rotate[1]]
-		const translate = [width / 2, height / 2]
+		const center: [number, number] = [-rotate[0], -rotate[1]]
+		const translate: [number, number] = [width / 2, height / 2]
 		const projection = d3
 			.geoOrthographic()
 			.rotate(rotate)
@@ -40,16 +40,37 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 		svg.selectAll('*').remove()
 		// Draw the visible circle of the globe
 		const circle = d3.geoCircle().center(center).radius(90)
-		svg.append('path').datum(circle()).attr('d', path).attr('class', styles.globe)
+		svg.append('path')
+			.datum(circle())
+			.attr('d', (d: any) => path(d) || '')
+			.attr('class', styles.globe)
 
 		// Draw the map paths using GeoJSON data
-		svg.append('g').selectAll('path').data(mapJson.features).enter().append('path').attr('d', path).attr('class', styles.mapPath)
+		svg.append('g')
+			.selectAll('path')
+			.data((mapJson as any).features)
+			.enter()
+			.append('path')
+			.attr('d', (d: any) => path(d) || '')
+			.attr('class', styles.mapPath)
 
 		const lakesGroup = svg.append('g')
-		lakesGroup.selectAll('path.lakePath').data(lakesJson.features).enter().append('path').attr('d', path).attr('class', styles.lakePath)
+		lakesGroup
+			.selectAll('path.lakePath')
+			.data((lakesJson as any).features)
+			.enter()
+			.append('path')
+			.attr('d', (d: any) => path(d) || '')
+			.attr('class', styles.lakePath)
 
 		const statesGroup = svg.append('g')
-		statesGroup.selectAll('path.statePath').data(statesJson.features).enter().append('path').attr('d', path).attr('class', styles.statePath)
+		statesGroup
+			.selectAll('path.statePath')
+			.data((statesJson as any).features)
+			.enter()
+			.append('path')
+			.attr('d', (d: any) => path(d) || '')
+			.attr('class', styles.statePath)
 
 		// store symbol generator for later use
 		const symbolGenerator = d3.symbol().size(100)
@@ -62,14 +83,17 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 		// Split the sectors by type
 		const pointSectors = sectors.filter((d) => {
 			let isVisible = false
-			isVisible = d.type === 'Point' ? d3.geoDistance(center, d.coordinates) < Math.PI / 2 : false
+			isVisible = d.type === 'Point' ? d3.geoDistance(center, d.coordinates as [number, number]) < Math.PI / 2 : false
 			return d.type === 'Point' && isVisible
 		})
 		const geoboxSectors = sectors.filter((d) => {
 			let isVisible = false
 			if (d.type === 'Geobox') {
-				const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
-				isVisible = d3.geoDistance(center, d3.geoCentroid(geobox)) < Math.PI / 2
+				const geobox = d3
+					.geoGraticule()
+					.extentMajor(d.coordinates as [[number, number], [number, number]])
+					.outline()
+				isVisible = d3.geoDistance(center, d3.geoCentroid(geobox) as [number, number]) < Math.PI / 2
 			}
 			return d.type === 'Geobox' && isVisible
 		})
@@ -77,14 +101,15 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 		const lineSectors = sectors.filter((d) => {
 			let isVisible = false
 			if (d.type === 'Line') {
-				const midpoint = d3.interpolate(d.coordinates[0], d.coordinates[1])(0.5)
+				const coords = d.coordinates as [[number, number], [number, number]]
+				const midpoint = d3.interpolate(coords[0], coords[1])(0.5) as [number, number]
 				isVisible = d3.geoDistance(center, midpoint) < Math.PI / 2
 			}
 			return d.type === 'Line' && isVisible
 		})
 
 		// Necessary data transformation to generate Line feature from endpoints
-		const arcFromCoordinates = (pointA, pointB) => {
+		const arcFromCoordinates = (pointA: [number, number], pointB: [number, number]): any => {
 			const interpolation = d3.geoInterpolate(pointA, pointB)
 			const numPoints = 100
 			const arc = d3.range(numPoints).map((d) => interpolation(d / (numPoints - 1)))
@@ -106,15 +131,22 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 				.data(pointSectors)
 				.enter()
 				.append('circle')
-				.attr('cx', (d) => projection(d.coordinates)[0])
-				.attr('cy', (d) => projection(d.coordinates)[1])
+				.attr('cx', (d) => {
+					const coords = projection(d.coordinates as [number, number])
+					return coords ? coords[0] : 0
+				})
+				.attr('cy', (d) => {
+					const coords = projection(d.coordinates as [number, number])
+					return coords ? coords[1] : 0
+				})
 				.attr('r', 10)
 				.attr('class', styles.pointRegion)
 				.on('mouseover', (_event, d) => {
 					d3.select(_event.currentTarget).attr('r', 25)
+					const coords = projection(d.coordinates as [number, number])
 					svg.append('text')
-						.attr('x', projection(d.coordinates)[0])
-						.attr('y', projection(d.coordinates)[1] - 10)
+						.attr('x', coords ? coords[0] : 0)
+						.attr('y', coords ? coords[1] - 10 : 0)
 						.attr('class', styles.tooltip)
 						.text(d.name)
 				})
@@ -132,10 +164,14 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 				.enter()
 				.append('path')
 				.attr('d', (d) => {
-					return symbolGenerator.type(d3[d.dotShape])()
+					const symbolType = d.dotShape ? (d3 as any)[d.dotShape] : d3.symbolCircle
+					return symbolGenerator.type(symbolType)()
 				})
-				.attr('transform', (d) => `translate(${projection(d.coordinates)})`)
-				.attr('fill', (d) => d.dotColor)
+				.attr('transform', (d) => {
+					const coords = projection(d.coordinates as [number, number])
+					return coords ? `translate(${coords})` : ''
+				})
+				.attr('fill', (d) => d.dotColor || '#000')
 				.attr('class', styles.point)
 		}
 
@@ -150,8 +186,11 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 				.enter()
 				.append('path')
 				.attr('d', (d) => {
-					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
-					return path(geobox)
+					const geobox = d3
+						.geoGraticule()
+						.extentMajor(d.coordinates as [[number, number], [number, number]])
+						.outline()
+					return path(geobox) || ''
 				})
 				.attr('class', (d) => `${styles.geobox} ${d.id}`)
 
@@ -162,27 +201,39 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 				.enter()
 				.append('circle')
 				.attr('cx', (d) => {
-					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
-					return projection(d3.geoCentroid(geobox))[0]
+					const geobox = d3
+						.geoGraticule()
+						.extentMajor(d.coordinates as [[number, number], [number, number]])
+						.outline()
+					const coords = projection(d3.geoCentroid(geobox))
+					return coords ? coords[0] : 0
 				})
 				.attr('cy', (d) => {
-					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
-					return projection(d3.geoCentroid(geobox))[1]
+					const geobox = d3
+						.geoGraticule()
+						.extentMajor(d.coordinates as [[number, number], [number, number]])
+						.outline()
+					const coords = projection(d3.geoCentroid(geobox))
+					return coords ? coords[1] : 0
 				})
 				.attr('r', 25)
 				.attr('class', styles.geoboxTrigger)
 				.attr('id', (d) => d.id)
 				.on('mouseover', (_event, d) => {
-					const geoboxOutline = d3.geoGraticule().extentMajor(d.coordinates).outline()
+					const geoboxOutline = d3
+						.geoGraticule()
+						.extentMajor(d.coordinates as [[number, number], [number, number]])
+						.outline()
 					// draw the visible geobox
 					d3.select(`.${styles.geobox}.${d.id}`).attr('style', 'opacity: 0.5')
 					// draw the tooltip
+					const centroidCoords = projection(d3.geoCentroid(geoboxOutline))
 					svg.append('text')
 						.attr('x', () => {
-							return projection(d3.geoCentroid(geoboxOutline))[0]
+							return centroidCoords ? centroidCoords[0] : 0
 						})
 						.attr('y', () => {
-							return projection(d3.geoCentroid(geoboxOutline))[1] - 10
+							return centroidCoords ? centroidCoords[1] - 10 : 0
 						})
 						.attr('class', styles.tooltip)
 						.text(d.name)
@@ -203,13 +254,18 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 				.enter()
 				.append('path')
 				.attr('d', (d) => {
-					return symbolGenerator.type(d3[d.dotShape])()
+					const symbolType = d.dotShape ? (d3 as any)[d.dotShape] : d3.symbolCircle
+					return symbolGenerator.type(symbolType)()
 				})
 				.attr('transform', (d) => {
-					const geobox = d3.geoGraticule().extentMajor(d.coordinates).outline()
-					return `translate(${projection(d3.geoCentroid(geobox))})`
+					const geobox = d3
+						.geoGraticule()
+						.extentMajor(d.coordinates as [[number, number], [number, number]])
+						.outline()
+					const coords = projection(d3.geoCentroid(geobox))
+					return coords ? `translate(${coords})` : ''
 				})
-				.attr('fill', (d) => d.dotColor)
+				.attr('fill', (d) => d.dotColor || '#000')
 				.attr('class', styles.point)
 		}
 
@@ -224,7 +280,10 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 				.enter()
 				.append('path')
 				.attr('class', (d) => `${styles.line} ${d.id}`)
-				.attr('d', (d) => path(arcFromCoordinates(d.coordinates[0], d.coordinates[1])))
+				.attr('d', (d) => {
+					const coords = d.coordinates as [[number, number], [number, number]]
+					return path(arcFromCoordinates(coords[0], coords[1])) || ''
+				})
 
 			// Draw the invisible line triggers
 			lineGroup
@@ -233,7 +292,10 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 				.enter()
 				.append('path')
 				.attr('class', styles.lineTrigger)
-				.attr('d', (d) => path(arcFromCoordinates(d.coordinates[0], d.coordinates[1])))
+				.attr('d', (d) => {
+					const coords = d.coordinates as [[number, number], [number, number]]
+					return path(arcFromCoordinates(coords[0], coords[1])) || ''
+				})
 				.on('mouseover', (_event, d) => {
 					// name tooltip
 					const lineName = d3.select('body').append('div').attr('class', styles.lineName).text(d.name)
@@ -242,16 +304,23 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 					})
 
 					// endpoint tooltips
-					svg.append('text')
-						.attr('x', projection(d.coordinates[0])[0])
-						.attr('y', projection(d.coordinates[0])[1] - 10)
-						.attr('class', styles.tooltip)
-						.text(d.label[0])
-					svg.append('text')
-						.attr('x', projection(d.coordinates[1])[0])
-						.attr('y', projection(d.coordinates[1])[1] - 10)
-						.attr('class', styles.tooltip)
-						.text(d.label[1])
+					const coords = d.coordinates as [[number, number], [number, number]]
+					const coord0 = projection(coords[0])
+					const coord1 = projection(coords[1])
+					if (coord0) {
+						svg.append('text')
+							.attr('x', coord0[0])
+							.attr('y', coord0[1] - 10)
+							.attr('class', styles.tooltip)
+							.text('Start')
+					}
+					if (coord1) {
+						svg.append('text')
+							.attr('x', coord1[0])
+							.attr('y', coord1[1] - 10)
+							.attr('class', styles.tooltip)
+							.text('End')
+					}
 
 					// highlight the line
 					svg.select(`path.${d.id}`).attr('class', `${styles.lineHover} ${d.id}`)
@@ -272,18 +341,32 @@ const SectorSelector: React.FC<ISectorSelectorProps> = ({ sectors, d3config, onC
 				.data(lineSectors)
 				.enter()
 				.append('path')
-				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
-				.attr('transform', (d) => `translate(${projection(d.coordinates[0])})`)
-				.attr('fill', (d) => d.dotColor)
+				.attr('d', (d) => {
+					const symbolType = d.dotShape ? (d3 as any)[d.dotShape] : d3.symbolCircle
+					return symbolGenerator.type(symbolType)()
+				})
+				.attr('transform', (d) => {
+					const coords = d.coordinates as [[number, number], [number, number]]
+					const projCoords = projection(coords[0])
+					return projCoords ? `translate(${projCoords})` : ''
+				})
+				.attr('fill', (d) => d.dotColor || '#000')
 				.attr('class', styles.point)
 			lineGroup
 				.selectAll('.point')
 				.data(lineSectors)
 				.enter()
 				.append('path')
-				.attr('d', (d) => symbolGenerator.type(d.dotShape)())
-				.attr('transform', (d) => `translate(${projection(d.coordinates[1])})`)
-				.attr('fill', (d) => d.dotColor)
+				.attr('d', (d) => {
+					const symbolType = d.dotShape ? (d3 as any)[d.dotShape] : d3.symbolCircle
+					return symbolGenerator.type(symbolType)()
+				})
+				.attr('transform', (d) => {
+					const coords = d.coordinates as [[number, number], [number, number]]
+					const projCoords = projection(coords[1])
+					return projCoords ? `translate(${projCoords})` : ''
+				})
+				.attr('fill', (d) => d.dotColor || '#000')
 				.attr('class', styles.point)
 		}
 	}, [sectors, d3config, onChange])

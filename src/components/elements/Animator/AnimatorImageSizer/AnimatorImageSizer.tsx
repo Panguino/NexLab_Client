@@ -6,7 +6,7 @@ import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
 import { useAnimator } from '../Animator'
 import { AnimatorImageMachine } from '../AnimatorImageMachine/AnimatorImageMachine'
 import DataTooltip from '../DataTooltip/DataTooltip'
-import ImageControls from '../ImageControls/ImageControls'
+import ViewControls from '../ViewControls/ViewControls'
 import styles from './AnimatorImageSizer.module.scss'
 
 const AnimatorImageSizer = () => {
@@ -33,7 +33,7 @@ const AnimatorImageSizer = () => {
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
 	// retain state for tooltip hover position (not required for click-through)
-	const [_imagePosition, setImagePosition] = useState({ xPercent: 0, yPercent: 0 })
+	const [, setImagePosition] = useState({ xPercent: 0, yPercent: 0 })
 	const [animatorRef, { width: _width, height: _height, adjustedHeight, adjustedWidth }, updateDimensions] = useDimensions(ratio, !zoomFill)
 
 	// Track panning to suppress click-through during/after pan
@@ -156,7 +156,9 @@ const AnimatorImageSizer = () => {
 				onPanningStart={handlePanningStart}
 				onPanningStop={handlePanningStop}
 				doubleClick={{ disabled: true }}
-				panning={{ velocityDisabled: true }}
+				panning={{ disabled: disableZoom, velocityDisabled: true }}
+				wheel={{ disabled: disableZoom }}
+				pinch={{ disabled: disableZoom }}
 			>
 				{({ zoomIn, zoomOut, resetTransform }) => (
 					<>
@@ -177,20 +179,22 @@ const AnimatorImageSizer = () => {
 								currentFrame={currentFrame}
 								loadedFrames={loadedFrames}
 								setLoadedFrames={setLoadedFrames}
-								baseOpacity={activeOverlays.includes('data') ? 1 : 0}
+								baseOpacity={1}
 							/>
-							{activeOverlays.map((overlay, index) => {
-								if (overlay === 'data') return null
-								return (
-									<AnimatorImageMachine
-										key={index}
-										baseOpacity={SATRAD_OVERLAYS[overlay].opacity} // TODO FIX THIS Satrad shouldn't be hard coded into animator
-										zIndex={SATRAD_OVERLAYS[overlay].zIndex}
-										frames={allOverlayImages[overlay] || []}
-										currentFrame={currentFrame}
-									/>
-								)
-							})}
+							{activeOverlays &&
+								Array.isArray(activeOverlays) &&
+								activeOverlays.map((overlay, index) => {
+									if (overlay === 'data') return null
+									return (
+										<AnimatorImageMachine
+											key={index}
+											baseOpacity={SATRAD_OVERLAYS[overlay].opacity} // TODO FIX THIS Satrad shouldn't be hard coded into animator
+											zIndex={SATRAD_OVERLAYS[overlay].zIndex}
+											frames={allOverlayImages[overlay] || []}
+											currentFrame={currentFrame}
+										/>
+									)
+								})}
 							{/* Overlay markers */}
 							{(Array.isArray(overlayMarkers) ? overlayMarkers : []).map((m, i) => (
 								<div
@@ -202,7 +206,9 @@ const AnimatorImageSizer = () => {
 						</TransformComponent>
 						<DataTooltip hoverRef={ImageMachineRef} frameRef={animatorRef} onUpdatePosition={setImagePosition} sectorId={sectorId} />
 
-						{!hideZoomControls && !disableZoom && <ImageControls zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />}
+						{!hideZoomControls && !disableZoom && (
+							<ViewControls mode="image" zoomIn={zoomIn} zoomOut={zoomOut} resetTransform={resetTransform} />
+						)}
 					</>
 				)}
 			</TransformWrapper>

@@ -15,8 +15,7 @@ export const ProgramOverview = () => {
 		{
 			icon: faCloud,
 			title: 'Hands-on with real data',
-			description:
-				"From day one you'll analyze observations, radar/satellite, and model output, applying concepts directly to live weather.",
+			description: "From day one you'll analyze observations, radar/satellite, and model output, applying concepts directly to live weather.",
 		},
 		{
 			icon: faChartLine,

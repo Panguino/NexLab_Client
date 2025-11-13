@@ -71,7 +71,6 @@ const RAPMesoAnimator: React.FC = () => {
 		frameValidTimeRef.current = rapMesoFrameValidTime
 	}, [rapMesoFrameValidTime])
 
-
 	return (
 		<>
 			<div className={styles.RAPMesoAnimatorContainer}>

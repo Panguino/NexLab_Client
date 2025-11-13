@@ -1,5 +1,7 @@
+import { NotFoundPage } from '@/components/blocks/NotFoundPage/NotFoundPage'
+
 const NotFound = () => {
-	return <>Page Not Found Noob</>
+	return <NotFoundPage />
 }
 
 export default NotFound

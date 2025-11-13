@@ -1,13 +1,13 @@
 'use client'
 
-import styles from './AcademicsSection.module.scss'
 import { Button } from '@/components/elements/Button/Button'
+import styles from './AcademicsSection.module.scss'
 
 export const AcademicsSection = () => {
 	return (
 		<section className={styles.academics}>
 			<div className={styles.container}>
-				<div className={styles.header}> 
+				<div className={styles.header}>
 					<h2>Academics at COD Meteorology</h2>
 					<p>Concept-first courses, forecasting labs each week, and a proven transfer runway to four-year programs.</p>
 				</div>
