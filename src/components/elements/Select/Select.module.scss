@@ -69,6 +69,13 @@
 	margin-bottom: 20px;
 	background-color: var(--color-grey19);
 	transition: all var(--themeChange);
+	max-height: 600px;
+	overflow: hidden;
+
+	> * {
+		max-height: 600px;
+		overflow: auto;
+	}
 
 	.option {
 		padding: 10px;

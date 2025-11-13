@@ -1,0 +1,28 @@
+.selectTitle {
+	padding: 10px;
+	color: var(--color-grey3);
+	border-bottom: solid 1px var(--color-grey3);
+}
+
+.wfoSelector {
+	padding: 10px;
+}
+
+.productsGroup {
+	// margin-bottom: 1rem;
+}
+
+.sectionTitle {
+	font-weight: 600;
+	font-size: 0.875rem;
+	padding: 10px;
+	text-align: center;
+	color: var(--text-secondary);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.wfoProducts {
+	display: flex;
+	flex-direction: column;
+}

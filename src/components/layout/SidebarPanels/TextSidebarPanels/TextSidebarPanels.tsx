@@ -8,6 +8,7 @@ import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
 import HazardsPanel from '../HazardsPanel/HazardsPanel'
 import TropicalPanel from '../TropicalPanel/TropicalPanel'
+import WFOPanel from '../WFOPanel/WFOPanel'
 import styles from './TextSidebarPanels.module.scss'
 
 const TextSidebarPanels = () => {
@@ -93,8 +94,8 @@ const TextSidebarPanels = () => {
 			</SidebarSubPanel>
 
 			{/* NWS WFO */}
-			<SidebarSubPanel matchesPath={`${basepath}/nws-wfo-national-weather-service-forecast-offices`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="NWS WFO" linkUrl={basepath} />
+			<SidebarSubPanel includesPath={`${basepath}/nws-wfo-national-weather-service-forecast-offices`} activeX="0%" inactiveX="100%">
+				<WFOPanel basepath={basepath} />
 			</SidebarSubPanel>
 		</div>
 	)
