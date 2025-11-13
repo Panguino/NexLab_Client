@@ -59,12 +59,12 @@ export const getTropicalGeneralData = async (productId) => {
 
 export const getActiveTropicalStorms = async () => {
 	const endpoint = 'https://climate.cod.edu/data/tropical/gis/CurrentStorms.json' // live/operational endpoint
-	// const endpoint = 'https://climate.cod.edu/data/tropical/currentstorms/CurrentStorms_202510242050.json' // good fallback for testing
 	const data = await getData(endpoint)
 
 	if (data && Object.keys(data).length > 0) {
 		return data
 	} else {
+		// No active storms
 		return false
 	}
 }

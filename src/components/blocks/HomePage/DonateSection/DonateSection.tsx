@@ -11,7 +11,7 @@ export const DonateSection = () => {
 					<h2>Keep Weather Data Free</h2>
 					<p>Your support powers open tools, reliable hosting, and ongoing innovation for millions of users.</p>
 				</div>
-				<div className={styles.panel}> 
+				<div className={styles.panel}>
 					<p>
 						NexLab Weather is community-supported. Donations sustain our infrastructure, compensate our small development team, and
 						accelerate new features — while keeping data and tools freely available.

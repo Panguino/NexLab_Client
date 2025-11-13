@@ -15,7 +15,7 @@ interface IAnimatorImageMachineProps {
 export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMachineProps>(
 	({ frames, currentFrame, loadedFrames: externalLoadedFrames, setLoadedFrames: externalSetLoadedFrames, baseOpacity = 1, zIndex = 30 }, ref) => {
 		const [isLoading, setIsLoading] = useState(true)
-		const [localLoadedFrames, setLocalLoadedFrames] = useState<number[]>([])
+		const [localLoadedFrames, setLocalLoadedFrames] = useState<any[]>([])
 
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
@@ -36,16 +36,16 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 				for (const frame of frames) {
 					const cachedImage = localStorage.getItem(frame)
 					if (cachedImage) {
-						const img = new Image()
-						img.src = cachedImage
-						validFrames.push(img)
+						// Store the URL string, not the Image object
+						validFrames.push({ src: cachedImage })
 					} else {
 						try {
 							await new Promise<void>((resolve, reject) => {
 								const img = new Image()
 								img.src = frame
 								img.onload = () => {
-									validFrames.push(img)
+									// Store the URL string, not the Image object
+									validFrames.push({ src: frame })
 									// attempt to cache the image in localStorage; if quota is exceeded
 									// we stop trying for the rest of this session to avoid repeated errors
 									if (!disableLocalStorageRef.current) {
@@ -78,8 +78,8 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 
 		// Helper function to calculate opacity
 		const calculateOpacity = (index: number, currentFrame: number, loadedFrames: any[], baseOpacity: number): number => {
-			// If the current frame is out of bounds, use the first frame (index 0)
-			const activeFrame = currentFrame >= loadedFrames.length ? 0 : currentFrame
+			// Ensure currentFrame is within bounds
+			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
 
 			// Return the base opacity if the index matches the active frame, otherwise 0
 			return index === activeFrame ? baseOpacity : 0
@@ -93,8 +93,9 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 					loadedFrames.length > 0 &&
 					loadedFrames.map((frame, index) => (
 						<img
-							key={index}
+							key={`frame-${index}`}
 							src={frame.src}
+							alt={`Frame ${index}`}
 							style={{
 								opacity: calculateOpacity(index, currentFrame, loadedFrames, baseOpacity),
 							}}

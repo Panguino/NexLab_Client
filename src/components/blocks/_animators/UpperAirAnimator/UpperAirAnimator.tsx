@@ -74,7 +74,6 @@ const UpperAirAnimator: React.FC = () => {
 		frameValidTimeRef.current = upperAirFrameValidTime
 	}, [upperAirFrameValidTime])
 
-
 	const handlePdfButtonClick = (pdfUrl: string) => {
 		console.log('PDF button clicked for URL:', pdfUrl)
 		window.open(pdfUrl, '_blank')

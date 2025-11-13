@@ -23,7 +23,7 @@ const TextSidebarPanels = () => {
 					<SidebarSectionLink name="Analysis & Forecast" linkUrl={`${basepath}/analysis-forecast`} />
 					<SidebarSectionLink name="Climatology" linkUrl={`${basepath}/cpc-climate`} />
 					<SidebarSectionLink name="Convective" linkUrl={`${basepath}/spc-convective-weather`} />
-					<SidebarSectionLink name="Tropical" linkUrl={`${basepath}/nhc-tropical-hurricane-weather`} />
+					<SidebarSectionLink name="Tropical" linkUrl={`${basepath}/nhc-tropical-hurricane-weather/overview/latest`} />
 					<SidebarSectionLink name="Winter" linkUrl={`${basepath}/wpc-winter-weather`} />
 					<SidebarSectionLink name="Hydrological" linkUrl={`${basepath}/nws-rfc-hydrological`} />
 					<SidebarSectionLink name="Fire & Drought" linkUrl={`${basepath}/spc-usdm-fire-weather-drought`} />

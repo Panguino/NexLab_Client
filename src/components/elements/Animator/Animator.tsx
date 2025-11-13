@@ -1,10 +1,10 @@
 'use client'
-import { zoomState } from '@/types/general'
-import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react'
+import { mapZoomState, zoomState } from '@/types/general'
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import AnimatorLayout from './AnimatorLayout/AnimatorLayout'
 
-interface IAnimatorProps {
-	frames: string[]
+export interface IAnimatorProps {
+	frames: string[] | any[] // Can be image URLs or MapFrame objects
 	frameValidTimes?: number[]
 	setFrameValidTime?: (validtime: number) => void
 	startFrame?: number
@@ -53,6 +53,19 @@ interface IAnimatorProps {
 	// PDF functionality
 	pdfs?: string[]
 	pdfButtonClick?: (pdfUrl: string) => void
+	// Map mode support
+	mode?: 'image' | 'map' // 'image' for images, 'map' for geographic data
+	mapRegion?: 'conus' | 'alaska' | 'hawaii' | 'namer' // Region for map mode
+	initialMapZoomState?: mapZoomState // Initial map zoom state
+	setMapZoomState?: (mapZoomState: mapZoomState) => void // Callback for map zoom state changes
+	// Map layer visibility
+	mapLayerVisibility?: Record<string, boolean> // Visibility state for map layers
+	setMapLayerVisibility?: (visibility: Record<string, boolean>) => void // Callback for layer visibility changes
+	mapDataType?: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
+	// Layer configuration
+	layerConfig: any // Layer configuration for filtering which layers are shown (LayerConfig type) - REQUIRED
+	// Storm click handler
+	onStormClick?: (stormId: string) => void
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -62,6 +75,15 @@ interface IAnimatorProvider extends IAnimatorProps {
 	isPlaying: boolean
 	setIsPlaying: Dispatch<SetStateAction<boolean>>
 	ratio: number
+	mode: 'image' | 'map'
+	mapRegion: 'conus' | 'alaska' | 'hawaii' | 'namer'
+	mapZoomState: mapZoomState // Current map zoom state
+	setMapZoomState: (mapZoomState: mapZoomState) => void // Update map zoom state
+	mapLayerVisibility: Record<string, boolean> // Map layer visibility state
+	setMapLayerVisibility: (visibility: Record<string, boolean>) => void // Update map layer visibility
+	onStormClick?: (stormId: string) => void // Storm click handler
+	mapDataType: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
+	layerConfig?: any // Layer configuration for filtering which layers are shown
 }
 
 const AnimatorContext = createContext<IAnimatorProvider | undefined>(undefined)
@@ -115,26 +137,77 @@ export const Animator = ({
 	setActiveOverlays = (overlays: string[]) => {
 		console.warn('setActiveOverlays function not provided, active overlays will not be updated.', overlays)
 	},
-	setZoomState = (zoomState: zoomState) => {
-		console.warn('setZoomState function not provided, zoom state will not be updated.', zoomState)
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	setZoomState = (_zoomState: zoomState) => {
+		// Silently ignore if not provided - this is optional
 	},
-	setZoomFill = (zoomFill: boolean) => {
-		console.warn('setZoomFill function not provided, zoom fill will not be updated.', zoomFill)
-	},
-	setFullScreen = (fullScreen: boolean) => {
-		console.warn('setFullScreen function not provided, full screen state will not be updated.', fullScreen)
-	},
-	onFrameUpdate = (frameIndex: number) => {
-		console.warn('onFrameUpdate function not provided, frame update will not be handled.', frameIndex)
+	setZoomFill,
+	setFullScreen,
+	onFrameUpdate = () => {
+		// console.warn('onFrameUpdate function not provided, frame update will not be handled.')
 	},
 	pdfs = [],
 	pdfButtonClick = (pdfUrl: string) => {
 		console.warn('pdfButtonClick function not provided, PDF button click will not be handled.', pdfUrl)
 	},
+	mode = 'image',
+	mapRegion = 'conus',
+	initialMapZoomState = { zoom: 3, latitude: 37, longitude: -95 },
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	setMapZoomState = (_mapZoomState: mapZoomState) => {
+		// Silently ignore if not provided - this is optional
+	},
+	mapLayerVisibility,
+	setMapLayerVisibility,
+	mapDataType = 'all',
+	layerConfig,
+	onStormClick,
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
+	const [mapZoomState, setMapZoomStateLocal] = useState<mapZoomState>(initialMapZoomState)
+
+	// Initialize layer visibility from layerConfig (required)
+	// If mapLayerVisibility prop is provided AND has keys, use it (controlled component)
+	// Otherwise, use layerConfig with defaults for missing layers
+	const getInitialLayerVisibility = () => {
+		// Only use mapLayerVisibility if it's provided and has keys
+		if (mapLayerVisibility && Object.keys(mapLayerVisibility).length > 0) {
+			return mapLayerVisibility
+		}
+
+		// Convert layerConfig to visibility state using initialValue
+		// For any layer not in layerConfig, default to false
+		const visibility: Record<string, boolean> = {}
+
+		// Get all possible layer IDs from mapLayers
+		const { getAllLayerIds } = require('./AnimatorMapMachine/config/mapLayers')
+		const allLayerIds = getAllLayerIds()
+
+		// Set visibility for all layers
+		allLayerIds.forEach((layerId: string) => {
+			if (layerConfig && layerId in layerConfig) {
+				// Use initialValue from layerConfig
+				visibility[layerId] = layerConfig[layerId].initialValue
+			} else {
+				// Default to false for layers not in layerConfig
+				visibility[layerId] = false
+			}
+		})
+
+		return visibility
+	}
+
+	const [mapLayerVisibilityLocal, setMapLayerVisibilityLocal] = useState<Record<string, boolean>>(getInitialLayerVisibility())
+
+	// Sync external mapLayerVisibility prop changes to local state
+	// Only sync if mapLayerVisibility has keys (not an empty object)
+	useEffect(() => {
+		if (mapLayerVisibility && Object.keys(mapLayerVisibility).length > 0) {
+			setMapLayerVisibilityLocal(mapLayerVisibility)
+		}
+	}, [mapLayerVisibility])
 	return (
 		<AnimatorContext.Provider
 			value={{
@@ -189,6 +262,21 @@ export const Animator = ({
 				onFrameUpdate,
 				pdfs,
 				pdfButtonClick,
+				mode,
+				mapRegion,
+				mapZoomState,
+				setMapZoomState: (newMapZoomState: mapZoomState) => {
+					setMapZoomStateLocal(newMapZoomState)
+					setMapZoomState(newMapZoomState)
+				},
+				mapLayerVisibility: mapLayerVisibilityLocal,
+				setMapLayerVisibility: (newVisibility: Record<string, boolean>) => {
+					setMapLayerVisibilityLocal(newVisibility)
+					setMapLayerVisibility?.(newVisibility)
+				},
+				mapDataType: mapDataType || 'all',
+				layerConfig,
+				onStormClick,
 			}}
 		>
 			<AnimatorLayout />

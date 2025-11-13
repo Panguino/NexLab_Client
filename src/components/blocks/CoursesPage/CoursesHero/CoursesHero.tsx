@@ -11,10 +11,10 @@ export const CoursesHero = () => {
 					<div className={styles.heroContent}>
 						<h1>Classes &amp; Course Pathways</h1>
 						<p>
-							Welcome to COD Meteorology Course Content — our collegiate program is dedicated to providing a comprehensive foundation in the
-							atmospheric sciences within your first two years of college. Whether you're a currently registered or aspiring student,
-							explore the course material to better understand what we offer and how each class builds your skills. Continue below for a
-							program overview and a suggested year-by-year plan for students intending to major in Meteorology.
+							Welcome to COD Meteorology Course Content — our collegiate program is dedicated to providing a comprehensive foundation in
+							the atmospheric sciences within your first two years of college. Whether you're a currently registered or aspiring
+							student, explore the course material to better understand what we offer and how each class builds your skills. Continue
+							below for a program overview and a suggested year-by-year plan for students intending to major in Meteorology.
 						</p>
 						<div className={styles.heroActions}>
 							<Button label="Browse Class Notes & Labs" link="/academics/classes-notes" target="_self" />

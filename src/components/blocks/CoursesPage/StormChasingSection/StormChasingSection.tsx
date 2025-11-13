@@ -15,8 +15,8 @@ export const StormChasingSection = () => {
 				<div className={styles.highlightCard}>
 					<p className={styles.cardIntro}>
 						Our storm chasing program offers an experience unlike any other. With over 35 years of experience, we aim to bring you
-						directly to the phenomena we study. You'll prepare in the classroom, participate in daily forecast discussions, and apply
-						your learning in the field under faculty guidance.
+						directly to the phenomena we study. You'll prepare in the classroom, participate in daily forecast discussions, and apply your
+						learning in the field under faculty guidance.
 					</p>
 
 					<div className={styles.cardGrid}>
@@ -24,12 +24,12 @@ export const StormChasingSection = () => {
 							<h3>Course Options</h3>
 							<ul>
 								<li>
-									<strong>ESAS 1112 — Storm Chasing / Thunderstorm Lab (Intro):</strong> open to the general public for
-									participants 18+; no prerequisite.
+									<strong>ESAS 1112 — Storm Chasing / Thunderstorm Lab (Intro):</strong> open to the general public for participants
+									18+; no prerequisite.
 								</li>
 								<li>
-									<strong>ESAS 2112 — Thunderstorm Lab (Advanced):</strong> for returning students; see prerequisites and
-									instructor permission details.
+									<strong>ESAS 2112 — Thunderstorm Lab (Advanced):</strong> for returning students; see prerequisites and instructor
+									permission details.
 								</li>
 							</ul>
 						</div>
@@ -44,8 +44,8 @@ export const StormChasingSection = () => {
 					</div>
 
 					<p className={styles.note}>
-						<strong>Note:</strong> Dates, fees, logistics, and eligibility are posted ahead of each season. Check the Storm Chasing
-						info page for current details.
+						<strong>Note:</strong> Dates, fees, logistics, and eligibility are posted ahead of each season. Check the Storm Chasing info
+						page for current details.
 					</p>
 
 					<div className={styles.buttonRow}>

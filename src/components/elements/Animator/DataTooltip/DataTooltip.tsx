@@ -111,7 +111,7 @@ const DataTooltip: React.FC<DataTooltipProps> = ({ hoverRef, frameRef, onUpdateP
 				console.error('Error processing readout data:', error)
 			}
 		}
-	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo, onUpdatePosition, sectorId])
+	}, [frameReadoutData, relativePosition, isHovering, isPlaying, hoverRef, imageInfo, sectorId])
 
 	useEffect(() => {
 		const handleMove = (e: MouseEvent | TouchEvent) => {

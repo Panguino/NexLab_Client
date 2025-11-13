@@ -1,0 +1,122 @@
+.viewControls {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+  pointer-events: auto;
+
+  // Image mode positioning (top-left)
+  &.image {
+    top: 2px;
+    left: 2px;
+    gap: 2px;
+  }
+
+  // Map mode positioning (top-left, same as image mode)
+  &.map {
+    top: 2px;
+    left: 2px;
+    gap: 2px;
+  }
+
+  // Base button styles
+  .controlButton {
+    position: relative;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-grey17);
+    outline: none;
+    border: none;
+    padding: 4px;
+    width: 30px;
+    font-size: 15px;
+    text-align: center;
+    height: 30px;
+    color: var(--color-grey5);
+    transition: var(--themeChange);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--color-white);
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover {
+        color: var(--color-grey5);
+      }
+
+      svg {
+        * {
+          fill: var(--color-grey8) !important;
+        }
+      }
+    }
+
+    svg {
+      * {
+        fill: var(--color-grey5);
+      }
+
+      &.active {
+        * {
+          fill: var(--color-blue4);
+        }
+      }
+    }
+  }
+
+  // Zoom controls group
+  .zoomControlsGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .zoomLevel {
+      width: 30px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: var(--color-grey5);
+      background-color: var(--color-grey17);
+      border-radius: 4px;
+      text-align: center;
+    }
+  }
+
+  // Mobile adjustments
+  @media (max-width: 768px) {
+    &.image {
+      top: 2px;
+      left: 2px;
+    }
+
+    &.map {
+      top: 2px;
+      left: 2px;
+      gap: 2px;
+    }
+
+    .controlButton {
+      width: 28px;
+      height: 28px;
+      font-size: 13px;
+      padding: 3px;
+    }
+
+    .zoomControlsGroup {
+      .zoomLevel {
+        width: 28px;
+        height: 22px;
+        font-size: 10px;
+      }
+    }
+  }
+}

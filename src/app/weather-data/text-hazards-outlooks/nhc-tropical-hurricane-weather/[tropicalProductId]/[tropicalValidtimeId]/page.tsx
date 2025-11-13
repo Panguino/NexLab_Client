@@ -1,14 +1,6 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
-
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Active Tropical Storms"
-			purpose="In theory this page is still the active storms deck.gl map. No storm id has been provided, but we are viewing a product at a specific validtime."
-			etaText="This section is being implemented."
-		/>
-	)
+// This page is intentionally empty
+// The TropicalAnimator is rendered in the parent layout at /nhc-tropical-hurricane-weather/layout.tsx
+// This keeps it mounted across productId and validtimeId changes
+export default function Page() {
+	return null
 }
-
-export default Page
