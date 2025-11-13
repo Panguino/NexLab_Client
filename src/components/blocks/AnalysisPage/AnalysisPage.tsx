@@ -1,7 +1,7 @@
 'use client'
 
-import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
+import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import styles from './AnalysisPage.module.scss'
 import { AnalysisHero } from './components/AnalysisHero/AnalysisHero'
 import { CategoriesSection } from './components/CategoriesSection/CategoriesSection'

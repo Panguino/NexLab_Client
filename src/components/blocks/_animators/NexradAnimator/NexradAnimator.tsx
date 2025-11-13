@@ -73,8 +73,6 @@ const NexradAnimator: React.FC = () => {
 		frameValidTimeRef.current = nexradFrameValidTime
 	}, [nexradFrameValidTime])
 
-
-
 	return (
 		<>
 			<div className={styles.nexradAnimatorContainer}>

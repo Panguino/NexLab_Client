@@ -21,12 +21,12 @@ $frame-indicator-border: var(--color-grey3-white);
   input[type='range'] {
     -webkit-appearance: none;
     appearance: none;
+    margin: 13px 0;
+    width: 100%;
+
     &.singleLabelPadding {
       padding-top: 22px; // make space for single active label above
     }
-
-    margin: 13px 0;
-    width: 100%;
 
     &:focus {
       outline: none;

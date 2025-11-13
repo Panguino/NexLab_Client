@@ -43,5 +43,5 @@
 	"parserOptions": {
 		"sourceType": "module"
 	},
-	"ignorePatterns": ["src/gql/generated/*", "codegen.ts", "codegen-strapi.ts"]
+	"ignorePatterns": ["src/gql/generated/*", "codegen.ts", "codegen-strapi.ts", "src/**/*.docs.mdx"]
 }

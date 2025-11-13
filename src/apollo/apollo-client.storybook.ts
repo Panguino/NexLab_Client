@@ -15,4 +15,3 @@ export const getDataClient = () =>
 		cache: new InMemoryCache(),
 		link: new HttpLink({ uri: 'https://example.com/graphql', fetchOptions: { cache: 'no-store' } }),
 	})
-

@@ -1,0 +1,736 @@
+/**
+ * County Alerts Story for Animator Component
+ * Demonstrates displaying county-level weather alerts on the DeckGL map
+ * using real-time hazard data from the NexLab API
+ */
+
+import { getHazards } from '@/apollo/data/getHazards'
+import Providers from '@/components/providers/Providers/Providers'
+import {
+	createCoastalAlertGeoJSON,
+	createCountyAlertGeoJSON,
+	fetchCountyAlertsLastHours,
+	fetchRealTimeHazards,
+	parseAlertsToCoastalMap,
+	parseAlertsToCountyMap,
+	parseHazardsToCoastalMap,
+	parseHazardsToCountyMap,
+} from '@/util/dataCalls/alerts/parseCountyAlerts'
+import type { Meta, StoryFn } from '@storybook/react'
+import { useEffect, useState } from 'react'
+import { Animator } from './Animator'
+import { MapFrame } from './AnimatorMapMachine'
+import { LAYER_CONFIG_PRESETS } from './AnimatorMapMachine/config/layerConfigTypes'
+
+const meta: Meta<typeof Animator> = {
+	title: 'Components/Animator/County Alerts',
+	component: Animator,
+	decorators: [
+		(Story) => (
+			<Providers>
+				<div style={{ height: '100vh' }}>
+					<Story />
+				</div>
+			</Providers>
+		),
+	],
+	parameters: {
+		layout: 'fullscreen',
+		docs: {
+			description: {
+				component: 'Animator component displaying county-level weather alerts on a DeckGL map using real-time hazard data.',
+			},
+		},
+	},
+	tags: ['autodocs'],
+}
+
+export default meta
+
+/**
+ * Real-Time Hazards - All Active Hazards
+ * Fetches live hazard data from the /api/hazards endpoint
+ * Displays all active weather hazards across CONUS on the map
+ */
+export const RealTimeHazards: StoryFn<typeof Animator> = () => {
+	const [frames, setFrames] = useState<MapFrame[]>([])
+	const [isLoading, setIsLoading] = useState(true)
+	const [error, setError] = useState<string | null>(null)
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				setIsLoading(true)
+
+				const hazardsResponse = await fetchRealTimeHazards({ region: 'CONUS' })
+
+				// Filter to only active alerts (not expired)
+				const now = new Date()
+				const activeHazards = (hazardsResponse.data || []).filter((hazard) => {
+					return isAlertActiveAtTime(hazard, now)
+				})
+
+				// Convert active hazards to county map
+				const activeHazardsResponse = {
+					...hazardsResponse,
+					data: activeHazards,
+				}
+				const countyMap = parseHazardsToCountyMap(activeHazardsResponse)
+
+				// Create a single frame with all current hazards
+				const geoJSON = createCountyAlertGeoJSON(countyMap)
+
+				// Parse coastal/offshore hazards (using active hazards only)
+				const coastalMap = parseHazardsToCoastalMap(activeHazardsResponse)
+
+				// Fetch coastal geometry from GraphQL API
+				let coastalGeoJSON: any = null
+				try {
+					const graphqlData = await getHazards()
+					const coastalFeatures: any[] = []
+
+					if (graphqlData && graphqlData.getRegions) {
+						graphqlData.getRegions.forEach((region: any) => {
+							// Process coasts
+							if (region && region.coasts) {
+								region.coasts.forEach((coast: any) => {
+									if (coast && coast.type && coast.geometry) {
+										const feature = {
+											type: 'Feature',
+											geometry: coast.geometry,
+											properties: {
+												ID: coast.properties?.ID,
+												NAME: coast.properties?.NAME,
+												type: 'coast',
+											},
+										}
+										coastalFeatures.push(feature)
+									}
+								})
+							}
+							// Process offshores
+							if (region && region.offshores) {
+								region.offshores.forEach((offshore: any) => {
+									if (offshore && offshore.type && offshore.geometry) {
+										const feature = {
+											type: 'Feature',
+											geometry: offshore.geometry,
+											properties: {
+												ID: offshore.properties?.ID,
+												NAME: offshore.properties?.NAME,
+												type: 'offshore',
+											},
+										}
+										coastalFeatures.push(feature)
+									}
+								})
+							}
+						})
+					}
+
+					if (coastalFeatures.length > 0) {
+						coastalGeoJSON = createCoastalAlertGeoJSON(coastalFeatures, coastalMap)
+					}
+				} catch (err) {
+					console.error('Error fetching coastal geometry from GraphQL:', err)
+				}
+
+				const frame: MapFrame = {
+					id: 'current-hazards',
+					timestamp: new Date(),
+					data: geoJSON,
+					coastalData: coastalGeoJSON || undefined,
+					metadata: {
+						source: 'real-time-hazards',
+						totalHazards: activeHazards.length,
+						totalHazardsFromAPI: hazardsResponse.data?.length || 0,
+						countiesAffected: Object.keys(countyMap).length,
+						coastalRegionsAffected: Object.keys(coastalMap).length,
+					},
+				}
+
+				setFrames([frame])
+				setError(null)
+			} catch (err) {
+				const errorMsg = err instanceof Error ? err.message : 'Failed to fetch hazards'
+				console.error('Error fetching hazards:', err)
+				setError(errorMsg)
+			} finally {
+				setIsLoading(false)
+			}
+		}
+
+		fetchData()
+	}, [])
+
+	if (isLoading) {
+		return (
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+				<p>Loading real-time hazard data...</p>
+			</div>
+		)
+	}
+
+	if (error) {
+		return (
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', flexDirection: 'column' }}>
+				<p style={{ color: 'red', marginBottom: '10px' }}>Error: {error}</p>
+				<p style={{ fontSize: '12px', color: '#666' }}>Check browser console for details</p>
+			</div>
+		)
+	}
+
+	return (
+		<Animator
+			frames={frames}
+			mode="map"
+			mapRegion="conus"
+			imageInfo={{ width: 1200, height: 800 }}
+			mapDataType="alerts"
+			layerConfig={LAYER_CONFIG_PRESETS.COUNTY_ALERTS}
+			autoPlay={false}
+			interval={500}
+			hideControls={true}
+		/>
+	)
+}
+
+RealTimeHazards.parameters = {
+	docs: {
+		description: {
+			story: 'Real-time hazard data from the /api/hazards endpoint. Shows all active weather hazards across the CONUS region with county-level coloring based on hazard type and level.',
+		},
+	},
+}
+
+/**
+ * Real-Time Hazards - Data Toggle Only
+ * Same as Real-Time Hazards but only the 2 data layers can be toggled
+ * All static map layers are locked on with their default settings
+ */
+export const RealTimeHazardsDataToggleOnly: StoryFn<typeof Animator> = () => {
+	const [frames, setFrames] = useState<MapFrame[]>([])
+	const [isLoading, setIsLoading] = useState(true)
+	const [error, setError] = useState<string | null>(null)
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				setIsLoading(true)
+
+				const hazardsResponse = await fetchRealTimeHazards({ region: 'CONUS' })
+
+				// Filter to only active alerts (not expired)
+				const now = new Date()
+				const activeHazards = (hazardsResponse.data || []).filter((hazard) => {
+					return isAlertActiveAtTime(hazard, now)
+				})
+
+				// Convert active hazards to county map
+				const activeHazardsResponse = {
+					...hazardsResponse,
+					data: activeHazards,
+				}
+				const countyMap = parseHazardsToCountyMap(activeHazardsResponse)
+
+				// Create a single frame with all current hazards
+				const geoJSON = createCountyAlertGeoJSON(countyMap)
+
+				// Parse coastal/offshore hazards (using active hazards only)
+				const coastalMap = parseHazardsToCoastalMap(activeHazardsResponse)
+
+				// Fetch coastal geometry from GraphQL API
+				let coastalGeoJSON: any = null
+				try {
+					const graphqlData = await getHazards()
+					const coastalFeatures: any[] = []
+
+					if (graphqlData && graphqlData.getRegions) {
+						graphqlData.getRegions.forEach((region: any) => {
+							// Process coasts
+							if (region && region.coasts) {
+								region.coasts.forEach((coast: any) => {
+									if (coast && coast.type && coast.geometry) {
+										const feature = {
+											type: 'Feature',
+											geometry: coast.geometry,
+											properties: {
+												ID: coast.properties?.ID,
+												NAME: coast.properties?.NAME,
+												type: 'coast',
+											},
+										}
+										coastalFeatures.push(feature)
+									}
+								})
+							}
+							// Process offshores
+							if (region && region.offshores) {
+								region.offshores.forEach((offshore: any) => {
+									if (offshore && offshore.type && offshore.geometry) {
+										const feature = {
+											type: 'Feature',
+											geometry: offshore.geometry,
+											properties: {
+												ID: offshore.properties?.ID,
+												NAME: offshore.properties?.NAME,
+												type: 'offshore',
+											},
+										}
+										coastalFeatures.push(feature)
+									}
+								})
+							}
+						})
+					}
+
+					if (coastalFeatures.length > 0) {
+						coastalGeoJSON = createCoastalAlertGeoJSON(coastalFeatures, coastalMap)
+					}
+				} catch (err) {
+					console.error('Error fetching coastal geometry from GraphQL:', err)
+				}
+
+				const frame: MapFrame = {
+					id: 'current-hazards',
+					timestamp: new Date(),
+					data: geoJSON,
+					coastalData: coastalGeoJSON || undefined,
+					metadata: {
+						source: 'real-time-hazards',
+						totalHazards: activeHazards.length,
+						totalHazardsFromAPI: hazardsResponse.data?.length || 0,
+						countiesAffected: Object.keys(countyMap).length,
+						coastalRegionsAffected: Object.keys(coastalMap).length,
+					},
+				}
+
+				setFrames([frame])
+				setError(null)
+			} catch (err) {
+				const errorMsg = err instanceof Error ? err.message : 'Failed to fetch hazards'
+				console.error('Error fetching hazards:', err)
+				setError(errorMsg)
+			} finally {
+				setIsLoading(false)
+			}
+		}
+
+		fetchData()
+	}, [])
+
+	if (isLoading) {
+		return (
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+				<p>Loading real-time hazard data...</p>
+			</div>
+		)
+	}
+
+	if (error) {
+		return (
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', flexDirection: 'column' }}>
+				<p style={{ color: 'red', marginBottom: '10px' }}>Error: {error}</p>
+				<p style={{ fontSize: '12px', color: '#666' }}>Check browser console for details</p>
+			</div>
+		)
+	}
+
+	return (
+		<Animator
+			frames={frames}
+			mode="map"
+			mapRegion="conus"
+			imageInfo={{ width: 1200, height: 800 }}
+			mapDataType="alerts"
+			layerConfig={LAYER_CONFIG_PRESETS.COUNTY_ALERTS_DATA_ONLY}
+			autoPlay={false}
+			interval={500}
+			hideControls={true}
+		/>
+	)
+}
+
+RealTimeHazardsDataToggleOnly.parameters = {
+	docs: {
+		description: {
+			story: 'Real-time hazard data with only data layers toggleable. All static map layers (world, states, lakes, etc.) are locked on. Only "Coastal Alerts (Active)" and "County Alerts (Active)" can be toggled in the layer panel.',
+		},
+	},
+}
+
+/**
+ * Filtered Hazards - Winter Alerts Only
+ * Fetches real-time hazard data and filters to show only Winter category alerts
+ * Includes: Frost Advisories, Freeze Warnings, Winter Storm Warnings, Blizzard Warnings, etc.
+ * Demonstrates how to filter hazards by category type
+ */
+export const WinterAlerts: StoryFn<typeof Animator> = () => {
+	const [frames, setFrames] = useState<MapFrame[]>([])
+	const [isLoading, setIsLoading] = useState(true)
+	const [error, setError] = useState<string | null>(null)
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				setIsLoading(true)
+				// Fetch all hazards and filter for Frost Advisories
+				const hazardsResponse = await fetchRealTimeHazards({ region: 'CONUS' })
+
+				// Filter to only active alerts (not expired)
+				const now = new Date()
+				const activeHazards = (hazardsResponse.data || []).filter((hazard) => {
+					return isAlertActiveAtTime(hazard, now)
+				})
+
+				// Filter for Winter category alerts (includes frost advisories, freeze warnings, winter storm warnings, etc.)
+				const winterAlerts = activeHazards.filter((hazard) => {
+					const hazardType = hazard.hazardType?.toUpperCase() || ''
+					return hazardType === 'WINTER'
+				})
+
+				console.log('Total active hazards:', activeHazards.length)
+				console.log('Winter alerts found:', winterAlerts.length)
+
+				// Debug: Log all unique hazard types to see what's available
+				const uniqueTypes = [...new Set(activeHazards.map((h) => h.hazardType))]
+				console.log('All unique hazard types:', uniqueTypes)
+
+				// Debug: Log winter alerts breakdown by event type
+				const winterEventCounts = winterAlerts.reduce(
+					(acc, h) => {
+						const event = h.event || 'Unknown'
+						acc[event] = (acc[event] || 0) + 1
+						return acc
+					},
+					{} as Record<string, number>,
+				)
+				console.log('Winter alerts by event type:', winterEventCounts)
+
+				// Create a filtered response
+				const filteredResponse = {
+					...hazardsResponse,
+					data: winterAlerts,
+				}
+
+				// Convert to county map
+				const countyMap = parseHazardsToCountyMap(filteredResponse)
+
+				// Create a single frame with filtered hazards
+				const geoJSON = createCountyAlertGeoJSON(countyMap)
+				const frame: MapFrame = {
+					id: 'winter-alerts',
+					timestamp: new Date(),
+					data: geoJSON,
+					metadata: {
+						source: 'winter-alerts',
+						totalHazards: winterAlerts.length,
+						countiesAffected: Object.keys(countyMap).length,
+					},
+				}
+
+				setFrames([frame])
+				setError(null)
+			} catch (err) {
+				const errorMsg = err instanceof Error ? err.message : 'Failed to fetch hazards'
+				console.error('Error fetching hazards:', err)
+				setError(errorMsg)
+			} finally {
+				setIsLoading(false)
+			}
+		}
+
+		fetchData()
+	}, [])
+
+	if (isLoading) {
+		return (
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+				<p>Loading frost advisories...</p>
+			</div>
+		)
+	}
+
+	if (error) {
+		return (
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', flexDirection: 'column' }}>
+				<p style={{ color: 'red', marginBottom: '10px' }}>Error: {error}</p>
+				<p style={{ fontSize: '12px', color: '#666' }}>Check browser console for details</p>
+			</div>
+		)
+	}
+
+	if (frames.length === 0 || frames[0].metadata?.totalHazards === 0) {
+		return (
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+				<p>No winter alerts currently active</p>
+			</div>
+		)
+	}
+
+	return (
+		<Animator
+			frames={frames}
+			mode="map"
+			mapRegion="conus"
+			imageInfo={{ width: 1200, height: 800 }}
+			mapDataType="alerts"
+			layerConfig={LAYER_CONFIG_PRESETS.COUNTY_ALERTS}
+			autoPlay={false}
+			interval={500}
+			hideControls={true}
+		/>
+	)
+}
+
+WinterAlerts.parameters = {
+	docs: {
+		description: {
+			story: 'Filtered hazard data showing only Winter category alerts. Includes Frost Advisories, Freeze Warnings, Winter Storm Warnings, Blizzard Warnings, and all other winter weather alerts. Demonstrates how to filter real-time hazard data by hazard category. Counties with active winter alerts are highlighted on the map with colors based on alert severity.',
+		},
+	},
+}
+
+/**
+ * Check if an alert is active at a given frame time
+ * Compares frame time against alert's effective/expires or onset/ends times
+ */
+function isAlertActiveAtTime(alert: any, frameTime: Date): boolean {
+	// Try to get start and end times from various properties
+	const startTimeStr = alert.effective || alert.onset || alert.sent
+	const endTimeStr = alert.expires || alert.ends
+
+	if (!startTimeStr || !endTimeStr) {
+		// If we don't have time info, assume alert is active
+		return true
+	}
+
+	try {
+		const startTime = new Date(startTimeStr)
+		const endTime = new Date(endTimeStr)
+
+		// Check if frameTime is between startTime and endTime (inclusive)
+		return frameTime >= startTime && frameTime <= endTime
+	} catch (e) {
+		// If date parsing fails, assume alert is active
+		console.warn('Failed to parse alert times:', { startTimeStr, endTimeStr, error: e })
+		return true
+	}
+}
+
+/**
+ * Historical Timeline - Scrubable Hazard History
+ * Fetches 36 hours of alert history and creates 12 animation frames (one per hour for last 12 hours)
+ * Filters alerts to only show those active at each time step based on their effective/expires times
+ */
+export const HistoricalTimeline: StoryFn<typeof Animator> = () => {
+	const [frames, setFrames] = useState<MapFrame[]>([])
+	const [isLoading, setIsLoading] = useState(true)
+	const [error, setError] = useState<string | null>(null)
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				setIsLoading(true)
+
+				// Fetch 36 hours of alert history to have data for the last 12 hours
+				const alertsResponse = await fetchCountyAlertsLastHours(36)
+				console.log('Fetched alerts response:', alertsResponse)
+				console.log('Total alerts in response:', Object.keys(alertsResponse.data?.alerts || {}).length)
+				console.log('Timeline entries:', alertsResponse.data?.timeline?.length || 0)
+
+				// Log sample alert to see structure
+				const sampleAlert = Object.values(alertsResponse.data?.alerts || {})[0]
+				console.log('Sample alert structure:', sampleAlert)
+
+				// Log all unique event types
+				const eventTypes = new Set<string>()
+				Object.values(alertsResponse.data?.alerts || {}).forEach((alert: any) => {
+					if (alert.event) eventTypes.add(alert.event)
+				})
+				console.log('Unique event types:', Array.from(eventTypes).sort())
+
+				// Debug: Check if alerts have locations array
+				const alertsWithLocations = Object.values(alertsResponse.data?.alerts || {}).filter((alert: any) => alert.locations)
+				const alertsWithoutLocations = Object.values(alertsResponse.data?.alerts || {}).filter((alert: any) => !alert.locations)
+				console.log('Alerts with locations array:', alertsWithLocations.length)
+				console.log('Alerts without locations array:', alertsWithoutLocations.length)
+				if (alertsWithoutLocations.length > 0) {
+					console.log('Sample alert without locations:', alertsWithoutLocations[0])
+				}
+
+				// Fetch coastal geometry once
+				const coastalFeatures: any[] = []
+				try {
+					const graphqlData = await getHazards()
+					if (graphqlData && graphqlData.getRegions) {
+						graphqlData.getRegions.forEach((region: any) => {
+							if (region && region.coasts) {
+								region.coasts.forEach((coast: any) => {
+									if (coast && coast.type && coast.geometry) {
+										coastalFeatures.push({
+											type: 'Feature',
+											geometry: coast.geometry,
+											properties: {
+												ID: coast.properties?.ID,
+												NAME: coast.properties?.NAME,
+												type: 'coast',
+											},
+										})
+									}
+								})
+							}
+							if (region && region.offshores) {
+								region.offshores.forEach((offshore: any) => {
+									if (offshore && offshore.type && offshore.geometry) {
+										coastalFeatures.push({
+											type: 'Feature',
+											geometry: offshore.geometry,
+											properties: {
+												ID: offshore.properties?.ID,
+												NAME: offshore.properties?.NAME,
+												type: 'offshore',
+											},
+										})
+									}
+								})
+							}
+						})
+					}
+				} catch (err) {
+					console.error('Error fetching coastal geometry:', err)
+				}
+
+				// Generate 12 frames (one for each hour of the last 12 hours)
+				const generatedFrames: MapFrame[] = []
+				const now = new Date()
+
+				for (let i = 0; i < 12; i++) {
+					const frameTime = new Date(now.getTime() - i * 60 * 60 * 1000) // Go back i hours
+
+					// Filter alerts based on whether they are active at this frame time
+					// An alert is active if the frame time falls between its effective/onset and expires/ends times
+					const timeBasedAlerts = (alertsResponse.data?.alerts ? Object.values(alertsResponse.data.alerts) : []).filter((alert: any) => {
+						return isAlertActiveAtTime(alert, frameTime)
+					})
+
+					// Create county map for this frame
+					const filteredResponse = {
+						...alertsResponse,
+						data: {
+							...alertsResponse.data,
+							alerts: timeBasedAlerts.reduce((acc: any, alert: any) => {
+								acc[alert.id || alert.event] = alert
+								return acc
+							}, {}),
+						},
+					}
+					const countyMap = parseAlertsToCountyMap(filteredResponse)
+					const coastalMap = parseAlertsToCoastalMap(filteredResponse)
+
+					// Debug: Log first frame details
+					if (i === 0) {
+						// Find counties with multiple alerts
+						const countiesWithMultipleAlerts = Object.entries(countyMap).filter(([_, data]) => data.alerts.length >= 2)
+						console.log(`Frame 0 debug:`, {
+							timeBasedAlerts: timeBasedAlerts.length,
+							countyMapSize: Object.keys(countyMap).length,
+							countiesWithMultipleAlerts: countiesWithMultipleAlerts.length,
+							sampleCountyAlert: Object.entries(countyMap)[0],
+							sampleMultiAlertCounty: countiesWithMultipleAlerts[0],
+							sampleTimeBasedAlert: timeBasedAlerts[0],
+						})
+					}
+
+					// Create GeoJSON for this frame
+					const geoJSON = createCountyAlertGeoJSON(countyMap)
+					const coastalGeoJSON = coastalFeatures.length > 0 ? createCoastalAlertGeoJSON(coastalFeatures, coastalMap) : undefined
+
+					const frame: MapFrame = {
+						id: `historical-${i}`,
+						timestamp: frameTime,
+						data: geoJSON,
+						coastalData: coastalGeoJSON,
+						metadata: {
+							source: 'historical-timeline',
+							frameIndex: i,
+							totalAlerts: timeBasedAlerts.length,
+							countiesAffected: Object.keys(countyMap).length,
+							coastalRegionsAffected: Object.keys(coastalMap).length,
+							hoursAgo: i,
+						},
+					}
+
+					console.log(`Frame ${i} (${frameTime.toISOString()}):`, {
+						totalAlerts: timeBasedAlerts.length,
+						countiesAffected: Object.keys(countyMap).length,
+						coastalRegionsAffected: Object.keys(coastalMap).length,
+						hoursAgo: i,
+					})
+
+					generatedFrames.push(frame)
+				}
+
+				setFrames(generatedFrames)
+				setError(null)
+			} catch (err) {
+				const errorMsg = err instanceof Error ? err.message : 'Failed to generate historical frames'
+				console.error('Error generating frames:', err)
+				setError(errorMsg)
+			} finally {
+				setIsLoading(false)
+			}
+		}
+
+		fetchData()
+	}, [])
+
+	if (isLoading) {
+		return (
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+				<p>Generating historical timeline...</p>
+			</div>
+		)
+	}
+
+	if (error) {
+		return (
+			<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', flexDirection: 'column' }}>
+				<p style={{ color: 'red', marginBottom: '10px' }}>Error: {error}</p>
+				<p style={{ fontSize: '12px', color: '#666' }}>Check browser console for details</p>
+			</div>
+		)
+	}
+
+	// Generate frame labels with time and date
+	const frameLabels = frames.map((frame) => {
+		const date = new Date(frame.timestamp)
+		const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
+		const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+		return `${timeStr}\n${dateStr}`
+	})
+
+	return (
+		<Animator
+			frames={frames}
+			mode="map"
+			mapRegion="conus"
+			imageInfo={{ width: 1200, height: 800 }}
+			mapDataType="alerts"
+			layerConfig={LAYER_CONFIG_PRESETS.COUNTY_ALERTS}
+			autoPlay={false}
+			interval={500}
+			frameLabels={frameLabels}
+			displayAllLabels={false}
+			startFrame={0}
+		/>
+	)
+}
+
+HistoricalTimeline.parameters = {
+	docs: {
+		description: {
+			story: 'Historical timeline showing 24 hours of hazard data progression. Scrub through the timeline slider to see how weather hazards evolved over the past day. Each frame represents one hour of historical data with simulated hazard changes.',
+		},
+	},
+}
