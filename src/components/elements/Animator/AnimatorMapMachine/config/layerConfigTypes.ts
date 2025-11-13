@@ -131,6 +131,32 @@ export const LAYER_CONFIG_PRESETS = {
 		'latlon-grid-layer': { active: true, initialValue: false },
 		'coastal-regions-inactive-layer': { active: true, initialValue: true },
 		'counties-inactive-layer': { active: true, initialValue: true },
+		'fire-zones-inactive-layer': { active: true, initialValue: false },
+		'fire-zones-fill-layer': { active: true, initialValue: false },
+		'forecast-zones-inactive-layer': { active: true, initialValue: false },
+		'forecast-zones-fill-layer': { active: true, initialValue: false },
+		'cwa-zones-inactive-layer': { active: true, initialValue: false },
+		'cwa-zones-fill-layer': { active: true, initialValue: false },
+	} as LayerConfig,
+
+	/**
+	 * All Static Layers
+	 * Shows all static/general layers for demonstration purposes
+	 */
+	ALL_STATIC_LAYERS: {
+		'world-layer': { active: true, initialValue: true },
+		'states-layer': { active: true, initialValue: true },
+		'states-fill-layer': { active: true, initialValue: true },
+		'lakes-layer': { active: true, initialValue: true },
+		'latlon-grid-layer': { active: true, initialValue: true },
+		'coastal-regions-inactive-layer': { active: true, initialValue: true },
+		'counties-inactive-layer': { active: true, initialValue: true },
+		'fire-zones-inactive-layer': { active: true, initialValue: true },
+		'fire-zones-fill-layer': { active: true, initialValue: true },
+		'forecast-zones-inactive-layer': { active: true, initialValue: true },
+		'forecast-zones-fill-layer': { active: true, initialValue: true },
+		'cwa-zones-inactive-layer': { active: true, initialValue: true },
+		'cwa-zones-fill-layer': { active: true, initialValue: true },
 	} as LayerConfig,
 }
 

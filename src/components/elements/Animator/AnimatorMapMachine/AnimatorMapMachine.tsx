@@ -3,6 +3,9 @@
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
 import countiesData from '@/data/d3Map/counties.json'
 import countriesData from '@/data/d3Map/countries.json'
+import cwaZonesData from '@/data/d3Map/cwaZones.json'
+import fireZonesData from '@/data/d3Map/fireZones.json'
+import forecastZonesData from '@/data/d3Map/forecastZones.json'
 import lakesData from '@/data/d3Map/lakes.json'
 import statesData from '@/data/d3Map/states.json'
 import worldData from '@/data/d3Map/world.json'
@@ -417,6 +420,102 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 								updateTriggers: {
 									getFillColor: [oceanColor],
 								},
+							}),
+						]
+					: []),
+
+				// Fire Zones Fill layer
+				...(shouldShowLayer('fire-zones-fill-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'fire-zones-fill-layer',
+								data: fireZonesData as any,
+								filled: true,
+								stroked: false,
+								getFillColor: () => [255, 200, 150, 50], // Light orange with low opacity
+								opacity: 0.3,
+								pickable: false,
+							}),
+						]
+					: []),
+
+				// Fire Zones Borders layer
+				...(shouldShowLayer('fire-zones-inactive-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'fire-zones-inactive-layer',
+								data: fireZonesData as any,
+								filled: false,
+								stroked: true,
+								lineWidthMinPixels: 0.5,
+								lineWidthMaxPixels: 1,
+								getLineColor: () => [255, 140, 0, 200], // Orange borders
+								opacity: 0.8,
+								pickable: false,
+							}),
+						]
+					: []),
+
+				// Forecast Zones Fill layer
+				...(shouldShowLayer('forecast-zones-fill-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'forecast-zones-fill-layer',
+								data: forecastZonesData as any,
+								filled: true,
+								stroked: false,
+								getFillColor: () => [150, 200, 255, 50], // Light blue with low opacity
+								opacity: 0.3,
+								pickable: false,
+							}),
+						]
+					: []),
+
+				// Forecast Zones Borders layer
+				...(shouldShowLayer('forecast-zones-inactive-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'forecast-zones-inactive-layer',
+								data: forecastZonesData as any,
+								filled: false,
+								stroked: true,
+								lineWidthMinPixels: 0.5,
+								lineWidthMaxPixels: 1,
+								getLineColor: () => [0, 100, 200, 200], // Blue borders
+								opacity: 0.8,
+								pickable: false,
+							}),
+						]
+					: []),
+
+				// CWA Zones Fill layer
+				...(shouldShowLayer('cwa-zones-fill-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'cwa-zones-fill-layer',
+								data: cwaZonesData as any,
+								filled: true,
+								stroked: false,
+								getFillColor: () => [200, 150, 255, 50], // Light purple with low opacity
+								opacity: 0.3,
+								pickable: false,
+							}),
+						]
+					: []),
+
+				// CWA Zones Borders layer
+				...(shouldShowLayer('cwa-zones-inactive-layer')
+					? [
+							new GeoJsonLayer({
+								id: 'cwa-zones-inactive-layer',
+								data: cwaZonesData as any,
+								filled: false,
+								stroked: true,
+								lineWidthMinPixels: 0.5,
+								lineWidthMaxPixels: 1,
+								getLineColor: () => [128, 0, 200, 200], // Purple borders
+								opacity: 0.8,
+								pickable: false,
 							}),
 						]
 					: []),

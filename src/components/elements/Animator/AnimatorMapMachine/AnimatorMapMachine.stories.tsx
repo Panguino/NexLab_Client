@@ -404,3 +404,24 @@ export const FullConfiguration: Story = {
 	},
 	render: () => <LayerConfigurationComponent configPreset="FULL" />,
 }
+
+/**
+ * All Static Layers Configuration
+ * Shows all static/general map layers including:
+ * - Base world map
+ * - US states (borders and fills)
+ * - Great Lakes
+ * - Latitude/Longitude grid
+ * - Coastal regions (inactive)
+ * - Counties (inactive)
+ * - Fire zones (borders and fills)
+ * - Forecast zones (borders and fills)
+ * Useful for showcasing all available static layers
+ */
+export const AllStaticLayersConfiguration: Story = {
+	args: {
+		frames: SAMPLE_HURRICANE_PATHS,
+		currentFrame: 0,
+	},
+	render: () => <LayerConfigurationComponent configPreset="ALL_STATIC_LAYERS" />,
+}
