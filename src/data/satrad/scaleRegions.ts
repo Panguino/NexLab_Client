@@ -17,6 +17,7 @@ export const SATRAD_REGION_GOES_WEST_ID = 'GOES_WEST'
 export const SATRAD_REGION_NAMER_ID = 'NAMER'
 export const SATRAD_REGION_ALASKA_ID = 'ALASKA'
 export const SATRAD_REGION_HAWAII_ID = 'HAWAII'
+const SATRAD_REGION_NAMER_ZOOM_ID = 'NAMER-Zoom'
 
 export const SATRAD_SCALE_REGION_GLOBAL_EAST_ID = `${SATRAD_SCALE_GLOBAL_ID}-${SATRAD_REGION_GOES_EAST_ID}`
 export const SATRAD_SCALE_REGION_GLOBAL_WEST_ID = `${SATRAD_SCALE_GLOBAL_ID}-${SATRAD_REGION_GOES_WEST_ID}`
@@ -41,6 +42,12 @@ export const SATRAD_REGIONS = {
 		label: 'North America',
 		rotate: [98, -40],
 		scale: 1.25,
+	},
+	[SATRAD_REGION_NAMER_ZOOM_ID]: {
+		// special case region to zoom in on North America for local sectors
+		label: 'North America',
+		rotate: [91, -37],
+		scale: 1.8,
 	},
 	[SATRAD_REGION_ALASKA_ID]: {
 		label: 'Alaska',
@@ -202,7 +209,7 @@ export const SATRAD_SCALE_REGIONS = {
 		sectors: Object.keys(SATRAD_SECTORS_SUBREGIONAL_HAWAII).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_LOCAL_NAMER_ID]: {
-		region: SATRAD_REGIONS[SATRAD_REGION_NAMER_ID],
+		region: SATRAD_REGIONS[SATRAD_REGION_NAMER_ZOOM_ID],
 		sectors: Object.keys(SATRAD_SECTORS_LOCAL_NAMER).map((sectorId) => sectorId),
 	},
 	[SATRAD_SCALE_REGION_LOCAL_ALASKA_ID]: {
