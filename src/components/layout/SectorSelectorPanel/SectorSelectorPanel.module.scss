@@ -5,7 +5,7 @@
   width: calc(100% - 300px);
   max-width: 900px;
   aspect-ratio: 10 / 7;
-  z-index: 30;
+  z-index: 230;
   background-color: black;
 
   @media screen and (max-width: 900px) {
@@ -13,7 +13,7 @@
     top: 50px;
     width: 100%;
     height: calc(100% - 50px);
-    z-index: 85;
+    z-index: 285;
   }
 }
 .sectorSelectorPanelWrapper {
@@ -25,6 +25,6 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 90;
+  z-index: 290;
   font-size: 23px;
 }

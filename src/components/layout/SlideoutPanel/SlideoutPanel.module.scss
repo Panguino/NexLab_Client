@@ -8,7 +8,7 @@
   height: 100%;
   pointer-events: none;
   touch-action: none;
-  z-index: 98;
+  z-index: 298;
 }
 
 .PanelWrapper {
@@ -29,7 +29,7 @@
   height: 100%;
   pointer-events: none;
   touch-action: none;
-  z-index: 30;
+  z-index: 230;
   background-color: rgba(0, 0, 0, 0.4);
 }
 
@@ -42,7 +42,7 @@
   //padding: 30px 12vw 30px 2%;
   display: flex;
   flex-direction: column;
-  z-index: 40;
+  z-index: 240;
   box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
   -webkit-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
@@ -56,7 +56,7 @@
   top: 18px;
   right: 20px;
   cursor: pointer;
-  z-index: 44;
+  z-index: 244;
 
   svg {
     path {

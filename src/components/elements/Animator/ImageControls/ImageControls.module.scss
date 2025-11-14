@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  z-index: 100;
   button {
     position: relative;
     border-radius: 4px;
