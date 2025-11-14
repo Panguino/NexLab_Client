@@ -1,47 +1,47 @@
-@import "/src/styles/vars";
+@import '/src/styles/vars';
 
 .SubNavigation {
-  width: 100%;
-  padding: 10px;
-  display: flex;
-  justify-content: center;
-  background-color: #333;
-  color: #fff;
-  position: fixed;
-  top: 70px;
-  z-index: 330;
-  min-height: 0;
+	width: 100%;
+	padding: 10px;
+	display: flex;
+	justify-content: center;
+	background-color: #333;
+	color: #fff;
+	position: fixed;
+	top: 70px;
+	z-index: 330;
+	min-height: 0;
 
-  a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.2s ease;
-    &:hover {
-      color: #0ec5ff;
-      text-decoration: none;
-    }
-  }
-  &.hide {
-    display: none;
-  }
+	a {
+		color: white;
+		text-decoration: none;
+		transition: color 0.2s ease;
+		&:hover {
+			color: #0ec5ff;
+			text-decoration: none;
+		}
+	}
+	&.hide {
+		display: none;
+	}
 
-  @media (max-width: $mobile-menu-breakpoint) {
-    display: none;
-  }
+	@media (max-width: $mobile-menu-breakpoint) {
+		display: none;
+	}
 }
 .NavItems {
-  display: flex;
-  gap: 20px;
-  align-items: center;
+	display: flex;
+	gap: 20px;
+	align-items: center;
 }
 .Spacer {
-  padding-top: 36px;
-  width: 100%;
-  display: block;
-  &.hide {
-    display: none;
-  }
-  @media (max-width: $mobile-menu-breakpoint) {
-    display: none;
-  }
+	padding-top: 36px;
+	width: 100%;
+	display: block;
+	&.hide {
+		display: none;
+	}
+	@media (max-width: $mobile-menu-breakpoint) {
+		display: none;
+	}
 }

@@ -522,8 +522,8 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 		name: 'Madison',
 		type: 'Geobox',
 		coordinates: [
-			[-94.02, 41.34],
-			[-84.88, 44.71],
+			[-94.02, 41.54],
+			[-84.88, 45.01],
 		],
 		products: SATRAD_PRODUCTS,
 	},
@@ -1041,7 +1041,7 @@ export const SATRAD_SECTORS_LOCAL_NAMER = {
 		products: SATRAD_PRODUCTS,
 	},
 	[SATRAD_SECTOR_LOCAL_UP_ID]: {
-		name: 'UP',
+		name: 'Upper Peninsula',
 		type: 'Geobox',
 		coordinates: [
 			[-91.84, 44.36],
