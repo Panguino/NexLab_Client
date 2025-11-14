@@ -1,69 +1,69 @@
-@import "/src/styles/vars";
+@import '/src/styles/vars';
 
 .SlideoutPanel {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  touch-action: none;
-  z-index: 98;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	touch-action: none;
+	z-index: 298;
 }
 
 .PanelWrapper {
-  display: flex;
-  flex-direction: row-reverse;
-  height: 100%;
-  @media (max-width: $mobile-menu-breakpoint) {
-    padding-top: 50px !important;
-  }
+	display: flex;
+	flex-direction: row-reverse;
+	height: 100%;
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding-top: 50px !important;
+	}
 }
 
 .OverflowPanel {
-  position: absolute;
-  content: "";
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  touch-action: none;
-  z-index: 30;
-  background-color: rgba(0, 0, 0, 0.4);
+	position: absolute;
+	content: '';
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	touch-action: none;
+	z-index: 230;
+	background-color: rgba(0, 0, 0, 0.4);
 }
 
 .Panel {
-  position: relative;
-  height: 100%;
-  background: var(--color-white-grey16);
-  transition: background-color var(--themeChange);
-  margin: 0 0 0 0;
-  //padding: 30px 12vw 30px 2%;
-  display: flex;
-  flex-direction: column;
-  z-index: 40;
-  box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
-  -webkit-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
-  pointer-events: all;
-  touch-action: auto;
-  overflow: hidden;
+	position: relative;
+	height: 100%;
+	background: var(--color-white-grey16);
+	transition: background-color var(--themeChange);
+	margin: 0 0 0 0;
+	//padding: 30px 12vw 30px 2%;
+	display: flex;
+	flex-direction: column;
+	z-index: 240;
+	box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
+	-webkit-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: -5px 0px 15px 0px rgba(0, 0, 0, 0.1);
+	pointer-events: all;
+	touch-action: auto;
+	overflow: hidden;
 }
 
 .Close {
-  position: absolute;
-  top: 18px;
-  right: 20px;
-  cursor: pointer;
-  z-index: 44;
+	position: absolute;
+	top: 18px;
+	right: 20px;
+	cursor: pointer;
+	z-index: 244;
 
-  svg {
-    path {
-      fill: var(--color-grey17-grey1);
-    }
-  }
+	svg {
+		path {
+			fill: var(--color-grey17-grey1);
+		}
+	}
 }
 .PanelContent {
-  height: 100%;
+	height: 100%;
 }

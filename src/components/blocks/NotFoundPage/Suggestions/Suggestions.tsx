@@ -45,7 +45,7 @@ export const Suggestions = () => {
 						</div>
 						<div className={styles.cardContent}>
 							<h3>Searching for Storm Chasing Info?</h3>
-							<p>Find field operations, chase logs, research initiatives, and storm reports.</p>
+							<p>Find upcoming chase dates, trip costs and applications, important guidelines, and more.</p>
 						</div>
 						<div className={styles.cardAction}>
 							<Button label="Storm Chasing" link="/storm-chasing" target="_self" />
