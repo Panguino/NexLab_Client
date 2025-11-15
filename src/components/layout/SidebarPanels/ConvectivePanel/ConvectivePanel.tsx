@@ -13,6 +13,8 @@ interface ConvectivePanelProps {
 }
 
 const ConvectivePanel = ({ basepath }: ConvectivePanelProps) => {
+	const convectiveBasePath = `${basepath}/spc-convective-weather`
+
 	const handleProductClick = useCallback((categoryId: string, productId: string) => {
 		const categoryTitle = CONVECTIVE_CATEGORIES[categoryId]?.title || 'Unknown Category'
 		const productTitle = CONVECTIVE_PRODUCTS[productId]?.title || 'Unknown Product'
@@ -34,12 +36,13 @@ const ConvectivePanel = ({ basepath }: ConvectivePanelProps) => {
 					<SidebarGroup key={categoryId} title={category.title}>
 						{category.products.map((productId) => {
 							const product = CONVECTIVE_PRODUCTS[productId]
+							const hasDirectLink = product.linkUrl !== null
 							return (
 								<SidebarLink
 									key={productId}
 									name={product.title}
-									linkUrl=""
-									onClick={() => handleProductClick(categoryId, productId)}
+									linkUrl={hasDirectLink ? `${convectiveBasePath}${product.linkUrl}` : ''}
+									onClick={hasDirectLink ? undefined : () => handleProductClick(categoryId, productId)}
 								/>
 							)
 						})}
