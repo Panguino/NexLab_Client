@@ -6,6 +6,7 @@ import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader
 import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/SidebarSectionLink'
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
+import ConvectivePanel from '../ConvectivePanel/ConvectivePanel'
 import HazardsPanel from '../HazardsPanel/HazardsPanel'
 import TropicalPanel from '../TropicalPanel/TropicalPanel'
 import WFOPanel from '../WFOPanel/WFOPanel'
@@ -59,8 +60,8 @@ const TextSidebarPanels = () => {
 			</SidebarSubPanel>
 
 			{/* Convective */}
-			<SidebarSubPanel matchesPath={`${basepath}/spc-convective-weather`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Convective" linkUrl={basepath} />
+			<SidebarSubPanel includesPath={`${basepath}/spc-convective-weather`} activeX="0%" inactiveX="100%">
+				<ConvectivePanel basepath={basepath} />
 			</SidebarSubPanel>
 
 			{/* Tropical */}

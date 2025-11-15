@@ -5,7 +5,7 @@ const Page = () => {
 		<ComingSoon
 			fullWidth
 			pageName="Convective Text Products"
-			purpose="Miscellaneous convective text products including tornado stats and other messages."
+			purpose="This will actually be a second instance of the main convective page."
 			etaText="This section is being implemented."
 		/>
 	)

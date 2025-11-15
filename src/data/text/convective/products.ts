@@ -7,6 +7,7 @@
 // export const CONVECTIVE_DAILY_TOR_AND_SVR_REPORTS_TEXT_ID = 'NWUS20_STADTS'
 // export const CONVECTIVE_PRELIM_KILLER_TORNADO_TEXT_ID = 'NWUS23_STATIJ'
 // export const CONVECTIVE_TORNADO_TOTALS_AND_DEATHS_TEXT_ID = 'NWUS21_STAMTS'
+
 // export const CONVECTIVE_ADMIN_MESSAGES_TEXT_ID = 'NOUS74_ADMSPC'
 export const CONVECTIVE_PRODUCT_SPC_DAY_ONE_OUTLOOK_ID = 'DY1'
 export const CONVECTIVE_PRODUCT_SPC_DAY_TWO_OUTLOOK_ID = 'DY2'
@@ -24,43 +25,56 @@ export const CONVECTIVE_PRODUCT_ADMIN_MESSAGES_ID = 'admin_messages'
 
 export const CONVECTIVE_PRODUCTS = {
 	[CONVECTIVE_PRODUCT_SPC_DAY_ONE_OUTLOOK_ID]: {
-		title: 'SPC Day 1',
+		title: 'Day 1',
+		linkUrl: `/outlooks/${CONVECTIVE_PRODUCT_SPC_DAY_ONE_OUTLOOK_ID}/latest`,
 	},
 	[CONVECTIVE_PRODUCT_SPC_DAY_TWO_OUTLOOK_ID]: {
-		title: 'SPC Day 2',
+		title: 'Day 2',
+		linkUrl: `/outlooks/${CONVECTIVE_PRODUCT_SPC_DAY_TWO_OUTLOOK_ID}/latest`,
 	},
 	[CONVECTIVE_PRODUCT_SPC_DAY_THREE_OUTLOOK_ID]: {
-		title: 'SPC Day 3',
+		title: 'Day 3',
+		linkUrl: `/outlooks/${CONVECTIVE_PRODUCT_SPC_DAY_THREE_OUTLOOK_ID}/latest`,
 	},
 	[CONVECTIVE_PRODUCT_SPC_DAY_FOUR_THRU_EIGHT_OUTLOOK_ID]: {
-		title: 'SPC Day 4 - 8',
+		title: 'Day 4 - 8',
+		linkUrl: `/outlooks/${CONVECTIVE_PRODUCT_SPC_DAY_FOUR_THRU_EIGHT_OUTLOOK_ID}/latest`,
 	},
 	[CONVECTIVE_PRODUCT_WARNINGS_MAP_AND_TABLE_ID]: {
 		title: 'Warnings Map and Table',
+		linkUrl: '/warnings',
 	},
 	[CONVECTIVE_PRODUCT_LOCAL_STORM_REPORTS_ID]: {
 		title: 'Local Storm Reports',
+		linkUrl: '/reports',
 	},
 	[CONVECTIVE_PRODUCT_WATCHES_ID]: {
 		title: 'Watches',
+		linkUrl: '/watches',
 	},
 	[CONVECTIVE_PRODUCT_MESO_DISCUSSIONS_ID]: {
 		title: 'Mesoscale Discussions',
+		linkUrl: '/mesoscale-discussions',
 	},
 	[CONVECTIVE_PRODUCT_PRELIM_KILLER_TORNADO_ID]: {
 		title: 'Preliminary Killer Tornado',
+		linkUrl: null,
 	},
 	[CONVECTIVE_PRODUCT_TORNADO_TOTALS_AND_DEATHS_ID]: {
 		title: 'Tornado Totals and Deaths',
+		linkUrl: null,
 	},
 	[CONVECTIVE_PRODUCT_HOURLY_TOR_AND_SVR_REPORTS_ID]: {
 		title: 'Hourly Tornado and Severe Reports',
+		linkUrl: null,
 	},
 	[CONVECTIVE_PRODUCT_DAILY_TOR_AND_SVR_REPORTS_ID]: {
 		title: 'Daily Tornado and Severe Reports',
+		linkUrl: null,
 	},
 	[CONVECTIVE_PRODUCT_ADMIN_MESSAGES_ID]: {
 		title: 'Admin Messages',
+		linkUrl: null,
 	},
 }
 
@@ -71,7 +85,7 @@ export const CONVECTIVE_CATEGORY_STATS_AND_MESSAGES = 'stats_and_messages'
 
 export const CONVECTIVE_CATEGORIES = {
 	[CONVECTIVE_CATEGORY_OUTLOOKS]: {
-		title: 'Convective Outlooks',
+		title: 'SPC Convective Outlooks',
 		products: [
 			CONVECTIVE_PRODUCT_SPC_DAY_ONE_OUTLOOK_ID,
 			CONVECTIVE_PRODUCT_SPC_DAY_TWO_OUTLOOK_ID,
