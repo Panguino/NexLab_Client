@@ -1,14 +1,7 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { SPCOutlooksPage } from '@/components/blocks/SPCOutlooksPage/SPCOutlooksPage'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Convective Outlooks"
-			purpose="Displaying SPC convective outlook graphics and full text discussions, as well as an archive of past outlooks."
-			etaText="This section is being implemented."
-		/>
-	)
+const Page = ({ params }: { params: { spcProdId: string; spcValidId: string } }) => {
+	return <SPCOutlooksPage productId={params.spcProdId} validTime={params.spcValidId} />
 }
 
 export default Page

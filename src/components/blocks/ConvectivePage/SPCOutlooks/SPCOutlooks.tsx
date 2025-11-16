@@ -1,5 +1,7 @@
 'use client'
 
+import { GraphicLink } from '@/components/elements/GraphicLink/GraphicLink'
+import { CONVECTIVE_CATEGORIES, CONVECTIVE_CATEGORY_OUTLOOKS, CONVECTIVE_PRODUCTS } from '@/data/text/convective/products'
 import { getAllConvectiveOutlookGraphics } from '@/util/dataCalls/text/query-convective'
 import { useEffect, useMemo, useState } from 'react'
 import styles from './SPCOutlooks.module.scss'
@@ -12,16 +14,11 @@ interface OutlookData {
 	outlooks: Array<Record<string, string>>
 }
 
-const OUTLOOK_LABELS = {
-	day1: 'Day 1',
-	day2: 'Day 2',
-	day3: 'Day 3',
-	day4: 'Day 4-8',
-}
-
 export const SPCOutlooks = () => {
 	const [outlookData, setOutlookData] = useState<OutlookData | null>(null)
 	const [isLoading, setIsLoading] = useState(true)
+
+	const outlookProducts = CONVECTIVE_CATEGORIES[CONVECTIVE_CATEGORY_OUTLOOKS].products
 
 	useEffect(() => {
 		const fetchOutlooks = async () => {
@@ -66,21 +63,14 @@ export const SPCOutlooks = () => {
 							))}
 						</>
 					) : (
-						displayOutlooks.map((outlook) => {
+						displayOutlooks.map((outlook, index) => {
 							const dayKey = Object.keys(outlook)[0]
 							const imageUrl = outlook[dayKey]
-							const label = OUTLOOK_LABELS[dayKey as keyof typeof OUTLOOK_LABELS] || dayKey
+							const productId = outlookProducts[index]
+							const product = CONVECTIVE_PRODUCTS[productId]
+							const linkUrl = `/weather-data/text-hazards-outlooks/spc-convective-weather${product.linkUrl}`
 
-							return (
-								<div key={dayKey} className={styles.outlookCard}>
-									<div className={styles.imageContainer}>
-										<img src={imageUrl} alt={`${label} Outlook`} className={styles.outlookImage} />
-									</div>
-									<div className={styles.banner}>
-										<span>View {label} Outlook</span>
-									</div>
-								</div>
-							)
+							return <GraphicLink key={dayKey} imageUrl={imageUrl} label={`View ${product.title} Outlook`} linkUrl={linkUrl} />
 						})
 					)}
 				</div>
