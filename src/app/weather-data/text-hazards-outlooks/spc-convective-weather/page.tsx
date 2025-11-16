@@ -1,14 +1,7 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { ConvectivePage } from '@/components/blocks/ConvectivePage/ConvectivePage'
 
 const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Convective Weather Products"
-			purpose="SPC convective outlooks, mesoscale discussions, and related products in one view."
-			etaText="This section is being implemented."
-		/>
-	)
+	return <ConvectivePage />
 }
 
 export default Page
