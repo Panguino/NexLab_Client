@@ -37,3 +37,14 @@ export const getConvectiveOutlookTextData = async (productId) => {
 	// Return the data object directly - keys are timestamps (YYYYMMDDHHmm), values are URLs
 	return data
 }
+
+export const getConvectiveOutlookGraphics = async (productId, validtimeId) => {
+	const endpoint = `https://weather.cod.edu/datapoints/text/convective/get-outlook.php?parms=${productId}-${validtimeId}`
+	const data = await getData(endpoint)
+
+	if (!data || Object.keys(data).length === 0) {
+		return false
+	}
+
+	return data
+}

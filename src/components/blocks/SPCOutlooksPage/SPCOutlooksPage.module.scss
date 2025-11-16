@@ -59,6 +59,27 @@
 	gap: 20px;
 }
 
+.graphicItem {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+
+	.graphic {
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.graphicLabel {
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: var(--color-grey18-grey2);
+		text-align: center;
+		margin: 0;
+	}
+}
+
 .graphicPlaceholder {
 	background: var(--color-grey6-grey14);
 	border: 2px dashed var(--color-grey8-grey12);

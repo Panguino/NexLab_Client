@@ -3,6 +3,8 @@
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { CONVECTIVE_PRODUCTS } from '@/data/text/convective/products'
+import { getConvectiveOutlookGraphics } from '@/util/dataCalls/text/query-convective'
+import { useEffect, useState } from 'react'
 import styles from './SPCOutlooksPage.module.scss'
 
 interface SPCOutlooksPageProps {
@@ -10,9 +12,43 @@ interface SPCOutlooksPageProps {
 	validTime: string
 }
 
+interface GraphicData {
+	url: string
+	period: string
+	type: string
+}
+
+interface OutlookGraphicsData {
+	graphics: GraphicData[]
+	img: {
+		height: number
+		width: number
+	}
+}
+
 export const SPCOutlooksPage = ({ productId, validTime }: SPCOutlooksPageProps) => {
+	const [graphicsData, setGraphicsData] = useState<OutlookGraphicsData | null>(null)
+	const [isLoadingGraphics, setIsLoadingGraphics] = useState(true)
+
 	const product = CONVECTIVE_PRODUCTS[productId]
 	const pageTitle = product ? `SPC Convective Outlook ${product.title}` : 'SPC Convective Outlook'
+
+	useEffect(() => {
+		const fetchGraphics = async () => {
+			try {
+				const data = await getConvectiveOutlookGraphics(productId, validTime)
+				if (data) {
+					setGraphicsData(data)
+				}
+			} catch (error) {
+				console.error('Failed to fetch outlook graphics:', error)
+			} finally {
+				setIsLoadingGraphics(false)
+			}
+		}
+
+		fetchGraphics()
+	}, [productId, validTime])
 
 	return (
 		<ScrollArea>
@@ -26,21 +62,24 @@ export const SPCOutlooksPage = ({ productId, validTime }: SPCOutlooksPageProps) 
 					<div className={styles.graphicsPanel}>
 						<h2>Graphics</h2>
 						<div className={styles.graphicsContainer}>
-							<div className={styles.graphicPlaceholder}>
-								<p>Categorical Outlook Graphic</p>
-							</div>
-							<div className={styles.graphicPlaceholder}>
-								<p>Tornado Probability Graphic</p>
-							</div>
-							<div className={styles.graphicPlaceholder}>
-								<p>Wind Probability Graphic</p>
-							</div>
-							<div className={styles.graphicPlaceholder}>
-								<p>Hail Probability Graphic</p>
-							</div>
-							<div className={styles.graphicPlaceholder}>
-								<p>Significant Tornado Graphic</p>
-							</div>
+							{isLoadingGraphics ? (
+								<div className={styles.graphicPlaceholder}>
+									<p>Loading graphics...</p>
+								</div>
+							) : graphicsData?.graphics && graphicsData.graphics.length > 0 ? (
+								graphicsData.graphics.map((graphic, index) => (
+									<div key={index} className={styles.graphicItem}>
+										<p className={styles.graphicLabel}>
+											Day {graphic.period} - {graphic.type} Risk
+										</p>
+										<img src={graphic.url} alt={`Day ${graphic.period} - ${graphic.type} Risk`} className={styles.graphic} />
+									</div>
+								))
+							) : (
+								<div className={styles.graphicPlaceholder}>
+									<p>No graphics available</p>
+								</div>
+							)}
 						</div>
 					</div>
 
