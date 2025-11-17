@@ -172,12 +172,10 @@ export const SPCOutlooksPage = ({ productId, validTime }: SPCOutlooksPageProps) 
 			<div className={styles.spcOutlooksPage}>
 				<div className={styles.titleSection}>
 					<h1>{pageTitle}</h1>
-					<p className={styles.validTime}>Valid Time: {validTime}</p>
 				</div>
 
 				<div className={styles.contentSection}>
 					<div className={styles.graphicsPanel}>
-						<h2>Graphics</h2>
 						<div className={styles.graphicsContainer}>
 							{isLoadingGraphics ? (
 								<div className={styles.graphicPlaceholder}>
@@ -201,7 +199,6 @@ export const SPCOutlooksPage = ({ productId, validTime }: SPCOutlooksPageProps) 
 					</div>
 
 					<div className={styles.textPanel}>
-						<h2>Discussion</h2>
 						{validtimeOptions.length > 1 && (
 							<div className={styles.validtimeSelector}>
 								<div className={styles.validtimeLabel}>Product Issuance:</div>
