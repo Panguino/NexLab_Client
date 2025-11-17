@@ -111,6 +111,29 @@
 	}
 }
 
+.validtimeSelector {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 24px;
+	padding: 16px;
+	background: var(--color-grey4-grey16);
+	border-radius: 8px;
+	border: 1px solid var(--color-grey6-grey14);
+
+	.validtimeLabel {
+		font-size: 14px;
+		font-weight: 600;
+		color: var(--color-grey14-grey8);
+		white-space: nowrap;
+	}
+
+	.validtimeSelectWrapper {
+		flex: 1;
+		max-width: 300px;
+	}
+}
+
 .textContent {
 	background: var(--color-grey4-grey16);
 	padding: 24px;
@@ -131,6 +154,16 @@
 			color: var(--color-grey20-grey2);
 			font-weight: 600;
 		}
+	}
+
+	.discussionText {
+		color: var(--color-grey18-grey4);
+		font-family: monospace;
+		font-size: 13px;
+		line-height: 1.6;
+		white-space: pre-wrap;
+		word-wrap: break-word;
+		margin: 0;
 	}
 }
 

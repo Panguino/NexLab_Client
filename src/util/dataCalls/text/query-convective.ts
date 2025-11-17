@@ -39,8 +39,11 @@ export const getConvectiveOutlookTextData = async (productId) => {
 }
 
 export const getConvectiveOutlookGraphics = async (productId, validtimeId) => {
-	const endpoint = `https://weather.cod.edu/datapoints/text/convective/get-outlook.php?parms=${productId}-${validtimeId}`
-	const data = await getData(endpoint)
+	const queryURL = `https://weather.cod.edu/datapoints/text/convective/get-outlook.php?parms=${productId}-${validtimeId}`
+	console.log('Fetching convective outlook graphics from:', queryURL)
+	const data = await getData(queryURL)
+
+	console.log('Fetched convective outlook graphics:', 'productId', productId, 'validtimeId', validtimeId, 'data', data)
 
 	if (!data || Object.keys(data).length === 0) {
 		return false
