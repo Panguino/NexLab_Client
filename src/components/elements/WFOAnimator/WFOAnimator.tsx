@@ -4,7 +4,8 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import { MapFrame } from '@/components/elements/Animator/AnimatorMapMachine/types'
 import { createCountyAlertFrame } from '@/util/dataCalls/alerts/createCountyAlertFrames'
 import { fetchRealTimeHazards, parseHazardsToCountyMap } from '@/util/dataCalls/alerts/parseCountyAlerts'
-import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from 'react'
 import styles from './WFOAnimator.module.scss'
 
 interface WFOAnimatorProps {
@@ -14,10 +15,28 @@ interface WFOAnimatorProps {
 }
 
 export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: WFOAnimatorProps) => {
+	const router = useRouter()
 	const [frames, setFrames] = useState<MapFrame[]>([])
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 	const [mapLayerVisibility, setMapLayerVisibility] = useState<Record<string, boolean>>({})
+
+	// Handle CWA zone click - navigate to WFO detail page
+	const handleCwaClick = useCallback(
+		(cwaId: string, wfoId: string) => {
+			console.log(`CWA zone clicked: ${cwaId}, WFO: ${wfoId}`)
+
+			// Navigate to WFO detail page
+			const wfoBasePath = '/weather-data/text-hazards-outlooks/nws-wfo-national-weather-service-forecast-offices'
+			router.push(`${wfoBasePath}/${wfoId}`)
+
+			// Call optional callback if provided
+			if (onWFOSelect) {
+				onWFOSelect(wfoId)
+			}
+		},
+		[router, onWFOSelect],
+	)
 
 	// Load county alerts data
 	useEffect(() => {
@@ -89,6 +108,7 @@ export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: W
 				hideControls={true}
 				mapLayerVisibility={mapLayerVisibility}
 				onMapLayerVisibilityChange={setMapLayerVisibility}
+				onCwaClick={handleCwaClick}
 			/>
 		</div>
 	)

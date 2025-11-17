@@ -66,6 +66,8 @@ export interface IAnimatorProps {
 	layerConfig: any // Layer configuration for filtering which layers are shown (LayerConfig type) - REQUIRED
 	// Storm click handler
 	onStormClick?: (stormId: string) => void
+	// CWA zone click handler
+	onCwaClick?: (cwaId: string, wfoId: string) => void
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -82,6 +84,7 @@ interface IAnimatorProvider extends IAnimatorProps {
 	mapLayerVisibility: Record<string, boolean> // Map layer visibility state
 	setMapLayerVisibility: (visibility: Record<string, boolean>) => void // Update map layer visibility
 	onStormClick?: (stormId: string) => void // Storm click handler
+	onCwaClick?: (cwaId: string, wfoId: string) => void // CWA zone click handler
 	mapDataType: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 	layerConfig?: any // Layer configuration for filtering which layers are shown
 }
@@ -162,6 +165,7 @@ export const Animator = ({
 	mapDataType = 'all',
 	layerConfig,
 	onStormClick,
+	onCwaClick,
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
@@ -277,6 +281,7 @@ export const Animator = ({
 				mapDataType: mapDataType || 'all',
 				layerConfig,
 				onStormClick,
+				onCwaClick,
 			}}
 		>
 			<AnimatorLayout />

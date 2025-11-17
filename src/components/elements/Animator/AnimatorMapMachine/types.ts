@@ -100,6 +100,9 @@ export interface IAnimatorMapMachineProps {
 	onStormHover?: (info: StormHoverInfo | null) => void
 	onStormClick?: (stormId: string) => void
 
+	// CWA zone interaction
+	onCwaClick?: (cwaId: string, wfoId: string) => void
+
 	// Callbacks
 	onFrameChange?: (frameIndex: number) => void
 	onViewStateChange?: (viewState: MapViewState) => void

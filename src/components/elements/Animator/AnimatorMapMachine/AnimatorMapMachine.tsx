@@ -185,6 +185,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			viewState: externalViewState,
 			layerVisibility = {},
 			onStormClick,
+			onCwaClick,
 		},
 		ref,
 	) => {
@@ -548,7 +549,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 									return [200, 150, 255, 50]
 								},
 								opacity: 0.8,
-								pickable: false,
+								pickable: true, // Enable clicking on CWA zones
 								updateTriggers: {
 									getLineColor: [hoveredCwaId],
 									getFillColor: [hoveredCwaId],
@@ -1282,6 +1283,18 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			// Check if a storm icon was clicked
 			if (info && info.object && info.object.id && onStormClick) {
 				onStormClick(info.object.id)
+				return
+			}
+
+			// Check if a CWA zone was clicked
+			// Use the same lat/long detection as hover
+			if (onCwaClick && info && info.coordinate) {
+				const [lon, lat] = info.coordinate
+				const regionInfo = findRegionAtPoint(lat, lon, undefined, cwaZonesData)
+
+				if (regionInfo?.type === 'cwa' && regionInfo.wfoId) {
+					onCwaClick(regionInfo.id, regionInfo.wfoId)
+				}
 			}
 		}
 

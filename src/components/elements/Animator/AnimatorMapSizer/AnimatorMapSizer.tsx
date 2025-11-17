@@ -46,6 +46,7 @@ const AnimatorMapSizer = () => {
 		mapDataType,
 		layerConfig,
 		onStormClick,
+		onCwaClick,
 	} = useAnimator()
 
 	// Debug logging - only for mouse/click interactions
@@ -245,6 +246,7 @@ const AnimatorMapSizer = () => {
 					layerVisibility={mapLayerVisibility}
 					mapDataType={mapDataType}
 					onStormClick={onStormClick}
+					onCwaClick={onCwaClick}
 				/>
 			</div>
 
