@@ -25,6 +25,24 @@ export interface ISlideoutPanelSlice {
 			stormName?: string
 		} | null,
 	) => void
+	wfoTextContent: {
+		productData: Record<string, string>
+		validtimeId: string
+		productKey: string
+		productName?: string
+		officeId?: string
+		officeName?: string
+	} | null
+	setWfoTextContent: (
+		content: {
+			productData: Record<string, string>
+			validtimeId: string
+			productKey: string
+			productName?: string
+			officeId?: string
+			officeName?: string
+		} | null,
+	) => void
 	slideoutPanelIsOpen: boolean
 	currentSlideoutPanel: string
 	openSlideoutPanel: (panel: string) => void
@@ -50,6 +68,17 @@ export const createSlideoutPanelSlice: ZustandStateSlice<ISlideoutPanelSlice> = 
 			stormName?: string
 		} | null,
 	) => set(() => ({ tropicalTextContent: content })),
+	wfoTextContent: null,
+	setWfoTextContent: (
+		content: {
+			productData: Record<string, string>
+			validtimeId: string
+			productKey: string
+			productName?: string
+			officeId?: string
+			officeName?: string
+		} | null,
+	) => set(() => ({ wfoTextContent: content })),
 	slideoutPanelIsOpen: false,
 	currentSlideoutPanel: '',
 	openSlideoutPanel: (panel: string) => set(() => ({ slideoutPanelIsOpen: true, currentSlideoutPanel: panel })),
@@ -60,6 +89,7 @@ export const createSlideoutPanelSlice: ZustandStateSlice<ISlideoutPanelSlice> = 
 			metarLoading: false,
 			metarContent: null,
 			tropicalTextContent: null,
+			wfoTextContent: null,
 		}))
 	},
 })

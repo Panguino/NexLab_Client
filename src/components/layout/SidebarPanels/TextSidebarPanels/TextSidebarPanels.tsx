@@ -8,6 +8,7 @@ import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
 import HazardsPanel from '../HazardsPanel/HazardsPanel'
 import TropicalPanel from '../TropicalPanel/TropicalPanel'
+import WFOPanel from '../WFOPanel/WFOPanel'
 import styles from './TextSidebarPanels.module.scss'
 
 const TextSidebarPanels = () => {
@@ -22,7 +23,7 @@ const TextSidebarPanels = () => {
 					<SidebarSectionLink name="Analysis & Forecast" linkUrl={`${basepath}/analysis-forecast`} />
 					<SidebarSectionLink name="Climatology" linkUrl={`${basepath}/cpc-climate`} />
 					<SidebarSectionLink name="Convective" linkUrl={`${basepath}/spc-convective-weather`} />
-					<SidebarSectionLink name="Tropical" linkUrl={`${basepath}/nhc-tropical-hurricane-weather`} />
+					<SidebarSectionLink name="Tropical" linkUrl={`${basepath}/nhc-tropical-hurricane-weather/overview/latest`} />
 					<SidebarSectionLink name="Winter" linkUrl={`${basepath}/wpc-winter-weather`} />
 					<SidebarSectionLink name="Hydrological" linkUrl={`${basepath}/nws-rfc-hydrological`} />
 					<SidebarSectionLink name="Fire & Drought" linkUrl={`${basepath}/spc-usdm-fire-weather-drought`} />
@@ -93,8 +94,8 @@ const TextSidebarPanels = () => {
 			</SidebarSubPanel>
 
 			{/* NWS WFO */}
-			<SidebarSubPanel matchesPath={`${basepath}/nws-wfo-national-weather-service-forecast-offices`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="NWS WFO" linkUrl={basepath} />
+			<SidebarSubPanel includesPath={`${basepath}/nws-wfo-national-weather-service-forecast-offices`} activeX="0%" inactiveX="100%">
+				<WFOPanel basepath={basepath} />
 			</SidebarSubPanel>
 		</div>
 	)

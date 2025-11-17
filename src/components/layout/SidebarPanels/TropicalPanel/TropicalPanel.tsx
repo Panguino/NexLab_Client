@@ -103,7 +103,7 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	}, [tropicalProductId, tropicalStormId, stormData, stormOptions, validtimeId, setTropicalTextContent, openSlideoutPanel])
 
 	const handleProductClick = useCallback(
-		async (productKey: string, productName: string) => {
+		async (productKey: string) => {
 			// Just navigate - the useEffect will handle fetching and opening the slideout
 			// Use 'latest' as the validtime for now
 			if (tropicalStormId) {
@@ -116,7 +116,7 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 	)
 
 	const handleStormProductClick = useCallback(
-		async (productKey: string, productName: string, stormId: string) => {
+		async (productKey: string, stormId: string) => {
 			// Just navigate - the useEffect will handle fetching and opening the slideout
 			// Use 'latest' as the validtime for now
 			router.push(`${tropicalBasePath}/${productKey}/${validtimeId}/storm/${stormId}`)
@@ -165,7 +165,7 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 								key={product.key}
 								name={product.name}
 								linkUrl=""
-								onClick={() => handleProductClick(product.key, product.name)}
+								onClick={() => handleProductClick(product.key)}
 								active={tropicalProductId === product.key && !tropicalStormId}
 							/>
 						))}
@@ -183,7 +183,7 @@ const TropicalPanel = ({ basepath }: TropicalPanelProps) => {
 									key={product.key}
 									name={product.name}
 									linkUrl=""
-									onClick={() => handleStormProductClick(product.key, product.name, selectedStorm)}
+									onClick={() => handleStormProductClick(product.key, selectedStorm)}
 									active={tropicalProductId === product.key && tropicalStormId === selectedStorm}
 								/>
 							))}

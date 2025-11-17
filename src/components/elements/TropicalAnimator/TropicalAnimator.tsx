@@ -172,7 +172,7 @@ export const TropicalAnimator = ({ selectedStormId, onStormSelect, view = 'overv
 		if (view === 'detail' && selectedStormId) {
 			loadStormDetail()
 		}
-	}, [selectedStormId, view, allStorms])
+	}, [selectedStormId, view, allStorms, currentStorm])
 
 	// Handle storm selection from map click
 	const handleStormClick = (stormId: string) => {

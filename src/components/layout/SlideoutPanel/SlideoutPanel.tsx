@@ -8,6 +8,7 @@ import MetarTextPanel from '@/components/blocks/MetarTextPanel/MetarTextPanel'
 import ProductInfoPanel from '@/components/blocks/ProductInfoPanel/ProductInfoPanel'
 import SoundingTextPanel from '@/components/blocks/SoundingTextPanel/SoundingTextPanel'
 import TropicalTextPanel from '@/components/blocks/TropicalTextPanel/TropicalTextPanel'
+import WFOTextPanel from '@/components/blocks/WFOTextPanel/WFOTextPanel'
 import CloseX from '@/components/elements/icons/CloseX/CloseX'
 import {
 	DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT,
@@ -16,6 +17,7 @@ import {
 	SEARCH_RESULTS_SLIDEOUT,
 	SOUNDING_TEXT_SLIDEOUT,
 	TROPICAL_TEXT_SLIDEOUT,
+	WFO_TEXT_SLIDEOUT,
 } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { usePathname } from 'next/navigation'
@@ -38,6 +40,11 @@ const SlideoutPanel = () => {
 			// Stay open when moving between tropical products
 			return
 		}
+		// Don't close the WFO panel when navigating between WFO products
+		if (currentSlideoutPanel === WFO_TEXT_SLIDEOUT && pathname.includes('/nws-wfo-national-weather-service-forecast-offices/')) {
+			// Stay open when moving between WFO products
+			return
+		}
 		closeSlideoutPanel()
 	}, [pathname, closeSlideoutPanel, currentSlideoutPanel])
 
@@ -55,6 +62,8 @@ const SlideoutPanel = () => {
 				return <SoundingTextPanel />
 			case TROPICAL_TEXT_SLIDEOUT:
 				return <TropicalTextPanel />
+			case WFO_TEXT_SLIDEOUT:
+				return <WFOTextPanel />
 			default:
 				return <></>
 		}

@@ -416,6 +416,7 @@ export const FullConfiguration: Story = {
  * - Counties (inactive)
  * - Fire zones (borders and fills)
  * - Forecast zones (borders and fills)
+ * - CWA zones (borders and fills)
  * Useful for showcasing all available static layers
  */
 export const AllStaticLayersConfiguration: Story = {
