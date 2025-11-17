@@ -33,16 +33,40 @@ try {
 }
 
 /**
- * Find which county or coastal region a given lat/long point is in
+ * Find which county, coastal region, or CWA zone a given lat/long point is in
  * Uses point-in-polygon detection with Turf.js
- * Returns object with id and type ('county' or 'coastal')
+ * Returns object with id and type ('county', 'coastal', or 'cwa')
  */
-function findRegionAtPoint(latitude: number, longitude: number, coastalData?: any): { id: string; type: 'county' | 'coastal' } | null {
+function findRegionAtPoint(
+	latitude: number,
+	longitude: number,
+	coastalData?: any,
+	cwaData?: any,
+): { id: string; type: 'county' | 'coastal' | 'cwa'; wfoId?: string } | null {
 	if (!booleanPointInPolygon) return null
 
 	const point = [longitude, latitude]
 
-	// First search through coastal data if available
+	// First search through CWA zones if available
+	if (cwaData && cwaData.features) {
+		const cwaFeatures = cwaData.features || []
+		for (const feature of cwaFeatures) {
+			try {
+				if (booleanPointInPolygon(point, feature)) {
+					const cwaId = feature.properties?.CWA
+					const wfoId = feature.properties?.FULLSTAID
+					if (cwaId) {
+						return { id: cwaId, type: 'cwa', wfoId }
+					}
+				}
+			} catch (e) {
+				// Skip features that cause errors
+				continue
+			}
+		}
+	}
+
+	// Then search through coastal data if available
 	if (coastalData && coastalData.features) {
 		const coastalFeatures = coastalData.features || []
 		for (const feature of coastalFeatures) {
@@ -60,7 +84,7 @@ function findRegionAtPoint(latitude: number, longitude: number, coastalData?: an
 		}
 	}
 
-	// Then search through counties data
+	// Finally search through counties data
 	const features = (countiesData as any).features || []
 	for (const feature of features) {
 		try {
@@ -170,6 +194,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const [stormHoverInfo, setStormHoverInfo] = useState<any>(null)
 		const [showTooltip, setShowTooltip] = useState(false)
 		const [hoveredCountyId, setHoveredCountyId] = useState<string | null>(null)
+		const [hoveredCwaId, setHoveredCwaId] = useState<string | null>(null)
+		const [hoveredCwaWfoId, setHoveredCwaWfoId] = useState<string | null>(null)
 		const [tooltipVisible, setTooltipVisible] = useState(false)
 		const [tooltipTitle, setTooltipTitle] = useState('')
 		const [tooltipAlerts, setTooltipAlerts] = useState<any[]>([])
@@ -488,34 +514,45 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						]
 					: []),
 
-				// CWA Zones Fill layer
-				...(shouldShowLayer('cwa-zones-fill-layer')
+				// CWA Zones - Combined layer with hover feedback
+				// Shows both fill and borders with conditional styling based on hover state
+				...(shouldShowLayer('cwa-zones-fill-layer') || shouldShowLayer('cwa-zones-inactive-layer')
 					? [
 							new GeoJsonLayer({
-								id: 'cwa-zones-fill-layer',
+								id: 'cwa-zones-layer',
 								data: cwaZonesData as any,
-								filled: true,
-								stroked: false,
-								getFillColor: () => [200, 150, 255, 50], // Light purple with low opacity
-								opacity: 0.3,
-								pickable: false,
-							}),
-						]
-					: []),
-
-				// CWA Zones Borders layer
-				...(shouldShowLayer('cwa-zones-inactive-layer')
-					? [
-							new GeoJsonLayer({
-								id: 'cwa-zones-inactive-layer',
-								data: cwaZonesData as any,
-								filled: false,
-								stroked: true,
+								filled: shouldShowLayer('cwa-zones-fill-layer'),
+								stroked: shouldShowLayer('cwa-zones-inactive-layer'),
 								lineWidthMinPixels: 0.5,
-								lineWidthMaxPixels: 1,
-								getLineColor: () => [128, 0, 200, 200], // Purple borders
+								lineWidthMaxPixels: 2,
+								getLineColor: (d: any) => {
+									const cwaId = d.properties?.CWA
+									const isHovered = hoveredCwaId === cwaId
+
+									if (isHovered) {
+										// Bright purple border for hovered zone
+										return [200, 0, 255, 255]
+									}
+									// Default purple border
+									return [128, 0, 200, 200]
+								},
+								getFillColor: (d: any) => {
+									const cwaId = d.properties?.CWA
+									const isHovered = hoveredCwaId === cwaId
+
+									if (isHovered) {
+										// Brighter purple fill for hovered zone
+										return [200, 150, 255, 120]
+									}
+									// Default light purple fill with low opacity
+									return [200, 150, 255, 50]
+								},
 								opacity: 0.8,
 								pickable: false,
+								updateTriggers: {
+									getLineColor: [hoveredCwaId],
+									getFillColor: [hoveredCwaId],
+								},
 							}),
 						]
 					: []),
@@ -1045,8 +1082,10 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			currentFrameAlertMap,
 			currentFrameCoastalAlertMap,
 			hoveredCountyId,
+			hoveredCwaId,
 			animatedColors,
 			initializedLayerVisibility,
+			layerVisibility,
 		])
 
 		const handleViewStateChange = (viewState: any) => {
@@ -1058,11 +1097,17 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		}
 
 		/**
-		 * Update tooltip content for a hovered region (county or coastal)
+		 * Update tooltip content for a hovered region (county, coastal, or CWA)
 		 * Extracts region name and alerts from the current frame
 		 */
-		const updateTooltipForRegion = (regionInfo: { id: string; type: 'county' | 'coastal' } | null) => {
+		const updateTooltipForRegion = (regionInfo: { id: string; type: 'county' | 'coastal' | 'cwa'; wfoId?: string } | null) => {
 			if (!regionInfo || loadedFrames.length === 0) {
+				setTooltipVisible(false)
+				return
+			}
+
+			// Don't show tooltip for CWA zones (we'll handle that separately later)
+			if (regionInfo.type === 'cwa') {
 				setTooltipVisible(false)
 				return
 			}
@@ -1174,10 +1219,21 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						// unproject converts [x, y] screen coordinates to [lon, lat, z]
 						const [lon, lat] = viewport.unproject([x, y])
 
-						// Find which region (county or coastal) this point is in
-						const regionInfo = findRegionAtPoint(lat, lon, coastalData)
-						setHoveredCountyId(regionInfo?.id || null)
-						updateTooltipForRegion(regionInfo)
+						// Find which region (county, coastal, or CWA) this point is in
+						const regionInfo = findRegionAtPoint(lat, lon, coastalData, cwaZonesData)
+
+						// Handle CWA hover separately from county/coastal hover
+						if (regionInfo?.type === 'cwa') {
+							setHoveredCwaId(regionInfo.id)
+							setHoveredCwaWfoId(regionInfo.wfoId || null)
+							setHoveredCountyId(null)
+							setTooltipVisible(false)
+						} else {
+							setHoveredCwaId(null)
+							setHoveredCwaWfoId(null)
+							setHoveredCountyId(regionInfo?.id || null)
+							updateTooltipForRegion(regionInfo)
+						}
 						return
 					}
 				}
@@ -1199,13 +1255,26 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			const hoverLon = centerLon + offsetLon
 			const hoverLat = centerLat + offsetLat
 
-			const regionInfo = findRegionAtPoint(hoverLat, hoverLon, coastalData)
-			setHoveredCountyId(regionInfo?.id || null)
-			updateTooltipForRegion(regionInfo)
+			const regionInfo = findRegionAtPoint(hoverLat, hoverLon, coastalData, cwaZonesData)
+
+			// Handle CWA hover separately from county/coastal hover
+			if (regionInfo?.type === 'cwa') {
+				setHoveredCwaId(regionInfo.id)
+				setHoveredCwaWfoId(regionInfo.wfoId || null)
+				setHoveredCountyId(null)
+				setTooltipVisible(false)
+			} else {
+				setHoveredCwaId(null)
+				setHoveredCwaWfoId(null)
+				setHoveredCountyId(regionInfo?.id || null)
+				updateTooltipForRegion(regionInfo)
+			}
 		}
 
 		const handleMouseLeave = () => {
 			setHoveredCountyId(null)
+			setHoveredCwaId(null)
+			setHoveredCwaWfoId(null)
 			setTooltipVisible(false)
 		}
 

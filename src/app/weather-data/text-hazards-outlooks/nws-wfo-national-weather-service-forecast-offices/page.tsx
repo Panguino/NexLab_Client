@@ -1,13 +1,13 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+'use client'
+
+import { WFOAnimator } from '@/components/elements/WFOAnimator/WFOAnimator'
+import styles from './page.module.scss'
 
 const Page = () => {
 	return (
-		<ComingSoon
-			fullWidth
-			pageName="NWS WFO Text Products"
-			purpose="A dedicated section for Weather Forecast Office text products organized to quickly drill into area-specific discussions and updates."
-			etaText="This section is being implemented."
-		/>
+		<div className={styles.wfoPage}>
+			<WFOAnimator view="overview" />
+		</div>
 	)
 }
 
