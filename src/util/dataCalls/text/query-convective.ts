@@ -51,3 +51,9 @@ export const getConvectiveOutlookGraphics = async (productId, validtimeId) => {
 
 	return data
 }
+
+export const getMesoscaleDiscussions = async () => {
+	const endpoint = 'https://weather.cod.edu/textserv/json/md'
+	const data = await getData(endpoint)
+	return data
+}
