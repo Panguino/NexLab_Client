@@ -96,18 +96,22 @@ function getFeatureBBox(feature: any): number[] | null {
  * Uses point-in-polygon detection with Turf.js
  * Optimized with bounding box pre-filtering
  * Returns object with id and type ('county', 'coastal', or 'cwa')
+ *
+ * @param selectedWFOId - If provided, skip this WFO when checking CWA zones (to allow county detection in detail view)
  */
 function findRegionAtPoint(
 	latitude: number,
 	longitude: number,
 	coastalData?: any,
 	cwaData?: any,
+	selectedWFOId?: string | null,
 ): { id: string; type: 'county' | 'coastal' | 'cwa'; wfoId?: string } | null {
 	if (!booleanPointInPolygon) return null
 
 	const point = [longitude, latitude]
 
 	// First search through CWA zones if available (only ~125 zones)
+	// Skip the selected WFO zone if in detail view to allow county detection
 	if (cwaData && cwaData.features) {
 		const cwaFeatures = cwaData.features || []
 		for (const feature of cwaFeatures) {
@@ -121,6 +125,12 @@ function findRegionAtPoint(
 				if (booleanPointInPolygon(point, feature)) {
 					const cwaId = feature.properties?.CWA
 					const wfoId = feature.properties?.FULLSTAID
+
+					// Skip the selected WFO zone to allow county tooltips in detail view
+					if (selectedWFOId && wfoId === selectedWFOId) {
+						continue
+					}
+
 					if (cwaId) {
 						return { id: cwaId, type: 'cwa', wfoId }
 					}
@@ -1083,10 +1093,20 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		 * Aggregates all alerts in the region and shows summary by alert type
 		 *
 		 * Uses the pre-computed countyToCwaMap for fast lookups (no point-in-polygon on hover)
+		 *
+		 * Note: If the hovered WFO is the selected one (in detail view), don't show the tooltip
+		 * to allow county tooltips to show instead
 		 */
 		const updateCwaTooltip = useCallback(
 			(cwaId: string, wfoId: string, mouseX: number, mouseY: number) => {
 				if (!cwaZonesData || !cwaZonesData.features) {
+					setCwaTooltipVisible(false)
+					return
+				}
+
+				// Don't show CWA tooltip if this is the selected WFO (in detail view)
+				// This allows county tooltips to show instead
+				if (selectedWFOId && wfoId === selectedWFOId) {
 					setCwaTooltipVisible(false)
 					return
 				}
@@ -1159,7 +1179,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				setCwaTooltipInfo(tooltipInfo)
 				setCwaTooltipVisible(true)
 			},
-			[cwaZonesData, currentFrame, loadedFrames, countyToCwaMap, setCwaTooltipInfo, setCwaTooltipVisible],
+			[cwaZonesData, currentFrame, loadedFrames, countyToCwaMap, setCwaTooltipInfo, setCwaTooltipVisible, selectedWFOId],
 		)
 
 		/**
@@ -1192,7 +1212,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							const [lon, lat] = viewport.unproject([x, y])
 
 							// Find which region (county, coastal, or CWA) this point is in
-							const regionInfo = findRegionAtPoint(lat, lon, coastalData, cwaZonesData)
+							// Pass selectedWFOId to skip the selected WFO zone in detail view
+							const regionInfo = findRegionAtPoint(lat, lon, coastalData, cwaZonesData, selectedWFOId)
 
 							// Handle CWA hover separately from county/coastal hover
 							if (regionInfo?.type === 'cwa') {
@@ -1233,7 +1254,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				const hoverLon = centerLon + offsetLon
 				const hoverLat = centerLat + offsetLat
 
-				const regionInfo = findRegionAtPoint(hoverLat, hoverLon, coastalData, cwaZonesData)
+				// Pass selectedWFOId to skip the selected WFO zone in detail view
+				const regionInfo = findRegionAtPoint(hoverLat, hoverLon, coastalData, cwaZonesData, selectedWFOId)
 
 				// Handle CWA hover separately from county/coastal hover
 				if (regionInfo?.type === 'cwa') {
@@ -1266,6 +1288,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				setHoveredCountyId,
 				setTooltipVisible,
 				setCwaTooltipVisible,
+				selectedWFOId,
 			],
 		)
 
