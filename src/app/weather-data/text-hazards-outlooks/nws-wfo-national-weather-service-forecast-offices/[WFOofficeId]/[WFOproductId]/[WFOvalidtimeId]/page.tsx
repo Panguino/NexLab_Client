@@ -1,6 +1,6 @@
 'use client'
 
-import ComingSoon from '@/components/blocks/ComingSoon/ComingSoon'
+import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
 
 const Page = () => {
 	return (
