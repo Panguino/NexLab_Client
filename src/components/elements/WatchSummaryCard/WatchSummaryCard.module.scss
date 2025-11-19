@@ -54,10 +54,16 @@
 }
 
 .content {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 20px;
+}
+
+.mainContent {
 	display: grid;
 	grid-template-columns: 1fr 1.5fr;
 	gap: 20px;
-	padding: 20px;
 }
 
 .graphicSection {
@@ -144,7 +150,7 @@
 
 	.probsList {
 		display: flex;
-		flex-direction: column;
+		flex-wrap: wrap;
 		gap: 6px;
 	}
 
@@ -156,21 +162,31 @@
 		background: var(--color-grey4-grey16);
 		border-radius: 3px;
 		font-size: 12px;
+		flex: 1 1 auto;
+		white-space: nowrap;
 
 		.probLabel {
 			color: var(--color-grey16-grey6);
-			flex: 1;
 		}
 
 		.probValue {
 			font-weight: 600;
 			color: var(--color-grey18-grey4);
+			margin-left: 4px;
+
+			&.moderateProb {
+				color: #f9a825;
+			}
+
+			&.highProb {
+				color: #ef6c00;
+			}
 		}
 	}
 }
 
 @media (max-width: 1024px) {
-	.content {
+	.mainContent {
 		grid-template-columns: 1fr;
 	}
 

@@ -80,6 +80,25 @@ export const WatchSummaryCard = ({
 		return decoded
 	}
 
+	// Format probability labels
+	const formatProbabilityLabel = (key: string): string | null => {
+		if (key === 'PROB OF 1 OR MORE HAIL EVENTS >= 2 INCHES') return 'Hail >= 2"'
+		if (key === 'PROB OF 1 OR MORE STRONG /EF2-EF5/ TORNADOES') return 'EF2+ Tornadoes'
+		if (key === 'PROB OF 1 OR MORE WIND EVENTS >= 65 KNOTS') return 'Wind +65 kts'
+		if (key === 'PROB OF 10 OR MORE SEVERE HAIL EVENTS') return 'Hail'
+		if (key === 'PROB OF 10 OR MORE SEVERE WIND EVENTS') return 'Wind'
+		if (key === 'PROB OF 2 OR MORE TORNADOES') return 'Tornadoes'
+		if (key === 'PROB OF 6 OR MORE COMBINED SEVERE HAIL/WIND EVENTS') return null // Omit combined
+		return key
+	}
+
+	// Get probability value class based on percentage
+	const getProbabilityClass = (value: string): string => {
+		const percentage = parseInt(value.replace('%', ''))
+		if (percentage >= 30) return styles.highProb
+		return styles.moderateProb
+	}
+
 	const decodedAttributes = decodeAttributes()
 
 	return (
@@ -92,48 +111,63 @@ export const WatchSummaryCard = ({
 			</div>
 
 			<div className={styles.content}>
-				<div className={styles.graphicSection}>
-					<img src={graphic} alt={`Watch ${number}`} className={styles.graphic} />
-				</div>
-
-				<div className={styles.detailsSection}>
-					<div className={styles.detailItem}>
-						<span className={styles.label}>Valid Time:</span>
-						<span className={styles.value}>
-							{timeBegin} - {timeEnd}
-						</span>
+				<div className={styles.mainContent}>
+					<div className={styles.graphicSection}>
+						<img src={graphic} alt={`Watch ${number}`} className={styles.graphic} />
 					</div>
 
-					{states.length > 0 && (
+					<div className={styles.detailsSection}>
 						<div className={styles.detailItem}>
-							<span className={styles.label}>States:</span>
-							<span className={styles.value}>{states.join(', ')}</span>
+							<span className={styles.label}>Valid Time:</span>
+							<span className={styles.value}>
+								{timeBegin} - {timeEnd}
+							</span>
 						</div>
-					)}
 
-					<div className={styles.attributesGrid}>
-						{Object.entries(decodedAttributes).map(([key, value]) => (
-							<div key={key} className={styles.attributeItem}>
-								<span className={styles.attrLabel}>{key}:</span>
-								<span className={styles.attrValue}>{value}</span>
+						{states.length > 0 && (
+							<div className={styles.detailItem}>
+								<span className={styles.label}>States:</span>
+								<span className={styles.value}>{states.join(', ')}</span>
 							</div>
-						))}
+						)}
+
+						<div className={styles.attributesGrid}>
+							{Object.entries(decodedAttributes).map(([key, value]) => (
+								<div key={key} className={styles.attributeItem}>
+									<span className={styles.attrLabel}>{key}:</span>
+									<span className={styles.attrValue}>{value}</span>
+								</div>
+							))}
+						</div>
 					</div>
-
-					{Object.keys(probabilities).length > 0 && (
-						<div className={styles.probabilitiesSection}>
-							<div className={styles.sectionTitle}>Probabilities</div>
-							<div className={styles.probsList}>
-								{Object.entries(probabilities).map(([key, value]) => (
-									<div key={key} className={styles.probItem}>
-										<span className={styles.probLabel}>{key.replace(/PROB OF /g, '')}:</span>
-										<span className={styles.probValue}>{value}</span>
-									</div>
-								))}
-							</div>
-						</div>
-					)}
 				</div>
+
+				{Object.keys(probabilities).length > 0 && (
+					<div className={styles.probabilitiesSection}>
+						<div className={styles.sectionTitle}>Probabilities</div>
+						<div className={styles.probsList}>
+							{[
+								'PROB OF 2 OR MORE TORNADOES',
+								'PROB OF 1 OR MORE STRONG /EF2-EF5/ TORNADOES',
+								'PROB OF 10 OR MORE SEVERE HAIL EVENTS',
+								'PROB OF 1 OR MORE HAIL EVENTS >= 2 INCHES',
+								'PROB OF 10 OR MORE SEVERE WIND EVENTS',
+								'PROB OF 1 OR MORE WIND EVENTS >= 65 KNOTS',
+							].map((key) => {
+								const value = probabilities[key as keyof WatchProbabilities]
+								if (!value) return null
+								const label = formatProbabilityLabel(key)
+								if (label === null) return null
+								return (
+									<div key={key} className={styles.probItem}>
+										<span className={styles.probLabel}>{label}:</span>
+										<span className={`${styles.probValue} ${!notActive ? getProbabilityClass(value) : ''}`}>{value}</span>
+									</div>
+								)
+							})}
+						</div>
+					</div>
+				)}
 			</div>
 		</div>
 	)
