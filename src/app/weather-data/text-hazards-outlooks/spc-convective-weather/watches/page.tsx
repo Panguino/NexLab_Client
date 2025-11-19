@@ -1,14 +1,7 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { ConvectiveWatchesPage } from '@/components/blocks/ConvectiveWatchesPage/ConvectiveWatchesPage'
 
 const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Severe Weather Watches"
-			purpose="List of active and recent severe weather watches."
-			etaText="This section is being implemented."
-		/>
-	)
+	return <ConvectiveWatchesPage />
 }
 
 export default Page

@@ -57,3 +57,9 @@ export const getMesoscaleDiscussions = async () => {
 	const data = await getData(endpoint)
 	return data
 }
+
+export const getConvectiveWatches = async () => {
+	const endpoint = 'https://weather.cod.edu/textserv/json/watch/'
+	const data = await getData(endpoint)
+	return data
+}
