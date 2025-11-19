@@ -81,6 +81,7 @@ interface IAnimatorProvider extends IAnimatorProps {
 	mapRegion: 'conus' | 'alaska' | 'hawaii' | 'namer'
 	mapZoomState: mapZoomState // Current map zoom state
 	setMapZoomState: (mapZoomState: mapZoomState) => void // Update map zoom state
+	targetMapZoomState: mapZoomState | null // Target zoom state for smooth animation
 	mapLayerVisibility: Record<string, boolean> // Map layer visibility state
 	setMapLayerVisibility: (visibility: Record<string, boolean>) => void // Update map layer visibility
 	onStormClick?: (stormId: string) => void // Storm click handler
@@ -171,6 +172,15 @@ export const Animator = ({
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
 	const [mapZoomState, setMapZoomStateLocal] = useState<mapZoomState>(initialMapZoomState)
+	const [targetMapZoomState, setTargetMapZoomState] = useState<mapZoomState | null>(null)
+
+	// Update target map zoom state when initialMapZoomState prop changes
+	// This triggers smooth animation instead of instant snap
+	useEffect(() => {
+		if (initialMapZoomState) {
+			setTargetMapZoomState(initialMapZoomState)
+		}
+	}, [initialMapZoomState])
 
 	// Initialize layer visibility from layerConfig (required)
 	// If mapLayerVisibility prop is provided AND has keys, use it (controlled component)
@@ -212,6 +222,15 @@ export const Animator = ({
 			setMapLayerVisibilityLocal(mapLayerVisibility)
 		}
 	}, [mapLayerVisibility])
+
+	// Update layer visibility when layerConfig changes
+	useEffect(() => {
+		// Only update if mapLayerVisibility is not controlling the state
+		if (!mapLayerVisibility || Object.keys(mapLayerVisibility).length === 0) {
+			setMapLayerVisibilityLocal(getInitialLayerVisibility())
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [layerConfig])
 	return (
 		<AnimatorContext.Provider
 			value={{
@@ -272,7 +291,10 @@ export const Animator = ({
 				setMapZoomState: (newMapZoomState: mapZoomState) => {
 					setMapZoomStateLocal(newMapZoomState)
 					setMapZoomState(newMapZoomState)
+					// Clear target when user manually changes zoom
+					setTargetMapZoomState(null)
 				},
+				targetMapZoomState,
 				mapLayerVisibility: mapLayerVisibilityLocal,
 				setMapLayerVisibility: (newVisibility: Record<string, boolean>) => {
 					setMapLayerVisibilityLocal(newVisibility)

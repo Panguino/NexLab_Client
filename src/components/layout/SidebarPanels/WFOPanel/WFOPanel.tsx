@@ -155,9 +155,12 @@ const WFOPanel = ({ basepath }: WFOPanelProps) => {
 		}))
 	}, [wfoData])
 
+	// Determine back button URL based on whether an office is selected
+	const backButtonUrl = selectedOfficeId ? wfoBasePath : basepath
+
 	return (
 		<>
-			<SidebarSectionHeader name="NWS WFO" linkUrl={basepath} />
+			<SidebarSectionHeader name="NWS WFO" linkUrl={backButtonUrl} />
 			<div className={styles.selectTitle}>Available Forecast Offices:</div>
 			<div className={styles.wfoSelector}>
 				<SelectSearchable

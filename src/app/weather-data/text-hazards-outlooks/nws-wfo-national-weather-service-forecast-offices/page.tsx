@@ -1,14 +1,7 @@
-'use client'
-
-import { WFOAnimator } from '@/components/elements/WFOAnimator/WFOAnimator'
-import styles from './page.module.scss'
-
 const Page = () => {
-	return (
-		<div className={styles.wfoPage}>
-			<WFOAnimator view="overview" />
-		</div>
-	)
+	// The WFOAnimator is now rendered in the layout
+	// This page is just a placeholder for the overview route
+	return null
 }
 
 export default Page

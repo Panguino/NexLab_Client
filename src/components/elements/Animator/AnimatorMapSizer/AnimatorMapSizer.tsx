@@ -18,7 +18,7 @@ import styles from './AnimatorMapSizer.module.scss'
  *
  * Similar to AnimatorImageSizer but for map data
  */
-const DEBUG_INTERACTIONS = true
+const DEBUG_INTERACTIONS = false
 
 // Zoom step sizes - adjust these to control zoom speed
 const ZOOM_STEP_BUTTON = 0.3 // Step size for zoom in/out buttons (smaller = slower)
@@ -41,6 +41,7 @@ const AnimatorMapSizer = () => {
 		mapRegion,
 		mapZoomState,
 		setMapZoomState,
+		targetMapZoomState,
 		mapLayerVisibility,
 		setMapLayerVisibility,
 		mapDataType,
@@ -96,6 +97,14 @@ const AnimatorMapSizer = () => {
 	useEffect(() => {
 		updateDimensions()
 	}, [updateDimensions, loadedFrames])
+
+	// Watch for external target zoom state changes (from WFOAnimator, etc.)
+	useEffect(() => {
+		if (targetMapZoomState) {
+			logInteraction('🎯 External target zoom state received', targetMapZoomState)
+			setTargetViewState(targetMapZoomState)
+		}
+	}, [targetMapZoomState, logInteraction])
 
 	// Animation loop for smooth easing using requestAnimationFrame
 	// When targetViewState is set, smoothly interpolate from current to target
@@ -188,7 +197,7 @@ const AnimatorMapSizer = () => {
 				latitude: newViewState.latitude,
 			})
 		},
-		[setMapZoomState, logInteraction],
+		[setMapZoomState],
 	)
 
 	// BUTTON INTERACTIONS: Animate to target state
