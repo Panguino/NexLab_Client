@@ -102,6 +102,7 @@ export interface IAnimatorMapMachineProps {
 
 	// CWA zone interaction
 	onCwaClick?: (cwaId: string, wfoId: string) => void
+	selectedWFOId?: string | null // Selected WFO ID for filtering counties in detail view
 
 	// Callbacks
 	onFrameChange?: (frameIndex: number) => void

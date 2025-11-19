@@ -8,6 +8,7 @@ export interface CountiesLayerProps {
 	hoveredCountyId: string | null
 	alertMap: Record<string, any> | null
 	animatedColors?: Record<string, number[]>
+	filterCountyFn?: (countyId: string) => boolean // Optional filter function to show only specific counties
 }
 
 /**
@@ -25,13 +26,27 @@ export const createCountiesLayer = ({
 	hoveredCountyId,
 	alertMap,
 	animatedColors,
+	filterCountyFn,
 }: CountiesLayerProps) => {
 	if (!data) return []
+
+	// Filter data if filter function is provided
+	let filteredData = data
+	if (filterCountyFn && data.features) {
+		filteredData = {
+			...data,
+			features: data.features.filter((feature: any) => {
+				const countyId = feature.properties?.id || feature.properties?.ID
+				if (!countyId) return false
+				return filterCountyFn(countyId)
+			}),
+		}
+	}
 
 	return [
 		new GeoJsonLayer({
 			id: 'counties-layer',
-			data: data as any,
+			data: filteredData as any,
 			filled: true,
 			stroked: true,
 			lineWidthMinPixels: 0.5,

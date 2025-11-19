@@ -68,6 +68,8 @@ export interface IAnimatorProps {
 	onStormClick?: (stormId: string) => void
 	// CWA zone click handler
 	onCwaClick?: (cwaId: string, wfoId: string) => void
+	// Selected WFO ID for filtering counties in detail view
+	selectedWFOId?: string | null
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -88,6 +90,7 @@ interface IAnimatorProvider extends IAnimatorProps {
 	onCwaClick?: (cwaId: string, wfoId: string) => void // CWA zone click handler
 	mapDataType: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 	layerConfig?: any // Layer configuration for filtering which layers are shown
+	selectedWFOId?: string | null // Selected WFO ID for filtering counties in detail view
 }
 
 const AnimatorContext = createContext<IAnimatorProvider | undefined>(undefined)
@@ -167,6 +170,7 @@ export const Animator = ({
 	layerConfig,
 	onStormClick,
 	onCwaClick,
+	selectedWFOId,
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
@@ -304,6 +308,7 @@ export const Animator = ({
 				layerConfig,
 				onStormClick,
 				onCwaClick,
+				selectedWFOId,
 			}}
 		>
 			<AnimatorLayout />

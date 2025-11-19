@@ -137,14 +137,16 @@ export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: W
 					'cwa-zones-fill-layer': { active: true, initialValue: true },
 				}
 			: {
-					// Detail mode: Show county alerts and data layers
+					// Detail mode: Show ALL CWA zones (for navigation) + counties in selected region
 					'world-layer': { active: true, initialValue: true },
 					'states-layer': { active: true, initialValue: true },
 					'states-fill-layer': { active: true, initialValue: true },
 					'lakes-layer': { active: true, initialValue: true },
 					'latlong-grid': { active: true, initialValue: true },
-					'counties-inactive-layer': { active: true, initialValue: true },
-					'county-data-regions-layer': { active: true, initialValue: true },
+					'cwa-zones-inactive-layer': { active: true, initialValue: true }, // Keep CWA zones visible
+					'cwa-zones-fill-layer': { active: true, initialValue: true }, // Keep CWA zones visible
+					'counties-inactive-layer': { active: true, initialValue: true }, // Only counties in selected WFO
+					'county-data-regions-layer': { active: true, initialValue: true }, // Only counties in selected WFO
 					'coastal-regions-inactive-layer': { active: true, initialValue: false },
 					'coastal-data-regions-layer': { active: true, initialValue: false },
 				}
@@ -163,7 +165,8 @@ export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: W
 				hideControls={view === 'overview'}
 				mapLayerVisibility={mapLayerVisibility}
 				onMapLayerVisibilityChange={setMapLayerVisibility}
-				onCwaClick={view === 'overview' ? handleCwaClick : undefined}
+				onCwaClick={handleCwaClick} // Enable CWA clicks in both overview and detail view
+				selectedWFOId={view === 'detail' ? selectedWFOId : null} // Pass selected WFO for filtering
 				initialMapZoomState={targetZoomState}
 				setMapZoomState={handleMapZoomStateChange}
 			/>

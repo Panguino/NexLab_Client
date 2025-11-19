@@ -7,6 +7,7 @@ import { getHazardInfoFromEvent } from '@/util/dataCalls/alerts/parseCountyAlert
 import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from 'deck.gl'
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useAnimator } from '../Animator'
 import styles from './AnimatorMapMachine.module.scss'
 import { CwaTooltip, type CwaTooltipInfo } from './components/CwaTooltip'
 import MapAlertTooltip from './components/MapAlertTooltip'
@@ -214,6 +215,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			layerVisibility = {},
 			onStormClick,
 			onCwaClick,
+			selectedWFOId,
 		},
 		ref,
 	) => {
@@ -226,6 +228,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		const [isHoveringStorm, setIsHoveringStorm] = useState(false)
 		const deckGLRef = useRef<any>(null)
 		const containerRef = useRef<HTMLDivElement>(null)
+
+		// Get targetMapZoomState and setMapZoomState from Animator context for smooth zoom animation
+		const animatorContext = useAnimator()
+		const targetMapZoomState = animatorContext?.targetMapZoomState
+		const setMapZoomState = animatorContext?.setMapZoomState
 
 		// Use custom hooks for data and interactions
 		const { cwaZonesData } = useMapData()
@@ -351,6 +358,51 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				},
 			[externalViewState],
 		)
+
+		// Smooth zoom animation using custom easing
+		// Moves a small percentage of the distance each frame for smooth transitions
+		useEffect(() => {
+			if (!targetMapZoomState || !setMapZoomState) return
+
+			const EASING_FACTOR = 0.05 // Move 5% of distance each frame (slower = smaller value)
+			const THRESHOLD = 0.001 // Stop when delta is very small
+
+			const animationFrame = requestAnimationFrame(() => {
+				const currentZoom = viewState.zoom
+				const currentLat = viewState.latitude
+				const currentLon = viewState.longitude
+
+				const targetZoom = targetMapZoomState.zoom
+				const targetLat = targetMapZoomState.latitude
+				const targetLon = targetMapZoomState.longitude
+
+				// Calculate deltas
+				const deltaZoom = targetZoom - currentZoom
+				const deltaLat = targetLat - currentLat
+				const deltaLon = targetLon - currentLon
+
+				// Check if we're close enough to stop
+				if (Math.abs(deltaZoom) < THRESHOLD && Math.abs(deltaLat) < THRESHOLD && Math.abs(deltaLon) < THRESHOLD) {
+					// Snap to final position
+					setMapZoomState({
+						zoom: targetZoom,
+						latitude: targetLat,
+						longitude: targetLon,
+					})
+					return
+				}
+
+				// Move a fraction of the distance
+				setMapZoomState({
+					zoom: currentZoom + deltaZoom * EASING_FACTOR,
+					latitude: currentLat + deltaLat * EASING_FACTOR,
+					longitude: currentLon + deltaLon * EASING_FACTOR,
+				})
+			})
+
+			return () => cancelAnimationFrame(animationFrame)
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, [viewState])
 
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
@@ -521,11 +573,12 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					gridlineColor,
 				}),
 
-				// CWA Zones layer
+				// CWA Zones layer - always visible, highlights selected WFO in detail view
 				...createCwaZonesLayer({
 					showFill: shouldShowLayer('cwa-zones-fill-layer'),
 					showBorders: shouldShowLayer('cwa-zones-inactive-layer'),
 					hoveredCwaId,
+					selectedWFOId,
 				}),
 
 				// Fire Zones layer
@@ -541,6 +594,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				}),
 
 				// Counties layer - only render when zoomed in for performance
+				// If selectedWFOId is provided, only show counties in that WFO region
 				...(viewState.zoom > 4.5
 					? createCountiesLayer({
 							data:
@@ -555,6 +609,18 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							hoveredCountyId,
 							alertMap: currentFrameAlertMap,
 							animatedColors,
+							filterCountyFn: selectedWFOId
+								? (countyId: string) => {
+										// Find the CWA ID for this WFO
+										const cwaFeature = cwaZonesData?.features?.find(
+											(f: any) => f.properties?.FULLSTAID === selectedWFOId || f.properties?.WFO === selectedWFOId,
+										)
+										const cwaId = cwaFeature?.properties?.CWA
+										if (!cwaId) return false
+										// Check if this county belongs to the selected CWA
+										return countyToCwaMap.get(countyId) === cwaId
+									}
+								: undefined,
 						})
 					: []),
 
@@ -899,6 +965,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			animatedColors,
 			initializedLayerVisibility,
 			viewState.zoom,
+			selectedWFOId,
+			countyToCwaMap,
+			cwaZonesData?.features,
 		])
 
 		const handleViewStateChange = (viewState: any) => {
