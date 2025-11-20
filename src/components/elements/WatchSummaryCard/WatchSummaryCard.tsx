@@ -1,3 +1,6 @@
+'use client'
+
+import { useRouter } from 'next/navigation'
 import styles from './WatchSummaryCard.module.scss'
 
 interface WatchAttributes {
@@ -100,9 +103,14 @@ export const WatchSummaryCard = ({
 	}
 
 	const decodedAttributes = decodeAttributes()
+	const router = useRouter()
+
+	const handleClick = () => {
+		router.push(`/weather-data/text-hazards-outlooks/spc-convective-weather/watches/${number}`)
+	}
 
 	return (
-		<div className={styles.watchSummaryCard}>
+		<div className={styles.watchSummaryCard} onClick={handleClick}>
 			<div className={`${styles.header} ${getTypeClass()}`}>
 				<div className={styles.titleRow}>
 					{watchType} Watch #{number}
