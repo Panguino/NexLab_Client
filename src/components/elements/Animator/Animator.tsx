@@ -3,6 +3,9 @@ import { mapZoomState, zoomState } from '@/types/general'
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import AnimatorLayout from './AnimatorLayout/AnimatorLayout'
 
+// Default map zoom state - defined outside component to prevent new object creation on every render
+const DEFAULT_MAP_ZOOM_STATE: mapZoomState = { zoom: 3, latitude: 37, longitude: -95 }
+
 export interface IAnimatorProps {
 	frames: string[] | any[] // Can be image URLs or MapFrame objects
 	frameValidTimes?: number[]
@@ -159,7 +162,7 @@ export const Animator = ({
 	},
 	mode = 'image',
 	mapRegion = 'conus',
-	initialMapZoomState = { zoom: 3, latitude: 37, longitude: -95 },
+	initialMapZoomState = DEFAULT_MAP_ZOOM_STATE,
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	setMapZoomState = (_mapZoomState: mapZoomState) => {
 		// Silently ignore if not provided - this is optional
@@ -180,11 +183,21 @@ export const Animator = ({
 
 	// Update target map zoom state when initialMapZoomState prop changes
 	// This triggers smooth animation instead of instant snap
+	// Use individual values as dependencies to avoid infinite loop from object reference changes
 	useEffect(() => {
 		if (initialMapZoomState) {
-			setTargetMapZoomState(initialMapZoomState)
+			// Only update if the values actually changed to prevent infinite loop
+			const hasChanged =
+				!targetMapZoomState ||
+				targetMapZoomState.zoom !== initialMapZoomState.zoom ||
+				targetMapZoomState.latitude !== initialMapZoomState.latitude ||
+				targetMapZoomState.longitude !== initialMapZoomState.longitude
+
+			if (hasChanged) {
+				setTargetMapZoomState(initialMapZoomState)
+			}
 		}
-	}, [initialMapZoomState])
+	}, [initialMapZoomState?.zoom, initialMapZoomState?.latitude, initialMapZoomState?.longitude, targetMapZoomState])
 
 	// Initialize layer visibility from layerConfig (required)
 	// If mapLayerVisibility prop is provided AND has keys, use it (controlled component)
