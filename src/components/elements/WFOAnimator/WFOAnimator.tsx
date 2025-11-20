@@ -13,11 +13,10 @@ import styles from './WFOAnimator.module.scss'
 
 interface WFOAnimatorProps {
 	selectedWFOId?: string | null
-	onWFOSelect?: (wfoId: string) => void
 	view?: 'overview' | 'detail'
 }
 
-export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: WFOAnimatorProps) => {
+export const WFOAnimator = ({ selectedWFOId, view = 'overview' }: WFOAnimatorProps) => {
 	const router = useRouter()
 	const [frames, setFrames] = useState<MapFrame[]>([])
 	const [isLoading, setIsLoading] = useState(true)
@@ -29,23 +28,17 @@ export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: W
 	// The object reference must remain stable unless the actual values change
 	const targetZoomState = useMemo(() => targetZoomStateRaw, [targetZoomStateRaw?.zoom, targetZoomStateRaw?.latitude, targetZoomStateRaw?.longitude])
 
-	// Handle CWA zone click - navigate to WFO detail page (only in overview mode)
+	// Handle CWA zone click - navigate to WFO detail page
+	// Works in both overview and detail view to allow switching between WFO regions
 	const handleCwaClick = useCallback(
 		(cwaId: string, wfoId: string) => {
 			console.log(`CWA zone clicked: ${cwaId}, WFO: ${wfoId}`)
 
-			// In overview mode, navigate to WFO detail page
-			if (view === 'overview') {
-				const wfoBasePath = '/weather-data/text-hazards-outlooks/nws-wfo-national-weather-service-forecast-offices'
-				router.push(`${wfoBasePath}/${wfoId}`)
-			}
-
-			// Call optional callback if provided
-			if (onWFOSelect) {
-				onWFOSelect(wfoId)
-			}
+			// Navigate to WFO detail page (route is the source of truth)
+			const wfoBasePath = '/weather-data/text-hazards-outlooks/nws-wfo-national-weather-service-forecast-offices'
+			router.push(`${wfoBasePath}/${wfoId}`)
 		},
-		[router, onWFOSelect, view],
+		[router],
 	)
 
 	// Update target zoom state when view or selectedWFOId changes
