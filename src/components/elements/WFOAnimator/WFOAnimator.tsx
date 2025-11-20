@@ -8,7 +8,7 @@ import cwaZonesData from '@/data/d3Map/cwaZones.json'
 import { createCountyAlertFrame } from '@/util/dataCalls/alerts/createCountyAlertFrames'
 import { fetchRealTimeHazards, parseHazardsToCountyMap } from '@/util/dataCalls/alerts/parseCountyAlerts'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styles from './WFOAnimator.module.scss'
 
 interface WFOAnimatorProps {
@@ -23,7 +23,11 @@ export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: W
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 	const [mapLayerVisibility, setMapLayerVisibility] = useState<Record<string, boolean>>({})
-	const [targetZoomState, setTargetZoomState] = useState<mapZoomState | undefined>(undefined)
+	const [targetZoomStateRaw, setTargetZoomStateRaw] = useState<mapZoomState | undefined>(undefined)
+
+	// Memoize targetZoomState to prevent infinite loop
+	// The object reference must remain stable unless the actual values change
+	const targetZoomState = useMemo(() => targetZoomStateRaw, [targetZoomStateRaw?.zoom, targetZoomStateRaw?.latitude, targetZoomStateRaw?.longitude])
 
 	// Handle CWA zone click - navigate to WFO detail page (only in overview mode)
 	const handleCwaClick = useCallback(
@@ -54,7 +58,7 @@ export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: W
 			const zoomState = zoomToCwaZone(cwaZonesData as any, selectedWFOId, viewportWidth, viewportHeight, 0.15)
 
 			if (zoomState) {
-				setTargetZoomState({
+				setTargetZoomStateRaw({
 					zoom: zoomState.zoom,
 					latitude: zoomState.latitude,
 					longitude: zoomState.longitude,
@@ -62,7 +66,7 @@ export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: W
 			}
 		} else if (view === 'overview') {
 			// Reset to overview zoom (CONUS)
-			setTargetZoomState({
+			setTargetZoomStateRaw({
 				zoom: 4,
 				latitude: 39.8283,
 				longitude: -98.5795,
@@ -74,7 +78,7 @@ export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: W
 	const handleMapZoomStateChange = useCallback((newZoomState: mapZoomState) => {
 		// Update target zoom state to match current state
 		// This prevents the zoom from resetting when user manually pans/zooms
-		setTargetZoomState(newZoomState)
+		setTargetZoomStateRaw(newZoomState)
 	}, [])
 
 	// Load county alerts data
