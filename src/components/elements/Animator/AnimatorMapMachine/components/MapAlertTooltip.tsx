@@ -51,7 +51,6 @@ export function MapAlertTooltip({ visible, title, alerts }: MapAlertTooltipProps
 				y: y,
 			}}
 			transition={{ duration: 0.2 }}
-			style={{ pointerEvents: visible ? 'auto' : 'none' }}
 		>
 			<h4>{title}</h4>
 			{alerts && alerts.length > 0 ? (

@@ -3,6 +3,9 @@ import { mapZoomState, zoomState } from '@/types/general'
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from 'react'
 import AnimatorLayout from './AnimatorLayout/AnimatorLayout'
 
+// Default map zoom state - defined outside component to prevent new object creation on every render
+const DEFAULT_MAP_ZOOM_STATE: mapZoomState = { zoom: 3, latitude: 37, longitude: -95 }
+
 export interface IAnimatorProps {
 	frames: string[] | any[] // Can be image URLs or MapFrame objects
 	frameValidTimes?: number[]
@@ -63,9 +66,13 @@ export interface IAnimatorProps {
 	setMapLayerVisibility?: (visibility: Record<string, boolean>) => void // Callback for layer visibility changes
 	mapDataType?: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 	// Layer configuration
-	layerConfig: any // Layer configuration for filtering which layers are shown (LayerConfig type) - REQUIRED
+	layerConfig?: any // Layer configuration for filtering which layers are shown (LayerConfig type) - REQUIRED
 	// Storm click handler
 	onStormClick?: (stormId: string) => void
+	// CWA zone click handler
+	onCwaClick?: (cwaId: string, wfoId: string) => void
+	// Selected WFO ID for filtering counties in detail view
+	selectedWFOId?: string | null
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -79,11 +86,14 @@ interface IAnimatorProvider extends IAnimatorProps {
 	mapRegion: 'conus' | 'alaska' | 'hawaii' | 'namer'
 	mapZoomState: mapZoomState // Current map zoom state
 	setMapZoomState: (mapZoomState: mapZoomState) => void // Update map zoom state
+	targetMapZoomState: mapZoomState | null // Target zoom state for smooth animation
 	mapLayerVisibility: Record<string, boolean> // Map layer visibility state
 	setMapLayerVisibility: (visibility: Record<string, boolean>) => void // Update map layer visibility
 	onStormClick?: (stormId: string) => void // Storm click handler
+	onCwaClick?: (cwaId: string, wfoId: string) => void // CWA zone click handler
 	mapDataType: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 	layerConfig?: any // Layer configuration for filtering which layers are shown
+	selectedWFOId?: string | null // Selected WFO ID for filtering counties in detail view
 }
 
 const AnimatorContext = createContext<IAnimatorProvider | undefined>(undefined)
@@ -152,7 +162,7 @@ export const Animator = ({
 	},
 	mode = 'image',
 	mapRegion = 'conus',
-	initialMapZoomState = { zoom: 3, latitude: 37, longitude: -95 },
+	initialMapZoomState = DEFAULT_MAP_ZOOM_STATE,
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	setMapZoomState = (_mapZoomState: mapZoomState) => {
 		// Silently ignore if not provided - this is optional
@@ -162,11 +172,32 @@ export const Animator = ({
 	mapDataType = 'all',
 	layerConfig,
 	onStormClick,
+	onCwaClick,
+	selectedWFOId,
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
 	const [mapZoomState, setMapZoomStateLocal] = useState<mapZoomState>(initialMapZoomState)
+	const [targetMapZoomState, setTargetMapZoomState] = useState<mapZoomState | null>(null)
+
+	// Update target map zoom state when initialMapZoomState prop changes
+	// This triggers smooth animation instead of instant snap
+	// Use individual values as dependencies to avoid infinite loop from object reference changes
+	useEffect(() => {
+		if (initialMapZoomState) {
+			// Only update if the values actually changed to prevent infinite loop
+			const hasChanged =
+				!targetMapZoomState ||
+				targetMapZoomState.zoom !== initialMapZoomState.zoom ||
+				targetMapZoomState.latitude !== initialMapZoomState.latitude ||
+				targetMapZoomState.longitude !== initialMapZoomState.longitude
+
+			if (hasChanged) {
+				setTargetMapZoomState(initialMapZoomState)
+			}
+		}
+	}, [initialMapZoomState, targetMapZoomState])
 
 	// Initialize layer visibility from layerConfig (required)
 	// If mapLayerVisibility prop is provided AND has keys, use it (controlled component)
@@ -208,6 +239,15 @@ export const Animator = ({
 			setMapLayerVisibilityLocal(mapLayerVisibility)
 		}
 	}, [mapLayerVisibility])
+
+	// Update layer visibility when layerConfig changes
+	useEffect(() => {
+		// Only update if mapLayerVisibility is not controlling the state
+		if (!mapLayerVisibility || Object.keys(mapLayerVisibility).length === 0) {
+			setMapLayerVisibilityLocal(getInitialLayerVisibility())
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [layerConfig])
 	return (
 		<AnimatorContext.Provider
 			value={{
@@ -268,7 +308,10 @@ export const Animator = ({
 				setMapZoomState: (newMapZoomState: mapZoomState) => {
 					setMapZoomStateLocal(newMapZoomState)
 					setMapZoomState(newMapZoomState)
+					// Clear target when user manually changes zoom
+					setTargetMapZoomState(null)
 				},
+				targetMapZoomState,
 				mapLayerVisibility: mapLayerVisibilityLocal,
 				setMapLayerVisibility: (newVisibility: Record<string, boolean>) => {
 					setMapLayerVisibilityLocal(newVisibility)
@@ -277,6 +320,8 @@ export const Animator = ({
 				mapDataType: mapDataType || 'all',
 				layerConfig,
 				onStormClick,
+				onCwaClick,
+				selectedWFOId,
 			}}
 		>
 			<AnimatorLayout />
