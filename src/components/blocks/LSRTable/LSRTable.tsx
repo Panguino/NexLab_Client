@@ -5,8 +5,10 @@ import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-material.css'
 import { AgGridReact } from 'ag-grid-react'
+import { useTheme } from 'next-themes'
 import { useEffect, useRef, useState } from 'react'
 import styles from './LSRTable.module.scss'
+import StormReportCard from './StormReportCard/StormReportCard'
 
 interface StormReport {
 	county: string
@@ -29,6 +31,7 @@ interface StormReport {
 }
 
 const LSRTable = () => {
+	const { theme } = useTheme()
 	const [searchText, setSearchText] = useState('')
 	const [rowData, setRowData] = useState<StormReport[]>([])
 	const [loading, setLoading] = useState(true)
@@ -36,7 +39,28 @@ const LSRTable = () => {
 	const [currentPage, setCurrentPage] = useState(0)
 	const [totalPages, setTotalPages] = useState(0)
 	const [pageInput, setPageInput] = useState('1')
+	const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+	const [showFilterMenu, setShowFilterMenu] = useState(false)
+	const [wholeWord, setWholeWord] = useState(false)
+	const [caseSensitive, setCaseSensitive] = useState(false)
+	const [selectedReport, setSelectedReport] = useState<StormReport | null>(null)
+	const [cardPosition, setCardPosition] = useState({ top: 0, left: 0 })
+	const [showCardAbove, setShowCardAbove] = useState(false)
 	const gridRef = useRef<AgGridReact>(null)
+	const tableRef = useRef<HTMLDivElement>(null)
+
+	// Available filter fields
+	const availableFilters = [
+		{ field: 'event', label: 'Event' },
+		{ field: 'state', label: 'State' },
+		{ field: 'county', label: 'County' },
+		{ field: 'location', label: 'Location' },
+		{ field: 'magnitude_str', label: 'Magnitude' },
+		{ field: 'remark', label: 'Remark' },
+		{ field: 'source', label: 'Source' },
+		{ field: 'office_plain', label: 'Office' },
+		{ field: 'valid_time_short', label: 'Valid Time' },
+	]
 
 	// Fetch storm reports on component mount
 	useEffect(() => {
@@ -70,6 +94,101 @@ const LSRTable = () => {
 		{ field: 'office_plain', headerName: 'Office', resizable: true, flex: 1 },
 		{ field: 'valid_time_short', headerName: 'Valid Time', resizable: true, flex: 1.5 },
 	]
+
+	// Handle cell click to show report card
+	const onCellClicked = (event: any) => {
+		const clickedReport = event.data as StormReport
+		const cellElement = event.event.target.closest('.ag-cell')
+		const tableElement = tableRef.current
+
+		if (cellElement && tableElement) {
+			const cellRect = cellElement.getBoundingClientRect()
+			const tableRect = tableElement.getBoundingClientRect()
+
+			// Calculate position relative to table container
+			const cellCenterX = cellRect.left + cellRect.width / 2 - tableRect.left
+			const cellBottomY = cellRect.bottom - tableRect.top
+
+			// Determine if card should show above or below based on available space
+			const spaceBelow = window.innerHeight - cellRect.bottom
+			const spaceAbove = cellRect.top
+			const showAbove = spaceBelow < 400 && spaceAbove > spaceBelow
+
+			// Constrain horizontal position to keep card within content area
+			// Account for sidebar (300px on desktop, hidden on mobile < 900px)
+			const isMobile = window.innerWidth <= 900
+			const sidebarWidth = isMobile ? 0 : 300
+			const cardWidth = 500 // max-width of card
+			const halfCardWidth = cardWidth / 2
+			const viewportWidth = window.innerWidth
+
+			let adjustedX = cellCenterX
+			const cardLeftEdge = cellRect.left + cellRect.width / 2 - halfCardWidth
+			const cardRightEdge = cellRect.left + cellRect.width / 2 + halfCardWidth
+
+			if (cardLeftEdge < sidebarWidth) {
+				// Card would overflow behind sidebar on left edge
+				const overflow = sidebarWidth - cardLeftEdge
+				adjustedX = cellCenterX + overflow + 10
+			} else if (cardRightEdge > viewportWidth) {
+				// Card would overflow right edge
+				adjustedX = cellCenterX - (cardRightEdge - viewportWidth) - 10
+			}
+
+			setSelectedReport(clickedReport)
+			setCardPosition({
+				top: showAbove ? cellRect.top - tableRect.top : cellBottomY,
+				left: adjustedX,
+			})
+			setShowCardAbove(showAbove)
+		}
+	}
+
+	const closeCard = () => {
+		setSelectedReport(null)
+	}
+
+	// Helper function to check if text matches based on search options
+	const matchesSearch = (value: any, searchStr: string): boolean => {
+		if (!value) return false
+
+		const valueStr = String(value)
+
+		// Apply case sensitivity
+		const valueToSearch = caseSensitive ? valueStr : valueStr.toLowerCase()
+		const textToFind = caseSensitive ? searchStr : searchStr.toLowerCase()
+
+		// Apply whole word matching
+		if (wholeWord) {
+			// Create regex for whole word matching
+			// Word boundaries: start of string, space, or after punctuation
+			// End boundaries: end of string, space, or before punctuation
+			const escapedSearch = textToFind.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+			const pattern = `(^|\\s)${escapedSearch}(\\s|[.,;:?!)*%'"\u2019\u201D]|$)`
+			const regex = new RegExp(pattern, caseSensitive ? '' : 'i')
+			return regex.test(valueToSearch)
+		} else {
+			return valueToSearch.includes(textToFind)
+		}
+	}
+
+	// Custom filter logic based on selected fields
+	const doesExternalFilterPass = (node: any) => {
+		if (!searchText) return true
+
+		// If specific filters are selected, search only those fields
+		if (selectedFilters.length > 0) {
+			return selectedFilters.some((field) => matchesSearch(node.data[field], searchText))
+		}
+
+		// Otherwise search all fields
+		const fieldsToSearch = ['event', 'state', 'county', 'location', 'magnitude_str', 'remark', 'source', 'office_plain', 'valid_time_short']
+		return fieldsToSearch.some((field) => matchesSearch(node.data[field], searchText))
+	}
+
+	const isExternalFilterPresent = () => {
+		return searchText.length > 0
+	}
 
 	const onSearchTextBoxChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchText(e.target.value)
@@ -133,6 +252,28 @@ const LSRTable = () => {
 		}
 	}
 
+	const addFilter = (field: string) => {
+		if (!selectedFilters.includes(field)) {
+			setSelectedFilters([...selectedFilters, field])
+		}
+		setShowFilterMenu(false)
+	}
+
+	const removeFilter = (field: string) => {
+		setSelectedFilters(selectedFilters.filter((f) => f !== field))
+	}
+
+	const toggleFilterMenu = () => {
+		setShowFilterMenu(!showFilterMenu)
+	}
+
+	// Apply column-specific filtering
+	useEffect(() => {
+		if (gridRef.current?.api) {
+			gridRef.current.api.onFilterChanged()
+		}
+	}, [searchText, selectedFilters, wholeWord, caseSensitive])
+
 	// Reusable pagination navigation component
 	const PaginationNavigation = () => (
 		<div className={styles.pageNavigation}>
@@ -157,11 +298,61 @@ const LSRTable = () => {
 	)
 
 	return (
-		<div className={`${styles.lsrTable} ag-theme-material-dark`}>
+		<div className={`${styles.lsrTable} ${theme === 'dark' ? 'ag-theme-material-dark' : 'ag-theme-material'}`} ref={tableRef}>
 			<div className={styles.controls}>
 				<div className={styles.searchbar}>
 					<span>Search:</span>
-					<input type="text" id="filter-text-box" placeholder="Filter..." onInput={onSearchTextBoxChanged} />
+					<div className={styles.searchInputWrapper}>
+						<div className={styles.filterTags}>
+							{selectedFilters.map((field) => {
+								const filterLabel = availableFilters.find((f) => f.field === field)?.label || field
+								return (
+									<span key={field} className={styles.filterTag}>
+										{filterLabel}
+										<button onClick={() => removeFilter(field)} className={styles.removeFilter} title="Remove filter">
+											×
+										</button>
+									</span>
+								)
+							})}
+						</div>
+						<input type="text" id="filter-text-box" placeholder="Filter..." onInput={onSearchTextBoxChanged} />
+						<div className={styles.searchOptions}>
+							<button
+								onClick={() => setCaseSensitive(!caseSensitive)}
+								className={`${styles.searchToggle} ${caseSensitive ? styles.active : ''}`}
+								title="Case sensitive"
+							>
+								<span className={styles.toggleIcon}>Aa</span>
+							</button>
+							<button
+								onClick={() => setWholeWord(!wholeWord)}
+								className={`${styles.searchToggle} ${wholeWord ? styles.active : ''}`}
+								title="Match whole word"
+							>
+								<span className={styles.toggleIcon}>
+									ab
+									<span className={styles.bracket}>⎵</span>
+								</span>
+							</button>
+						</div>
+						<div className={styles.addFilterWrapper}>
+							<button onClick={toggleFilterMenu} className={styles.addFilterButton} title="Add field filter">
+								+
+							</button>
+							{showFilterMenu && (
+								<div className={styles.filterMenu}>
+									{availableFilters
+										.filter((f) => !selectedFilters.includes(f.field))
+										.map((filter) => (
+											<button key={filter.field} onClick={() => addFilter(filter.field)} className={styles.filterMenuItem}>
+												{filter.label}
+											</button>
+										))}
+								</div>
+							)}
+						</div>
+					</div>
 				</div>
 				<div className={styles.paginationControls}>
 					<div className={styles.pageSize}>
@@ -183,7 +374,6 @@ const LSRTable = () => {
 				<>
 					<AgGridReact
 						ref={gridRef}
-						quickFilterText={searchText}
 						rowData={rowData}
 						columnDefs={colDefs}
 						domLayout="autoHeight"
@@ -193,10 +383,16 @@ const LSRTable = () => {
 						suppressPaginationPanel={true}
 						onGridReady={onGridReady}
 						onPaginationChanged={onPaginationChanged}
+						isExternalFilterPresent={isExternalFilterPresent}
+						doesExternalFilterPass={doesExternalFilterPass}
+						onCellClicked={onCellClicked}
 					/>
 					<div className={styles.bottomPagination}>
 						<PaginationNavigation />
 					</div>
+					{selectedReport && (
+						<StormReportCard report={selectedReport} position={cardPosition} showAbove={showCardAbove} onClose={closeCard} />
+					)}
 				</>
 			)}
 		</div>
