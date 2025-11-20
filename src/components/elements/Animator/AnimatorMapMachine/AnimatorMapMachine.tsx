@@ -603,9 +603,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					showBorders: shouldShowLayer('forecast-zones-inactive-layer'),
 				}),
 
-				// Counties layer - only render when zoomed in for performance
-				// If selectedWFOId is provided, only show counties in that WFO region
-				...(viewState.zoom > 4.5
+				// Counties layer - only render when zoomed in for performance (unless in detail view)
+				// If selectedWFOId is provided, always show counties in that WFO region regardless of zoom
+				...(selectedWFOId || viewState.zoom > 4.5
 					? createCountiesLayer({
 							data:
 								loadedFrames.length > 0
