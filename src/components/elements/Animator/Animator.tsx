@@ -66,7 +66,7 @@ export interface IAnimatorProps {
 	setMapLayerVisibility?: (visibility: Record<string, boolean>) => void // Callback for layer visibility changes
 	mapDataType?: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 	// Layer configuration
-	layerConfig: any // Layer configuration for filtering which layers are shown (LayerConfig type) - REQUIRED
+	layerConfig?: any // Layer configuration for filtering which layers are shown (LayerConfig type) - REQUIRED
 	// Storm click handler
 	onStormClick?: (stormId: string) => void
 	// CWA zone click handler
@@ -197,7 +197,7 @@ export const Animator = ({
 				setTargetMapZoomState(initialMapZoomState)
 			}
 		}
-	}, [initialMapZoomState?.zoom, initialMapZoomState?.latitude, initialMapZoomState?.longitude, targetMapZoomState])
+	}, [initialMapZoomState, targetMapZoomState])
 
 	// Initialize layer visibility from layerConfig (required)
 	// If mapLayerVisibility prop is provided AND has keys, use it (controlled component)
