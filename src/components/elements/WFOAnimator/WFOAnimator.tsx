@@ -162,7 +162,7 @@ export const WFOAnimator = ({ selectedWFOId, onWFOSelect, view = 'overview' }: W
 				layerConfig={layerConfig}
 				autoPlay={false}
 				interval={500}
-				hideControls={view === 'detail'} // Hide controls in detail view (single frame, no animation needed)
+				hideControls={view === 'overview'}
 				mapLayerVisibility={mapLayerVisibility}
 				onMapLayerVisibilityChange={setMapLayerVisibility}
 				onCwaClick={handleCwaClick} // Enable CWA clicks in both overview and detail view
