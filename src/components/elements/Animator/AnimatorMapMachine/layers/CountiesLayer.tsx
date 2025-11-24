@@ -64,11 +64,6 @@ export const createCountiesLayer = ({
 					return [0, 0, 0, 0]
 				}
 
-				// Always show white outline for hovered region
-				if (showAlertData && hoveredCountyId && regionId === hoveredCountyId) {
-					return [255, 255, 255, 255]
-				}
-
 				// If county has alert, always show border
 				if (hasAlert) {
 					return countyBorderColor as any
