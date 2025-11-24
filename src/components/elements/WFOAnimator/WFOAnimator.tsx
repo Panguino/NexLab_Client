@@ -3,7 +3,7 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { MapFrame } from '@/components/elements/Animator/AnimatorMapMachine/types'
 import { zoomToCwaZone } from '@/components/elements/Animator/AnimatorMapMachine/utils/mapZoomUtils'
-import { mapZoomState } from '@/components/elements/Animator/types'
+import { mapZoomState } from '@/types/general'
 import cwaZonesData from '@/data/d3Map/cwaZones.json'
 import { createCountyAlertFrame } from '@/util/dataCalls/alerts/createCountyAlertFrames'
 import { fetchRealTimeHazards, parseHazardsToCountyMap } from '@/util/dataCalls/alerts/parseCountyAlerts'
@@ -22,7 +22,20 @@ export const WFOAnimator = ({ selectedWFOId, view = 'overview' }: WFOAnimatorPro
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 	const [mapLayerVisibility, setMapLayerVisibility] = useState<Record<string, boolean>>({})
-	const [targetZoomStateRaw, setTargetZoomStateRaw] = useState<mapZoomState | undefined>(undefined)
+	const [targetZoomStateRaw, setTargetZoomStateRaw] = useState<mapZoomState | undefined>(() => {
+		if (view === 'detail' && selectedWFOId) {
+			const viewportWidth = 1200
+			const viewportHeight = 800
+			return zoomToCwaZone(cwaZonesData as any, selectedWFOId, viewportWidth, viewportHeight, 0.3) || undefined
+		} else if (view === 'overview') {
+			return {
+				zoom: 4,
+				latitude: 39.8283,
+				longitude: -98.5795,
+			}
+		}
+		return undefined
+	})
 
 	// Memoize targetZoomState to prevent infinite loop
 	// The object reference must remain stable unless the actual values change
@@ -43,12 +56,15 @@ export const WFOAnimator = ({ selectedWFOId, view = 'overview' }: WFOAnimatorPro
 
 	// Update target zoom state when view or selectedWFOId changes
 	useEffect(() => {
+		console.log('WFOAnimator Effect Triggered:', { view, selectedWFOId })
 		if (view === 'detail' && selectedWFOId) {
 			// Calculate zoom state for the selected WFO
 			// Use standard viewport dimensions for calculation
 			const viewportWidth = 1200
 			const viewportHeight = 800
-			const zoomState = zoomToCwaZone(cwaZonesData as any, selectedWFOId, viewportWidth, viewportHeight, 0.15)
+			const zoomState = zoomToCwaZone(cwaZonesData as any, selectedWFOId, viewportWidth, viewportHeight, 0.3)
+
+			console.log('Calculated Zoom State:', zoomState)
 
 			if (zoomState) {
 				setTargetZoomStateRaw({
@@ -161,7 +177,7 @@ export const WFOAnimator = ({ selectedWFOId, view = 'overview' }: WFOAnimatorPro
 				interval={500}
 				hideControls={view === 'detail'} // Hide controls in detail view (single frame, no animation needed)
 				mapLayerVisibility={mapLayerVisibility}
-				onMapLayerVisibilityChange={setMapLayerVisibility}
+				setMapLayerVisibility={setMapLayerVisibility}
 				onCwaClick={handleCwaClick} // Enable CWA clicks in both overview and detail view
 				selectedWFOId={view === 'detail' ? selectedWFOId : null} // Pass selected WFO for filtering
 				initialMapZoomState={targetZoomState}

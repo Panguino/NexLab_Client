@@ -372,7 +372,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		// Smooth zoom animation using custom easing
 		// Moves a small percentage of the distance each frame for smooth transitions
 		useEffect(() => {
-			if (!targetMapZoomState || !setMapZoomState) return
+			if (!targetMapZoomState || !setMapZoomState) return undefined
 
 			const EASING_FACTOR = 0.05 // Move 5% of distance each frame (slower = smaller value)
 			const THRESHOLD = 0.001 // Stop when delta is very small
@@ -407,7 +407,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					zoom: currentZoom + deltaZoom * EASING_FACTOR,
 					latitude: currentLat + deltaLat * EASING_FACTOR,
 					longitude: currentLon + deltaLon * EASING_FACTOR,
-				})
+				}, true)
 			})
 
 			return () => cancelAnimationFrame(animationFrame)
@@ -1338,19 +1338,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				const regionInfo = findRegionAtPoint(lat, lon, undefined, cwaZonesData)
 
 				if (regionInfo?.type === 'cwa' && regionInfo.wfoId) {
-					// Call the callback
+					// Call the callback to navigate (route drives the state)
 					onCwaClick(regionInfo.id, regionInfo.wfoId)
-
-					// Calculate zoom view state to focus on this CWA zone
-					if (containerRef.current && _onViewStateChange) {
-						const rect = containerRef.current.getBoundingClientRect()
-						const newViewState = zoomToCwaZone(cwaZonesData as any, regionInfo.id, rect.width, rect.height, 0.15)
-
-						if (newViewState) {
-							// Update the view state to zoom to the CWA region
-							_onViewStateChange(newViewState)
-						}
-					}
 				}
 			}
 		}
@@ -1408,13 +1397,17 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						//transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
 						//transitionDuration: 'auto',
 					}}
-					controller={{
-						scrollZoom: {
-							smooth: true,
-						},
-						// Keyboard controls
-						keyboard: true,
-					}}
+					controller={
+						targetMapZoomState
+							? false
+							: {
+									scrollZoom: {
+										smooth: true,
+									},
+									// Keyboard controls
+									keyboard: true,
+							  }
+					}
 					layers={layers}
 					onViewStateChange={handleViewStateChange}
 					onClick={handleDeckGLClick}

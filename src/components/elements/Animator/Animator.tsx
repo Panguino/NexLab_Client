@@ -85,7 +85,7 @@ interface IAnimatorProvider extends IAnimatorProps {
 	mode: 'image' | 'map'
 	mapRegion: 'conus' | 'alaska' | 'hawaii' | 'namer'
 	mapZoomState: mapZoomState // Current map zoom state
-	setMapZoomState: (mapZoomState: mapZoomState) => void // Update map zoom state
+	setMapZoomState: (mapZoomState: mapZoomState, keepTarget?: boolean) => void // Update map zoom state
 	targetMapZoomState: mapZoomState | null // Target zoom state for smooth animation
 	mapLayerVisibility: Record<string, boolean> // Map layer visibility state
 	setMapLayerVisibility: (visibility: Record<string, boolean>) => void // Update map layer visibility
@@ -186,6 +186,14 @@ export const Animator = ({
 	// Use individual values as dependencies to avoid infinite loop from object reference changes
 	useEffect(() => {
 		if (initialMapZoomState) {
+			// Check if the new initial state is actually different from the CURRENT state
+			// If they are the same (or very close), it's likely just a sync from a manual pan,
+			// so we shouldn't set a target (which would lock the controller)
+			const isDifferentFromCurrent =
+				Math.abs(initialMapZoomState.zoom - mapZoomState.zoom) > 0.001 ||
+				Math.abs(initialMapZoomState.latitude - mapZoomState.latitude) > 0.001 ||
+				Math.abs(initialMapZoomState.longitude - mapZoomState.longitude) > 0.001
+
 			// Only update if the values actually changed to prevent infinite loop
 			const hasChanged =
 				!targetMapZoomState ||
@@ -193,11 +201,21 @@ export const Animator = ({
 				targetMapZoomState.latitude !== initialMapZoomState.latitude ||
 				targetMapZoomState.longitude !== initialMapZoomState.longitude
 
-			if (hasChanged) {
+			console.log('Animator Zoom Update:', {
+				initial: initialMapZoomState,
+				current: mapZoomState,
+				target: targetMapZoomState,
+				isDifferent: isDifferentFromCurrent,
+				hasChanged,
+			})
+
+			if (hasChanged && isDifferentFromCurrent) {
+				console.log('Setting target map zoom state:', initialMapZoomState)
 				setTargetMapZoomState(initialMapZoomState)
 			}
 		}
-	}, [initialMapZoomState, targetMapZoomState])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [initialMapZoomState])
 
 	// Initialize layer visibility from layerConfig (required)
 	// If mapLayerVisibility prop is provided AND has keys, use it (controlled component)
@@ -305,11 +323,17 @@ export const Animator = ({
 				mode,
 				mapRegion,
 				mapZoomState,
-				setMapZoomState: (newMapZoomState: mapZoomState) => {
+				setMapZoomState: (newMapZoomState: mapZoomState, keepTarget = false) => {
 					setMapZoomStateLocal(newMapZoomState)
-					setMapZoomState(newMapZoomState)
-					// Clear target when user manually changes zoom
-					setTargetMapZoomState(null)
+					// Only notify parent if NOT keeping target (i.e. manual move or end of animation)
+					// This prevents the parent from syncing intermediate animation states back to us
+					if (!keepTarget) {
+						setMapZoomState(newMapZoomState)
+					}
+					// Clear target when user manually changes zoom, unless keepTarget is true
+					if (!keepTarget) {
+						setTargetMapZoomState(null)
+					}
 				},
 				targetMapZoomState,
 				mapLayerVisibility: mapLayerVisibilityLocal,

@@ -17,7 +17,7 @@ export interface MapViewState {
  * Returns [minLon, minLat, maxLon, maxLat]
  */
 export function calculateBoundingBox(feature: Feature | FeatureCollection): [number, number, number, number] {
-	return bbox(feature)
+	return bbox(feature) as [number, number, number, number]
 }
 
 /**
@@ -111,7 +111,12 @@ export function findCwaFeature(cwaData: FeatureCollection, cwaId: string): Featu
 	const feature = cwaData.features.find((f) => {
 		const id = f.properties?.id || f.properties?.ID || f.properties?.CWA
 		const wfo = f.properties?.WFO || f.properties?.wfo
-		return id === cwaId || wfo === cwaId
+		const fullStaId = f.properties?.FULLSTAID || f.properties?.fullstaid
+		
+		const searchId = cwaId.toUpperCase()
+		return (id && id.toUpperCase() === searchId) || 
+		       (wfo && wfo.toUpperCase() === searchId) ||
+		       (fullStaId && fullStaId.toUpperCase() === searchId)
 	})
 
 	return feature || null
