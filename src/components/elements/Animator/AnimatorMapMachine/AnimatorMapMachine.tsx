@@ -22,6 +22,7 @@ import { createCountiesLayer } from './layers/CountiesLayer'
 import { createCwaZonesLayer } from './layers/CwaZonesLayer'
 import { createFireZonesLayer } from './layers/FireZonesLayer'
 import { createForecastZonesLayer } from './layers/ForecastZonesLayer'
+import { createHoverHighlightLayer } from './layers/HoverHighlightLayer'
 import { createHurricaneLayer, getHurricaneIconCanvasSync, initializeHurricaneIcons } from './layers/HurricaneLayer'
 import { createLakesLayer } from './layers/LakesLayer'
 import { createLatLongGridLayer } from './layers/LatLongGridLayer'
@@ -542,8 +543,74 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			return {}
 		}, [loadedFrames, currentFrame])
 
+		// Extract CWA alert map from current frame (aggregating county alerts)
+		const currentFrameCwaAlertMap = useMemo(() => {
+			if (loadedFrames.length === 0 || !cwaZonesData) return {}
+
+			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+			const frame = loadedFrames[activeFrame]
+
+			if (!frame || !frame.data) return {}
+
+			// If frame.data is a FeatureCollection, extract alert info from features
+			if ('features' in frame.data && Array.isArray(frame.data.features)) {
+				// Map CWA ID to a Set of unique color strings to deduplicate alerts across counties
+				const cwaColorMap: Record<string, Set<string>> = {}
+
+				// Iterate through all counties in the frame
+				frame.data.features.forEach((feature: any) => {
+					const countyId = feature.properties?.id
+					const alerts = feature.properties?.alerts // Array of alert objects with color property
+					
+					if (countyId && Array.isArray(alerts) && alerts.length > 0 && countyToCwaMap.has(countyId)) {
+						const cwaId = countyToCwaMap.get(countyId)
+						if (cwaId) {
+							if (!cwaColorMap[cwaId]) {
+								cwaColorMap[cwaId] = new Set()
+							}
+							
+							// Add each alert's color to the CWA's set
+							alerts.forEach((alert: any) => {
+								if (alert.color && Array.isArray(alert.color)) {
+									// Check if it's the default grey [200, 200, 200, ...]
+									const isDefaultGrey = alert.color[0] === 200 && alert.color[1] === 200 && alert.color[2] === 200
+									
+									if (!isDefaultGrey) {
+										// Store as string for Set deduplication (e.g., "255,0,0,255")
+										cwaColorMap[cwaId].add(alert.color.join(','))
+									}
+								}
+							})
+						}
+					}
+				})
+				
+				// Convert to format expected by useMultiAlertAnimation
+				const result: Record<string, any> = {}
+				Object.entries(cwaColorMap).forEach(([cwaId, colorSet]) => {
+					if (colorSet.size > 0) {
+						// Convert strings back to number arrays
+						const uniqueColors = Array.from(colorSet).map(c => c.split(',').map(Number))
+						
+						result[cwaId] = {
+							hasAlert: true,
+							color: uniqueColors[0], // Use first color as static fallback
+							alerts: uniqueColors.map(color => ({ color }))
+						}
+					}
+				})
+
+				return result
+			}
+
+			return {}
+		}, [loadedFrames, currentFrame, cwaZonesData, countyToCwaMap])
+
 		// Use multi-alert animation hook for counties with 2+ alerts
-		const { animatedColors } = useMultiAlertAnimation(currentFrameAlertMap, true)
+		const { animatedColors: animatedCountyColors } = useMultiAlertAnimation(currentFrameAlertMap, true)
+		
+		// Use multi-alert animation hook for CWA zones with 2+ alert types
+		const { animatedColors: animatedCwaColors } = useMultiAlertAnimation(currentFrameCwaAlertMap, true)
 
 		// Create layers with base map and current frame data
 		const layers = useMemo(() => {
@@ -563,12 +630,24 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					worldColor,
 				}),
 
-				// States layers - fills and borders
+				// States Fill Layer (Background)
 				...createStatesLayers({
 					showFill: shouldShowLayer('states-fill-layer'),
-					showBorders: shouldShowLayer('states-layer'),
+					showBorders: false, // Borders rendered later on top
 					statesColor,
 					borderColor,
+				}),
+
+				// CWA Zones Fill Layer
+				...createCwaZonesLayer({
+					showFill: shouldShowLayer('cwa-zones-fill-layer'),
+					showBorders: false, // Borders rendered later
+					hoveredCwaId,
+					selectedWFOId,
+					alertMap: currentFrameCwaAlertMap,
+					countyBorderColor,
+					animatedColors: animatedCwaColors,
+					renderMode: 'fill',
 				}),
 
 				// Great Lakes layer
@@ -583,14 +662,6 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					gridlineColor,
 				}),
 
-				// CWA Zones layer - always visible, highlights selected WFO in detail view
-				...createCwaZonesLayer({
-					showFill: shouldShowLayer('cwa-zones-fill-layer'),
-					showBorders: shouldShowLayer('cwa-zones-inactive-layer'),
-					hoveredCwaId,
-					selectedWFOId,
-				}),
-
 				// Fire Zones layer
 				...createFireZonesLayer({
 					showFill: shouldShowLayer('fire-zones-fill-layer'),
@@ -603,8 +674,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					showBorders: shouldShowLayer('forecast-zones-inactive-layer'),
 				}),
 
-				// Counties layer - only render when zoomed in for performance (unless in detail view)
-				// If selectedWFOId is provided, always show counties in that WFO region regardless of zoom
+				// Counties layer (Fill + Borders)
+				// Rendered here so it sits on top of State/CWA fills but below their borders
 				...(selectedWFOId || viewState.zoom > 4.5
 					? createCountiesLayer({
 							data:
@@ -618,7 +689,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							countyBorderColor,
 							hoveredCountyId,
 							alertMap: currentFrameAlertMap,
-							animatedColors,
+							animatedColors: animatedCountyColors,
 							filterCountyFn: selectedWFOId
 								? (countyId: string) => {
 										// Find the CWA ID for this WFO
@@ -634,6 +705,26 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						})
 					: []),
 
+				// CWA Zones Border Layer (Top of regions)
+				...createCwaZonesLayer({
+					showFill: false,
+					showBorders: shouldShowLayer('cwa-zones-inactive-layer'),
+					hoveredCwaId,
+					selectedWFOId,
+					alertMap: currentFrameCwaAlertMap,
+					countyBorderColor,
+					animatedColors: animatedCwaColors,
+					renderMode: 'border',
+				}),
+
+				// States Border Layer (Topmost boundary)
+				...createStatesLayers({
+					showFill: false,
+					showBorders: shouldShowLayer('states-layer'),
+					statesColor,
+					borderColor,
+				}),
+
 				// Coastal regions layer
 				...createCoastalRegionsLayer({
 					data:
@@ -645,6 +736,14 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					showAlertData: shouldShowLayer('coastal-data-regions-layer'),
 					oceanColor,
 					alertMap: currentFrameCoastalAlertMap,
+				}),
+
+				// Hover Highlight Layer - Topmost layer for bright border outline
+				...createHoverHighlightLayer({
+					hoveredCountyId,
+					hoveredCwaId,
+					countyData: countiesData,
+					cwaZonesData,
 				}),
 			]
 
@@ -972,7 +1071,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			currentFrameCoastalAlertMap,
 			hoveredCountyId,
 			hoveredCwaId,
-			animatedColors,
+			animatedCountyColors,
+			animatedCwaColors,
+			currentFrameCwaAlertMap,
 			initializedLayerVisibility,
 			viewState.zoom,
 			selectedWFOId,
