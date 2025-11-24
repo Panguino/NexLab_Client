@@ -1,14 +1,7 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { ConvectiveWatchDetailPage } from '@/components/blocks/ConvectiveWatchDetailPage/ConvectiveWatchDetailPage'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Severe Weather Watch Details"
-			purpose="An in-depth view of a specific severe weather watch including discussion and metadata."
-			etaText="This section is being implemented."
-		/>
-	)
+const Page = ({ params }: { params: { watchProdId: string } }) => {
+	return <ConvectiveWatchDetailPage watchNumber={params.watchProdId} />
 }
 
 export default Page

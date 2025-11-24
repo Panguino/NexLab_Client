@@ -1,14 +1,7 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { MesoscaleDiscussionsPage } from '@/components/blocks/MesoscaleDiscussionsPage/MesoscaleDiscussionsPage'
 
 const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Mesoscale Discussions"
-			purpose="List of both Convective and Precipitation Mesoscale Discussions issued by the SPC."
-			etaText="This section is being implemented."
-		/>
-	)
+	return <MesoscaleDiscussionsPage />
 }
 
 export default Page

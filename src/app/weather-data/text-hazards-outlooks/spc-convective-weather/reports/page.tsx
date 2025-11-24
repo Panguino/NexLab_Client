@@ -1,14 +1,7 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { StormReportsPage } from '@/components/blocks/StormReportsPage/StormReportsPage'
 
 const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Local Storm Reports"
-			purpose="Table of combined NWS local storm reports. Rebuild of existing Bootstrap Table."
-			etaText="This section is being implemented."
-		/>
-	)
+	return <StormReportsPage />
 }
 
 export default Page

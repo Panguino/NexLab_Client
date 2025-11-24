@@ -1,0 +1,110 @@
+.mdSummaryCard {
+	display: flex;
+	flex-direction: column;
+	background: var(--color-white-black);
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	}
+}
+
+.header {
+	padding: 16px 20px;
+	color: white;
+
+	.titleRow {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	.expiredBadge {
+		padding: 4px 12px;
+		background: rgba(0, 0, 0, 0.2);
+		border-radius: 12px;
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+}
+
+.mcd {
+	background: #d32f2f;
+}
+
+.mpd {
+	background: #388e3c;
+}
+
+.expired {
+	/* same as default -- can be customized if needed */
+	background: var(--color-grey14-grey8);
+}
+
+.default {
+	background: var(--color-grey14-grey8);
+}
+
+.content {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 20px;
+	padding: 20px;
+}
+
+.graphicSection {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	.graphic {
+		width: 100%;
+		height: auto;
+		border-radius: 4px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+}
+
+.detailsSection {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.detailItem {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+
+	.label {
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: var(--color-grey12-grey10);
+		letter-spacing: 0.5px;
+	}
+
+	.value {
+		font-size: 14px;
+		color: var(--color-grey18-grey4);
+		line-height: 1.5;
+	}
+}
+
+@media (max-width: 768px) {
+	.content {
+		grid-template-columns: 1fr;
+	}
+
+	.header h3 {
+		font-size: 16px;
+	}
+}

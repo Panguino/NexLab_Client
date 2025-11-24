@@ -1,0 +1,207 @@
+.watchSummaryCard {
+	display: flex;
+	flex-direction: column;
+	background: var(--color-white-black);
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+	transition:
+		transform 0.2s ease,
+		box-shadow 0.2s ease;
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	}
+}
+
+.header {
+	padding: 16px 20px;
+	color: white;
+
+	.titleRow {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	.expiredBadge {
+		padding: 4px 12px;
+		background: rgba(0, 0, 0, 0.2);
+		border-radius: 12px;
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+	}
+}
+
+.tornado {
+	background: #d32f2f;
+}
+
+.severeThunderstorm {
+	background: #1976d2;
+}
+
+.expired {
+	/* same as default -- can be customized if needed */
+	background: var(--color-grey14-grey8);
+}
+
+.default {
+	background: var(--color-grey14-grey8);
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 20px;
+}
+
+.mainContent {
+	display: grid;
+	grid-template-columns: 1fr 1.5fr;
+	gap: 20px;
+}
+
+.graphicSection {
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+
+	.graphic {
+		width: 100%;
+		height: auto;
+		border-radius: 4px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	}
+}
+
+.detailsSection {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.detailItem {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+
+	.label {
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: var(--color-grey12-grey10);
+		letter-spacing: 0.5px;
+	}
+
+	.value {
+		font-size: 14px;
+		color: var(--color-grey18-grey4);
+		line-height: 1.5;
+	}
+}
+
+.attributesGrid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 12px;
+	padding: 12px;
+	background: var(--color-grey4-grey16);
+	border-radius: 4px;
+}
+
+.attributeItem {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+
+	.attrLabel {
+		font-size: 11px;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: var(--color-grey12-grey10);
+		letter-spacing: 0.3px;
+	}
+
+	.attrValue {
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--color-grey18-grey4);
+	}
+}
+
+.probabilitiesSection {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+
+	.sectionTitle {
+		font-size: 12px;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: var(--color-grey12-grey10);
+		letter-spacing: 0.5px;
+		margin: 0;
+	}
+
+	.probsList {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+	}
+
+	.probItem {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 6px 8px;
+		background: var(--color-grey4-grey16);
+		border-radius: 3px;
+		font-size: 12px;
+		flex: 1 1 auto;
+		white-space: nowrap;
+
+		.probLabel {
+			color: var(--color-grey16-grey6);
+		}
+
+		.probValue {
+			font-weight: 600;
+			color: var(--color-grey18-grey4);
+			margin-left: 4px;
+
+			&.moderateProb {
+				color: #f9a825;
+			}
+
+			&.highProb {
+				color: #ef6c00;
+			}
+		}
+	}
+}
+
+@media (max-width: 1024px) {
+	.mainContent {
+		grid-template-columns: 1fr;
+	}
+
+	.attributesGrid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 768px) {
+	.header .titleRow {
+		font-size: 16px;
+	}
+
+	.attributesGrid {
+		grid-template-columns: 1fr;
+	}
+}
