@@ -447,7 +447,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		// Theme-aware colors (RGBA format)
 		const isDark = isDarkMode
 		// Memoize colors to prevent dependency changes on every render
-		const { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, gridlineColor } = useMemo(() => {
+		const { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, cwaBorderColor, gridlineColor } = useMemo(() => {
 			// Ocean: blue1 (#8aadcf) light / blue2 (#233544) dark
 			const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
 			// World: grey2 (#d8d8d8) light / grey16 (#484848) dark
@@ -456,11 +456,13 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255]
 			// State Borders: grey18 (#232323) light / grey15 (#505050) dark - darker
 			const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
+			// CWA Zone Borders: Between state and county borders - darker than counties, lighter than states
+			const cwaBorderColor = isDark ? [95, 95, 95, 255] : [60, 60, 60, 255]
 			// County Borders: grey14 (#6b6b6b) light / grey12 (#7a7a7a) dark - lighter than state borders
 			const countyBorderColor = isDark ? [122, 122, 122, 255] : [107, 107, 107, 255]
 			// Grid lines: more visible grey with higher opacity
 			const gridlineColor = isDark ? [120, 120, 120, 180] : [180, 180, 180, 180]
-			return { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, gridlineColor }
+			return { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, cwaBorderColor, gridlineColor }
 		}, [isDark])
 
 		// Load frames
@@ -648,7 +650,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					hoveredCwaId,
 					selectedWFOId,
 					alertMap: currentFrameCwaAlertMap,
-					countyBorderColor,
+					cwaBorderColor,
 					animatedColors: animatedCwaColors,
 					renderMode: 'fill',
 				}),
@@ -715,7 +717,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 					hoveredCwaId,
 					selectedWFOId,
 					alertMap: currentFrameCwaAlertMap,
-					countyBorderColor,
+					cwaBorderColor,
 					animatedColors: animatedCwaColors,
 					renderMode: 'border',
 				}),
@@ -1069,6 +1071,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			statesColor,
 			borderColor,
 			countyBorderColor,
+			cwaBorderColor,
 			gridlineColor,
 			currentFrameAlertMap,
 			currentFrameCoastalAlertMap,
@@ -1081,7 +1084,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			viewState.zoom,
 			selectedWFOId,
 			countyToCwaMap,
-			cwaZonesData?.features,
+			cwaZonesData,
 		])
 
 		const handleViewStateChange = (viewState: any) => {

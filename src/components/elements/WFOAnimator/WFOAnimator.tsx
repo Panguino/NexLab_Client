@@ -275,8 +275,9 @@ export const WFOAnimator = ({ selectedWFOId, view = 'overview' }: WFOAnimatorPro
 					'cwa-zones-fill-layer': { active: true, initialValue: true }, // Keep CWA zones visible
 					'counties-inactive-layer': { active: true, initialValue: true }, // Only counties in selected WFO
 					'county-data-regions-layer': { active: true, initialValue: true }, // Only counties in selected WFO
-					'coastal-regions-inactive-layer': { active: true, initialValue: false },
-					'coastal-data-regions-layer': { active: true, initialValue: false },
+					// Coastal regions removed from WFO page - not needed for WFO office alerts
+					'coastal-regions-inactive-layer': { active: false, initialValue: false },
+					'coastal-data-regions-layer': { active: false, initialValue: false },
 				}
 
 	return (
