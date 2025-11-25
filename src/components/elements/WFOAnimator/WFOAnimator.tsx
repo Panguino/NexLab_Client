@@ -3,8 +3,9 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import { MapFrame } from '@/components/elements/Animator/AnimatorMapMachine/types'
 import { zoomToCwaZone } from '@/components/elements/Animator/AnimatorMapMachine/utils/mapZoomUtils'
-import { mapZoomState } from '@/types/general'
 import cwaZonesData from '@/data/d3Map/cwaZones.json'
+import { useRootStore } from '@/store/useRootStore'
+import { mapZoomState } from '@/types/general'
 import { createCountyAlertFrame } from '@/util/dataCalls/alerts/createCountyAlertFrames'
 import { fetchRealTimeHazards, parseHazardsToCountyMap } from '@/util/dataCalls/alerts/parseCountyAlerts'
 import { useRouter } from 'next/navigation'
@@ -18,6 +19,9 @@ interface WFOAnimatorProps {
 
 export const WFOAnimator = ({ selectedWFOId, view = 'overview' }: WFOAnimatorProps) => {
 	const router = useRouter()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+	const setSelectedCounty = useRootStore.use.setSelectedCounty()
+	const setRegionHazards = useRootStore.use.setRegionHazards()
 	const [frames, setFrames] = useState<MapFrame[]>([])
 	const [isLoading, setIsLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
@@ -52,6 +56,117 @@ export const WFOAnimator = ({ selectedWFOId, view = 'overview' }: WFOAnimatorPro
 			router.push(`${wfoBasePath}/${wfoId}`)
 		},
 		[router],
+	)
+
+	// Handle county click - open slideout panel with alert details
+	// Only works in detail view (onCountyClick is only passed in detail mode)
+	const handleCountyClick = useCallback(
+		(countyId: string, countyData: any) => {
+			// Only handle county clicks in detail view
+			if (view !== 'detail') return
+
+			console.log(`County clicked: ${countyId}`, countyData)
+
+			// Transform alerts from HazardData format to match hazards page structure
+			// The hazards page expects alerts with hazardInfo property containing type, level, and color
+			const transformedAlerts = (countyData.alerts || []).map((alert: any) => {
+				// If alert already has hazardInfo, use it as-is
+				if (alert.hazardInfo) {
+					return alert
+				}
+
+				// Otherwise, transform from HazardData format
+				// Extract type and level from hazardType and hazardLevel fields
+				const hazardType = alert.hazardType || 'UNKNOWN'
+				const hazardLevel = alert.hazardLevel || 'UNKNOWN'
+
+				// Map type and level to display names
+				// Using inline mappings to avoid import issues
+				const HAZARD_TYPE_NAMES_MAP: Record<string, string> = {
+					TORNADO: 'Tornado',
+					SEVERE: 'SEVERE',
+					FIRE: 'FIRE',
+					HYDROLOGICAL: 'Hydro',
+					MARINE: 'Marine',
+					NONMET: 'Non-Met',
+					NONPRECIP: 'Non-Precip',
+					TROPICAL: 'Tropical',
+					WINTER: 'Winter',
+					SPECIALWX: 'Special',
+				}
+
+				const HAZARD_LEVEL_NAMES_MAP: Record<string, string> = {
+					WARNING: 'Warning',
+					WATCH: 'Watch',
+					ADVISORY: 'Advisory',
+					STATEMENT: 'Statement',
+				}
+
+				const hazardTypeName = HAZARD_TYPE_NAMES_MAP[hazardType] || hazardType
+				const hazardLevelName = HAZARD_LEVEL_NAMES_MAP[hazardLevel] || hazardLevel
+
+				// Parse color - it can be either:
+				// 1. An object with hex/rgb properties from the API
+				// 2. An RGBA array [r, g, b, a] from parseHazardsToCountyMap
+				let hexColor = '#808080' // Default grey
+
+				if (alert.color) {
+					if (typeof alert.color === 'object' && 'hex' in alert.color) {
+						// API format: { hex: '#FF0000', rgb: '255,0,0' }
+						hexColor = alert.color.hex
+					} else if (Array.isArray(alert.color) && alert.color.length >= 3) {
+						// RGBA array format: [255, 0, 0, 255]
+						const [r, g, b] = alert.color
+						hexColor = `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
+					}
+				}
+
+				console.log('Alert color transformation:', {
+					originalColor: alert.color,
+					hexColor,
+					hazardType,
+					hazardLevel,
+				})
+
+				return {
+					...alert,
+					hazardInfo: {
+						type: {
+							type: hazardType,
+							name: hazardTypeName,
+						},
+						level: {
+							level: hazardLevel,
+							name: hazardLevelName,
+						},
+						color: {
+							HEX: hexColor,
+						},
+					},
+				}
+			})
+
+			// Format county data to match hazards page structure
+			// The regionHazards state expects a Record where keys are county IDs
+			// and values contain {shape, alerts, properties}
+			const formattedRegionHazards = {
+				[countyId]: {
+					shape: countyData.shape,
+					alerts: transformedAlerts,
+					properties: countyData.properties,
+				},
+			}
+
+			// Update zustand store with county data
+			setRegionHazards(formattedRegionHazards)
+			setSelectedCounty(countyId)
+
+			// Open slideout panel - HazardsDetailPanel will read from the store
+			// Using the constant from @/data/vars
+			const SLIDEOUT_PANEL_ID = 'DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT'
+			openSlideoutPanel(SLIDEOUT_PANEL_ID)
+		},
+		[view, setRegionHazards, setSelectedCounty, openSlideoutPanel],
 	)
 
 	// Update target zoom state when view or selectedWFOId changes
@@ -175,10 +290,11 @@ export const WFOAnimator = ({ selectedWFOId, view = 'overview' }: WFOAnimatorPro
 				layerConfig={layerConfig}
 				autoPlay={false}
 				interval={500}
-				hideControls={view === 'detail'} // Hide controls in detail view (single frame, no animation needed)
+				hideControls={true} // Hide controls - WFO animator only shows a single frame (current alerts), no animation needed
 				mapLayerVisibility={mapLayerVisibility}
 				setMapLayerVisibility={setMapLayerVisibility}
 				onCwaClick={handleCwaClick} // Enable CWA clicks in both overview and detail view
+				onCountyClick={view === 'detail' ? handleCountyClick : undefined} // Enable county clicks only in detail view
 				selectedWFOId={view === 'detail' ? selectedWFOId : null} // Pass selected WFO for filtering
 				initialMapZoomState={targetZoomState}
 				setMapZoomState={handleMapZoomStateChange}

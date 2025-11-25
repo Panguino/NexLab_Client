@@ -48,6 +48,7 @@ const AnimatorMapSizer = () => {
 		layerConfig,
 		onStormClick,
 		onCwaClick,
+		onCountyClick,
 		selectedWFOId,
 	} = useAnimator()
 
@@ -257,6 +258,7 @@ const AnimatorMapSizer = () => {
 					mapDataType={mapDataType}
 					onStormClick={onStormClick}
 					onCwaClick={onCwaClick}
+					onCountyClick={onCountyClick}
 					selectedWFOId={selectedWFOId}
 				/>
 			</div>

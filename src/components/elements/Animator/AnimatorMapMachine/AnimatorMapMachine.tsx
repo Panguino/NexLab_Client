@@ -31,7 +31,6 @@ import { createStatesLayers } from './layers/StatesLayer'
 import { createStormTrackLayer } from './layers/StormTrackLayer'
 import { createWorldLayer } from './layers/WorldLayer'
 import { IAnimatorMapMachineProps, MapFrame } from './types'
-import { zoomToCwaZone } from './utils/mapZoomUtils'
 import { createAffectedRegionsGeoJSON, detectAllAffectedRegions, getWarningColor } from './utils/regionDetection'
 
 // Import booleanPointInPolygon for point-in-polygon detection
@@ -226,6 +225,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			layerVisibility = {},
 			onStormClick,
 			onCwaClick,
+			onCountyClick,
 			selectedWFOId,
 		},
 		ref,
@@ -404,11 +404,14 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				}
 
 				// Move a fraction of the distance
-				setMapZoomState({
-					zoom: currentZoom + deltaZoom * EASING_FACTOR,
-					latitude: currentLat + deltaLat * EASING_FACTOR,
-					longitude: currentLon + deltaLon * EASING_FACTOR,
-				}, true)
+				setMapZoomState(
+					{
+						zoom: currentZoom + deltaZoom * EASING_FACTOR,
+						latitude: currentLat + deltaLat * EASING_FACTOR,
+						longitude: currentLon + deltaLon * EASING_FACTOR,
+					},
+					true,
+				)
 			})
 
 			return () => cancelAnimationFrame(animationFrame)
@@ -561,20 +564,20 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				frame.data.features.forEach((feature: any) => {
 					const countyId = feature.properties?.id
 					const alerts = feature.properties?.alerts // Array of alert objects with color property
-					
+
 					if (countyId && Array.isArray(alerts) && alerts.length > 0 && countyToCwaMap.has(countyId)) {
 						const cwaId = countyToCwaMap.get(countyId)
 						if (cwaId) {
 							if (!cwaColorMap[cwaId]) {
 								cwaColorMap[cwaId] = new Set()
 							}
-							
+
 							// Add each alert's color to the CWA's set
 							alerts.forEach((alert: any) => {
 								if (alert.color && Array.isArray(alert.color)) {
 									// Check if it's the default grey [200, 200, 200, ...]
 									const isDefaultGrey = alert.color[0] === 200 && alert.color[1] === 200 && alert.color[2] === 200
-									
+
 									if (!isDefaultGrey) {
 										// Store as string for Set deduplication (e.g., "255,0,0,255")
 										cwaColorMap[cwaId].add(alert.color.join(','))
@@ -584,18 +587,18 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						}
 					}
 				})
-				
+
 				// Convert to format expected by useMultiAlertAnimation
 				const result: Record<string, any> = {}
 				Object.entries(cwaColorMap).forEach(([cwaId, colorSet]) => {
 					if (colorSet.size > 0) {
 						// Convert strings back to number arrays
-						const uniqueColors = Array.from(colorSet).map(c => c.split(',').map(Number))
-						
+						const uniqueColors = Array.from(colorSet).map((c) => c.split(',').map(Number))
+
 						result[cwaId] = {
 							hasAlert: true,
 							color: uniqueColors[0], // Use first color as static fallback
-							alerts: uniqueColors.map(color => ({ color }))
+							alerts: uniqueColors.map((color) => ({ color })),
 						}
 					}
 				})
@@ -608,7 +611,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 		// Use multi-alert animation hook for counties with 2+ alerts
 		const { animatedColors: animatedCountyColors } = useMultiAlertAnimation(currentFrameAlertMap, true)
-		
+
 		// Use multi-alert animation hook for CWA zones with 2+ alert types
 		const { animatedColors: animatedCwaColors } = useMultiAlertAnimation(currentFrameCwaAlertMap, true)
 
@@ -1426,13 +1429,55 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		}
 
 		const handleDeckGLClick = (info: any) => {
+			console.log('handleDeckGLClick called with info:', info, 'onCountyClick:', !!onCountyClick, 'onCwaClick:', !!onCwaClick)
+
 			// Check if a storm icon was clicked
 			if (info && info.object && info.object.id && onStormClick) {
 				onStormClick(info.object.id)
 				return
 			}
 
-			// Check if a CWA zone was clicked
+			// Check if a county was clicked first (only in detail view when onCountyClick is provided)
+			// This allows county clicks to open the slideout panel with alert details
+			// County clicks take priority over CWA clicks in detail view
+			if (onCountyClick && info && info.coordinate) {
+				const [lon, lat] = info.coordinate
+				console.log('County click check - lat/lon:', lat, lon, 'selectedWFOId:', selectedWFOId)
+				const regionInfo = findRegionAtPoint(lat, lon, undefined, cwaZonesData, selectedWFOId)
+				console.log('County click - regionInfo:', regionInfo)
+
+				if (regionInfo?.type === 'county') {
+					// Get county data from current frame
+					const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+					const frame = loadedFrames[activeFrame]
+					console.log('County click - frame:', frame, 'activeFrame:', activeFrame)
+
+					if (frame && frame.data && 'features' in frame.data) {
+						// Find the county feature in the frame data
+						const countyFeature = frame.data.features.find((feature: any) => {
+							const featureId = feature.properties?.id || feature.properties?.ID
+							return featureId === regionInfo.id
+						})
+						console.log('County click - countyFeature:', countyFeature)
+
+						if (countyFeature) {
+							// Extract county data including alerts
+							const countyData = {
+								shape: countyFeature,
+								alerts: countyFeature.properties?.alerts || [],
+								properties: countyFeature.properties || {},
+							}
+
+							console.log('County click - calling onCountyClick with:', regionInfo.id, countyData)
+							// Call the callback with county ID and data
+							onCountyClick(regionInfo.id, countyData)
+							return // Don't process CWA click if county was clicked
+						}
+					}
+				}
+			}
+
+			// Check if a CWA zone was clicked (only if county wasn't clicked)
 			// Use the same lat/long detection as hover
 			if (onCwaClick && info && info.coordinate) {
 				const [lon, lat] = info.coordinate
@@ -1441,6 +1486,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				if (regionInfo?.type === 'cwa' && regionInfo.wfoId) {
 					// Call the callback to navigate (route drives the state)
 					onCwaClick(regionInfo.id, regionInfo.wfoId)
+					return
 				}
 			}
 		}
@@ -1507,7 +1553,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 									},
 									// Keyboard controls
 									keyboard: true,
-							  }
+								}
 					}
 					layers={layers}
 					onViewStateChange={handleViewStateChange}
