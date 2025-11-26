@@ -3,29 +3,19 @@
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import Select from '@/components/elements/Select/Select'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
-import { CONVECTIVE_WATCH_PRODUCTS } from '@/data/text/convective/watch-products'
+import {
+	CONVECTIVE_WATCH_ATTRIBUTES,
+	CONVECTIVE_WATCH_ATTRIBUTES_IDS,
+	CONVECTIVE_WATCH_PROBABILITIES,
+	CONVECTIVE_WATCH_PROBABILITIES_IDS,
+	CONVECTIVE_WATCH_PRODUCTS,
+} from '@/data/text/convective/watch-products'
+import type { WatchAttributes, WatchProbabilities } from '@/types/text/convective/watch'
 import { getWatchDetails } from '@/util/dataCalls/text/query-convective'
+import { decodeAttributes, getProbabilityClass, getTypeClass } from '@/util/text/convective/watch-functions'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import styles from './ConvectiveWatchDetailPage.module.scss'
-
-interface WatchAttributes {
-	'MAX HAIL /INCHES/'?: string
-	'MAX TOPS /X 100 FEET/'?: string
-	'MAX WIND GUSTS SURFACE /KNOTS/'?: string
-	'MEAN STORM MOTION VECTOR /DEGREES AND KNOTS/'?: string
-	'PARTICULARLY DANGEROUS SITUATION'?: string
-}
-
-interface WatchProbabilities {
-	'PROB OF 1 OR MORE HAIL EVENTS >= 2 INCHES'?: string
-	'PROB OF 1 OR MORE STRONG /EF2-EF5/ TORNADOES'?: string
-	'PROB OF 1 OR MORE WIND EVENTS >= 65 KNOTS'?: string
-	'PROB OF 10 OR MORE SEVERE HAIL EVENTS'?: string
-	'PROB OF 10 OR MORE SEVERE WIND EVENTS'?: string
-	'PROB OF 2 OR MORE TORNADOES'?: string
-	'PROB OF 6 OR MORE COMBINED SEVERE HAIL/WIND EVENTS'?: string
-}
 
 interface WatchUrls {
 	Watch_Notification_Messages?: string[]
@@ -53,13 +43,100 @@ interface ConvectiveWatchDetailPageProps {
 	watchValidId: string
 }
 
+// Memoized left panel component - only re-renders when watchData changes
+const WatchDetailsPanel = memo(({ watchData }: { watchData: WatchData }) => {
+	const formatTime = (timeStr: string) => {
+		try {
+			const date = new Date(timeStr)
+			return date.toLocaleString('en-US', {
+				month: 'short',
+				day: 'numeric',
+				year: 'numeric',
+				hour: '2-digit',
+				minute: '2-digit',
+				timeZoneName: 'short',
+			})
+		} catch {
+			return timeStr
+		}
+	}
+
+	const decodedAttributes = decodeAttributes(watchData.attributes)
+
+	return (
+		<div className={styles.detailsPanel}>
+			<div className={styles.graphicSection}>
+				<img src={watchData.graphic} alt={`Watch ${watchData.number}`} className={styles.graphic} />
+			</div>
+
+			<div className={styles.infoSection}>
+				<div className={styles.timeInfo}>
+					<div className={styles.infoItem}>
+						<span className={styles.label}>Valid:</span>
+						<span className={styles.value}>{formatTime(watchData.time_begin_dt)}</span>
+					</div>
+					<div className={styles.infoItem}>
+						<span className={styles.label}>Until:</span>
+						<span className={styles.value}>{formatTime(watchData.time_end_dt)}</span>
+					</div>
+				</div>
+				{watchData.states.length > 0 && (
+					<div className={styles.statesInfo}>
+						<span className={styles.label}>States Affected:</span>
+						<span className={styles.value}>{watchData.states.join(', ')}</span>
+					</div>
+				)}{' '}
+				{Object.keys(decodedAttributes).length > 0 && (
+					<div className={styles.attributesSection}>
+						<div className={styles.sectionTitle}>Attributes</div>
+						<div className={styles.attributesGrid}>
+							{CONVECTIVE_WATCH_ATTRIBUTES_IDS.map((attrKey) => {
+								const value = decodedAttributes[attrKey]
+								if (!value) return null
+								const attrConfig = CONVECTIVE_WATCH_ATTRIBUTES[attrKey]
+								return (
+									<div key={attrKey} className={styles.attributeItem} title={attrConfig.title}>
+										<span className={styles.attrLabel}>{attrConfig.label}:</span>
+										<span className={styles.attrValue}>{value}</span>
+									</div>
+								)
+							})}
+						</div>
+					</div>
+				)}
+				{Object.keys(watchData.probabilities).length > 0 && (
+					<div className={styles.probabilitiesSection}>
+						<div className={styles.sectionTitle}>Probabilities</div>
+						<div className={styles.probsList}>
+							{CONVECTIVE_WATCH_PROBABILITIES_IDS.map((key) => {
+								const value = watchData.probabilities[key as keyof WatchProbabilities]
+								if (!value) return null
+								const probConfig = CONVECTIVE_WATCH_PROBABILITIES[key]
+								return (
+									<div key={key} className={styles.probItem} title={probConfig.title}>
+										<span className={styles.probLabel}>{probConfig.label}:</span>
+										<span className={`${styles.probValue} ${getProbabilityClass(value, styles)}`}>{value}</span>
+									</div>
+								)
+							})}
+						</div>
+					</div>
+				)}
+			</div>
+		</div>
+	)
+})
+WatchDetailsPanel.displayName = 'WatchDetailsPanel'
+
 export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }: ConvectiveWatchDetailPageProps) => {
 	const [watchData, setWatchData] = useState<WatchData | null>(null)
 	const [isLoading, setIsLoading] = useState(true)
 	const [displayText, setDisplayText] = useState<string | null>(null)
 	const [isLoadingText, setIsLoadingText] = useState(true)
 
-	// Fetch watch details
+	const router = useRouter()
+
+	// Fetch watch details only when watchId changes
 	useEffect(() => {
 		const fetchWatchData = async () => {
 			try {
@@ -76,8 +153,6 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 
 		fetchWatchData()
 	}, [watchId])
-
-	const router = useRouter()
 
 	// Get the product configuration
 	const productConfig = CONVECTIVE_WATCH_PRODUCTS[watchProdId]
@@ -140,7 +215,7 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 		return watchValidId
 	}, [watchData, feedKey, watchValidId, validTimeOptions])
 
-	// Fetch the text product when watchData and actualValidId are available
+	// Fetch the text product when product or valid time changes
 	useEffect(() => {
 		const fetchTextContent = async () => {
 			if (!watchData?.urls || !feedKey || !actualValidId) {
@@ -191,78 +266,16 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 		fetchTextContent()
 	}, [watchData, feedKey, actualValidId])
 
-	// Decode attributes for display
-	const decodeAttributes = (attributes: WatchAttributes) => {
-		const decoded: Record<string, string> = {}
-
-		if (attributes['MAX HAIL /INCHES/']) {
-			decoded['Max Hail'] = `${attributes['MAX HAIL /INCHES/']} in.`
-		}
-
-		if (attributes['MAX TOPS /X 100 FEET/']) {
-			const value = parseInt(attributes['MAX TOPS /X 100 FEET/']) * 100
-			decoded['Max Tops'] = `${value.toLocaleString()} ft`
-		}
-
-		if (attributes['MAX WIND GUSTS SURFACE /KNOTS/']) {
-			decoded['Max Wind Gusts'] = `${attributes['MAX WIND GUSTS SURFACE /KNOTS/']} kts`
-		}
-
-		if (attributes['MEAN STORM MOTION VECTOR /DEGREES AND KNOTS/']) {
-			const vector = attributes['MEAN STORM MOTION VECTOR /DEGREES AND KNOTS/']
-			const direction = vector.slice(0, 3)
-			const speed = vector.slice(3)
-			decoded['Storm Motion'] = `${direction}° @ ${speed} kts`
-		}
-
-		if (attributes['PARTICULARLY DANGEROUS SITUATION']) {
-			decoded['PDS'] = attributes['PARTICULARLY DANGEROUS SITUATION']
-		}
-
-		return decoded
-	}
-
-	// Format probability labels
-	const formatProbabilityLabel = (key: string): string | null => {
-		if (key === 'PROB OF 1 OR MORE HAIL EVENTS >= 2 INCHES') return 'Hail >= 2"'
-		if (key === 'PROB OF 1 OR MORE STRONG /EF2-EF5/ TORNADOES') return 'EF2+ Tornadoes'
-		if (key === 'PROB OF 1 OR MORE WIND EVENTS >= 65 KNOTS') return 'Wind >= 65 kts'
-		if (key === 'PROB OF 10 OR MORE SEVERE HAIL EVENTS') return 'Severe Hail Events'
-		if (key === 'PROB OF 10 OR MORE SEVERE WIND EVENTS') return 'Severe Wind Events'
-		if (key === 'PROB OF 2 OR MORE TORNADOES') return 'Tornadoes'
-		if (key === 'PROB OF 6 OR MORE COMBINED SEVERE HAIL/WIND EVENTS') return null // Omit combined
-		return key
-	}
-
-	// Determine color coding based on watch type
-	const getTypeClass = () => {
-		if (watchData?.type === 'Tornado') return styles.tornado
-		if (watchData?.type === 'Severe Thunderstorm') return styles.severeThunderstorm
-		return styles.default
-	}
-
-	// Format time string
-	const formatTime = (timeStr: string) => {
-		try {
-			const date = new Date(timeStr)
-			return date.toLocaleString('en-US', {
-				month: 'short',
-				day: 'numeric',
-				year: 'numeric',
-				hour: '2-digit',
-				minute: '2-digit',
-				timeZoneName: 'short',
-			})
-		} catch {
-			return timeStr
-		}
-	}
-
 	// Handle validtime selection change
 	const handleValidTimeChange = (newValidId: string) => {
-		// Update the URL to reflect the new validtime
 		const newPath = `/weather-data/text-hazards-outlooks/spc-convective-weather/watches/${watchId}/${watchProdId}/${newValidId}`
-		router.push(newPath)
+		router.push(newPath, { scroll: false })
+	}
+
+	// Handle product selection change
+	const handleProductChange = (newProdId: string) => {
+		const newPath = `/weather-data/text-hazards-outlooks/spc-convective-weather/watches/${watchId}/${newProdId}/latest`
+		router.push(newPath, { scroll: false })
 	}
 
 	const pageTitle = watchData ? `${watchData.type} Watch #${watchData.number}` : `Watch #${watchId}`
@@ -293,82 +306,14 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 		)
 	}
 
-	const decodedAttributes = decodeAttributes(watchData.attributes)
-
 	return (
 		<ScrollArea>
 			<div className={styles.convectiveWatchDetailPage}>
-				<div className={`${styles.titleSection} ${getTypeClass()}`}>
+				<div className={`${styles.titleSection} ${getTypeClass(watchData?.type, false, styles)}`}>
 					<h1>{pageTitle}</h1>
-				</div>
-
+				</div>{' '}
 				<div className={styles.contentSection}>
-					<div className={styles.detailsPanel}>
-						<div className={styles.graphicSection}>
-							<img src={watchData.graphic} alt={`Watch ${watchData.number}`} className={styles.graphic} />
-						</div>
-
-						<div className={styles.infoSection}>
-							<div className={styles.timeInfo}>
-								<div className={styles.infoItem}>
-									<span className={styles.label}>Valid:</span>
-									<span className={styles.value}>{formatTime(watchData.time_begin_dt)}</span>
-								</div>
-								<div className={styles.infoItem}>
-									<span className={styles.label}>Until:</span>
-									<span className={styles.value}>{formatTime(watchData.time_end_dt)}</span>
-								</div>
-							</div>
-
-							{watchData.states.length > 0 && (
-								<div className={styles.statesInfo}>
-									<span className={styles.label}>States:</span>
-									<span className={styles.value}>{watchData.states.join(', ')}</span>
-								</div>
-							)}
-
-							{Object.keys(decodedAttributes).length > 0 && (
-								<div className={styles.attributesSection}>
-									<div className={styles.sectionTitle}>Attributes</div>
-									<div className={styles.attributesGrid}>
-										{Object.entries(decodedAttributes).map(([key, value]) => (
-											<div key={key} className={styles.attributeItem}>
-												<span className={styles.attrLabel}>{key}:</span>
-												<span className={styles.attrValue}>{value}</span>
-											</div>
-										))}
-									</div>
-								</div>
-							)}
-
-							{Object.keys(watchData.probabilities).length > 0 && (
-								<div className={styles.probabilitiesSection}>
-									<div className={styles.sectionTitle}>Probabilities</div>
-									<div className={styles.probsList}>
-										{[
-											'PROB OF 2 OR MORE TORNADOES',
-											'PROB OF 1 OR MORE STRONG /EF2-EF5/ TORNADOES',
-											'PROB OF 10 OR MORE SEVERE HAIL EVENTS',
-											'PROB OF 1 OR MORE HAIL EVENTS >= 2 INCHES',
-											'PROB OF 10 OR MORE SEVERE WIND EVENTS',
-											'PROB OF 1 OR MORE WIND EVENTS >= 65 KNOTS',
-										].map((key) => {
-											const value = watchData.probabilities[key as keyof WatchProbabilities]
-											if (!value) return null
-											const label = formatProbabilityLabel(key)
-											if (label === null) return null
-											return (
-												<div key={key} className={styles.probItem}>
-													<span className={styles.probLabel}>{label}:</span>
-													<span className={styles.probValue}>{value}</span>
-												</div>
-											)
-										})}
-									</div>
-								</div>
-							)}
-						</div>
-					</div>
+					<WatchDetailsPanel watchData={watchData} />
 
 					<div className={styles.textPanel}>
 						<div className={styles.watchProductsSection}>
@@ -379,8 +324,7 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 
 								const handleProductClick = () => {
 									if (!isAvailable) return
-									const newPath = `/weather-data/text-hazards-outlooks/spc-convective-weather/watches/${watchId}/${prodId}/latest`
-									router.push(newPath)
+									handleProductChange(prodId)
 								}
 
 								return (

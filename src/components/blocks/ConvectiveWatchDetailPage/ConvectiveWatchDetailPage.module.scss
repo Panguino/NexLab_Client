@@ -75,9 +75,9 @@
 }
 
 .timeInfo {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
 	padding: 16px;
 	background: var(--color-white-black);
 	border-radius: 8px;
@@ -138,54 +138,67 @@
 }
 
 .attributesGrid {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: 8px;
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
 }
 
 .attributeItem {
 	display: flex;
-	align-items: baseline;
-	gap: 8px;
+	flex-direction: column;
+	gap: 2px;
+	flex: 1 1 auto;
+	min-width: 0;
 
 	.attrLabel {
+		font-size: 11px;
 		font-weight: 600;
-		color: var(--color-grey14-grey8);
-		font-size: 13px;
-		min-width: 120px;
+		text-transform: uppercase;
+		color: var(--color-grey12-grey10);
+		letter-spacing: 0.3px;
 	}
 
 	.attrValue {
-		color: var(--color-grey20-grey1);
 		font-size: 13px;
+		font-weight: 600;
+		color: var(--color-grey18-grey4);
 	}
 }
 
 .probsList {
 	display: flex;
-	flex-direction: column;
-	gap: 8px;
+	flex-wrap: wrap;
+	gap: 6px;
 }
 
 .probItem {
 	display: flex;
-	align-items: baseline;
 	justify-content: space-between;
-	gap: 8px;
+	align-items: center;
+	padding: 6px 8px;
+	background: var(--color-grey4-grey16);
+	border-radius: 3px;
+	font-size: 12px;
+	flex: 1 1 auto;
+	white-space: nowrap;
+	min-width: fit-content;
 
 	.probLabel {
-		font-weight: 500;
 		color: var(--color-grey16-grey6);
-		font-size: 13px;
-		flex: 1;
 	}
 
 	.probValue {
-		color: var(--color-grey20-grey1);
-		font-size: 13px;
 		font-weight: 600;
-		min-width: 40px;
-		text-align: right;
+		color: var(--color-grey18-grey4);
+		margin-left: 4px;
+
+		&.moderateProb {
+			color: #f9a825;
+		}
+
+		&.highProb {
+			color: #ef6c00;
+		}
 	}
 }
 
