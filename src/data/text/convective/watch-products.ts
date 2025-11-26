@@ -13,7 +13,7 @@ export const CONVECTIVE_WATCH_PRODUCTS = {
 		feedKey: 'Watch_Notification_Messages',
 	},
 	[CONVECTIVE_WATCH_AVIATION_DISCUSSION]: {
-		title: 'Discussion (Aviation)',
+		title: 'Aviation Disc.',
 		WMOPIL: 'WWUS30_SAW',
 		feedKey: 'Watch_Aviation_Notification_Messages',
 	},

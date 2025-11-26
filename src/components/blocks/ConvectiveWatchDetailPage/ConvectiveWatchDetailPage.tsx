@@ -3,19 +3,14 @@
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import Select from '@/components/elements/Select/Select'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
-import {
-	CONVECTIVE_WATCH_ATTRIBUTES,
-	CONVECTIVE_WATCH_ATTRIBUTES_IDS,
-	CONVECTIVE_WATCH_PROBABILITIES,
-	CONVECTIVE_WATCH_PROBABILITIES_IDS,
-	CONVECTIVE_WATCH_PRODUCTS,
-} from '@/data/text/convective/watch-products'
+import { CONVECTIVE_WATCH_PRODUCTS } from '@/data/text/convective/watch-products'
 import type { WatchAttributes, WatchProbabilities } from '@/types/text/convective/watch'
 import { getWatchDetails } from '@/util/dataCalls/text/query-convective'
-import { decodeAttributes, getProbabilityClass, getTypeClass } from '@/util/text/convective/watch-functions'
+import { getTypeClass } from '@/util/text/convective/watch-functions'
 import { useRouter } from 'next/navigation'
-import { memo, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './ConvectiveWatchDetailPage.module.scss'
+import { WatchDetailsPanel } from './WatchDetailsPanel/WatchDetailsPanel'
 
 interface WatchUrls {
 	Watch_Notification_Messages?: string[]
@@ -42,91 +37,6 @@ interface ConvectiveWatchDetailPageProps {
 	watchProdId: string
 	watchValidId: string
 }
-
-// Memoized left panel component - only re-renders when watchData changes
-const WatchDetailsPanel = memo(({ watchData }: { watchData: WatchData }) => {
-	const formatTime = (timeStr: string) => {
-		try {
-			const date = new Date(timeStr)
-			return date.toLocaleString('en-US', {
-				month: 'short',
-				day: 'numeric',
-				year: 'numeric',
-				hour: '2-digit',
-				minute: '2-digit',
-				timeZoneName: 'short',
-			})
-		} catch {
-			return timeStr
-		}
-	}
-
-	const decodedAttributes = decodeAttributes(watchData.attributes)
-
-	return (
-		<div className={styles.detailsPanel}>
-			<div className={styles.graphicSection}>
-				<img src={watchData.graphic} alt={`Watch ${watchData.number}`} className={styles.graphic} />
-			</div>
-
-			<div className={styles.infoSection}>
-				<div className={styles.timeInfo}>
-					<div className={styles.infoItem}>
-						<span className={styles.label}>Valid:</span>
-						<span className={styles.value}>{formatTime(watchData.time_begin_dt)}</span>
-					</div>
-					<div className={styles.infoItem}>
-						<span className={styles.label}>Until:</span>
-						<span className={styles.value}>{formatTime(watchData.time_end_dt)}</span>
-					</div>
-				</div>
-				{watchData.states.length > 0 && (
-					<div className={styles.statesInfo}>
-						<span className={styles.label}>States Affected:</span>
-						<span className={styles.value}>{watchData.states.join(', ')}</span>
-					</div>
-				)}{' '}
-				{Object.keys(decodedAttributes).length > 0 && (
-					<div className={styles.attributesSection}>
-						<div className={styles.sectionTitle}>Attributes</div>
-						<div className={styles.attributesGrid}>
-							{CONVECTIVE_WATCH_ATTRIBUTES_IDS.map((attrKey) => {
-								const value = decodedAttributes[attrKey]
-								if (!value) return null
-								const attrConfig = CONVECTIVE_WATCH_ATTRIBUTES[attrKey]
-								return (
-									<div key={attrKey} className={styles.attributeItem} title={attrConfig.title}>
-										<span className={styles.attrLabel}>{attrConfig.label}:</span>
-										<span className={styles.attrValue}>{value}</span>
-									</div>
-								)
-							})}
-						</div>
-					</div>
-				)}
-				{Object.keys(watchData.probabilities).length > 0 && (
-					<div className={styles.probabilitiesSection}>
-						<div className={styles.sectionTitle}>Probabilities</div>
-						<div className={styles.probsList}>
-							{CONVECTIVE_WATCH_PROBABILITIES_IDS.map((key) => {
-								const value = watchData.probabilities[key as keyof WatchProbabilities]
-								if (!value) return null
-								const probConfig = CONVECTIVE_WATCH_PROBABILITIES[key]
-								return (
-									<div key={key} className={styles.probItem} title={probConfig.title}>
-										<span className={styles.probLabel}>{probConfig.label}:</span>
-										<span className={`${styles.probValue} ${getProbabilityClass(value, styles)}`}>{value}</span>
-									</div>
-								)
-							})}
-						</div>
-					</div>
-				)}
-			</div>
-		</div>
-	)
-})
-WatchDetailsPanel.displayName = 'WatchDetailsPanel'
 
 export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }: ConvectiveWatchDetailPageProps) => {
 	const [watchData, setWatchData] = useState<WatchData | null>(null)
@@ -279,7 +189,6 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 	}
 
 	const pageTitle = watchData ? `${watchData.type} Watch #${watchData.number}` : `Watch #${watchId}`
-	const productTitle = productConfig ? productConfig.title : 'Watch Product'
 
 	if (isLoading) {
 		return (
@@ -339,17 +248,14 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 							})}
 						</div>
 
-						<div className={styles.productHeader}>
-							<div className={styles.productTitle}>{productTitle}</div>
-							{validTimeOptions.length > 1 && (
-								<div className={styles.validtimeSelector}>
-									<div className={styles.validtimeLabel}>Product Issuance:</div>
-									<div className={styles.validtimeSelectWrapper}>
-										<Select value={actualValidId || ''} onChange={handleValidTimeChange} options={validTimeOptions} />
-									</div>
+						{validTimeOptions.length > 1 && (
+							<div className={styles.productHeader}>
+								<div className={styles.validtimeLabel}>Product Issuance:</div>
+								<div className={styles.validtimeSelectWrapper}>
+									<Select value={actualValidId || ''} onChange={handleValidTimeChange} options={validTimeOptions} />
 								</div>
-							)}
-						</div>
+							</div>
+						)}
 						<div className={styles.textContent}>
 							{isLoadingText ? (
 								<p>Loading watch product...</p>

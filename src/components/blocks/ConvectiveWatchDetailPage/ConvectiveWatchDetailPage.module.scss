@@ -49,165 +49,12 @@
 	width: 100%;
 }
 
-.detailsPanel {
-	padding: 30px;
-	background: var(--color-grey4-grey16);
-	display: flex;
-	flex-direction: column;
-	gap: 24px;
-}
-
-.graphicSection {
-	width: 100%;
-
-	.graphic {
-		width: 100%;
-		height: auto;
-		border-radius: 8px;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-	}
-}
-
-.infoSection {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-}
-
-.timeInfo {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 12px;
-	padding: 16px;
-	background: var(--color-white-black);
-	border-radius: 8px;
-}
-
-.infoItem {
-	display: flex;
-	align-items: baseline;
-	gap: 8px;
-
-	.label {
-		font-weight: 600;
-		color: var(--color-grey14-grey8);
-		font-size: 14px;
-		min-width: 50px;
-	}
-
-	.value {
-		color: var(--color-grey20-grey1);
-		font-size: 14px;
-		flex: 1;
-	}
-}
-
-.statesInfo {
-	display: flex;
-	align-items: baseline;
-	gap: 8px;
-	padding: 16px;
-	background: var(--color-white-black);
-	border-radius: 8px;
-
-	.label {
-		font-weight: 600;
-		color: var(--color-grey14-grey8);
-		font-size: 14px;
-	}
-
-	.value {
-		color: var(--color-grey20-grey1);
-		font-size: 14px;
-		flex: 1;
-	}
-}
-
-.attributesSection,
-.probabilitiesSection {
-	padding: 16px;
-	background: var(--color-white-black);
-	border-radius: 8px;
-}
-
-.sectionTitle {
-	font-size: 18px;
-	font-weight: 600;
-	margin: 0 0 12px;
-	color: var(--color-grey20-grey2);
-}
-
-.attributesGrid {
-	display: flex;
-	gap: 12px;
-	flex-wrap: wrap;
-}
-
-.attributeItem {
-	display: flex;
-	flex-direction: column;
-	gap: 2px;
-	flex: 1 1 auto;
-	min-width: 0;
-
-	.attrLabel {
-		font-size: 11px;
-		font-weight: 600;
-		text-transform: uppercase;
-		color: var(--color-grey12-grey10);
-		letter-spacing: 0.3px;
-	}
-
-	.attrValue {
-		font-size: 13px;
-		font-weight: 600;
-		color: var(--color-grey18-grey4);
-	}
-}
-
-.probsList {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px;
-}
-
-.probItem {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 6px 8px;
-	background: var(--color-grey4-grey16);
-	border-radius: 3px;
-	font-size: 12px;
-	flex: 1 1 auto;
-	white-space: nowrap;
-	min-width: fit-content;
-
-	.probLabel {
-		color: var(--color-grey16-grey6);
-	}
-
-	.probValue {
-		font-weight: 600;
-		color: var(--color-grey18-grey4);
-		margin-left: 4px;
-
-		&.moderateProb {
-			color: #f9a825;
-		}
-
-		&.highProb {
-			color: #ef6c00;
-		}
-	}
-}
-
 .textPanel {
-	padding: 30px;
+	padding: 24px;
 	background: var(--color-white-black);
 	display: flex;
 	flex-direction: column;
-	gap: 20px;
+	gap: 16px;
 }
 
 .watchProductsSection {
@@ -221,6 +68,7 @@
 	flex: 1;
 	padding: 12px 16px;
 	background: var(--color-grey4-grey16);
+	border: 1px solid var(--color-grey8-grey12);
 	border-radius: 6px;
 	text-align: center;
 	font-size: 13px;
@@ -230,7 +78,8 @@
 	transition:
 		background-color 0.2s ease,
 		color 0.2s ease,
-		transform 0.1s ease;
+		transform 0.1s ease,
+		border-color 0.2s ease;
 	user-select: none;
 
 	&:hover:not(.disabled) {
@@ -243,10 +92,12 @@
 		background: var(--color-blue3);
 		color: var(--color-white);
 		font-weight: 600;
+		border-color: var(--color-blue3);
 
-		&:hover:not(.selected) {
-			background: var(--color-primary);
-			transform: none;
+		&:hover {
+			background: var(--color-blue3);
+			color: var(--color-white);
+			border-color: var(--color-blue3);
 		}
 	}
 
@@ -257,25 +108,24 @@
 }
 
 .productHeader {
-	.productTitle {
-		font-size: 24px;
-		font-weight: 600;
-		margin: 0 0 16px;
-		color: var(--color-grey20-grey2);
-	}
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px;
+	background: var(--color-grey4-grey16);
+	border-radius: 8px;
 }
 
 .validtimeSelector {
 	display: flex;
 	align-items: center;
 	gap: 16px;
-	margin-bottom: 12px;
 }
 
 .validtimeLabel {
 	font-size: 14px;
 	font-weight: 600;
-	color: var(--color-grey16-grey6);
+	color: var(--color-grey19-grey1);
 	white-space: nowrap;
 }
 
@@ -315,16 +165,15 @@
 
 @media (max-width: 768px) {
 	.titleSection {
-		padding: 30px 20px;
+		padding: 24px 20px;
 
 		h1 {
 			font-size: 32px;
 		}
 	}
 
-	.detailsPanel,
 	.textPanel {
-		padding: 30px 20px;
+		padding: 24px 20px;
 	}
 
 	.textContent {
@@ -342,7 +191,6 @@
 		font-size: 26px;
 	}
 
-	.detailsPanel,
 	.textPanel {
 		padding: 20px 16px;
 	}
