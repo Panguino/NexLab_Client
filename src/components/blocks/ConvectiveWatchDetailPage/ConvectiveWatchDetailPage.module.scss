@@ -226,13 +226,44 @@
 .textPanel {
 	padding: 30px;
 	background: var(--color-white-black);
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.productHeader {
+	h2 {
+		font-family: var(--font-secondary);
+		font-size: 24px;
+		font-weight: 600;
+		margin: 0 0 16px;
+		color: var(--color-grey20-grey2);
+	}
+}
+
+.validtimeSelector {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-bottom: 12px;
+}
+
+.validtimeLabel {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--color-grey16-grey6);
+	white-space: nowrap;
+}
+
+.validtimeSelectWrapper {
+	min-width: 200px;
 }
 
 .textContent {
 	background: var(--color-grey4-grey16);
 	padding: 24px;
 	border-radius: 8px;
-	height: 100%;
+	flex: 1;
 
 	p {
 		color: var(--color-grey19-grey2);

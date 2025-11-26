@@ -1,5 +1,6 @@
 'use client'
 
+import { CONVECTIVE_WATCH_DISCUSSION } from '@/data/text/convective/watch-products'
 import { useRouter } from 'next/navigation'
 import styles from './WatchSummaryCard.module.scss'
 
@@ -106,7 +107,7 @@ export const WatchSummaryCard = ({
 	const router = useRouter()
 
 	const handleClick = () => {
-		router.push(`/weather-data/text-hazards-outlooks/spc-convective-weather/watches/${number}`)
+		router.push(`/weather-data/text-hazards-outlooks/spc-convective-weather/watches/${number}/${CONVECTIVE_WATCH_DISCUSSION}/latest`)
 	}
 
 	return (

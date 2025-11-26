@@ -1,9 +1,12 @@
 'use client'
 
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
+import Select from '@/components/elements/Select/Select'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import { CONVECTIVE_WATCH_PRODUCTS } from '@/data/text/convective/watch-products'
 import { getWatchDetails } from '@/util/dataCalls/text/query-convective'
-import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 import styles from './ConvectiveWatchDetailPage.module.scss'
 
 interface WatchAttributes {
@@ -45,10 +48,12 @@ interface WatchData {
 }
 
 interface ConvectiveWatchDetailPageProps {
-	watchNumber: string
+	watchId: string
+	watchProdId: string
+	watchValidId: string
 }
 
-export const ConvectiveWatchDetailPage = ({ watchNumber }: ConvectiveWatchDetailPageProps) => {
+export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }: ConvectiveWatchDetailPageProps) => {
 	const [watchData, setWatchData] = useState<WatchData | null>(null)
 	const [isLoading, setIsLoading] = useState(true)
 	const [displayText, setDisplayText] = useState<string | null>(null)
@@ -58,7 +63,7 @@ export const ConvectiveWatchDetailPage = ({ watchNumber }: ConvectiveWatchDetail
 	useEffect(() => {
 		const fetchWatchData = async () => {
 			try {
-				const data = await getWatchDetails(watchNumber)
+				const data = await getWatchDetails(watchId)
 				if (data) {
 					setWatchData(data)
 				}
@@ -70,30 +75,99 @@ export const ConvectiveWatchDetailPage = ({ watchNumber }: ConvectiveWatchDetail
 		}
 
 		fetchWatchData()
-	}, [watchNumber])
+	}, [watchId])
 
-	// Fetch the text product when watchData is available
+	const router = useRouter()
+
+	// Get the product configuration
+	const productConfig = CONVECTIVE_WATCH_PRODUCTS[watchProdId]
+	const feedKey = productConfig?.feedKey
+
+	// Create sorted options for the Select from available valid times
+	const validTimeOptions = useMemo(() => {
+		if (!watchData?.urls || !feedKey) return []
+
+		const productUrls = watchData.urls[feedKey as keyof WatchUrls]
+		if (!productUrls || productUrls.length === 0) return []
+
+		// Extract timestamps from URLs (last 12 digits in the URL path)
+		const timestamps = productUrls
+			.map((url) => {
+				// Match 12 digits at the end of the URL (with or without file extension)
+				const match = url.match(/(\d{12})(?:\.[^.]+)?$/)
+				return match ? match[1] : null
+			})
+			.filter((ts): ts is string => ts !== null)
+
+		// Sort timestamps in descending order (newest first)
+		const sorted = [...new Set(timestamps)].sort((a, b) => b.localeCompare(a))
+
+		// Format timestamps for display: YYYYMMDDHHmm -> HH:mm MM/DD/YYYY
+		return sorted.map((timestamp) => {
+			const year = timestamp.substring(0, 4)
+			const month = timestamp.substring(4, 6)
+			const day = timestamp.substring(6, 8)
+			const hour = timestamp.substring(8, 10)
+			const minute = timestamp.substring(10, 12)
+
+			return {
+				value: timestamp,
+				label: `${hour}:${minute} ${month}/${day}/${year}`,
+			}
+		})
+	}, [watchData, feedKey])
+
+	// Determine the actual validtime to use
+	const actualValidId = useMemo(() => {
+		if (!watchData?.urls || !feedKey) return null
+
+		const productUrls = watchData.urls[feedKey as keyof WatchUrls]
+		if (!productUrls || productUrls.length === 0) return null
+
+		// If watchValidId is 'latest', use the first (newest) timestamp
+		if (watchValidId === 'latest' && validTimeOptions.length > 0) {
+			return validTimeOptions[0].value
+		}
+
+		// Check if the requested validtime exists
+		const exists = validTimeOptions.some((opt) => opt.value === watchValidId)
+		if (!exists) {
+			// If not found, use the latest available
+			return validTimeOptions[0]?.value || null
+		}
+
+		// Otherwise use the provided watchValidId
+		return watchValidId
+	}, [watchData, feedKey, watchValidId, validTimeOptions])
+
+	// Fetch the text product when watchData and actualValidId are available
 	useEffect(() => {
 		const fetchTextContent = async () => {
-			if (!watchData?.urls?.Watch_Notification_Messages) {
+			if (!watchData?.urls || !feedKey || !actualValidId) {
 				setDisplayText(null)
 				setIsLoadingText(false)
 				return
 			}
 
-			const messages = watchData.urls.Watch_Notification_Messages
-			if (messages.length === 0) {
-				setDisplayText('No watch notification messages available')
+			const productUrls = watchData.urls[feedKey as keyof WatchUrls]
+			if (!productUrls || productUrls.length === 0) {
+				setDisplayText('No products available for this watch')
 				setIsLoadingText(false)
 				return
 			}
 
-			// Get the last (most recent) message
-			const url = messages[messages.length - 1]
+			// Find the URL matching the actualValidId
+			const matchingUrl = productUrls.find((url) => url.includes(actualValidId))
+
+			if (!matchingUrl) {
+				setDisplayText('Product not available for selected time')
+				setIsLoadingText(false)
+				return
+			}
 
 			setIsLoadingText(true)
 			try {
-				const response = await fetch(url)
+				const response = await fetch(matchingUrl)
 				if (!response.ok) {
 					throw new Error(`HTTP error! status: ${response.status}`)
 				}
@@ -115,7 +189,7 @@ export const ConvectiveWatchDetailPage = ({ watchNumber }: ConvectiveWatchDetail
 		}
 
 		fetchTextContent()
-	}, [watchData])
+	}, [watchData, feedKey, actualValidId])
 
 	// Decode attributes for display
 	const decodeAttributes = (attributes: WatchAttributes) => {
@@ -189,7 +263,15 @@ export const ConvectiveWatchDetailPage = ({ watchNumber }: ConvectiveWatchDetail
 		}
 	}
 
-	const pageTitle = watchData ? `${watchData.type} Watch #${watchData.number}` : `Watch #${watchNumber}`
+	// Handle validtime selection change
+	const handleValidTimeChange = (newValidId: string) => {
+		// Update the URL to reflect the new validtime
+		const newPath = `/weather-data/text-hazards-outlooks/spc-convective-weather/watches/${watchId}/${watchProdId}/${newValidId}`
+		router.push(newPath)
+	}
+
+	const pageTitle = watchData ? `${watchData.type} Watch #${watchData.number}` : `Watch #${watchId}`
+	const productTitle = productConfig ? productConfig.title : 'Watch Product'
 
 	if (isLoading) {
 		return (
@@ -313,6 +395,17 @@ export const ConvectiveWatchDetailPage = ({ watchNumber }: ConvectiveWatchDetail
 					</div>
 
 					<div className={styles.textPanel}>
+						<div className={styles.productHeader}>
+							<h2>{productTitle}</h2>
+							{validTimeOptions.length > 1 && (
+								<div className={styles.validtimeSelector}>
+									<div className={styles.validtimeLabel}>Product Issuance:</div>
+									<div className={styles.validtimeSelectWrapper}>
+										<Select value={actualValidId || ''} onChange={handleValidTimeChange} options={validTimeOptions} />
+									</div>
+								</div>
+							)}
+						</div>
 						<div className={styles.textContent}>
 							{isLoadingText ? (
 								<p>Loading watch product...</p>
