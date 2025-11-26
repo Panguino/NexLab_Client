@@ -234,11 +234,6 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 		return key
 	}
 
-	// Format product names for URL keys
-	const formatProductName = (key: string): string => {
-		return key.replace(/_/g, ' ')
-	}
-
 	// Determine color coding based on watch type
 	const getTypeClass = () => {
 		if (watchData?.type === 'Tornado') return styles.tornado
@@ -334,7 +329,7 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 
 							{Object.keys(decodedAttributes).length > 0 && (
 								<div className={styles.attributesSection}>
-									<h3>Attributes</h3>
+									<div className={styles.sectionTitle}>Attributes</div>
 									<div className={styles.attributesGrid}>
 										{Object.entries(decodedAttributes).map(([key, value]) => (
 											<div key={key} className={styles.attributeItem}>
@@ -348,7 +343,7 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 
 							{Object.keys(watchData.probabilities).length > 0 && (
 								<div className={styles.probabilitiesSection}>
-									<h3>Probabilities</h3>
+									<div className={styles.sectionTitle}>Probabilities</div>
 									<div className={styles.probsList}>
 										{[
 											'PROB OF 2 OR MORE TORNADOES',
@@ -372,31 +367,36 @@ export const ConvectiveWatchDetailPage = ({ watchId, watchProdId, watchValidId }
 									</div>
 								</div>
 							)}
-
-							{watchData.urls && Object.keys(watchData.urls).length > 0 && (
-								<div className={styles.productsSection}>
-									<h3>Associated Products</h3>
-									<div className={styles.productsList}>
-										{Object.entries(watchData.urls).map(([key, urls]) => {
-											if (!urls || urls.length === 0) return null
-											return (
-												<div key={key} className={styles.productCategory}>
-													<div className={styles.productLabel}>{formatProductName(key)}</div>
-													<div className={styles.productCount}>
-														{urls.length} product{urls.length !== 1 ? 's' : ''}
-													</div>
-												</div>
-											)
-										})}
-									</div>
-								</div>
-							)}
 						</div>
 					</div>
 
 					<div className={styles.textPanel}>
+						<div className={styles.watchProductsSection}>
+							{Object.entries(CONVECTIVE_WATCH_PRODUCTS).map(([prodId, config]) => {
+								const urls = watchData.urls[config.feedKey as keyof WatchUrls]
+								const isAvailable = urls && urls.length > 0
+								const isSelected = prodId === watchProdId
+
+								const handleProductClick = () => {
+									if (!isAvailable) return
+									const newPath = `/weather-data/text-hazards-outlooks/spc-convective-weather/watches/${watchId}/${prodId}/latest`
+									router.push(newPath)
+								}
+
+								return (
+									<div
+										key={prodId}
+										className={`${styles.watchProduct} ${isSelected ? styles.selected : ''} ${!isAvailable ? styles.disabled : ''}`}
+										onClick={handleProductClick}
+									>
+										{config.title}
+									</div>
+								)
+							})}
+						</div>
+
 						<div className={styles.productHeader}>
-							<h2>{productTitle}</h2>
+							<div className={styles.productTitle}>{productTitle}</div>
 							{validTimeOptions.length > 1 && (
 								<div className={styles.validtimeSelector}>
 									<div className={styles.validtimeLabel}>Product Issuance:</div>
