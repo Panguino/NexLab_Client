@@ -75,13 +75,13 @@ export const WatchSummaryCard = ({
 
 						<div className={styles.attributesGrid}>
 							{CONVECTIVE_WATCH_ATTRIBUTES_IDS.map((attrKey) => {
-								const value = decodedAttributes[attrKey]
-								if (!value) return null
+								const attrData = decodedAttributes[attrKey]
+								if (!attrData) return null
 								const attrConfig = CONVECTIVE_WATCH_ATTRIBUTES[attrKey]
 								return (
 									<div key={attrKey} className={styles.attributeItem} title={attrConfig.title}>
 										<span className={styles.attrLabel}>{attrConfig.label}:</span>
-										<span className={styles.attrValue}>{value}</span>
+										<span className={styles.attrValue}>{attrData.value}</span>
 									</div>
 								)
 							})}

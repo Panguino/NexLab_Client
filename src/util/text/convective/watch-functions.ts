@@ -30,42 +30,55 @@ export function getTypeClass(watchType?: string, notActive?: boolean, styles?: R
 /**
  * Decodes raw watch attributes into formatted display values
  * @param attributes - Raw attribute values from API
- * @returns Object mapping attribute IDs to formatted display strings
+ * @returns Object mapping attribute IDs to { value: string, isHighThreshold: boolean }
  */
-export function decodeAttributes(attributes: WatchAttributes): Record<string, string> {
-	const decoded: Record<string, string> = {}
+export function decodeAttributes(attributes: WatchAttributes): Record<string, { value: string; isHighThreshold: boolean }> {
+	const decoded: Record<string, { value: string; isHighThreshold: boolean }> = {}
 
-	// Max Hail
+	// Max Hail (threshold: 2)
 	if (attributes[ATTR_MAX_HAIL]) {
-		decoded[ATTR_MAX_HAIL] = `${attributes[ATTR_MAX_HAIL]} in.`
-	}
-
-	// Max Tops
-	if (attributes[ATTR_MAX_TOPS]) {
-		const tops = parseInt(attributes[ATTR_MAX_TOPS])
-		decoded[ATTR_MAX_TOPS] = `${(tops * 100).toLocaleString()} ft`
-	}
-
-	// Max Wind Gusts
-	if (attributes[ATTR_MAX_WIND_GUSTS]) {
-		decoded[ATTR_MAX_WIND_GUSTS] = `${attributes[ATTR_MAX_WIND_GUSTS]} kts`
-	}
-
-	// Storm Motion
-	if (attributes[ATTR_STORM_MOTION]) {
-		const parts = attributes[ATTR_STORM_MOTION].split('/')
-		if (parts.length === 2) {
-			const direction = parts[0].trim()
-			const speed = parts[1].trim()
-			decoded[ATTR_STORM_MOTION] = `${direction}° @ ${speed} kts`
-		} else {
-			decoded[ATTR_STORM_MOTION] = attributes[ATTR_STORM_MOTION]
+		const hailValue = parseFloat(attributes[ATTR_MAX_HAIL])
+		decoded[ATTR_MAX_HAIL] = {
+			value: `${attributes[ATTR_MAX_HAIL]} in.`,
+			isHighThreshold: hailValue > 2,
 		}
 	}
 
-	// PDS
+	// Max Tops (threshold: 500)
+	if (attributes[ATTR_MAX_TOPS]) {
+		const tops = parseInt(attributes[ATTR_MAX_TOPS])
+		decoded[ATTR_MAX_TOPS] = {
+			value: `${(tops * 100).toLocaleString()} ft`,
+			isHighThreshold: tops > 500,
+		}
+	}
+
+	// Max Wind Gusts (threshold: 65)
+	if (attributes[ATTR_MAX_WIND_GUSTS]) {
+		const windValue = parseInt(attributes[ATTR_MAX_WIND_GUSTS])
+		decoded[ATTR_MAX_WIND_GUSTS] = {
+			value: `${attributes[ATTR_MAX_WIND_GUSTS]} kts`,
+			isHighThreshold: windValue > 65,
+		}
+	}
+
+	// Storm Motion (threshold for speed: 35)
+	if (attributes[ATTR_STORM_MOTION]) {
+		const direction = attributes[ATTR_STORM_MOTION].substring(0, 3)
+		const speed = attributes[ATTR_STORM_MOTION].substring(3).trim()
+		const speedValue = parseInt(speed)
+		decoded[ATTR_STORM_MOTION] = {
+			value: `${direction}° @ ${speed} kts`,
+			isHighThreshold: speedValue > 35,
+		}
+	}
+
+	// PDS (threshold: "YES")
 	if (attributes[ATTR_PDS]) {
-		decoded[ATTR_PDS] = attributes[ATTR_PDS]
+		decoded[ATTR_PDS] = {
+			value: attributes[ATTR_PDS],
+			isHighThreshold: attributes[ATTR_PDS].toUpperCase() === 'YES',
+		}
 	}
 
 	return decoded

@@ -81,13 +81,15 @@ export const WatchDetailsPanel = ({ watchData }: WatchDetailsPanelProps) => {
 						<div className={styles.sectionTitle}>Attributes</div>
 						<div className={styles.attributesGrid}>
 							{CONVECTIVE_WATCH_ATTRIBUTES_IDS.map((attrKey) => {
-								const value = decodedAttributes[attrKey]
-								if (!value) return null
+								const attr = decodedAttributes[attrKey]
+								if (!attr) return null
 								const attrConfig = CONVECTIVE_WATCH_ATTRIBUTES[attrKey]
 								return (
 									<div key={attrKey} className={styles.attributeItem} title={attrConfig.title}>
 										<span className={styles.attrLabel}>{attrConfig.label}:</span>
-										<span className={styles.attrValue}>{value}</span>
+										<span className={`${styles.attrValue} ${attr.isHighThreshold ? styles.highThreshold : ''}`}>
+											{attr.value}
+										</span>
 									</div>
 								)
 							})}

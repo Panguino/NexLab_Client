@@ -112,6 +112,10 @@
 		font-size: 13px;
 		font-weight: 600;
 		color: var(--color-grey18-grey4);
+
+		&.highThreshold {
+			color: var(--color-orange-high-threat);
+		}
 	}
 }
 
@@ -150,11 +154,11 @@
 		color: var(--color-grey18-grey4);
 
 		&.moderateProb {
-			color: #f9a825;
+			color: var(--color-yellow-moderate-threat);
 		}
 
 		&.highProb {
-			color: #ef6c00;
+			color: var(--color-orange-high-threat);
 		}
 	}
 }
