@@ -1,6 +1,6 @@
 'use client'
 
-import { getLocalStormReports } from '@/util/dataCalls/text/query-storm-reports'
+import { getLocalStormReports } from '@/util/dataCalls/text/query-convective'
 import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-material.css'
