@@ -69,3 +69,9 @@ export const getWatchDetails = async (watchNumber: string) => {
 	const data = await getData(endpoint)
 	return data
 }
+
+export const getMesoscaleDiscussion = async (mesoId: string) => {
+	const endpoint = `https://weather.cod.edu/textserv/md/${mesoId}/json`
+	const data = await getData(endpoint)
+	return data
+}

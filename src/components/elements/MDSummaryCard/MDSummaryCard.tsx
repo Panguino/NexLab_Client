@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation'
 import styles from './MDSummaryCard.module.scss'
 
 interface MDSummaryCardProps {
@@ -13,6 +14,8 @@ interface MDSummaryCardProps {
 }
 
 export const MDSummaryCard = ({ type, number, notActive, timeBegin, timeEnd, areasAffected, concerning, watchProb, graphic }: MDSummaryCardProps) => {
+	const router = useRouter()
+
 	// Determine color coding based on type and active status
 	const getTypeClass = () => {
 		if (notActive) return styles.expired
@@ -27,8 +30,13 @@ export const MDSummaryCard = ({ type, number, notActive, timeBegin, timeEnd, are
 		return type
 	}
 
+	const handleCardClick = () => {
+		const mesoId = `${type}_${number}`
+		router.push(`/weather-data/text-hazards-outlooks/spc-convective-weather/mesoscale-discussions/${mesoId}`)
+	}
+
 	return (
-		<div className={styles.mdSummaryCard}>
+		<div className={styles.mdSummaryCard} onClick={handleCardClick}>
 			<div className={`${styles.header} ${getTypeClass()}`}>
 				<div className={styles.titleRow}>
 					{getTypeLabel()} #{number}

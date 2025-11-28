@@ -1,14 +1,14 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { MesoscaleDiscussionDetailPage } from '@/components/blocks/MesoscaleDiscussionDetailPage/MesoscaleDiscussionDetailPage'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Mesoscale Discussion Details"
-			purpose="An in-depth view of a specific mesoscale discussion including discussion and metadata."
-			etaText="This section is being implemented."
-		/>
-	)
+interface PageProps {
+	params: Promise<{
+		mdProdId: string
+	}>
+}
+
+const Page = async ({ params }: PageProps) => {
+	const { mdProdId } = await params
+	return <MesoscaleDiscussionDetailPage mdId={mdProdId} />
 }
 
 export default Page
