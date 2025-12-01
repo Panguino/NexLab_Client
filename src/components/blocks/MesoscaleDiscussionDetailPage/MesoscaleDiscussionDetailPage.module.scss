@@ -1,0 +1,145 @@
+.mesoscaleDiscussionDetailPage {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	min-height: 100vh;
+	background: var(--color-grey2-grey18);
+}
+
+.titleSection {
+	padding: 20px;
+	background: var(--color-white-black);
+	text-align: center;
+	border-bottom: 1px solid var(--color-grey6-grey14);
+
+	h1 {
+		font-family: var(--font-secondary);
+		font-size: 42px;
+		font-weight: 400;
+		line-height: 1.1;
+		margin: 0;
+		color: var(--color-grey20-grey2);
+	}
+
+	// MCD type styling - red background
+	&.mcd {
+		background: #d32f2f;
+
+		h1 {
+			color: white;
+		}
+	}
+
+	// MPD type styling - green background
+	&.mpd {
+		background: #388e3c;
+
+		h1 {
+			color: white;
+		}
+	}
+
+	// Default/fallback styling
+	&.default {
+		background: var(--color-grey14-grey8);
+
+		h1 {
+			color: white;
+		}
+	}
+}
+
+.contentSection {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0;
+	flex: 1;
+	max-width: 1800px;
+	margin: 0 auto;
+	width: 100%;
+}
+
+.graphicsPanel {
+	padding: 24px;
+	background: var(--color-grey4-grey16);
+}
+
+.graphicContainer {
+	width: 100%;
+
+	.graphic {
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+}
+
+.textPanel {
+	padding: 24px;
+	background: var(--color-white-black);
+}
+
+.textContent {
+	background: var(--color-grey4-grey16);
+	padding: 24px;
+	border-radius: 8px;
+
+	p {
+		color: var(--color-grey19-grey2);
+		line-height: 1.8;
+		margin: 0;
+		font-size: 15px;
+	}
+
+	.discussionText {
+		color: var(--color-grey19-grey1);
+		font-family: monospace;
+		font-size: 13px;
+		line-height: 1.6;
+		white-space: pre-wrap;
+		word-wrap: break-word;
+		margin: 0;
+	}
+}
+
+@media (max-width: 1200px) {
+	.contentSection {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 768px) {
+	.titleSection {
+		padding: 24px 20px;
+
+		h1 {
+			font-size: 32px;
+		}
+	}
+
+	.graphicsPanel,
+	.textPanel {
+		padding: 24px 20px;
+	}
+
+	.textContent {
+		padding: 20px;
+
+		p,
+		.discussionText {
+			font-size: 14px;
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	.titleSection h1 {
+		font-size: 26px;
+	}
+
+	.graphicsPanel,
+	.textPanel {
+		padding: 20px 16px;
+	}
+}

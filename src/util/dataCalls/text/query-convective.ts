@@ -38,6 +38,33 @@ export const getConvectiveOutlookTextData = async (productId) => {
 	return data
 }
 
+export const getStatsAndMessages = async (productId) => {
+	let productQueryString
+	switch (productId) {
+		case 'prelim-killer-tornado':
+			productQueryString = 'KWNS/NWUS23_STATIJ'
+			break
+		case 'tornado-totals-and-deaths':
+			productQueryString = 'KWNS/NWUS21_STAMTS'
+			break
+		case 'hourly-tor-and-svr-reports':
+			productQueryString = 'KWNS/NWUS22_STAHRY'
+			break
+		case 'daily-tor-and-svr-reports':
+			productQueryString = 'KWNS/NWUS20_STADTS'
+			break
+		case 'admin-messages':
+			productQueryString = 'KWNS/NOUS74_ADMSPC'
+			break
+		default:
+			return false // Invalid productId for stats and messages
+	}
+
+	const endpoint = `https://weather.cod.edu/textserv/json/${productQueryString}`
+	const data = await getData(endpoint)
+	return data
+}
+
 export const getConvectiveOutlookGraphics = async (productId, validtimeId) => {
 	const queryURL = `https://weather.cod.edu/datapoints/text/convective/get-outlook.php?parms=${productId}-${validtimeId}`
 	console.log('Fetching convective outlook graphics from:', queryURL)
@@ -66,6 +93,18 @@ export const getConvectiveWatches = async () => {
 
 export const getWatchDetails = async (watchNumber: string) => {
 	const endpoint = `https://weather.cod.edu/textserv/watch/${watchNumber}/json`
+	const data = await getData(endpoint)
+	return data
+}
+
+export const getMesoscaleDiscussion = async (mesoId: string) => {
+	const endpoint = `https://weather.cod.edu/textserv/md/${mesoId}/json`
+	const data = await getData(endpoint)
+	return data
+}
+
+export const getLocalStormReports = async () => {
+	const endpoint = 'https://weather.cod.edu/textserv/json/lsr?days=3'
 	const data = await getData(endpoint)
 	return data
 }
