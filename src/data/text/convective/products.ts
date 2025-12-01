@@ -14,14 +14,14 @@ export const CONVECTIVE_PRODUCT_SPC_DAY_TWO_OUTLOOK_ID = 'DY2'
 export const CONVECTIVE_PRODUCT_SPC_DAY_THREE_OUTLOOK_ID = 'DY3'
 export const CONVECTIVE_PRODUCT_SPC_DAY_FOUR_THRU_EIGHT_OUTLOOK_ID = 'DY48'
 export const CONVECTIVE_PRODUCT_WARNINGS_MAP_AND_TABLE_ID = 'warnings'
-export const CONVECTIVE_PRODUCT_LOCAL_STORM_REPORTS_ID = 'storm_reports'
+export const CONVECTIVE_PRODUCT_LOCAL_STORM_REPORTS_ID = 'storm-reports'
 export const CONVECTIVE_PRODUCT_WATCHES_ID = 'watches'
-export const CONVECTIVE_PRODUCT_MESO_DISCUSSIONS_ID = 'mesoscale_discussions'
-export const CONVECTIVE_PRODUCT_PRELIM_KILLER_TORNADO_ID = 'prelim_killer_tornado'
-export const CONVECTIVE_PRODUCT_TORNADO_TOTALS_AND_DEATHS_ID = 'tornado_totals_and_deaths'
-export const CONVECTIVE_PRODUCT_HOURLY_TOR_AND_SVR_REPORTS_ID = 'hourly_tor_and_svr_reports'
-export const CONVECTIVE_PRODUCT_DAILY_TOR_AND_SVR_REPORTS_ID = 'daily_tor_and_svr_reports'
-export const CONVECTIVE_PRODUCT_ADMIN_MESSAGES_ID = 'admin_messages'
+export const CONVECTIVE_PRODUCT_MESO_DISCUSSIONS_ID = 'mesoscale-discussions'
+export const CONVECTIVE_PRODUCT_PRELIM_KILLER_TORNADO_ID = 'prelim-killer-tornado'
+export const CONVECTIVE_PRODUCT_TORNADO_TOTALS_AND_DEATHS_ID = 'tornado-totals-and-deaths'
+export const CONVECTIVE_PRODUCT_HOURLY_TOR_AND_SVR_REPORTS_ID = 'hourly-tor-and-svr-reports'
+export const CONVECTIVE_PRODUCT_DAILY_TOR_AND_SVR_REPORTS_ID = 'daily-tor-and-svr-reports'
+export const CONVECTIVE_PRODUCT_ADMIN_MESSAGES_ID = 'admin-messages'
 
 export const CONVECTIVE_PRODUCTS = {
 	[CONVECTIVE_PRODUCT_SPC_DAY_ONE_OUTLOOK_ID]: {
@@ -58,23 +58,23 @@ export const CONVECTIVE_PRODUCTS = {
 	},
 	[CONVECTIVE_PRODUCT_PRELIM_KILLER_TORNADO_ID]: {
 		title: 'Preliminary Killer Tornado',
-		linkUrl: null,
+		linkUrl: `/stats-and-messages/${CONVECTIVE_PRODUCT_PRELIM_KILLER_TORNADO_ID}/latest`,
 	},
 	[CONVECTIVE_PRODUCT_TORNADO_TOTALS_AND_DEATHS_ID]: {
 		title: 'Tornado Totals and Deaths',
-		linkUrl: null,
+		linkUrl: `/stats-and-messages/${CONVECTIVE_PRODUCT_TORNADO_TOTALS_AND_DEATHS_ID}/latest`,
 	},
 	[CONVECTIVE_PRODUCT_HOURLY_TOR_AND_SVR_REPORTS_ID]: {
 		title: 'Hourly Tornado and Severe Reports',
-		linkUrl: null,
+		linkUrl: `/stats-and-messages/${CONVECTIVE_PRODUCT_HOURLY_TOR_AND_SVR_REPORTS_ID}/latest`,
 	},
 	[CONVECTIVE_PRODUCT_DAILY_TOR_AND_SVR_REPORTS_ID]: {
 		title: 'Daily Tornado and Severe Reports',
-		linkUrl: null,
+		linkUrl: `/stats-and-messages/${CONVECTIVE_PRODUCT_DAILY_TOR_AND_SVR_REPORTS_ID}/latest`,
 	},
 	[CONVECTIVE_PRODUCT_ADMIN_MESSAGES_ID]: {
 		title: 'Admin Messages',
-		linkUrl: null,
+		linkUrl: `/stats-and-messages/${CONVECTIVE_PRODUCT_ADMIN_MESSAGES_ID}/latest`,
 	},
 }
 
