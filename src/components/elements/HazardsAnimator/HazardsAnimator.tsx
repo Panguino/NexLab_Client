@@ -76,6 +76,10 @@ export const HazardsAnimator = ({ alerts, allCoastalRegions }: HazardsAnimatorPr
 	const setSelectedRegion = useRootStore.use.setSelectedRegion()
 	const regionHazards = useRootStore.use.regionHazards()
 
+	// Fullscreen state from store
+	const hazardMapFullScreen = useRootStore.use.hazardMapFullScreen()
+	const setHazardMapFullScreen = useRootStore.use.setHazardMapFullScreen()
+
 	// Hazard filter state from store (for sidebar hover interaction)
 	const isHazardVisible = useRootStore.use.isHazardVisible()
 	const anyActiveOrToggledHazards = useRootStore.use.anyActiveOrToggledHazards()
@@ -291,6 +295,8 @@ export const HazardsAnimator = ({ alerts, allCoastalRegions }: HazardsAnimatorPr
 				disableCwaDetection={true}
 				hazardOpacityFn={hazardOpacityFn}
 				allCoastalRegions={allCoastalRegions}
+				fullScreen={hazardMapFullScreen}
+				setFullScreen={setHazardMapFullScreen}
 			/>
 		</div>
 	)
