@@ -227,6 +227,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			onCwaClick,
 			onCountyClick,
 			selectedWFOId,
+			disableCwaDetection = false,
 		},
 		ref,
 	) => {
@@ -1320,10 +1321,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 							// Find which region (county, coastal, or CWA) this point is in
 							// Pass selectedWFOId to skip the selected WFO zone in detail view
-							const regionInfo = findRegionAtPoint(lat, lon, coastalData, cwaZonesData, selectedWFOId)
+							// Pass undefined for cwaData when disableCwaDetection is true to skip CWA zones entirely
+							const regionInfo = findRegionAtPoint(lat, lon, coastalData, disableCwaDetection ? undefined : cwaZonesData, selectedWFOId)
 
 							// Handle CWA hover separately from county/coastal hover
-							if (regionInfo?.type === 'cwa') {
+							if (regionInfo?.type === 'cwa' && !disableCwaDetection) {
 								setHoveredCwaId(regionInfo.id)
 								setHoveredCwaWfoId(regionInfo.wfoId || null)
 								setHoveredCountyId(null)
@@ -1362,10 +1364,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				const hoverLat = centerLat + offsetLat
 
 				// Pass selectedWFOId to skip the selected WFO zone in detail view
-				const regionInfo = findRegionAtPoint(hoverLat, hoverLon, coastalData, cwaZonesData, selectedWFOId)
+				// Pass undefined for cwaData when disableCwaDetection is true to skip CWA zones entirely
+				const regionInfo = findRegionAtPoint(hoverLat, hoverLon, coastalData, disableCwaDetection ? undefined : cwaZonesData, selectedWFOId)
 
 				// Handle CWA hover separately from county/coastal hover
-				if (regionInfo?.type === 'cwa') {
+				if (regionInfo?.type === 'cwa' && !disableCwaDetection) {
 					setHoveredCwaId(regionInfo.id)
 					setHoveredCwaWfoId(regionInfo.wfoId || null)
 					setHoveredCountyId(null)
@@ -1396,6 +1399,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				setTooltipVisible,
 				setCwaTooltipVisible,
 				selectedWFOId,
+				disableCwaDetection,
 			],
 		)
 
@@ -1446,7 +1450,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			if (onCountyClick && info && info.coordinate) {
 				const [lon, lat] = info.coordinate
 				console.log('County click check - lat/lon:', lat, lon, 'selectedWFOId:', selectedWFOId)
-				const regionInfo = findRegionAtPoint(lat, lon, undefined, cwaZonesData, selectedWFOId)
+				// Pass undefined for cwaData when disableCwaDetection is true to skip CWA zones entirely
+				const regionInfo = findRegionAtPoint(lat, lon, undefined, disableCwaDetection ? undefined : cwaZonesData, selectedWFOId)
 				console.log('County click - regionInfo:', regionInfo)
 
 				if (regionInfo?.type === 'county') {
@@ -1480,9 +1485,9 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 				}
 			}
 
-			// Check if a CWA zone was clicked (only if county wasn't clicked)
+			// Check if a CWA zone was clicked (only if county wasn't clicked and CWA detection is enabled)
 			// Use the same lat/long detection as hover
-			if (onCwaClick && info && info.coordinate) {
+			if (onCwaClick && !disableCwaDetection && info && info.coordinate) {
 				const [lon, lat] = info.coordinate
 				const regionInfo = findRegionAtPoint(lat, lon, undefined, cwaZonesData)
 

@@ -103,6 +103,7 @@ export interface IAnimatorMapMachineProps {
 	// CWA zone interaction
 	onCwaClick?: (cwaId: string, wfoId: string) => void
 	selectedWFOId?: string | null // Selected WFO ID for filtering counties in detail view
+	disableCwaDetection?: boolean // Disable CWA zone hover/click detection entirely (for hazards page)
 
 	// County interaction
 	onCountyClick?: (countyId: string, countyData: any) => void

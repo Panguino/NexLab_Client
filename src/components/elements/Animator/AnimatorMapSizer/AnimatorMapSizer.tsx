@@ -50,6 +50,7 @@ const AnimatorMapSizer = () => {
 		onCwaClick,
 		onCountyClick,
 		selectedWFOId,
+		disableCwaDetection,
 	} = useAnimator()
 
 	// Debug logging - only for mouse/click interactions
@@ -260,6 +261,7 @@ const AnimatorMapSizer = () => {
 					onCwaClick={onCwaClick}
 					onCountyClick={onCountyClick}
 					selectedWFOId={selectedWFOId}
+					disableCwaDetection={disableCwaDetection}
 				/>
 			</div>
 

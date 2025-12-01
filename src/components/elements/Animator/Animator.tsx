@@ -75,6 +75,8 @@ export interface IAnimatorProps {
 	onCountyClick?: (countyId: string, countyData: any) => void
 	// Selected WFO ID for filtering counties in detail view
 	selectedWFOId?: string | null
+	// Disable CWA zone hover/click detection entirely (for hazards page)
+	disableCwaDetection?: boolean
 }
 interface IAnimatorProvider extends IAnimatorProps {
 	loadedFrames: any[] // Replace `any` with the actual type of frames
@@ -97,6 +99,7 @@ interface IAnimatorProvider extends IAnimatorProps {
 	mapDataType: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 	layerConfig?: any // Layer configuration for filtering which layers are shown
 	selectedWFOId?: string | null // Selected WFO ID for filtering counties in detail view
+	disableCwaDetection?: boolean // Disable CWA zone hover/click detection entirely
 }
 
 const AnimatorContext = createContext<IAnimatorProvider | undefined>(undefined)
@@ -178,6 +181,7 @@ export const Animator = ({
 	onCwaClick,
 	onCountyClick,
 	selectedWFOId,
+	disableCwaDetection = false,
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
@@ -351,6 +355,7 @@ export const Animator = ({
 				onCwaClick,
 				onCountyClick,
 				selectedWFOId,
+				disableCwaDetection,
 			}}
 		>
 			<AnimatorLayout />
