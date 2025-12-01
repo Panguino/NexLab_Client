@@ -228,6 +228,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			onCountyClick,
 			selectedWFOId,
 			disableCwaDetection = false,
+			hazardOpacityFn,
+			allCoastalRegions,
 		},
 		ref,
 	) => {
@@ -664,7 +666,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 				// Lat/Long grid layer
 				...createLatLongGridLayer({
-					visible: shouldShowLayer('latlong-grid'),
+					visible: shouldShowLayer('latlon-grid-layer'),
 					gridlineColor,
 				}),
 
@@ -682,34 +684,29 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 				// Counties layer (Fill + Borders)
 				// Rendered here so it sits on top of State/CWA fills but below their borders
-				...(selectedWFOId || viewState.zoom > 4.5
-					? createCountiesLayer({
-							data:
-								loadedFrames.length > 0
-									? loadedFrames[
-											currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
-										]?.data
-									: null,
-							showInactiveBorders: shouldShowLayer('counties-inactive-layer'),
-							showAlertData: shouldShowLayer('county-data-regions-layer'),
-							countyBorderColor,
-							hoveredCountyId,
-							alertMap: currentFrameAlertMap,
-							animatedColors: animatedCountyColors,
-							filterCountyFn: selectedWFOId
-								? (countyId: string) => {
-										// Find the CWA ID for this WFO
-										const cwaFeature = cwaZonesData?.features?.find(
-											(f: any) => f.properties?.FULLSTAID === selectedWFOId || f.properties?.WFO === selectedWFOId,
-										)
-										const cwaId = cwaFeature?.properties?.CWA
-										if (!cwaId) return false
-										// Check if this county belongs to the selected CWA
-										return countyToCwaMap.get(countyId) === cwaId
-									}
-								: undefined,
-						})
-					: []),
+				// Uses static countiesData for all counties, alertMap for coloring counties with alerts
+				...createCountiesLayer({
+					data: countiesData,
+					showInactiveBorders: shouldShowLayer('counties-inactive-layer'),
+					showAlertData: shouldShowLayer('county-data-regions-layer'),
+					countyBorderColor,
+					hoveredCountyId,
+					alertMap: currentFrameAlertMap,
+					animatedColors: animatedCountyColors,
+					filterCountyFn: selectedWFOId
+						? (countyId: string) => {
+								// Find the CWA ID for this WFO
+								const cwaFeature = cwaZonesData?.features?.find(
+									(f: any) => f.properties?.FULLSTAID === selectedWFOId || f.properties?.WFO === selectedWFOId,
+								)
+								const cwaId = cwaFeature?.properties?.CWA
+								if (!cwaId) return false
+								// Check if this county belongs to the selected CWA
+								return countyToCwaMap.get(countyId) === cwaId
+							}
+						: undefined,
+					hazardOpacityFn,
+				}),
 
 				// CWA Zones Border Layer (Top of regions)
 				...createCwaZonesLayer({
@@ -733,11 +730,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 
 				// Coastal regions layer
 				...createCoastalRegionsLayer({
-					data:
-						loadedFrames.length > 0
-							? loadedFrames[currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame]
-									?.coastalData
-							: null,
+					allCoastalRegions: allCoastalRegions,
 					showInactiveBorders: shouldShowLayer('coastal-regions-inactive-layer'),
 					showAlertData: shouldShowLayer('coastal-data-regions-layer'),
 					oceanColor,
@@ -1082,10 +1075,11 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			animatedCwaColors,
 			currentFrameCwaAlertMap,
 			initializedLayerVisibility,
-			viewState.zoom,
 			selectedWFOId,
 			countyToCwaMap,
 			cwaZonesData,
+			hazardOpacityFn,
+			allCoastalRegions,
 		])
 
 		const handleViewStateChange = (viewState: any) => {

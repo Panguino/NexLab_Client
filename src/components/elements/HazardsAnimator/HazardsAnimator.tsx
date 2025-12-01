@@ -33,6 +33,8 @@ const REGION_NAME_MAP: Record<string, string> = {
 interface HazardsAnimatorProps {
 	/** Pre-loaded alerts data from the server (from allHazards store) */
 	alerts: Record<string, Record<string, any>>
+	/** All coastal/offshore regions (for showing inactive borders) */
+	allCoastalRegions?: any
 }
 
 /**
@@ -44,12 +46,16 @@ interface HazardsAnimatorProps {
  * - regionHazards: the hazard data to visualize
  * - activeHazards/Types/Levels: for sidebar hover highlighting
  */
-export const HazardsAnimator = ({ alerts }: HazardsAnimatorProps) => {
+export const HazardsAnimator = ({ alerts, allCoastalRegions }: HazardsAnimatorProps) => {
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 	const setSelectedCounty = useRootStore.use.setSelectedCounty()
 	const setRegionHazards = useRootStore.use.setRegionHazards()
 	const selectedRegion = useRootStore.use.selectedRegion()
 	const regionHazards = useRootStore.use.regionHazards()
+
+	// Hazard filter state from store (for sidebar hover interaction)
+	const isHazardVisible = useRootStore.use.isHazardVisible()
+	const anyActiveOrToggledHazards = useRootStore.use.anyActiveOrToggledHazards()
 
 	const [frames, setFrames] = useState<MapFrame[]>([])
 	const [mapLayerVisibility, setMapLayerVisibility] = useState<Record<string, boolean>>({})
@@ -74,36 +80,49 @@ export const HazardsAnimator = ({ alerts }: HazardsAnimatorProps) => {
 	}, [selectedRegion])
 
 	// Convert regionHazards to MapFrame format
+	// Separates county alerts from coastal/offshore alerts
 	useEffect(() => {
 		if (!regionHazards || Object.keys(regionHazards).length === 0) {
 			setFrames([])
 			return
 		}
 
-		// Create GeoJSON features from regionHazards
-		const features = Object.entries(regionHazards).map(([countyId, data]: [string, any]) => {
-			const { shape, alerts: countyAlerts, properties } = data
-			const firstAlert = countyAlerts[0]
+		// Convert HEX color to RGBA array
+		const hexToRgba = (hex: string): [number, number, number, number] => {
+			const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+			if (result) {
+				return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16), 255]
+			}
+			return [128, 128, 128, 255]
+		}
+
+		// Helper to check if an ID is a coastal/offshore region
+		// Coastal IDs typically start with letters (e.g., "ANZ", "AMZ", "GMZ", "PKZ", "PHZ", "PMZ", "PZZ", "LSZ", "LEZ", "LMZ", "LOZ", "LHZ", "LCZ", "SLZ")
+		// County IDs are numeric FIPS codes (e.g., "53073")
+		const isCoastalId = (id: string): boolean => {
+			// If ID starts with a letter, it's likely a coastal/offshore zone
+			return /^[A-Za-z]/.test(id)
+		}
+
+		const countyFeatures: any[] = []
+		const coastalFeatures: any[] = []
+
+		// Create GeoJSON features from regionHazards, separating counties from coastal
+		Object.entries(regionHazards).forEach(([regionId, data]: [string, any]) => {
+			const { shape, alerts: regionAlerts, properties } = data
+			const firstAlert = regionAlerts[0]
 			const alertColor = firstAlert?.hazardInfo?.color?.HEX || '#808080'
 
-			// Convert HEX color to RGBA array
-			const hexToRgba = (hex: string): [number, number, number, number] => {
-				const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-				if (result) {
-					return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16), 255]
-				}
-				return [128, 128, 128, 255]
-			}
-
-			return {
+			const feature = {
 				type: 'Feature' as const,
 				geometry: shape.geometry,
 				properties: {
 					...properties,
-					id: countyId,
+					id: regionId,
+					ID: regionId, // Include both formats for compatibility
 					alertColor: hexToRgba(alertColor),
 					hasAlert: true,
-					alerts: countyAlerts.map((alert: any) => ({
+					alerts: regionAlerts.map((alert: any) => ({
 						...alert,
 						event: alert.event,
 						headline: alert.headline,
@@ -113,19 +132,33 @@ export const HazardsAnimator = ({ alerts }: HazardsAnimatorProps) => {
 					})),
 				},
 			}
+
+			if (isCoastalId(regionId)) {
+				coastalFeatures.push(feature)
+			} else {
+				countyFeatures.push(feature)
+			}
 		})
 
-		const geoJSON = {
+		const countyGeoJSON = {
 			type: 'FeatureCollection' as const,
-			features,
+			features: countyFeatures,
+		}
+
+		const coastalGeoJSON = {
+			type: 'FeatureCollection' as const,
+			features: coastalFeatures,
 		}
 
 		const frame: MapFrame = {
 			id: 'current-hazards',
 			timestamp: new Date(),
-			data: geoJSON,
+			data: countyGeoJSON,
+			coastalData: coastalFeatures.length > 0 ? coastalGeoJSON : undefined,
 			metadata: {
-				alertCount: features.length,
+				alertCount: countyFeatures.length + coastalFeatures.length,
+				countyAlerts: countyFeatures.length,
+				coastalAlerts: coastalFeatures.length,
 				region: selectedRegion,
 			},
 		}
@@ -147,6 +180,32 @@ export const HazardsAnimator = ({ alerts }: HazardsAnimatorProps) => {
 	const handleMapZoomStateChange = useCallback((newZoomState: mapZoomState) => {
 		setTargetZoomState(newZoomState)
 	}, [])
+
+	// Hazard opacity function for sidebar hover interaction
+	// Returns 1 (full opacity) if county should be visible, 0.2 (dimmed) otherwise
+	const hazardOpacityFn = useCallback(
+		(countyAlerts: any[]): number => {
+			// If no filters are active, show all counties at full opacity
+			if (anyActiveOrToggledHazards()) {
+				return 1
+			}
+
+			// Check if any of the county's alerts match the active filter
+			if (countyAlerts && countyAlerts.length > 0) {
+				for (const alert of countyAlerts) {
+					const hazardType = alert.hazardType || alert.hazardInfo?.type?.type
+					const hazardLevel = alert.hazardLevel || alert.hazardInfo?.level?.level
+					if (hazardType && hazardLevel && isHazardVisible(hazardType, hazardLevel)) {
+						return 1 // Full opacity - this county has a matching alert
+					}
+				}
+			}
+
+			// No matching alerts - dim the county
+			return 0.2
+		},
+		[anyActiveOrToggledHazards, isHazardVisible],
+	)
 
 	// Layer configuration for hazards display
 	// Based on COUNTY_ALERTS preset but with CWA zones explicitly disabled
@@ -189,6 +248,8 @@ export const HazardsAnimator = ({ alerts }: HazardsAnimatorProps) => {
 				initialMapZoomState={targetZoomState}
 				setMapZoomState={handleMapZoomStateChange}
 				disableCwaDetection={true}
+				hazardOpacityFn={hazardOpacityFn}
+				allCoastalRegions={allCoastalRegions}
 			/>
 		</div>
 	)

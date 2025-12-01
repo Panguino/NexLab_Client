@@ -41,7 +41,7 @@ const Hazards = ({ displayRegions, displayStates, displayOffshores, alerts }) =>
 				<>
 					{selectedView === 'map' ? (
 						USE_ANIMATOR_MAP ? (
-							<HazardsAnimator alerts={allHazards} />
+							<HazardsAnimator alerts={allHazards} allCoastalRegions={displayOffshores} />
 						) : (
 							<HazardsMap displayRegions={displayRegions} displayStates={displayStates} displayOffshores={displayOffshores} />
 						)
