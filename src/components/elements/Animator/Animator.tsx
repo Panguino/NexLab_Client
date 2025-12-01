@@ -71,6 +71,8 @@ export interface IAnimatorProps {
 	onStormClick?: (stormId: string) => void
 	// CWA zone click handler
 	onCwaClick?: (cwaId: string, wfoId: string) => void
+	// County click handler
+	onCountyClick?: (countyId: string, countyData: any) => void
 	// Selected WFO ID for filtering counties in detail view
 	selectedWFOId?: string | null
 }
@@ -91,6 +93,7 @@ interface IAnimatorProvider extends IAnimatorProps {
 	setMapLayerVisibility: (visibility: Record<string, boolean>) => void // Update map layer visibility
 	onStormClick?: (stormId: string) => void // Storm click handler
 	onCwaClick?: (cwaId: string, wfoId: string) => void // CWA zone click handler
+	onCountyClick?: (countyId: string, countyData: any) => void // County click handler
 	mapDataType: 'alerts' | 'hurricane' | 'all' // Type of data being displayed
 	layerConfig?: any // Layer configuration for filtering which layers are shown
 	selectedWFOId?: string | null // Selected WFO ID for filtering counties in detail view
@@ -173,6 +176,7 @@ export const Animator = ({
 	layerConfig,
 	onStormClick,
 	onCwaClick,
+	onCountyClick,
 	selectedWFOId,
 }: IAnimatorProps) => {
 	const [isPlaying, setIsPlaying] = useState(false)
@@ -345,6 +349,7 @@ export const Animator = ({
 				layerConfig,
 				onStormClick,
 				onCwaClick,
+				onCountyClick,
 				selectedWFOId,
 			}}
 		>
