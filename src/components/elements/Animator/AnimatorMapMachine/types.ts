@@ -104,6 +104,9 @@ export interface IAnimatorMapMachineProps {
 	onCwaClick?: (cwaId: string, wfoId: string) => void
 	selectedWFOId?: string | null // Selected WFO ID for filtering counties in detail view
 
+	// County interaction
+	onCountyClick?: (countyId: string, countyData: any) => void
+
 	// Callbacks
 	onFrameChange?: (frameIndex: number) => void
 	onViewStateChange?: (viewState: MapViewState) => void

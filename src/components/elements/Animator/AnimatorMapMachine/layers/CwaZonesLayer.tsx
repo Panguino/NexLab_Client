@@ -7,14 +7,14 @@ export interface CwaZonesLayerProps {
 	hoveredCwaId: string | null
 	selectedWFOId?: string | null // Selected WFO ID for highlighting in detail view
 	alertMap: Record<string, any> | null // Alert data aggregated by CWA ID
-	countyBorderColor: number[] // Border color matching counties
+	cwaBorderColor: number[] // Border color for CWA zones - darker than counties, lighter than states
 	animatedColors?: Record<string, number[]> // Animated colors for multi-alert CWAs
 	renderMode?: 'both' | 'fill' | 'border' // Control what to render for layering
 }
 
 /**
  * CwaZonesLayer - Renders CWA (County Warning Areas) zones with alert-based coloring
- * Uses the same color scheme as counties for consistency
+ * Uses darker borders than counties for better visual hierarchy
  * Highlights the selected WFO region in detail view with a subtle tint
  * Supports multi-alert animation for CWAs containing multiple alert types
  */
@@ -24,7 +24,7 @@ export const createCwaZonesLayer = ({
 	hoveredCwaId,
 	selectedWFOId,
 	alertMap,
-	countyBorderColor,
+	cwaBorderColor,
 	animatedColors,
 	renderMode = 'both',
 }: CwaZonesLayerProps) => {
@@ -49,8 +49,8 @@ export const createCwaZonesLayer = ({
 					// Subtle blue border for selected zone
 					return [100, 150, 200, 200]
 				}
-				// Use county-style grey border (hover handled by highlight layer)
-				return countyBorderColor as any
+				// Use darker CWA border color for better visual hierarchy
+				return cwaBorderColor as any
 			},
 			getFillColor: (d: any) => {
 				const cwaId = d.properties?.CWA
@@ -81,7 +81,7 @@ export const createCwaZonesLayer = ({
 			},
 			opacity: 1,
 			updateTriggers: {
-				getLineColor: [hoveredCwaId, selectedWFOId, countyBorderColor],
+				getLineColor: [hoveredCwaId, selectedWFOId, cwaBorderColor],
 				getFillColor: [hoveredCwaId, selectedWFOId, alertMap, animatedColors],
 			},
 		}),
