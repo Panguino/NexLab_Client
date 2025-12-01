@@ -6,14 +6,13 @@ import { MapFrame } from '@/components/elements/Animator/AnimatorMapMachine/type
 import { DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { mapZoomState } from '@/types/general'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './HazardsAnimator.module.scss'
 
 // Region view state configurations for different geographic regions
-// Note: Zoom must be > 4.5 for counties to show in AnimatorMapMachine
 const REGION_VIEW_STATES: Record<string, mapZoomState> = {
-	conus: { zoom: 4.6, latitude: 39.8283, longitude: -98.5795 },
-	ak: { zoom: 4.6, latitude: 64.2, longitude: -152 },
+	conus: { zoom: 3.8, latitude: 39.8283, longitude: -98.5795 },
+	ak: { zoom: 4.2, latitude: 64.2, longitude: -152 },
 	hi: { zoom: 6, latitude: 20.5, longitude: -157 },
 	pr: { zoom: 8, latitude: 18.21, longitude: -66 },
 	sam: { zoom: 8, latitude: -14.27, longitude: -170.7 },
@@ -28,6 +27,29 @@ const REGION_NAME_MAP: Record<string, string> = {
 	pr: 'Puerto Rico',
 	sam: 'American Samoa',
 	gum: 'Guam',
+}
+
+// Bounding boxes for region detection [minLat, maxLat, minLon, maxLon]
+const REGION_BOUNDS: Record<string, [number, number, number, number]> = {
+	conus: [24, 50, -125, -66],
+	ak: [51, 72, -180, -129],
+	hi: [18, 23, -161, -154],
+	pr: [17, 19, -68, -65],
+	sam: [-15, -13, -172, -169],
+	gum: [12, 15, 143, 146],
+}
+
+/**
+ * Detect which region the map center is in based on lat/lon
+ * Returns the region code or null if not in any defined region
+ */
+const detectRegionFromPosition = (latitude: number, longitude: number): string | null => {
+	for (const [regionCode, [minLat, maxLat, minLon, maxLon]] of Object.entries(REGION_BOUNDS)) {
+		if (latitude >= minLat && latitude <= maxLat && longitude >= minLon && longitude <= maxLon) {
+			return regionCode
+		}
+	}
+	return null
 }
 
 interface HazardsAnimatorProps {
@@ -51,6 +73,7 @@ export const HazardsAnimator = ({ alerts, allCoastalRegions }: HazardsAnimatorPr
 	const setSelectedCounty = useRootStore.use.setSelectedCounty()
 	const setRegionHazards = useRootStore.use.setRegionHazards()
 	const selectedRegion = useRootStore.use.selectedRegion()
+	const setSelectedRegion = useRootStore.use.setSelectedRegion()
 	const regionHazards = useRootStore.use.regionHazards()
 
 	// Hazard filter state from store (for sidebar hover interaction)
@@ -60,6 +83,9 @@ export const HazardsAnimator = ({ alerts, allCoastalRegions }: HazardsAnimatorPr
 	const [frames, setFrames] = useState<MapFrame[]>([])
 	const [mapLayerVisibility, setMapLayerVisibility] = useState<Record<string, boolean>>({})
 	const [targetZoomState, setTargetZoomState] = useState<mapZoomState | undefined>(REGION_VIEW_STATES.conus)
+
+	// Track whether region change was triggered by panning (to prevent zoom animation)
+	const regionChangeFromPanRef = useRef(false)
 
 	// Update region hazards when alerts or selected region changes
 	useEffect(() => {
@@ -71,8 +97,13 @@ export const HazardsAnimator = ({ alerts, allCoastalRegions }: HazardsAnimatorPr
 		}
 	}, [selectedRegion, alerts, setRegionHazards])
 
-	// Update zoom state when region changes
+	// Update zoom state when region changes (only if not triggered by panning)
 	useEffect(() => {
+		if (regionChangeFromPanRef.current) {
+			// Region change was triggered by panning - don't animate
+			regionChangeFromPanRef.current = false
+			return
+		}
 		const viewState = REGION_VIEW_STATES[selectedRegion]
 		if (viewState) {
 			setTargetZoomState(viewState)
@@ -177,9 +208,19 @@ export const HazardsAnimator = ({ alerts, allCoastalRegions }: HazardsAnimatorPr
 	)
 
 	// Handle zoom state updates from map interactions
-	const handleMapZoomStateChange = useCallback((newZoomState: mapZoomState) => {
-		setTargetZoomState(newZoomState)
-	}, [])
+	// Also detects when user pans to a different region and auto-switches data
+	const handleMapZoomStateChange = useCallback(
+		(newZoomState: mapZoomState) => {
+			// Detect if user has panned to a different region
+			const detectedRegion = detectRegionFromPosition(newZoomState.latitude, newZoomState.longitude)
+			if (detectedRegion && detectedRegion !== selectedRegion) {
+				// Mark that this region change is from panning (to prevent zoom animation)
+				regionChangeFromPanRef.current = true
+				setSelectedRegion(detectedRegion)
+			}
+		},
+		[selectedRegion, setSelectedRegion],
+	)
 
 	// Hazard opacity function for sidebar hover interaction
 	// Returns 1 (full opacity) if county should be visible, 0.2 (dimmed) otherwise
