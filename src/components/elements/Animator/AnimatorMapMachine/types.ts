@@ -103,9 +103,17 @@ export interface IAnimatorMapMachineProps {
 	// CWA zone interaction
 	onCwaClick?: (cwaId: string, wfoId: string) => void
 	selectedWFOId?: string | null // Selected WFO ID for filtering counties in detail view
+	disableCwaDetection?: boolean // Disable CWA zone hover/click detection entirely (for hazards page)
 
 	// County interaction
 	onCountyClick?: (countyId: string, countyData: any) => void
+
+	// Hazard filter for sidebar hover interaction
+	// Returns opacity 0-1 based on whether the county's alerts match the hovered hazard type/level
+	hazardOpacityFn?: (alerts: any[]) => number
+
+	// All coastal/offshore regions for showing inactive borders (not just those with alerts)
+	allCoastalRegions?: any
 
 	// Callbacks
 	onFrameChange?: (frameIndex: number) => void

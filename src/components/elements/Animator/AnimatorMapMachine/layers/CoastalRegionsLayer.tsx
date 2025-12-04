@@ -1,11 +1,28 @@
 import { GeoJsonLayer } from '@deck.gl/layers'
 
 export interface CoastalRegionsLayerProps {
-	data: any
+	/** All coastal/offshore regions (for showing inactive borders) */
+	allCoastalRegions: any
 	showInactiveBorders: boolean
 	showAlertData: boolean
 	oceanColor: number[]
 	alertMap: Record<string, any> | null
+}
+
+/**
+ * Helper function to get region ID from feature properties
+ * Handles different property formats from API data
+ */
+const getRegionId = (feature: any): string | null => {
+	const props = feature.properties
+	if (!props) return null
+	// Try common ID property names
+	if (props.id) return props.id
+	if (props.ID) return props.ID
+	if (props.Id) return props.Id
+	if (props.CODE) return props.CODE
+	if (props.NAME) return props.NAME
+	return null
 }
 
 /**
@@ -15,19 +32,26 @@ export interface CoastalRegionsLayerProps {
  * - showInactiveBorders: Controls border opacity for regions without alerts (0 opacity when off, except for hovered)
  * - showAlertData: Controls whether to show alert colors and hover interactivity (when off, all fills are ocean color)
  */
-export const createCoastalRegionsLayer = ({ data, showInactiveBorders, showAlertData, oceanColor, alertMap }: CoastalRegionsLayerProps) => {
-	if (!data) return []
+export const createCoastalRegionsLayer = ({
+	allCoastalRegions,
+	showInactiveBorders,
+	showAlertData,
+	oceanColor,
+	alertMap,
+}: CoastalRegionsLayerProps) => {
+	// Use allCoastalRegions as the base data (contains ALL coastal regions, not just those with alerts)
+	if (!allCoastalRegions) return []
 
 	return [
 		new GeoJsonLayer({
 			id: 'coastal-regions-layer',
-			data: data as any,
+			data: allCoastalRegions as any,
 			filled: true,
 			stroked: true,
 			lineWidthMinPixels: 0.5,
 			lineWidthMaxPixels: 1,
 			getLineColor: (d: any) => {
-				const regionId = d.properties?.id || d.properties?.ID
+				const regionId = getRegionId(d)
 				const alertInfo = alertMap && regionId && alertMap[regionId]
 				const hasAlert = alertInfo?.hasAlert
 
@@ -48,7 +72,7 @@ export const createCoastalRegionsLayer = ({ data, showInactiveBorders, showAlert
 				return [100, 100, 100, 100]
 			},
 			getFillColor: (d: any) => {
-				const regionId = d.properties?.id || d.properties?.ID
+				const regionId = getRegionId(d)
 				const alertInfo = alertMap && regionId && alertMap[regionId]
 				const hasAlert = alertInfo?.hasAlert
 

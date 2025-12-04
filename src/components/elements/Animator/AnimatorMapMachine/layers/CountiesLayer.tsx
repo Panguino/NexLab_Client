@@ -9,6 +9,29 @@ export interface CountiesLayerProps {
 	alertMap: Record<string, any> | null
 	animatedColors?: Record<string, number[]>
 	filterCountyFn?: (countyId: string) => boolean // Optional filter function to show only specific counties
+	hazardOpacityFn?: (alerts: any[]) => number // Optional function to determine opacity based on alerts (for sidebar hover filtering)
+}
+
+/**
+ * Extract county ID from feature properties
+ * Handles multiple property formats: id, ID, CODE_LOCAL, or FIPS (extracts numeric part)
+ */
+const getCountyId = (feature: any): string | null => {
+	const props = feature.properties
+	if (!props) return null
+
+	// Try direct id properties first
+	if (props.id) return props.id
+	if (props.ID) return props.ID
+	if (props.CODE_LOCAL) return props.CODE_LOCAL
+
+	// Try FIPS format (e.g., "US53073" -> "53073")
+	if (props.FIPS) {
+		const fipsMatch = props.FIPS.match(/(\d{5})/)
+		return fipsMatch ? fipsMatch[1] : null
+	}
+
+	return null
 }
 
 /**
@@ -27,6 +50,7 @@ export const createCountiesLayer = ({
 	alertMap,
 	animatedColors,
 	filterCountyFn,
+	hazardOpacityFn,
 }: CountiesLayerProps) => {
 	if (!data) return []
 
@@ -36,7 +60,7 @@ export const createCountiesLayer = ({
 		filteredData = {
 			...data,
 			features: data.features.filter((feature: any) => {
-				const countyId = feature.properties?.id || feature.properties?.ID
+				const countyId = getCountyId(feature)
 				if (!countyId) return false
 				return filterCountyFn(countyId)
 			}),
@@ -52,7 +76,7 @@ export const createCountiesLayer = ({
 			lineWidthMinPixels: 0.5,
 			lineWidthMaxPixels: 1,
 			getLineColor: (d: any) => {
-				const regionId = d.properties?.id || d.properties?.ID
+				const regionId = getCountyId(d)
 				const alertInfo = alertMap && regionId && alertMap[regionId]
 				const hasAlert = alertInfo?.hasAlert
 
@@ -73,31 +97,41 @@ export const createCountiesLayer = ({
 				return countyBorderColor as any
 			},
 			getFillColor: (d: any) => {
-				const regionId = d.properties?.id || d.properties?.ID
+				const regionId = getCountyId(d)
 				const alertInfo = alertMap && regionId && alertMap[regionId]
 				const hasAlert = alertInfo?.hasAlert
+				const alerts = d.properties?.alerts || alertInfo?.alerts || []
 
 				// If county data is disabled, use default color for all counties
 				if (!showAlertData) {
 					return [200, 200, 200, 0]
 				}
 
+				// Calculate opacity from hazard filter (for sidebar hover interaction)
+				// Default opacity is 1 (fully visible), hazardOpacityFn returns 0-1
+				const filterOpacity = hazardOpacityFn ? hazardOpacityFn(alerts) : 1
+
 				// If county has alert and county data is enabled, show alert color
+				let baseColor: number[]
 				if (animatedColors && regionId && animatedColors[regionId]) {
-					return animatedColors[regionId]
-				}
-				if (hasAlert && alertInfo) {
-					return alertInfo.color
+					baseColor = animatedColors[regionId]
+				} else if (hasAlert && alertInfo) {
+					baseColor = alertInfo.color
+				} else {
+					// No alert - show default fill
+					return [200, 200, 200, 0]
 				}
 
-				// No alert - show default fill
-				return [200, 200, 200, 0]
+				// Apply filter opacity to the alpha channel
+				// baseColor is [R, G, B, A] - we multiply A by filterOpacity
+				const alpha = (baseColor[3] ?? 255) * filterOpacity
+				return [baseColor[0], baseColor[1], baseColor[2], alpha]
 			},
 			opacity: 1,
 			pickable: false, // Use lat/long-based detection instead of deck.gl picking
 			updateTriggers: {
 				getLineColor: [countyBorderColor, hoveredCountyId, showInactiveBorders, showAlertData, alertMap],
-				getFillColor: [showAlertData, alertMap, animatedColors],
+				getFillColor: [showAlertData, alertMap, animatedColors, hazardOpacityFn],
 			},
 		}),
 	]
