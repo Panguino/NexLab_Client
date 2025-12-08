@@ -1,26 +1,22 @@
-const WINTER_TEXT_PRODUCT_HAZARDS_ID = 'hazards'
-const WINTER_TEXT_PRODUCT_SNOW_DEPTH_ID = 'snow-depth'
-const WINTER_TEXT_PRODUCT_LIQUID_EQUIV_ID = 'liquid-equivalent'
-const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_FOUR_ID = 'dy1-snow-prob-4'
-const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_EIGHT_ID = 'dy1-snow-prob-8'
-const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_TWELVE_ID = 'dy1-snow-prob-12'
-const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_ICE_ID = 'dy1-snow-prob-ice'
-const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_FOUR_ID = 'dy2-snow-prob-4'
-const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_EIGHT_ID = 'dy2-snow-prob-8'
-const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_TWELVE_ID = 'dy2-snow-prob-12'
-const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_ICE_ID = 'dy2-snow-prob-ice'
-const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_FOUR_ID = 'dy3-snow-prob-4'
-const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_EIGHT_ID = 'dy3-snow-prob-8'
-const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_TWELVE_ID = 'dy3-snow-prob-12'
-const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_ICE_ID = 'dy3-snow-prob-ice'
-const WINTER_TEXT_PRODUCT_HEAVY_SNOW_ICING_DISCUSSION_ID = 'discussion'
-export const WINTER_TEXT_REPORTS = [
-	{
-		id: 'reports',
-		label: 'Reports',
-		products: [WINTER_TEXT_PRODUCT_SNOW_DEPTH_ID, WINTER_TEXT_PRODUCT_LIQUID_EQUIV_ID],
-	},
-]
+export const WINTER_TEXT_PRODUCT_HAZARDS_ID = 'hazards'
+export const WINTER_TEXT_PRODUCT_SNOW_DEPTH_ID = 'snow-depth'
+export const WINTER_TEXT_PRODUCT_LIQUID_EQUIV_ID = 'liquid-equivalent'
+export const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_FOUR_ID = 'dy1-snow-prob-4'
+export const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_EIGHT_ID = 'dy1-snow-prob-8'
+export const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_TWELVE_ID = 'dy1-snow-prob-12'
+export const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_ICE_ID = 'dy1-snow-prob-ice'
+export const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_FOUR_ID = 'dy2-snow-prob-4'
+export const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_EIGHT_ID = 'dy2-snow-prob-8'
+export const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_TWELVE_ID = 'dy2-snow-prob-12'
+export const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_ICE_ID = 'dy2-snow-prob-ice'
+export const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_FOUR_ID = 'dy3-snow-prob-4'
+export const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_EIGHT_ID = 'dy3-snow-prob-8'
+export const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_TWELVE_ID = 'dy3-snow-prob-12'
+export const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_ICE_ID = 'dy3-snow-prob-ice'
+export const WINTER_TEXT_PRODUCT_HEAVY_SNOW_ICING_DISCUSSION_ID = 'discussion'
+
+export const WINTER_TEXT_REPORTS = [WINTER_TEXT_PRODUCT_SNOW_DEPTH_ID, WINTER_TEXT_PRODUCT_LIQUID_EQUIV_ID]
+
 export const WINTER_TEXT_OUTLOOKS = [
 	{
 		id: 'dy1',
