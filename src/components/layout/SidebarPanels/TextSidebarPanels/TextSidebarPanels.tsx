@@ -10,6 +10,7 @@ import ConvectivePanel from '../ConvectivePanel/ConvectivePanel'
 import HazardsPanel from '../HazardsPanel/HazardsPanel'
 import TropicalPanel from '../TropicalPanel/TropicalPanel'
 import WFOPanel from '../WFOPanel/WFOPanel'
+import WinterPanel from '../WinterPanel/WinterPanel'
 import styles from './TextSidebarPanels.module.scss'
 
 const TextSidebarPanels = () => {
@@ -70,8 +71,8 @@ const TextSidebarPanels = () => {
 			</SidebarSubPanel>
 
 			{/* Winter */}
-			<SidebarSubPanel matchesPath={`${basepath}/wpc-winter-weather`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Winter" linkUrl={basepath} />
+			<SidebarSubPanel includesPath={`${basepath}/wpc-winter-weather`} activeX="0%" inactiveX="100%">
+				<WinterPanel basepath={basepath} />
 			</SidebarSubPanel>
 
 			{/* Hydrological */}
