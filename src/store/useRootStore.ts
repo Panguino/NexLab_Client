@@ -11,6 +11,7 @@ import { ISatradSlice, createSatradSlice } from './satradSlice'
 import { ISectorSelectorPanelSlice, createSectorSelectorPanelSlice } from './sectorSelectorPanelSlice'
 import { ISlideoutPanelSlice, createSlideoutPanelSlice } from './slideoutPanelSlice'
 import { ISoundingPickerPanelSlice, createSoundingPickerPanelSlice } from './soundingPickerPanelSlice'
+import { IWinterSlice, createWinterSlice } from './winterSlice'
 
 enableMapSet()
 
@@ -24,7 +25,8 @@ export interface IGlobalStore
 		ISatradSlice,
 		IForecastSlice,
 		IAnalysisSlice,
-		ISoundingPickerPanelSlice {}
+		ISoundingPickerPanelSlice,
+		IWinterSlice {}
 
 export type ZustandStateSlice<T> = StateCreator<IGlobalStore, [], [], T>
 
@@ -39,6 +41,7 @@ const useRootStoreBase = create<IGlobalStore>((...args) => ({
 	...createSatradSlice(...args),
 	...createForecastSlice(...args),
 	...createAnalysisSlice(...args),
+	...createWinterSlice(...args),
 }))
 
 export const useRootStore = createSelectors(useRootStoreBase as any)
