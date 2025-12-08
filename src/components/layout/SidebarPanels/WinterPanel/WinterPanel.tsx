@@ -11,17 +11,31 @@ import {
 	WINTER_TEXT_PRODUCTS,
 	WINTER_TEXT_REPORTS,
 } from '@/data/text/winter/products'
+import { WINTER_TEXT_SLIDEOUT } from '@/data/vars'
+import { useRootStore } from '@/store/useRootStore'
+import { getHeavySnowIceDiscussion } from '@/util/dataCalls/text/query-winter'
 import styles from './WinterPanel.module.scss'
 
 interface WinterPanelProps {
 	basepath: string
 }
 
-const handleDiscussionClick = () => {
-	console.log('Heavy Snow and Icing Discussion clicked')
-	// Add additional logic here if needed
-}
 const WinterPanel = ({ basepath }: WinterPanelProps) => {
+	const setWinterTextContent = useRootStore.use.setWinterTextContent()
+	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
+
+	const handleDiscussionClick = async () => {
+		const productData = await getHeavySnowIceDiscussion()
+
+		if (productData && typeof productData === 'object') {
+			setWinterTextContent({
+				productData,
+				productName: WINTER_TEXT_PRODUCTS[WINTER_TEXT_PRODUCT_HEAVY_SNOW_ICING_DISCUSSION_ID].label,
+			})
+			openSlideoutPanel(WINTER_TEXT_SLIDEOUT)
+		}
+	}
+
 	return (
 		<>
 			<SidebarSectionHeader name="Winter" linkUrl={basepath} />
