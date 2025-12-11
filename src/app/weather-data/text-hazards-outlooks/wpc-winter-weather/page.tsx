@@ -5,7 +5,7 @@ const Page = () => {
 		<ComingSoon
 			fullWidth
 			pageName="Winter Weather Products"
-			purpose="WPC winter weather discussions, probabilities, and national guidance grouped for quick access."
+			purpose="Active Hazards and Outlooks deck.gl Map"
 			etaText="This section is being implemented."
 		/>
 	)
