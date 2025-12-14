@@ -46,7 +46,7 @@ export const FireDiscussions = () => {
 		<section className={styles.fireDiscussions}>
 			<div className={styles.container}>
 				<div className={styles.header}>
-					<h1>Fire Weather Outlooks & Drought Monitor</h1>
+					<h1>Discussions and Outlooks</h1>
 					<p className={styles.subtitle}>
 						The Storm Prediction Center issues fire weather outlooks highlighting areas of critical fire weather conditions. The U.S.
 						Drought Monitor provides weekly updates on drought conditions across the nation.

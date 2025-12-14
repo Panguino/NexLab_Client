@@ -1,14 +1,16 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { FireDiscussionsPage } from '@/components/blocks/FireDiscussionsPage/FireDiscussionsPage'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="FWO and USDM Discussions"
-			purpose="The Fire Weather Outlook (FWO) and U.S. Drought Monitor (USDM) summaries, including graphics and discussions."
-			etaText="This section is being implemented."
-		/>
-	)
+interface PageProps {
+	params: Promise<{
+		prodId: string
+		regionId: string
+		validId: string
+	}>
+}
+
+const Page = async ({ params }: PageProps) => {
+	const { prodId, regionId, validId } = await params
+	return <FireDiscussionsPage productId={prodId} regionId={regionId} validTime={validId} />
 }
 
 export default Page
