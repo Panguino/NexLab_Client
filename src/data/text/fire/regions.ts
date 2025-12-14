@@ -1,13 +1,3 @@
-// Caribbean
-
-// High Plains
-// Midwest
-// Northeast
-// Pacific
-
-// South
-// West
-
 const FIRE_DROUGHT_REGION_CARIBBEAN_ID = 'Caribbean'
 const FIRE_DROUGHT_REGION_HIGH_PLAINS_ID = 'High Plains'
 const FIRE_DROUGHT_REGION_MIDWEST_ID = 'Midwest'
@@ -25,3 +15,5 @@ export const FIRE_DROUGHT_REGIONS = {
 	[FIRE_DROUGHT_REGION_SOUTH_ID]: { name: FIRE_DROUGHT_REGION_SOUTH_ID },
 	[FIRE_DROUGHT_REGION_WEST_ID]: { name: FIRE_DROUGHT_REGION_WEST_ID },
 }
+
+export const FIRE_DROUGHT_REGION_IDS = Object.keys(FIRE_DROUGHT_REGIONS)
