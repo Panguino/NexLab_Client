@@ -5,7 +5,7 @@ import styles from './FireHazards.module.scss'
 
 export const FireHazards = () => {
 	const router = useRouter()
-	const fireBasePath = '/weather-data/text-hazards-outlooks/spc-usdm-fire-weather-drought'
+	const fireBasePath = '/weather-data/text-hazards-outlooks/fire-drought'
 
 	const handleViewHazards = () => {
 		router.push(`${fireBasePath}/hazards`)

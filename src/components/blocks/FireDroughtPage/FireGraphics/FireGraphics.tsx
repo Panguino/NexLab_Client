@@ -15,7 +15,7 @@ export const FireGraphics = () => {
 	const [graphicsData, setGraphicsData] = useState<FireGraphicsData | null>(null)
 	const [isLoading, setIsLoading] = useState(true)
 
-	const fireBasePath = '/weather-data/text-hazards-outlooks/spc-usdm-fire-weather-drought'
+	const fireBasePath = '/weather-data/text-hazards-outlooks/fire-drought'
 
 	useEffect(() => {
 		const fetchGraphics = async () => {

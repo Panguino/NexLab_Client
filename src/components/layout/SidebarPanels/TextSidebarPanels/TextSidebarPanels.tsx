@@ -29,7 +29,7 @@ const TextSidebarPanels = () => {
 					<SidebarSectionLink name="Tropical" linkUrl={`${basepath}/nhc-tropical-hurricane-weather/overview/latest`} />
 					<SidebarSectionLink name="Winter" linkUrl={`${basepath}/wpc-winter-weather`} />
 					<SidebarSectionLink name="Hydrological" linkUrl={`${basepath}/nws-rfc-hydrological`} />
-					<SidebarSectionLink name="Fire & Drought" linkUrl={`${basepath}/spc-usdm-fire-weather-drought`} />
+					<SidebarSectionLink name="Fire & Drought" linkUrl={`${basepath}/fire-drought`} />
 					<SidebarSectionLink name="Marine" linkUrl={`${basepath}/nws-opc-nhc-marine-weather`} />
 					<SidebarSectionLink name="Space" linkUrl={`${basepath}/swpc-space-weather`} />
 				</SidebarPanelPad>
