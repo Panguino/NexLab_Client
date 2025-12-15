@@ -4,7 +4,7 @@ import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import Select from '@/components/elements/Select/Select'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { FIRE_DROUGHT_DISCUSSION_PRODUCTS } from '@/data/text/fire/products'
-import { getFireDroughtDiscussions } from '@/util/dataCalls/text/query-fire'
+import { getFireDroughtDiscussions, getFireDroughtGraphicsByValidTime } from '@/util/dataCalls/text/query-fire'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import styles from './FireDiscussionsPage.module.scss'
@@ -26,12 +26,23 @@ interface USDMData {
 	authors: string[]
 }
 
+interface GraphicData {
+	err: boolean | string
+	validtime: string
+	url: string | null
+}
+
+// Products that have accompanying graphics
+const PRODUCTS_WITH_GRAPHICS = ['fwody1', 'fwody2', 'usdm']
+
 export const FireDiscussionsPage = ({ productId, regionId, validTime }: FireDiscussionsPageProps) => {
 	const router = useRouter()
 	const [textData, setTextData] = useState<Record<string, string> | null>(null)
 	const [displayText, setDisplayText] = useState<string | null>(null)
+	const [graphicUrl, setGraphicUrl] = useState<string | null>(null)
 	const [isLoadingData, setIsLoadingData] = useState(true)
 	const [isLoadingText, setIsLoadingText] = useState(true)
+	const [isLoadingGraphic, setIsLoadingGraphic] = useState(false)
 
 	const product = FIRE_DROUGHT_DISCUSSION_PRODUCTS[productId]
 	const pageTitle = product ? product.name : 'Fire & Drought Discussion'
@@ -182,6 +193,35 @@ export const FireDiscussionsPage = ({ productId, regionId, validTime }: FireDisc
 		fetchTextContent()
 	}, [textData, actualValidtimeId, isUSDM])
 
+	// Fetch graphic when product/validtime changes (only for products with graphics)
+	useEffect(() => {
+		const fetchGraphic = async () => {
+			// Only fetch graphics for supported products
+			if (!PRODUCTS_WITH_GRAPHICS.includes(productId) || !actualValidtimeId) {
+				setGraphicUrl(null)
+				setIsLoadingGraphic(false)
+				return
+			}
+
+			setIsLoadingGraphic(true)
+			try {
+				const data: GraphicData = await getFireDroughtGraphicsByValidTime(productId, actualValidtimeId)
+				if (data && !data.err && data.url) {
+					setGraphicUrl(data.url)
+				} else {
+					setGraphicUrl(null)
+				}
+			} catch (error) {
+				console.error('Error fetching graphic:', error)
+				setGraphicUrl(null)
+			} finally {
+				setIsLoadingGraphic(false)
+			}
+		}
+
+		fetchGraphic()
+	}, [productId, actualValidtimeId])
+
 	// Handle validtime selection change
 	const handleValidtimeChange = (newValidtimeId: string) => {
 		const newPath = `${fireBasePath}/discussions/${productId}/${regionId}/${newValidtimeId}`
@@ -212,6 +252,21 @@ export const FireDiscussionsPage = ({ productId, regionId, validTime }: FireDisc
 				</div>
 
 				<div className={styles.contentSection}>
+					{/* Graphic display for products that have accompanying graphics */}
+					{PRODUCTS_WITH_GRAPHICS.includes(productId) && (
+						<div className={styles.graphicSection}>
+							{isLoadingGraphic ? (
+								<div className={styles.graphicLoading}>Loading graphic...</div>
+							) : graphicUrl ? (
+								<div className={styles.graphicWrapper}>
+									<img src={graphicUrl} alt={`${pageTitle} graphic`} className={styles.productGraphic} />
+								</div>
+							) : (
+								<div className={styles.graphicNotAvailable}>Graphic not available for this time</div>
+							)}
+						</div>
+					)}
+
 					{validtimeOptions.length > 0 && (
 						<div className={styles.validtimeSelector}>
 							<div className={styles.validtimeLabel}>Product Issuance:</div>

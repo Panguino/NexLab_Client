@@ -30,3 +30,15 @@ export const getFireDroughtDiscussions = async (productId) => {
 	const data = await getData(endpoint)
 	return data
 }
+
+export const getFireAnalysisGraphics = async (productId, numFrames) => {
+	const endpoint = `https://weather.cod.edu/datapoints/text/fire/get-analysis.php?parms=${productId}-${numFrames}`
+	const data = await getData(endpoint)
+	return data
+}
+
+export const getFireDroughtGraphicsByValidTime = async (productId, validTime) => {
+	const endpoint = `https://weather.cod.edu/datapoints/text/fire/get-outlooks.php?parms=${productId}-${validTime}`
+	const data = await getData(endpoint)
+	return data
+}

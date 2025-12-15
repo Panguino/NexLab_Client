@@ -84,6 +84,34 @@
 	font-size: 1rem;
 }
 
+.graphicSection {
+	margin-bottom: 24px;
+	background: var(--color-grey4-grey16);
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.graphicWrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 16px;
+}
+
+.productGraphic {
+	max-width: 100%;
+	height: auto;
+	border-radius: 4px;
+}
+
+.graphicLoading,
+.graphicNotAvailable {
+	text-align: center;
+	padding: 40px 20px;
+	color: var(--color-grey14-grey8);
+	font-size: 14px;
+}
+
 @media (max-width: 768px) {
 	.titleSection {
 		padding: 16px;

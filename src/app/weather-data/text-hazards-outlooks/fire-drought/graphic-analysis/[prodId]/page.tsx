@@ -1,14 +1,14 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import FireDroughtAnimator from '@/components/blocks/_animators/FireDroughtAnimator/FireDroughtAnimator'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Fire and Drought Graphic Analysis"
-			purpose="Graphic Analysis Products for Fire and Drought"
-			etaText="This section is being implemented."
-		/>
-	)
+interface PageProps {
+	params: Promise<{
+		prodId: string
+	}>
+}
+
+const Page = async ({ params }: PageProps) => {
+	const { prodId } = await params
+	return <FireDroughtAnimator productId={prodId} />
 }
 
 export default Page
