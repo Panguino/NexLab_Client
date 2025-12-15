@@ -7,6 +7,7 @@ import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/Sid
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
 import ConvectivePanel from '../ConvectivePanel/ConvectivePanel'
+import FirePanel from '../FirePanel/FirePanel'
 import HazardsPanel from '../HazardsPanel/HazardsPanel'
 import TropicalPanel from '../TropicalPanel/TropicalPanel'
 import WFOPanel from '../WFOPanel/WFOPanel'
@@ -28,7 +29,7 @@ const TextSidebarPanels = () => {
 					<SidebarSectionLink name="Tropical" linkUrl={`${basepath}/nhc-tropical-hurricane-weather/overview/latest`} />
 					<SidebarSectionLink name="Winter" linkUrl={`${basepath}/wpc-winter-weather`} />
 					<SidebarSectionLink name="Hydrological" linkUrl={`${basepath}/nws-rfc-hydrological`} />
-					<SidebarSectionLink name="Fire & Drought" linkUrl={`${basepath}/spc-usdm-fire-weather-drought`} />
+					<SidebarSectionLink name="Fire & Drought" linkUrl={`${basepath}/fire-drought`} />
 					<SidebarSectionLink name="Marine" linkUrl={`${basepath}/nws-opc-nhc-marine-weather`} />
 					<SidebarSectionLink name="Space" linkUrl={`${basepath}/swpc-space-weather`} />
 				</SidebarPanelPad>
@@ -81,8 +82,8 @@ const TextSidebarPanels = () => {
 			</SidebarSubPanel>
 
 			{/* Fire & Drought */}
-			<SidebarSubPanel matchesPath={`${basepath}/spc-usdm-fire-weather-drought`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Fire & Drought" linkUrl={basepath} />
+			<SidebarSubPanel includesPath={`${basepath}/fire-drought`} activeX="0%" inactiveX="100%">
+				<FirePanel basepath={basepath} />
 			</SidebarSubPanel>
 
 			{/* Marine */}
