@@ -1,0 +1,232 @@
+@import '/src/styles/vars';
+
+.aiAgentPage {
+	display: flex;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	background-color: var(--color-grey0-grey20);
+}
+
+.animatorPanel {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--color-grey2-grey18);
+	position: relative;
+	overflow: hidden;
+}
+
+.chatPanel {
+	width: 400px;
+	flex-shrink: 0;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.animatorWrapper {
+	width: 100%;
+	height: 100%;
+}
+
+.emptyState {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 40px;
+	color: var(--color-grey14-grey6);
+
+	h3 {
+		margin: 16px 0 8px;
+		font-size: 20px;
+		font-weight: 600;
+		color: var(--color-grey18-grey2);
+	}
+
+	p {
+		margin: 0;
+		font-size: 14px;
+		max-width: 280px;
+		line-height: 1.5;
+	}
+}
+
+.emptyIcon {
+	font-size: 64px;
+	opacity: 0.8;
+}
+
+.loadingOverlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 10;
+	color: var(--color-white);
+
+	p {
+		margin-top: 16px;
+		font-size: 14px;
+	}
+}
+
+.loadingSpinner {
+	width: 48px;
+	height: 48px;
+	border: 4px solid rgba(255, 255, 255, 0.3);
+	border-top-color: var(--color-blue3);
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.errorState {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	padding: 40px;
+	color: var(--color-orange-high-threat);
+	font-size: 16px;
+	text-align: center;
+}
+
+// Mobile chat button (bottom-left)
+.mobileChatButton {
+	display: none;
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	width: 56px;
+	height: 56px;
+	border-radius: 50%;
+	background-color: var(--color-blue3-blue4);
+	border: none;
+	cursor: pointer;
+	z-index: 200;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+	transition:
+		transform 0.2s ease,
+		background-color var(--themeChange);
+
+	svg {
+		font-size: 22px;
+		color: var(--color-white-grey20);
+	}
+
+	&:hover {
+		transform: scale(1.05);
+	}
+
+	&:active {
+		transform: scale(0.95);
+	}
+}
+
+// Mobile chat slideout panel
+.mobileChatSlideout {
+	display: none;
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 100%;
+	max-width: 400px;
+	height: 100%;
+	background-color: var(--color-grey0-grey20);
+	z-index: 300;
+	box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+	flex-direction: column;
+}
+
+.mobileChatClose {
+	position: absolute;
+	top: 12px;
+	right: 12px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: var(--color-grey3-grey17);
+	border: none;
+	cursor: pointer;
+	z-index: 310;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 0.2s ease;
+
+	svg {
+		font-size: 18px;
+		color: var(--color-grey15-grey5);
+	}
+
+	&:hover {
+		background-color: var(--color-grey5-grey15);
+	}
+}
+
+// Mobile backdrop
+.mobileBackdrop {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 250;
+}
+
+@media (max-width: 1024px) {
+	.chatPanel {
+		width: 350px;
+	}
+}
+
+@media (max-width: $mobile-menu-breakpoint) {
+	.aiAgentPage {
+		flex-direction: column;
+	}
+
+	.animatorPanel {
+		flex: 1;
+		width: 100%;
+		height: 100%;
+	}
+
+	// Hide desktop chat panel on mobile
+	.chatPanel {
+		display: none;
+	}
+
+	// Show mobile chat button
+	.mobileChatButton {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	// Show mobile chat slideout
+	.mobileChatSlideout {
+		display: flex;
+	}
+
+	// Show backdrop when open
+	.mobileBackdrop {
+		display: block;
+	}
+}

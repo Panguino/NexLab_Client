@@ -1,0 +1,83 @@
+.chatInputForm {
+	padding: 16px;
+	background-color: var(--color-grey1-grey19);
+	border-top: 1px solid var(--color-grey5-grey15);
+}
+
+.inputWrapper {
+	display: flex;
+	align-items: flex-end;
+	gap: 12px;
+	background-color: var(--color-grey0-grey20);
+	border: 1px solid var(--color-grey5-grey15);
+	border-radius: 12px;
+	padding: 8px 12px;
+	transition: border-color 0.2s ease;
+
+	&:focus-within {
+		border-color: var(--color-blue3-blue4);
+	}
+}
+
+.textarea {
+	flex: 1;
+	border: none;
+	background: transparent;
+	color: var(--color-grey20-grey0);
+	font-size: 14px;
+	font-family: var(--font-primary);
+	line-height: 1.5;
+	resize: none;
+	min-height: 24px;
+	max-height: 120px;
+	padding: 4px 0;
+
+	&::placeholder {
+		color: var(--color-grey10-grey10);
+	}
+
+	&:focus {
+		outline: none;
+	}
+
+	&:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+}
+
+.sendButton {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border: none;
+	border-radius: 8px;
+	background-color: var(--color-blue3-blue4);
+	color: var(--color-white);
+	cursor: pointer;
+	transition: all 0.2s ease;
+	flex-shrink: 0;
+
+	&:hover:not(:disabled) {
+		background-color: var(--color-blue5-blue3);
+		transform: scale(1.05);
+	}
+
+	&:active:not(:disabled) {
+		transform: scale(0.95);
+	}
+
+	&:disabled {
+		background-color: var(--color-grey5-grey15);
+		color: var(--color-grey10-grey10);
+		cursor: not-allowed;
+	}
+
+	svg {
+		width: 18px;
+		height: 18px;
+	}
+}
+
