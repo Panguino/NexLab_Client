@@ -10,6 +10,7 @@ import ConvectivePanel from '../ConvectivePanel/ConvectivePanel'
 import FirePanel from '../FirePanel/FirePanel'
 import HazardsPanel from '../HazardsPanel/HazardsPanel'
 import MarinePanel from '../MarinePanel/MarinePanel'
+import SpacePanel from '../SpacePanel/SpacePanel'
 import TropicalPanel from '../TropicalPanel/TropicalPanel'
 import WFOPanel from '../WFOPanel/WFOPanel'
 import WinterPanel from '../WinterPanel/WinterPanel'
@@ -32,7 +33,7 @@ const TextSidebarPanels = () => {
 					<SidebarSectionLink name="Hydrological" linkUrl={`${basepath}/nws-rfc-hydrological`} />
 					<SidebarSectionLink name="Fire & Drought" linkUrl={`${basepath}/fire-drought`} />
 					<SidebarSectionLink name="Marine" linkUrl={`${basepath}/marine-opc-nhc/hazards`} />
-					<SidebarSectionLink name="Space" linkUrl={`${basepath}/swpc-space-weather`} />
+					<SidebarSectionLink name="Space" linkUrl={`${basepath}/swpc-space-weather/KWNP/NWXX04_ADVOUT/latest`} />
 				</SidebarPanelPad>
 			</SidebarSubPanel>
 			<SidebarSubPanel matchesPath={`${basepath}/NWF-WFO`} activeX="0%" inactiveX="100%">
@@ -93,8 +94,8 @@ const TextSidebarPanels = () => {
 			</SidebarSubPanel>
 
 			{/* Space */}
-			<SidebarSubPanel matchesPath={`${basepath}/swpc-space-weather`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Space" linkUrl={basepath} />
+			<SidebarSubPanel includesPath={`${basepath}/swpc-space-weather/KWNP/NWXX04_ADVOUT/latest`} activeX="0%" inactiveX="100%">
+				<SpacePanel basepath={basepath} />
 			</SidebarSubPanel>
 
 			{/* NWS WFO */}
