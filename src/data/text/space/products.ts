@@ -1,0 +1,40 @@
+const SPACE_TEXT_PRODUCT_SPACE_WEATHER_OUTLOOK_ID = 'ADV'
+const SPACE_TEXT_PRODUCT_INDICES_ID = 'CUR'
+const SPACE_TEXT_PRODUCT_WATCHES_ID = 'WAT'
+const SPACE_TEXT_PRODUCT_WARNINGS_ID = 'WAR'
+const SPACE_TEXT_PRODUCT_ALERTS_ID = 'ALT'
+const SPACE_TEXT_PRODUCT_3_HR_FORECAST_ID = '3HR'
+const SPACE_TEXT_PRODUCT_DAILY_FORECAST_ID = 'DAY'
+const SPACE_TEXT_PRODUCT_WEEKLY_FORECAST_ID = 'WEK'
+const SPACE_TEXT_PRODUCT_MISC_ID = 'misc'
+
+export const SPACE_TEXT_PRODUCTS = {
+	[SPACE_TEXT_PRODUCT_SPACE_WEATHER_OUTLOOK_ID]: {
+		name: 'Space Weather Outlooks',
+	},
+	[SPACE_TEXT_PRODUCT_INDICES_ID]: {
+		name: 'Current Space Weather Indices',
+	},
+	[SPACE_TEXT_PRODUCT_WATCHES_ID]: {
+		name: 'Watches',
+	},
+	[SPACE_TEXT_PRODUCT_WARNINGS_ID]: {
+		name: 'Warnings',
+	},
+	[SPACE_TEXT_PRODUCT_ALERTS_ID]: {
+		name: 'Alerts',
+	},
+	[SPACE_TEXT_PRODUCT_3_HR_FORECAST_ID]: {
+		name: '3hr Conditions & Forecasts',
+	},
+	[SPACE_TEXT_PRODUCT_DAILY_FORECAST_ID]: {
+		name: 'Daily Products',
+	},
+	[SPACE_TEXT_PRODUCT_WEEKLY_FORECAST_ID]: {
+		name: 'Weekly Products',
+	},
+	[SPACE_TEXT_PRODUCT_MISC_ID]: {
+		name: 'Miscellaneous Products',
+	},
+}
+export const SPACE_TEXT_PRODUCT_IDS = Object.keys(SPACE_TEXT_PRODUCTS)

@@ -1,0 +1,21 @@
+const ADMIN_TEXT_PRODUCT_URGENT_NOTICE_ID = 'ADA'
+const ADMIN_TEXT_PRODUCT_ALERT_ID = 'ADM'
+const ADMIN_TEXT_PRODUCT_INFORMATION_ID = 'PNS'
+const ADMIN_TEXT_PRODUCT_STORM_SUMMARIES_ID = 'SCC'
+
+export const ADMIN_TEXT_PRODUCTS = {
+	[ADMIN_TEXT_PRODUCT_URGENT_NOTICE_ID]: {
+		name: 'Urgent Notices',
+	},
+	[ADMIN_TEXT_PRODUCT_ALERT_ID]: {
+		name: 'Administrative Alerts',
+	},
+	[ADMIN_TEXT_PRODUCT_INFORMATION_ID]: {
+		name: 'Public Information Statements',
+	},
+	[ADMIN_TEXT_PRODUCT_STORM_SUMMARIES_ID]: {
+		name: 'WPC Storm Summaries',
+	},
+}
+
+export const ADMIN_TEXT_PRODUCT_IDS = Object.keys(ADMIN_TEXT_PRODUCTS)
