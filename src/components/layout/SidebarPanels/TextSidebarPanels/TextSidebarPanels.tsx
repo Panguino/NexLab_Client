@@ -6,6 +6,7 @@ import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader
 import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/SidebarSectionLink'
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
+import AdminPanel from '../AdminPanel/AdminPanel'
 import ConvectivePanel from '../ConvectivePanel/ConvectivePanel'
 import FirePanel from '../FirePanel/FirePanel'
 import HazardsPanel from '../HazardsPanel/HazardsPanel'
@@ -34,6 +35,7 @@ const TextSidebarPanels = () => {
 					<SidebarSectionLink name="Fire & Drought" linkUrl={`${basepath}/fire-drought`} />
 					<SidebarSectionLink name="Marine" linkUrl={`${basepath}/marine-opc-nhc/hazards`} />
 					<SidebarSectionLink name="Space" linkUrl={`${basepath}/swpc-space-weather/KWNP/NWXX04_ADVOUT/latest`} />
+					<SidebarSectionLink name="Administrative" linkUrl={`${basepath}/admin-products/KWBC/NOUS41_PNSWSH/latest`} />
 				</SidebarPanelPad>
 			</SidebarSubPanel>
 			<SidebarSubPanel matchesPath={`${basepath}/NWF-WFO`} activeX="0%" inactiveX="100%">
@@ -96,6 +98,11 @@ const TextSidebarPanels = () => {
 			{/* Space */}
 			<SidebarSubPanel includesPath={`${basepath}/swpc-space-weather`} activeX="0%" inactiveX="100%">
 				<SpacePanel basepath={basepath} />
+			</SidebarSubPanel>
+
+			{/* Administrative */}
+			<SidebarSubPanel includesPath={`${basepath}/admin-products`} activeX="0%" inactiveX="100%">
+				<AdminPanel basepath={basepath} />
 			</SidebarSubPanel>
 
 			{/* NWS WFO */}
