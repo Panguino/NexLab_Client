@@ -89,12 +89,12 @@ const TextSidebarPanels = () => {
 			</SidebarSubPanel>
 
 			{/* Marine */}
-			<SidebarSubPanel includesPath={`${basepath}/marine-opc-nhc/hazards`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel includesPath={`${basepath}/marine-opc-nhc`} activeX="0%" inactiveX="100%">
 				<MarinePanel basepath={basepath} />
 			</SidebarSubPanel>
 
 			{/* Space */}
-			<SidebarSubPanel includesPath={`${basepath}/swpc-space-weather/KWNP/NWXX04_ADVOUT/latest`} activeX="0%" inactiveX="100%">
+			<SidebarSubPanel includesPath={`${basepath}/swpc-space-weather`} activeX="0%" inactiveX="100%">
 				<SpacePanel basepath={basepath} />
 			</SidebarSubPanel>
 
