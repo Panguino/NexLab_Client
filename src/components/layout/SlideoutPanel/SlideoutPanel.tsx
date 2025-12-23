@@ -9,6 +9,7 @@ import ProductInfoPanel from '@/components/blocks/ProductInfoPanel/ProductInfoPa
 import SoundingTextPanel from '@/components/blocks/SoundingTextPanel/SoundingTextPanel'
 import TropicalTextPanel from '@/components/blocks/TropicalTextPanel/TropicalTextPanel'
 import WFOTextPanel from '@/components/blocks/WFOTextPanel/WFOTextPanel'
+import WinterTextPanel from '@/components/blocks/WinterTextPanel/WinterTextPanel'
 import CloseX from '@/components/elements/icons/CloseX/CloseX'
 import {
 	DATA_TEXT_HAZARDS_MAP_DETAILS_SLIDEOUT,
@@ -18,6 +19,7 @@ import {
 	SOUNDING_TEXT_SLIDEOUT,
 	TROPICAL_TEXT_SLIDEOUT,
 	WFO_TEXT_SLIDEOUT,
+	WINTER_TEXT_SLIDEOUT,
 } from '@/data/vars'
 import { useRootStore } from '@/store/useRootStore'
 import { usePathname } from 'next/navigation'
@@ -45,6 +47,11 @@ const SlideoutPanel = () => {
 			// Stay open when moving between WFO products
 			return
 		}
+		// Don't close the Winter panel when navigating within winter weather section
+		if (currentSlideoutPanel === WINTER_TEXT_SLIDEOUT && pathname.includes('/wpc-winter-weather/')) {
+			// Stay open when moving within winter products
+			return
+		}
 		closeSlideoutPanel()
 	}, [pathname, closeSlideoutPanel, currentSlideoutPanel])
 
@@ -64,6 +71,8 @@ const SlideoutPanel = () => {
 				return <TropicalTextPanel />
 			case WFO_TEXT_SLIDEOUT:
 				return <WFOTextPanel />
+			case WINTER_TEXT_SLIDEOUT:
+				return <WinterTextPanel />
 			default:
 				return <></>
 		}

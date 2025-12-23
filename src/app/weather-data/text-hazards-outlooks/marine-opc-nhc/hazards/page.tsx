@@ -4,8 +4,8 @@ const Page = () => {
 	return (
 		<ComingSoon
 			fullWidth
-			pageName="Winter Weather Products"
-			purpose="Active Hazards and Outlooks deck.gl Map"
+			pageName="Marine Hazards Map"
+			purpose="Filtered Deck.gl map displaying marine hazards from OPC/NHC text products."
 			etaText="This section is being implemented."
 		/>
 	)
