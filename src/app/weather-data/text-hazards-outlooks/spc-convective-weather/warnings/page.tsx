@@ -1,14 +1,10 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { redirect } from 'next/navigation'
 
+/**
+ * Redirect /warnings to /warnings/map by default
+ */
 const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Convective Warnings Map and Table"
-			purpose="Deck.gl or D3.js visualizations of convective warnings (Tornado, Severe Thunderstorm, Flash Flood, etc.). Optional Table View."
-			etaText="This section is being implemented."
-		/>
-	)
+	redirect('/weather-data/text-hazards-outlooks/spc-convective-weather/warnings/map')
 }
 
 export default Page

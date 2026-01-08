@@ -3,10 +3,12 @@
 import { ConvectiveProductCard } from '@/components/elements/ConvectiveProductCard/ConvectiveProductCard'
 import { getLocalStormReports } from '@/util/dataCalls/text/query-convective'
 import { faTable } from '@fortawesome/free-solid-svg-icons'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import styles from './WarningsReports.module.scss'
 
 export const WarningsReports = () => {
+	const router = useRouter()
 	const [reportCount, setReportCount] = useState<number | null>(null)
 	const [isLoading, setIsLoading] = useState(true)
 
@@ -30,6 +32,14 @@ export const WarningsReports = () => {
 		fetchReportCount()
 	}, [])
 
+	const handleViewWarningsMap = () => {
+		router.push('/weather-data/text-hazards-outlooks/spc-convective-weather/warnings/map')
+	}
+
+	const handleViewWarningsTable = () => {
+		router.push('/weather-data/text-hazards-outlooks/spc-convective-weather/warnings/table')
+	}
+
 	return (
 		<section className={styles.warningsReports}>
 			<div className={styles.container}>
@@ -41,8 +51,20 @@ export const WarningsReports = () => {
 					</p>
 				</div>
 				<div className={styles.content}>
-					<div className={styles.graphicPlaceholder}>
-						<p>Active Warnings Map</p>
+					<div className={styles.warningsSection}>
+						<h2>Active Convective Warnings</h2>
+						<p>
+							View current tornado warnings, severe thunderstorm warnings, and flash flood warnings across the United States. Track
+							active severe weather in real-time and access detailed warning information.
+						</p>
+						<div className={styles.buttonGroup}>
+							<button className={styles.viewButton} onClick={handleViewWarningsMap}>
+								View Warnings Map
+							</button>
+							<button className={`${styles.viewButton} ${styles.secondary}`} onClick={handleViewWarningsTable}>
+								View Warnings Table
+							</button>
+						</div>
 					</div>
 					<ConvectiveProductCard
 						icon={faTable}
@@ -50,7 +72,7 @@ export const WarningsReports = () => {
 						description="View recent local storm reports"
 						stat={`${reportCount} reports in last 3 days`}
 						isLoading={isLoading}
-						linkUrl="/weather-data/text-hazards-outlooks/spc-convective-weather/local-storm-reports"
+						linkUrl="/weather-data/text-hazards-outlooks/spc-convective-weather/reports"
 					/>
 				</div>
 			</div>
