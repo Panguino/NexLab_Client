@@ -3,20 +3,33 @@
 import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
 import countiesData from '@/data/d3Map/counties.json'
 import countriesData from '@/data/d3Map/countries.json'
-import lakesData from '@/data/d3Map/lakes.json'
-import statesData from '@/data/d3Map/states.json'
-import worldData from '@/data/d3Map/world.json'
 import { getHazardInfoFromEvent } from '@/util/dataCalls/alerts/parseCountyAlerts'
 import { GeoJsonLayer } from '@deck.gl/layers'
 import DeckGL from 'deck.gl'
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useAnimator } from '../Animator'
 import styles from './AnimatorMapMachine.module.scss'
+import { CwaTooltip, type CwaTooltipInfo } from './components/CwaTooltip'
 import MapAlertTooltip from './components/MapAlertTooltip'
 import { StormTooltip } from './components/StormTooltip'
 import { getDefaultLayerVisibility } from './config/mapLayers'
+import { useClickDetection } from './hooks/useClickDetection'
+import { useHoverDetection } from './hooks/useHoverDetection'
+import { useMapData } from './hooks/useMapData'
 import { useMultiAlertAnimation } from './hooks/useMultiAlertAnimation'
+import { createCoastalRegionsLayer } from './layers/CoastalRegionsLayer'
+import { createCountiesLayer } from './layers/CountiesLayer'
+import { createCwaZonesLayer } from './layers/CwaZonesLayer'
+import { createFireZonesLayer } from './layers/FireZonesLayer'
+import { createForecastZonesLayer } from './layers/ForecastZonesLayer'
+import { createHoverHighlightLayer } from './layers/HoverHighlightLayer'
 import { createHurricaneLayer, getHurricaneIconCanvasSync, initializeHurricaneIcons } from './layers/HurricaneLayer'
+import { createLakesLayer } from './layers/LakesLayer'
+import { createLatLongGridLayer } from './layers/LatLongGridLayer'
+import { createOceanLayer } from './layers/OceanLayer'
+import { createStatesLayers } from './layers/StatesLayer'
 import { createStormTrackLayer } from './layers/StormTrackLayer'
+import { createWorldLayer } from './layers/WorldLayer'
 import { IAnimatorMapMachineProps, MapFrame } from './types'
 import { createAffectedRegionsGeoJSON, detectAllAffectedRegions, getWarningColor } from './utils/regionDetection'
 
@@ -30,20 +43,116 @@ try {
 }
 
 /**
- * Find which county or coastal region a given lat/long point is in
- * Uses point-in-polygon detection with Turf.js
- * Returns object with id and type ('county' or 'coastal')
+ * Check if a point is within a bounding box (fast pre-filter)
  */
-function findRegionAtPoint(latitude: number, longitude: number, coastalData?: any): { id: string; type: 'county' | 'coastal' } | null {
+function isPointInBBox(lon: number, lat: number, bbox: number[]): boolean {
+	// bbox format: [minLon, minLat, maxLon, maxLat]
+	return lon >= bbox[0] && lon <= bbox[2] && lat >= bbox[1] && lat <= bbox[3]
+}
+
+/**
+ * Get or compute bounding box for a feature
+ */
+function getFeatureBBox(feature: any): number[] | null {
+	// Check if bbox is already cached in properties
+	if (feature.properties?._bbox) {
+		return feature.properties._bbox
+	}
+
+	// Compute bbox from geometry
+	const coords = feature.geometry?.coordinates
+	if (!coords) return null
+
+	let minLon = Infinity,
+		minLat = Infinity,
+		maxLon = -Infinity,
+		maxLat = -Infinity
+
+	const processCoords = (coordArray: any) => {
+		if (typeof coordArray[0] === 'number') {
+			// Single coordinate pair
+			minLon = Math.min(minLon, coordArray[0])
+			maxLon = Math.max(maxLon, coordArray[0])
+			minLat = Math.min(minLat, coordArray[1])
+			maxLat = Math.max(maxLat, coordArray[1])
+		} else {
+			// Nested array
+			coordArray.forEach(processCoords)
+		}
+	}
+
+	processCoords(coords)
+
+	const bbox = [minLon, minLat, maxLon, maxLat]
+	// Cache bbox in properties for future use
+	if (feature.properties) {
+		feature.properties._bbox = bbox
+	}
+	return bbox
+}
+
+/**
+ * Find which county, coastal region, or CWA zone a given lat/long point is in
+ * Uses point-in-polygon detection with Turf.js
+ * Optimized with bounding box pre-filtering
+ * Returns object with id and type ('county', 'coastal', or 'cwa')
+ *
+ * @param selectedWFOId - If provided, skip this WFO when checking CWA zones (to allow county detection in detail view)
+ */
+function findRegionAtPoint(
+	latitude: number,
+	longitude: number,
+	coastalData?: any,
+	cwaData?: any,
+	selectedWFOId?: string | null,
+): { id: string; type: 'county' | 'coastal' | 'cwa'; wfoId?: string } | null {
 	if (!booleanPointInPolygon) return null
 
 	const point = [longitude, latitude]
 
-	// First search through coastal data if available
+	// First search through CWA zones if available (only ~125 zones)
+	// Skip the selected WFO zone if in detail view to allow county detection
+	if (cwaData && cwaData.features) {
+		const cwaFeatures = cwaData.features || []
+		for (const feature of cwaFeatures) {
+			try {
+				// Fast bounding box check first
+				const bbox = getFeatureBBox(feature)
+				if (bbox && !isPointInBBox(longitude, latitude, bbox)) {
+					continue // Skip expensive point-in-polygon check
+				}
+
+				if (booleanPointInPolygon(point, feature)) {
+					const cwaId = feature.properties?.CWA
+					const wfoId = feature.properties?.FULLSTAID
+
+					// Skip the selected WFO zone to allow county tooltips in detail view
+					if (selectedWFOId && wfoId === selectedWFOId) {
+						continue
+					}
+
+					if (cwaId) {
+						return { id: cwaId, type: 'cwa', wfoId }
+					}
+				}
+			} catch (e) {
+				// Skip features that cause errors
+				continue
+			}
+		}
+	}
+
+	// Then search through coastal data if available
 	if (coastalData && coastalData.features) {
 		const coastalFeatures = coastalData.features || []
 		for (const feature of coastalFeatures) {
 			try {
+				// Fast bounding box check first
+				const bbox = getFeatureBBox(feature)
+				if (bbox && !isPointInBBox(longitude, latitude, bbox)) {
+					continue // Skip expensive point-in-polygon check
+				}
+
 				if (booleanPointInPolygon(point, feature)) {
 					const regionId = feature.properties?.id || feature.properties?.ID
 					if (regionId) {
@@ -57,10 +166,17 @@ function findRegionAtPoint(latitude: number, longitude: number, coastalData?: an
 		}
 	}
 
-	// Then search through counties data
+	// Finally search through counties data (~3000 counties)
+	// Only check counties if we haven't found a CWA or coastal region
 	const features = (countiesData as any).features || []
 	for (const feature of features) {
 		try {
+			// Fast bounding box check first
+			const bbox = getFeatureBBox(feature)
+			if (bbox && !isPointInBBox(longitude, latitude, bbox)) {
+				continue // Skip expensive point-in-polygon check
+			}
+
 			if (booleanPointInPolygon(point, feature)) {
 				// Extract county ID from properties
 				let countyId = feature.properties?.id || feature.properties?.ID
@@ -79,56 +195,6 @@ function findRegionAtPoint(latitude: number, longitude: number, coastalData?: an
 	}
 
 	return null
-}
-
-/**
- * Generate dashed lat-long grid lines
- * Creates a grid of latitude and longitude lines at regular intervals
- * Uses short line segments to simulate dashes
- */
-function generateGridLines(spacing: number = 0.5, dashLength: number = 0.25, gapLength: number = 0.25): any {
-	const features: any[] = []
-
-	// Latitude lines (horizontal)
-	for (let lat = -90; lat <= 90; lat += spacing) {
-		// Create dashed line by generating segments
-		for (let lon = -180; lon < 180; lon += dashLength + gapLength) {
-			features.push({
-				type: 'Feature',
-				geometry: {
-					type: 'LineString',
-					coordinates: [
-						[lon, lat],
-						[Math.min(lon + dashLength, 180), lat],
-					],
-				},
-				properties: { type: 'latitude', value: lat },
-			})
-		}
-	}
-
-	// Longitude lines (vertical)
-	for (let lon = -180; lon <= 180; lon += spacing) {
-		// Create dashed line by generating segments
-		for (let lat = -90; lat < 90; lat += dashLength + gapLength) {
-			features.push({
-				type: 'Feature',
-				geometry: {
-					type: 'LineString',
-					coordinates: [
-						[lon, lat],
-						[lon, Math.min(lat + dashLength, 90)],
-					],
-				},
-				properties: { type: 'longitude', value: lon },
-			})
-		}
-	}
-
-	return {
-		type: 'FeatureCollection',
-		features,
-	}
 }
 
 /**
@@ -158,21 +224,135 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			viewState: externalViewState,
 			layerVisibility = {},
 			onStormClick,
+			onCwaClick,
+			onCountyClick,
+			selectedWFOId,
+			disableCwaDetection = false,
+			hazardOpacityFn,
+			allCoastalRegions,
 		},
 		ref,
 	) => {
+		// Local state
 		const [isLoading, setIsLoading] = useState(true)
 		const [localLoadedFrames, setLocalLoadedFrames] = useState<MapFrame[]>([])
 		const [isDarkMode, setIsDarkMode] = useState(false)
 		const [stormHoverInfo, setStormHoverInfo] = useState<any>(null)
 		const [showTooltip, setShowTooltip] = useState(false)
-		const [hoveredCountyId, setHoveredCountyId] = useState<string | null>(null)
-		const [tooltipVisible, setTooltipVisible] = useState(false)
-		const [tooltipTitle, setTooltipTitle] = useState('')
-		const [tooltipAlerts, setTooltipAlerts] = useState<any[]>([])
 		const [isHoveringStorm, setIsHoveringStorm] = useState(false)
 		const deckGLRef = useRef<any>(null)
 		const containerRef = useRef<HTMLDivElement>(null)
+
+		// Get targetMapZoomState and setMapZoomState from Animator context for smooth zoom animation
+		const animatorContext = useAnimator()
+		const targetMapZoomState = animatorContext?.targetMapZoomState
+		const setMapZoomState = animatorContext?.setMapZoomState
+
+		// Use custom hooks for data and interactions
+		const { cwaZonesData } = useMapData()
+		const {
+			hoveredCountyId,
+			setHoveredCountyId,
+			hoveredCwaId,
+			setHoveredCwaId,
+			setHoveredCwaWfoId,
+			tooltipVisible,
+			setTooltipVisible,
+			tooltipTitle,
+			setTooltipTitle,
+			tooltipAlerts,
+			setTooltipAlerts,
+			cwaTooltipVisible,
+			setCwaTooltipVisible,
+			cwaTooltipInfo,
+			setCwaTooltipInfo,
+		} = useHoverDetection()
+
+		useClickDetection(onStormClick, onCwaClick)
+
+		/**
+		 * Memoized mapping of county IDs to CWA zone IDs
+		 * This is expensive to compute (point-in-polygon for ~3000 counties x ~125 CWA zones)
+		 * but only needs to be done once when the data loads
+		 */
+		const countyToCwaMap = useMemo(() => {
+			if (!cwaZonesData || !booleanPointInPolygon) {
+				return new Map<string, string>()
+			}
+
+			const map = new Map<string, string>()
+			const counties = (countiesData as any).features || []
+			const cwaZones = cwaZonesData.features || []
+
+			console.log('🗺️ Building county-to-CWA mapping...', {
+				counties: counties.length,
+				cwaZones: cwaZones.length,
+			})
+
+			// For each county, find which CWA zone it belongs to
+			counties.forEach((countyFeature: any) => {
+				const countyId = countyFeature.properties?.id || countyFeature.properties?.ID
+				if (!countyId) {
+					// Extract county ID from FIPS if needed
+					if (countyFeature.properties?.FIPS) {
+						const fipsMatch = countyFeature.properties.FIPS.match(/(\d{5})/)
+						if (!fipsMatch) return
+						const finalCountyId = fipsMatch[1]
+
+						const lat = countyFeature.properties?.latitude
+						const lon = countyFeature.properties?.longitude
+						if (!lat || !lon) return
+
+						const point = [lon, lat]
+
+						// Check which CWA zone this county belongs to
+						for (const cwaFeature of cwaZones) {
+							try {
+								if (booleanPointInPolygon(point, cwaFeature)) {
+									const cwaId = cwaFeature.properties?.CWA
+									if (cwaId) {
+										map.set(finalCountyId, cwaId)
+										break // County found, no need to check other CWA zones
+									}
+								}
+							} catch (e) {
+								// Skip errors
+							}
+						}
+					}
+					return
+				}
+
+				const lat = countyFeature.properties?.latitude
+				const lon = countyFeature.properties?.longitude
+				if (!lat || !lon) return
+
+				const point = [lon, lat]
+
+				// Check which CWA zone this county belongs to
+				for (const cwaFeature of cwaZones) {
+					try {
+						if (booleanPointInPolygon(point, cwaFeature)) {
+							const cwaId = cwaFeature.properties?.CWA
+							if (cwaId) {
+								map.set(countyId, cwaId)
+								break // County found, no need to check other CWA zones
+							}
+						}
+					} catch (e) {
+						// Skip errors
+					}
+				}
+			})
+
+			console.log('✅ County-to-CWA mapping complete:', {
+				mappedCounties: map.size,
+				totalCounties: counties.length,
+				coverage: `${((map.size / counties.length) * 100).toFixed(1)}%`,
+			})
+
+			return map
+		}, [cwaZonesData])
 
 		// Initialize layer visibility with defaults if not provided
 		const initializedLayerVisibility = useMemo(() => {
@@ -183,11 +363,63 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		// CONTROLLED COMPONENT: Use the global mapZoomState from parent
 		// All state changes (buttons, mouse interactions) update the global state
 		// DeckGL always receives the current viewState from the global state
-		const viewState = externalViewState ?? {
-			longitude: -95,
-			latitude: 37,
-			zoom: 3,
-		}
+		const viewState = useMemo(
+			() =>
+				externalViewState ?? {
+					longitude: -95,
+					latitude: 37,
+					zoom: 3,
+				},
+			[externalViewState],
+		)
+
+		// Smooth zoom animation using custom easing
+		// Moves a small percentage of the distance each frame for smooth transitions
+		useEffect(() => {
+			if (!targetMapZoomState || !setMapZoomState) return undefined
+
+			const EASING_FACTOR = 0.05 // Move 5% of distance each frame (slower = smaller value)
+			const THRESHOLD = 0.001 // Stop when delta is very small
+
+			const animationFrame = requestAnimationFrame(() => {
+				const currentZoom = viewState.zoom
+				const currentLat = viewState.latitude
+				const currentLon = viewState.longitude
+
+				const targetZoom = targetMapZoomState.zoom
+				const targetLat = targetMapZoomState.latitude
+				const targetLon = targetMapZoomState.longitude
+
+				// Calculate deltas
+				const deltaZoom = targetZoom - currentZoom
+				const deltaLat = targetLat - currentLat
+				const deltaLon = targetLon - currentLon
+
+				// Check if we're close enough to stop
+				if (Math.abs(deltaZoom) < THRESHOLD && Math.abs(deltaLat) < THRESHOLD && Math.abs(deltaLon) < THRESHOLD) {
+					// Snap to final position
+					setMapZoomState({
+						zoom: targetZoom,
+						latitude: targetLat,
+						longitude: targetLon,
+					})
+					return
+				}
+
+				// Move a fraction of the distance
+				setMapZoomState(
+					{
+						zoom: currentZoom + deltaZoom * EASING_FACTOR,
+						latitude: currentLat + deltaLat * EASING_FACTOR,
+						longitude: currentLon + deltaLon * EASING_FACTOR,
+					},
+					true,
+				)
+			})
+
+			return () => cancelAnimationFrame(animationFrame)
+			// eslint-disable-next-line react-hooks/exhaustive-deps
+		}, [viewState])
 
 		const loadedFrames = externalLoadedFrames ?? localLoadedFrames
 		const setLoadedFrames = externalSetLoadedFrames ?? setLocalLoadedFrames
@@ -218,7 +450,7 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		// Theme-aware colors (RGBA format)
 		const isDark = isDarkMode
 		// Memoize colors to prevent dependency changes on every render
-		const { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, gridlineColor } = useMemo(() => {
+		const { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, cwaBorderColor, gridlineColor } = useMemo(() => {
 			// Ocean: blue1 (#8aadcf) light / blue2 (#233544) dark
 			const oceanColor = isDark ? [35, 53, 68, 255] : [138, 173, 207, 255]
 			// World: grey2 (#d8d8d8) light / grey16 (#484848) dark
@@ -227,11 +459,13 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			const statesColor = isDark ? [95, 95, 95, 255] : [255, 255, 255, 255]
 			// State Borders: grey18 (#232323) light / grey15 (#505050) dark - darker
 			const borderColor = isDark ? [80, 80, 80, 255] : [35, 35, 35, 255]
+			// CWA Zone Borders: Between state and county borders - darker than counties, lighter than states
+			const cwaBorderColor = isDark ? [95, 95, 95, 255] : [60, 60, 60, 255]
 			// County Borders: grey14 (#6b6b6b) light / grey12 (#7a7a7a) dark - lighter than state borders
 			const countyBorderColor = isDark ? [122, 122, 122, 255] : [107, 107, 107, 255]
 			// Grid lines: more visible grey with higher opacity
 			const gridlineColor = isDark ? [120, 120, 120, 180] : [180, 180, 180, 180]
-			return { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, gridlineColor }
+			return { oceanColor, worldColor, statesColor, borderColor, countyBorderColor, cwaBorderColor, gridlineColor }
 		}, [isDark])
 
 		// Load frames
@@ -317,8 +551,74 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			return {}
 		}, [loadedFrames, currentFrame])
 
+		// Extract CWA alert map from current frame (aggregating county alerts)
+		const currentFrameCwaAlertMap = useMemo(() => {
+			if (loadedFrames.length === 0 || !cwaZonesData) return {}
+
+			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+			const frame = loadedFrames[activeFrame]
+
+			if (!frame || !frame.data) return {}
+
+			// If frame.data is a FeatureCollection, extract alert info from features
+			if ('features' in frame.data && Array.isArray(frame.data.features)) {
+				// Map CWA ID to a Set of unique color strings to deduplicate alerts across counties
+				const cwaColorMap: Record<string, Set<string>> = {}
+
+				// Iterate through all counties in the frame
+				frame.data.features.forEach((feature: any) => {
+					const countyId = feature.properties?.id
+					const alerts = feature.properties?.alerts // Array of alert objects with color property
+
+					if (countyId && Array.isArray(alerts) && alerts.length > 0 && countyToCwaMap.has(countyId)) {
+						const cwaId = countyToCwaMap.get(countyId)
+						if (cwaId) {
+							if (!cwaColorMap[cwaId]) {
+								cwaColorMap[cwaId] = new Set()
+							}
+
+							// Add each alert's color to the CWA's set
+							alerts.forEach((alert: any) => {
+								if (alert.color && Array.isArray(alert.color)) {
+									// Check if it's the default grey [200, 200, 200, ...]
+									const isDefaultGrey = alert.color[0] === 200 && alert.color[1] === 200 && alert.color[2] === 200
+
+									if (!isDefaultGrey) {
+										// Store as string for Set deduplication (e.g., "255,0,0,255")
+										cwaColorMap[cwaId].add(alert.color.join(','))
+									}
+								}
+							})
+						}
+					}
+				})
+
+				// Convert to format expected by useMultiAlertAnimation
+				const result: Record<string, any> = {}
+				Object.entries(cwaColorMap).forEach(([cwaId, colorSet]) => {
+					if (colorSet.size > 0) {
+						// Convert strings back to number arrays
+						const uniqueColors = Array.from(colorSet).map((c) => c.split(',').map(Number))
+
+						result[cwaId] = {
+							hasAlert: true,
+							color: uniqueColors[0], // Use first color as static fallback
+							alerts: uniqueColors.map((color) => ({ color })),
+						}
+					}
+				})
+
+				return result
+			}
+
+			return {}
+		}, [loadedFrames, currentFrame, cwaZonesData, countyToCwaMap])
+
 		// Use multi-alert animation hook for counties with 2+ alerts
-		const { animatedColors } = useMultiAlertAnimation(currentFrameAlertMap, true)
+		const { animatedColors: animatedCountyColors } = useMultiAlertAnimation(currentFrameAlertMap, true)
+
+		// Use multi-alert animation hook for CWA zones with 2+ alert types
+		const { animatedColors: animatedCwaColors } = useMultiAlertAnimation(currentFrameCwaAlertMap, true)
 
 		// Create layers with base map and current frame data
 		const layers = useMemo(() => {
@@ -329,298 +629,121 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			}
 
 			const baseLayers: any[] = [
-				// Ocean background layer - using theme color blue1-blue2
-				// Light mode: #8aadcf (138, 173, 207), Dark mode: #233544 (35, 53, 68)
-				new GeoJsonLayer({
-					id: 'ocean-background',
-					data: {
-						type: 'FeatureCollection' as const,
-						features: [
-							{
-								type: 'Feature' as const,
-								geometry: {
-									type: 'Polygon' as const,
-									coordinates: [
-										[
-											[-180, -90],
-											[180, -90],
-											[180, 90],
-											[-180, 90],
-											[-180, -90],
-										],
-									],
-								},
-								properties: {},
-							},
-						],
-					} as any,
-					filled: true,
-					stroked: false,
-					getFillColor: () => oceanColor as any,
-					opacity: 1,
-					updateTriggers: {
-						getFillColor: [oceanColor],
-					},
-				}),
+				// Ocean background layer
+				createOceanLayer({ oceanColor }),
+
 				// World layer - faded background for all countries
-				// Using theme color grey2-grey16: Light mode: #d8d8d8 (216, 216, 216), Dark mode: #484848 (72, 72, 72)
-				...(shouldShowLayer('world-layer')
-					? [
-							new GeoJsonLayer({
-								id: 'world-layer',
-								data: worldData as any,
-								filled: true,
-								stroked: true,
-								lineWidthMinPixels: 0.5,
-								lineWidthMaxPixels: 1,
-								getLineColor: () => [0, 0, 0, 255], // Black borders
-								getLineWidth: () => 0.5, // 50% size
-								getFillColor: () => worldColor as any,
-								opacity: 0.3, // Faded/subtle - reduced to prevent covering states
-								pickable: false,
-								updateTriggers: {
-									getFillColor: [worldColor],
-								},
-							}),
-						]
-					: []),
-				// State fills layer - fills only
-				// Light mode: white (#ffffff), Dark mode: grey13 (#5f5f5f)
-				...(shouldShowLayer('states-fill-layer')
-					? [
-							new GeoJsonLayer({
-								id: 'states-fill-layer',
-								data: statesData as any,
-								filled: true,
-								stroked: false,
-								getFillColor: () => statesColor as any,
-								opacity: 1,
-								pickable: false,
-								updateTriggers: {
-									getFillColor: [statesColor],
-								},
-							}),
-						]
-					: []),
-				// Great Lakes layer - using ocean color to match water
-				// Light mode: #8aadcf (138, 173, 207), Dark mode: #233544 (35, 53, 68)
-				...(shouldShowLayer('lakes-layer')
-					? [
-							new GeoJsonLayer({
-								id: 'lakes-layer',
-								data: lakesData as any,
-								filled: true,
-								stroked: false,
-								getFillColor: () => oceanColor as any,
-								opacity: 1,
-								pickable: false,
-								updateTriggers: {
-									getFillColor: [oceanColor],
-								},
-							}),
-						]
-					: []),
+				...createWorldLayer({
+					visible: shouldShowLayer('world-layer'),
+					worldColor,
+				}),
 
-				// Counties layer - single layer with conditional styling
-				// Toggles:
-				// - 'counties-inactive-layer': Controls border opacity for counties without alerts (0 opacity when off, except for hovered)
-				// - 'county-data-regions-layer': Controls whether to show alert colors and hover interactivity (when off, all fills use default color)
-				...(loadedFrames.length > 0 &&
-				loadedFrames[currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame]?.data
-					? [
-							new GeoJsonLayer({
-								id: 'counties-layer',
-								data: loadedFrames[
-									currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
-								]?.data as any,
-								filled: true,
-								stroked: true,
-								lineWidthMinPixels: 0.5,
-								lineWidthMaxPixels: 1,
-								getLineColor: (d: any) => {
-									const regionId = d.properties?.id || d.properties?.ID
-									const showCountyData = shouldShowLayer('county-data-regions-layer')
-									const showInactiveCounties = shouldShowLayer('counties-inactive-layer')
-									const alertInfo = currentFrameAlertMap && regionId && currentFrameAlertMap[regionId]
-									const hasAlert = alertInfo?.hasAlert
+				// States Fill Layer (Background)
+				...createStatesLayers({
+					showFill: shouldShowLayer('states-fill-layer'),
+					showBorders: false, // Borders rendered later on top
+					statesColor,
+					borderColor,
+				}),
 
-									// For counties without alerts, respect the inactive toggle
-									if (!showInactiveCounties) {
-										if (hasAlert && showCountyData) {
-											return countyBorderColor as any
-										}
-										return [0, 0, 0, 0]
-									}
+				// CWA Zones Fill Layer
+				...createCwaZonesLayer({
+					showFill: shouldShowLayer('cwa-zones-fill-layer'),
+					showBorders: false, // Borders rendered later
+					hoveredCwaId,
+					selectedWFOId,
+					alertMap: currentFrameCwaAlertMap,
+					cwaBorderColor,
+					animatedColors: animatedCwaColors,
+					renderMode: 'fill',
+				}),
 
-									// Always show white outline for hovered region
-									if (showCountyData && hoveredCountyId && regionId === hoveredCountyId) {
-										return [255, 255, 255, 255]
-									}
+				// Great Lakes layer
+				...createLakesLayer({
+					visible: shouldShowLayer('lakes-layer'),
+					oceanColor,
+				}),
 
-									// If county has alert, always show border
-									if (hasAlert) {
-										return countyBorderColor as any
-									}
+				// Lat/Long grid layer
+				...createLatLongGridLayer({
+					visible: shouldShowLayer('latlon-grid-layer'),
+					gridlineColor,
+				}),
 
-									// Show border for inactive counties when toggle is on
-									return countyBorderColor as any
-								},
-								getFillColor: (d: any) => {
-									const regionId = d.properties?.id || d.properties?.ID
-									const showCountyData = shouldShowLayer('county-data-regions-layer')
-									const alertInfo = currentFrameAlertMap && regionId && currentFrameAlertMap[regionId]
-									const hasAlert = alertInfo?.hasAlert
+				// Fire Zones layer
+				...createFireZonesLayer({
+					showFill: shouldShowLayer('fire-zones-fill-layer'),
+					showBorders: shouldShowLayer('fire-zones-inactive-layer'),
+				}),
 
-									// If county data is disabled, use default color for all counties
-									if (!showCountyData) {
-										return [200, 200, 200, 0]
-									}
+				// Forecast Zones layer
+				...createForecastZonesLayer({
+					showFill: shouldShowLayer('forecast-zones-fill-layer'),
+					showBorders: shouldShowLayer('forecast-zones-inactive-layer'),
+				}),
 
-									// If county has alert and county data is enabled, show alert color
-									if (animatedColors && regionId && animatedColors[regionId]) {
-										return animatedColors[regionId]
-									}
-									if (hasAlert && alertInfo) {
-										return alertInfo.color
-									}
+				// Counties layer (Fill + Borders)
+				// Rendered here so it sits on top of State/CWA fills but below their borders
+				// Uses static countiesData for all counties, alertMap for coloring counties with alerts
+				...createCountiesLayer({
+					data: countiesData,
+					showInactiveBorders: shouldShowLayer('counties-inactive-layer'),
+					showAlertData: shouldShowLayer('county-data-regions-layer'),
+					countyBorderColor,
+					hoveredCountyId,
+					alertMap: currentFrameAlertMap,
+					animatedColors: animatedCountyColors,
+					filterCountyFn: selectedWFOId
+						? (countyId: string) => {
+								// Find the CWA ID for this WFO
+								const cwaFeature = cwaZonesData?.features?.find(
+									(f: any) => f.properties?.FULLSTAID === selectedWFOId || f.properties?.WFO === selectedWFOId,
+								)
+								const cwaId = cwaFeature?.properties?.CWA
+								if (!cwaId) return false
+								// Check if this county belongs to the selected CWA
+								return countyToCwaMap.get(countyId) === cwaId
+							}
+						: undefined,
+					hazardOpacityFn,
+				}),
 
-									// No alert - show default fill
-									return [200, 200, 200, 0]
-								},
-								opacity: 1,
-								pickable: false,
-								updateTriggers: {
-									getLineColor: [
-										countyBorderColor,
-										hoveredCountyId,
-										layerVisibility['counties-inactive-layer'],
-										layerVisibility['county-data-regions-layer'],
-										currentFrameAlertMap,
-									],
-									getFillColor: [layerVisibility['county-data-regions-layer'], currentFrameAlertMap, animatedColors],
-								},
-							}),
-						]
-					: []),
-				// Coastal regions layer - single layer with conditional styling
-				// Toggles:
-				// - 'coastal-regions-inactive-layer': Controls border opacity for regions without alerts (0 opacity when off, except for hovered)
-				// - 'coastal-data-regions-layer': Controls whether to show alert colors and hover interactivity (when off, all fills are ocean color)
-				...(loadedFrames.length > 0 &&
-				loadedFrames[currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame]?.coastalData
-					? [
-							new GeoJsonLayer({
-								id: 'coastal-regions-layer',
-								data: loadedFrames[
-									currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
-								]?.coastalData as any,
-								filled: true,
-								stroked: true,
-								lineWidthMinPixels: 0.5,
-								lineWidthMaxPixels: 1,
-								getLineColor: (d: any) => {
-									const regionId = d.properties?.id || d.properties?.ID
-									const showCoastalData = shouldShowLayer('coastal-data-regions-layer')
-									const showInactiveRegions = shouldShowLayer('coastal-regions-inactive-layer')
-									const alertInfo = currentFrameCoastalAlertMap && regionId && currentFrameCoastalAlertMap[regionId]
-									const hasAlert = alertInfo?.hasAlert
+				// CWA Zones Border Layer (Top of regions)
+				...createCwaZonesLayer({
+					showFill: false,
+					showBorders: shouldShowLayer('cwa-zones-inactive-layer'),
+					hoveredCwaId,
+					selectedWFOId,
+					alertMap: currentFrameCwaAlertMap,
+					cwaBorderColor,
+					animatedColors: animatedCwaColors,
+					renderMode: 'border',
+				}),
 
-									// Always show white outline for hovered region
-									if (showCoastalData && hoveredCountyId && regionId === hoveredCountyId) {
-										return [255, 255, 255, 255]
-									}
+				// States Border Layer (Topmost boundary)
+				...createStatesLayers({
+					showFill: false,
+					showBorders: shouldShowLayer('states-layer'),
+					statesColor,
+					borderColor,
+				}),
 
-									// For regions without alerts, respect the inactive toggle
-									if (!showInactiveRegions) {
-										if (hasAlert && showCoastalData) {
-											return countyBorderColor as any
-										}
-										return [0, 0, 0, 0]
-									}
+				// Coastal regions layer
+				...createCoastalRegionsLayer({
+					allCoastalRegions: allCoastalRegions,
+					showInactiveBorders: shouldShowLayer('coastal-regions-inactive-layer'),
+					showAlertData: shouldShowLayer('coastal-data-regions-layer'),
+					oceanColor,
+					alertMap: currentFrameCoastalAlertMap,
+				}),
 
-									// If region has alert, always show border
-									if (hasAlert) {
-										return countyBorderColor as any
-									}
-
-									// Show border for inactive regions when toggle is on
-									return countyBorderColor as any
-								},
-								getFillColor: (d: any) => {
-									const regionId = d.properties?.id || d.properties?.ID
-									const showCoastalData = shouldShowLayer('coastal-data-regions-layer')
-									const alertInfo = currentFrameCoastalAlertMap && regionId && currentFrameCoastalAlertMap[regionId]
-									const hasAlert = alertInfo?.hasAlert
-
-									// If coastal data is disabled, use ocean color for all regions
-									if (!showCoastalData) {
-										return oceanColor as any
-									}
-
-									// If region has alert and coastal data is enabled, show alert color
-									if (hasAlert && alertInfo) {
-										return alertInfo.color
-									}
-
-									// No alert - show light fill
-									return oceanColor as any
-								},
-								opacity: 1,
-								pickable: false,
-								updateTriggers: {
-									getLineColor: [
-										countyBorderColor,
-										hoveredCountyId,
-										layerVisibility['coastal-regions-inactive-layer'],
-										layerVisibility['coastal-data-regions-layer'],
-										currentFrameCoastalAlertMap,
-									],
-									getFillColor: [oceanColor, layerVisibility['coastal-data-regions-layer'], currentFrameCoastalAlertMap],
-								},
-							}),
-						]
-					: []),
-				// Lat-long grid lines with dashed appearance
-				// More visible for geographic reference
-				...(shouldShowLayer('latlon-grid-layer')
-					? [
-							new GeoJsonLayer({
-								id: 'latlon-grid-layer',
-								data: generateGridLines(10) as any,
-								filled: false,
-								stroked: true,
-								lineWidthMinPixels: 1,
-								lineWidthMaxPixels: 2,
-								getLineColor: () => gridlineColor as any,
-								getLineWidth: () => 1.5,
-								opacity: 0.2,
-								pickable: false,
-								updateTriggers: {
-									getLineColor: [gridlineColor],
-								},
-							}),
-						]
-					: []),
-				// US States borders layer - strokes only
-				// Light mode: grey18 (#232323), Dark mode: grey15 (#505050)
-				...(shouldShowLayer('states-layer')
-					? [
-							new GeoJsonLayer({
-								id: 'states-layer',
-								data: statesData as any,
-								filled: false,
-								stroked: true,
-								lineWidthMinPixels: 0.5,
-								lineWidthMaxPixels: 1,
-								getLineColor: () => borderColor as any,
-								opacity: 1,
-								pickable: false,
-								updateTriggers: {
-									getLineColor: [borderColor],
-								},
-							}),
-						]
-					: []),
+				// Hover Highlight Layer - Topmost layer for bright border outline
+				...createHoverHighlightLayer({
+					hoveredCountyId,
+					hoveredCwaId,
+					countyData: countiesData,
+					cwaZonesData,
+				}),
 			]
 
 			// Add overlays and tropical storms from current frame if available
@@ -942,12 +1065,21 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 			statesColor,
 			borderColor,
 			countyBorderColor,
+			cwaBorderColor,
 			gridlineColor,
 			currentFrameAlertMap,
 			currentFrameCoastalAlertMap,
 			hoveredCountyId,
-			animatedColors,
+			hoveredCwaId,
+			animatedCountyColors,
+			animatedCwaColors,
+			currentFrameCwaAlertMap,
 			initializedLayerVisibility,
+			selectedWFOId,
+			countyToCwaMap,
+			cwaZonesData,
+			hazardOpacityFn,
+			allCoastalRegions,
 		])
 
 		const handleViewStateChange = (viewState: any) => {
@@ -959,161 +1091,405 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 		}
 
 		/**
-		 * Update tooltip content for a hovered region (county or coastal)
+		 * Update tooltip content for a hovered region (county, coastal, or CWA)
 		 * Extracts region name and alerts from the current frame
 		 */
-		const updateTooltipForRegion = (regionInfo: { id: string; type: 'county' | 'coastal' } | null) => {
-			if (!regionInfo || loadedFrames.length === 0) {
-				setTooltipVisible(false)
-				return
-			}
+		const updateTooltipForRegion = useCallback(
+			(regionInfo: { id: string; type: 'county' | 'coastal' | 'cwa'; wfoId?: string } | null) => {
+				if (!regionInfo || loadedFrames.length === 0) {
+					setTooltipVisible(false)
+					return
+				}
 
-			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
-			const frame = loadedFrames[activeFrame]
+				// Don't show tooltip for CWA zones (we'll handle that separately later)
+				if (regionInfo.type === 'cwa') {
+					setTooltipVisible(false)
+					return
+				}
 
-			if (!frame) {
-				setTooltipVisible(false)
-				return
-			}
+				const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+				const frame = loadedFrames[activeFrame]
 
-			let feature: any = null
+				if (!frame) {
+					setTooltipVisible(false)
+					return
+				}
 
-			// Find feature in appropriate data source
-			if (regionInfo.type === 'coastal' && frame.coastalData && 'features' in frame.coastalData) {
-				feature = (frame.coastalData as any).features.find((f: any) => {
-					const fId = f.properties?.id || f.properties?.ID
-					return fId === regionInfo.id
-				})
-			} else if (regionInfo.type === 'county' && frame.data && 'features' in frame.data) {
-				feature = (frame.data as any).features.find((f: any) => {
-					const fId = f.properties?.id || f.properties?.ID
-					return fId === regionInfo.id
-				})
-			}
+				let feature: any = null
 
-			if (!feature) {
-				setTooltipVisible(false)
-				return
-			}
+				// Find feature in appropriate data source
+				if (regionInfo.type === 'coastal' && frame.coastalData && 'features' in frame.coastalData) {
+					feature = (frame.coastalData as any).features.find((f: any) => {
+						const fId = f.properties?.id || f.properties?.ID
+						return fId === regionInfo.id
+					})
+				} else if (regionInfo.type === 'county' && frame.data && 'features' in frame.data) {
+					feature = (frame.data as any).features.find((f: any) => {
+						const fId = f.properties?.id || f.properties?.ID
+						return fId === regionInfo.id
+					})
+				}
 
-			// Extract region name
-			let title = 'Unknown'
-			if (regionInfo.type === 'coastal') {
-				// For coastal regions, use NAME or ID
-				title = feature.properties?.NAME || feature.properties?.name || regionInfo.id
-			} else {
-				// For counties, use COUNTYNAME and STATE
-				const countyName = feature.properties?.COUNTYNAME || feature.properties?.NAME || 'Unknown'
-				const state = feature.properties?.STATE || ''
-				title = state ? `${countyName} county, ${state}` : countyName
-			}
+				if (!feature) {
+					setTooltipVisible(false)
+					return
+				}
 
-			// Extract alerts
-			const alerts = feature.properties?.alerts || []
-			const formattedAlerts = alerts.map((alert: any) => {
-				// Convert color from HazardData format to RGBA array
-				let color: [number, number, number, number] = [128, 128, 128, 255]
-				let name = 'Unknown'
+				// Extract region name
+				let title = 'Unknown'
+				if (regionInfo.type === 'coastal') {
+					// For coastal regions, use NAME or ID
+					title = feature.properties?.NAME || feature.properties?.name || regionInfo.id
+				} else {
+					// For counties, use COUNTYNAME and STATE
+					const countyName = feature.properties?.COUNTYNAME || feature.properties?.NAME || 'Unknown'
+					const state = feature.properties?.STATE || ''
+					title = state ? `${countyName} county, ${state}` : countyName
+				}
 
-				if (alert.color) {
-					if (typeof alert.color === 'string') {
-						// If it's already a hex string or CSS color
-						color = alert.color
-					} else if (alert.color.rgb) {
-						// Parse RGB string like "255,0,0"
-						const [r, g, b] = alert.color.rgb.split(',').map(Number)
-						color = [r, g, b, 255]
-					} else if (Array.isArray(alert.color)) {
-						// Already an array
-						color = alert.color
+				// Extract alerts
+				const alerts = feature.properties?.alerts || []
+				const formattedAlerts = alerts.map((alert: any) => {
+					// Convert color from HazardData format to RGBA array
+					let color: [number, number, number, number] = [128, 128, 128, 255]
+					let name = 'Unknown'
+
+					if (alert.color) {
+						if (typeof alert.color === 'string') {
+							// If it's already a hex string or CSS color
+							color = alert.color
+						} else if (alert.color.rgb) {
+							// Parse RGB string like "255,0,0"
+							const [r, g, b] = alert.color.rgb.split(',').map(Number)
+							color = [r, g, b, 255]
+						} else if (Array.isArray(alert.color)) {
+							// Already an array
+							color = alert.color
+						}
+						// Use hazardType and hazardLevel as the name if available
+						name = alert.hazardType || alert.locationName || 'Unknown'
+					} else if (alert.event) {
+						// For historical alerts without color field, get complete hazard info from event
+						const hazardInfo = getHazardInfoFromEvent(alert.event)
+						color = hazardInfo.rgba
+						// Format name as "Type Level" (e.g., "Winter Advisory")
+						name = `${hazardInfo.typeName} ${hazardInfo.levelName}`
 					}
-					// Use hazardType and hazardLevel as the name if available
-					name = alert.hazardType || alert.locationName || 'Unknown'
-				} else if (alert.event) {
-					// For historical alerts without color field, get complete hazard info from event
-					const hazardInfo = getHazardInfoFromEvent(alert.event)
-					color = hazardInfo.rgba
-					// Format name as "Type Level" (e.g., "Winter Advisory")
-					name = `${hazardInfo.typeName} ${hazardInfo.levelName}`
+
+					return {
+						color,
+						name,
+						event: alert.event || 'Alert',
+					}
+				})
+
+				setTooltipTitle(title)
+				setTooltipAlerts(formattedAlerts)
+				setTooltipVisible(formattedAlerts.length > 0)
+			},
+			[loadedFrames, currentFrame, setTooltipTitle, setTooltipAlerts, setTooltipVisible],
+		)
+
+		/**
+		 * Update CWA tooltip content for a hovered CWA region
+		 * Aggregates all alerts in the region and shows summary by alert type
+		 *
+		 * Uses the pre-computed countyToCwaMap for fast lookups (no point-in-polygon on hover)
+		 *
+		 * Note: If the hovered WFO is the selected one (in detail view), don't show the tooltip
+		 * to allow county tooltips to show instead
+		 */
+		const updateCwaTooltip = useCallback(
+			(cwaId: string, wfoId: string, mouseX: number, mouseY: number) => {
+				if (!cwaZonesData || !cwaZonesData.features) {
+					setCwaTooltipVisible(false)
+					return
 				}
 
-				return {
-					color,
-					name,
-					event: alert.event || 'Alert',
+				// Don't show CWA tooltip if this is the selected WFO (in detail view)
+				// This allows county tooltips to show instead
+				if (selectedWFOId && wfoId === selectedWFOId) {
+					setCwaTooltipVisible(false)
+					return
 				}
-			})
 
-			setTooltipTitle(title)
-			setTooltipAlerts(formattedAlerts)
-			setTooltipVisible(formattedAlerts.length > 0)
-		}
+				// Find the CWA feature
+				const cwaFeature = cwaZonesData.features.find((f: any) => f.properties?.CWA === cwaId)
+				if (!cwaFeature) {
+					setCwaTooltipVisible(false)
+					return
+				}
+
+				// Get CWA name from properties
+				const cwaName = cwaFeature.properties?.NAME || cwaFeature.properties?.name || cwaId
+
+				// Aggregate alerts from all counties in this CWA region
+				const alertCounts: Record<string, { count: number; color: [number, number, number, number] }> = {}
+
+				// Get the current frame to access the full feature collection
+				const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+				const frame = loadedFrames[activeFrame]
+
+				if (frame && frame.data && 'features' in frame.data && Array.isArray(frame.data.features)) {
+					// Iterate through all county features in the frame
+					frame.data.features.forEach((feature: any) => {
+						const countyId = feature.properties?.id
+
+						// Use the pre-computed map to check if this county belongs to the CWA
+						// This is O(1) lookup instead of expensive point-in-polygon check
+						if (countyToCwaMap.get(countyId) === cwaId) {
+							// This county is inside the CWA zone, count its alerts
+							const alerts = feature.properties?.alerts
+							if (alerts && Array.isArray(alerts) && alerts.length > 0) {
+								// Iterate through all alerts for this county
+								alerts.forEach((alert: any) => {
+									const event = alert.event || alert.name || 'Unknown Alert'
+									const color = alert.color || feature.properties?.alertColor || [200, 200, 200, 255]
+
+									if (!alertCounts[event]) {
+										alertCounts[event] = {
+											count: 0,
+											color: color,
+										}
+									}
+									alertCounts[event].count++
+								})
+							}
+						}
+					})
+				}
+
+				// Convert to array format for tooltip
+				const alertSummary = Object.entries(alertCounts).map(([event, data]) => ({
+					event,
+					count: data.count,
+					color: data.color,
+				}))
+
+				// Sort by count descending
+				alertSummary.sort((a, b) => b.count - a.count)
+
+				const tooltipInfo: CwaTooltipInfo = {
+					cwaId,
+					wfoId,
+					name: cwaName,
+					alertSummary,
+					x: mouseX,
+					y: mouseY,
+				}
+
+				setCwaTooltipInfo(tooltipInfo)
+				setCwaTooltipVisible(true)
+			},
+			[cwaZonesData, currentFrame, loadedFrames, countyToCwaMap, setCwaTooltipInfo, setCwaTooltipVisible, selectedWFOId],
+		)
 
 		/**
 		 * Handle mouse move to detect which region (county or coastal) is being hovered
 		 * Converts screen coordinates to lat/long using DeckGL's unproject and uses point-in-polygon detection
+		 * Throttled using requestAnimationFrame for better performance
 		 */
-		const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-			if (!containerRef.current || !deckGLRef.current) return
+		const mouseMoveThrottleRef = useRef<number | null>(null)
+		const lastMouseEventRef = useRef<{ x: number; y: number } | null>(null)
 
-			// Get the container's bounding rect
-			const rect = containerRef.current.getBoundingClientRect()
-			const x = e.clientX - rect.left
-			const y = e.clientY - rect.top
+		const processMouseMove = useCallback(
+			(x: number, y: number) => {
+				if (!containerRef.current || !deckGLRef.current) return
 
-			// Get current frame's coastal data
-			const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
-			const coastalData = loadedFrames[activeFrame]?.coastalData
+				// Get the container's bounding rect
+				const rect = containerRef.current.getBoundingClientRect()
 
-			try {
-				// Use DeckGL's unproject to accurately convert screen coordinates to lat/long
-				const deck = deckGLRef.current
-				if (deck && deck.deck && deck.deck.getViewports) {
-					const viewports = deck.deck.getViewports()
-					if (viewports && viewports.length > 0) {
-						const viewport = viewports[0]
-						// unproject converts [x, y] screen coordinates to [lon, lat, z]
-						const [lon, lat] = viewport.unproject([x, y])
+				// Get current frame's coastal data
+				const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+				const coastalData = loadedFrames[activeFrame]?.coastalData
 
-						// Find which region (county or coastal) this point is in
-						const regionInfo = findRegionAtPoint(lat, lon, coastalData)
-						setHoveredCountyId(regionInfo?.id || null)
-						updateTooltipForRegion(regionInfo)
-						return
+				try {
+					// Use DeckGL's unproject to accurately convert screen coordinates to lat/long
+					const deck = deckGLRef.current
+					if (deck && deck.deck && deck.deck.getViewports) {
+						const viewports = deck.deck.getViewports()
+						if (viewports && viewports.length > 0) {
+							const viewport = viewports[0]
+							// unproject converts [x, y] screen coordinates to [lon, lat, z]
+							const [lon, lat] = viewport.unproject([x, y])
+
+							// Find which region (county, coastal, or CWA) this point is in
+							// Pass selectedWFOId to skip the selected WFO zone in detail view
+							// Pass undefined for cwaData when disableCwaDetection is true to skip CWA zones entirely
+							const regionInfo = findRegionAtPoint(lat, lon, coastalData, disableCwaDetection ? undefined : cwaZonesData, selectedWFOId)
+
+							// Handle CWA hover separately from county/coastal hover
+							if (regionInfo?.type === 'cwa' && !disableCwaDetection) {
+								setHoveredCwaId(regionInfo.id)
+								setHoveredCwaWfoId(regionInfo.wfoId || null)
+								setHoveredCountyId(null)
+								setTooltipVisible(false)
+								// Update CWA tooltip with mouse position
+								if (containerRef.current) {
+									const rect = containerRef.current.getBoundingClientRect()
+									updateCwaTooltip(regionInfo.id, regionInfo.wfoId || '', x + rect.left, y + rect.top)
+								}
+							} else {
+								setHoveredCwaId(null)
+								setHoveredCwaWfoId(null)
+								setCwaTooltipVisible(false)
+								setHoveredCountyId(regionInfo?.id || null)
+								updateTooltipForRegion(regionInfo)
+							}
+							return
+						}
 					}
+				} catch (error) {
+					// Fallback if unproject fails
+					console.debug('DeckGL unproject failed, using fallback', error)
 				}
-			} catch (error) {
-				// Fallback if unproject fails
-				console.debug('DeckGL unproject failed, using fallback', error)
-			}
 
-			// Fallback: use approximate conversion if DeckGL unproject is not available
-			const metersPerPixel = (40075000 * Math.cos((viewState.latitude * Math.PI) / 180)) / (256 * Math.pow(2, viewState.zoom))
-			const pixelsPerDegree = 111320 / metersPerPixel
+				// Fallback: use approximate conversion if DeckGL unproject is not available
+				const metersPerPixel = (40075000 * Math.cos((viewState.latitude * Math.PI) / 180)) / (256 * Math.pow(2, viewState.zoom))
+				const pixelsPerDegree = 111320 / metersPerPixel
 
-			const centerLon = viewState.longitude
-			const centerLat = viewState.latitude
+				const centerLon = viewState.longitude
+				const centerLat = viewState.latitude
 
-			const offsetLon = (x / rect.width - 0.5) * (rect.width / pixelsPerDegree)
-			const offsetLat = (y / rect.height - 0.5) * (rect.height / pixelsPerDegree) * -1
+				const offsetLon = (x / rect.width - 0.5) * (rect.width / pixelsPerDegree)
+				const offsetLat = (y / rect.height - 0.5) * (rect.height / pixelsPerDegree) * -1
 
-			const hoverLon = centerLon + offsetLon
-			const hoverLat = centerLat + offsetLat
+				const hoverLon = centerLon + offsetLon
+				const hoverLat = centerLat + offsetLat
 
-			const regionInfo = findRegionAtPoint(hoverLat, hoverLon, coastalData)
-			setHoveredCountyId(regionInfo?.id || null)
-			updateTooltipForRegion(regionInfo)
-		}
+				// Pass selectedWFOId to skip the selected WFO zone in detail view
+				// Pass undefined for cwaData when disableCwaDetection is true to skip CWA zones entirely
+				const regionInfo = findRegionAtPoint(hoverLat, hoverLon, coastalData, disableCwaDetection ? undefined : cwaZonesData, selectedWFOId)
+
+				// Handle CWA hover separately from county/coastal hover
+				if (regionInfo?.type === 'cwa' && !disableCwaDetection) {
+					setHoveredCwaId(regionInfo.id)
+					setHoveredCwaWfoId(regionInfo.wfoId || null)
+					setHoveredCountyId(null)
+					setTooltipVisible(false)
+					// Update CWA tooltip with mouse position (fallback path)
+					if (containerRef.current) {
+						const rect = containerRef.current.getBoundingClientRect()
+						updateCwaTooltip(regionInfo.id, regionInfo.wfoId || '', x + rect.left, y + rect.top)
+					}
+				} else {
+					setHoveredCwaId(null)
+					setHoveredCwaWfoId(null)
+					setCwaTooltipVisible(false)
+					setHoveredCountyId(regionInfo?.id || null)
+					updateTooltipForRegion(regionInfo)
+				}
+			},
+			[
+				currentFrame,
+				loadedFrames,
+				cwaZonesData,
+				viewState,
+				updateTooltipForRegion,
+				updateCwaTooltip,
+				setHoveredCwaId,
+				setHoveredCwaWfoId,
+				setHoveredCountyId,
+				setTooltipVisible,
+				setCwaTooltipVisible,
+				selectedWFOId,
+				disableCwaDetection,
+			],
+		)
+
+		const handleMouseMove = useCallback(
+			(e: React.MouseEvent<HTMLDivElement>) => {
+				if (!containerRef.current) return
+
+				const rect = containerRef.current.getBoundingClientRect()
+				const x = e.clientX - rect.left
+				const y = e.clientY - rect.top
+
+				// Store the latest mouse position
+				lastMouseEventRef.current = { x, y }
+
+				// Throttle using requestAnimationFrame - only process one event per frame
+				if (mouseMoveThrottleRef.current === null) {
+					mouseMoveThrottleRef.current = requestAnimationFrame(() => {
+						mouseMoveThrottleRef.current = null
+						if (lastMouseEventRef.current) {
+							processMouseMove(lastMouseEventRef.current.x, lastMouseEventRef.current.y)
+						}
+					})
+				}
+			},
+			[processMouseMove],
+		)
 
 		const handleMouseLeave = () => {
 			setHoveredCountyId(null)
+			setHoveredCwaId(null)
+			setHoveredCwaWfoId(null)
 			setTooltipVisible(false)
+			setCwaTooltipVisible(false)
 		}
 
 		const handleDeckGLClick = (info: any) => {
+			console.log('handleDeckGLClick called with info:', info, 'onCountyClick:', !!onCountyClick, 'onCwaClick:', !!onCwaClick)
+
 			// Check if a storm icon was clicked
 			if (info && info.object && info.object.id && onStormClick) {
 				onStormClick(info.object.id)
+				return
+			}
+
+			// Check if a county was clicked first (only in detail view when onCountyClick is provided)
+			// This allows county clicks to open the slideout panel with alert details
+			// County clicks take priority over CWA clicks in detail view
+			if (onCountyClick && info && info.coordinate) {
+				const [lon, lat] = info.coordinate
+				console.log('County click check - lat/lon:', lat, lon, 'selectedWFOId:', selectedWFOId)
+				// Pass undefined for cwaData when disableCwaDetection is true to skip CWA zones entirely
+				const regionInfo = findRegionAtPoint(lat, lon, undefined, disableCwaDetection ? undefined : cwaZonesData, selectedWFOId)
+				console.log('County click - regionInfo:', regionInfo)
+
+				if (regionInfo?.type === 'county') {
+					// Get county data from current frame
+					const activeFrame = currentFrame < 0 ? 0 : currentFrame >= loadedFrames.length ? loadedFrames.length - 1 : currentFrame
+					const frame = loadedFrames[activeFrame]
+					console.log('County click - frame:', frame, 'activeFrame:', activeFrame)
+
+					if (frame && frame.data && 'features' in frame.data) {
+						// Find the county feature in the frame data
+						const countyFeature = frame.data.features.find((feature: any) => {
+							const featureId = feature.properties?.id || feature.properties?.ID
+							return featureId === regionInfo.id
+						})
+						console.log('County click - countyFeature:', countyFeature)
+
+						if (countyFeature) {
+							// Extract county data including alerts
+							const countyData = {
+								shape: countyFeature,
+								alerts: countyFeature.properties?.alerts || [],
+								properties: countyFeature.properties || {},
+							}
+
+							console.log('County click - calling onCountyClick with:', regionInfo.id, countyData)
+							// Call the callback with county ID and data
+							onCountyClick(regionInfo.id, countyData)
+							return // Don't process CWA click if county was clicked
+						}
+					}
+				}
+			}
+
+			// Check if a CWA zone was clicked (only if county wasn't clicked and CWA detection is enabled)
+			// Use the same lat/long detection as hover
+			if (onCwaClick && !disableCwaDetection && info && info.coordinate) {
+				const [lon, lat] = info.coordinate
+				const regionInfo = findRegionAtPoint(lat, lon, undefined, cwaZonesData)
+
+				if (regionInfo?.type === 'cwa' && regionInfo.wfoId) {
+					// Call the callback to navigate (route drives the state)
+					onCwaClick(regionInfo.id, regionInfo.wfoId)
+					return
+				}
 			}
 		}
 
@@ -1170,19 +1546,24 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 						//transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
 						//transitionDuration: 'auto',
 					}}
-					controller={{
-						scrollZoom: {
-							smooth: true,
-						},
-						// Keyboard controls
-						keyboard: true,
-					}}
+					controller={
+						targetMapZoomState
+							? false
+							: {
+									scrollZoom: {
+										smooth: true,
+									},
+									// Keyboard controls
+									keyboard: true,
+								}
+					}
 					layers={layers}
 					onViewStateChange={handleViewStateChange}
 					onClick={handleDeckGLClick}
 					onHover={handleDeckGLHover}
 				/>
 				<StormTooltip info={stormHoverInfo} visible={showTooltip} containerRef={containerRef} />
+				<CwaTooltip info={cwaTooltipInfo} visible={cwaTooltipVisible} containerRef={containerRef} />
 				<MapAlertTooltip visible={tooltipVisible} title={tooltipTitle} alerts={tooltipAlerts} />
 			</div>
 		)

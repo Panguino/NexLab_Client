@@ -1,0 +1,205 @@
+.convectiveWatchDetailPage {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	min-height: 100vh;
+	background: var(--color-grey2-grey18);
+}
+
+.titleSection {
+	padding: 20px;
+	background: var(--color-white-black);
+	text-align: center;
+	border-bottom: 1px solid var(--color-grey6-grey14);
+	transition: background-color 0.3s ease;
+
+	h1 {
+		font-family: var(--font-secondary);
+		font-size: 42px;
+		font-weight: 400;
+		line-height: 1.1;
+		margin: 0;
+		color: var(--color-grey20-grey2);
+	}
+
+	&.tornado {
+		background: #d32f2f;
+
+		h1 {
+			color: var(--color-white);
+		}
+	}
+
+	&.severeThunderstorm {
+		background: #1976d2;
+
+		h1 {
+			color: var(--color-white);
+		}
+	}
+}
+
+.contentSection {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0;
+	flex: 1;
+	max-width: 1800px;
+	margin: 0 auto;
+	width: 100%;
+}
+
+.textPanel {
+	padding: 24px;
+	background: var(--color-white-black);
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.watchProductsSection {
+	display: flex;
+	gap: 12px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid var(--color-grey6-grey14);
+}
+
+.watchProduct {
+	flex: 1;
+	padding: 12px 16px;
+	background: var(--color-grey4-grey16);
+	border: 1px solid var(--color-grey8-grey12);
+	border-radius: 6px;
+	text-align: center;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--color-grey16-grey6);
+	cursor: pointer;
+	transition:
+		background-color 0.2s ease,
+		color 0.2s ease,
+		transform 0.1s ease,
+		border-color 0.2s ease;
+	user-select: none;
+
+	&:hover:not(.disabled) {
+		background: var(--color-grey6-grey14);
+		color: var(--color-grey19-grey2);
+		transform: translateY(-1px);
+	}
+
+	&.selected {
+		background: var(--color-blue3);
+		color: var(--color-white);
+		font-weight: 600;
+		border-color: var(--color-blue3);
+
+		&:hover {
+			background: var(--color-blue3);
+			color: var(--color-white);
+			border-color: var(--color-blue3);
+		}
+	}
+
+	&.disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+	}
+}
+
+.productHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px;
+	background: var(--color-grey4-grey16);
+	border-radius: 8px;
+}
+
+.validtimeSelector {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+}
+
+.validtimeLabel {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--color-grey19-grey1);
+	white-space: nowrap;
+}
+
+.validtimeSelectWrapper {
+	min-width: 200px;
+}
+
+.textContent {
+	background: var(--color-grey4-grey16);
+	padding: 24px;
+	border-radius: 8px;
+	flex: 1;
+
+	p {
+		color: var(--color-grey19-grey2);
+		line-height: 1.8;
+		margin: 0;
+		font-size: 15px;
+	}
+
+	.productText {
+		color: var(--color-grey19-grey1);
+		font-family: monospace;
+		font-size: 13px;
+		line-height: 1.6;
+		white-space: pre-wrap;
+		word-wrap: break-word;
+		margin: 0;
+	}
+}
+
+@media (max-width: 1200px) {
+	.contentSection {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 768px) {
+	.titleSection {
+		padding: 24px 20px;
+
+		h1 {
+			font-size: 32px;
+		}
+	}
+
+	.textPanel {
+		padding: 24px 20px;
+	}
+
+	.textContent {
+		padding: 20px;
+
+		p,
+		.productText {
+			font-size: 14px;
+		}
+	}
+}
+
+@media (max-width: 480px) {
+	.titleSection h1 {
+		font-size: 26px;
+	}
+
+	.textPanel {
+		padding: 20px 16px;
+	}
+
+	.attributesSection,
+	.probabilitiesSection,
+	.productsSection {
+		h3 {
+			font-size: 16px;
+		}
+	}
+}

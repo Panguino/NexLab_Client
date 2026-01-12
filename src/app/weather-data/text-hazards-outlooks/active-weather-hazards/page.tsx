@@ -45,7 +45,8 @@ const Page = async () => {
 			if (region && region.coasts) {
 				region.coasts.forEach((coasts) => {
 					if (coasts && coasts.type && coasts.geometry) {
-						const optimizedCoast = { type: coasts.type, geometry: coasts.geometry, properties: {} }
+						// Include properties (ID, NAME) for coastal region identification
+						const optimizedCoast = { type: coasts.type, geometry: coasts.geometry, properties: coasts.properties || {} }
 						displayOffshoreRegions.push(rewind(optimizedCoast as AllGeoJSON, { reverse: true }))
 					}
 				})
@@ -53,7 +54,8 @@ const Page = async () => {
 			if (region && region.offshores) {
 				region.offshores.forEach((offshores) => {
 					if (offshores && offshores.type && offshores.geometry) {
-						const optimizedOffshore = { type: offshores.type, geometry: offshores.geometry, properties: {} }
+						// Include properties (ID, NAME) for offshore region identification
+						const optimizedOffshore = { type: offshores.type, geometry: offshores.geometry, properties: offshores.properties || {} }
 						displayOffshoreRegions.push(rewind(optimizedOffshore as AllGeoJSON, { reverse: true }))
 					}
 				})

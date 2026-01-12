@@ -19,15 +19,15 @@ import {
 	watchWarningsToGeoJSON,
 } from '../utils/tropicalProductsParser'
 
-// Figma design SVG assets for hurricane icons
-const FIGMA_HURRICANE_ICONS = {
-	TS: 'http://localhost:3845/assets/73db89ce4bbdfdb542e8d17a70160443250c6a9b.svg', // Tropical Storm
-	CAT1: 'http://localhost:3845/assets/73db89ce4bbdfdb542e8d17a70160443250c6a9b.svg', // Category 1
-	CAT2: 'http://localhost:3845/assets/2a1bbc28941e155d3942c3ee20df8a3c5c567fb0.svg', // Category 2
-	CAT3: 'http://localhost:3845/assets/0d335261204ec0f3222cae98d9d38755757ae577.svg', // Category 3
-	CAT4: 'http://localhost:3845/assets/8555bbcaab87269d27282735732044b64f5f200c.svg', // Category 4
-	CAT5: 'http://localhost:3845/assets/a8777ab22d600b5bb6271d472739f8961e967a17.svg', // Category 5
-}
+// Figma design SVG assets for hurricane icons (reserved for future use)
+// const FIGMA_HURRICANE_ICONS = {
+// 	TS: 'http://localhost:3845/assets/73db89ce4bbdfdb542e8d17a70160443250c6a9b.svg', // Tropical Storm
+// 	CAT1: 'http://localhost:3845/assets/73db89ce4bbdfdb542e8d17a70160443250c6a9b.svg', // Category 1
+// 	CAT2: 'http://localhost:3845/assets/2a1bbc28941e155d3942c3ee20df8a3c5c567fb0.svg', // Category 2
+// 	CAT3: 'http://localhost:3845/assets/0d335261204ec0f3222cae98d9d38755757ae577.svg', // Category 3
+// 	CAT4: 'http://localhost:3845/assets/8555bbcaab87269d27282735732044b64f5f200c.svg', // Category 4
+// 	CAT5: 'http://localhost:3845/assets/a8777ab22d600b5bb6271d472739f8961e967a17.svg', // Category 5
+// }
 
 /**
  * Create a DeckGL IconLayer for rendering hurricane icons
@@ -111,12 +111,12 @@ export function generateHurricaneIconSVG(): string {
 }
 
 /**
- * Get size multiplier based on category (intensity)
+ * Get size multiplier based on category (intensity) - reserved for future use
  */
-function getSizeMultiplier(category: number): number {
-	// TS: 0.8x, Cat1: 0.9x, Cat2: 1.0x, Cat3: 1.1x, Cat4: 1.2x, Cat5: 1.3x
-	return 0.8 + category * 0.1
-}
+// function getSizeMultiplier(category: number): number {
+// 	// TS: 0.8x, Cat1: 0.9x, Cat2: 1.0x, Cat3: 1.1x, Cat4: 1.2x, Cat5: 1.3x
+// 	return 0.8 + category * 0.1
+// }
 
 /**
  * Convert RGB array to hex color string

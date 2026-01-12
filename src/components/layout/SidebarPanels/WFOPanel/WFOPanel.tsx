@@ -155,9 +155,21 @@ const WFOPanel = ({ basepath }: WFOPanelProps) => {
 		}))
 	}, [wfoData])
 
+	// Determine back button URL - always go back to landing page
+	const backButtonUrl = basepath
+
 	return (
 		<>
-			<SidebarSectionHeader name="NWS WFO" linkUrl={basepath} />
+			<SidebarSectionHeader name="NWS WFO" linkUrl={backButtonUrl} />
+			
+			{selectedOfficeId && (
+				<div className={styles.backToOverview}>
+					<button onClick={() => router.push(wfoBasePath)} className={styles.backButton}>
+						&larr; Back to Overview
+					</button>
+				</div>
+			)}
+
 			<div className={styles.selectTitle}>Available Forecast Offices:</div>
 			<div className={styles.wfoSelector}>
 				<SelectSearchable
