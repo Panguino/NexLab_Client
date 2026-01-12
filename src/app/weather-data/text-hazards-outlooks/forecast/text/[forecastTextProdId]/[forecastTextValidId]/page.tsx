@@ -1,14 +1,15 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { ForecastTextPage } from '@/components/blocks/ForecastTextPage/ForecastTextPage'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Analysis & Forecast Products"
-			purpose="Selected national analysis and forecast text products curated for rapid situational assessment."
-			etaText="This section is being implemented."
-		/>
-	)
+interface PageProps {
+	params: Promise<{
+		forecastTextProdId: string
+		forecastTextValidId: string
+	}>
+}
+
+const Page = async ({ params }: PageProps) => {
+	const { forecastTextProdId, forecastTextValidId } = await params
+	return <ForecastTextPage productId={forecastTextProdId} validTime={forecastTextValidId} />
 }
 
 export default Page

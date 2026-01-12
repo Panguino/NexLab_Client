@@ -31,15 +31,23 @@ export const FORECAST_TEXT_PRODUCTS = {
 }
 export const FORECAST_TEXT_WPC_FRONT_PRODUCTS = {
 	[FORECAST_TEXT_PRODUCT_WPC_FRONTS_12HR_ID]: {
-		label: '12 Hour Fronts',
+		label: '12 Hour',
+		queryId: '12HR',
+		latest: 'https://weather.cod.edu/cdata/text/images/wpc-fronts/12hr/wpc-fronts_12hr_latest.gif',
 	},
 	[FORECAST_TEXT_PRODUCT_WPC_FRONTS_24HR_ID]: {
-		label: '24 Hour Fronts',
+		label: '24 Hour',
+		queryId: '24HR',
+		latest: 'https://weather.cod.edu/cdata/text/images/wpc-fronts/24hr/wpc-fronts_24hr_latest.gif',
 	},
 	[FORECAST_TEXT_PRODUCT_WPC_FRONTS_36HR_ID]: {
-		label: '36 Hour Fronts',
+		label: '36 Hour',
+		queryId: '36HR',
+		latest: 'https://weather.cod.edu/cdata/text/images/wpc-fronts/36hr/wpc-fronts_36hr_latest.gif',
 	},
 	[FORECAST_TEXT_PRODUCT_WPC_FRONTS_48HR_ID]: {
-		label: '48 Hour Fronts',
+		label: '48 Hour',
+		queryId: '48HR',
+		latest: 'https://weather.cod.edu/cdata/text/images/wpc-fronts/48hr/wpc-fronts_48hr_latest.gif',
 	},
 }

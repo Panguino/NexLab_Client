@@ -1,0 +1,31 @@
+.wpcFrontsSection {
+	width: 100%;
+}
+
+.container {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.header {
+	h1 {
+		font-size: 1.75rem;
+		font-weight: 600;
+		color: var(--text-primary);
+		margin-bottom: 0.5rem;
+	}
+}
+
+.subtitle {
+	font-size: 0.9375rem;
+	color: var(--text-secondary);
+	line-height: 1.6;
+	max-width: 800px;
+}
+
+.content {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 1.25rem;
+}
