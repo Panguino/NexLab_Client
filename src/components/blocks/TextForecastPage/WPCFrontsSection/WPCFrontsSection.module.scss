@@ -1,31 +1,39 @@
 .wpcFrontsSection {
-	width: 100%;
-}
+	padding: 80px 20px 60px;
+	background: var(--color-grey2-grey19);
 
-.container {
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
-}
-
-.header {
-	h1 {
-		font-size: 1.75rem;
-		font-weight: 600;
-		color: var(--text-primary);
-		margin-bottom: 0.5rem;
+	.container {
+		max-width: 1400px;
+		margin: 0 auto;
 	}
-}
 
-.subtitle {
-	font-size: 0.9375rem;
-	color: var(--text-secondary);
-	line-height: 1.6;
-	max-width: 800px;
-}
+	.header {
+		margin-bottom: 50px;
+		text-align: center;
+		max-width: 900px;
+		margin-left: auto;
+		margin-right: auto;
 
-.content {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-	gap: 1.25rem;
+		h1 {
+			font-family: var(--font-secondary);
+			font-size: 54px;
+			font-weight: 400;
+			line-height: 1.1;
+			margin: 0 0 20px;
+			color: var(--color-grey20-grey2);
+		}
+	}
+
+	.subtitle {
+		font-size: 18px;
+		line-height: 1.6;
+		margin: 0;
+		color: var(--color-grey16-grey6);
+	}
+
+	.content {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 30px;
+	}
 }

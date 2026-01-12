@@ -3,7 +3,6 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { FORECAST_TEXT_WPC_FRONT_PRODUCTS } from '@/data/text/forecast/products'
 import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getWPCFrontsData } from '@/util/dataCalls/text/query-forecast'
@@ -34,12 +33,8 @@ const WPCFrontsAnimator: React.FC<WPCFrontsAnimatorProps> = ({ productId }) => {
 	const [startFrame, setStartFrame] = useState(0)
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
 
-	// Get the query ID from the product definition
-	const product = FORECAST_TEXT_WPC_FRONT_PRODUCTS[productId]
-	const queryId = product?.queryId || productId
-
 	const getData = useCallback(async () => {
-		const data = await getWPCFrontsData(queryId)
+		const data = await getWPCFrontsData(productId)
 
 		if (data && !data.error && data.files) {
 			setFrames(data.files)
@@ -50,11 +45,11 @@ const WPCFrontsAnimator: React.FC<WPCFrontsAnimatorProps> = ({ productId }) => {
 				setImageInfo(data.img)
 			}
 		}
-	}, [queryId])
+	}, [productId])
 
 	useEffect(() => {
 		getData()
-	}, [queryId, getData])
+	}, [productId, getData])
 
 	return (
 		<>
