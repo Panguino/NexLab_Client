@@ -4,8 +4,8 @@ const Page = () => {
 	return (
 		<ComingSoon
 			fullWidth
-			pageName="Climatology Landing Page"
-			purpose="A collection of all graphics, outlooks and discussions available from CPC, and other sources."
+			pageName="Text Only Climate Products"
+			purpose="A simple text viewer for climate products that do not have associated graphics."
 			etaText="This section is being implemented."
 		/>
 	)
