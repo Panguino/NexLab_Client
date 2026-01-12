@@ -5,16 +5,16 @@ export const getAnalysisTextProduct = async (productId) => {
 	switch (productId) {
 		// selected city summaries
 		case 'SCS1':
-			productQueryString = 'KWNS/FPUS20_SCS01'
+			productQueryString = 'KWBN/FPUS20_SCS01'
 			break
 		case 'SCS2':
-			productQueryString = 'KWNS/FPUS20_SCS02'
+			productQueryString = 'KWBN/FPUS20_SCS02'
 			break
 		case 'SCS3':
-			productQueryString = 'KWNS/FPUS20_SCS03'
+			productQueryString = 'KWBN/FPUS20_SCS03'
 			break
 		case 'SCS4':
-			productQueryString = 'KWNS/FPUS20_SCS04'
+			productQueryString = 'KWBN/FPUS20_SCS04'
 			break
 		// temp and weather tables
 		case 'TPTNAM':
@@ -61,5 +61,17 @@ export const getAnalysisTextProduct = async (productId) => {
 	}
 
 	// Return the data object directly - keys are timestamps (YYYYMMDDHHmm), values are URLs
+	return data
+}
+
+export const getAnalysisMRMRData = async (productId, frames) => {
+	// example productId: 1HR, 3HR, 6HR, 12HR, 24HR, 48HR, 72HR
+	// frames is number of frames to retrieve 1-200 allowed
+	const endpoint = `https://weather.cod.edu/datapoints/text/analysis/get-mrms.php?parms=${productId}-${frames}`
+	const data = await getData(endpoint)
+
+	if (!data || Object.keys(data).length === 0) {
+		return false
+	}
 	return data
 }

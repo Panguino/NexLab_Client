@@ -1,14 +1,14 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import MRMSAnimator from '@/components/blocks/_animators/MRMSAnimator/MRMSAnimator'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Analysis & Forecast Products"
-			purpose="Selected national analysis and forecast text products curated for rapid situational assessment."
-			etaText="This section is being implemented."
-		/>
-	)
+interface PageProps {
+	params: Promise<{
+		mrmsProdId: string
+	}>
+}
+
+const Page = async ({ params }: PageProps) => {
+	const { mrmsProdId } = await params
+	return <MRMSAnimator productId={mrmsProdId} />
 }
 
 export default Page
