@@ -7,7 +7,6 @@ import styles from './MRMSSection.module.scss'
 export const MRMSSection = () => {
 	const analysisBasePath = '/weather-data/text-hazards-outlooks/analysis'
 
-	// For now, use placeholders until endpoint is built
 	const mrmsProducts = Object.entries(ANALYSIS_TEXT_MRMS_QPE_PRODUCTS)
 
 	return (
@@ -25,7 +24,7 @@ export const MRMSSection = () => {
 					{mrmsProducts.map(([productId, product]) => (
 						<GraphicLink
 							key={productId}
-							imageUrl="/img/placeholder-mrms.png"
+							imageUrl={product.latest}
 							label={`View ${product.label} QPE`}
 							linkUrl={`${analysisBasePath}/MRMS/${productId}`}
 						/>

@@ -64,6 +64,25 @@ export const getAnalysisTextProduct = async (productId) => {
 	return data
 }
 
+export const getAdditionalRWRProducts = async () => {
+	// for collecting additional RWR products not in the general list
+	const endpoint = 'https://weather.cod.edu/textserv/national/analysis/json'
+	const data = await getData(endpoint)
+	if (!data || Object.keys(data).length === 0) {
+		return false
+	}
+	return data
+}
+
+export const getSpecialAnalysisTextProduct = async (endpoint) => {
+	// for collecting additional RWR products not in the general list
+	const data = await getData(endpoint)
+	if (!data || Object.keys(data).length === 0) {
+		return false
+	}
+	return data
+}
+
 export const getAnalysisMRMRData = async (productId, frames) => {
 	// example productId: 1HR, 3HR, 6HR, 12HR, 24HR, 48HR, 72HR
 	// frames is number of frames to retrieve 1-200 allowed

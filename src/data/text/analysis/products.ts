@@ -72,23 +72,30 @@ export const ANALYSIS_TEXT_REGIONAL_ROUNDUP_PRODUCTS = {
 export const ANALYSIS_TEXT_MRMS_QPE_PRODUCTS = {
 	[ANALYSIS_TEXT_PRODUCT_MRMS_QPE_1HR_ID]: {
 		label: '1 Hr',
+		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/01/mrmsqpe_01_latest.png',
 	},
 	[ANALYSIS_TEXT_PRODUCT_MRMS_QPE_3HR_ID]: {
 		label: '3 Hr',
+		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/03/mrmsqpe_03_latest.png',
 	},
 	[ANALYSIS_TEXT_PRODUCT_MRMS_QPE_6HR_ID]: {
 		label: '6 Hr',
+		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/06/mrmsqpe_06_latest.png',
 	},
 	[ANALYSIS_TEXT_PRODUCT_MRMS_QPE_12HR_ID]: {
 		label: '12 Hr',
+		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/12/mrmsqpe_12_latest.png',
 	},
 	[ANALYSIS_TEXT_PRODUCT_MRMS_QPE_24HR_ID]: {
 		label: '24 Hr',
+		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/24/mrmsqpe_24_latest.png',
 	},
 	[ANALYSIS_TEXT_PRODUCT_MRMS_QPE_48HR_ID]: {
 		label: '48 Hr',
+		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/48/mrmsqpe_48_latest.png',
 	},
 	[ANALYSIS_TEXT_PRODUCT_MRMS_QPE_72HR_ID]: {
 		label: '72 Hr',
+		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/72/mrmsqpe_72_latest.png',
 	},
 }

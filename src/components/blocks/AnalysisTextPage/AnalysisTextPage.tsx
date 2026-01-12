@@ -8,7 +8,7 @@ import {
 	ANALYSIS_TEXT_SEL_CITY_PRODUCTS,
 	ANALYSIS_TEXT_TEMP_WEATHER_TABLE_PRODUCTS,
 } from '@/data/text/analysis/products'
-import { getAnalysisTextProduct } from '@/util/dataCalls/text/query-analysis'
+import { getAdditionalRWRProducts, getAnalysisTextProduct, getSpecialAnalysisTextProduct } from '@/util/dataCalls/text/query-analysis'
 import { useRouter } from 'next/navigation'
 import { useEffect, useMemo, useState } from 'react'
 import styles from './AnalysisTextPage.module.scss'
@@ -25,24 +25,48 @@ const ALL_ANALYSIS_PRODUCTS = {
 	...ANALYSIS_TEXT_REGIONAL_ROUNDUP_PRODUCTS,
 }
 
+// Helper to determine if this is a special RWR product (state or station)
+const parseSpecialProductId = (productId: string): { type: 'state' | 'station' | null; key: string | null } => {
+	if (productId.startsWith('state-')) {
+		return { type: 'state', key: productId.replace('state-', '') }
+	}
+	if (productId.startsWith('station-')) {
+		return { type: 'station', key: productId.replace('station-', '') }
+	}
+	return { type: null, key: null }
+}
+
 export const AnalysisTextPage = ({ productId, validTime }: AnalysisTextPageProps) => {
 	const router = useRouter()
 	const [textData, setTextData] = useState<Record<string, string> | null>(null)
 	const [displayText, setDisplayText] = useState<string | null>(null)
 	const [isLoadingData, setIsLoadingData] = useState(true)
 	const [isLoadingText, setIsLoadingText] = useState(true)
+	const [specialProductInfo, setSpecialProductInfo] = useState<{ location: string; title: string } | null>(null)
+
+	const specialProduct = parseSpecialProductId(productId)
+	const isSpecialProduct = specialProduct.type !== null
 
 	const product = ALL_ANALYSIS_PRODUCTS[productId]
-	const pageTitle = product ? product.label : 'Analysis Product'
 	const analysisBasePath = '/weather-data/text-hazards-outlooks/analysis'
+
+	// Determine page title
+	const pageTitle = useMemo(() => {
+		if (isSpecialProduct && specialProductInfo) {
+			return specialProductInfo.location
+		}
+		return product ? product.label : 'Analysis Product'
+	}, [isSpecialProduct, specialProductInfo, product])
 
 	// Determine the category for display
 	const productCategory = useMemo(() => {
+		if (specialProduct.type === 'state') return 'Regional Weather Roundup - State'
+		if (specialProduct.type === 'station') return 'Regional Weather Roundup - Station'
 		if (productId in ANALYSIS_TEXT_SEL_CITY_PRODUCTS) return 'Selected City Summary'
 		if (productId in ANALYSIS_TEXT_TEMP_WEATHER_TABLE_PRODUCTS) return 'Temperature & Weather Table'
 		if (productId in ANALYSIS_TEXT_REGIONAL_ROUNDUP_PRODUCTS) return 'Regional Weather Roundup'
 		return 'Analysis Product'
-	}, [productId])
+	}, [productId, specialProduct.type])
 
 	// Create sorted options for the Select from available validtimes
 	const validtimeOptions = useMemo(() => {
@@ -91,9 +115,31 @@ export const AnalysisTextPage = ({ productId, validTime }: AnalysisTextPageProps
 		const fetchData = async () => {
 			setIsLoadingData(true)
 			try {
-				const data = await getAnalysisTextProduct(productId)
-				if (data) {
-					setTextData(data)
+				if (isSpecialProduct && specialProduct.key) {
+					// Fetch from additional RWR products endpoint
+					const rwrData = await getAdditionalRWRProducts()
+					if (rwrData) {
+						const category = specialProduct.type === 'state' ? 'states' : 'stations'
+						const productData = rwrData[category]?.[specialProduct.key]
+						if (productData) {
+							// Store product info for title/category display
+							setSpecialProductInfo({
+								location: productData.location,
+								title: productData.title,
+							})
+							// Fetch the actual data from the product's URL
+							const data = await getSpecialAnalysisTextProduct(productData.url)
+							if (data) {
+								setTextData(data)
+							}
+						}
+					}
+				} else {
+					// Standard product fetch
+					const data = await getAnalysisTextProduct(productId)
+					if (data) {
+						setTextData(data)
+					}
 				}
 			} catch (error) {
 				console.error('Failed to fetch analysis product data:', error)
@@ -103,7 +149,7 @@ export const AnalysisTextPage = ({ productId, validTime }: AnalysisTextPageProps
 		}
 
 		fetchData()
-	}, [productId])
+	}, [productId, isSpecialProduct, specialProduct.type, specialProduct.key])
 
 	// Fetch the actual text content when actualValidtimeId changes
 	useEffect(() => {
