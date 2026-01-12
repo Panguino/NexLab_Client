@@ -163,27 +163,23 @@ const AnalysisPanel = ({ basepath }: AnalysisPanelProps) => {
 						/>
 					))}
 				</SidebarGrid>
-			</SidebarGroup>
 
-			<SidebarGroup title="RWR by State">
 				<div className={styles.selectWrapper}>
 					<SelectSearchable
 						value={selectedState}
 						options={stateOptions}
 						onChange={handleStateChange}
-						placeholder="Select a state..."
+						placeholder="RWR by State"
 						optionsEmptyText="Loading states..."
 					/>
 				</div>
-			</SidebarGroup>
 
-			<SidebarGroup title="RWR by Station">
 				<div className={styles.selectWrapper}>
 					<SelectSearchable
 						value={selectedStation}
 						options={stationOptions}
 						onChange={handleStationChange}
-						placeholder="Select a station..."
+						placeholder="RWR by Station"
 						optionsEmptyText="Loading stations..."
 					/>
 				</div>
