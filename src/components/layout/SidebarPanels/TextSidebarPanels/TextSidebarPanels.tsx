@@ -7,8 +7,10 @@ import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/Sid
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
 import AdminPanel from '../AdminPanel/AdminPanel'
+import AnalysisPanel from '../AnalysisPanel/AnalysisPanel'
 import ConvectivePanel from '../ConvectivePanel/ConvectivePanel'
 import FirePanel from '../FirePanel/FirePanel'
+import ForecastPanel from '../ForecastPanel/ForecastPanel'
 import HazardsPanel from '../HazardsPanel/HazardsPanel'
 import MarinePanel from '../MarinePanel/MarinePanel'
 import SpacePanel from '../SpacePanel/SpacePanel'
@@ -26,7 +28,8 @@ const TextSidebarPanels = () => {
 				<SidebarPanelPad>
 					<SidebarSectionLink name="NWS WFO" linkUrl={`${basepath}/nws-wfo-national-weather-service-forecast-offices`} />
 					<SidebarSectionLink name="Hazards" linkUrl={`${basepath}/active-weather-hazards`} />
-					<SidebarSectionLink name="Analysis & Forecast" linkUrl={`${basepath}/analysis-forecast`} />
+					<SidebarSectionLink name="Analysis" linkUrl={`${basepath}/analysis`} />
+					<SidebarSectionLink name="Forecast" linkUrl={`${basepath}/forecast`} />
 					<SidebarSectionLink name="Climatology" linkUrl={`${basepath}/cpc-climate`} />
 					<SidebarSectionLink name="Convective" linkUrl={`${basepath}/spc-convective-weather`} />
 					<SidebarSectionLink name="Tropical" linkUrl={`${basepath}/nhc-tropical-hurricane-weather/overview/latest`} />
@@ -55,9 +58,14 @@ const TextSidebarPanels = () => {
 				<HazardsPanel basepath={basepath} />
 			</SidebarSubPanel>
 
-			{/* Analysis & Forecast */}
-			<SidebarSubPanel matchesPath={`${basepath}/analysis-forecast`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Analysis & Forecast" linkUrl={basepath} />
+			{/* Forecast */}
+			<SidebarSubPanel includesPath={`${basepath}/forecast`} activeX="0%" inactiveX="100%">
+				<ForecastPanel basepath={basepath} />
+			</SidebarSubPanel>
+
+			{/* Analysis */}
+			<SidebarSubPanel includesPath={`${basepath}/analysis`} activeX="0%" inactiveX="100%">
+				<AnalysisPanel basepath={basepath} />
 			</SidebarSubPanel>
 
 			{/* Climatology */}

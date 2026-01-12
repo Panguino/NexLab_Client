@@ -21,9 +21,11 @@ export interface IAnalysisSlice {
 	surfaceMapsNumberOfFrames: number
 	upperAirNumberOfFrames: number
 	soundingNumberOfFrames: number
+	mrmsNumberOfFrames: number
 	setSurfaceMapsNumberOfFrames: (frames: number) => void
 	setUpperAirNumberOfFrames: (frames: number) => void
 	setSoundingNumberOfFrames: (frames: number) => void
+	setMrmsNumberOfFrames: (frames: number) => void
 	analysisZoomState: zoomState
 	setAnalysisZoomState: (zoomState: zoomState) => void
 	resetAnalysisZoomState: () => void
@@ -60,6 +62,8 @@ export const createAnalysisSlice: ZustandStateSlice<IAnalysisSlice> = (set) => (
 	setUpperAirNumberOfFrames: (frames: number) => set(() => ({ upperAirNumberOfFrames: frames })),
 	soundingNumberOfFrames: 14,
 	setSoundingNumberOfFrames: (frames: number) => set(() => ({ soundingNumberOfFrames: frames })),
+	mrmsNumberOfFrames: 24,
+	setMrmsNumberOfFrames: (frames: number) => set(() => ({ mrmsNumberOfFrames: frames })),
 	analysisZoomState: { ...defaultAnalysisZoomState },
 	setAnalysisZoomState: (analysisZoomState) => set(() => ({ analysisZoomState })),
 	resetAnalysisZoomState: () => set(() => ({ analysisZoomState: { ...defaultAnalysisZoomState } })),
