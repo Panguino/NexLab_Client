@@ -1,14 +1,12 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { HydroTextPage } from '@/components/blocks/HydroTextPage/HydroTextPage'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Hydro General Text Products"
-			purpose="Simple text viewer with product issuance time selection and text content display."
-			etaText="This section is being implemented."
-		/>
-	)
+interface PageProps {
+	params: Promise<{ hydroTextProdId: string; hydroTextValidId: string }>
+}
+
+const Page = async ({ params }: PageProps) => {
+	const { hydroTextProdId, hydroTextValidId } = await params
+	return <HydroTextPage productId={hydroTextProdId} validTime={hydroTextValidId} />
 }
 
 export default Page

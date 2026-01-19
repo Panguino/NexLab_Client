@@ -1,14 +1,7 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { TextHydrologicalPage } from '@/components/blocks/TextHydrologicalPage/TextHydrologicalPage'
 
 const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Hydrological Landing Page"
-			purpose="Excessive Rainfall Outlook: Latest ERO Day 1-3 Images with a button route to full ERO page. Analysis: Latest Day 1 QPF, 1 hour MRMS and 1 hour FFG."
-			etaText="This section is being implemented."
-		/>
-	)
+	return <TextHydrologicalPage />
 }
 
 export default Page

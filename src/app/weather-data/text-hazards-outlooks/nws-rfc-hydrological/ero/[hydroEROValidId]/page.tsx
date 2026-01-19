@@ -1,14 +1,12 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { HydroEROPage } from '@/components/blocks/HydroEROPage/HydroEROPage'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Excessive Rainfall Outlooks"
-			purpose="Product viewer for ERO day 1-3 graphics and discussion text with issuance time selection."
-			etaText="This section is being implemented."
-		/>
-	)
+interface PageProps {
+	params: Promise<{ hydroEROValidId: string }>
+}
+
+const Page = async ({ params }: PageProps) => {
+	const { hydroEROValidId } = await params
+	return <HydroEROPage validTime={hydroEROValidId} />
 }
 
 export default Page

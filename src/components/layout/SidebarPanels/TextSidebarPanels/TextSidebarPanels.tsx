@@ -13,6 +13,7 @@ import ConvectivePanel from '../ConvectivePanel/ConvectivePanel'
 import FirePanel from '../FirePanel/FirePanel'
 import ForecastPanel from '../ForecastPanel/ForecastPanel'
 import HazardsPanel from '../HazardsPanel/HazardsPanel'
+import HydrologicalPanel from '../HydrologicalPanel/HydrologicalPanel'
 import MarinePanel from '../MarinePanel/MarinePanel'
 import SpacePanel from '../SpacePanel/SpacePanel'
 import TropicalPanel from '../TropicalPanel/TropicalPanel'
@@ -90,8 +91,8 @@ const TextSidebarPanels = () => {
 			</SidebarSubPanel>
 
 			{/* Hydrological */}
-			<SidebarSubPanel matchesPath={`${basepath}/nws-rfc-hydrological`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Hydrological" linkUrl={basepath} />
+			<SidebarSubPanel includesPath={`${basepath}/nws-rfc-hydrological`} activeX="0%" inactiveX="100%">
+				<HydrologicalPanel basepath={basepath} />
 			</SidebarSubPanel>
 
 			{/* Fire & Drought */}

@@ -15,10 +15,9 @@ export const HYDRO_TEXT_PRODUCT_MRMS_QPE_12HR_ID = '12HR'
 export const HYDRO_TEXT_PRODUCT_MRMS_QPE_24HR_ID = '24HR'
 export const HYDRO_TEXT_PRODUCT_MRMS_QPE_48HR_ID = '48HR'
 export const HYDRO_TEXT_PRODUCT_MRMS_QPE_72HR_ID = '72HR'
-export const HYDRO_TEXT_PRODUCT_FFG_1HR_ID = 'ffg-1hr'
-export const HYDRO_TEXT_PRODUCT_FFG_3HR_ID = 'ffg-3hr'
-export const HYDRO_TEXT_PRODUCT_FFG_6HR_ID = 'ffg-6hr'
-// pils = "ESP,FFG,FFH,HMD,HYD,QPFERD,SPE,CRF,SWE,ESG".split(",")
+export const HYDRO_TEXT_PRODUCT_FFG_1HR_ID = 'ffg1hr'
+export const HYDRO_TEXT_PRODUCT_FFG_3HR_ID = 'ffg3hr'
+export const HYDRO_TEXT_PRODUCT_FFG_6HR_ID = 'ffg6hr'
 export const HYDRO_TEXT_PRODUCT_CRF_ID = 'CRF'
 export const HYDRO_TEXT_PRODUCT_ESG_ID = 'ESG'
 export const HYDRO_TEXT_PRODUCT_ESP_ID = 'ESP'
@@ -42,34 +41,57 @@ export const HYDRO_TEXT_PRODUCT_SWE_ID = 'SWE'
 // 	},
 // }
 
+export const HYDRO_TEXT_QPF_PRODUCTS = {
+	[HYDRO_TEXT_PRODUCT_QPF_DAY1_ID]: {
+		label: 'Day 1',
+	},
+	[HYDRO_TEXT_PRODUCT_QPF_DAY2_ID]: {
+		label: 'Day 2',
+	},
+	[HYDRO_TEXT_PRODUCT_QPF_DAY3_ID]: {
+		label: 'Day 3',
+	},
+	[HYDRO_TEXT_PRODUCT_QPF_DAY4_5_ID]: {
+		label: 'Day 4-5',
+	},
+	[HYDRO_TEXT_PRODUCT_QPF_DAY6_7_ID]: {
+		label: 'Day 6-7',
+	},
+	[HYDRO_TEXT_PRODUCT_QPF_DAY1_2_ID]: {
+		label: 'Day 1-2',
+	},
+	[HYDRO_TEXT_PRODUCT_QPF_DAY1_3_ID]: {
+		label: 'Day 1-3',
+	},
+	[HYDRO_TEXT_PRODUCT_QPF_DAY1_5_ID]: {
+		label: 'Day 1-5',
+	},
+	[HYDRO_TEXT_PRODUCT_QPF_DAY1_7_ID]: {
+		label: 'Day 1-7',
+	},
+}
+
 export const HYDRO_TEXT_MRMS_QPE_PRODUCTS = {
 	[HYDRO_TEXT_PRODUCT_MRMS_QPE_1HR_ID]: {
 		label: '1 Hr',
-		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/01/mrmsqpe_01_latest.png',
 	},
 	[HYDRO_TEXT_PRODUCT_MRMS_QPE_3HR_ID]: {
 		label: '3 Hr',
-		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/03/mrmsqpe_03_latest.png',
 	},
 	[HYDRO_TEXT_PRODUCT_MRMS_QPE_6HR_ID]: {
 		label: '6 Hr',
-		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/06/mrmsqpe_06_latest.png',
 	},
 	[HYDRO_TEXT_PRODUCT_MRMS_QPE_12HR_ID]: {
 		label: '12 Hr',
-		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/12/mrmsqpe_12_latest.png',
 	},
 	[HYDRO_TEXT_PRODUCT_MRMS_QPE_24HR_ID]: {
 		label: '24 Hr',
-		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/24/mrmsqpe_24_latest.png',
 	},
 	[HYDRO_TEXT_PRODUCT_MRMS_QPE_48HR_ID]: {
 		label: '48 Hr',
-		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/48/mrmsqpe_48_latest.png',
 	},
 	[HYDRO_TEXT_PRODUCT_MRMS_QPE_72HR_ID]: {
 		label: '72 Hr',
-		latest: 'https://weather.cod.edu/cdata/text/images/mrms/msqpe/72/mrmsqpe_72_latest.png',
 	},
 }
 

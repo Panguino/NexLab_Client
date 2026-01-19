@@ -1,14 +1,12 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import HydroAnalysisAnimator from '@/components/blocks/_animators/HydroAnalysisAnimator/HydroAnalysisAnimator'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Hydro Analysis Animator"
-			purpose="Animator for hydrological analysis products."
-			etaText="This section is being implemented."
-		/>
-	)
+interface PageProps {
+	params: Promise<{ hydroAnalysisProdId: string }>
+}
+
+const Page = async ({ params }: PageProps) => {
+	const { hydroAnalysisProdId } = await params
+	return <HydroAnalysisAnimator productId={hydroAnalysisProdId} />
 }
 
 export default Page
