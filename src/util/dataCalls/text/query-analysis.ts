@@ -83,7 +83,7 @@ export const getSpecialAnalysisTextProduct = async (endpoint) => {
 	return data
 }
 
-export const getAnalysisMRMRData = async (productId, frames) => {
+export const getAnalysisMRMSData = async (productId, frames) => {
 	// example productId: 1HR, 3HR, 6HR, 12HR, 24HR, 48HR, 72HR
 	// frames is number of frames to retrieve 1-200 allowed
 	const endpoint = `https://weather.cod.edu/datapoints/text/analysis/get-mrms.php?parms=${productId}-${frames}`

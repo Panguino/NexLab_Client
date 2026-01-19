@@ -4,8 +4,8 @@ const Page = () => {
 	return (
 		<ComingSoon
 			fullWidth
-			pageName="Hydrological Landing Page"
-			purpose="Excessive Rainfall Outlook: Latest ERO Day 1-3 Images with a button route to full ERO page. Analysis: Latest Day 1 QPF, 1 hour MRMS and 1 hour FFG."
+			pageName="Hydro General Text Products"
+			purpose="Simple text viewer with product issuance time selection and text content display."
 			etaText="This section is being implemented."
 		/>
 	)
