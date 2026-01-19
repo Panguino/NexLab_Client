@@ -8,6 +8,7 @@ import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
 import AdminPanel from '../AdminPanel/AdminPanel'
 import AnalysisPanel from '../AnalysisPanel/AnalysisPanel'
+import ClimatePanel from '../ClimatePanel/ClimatePanel'
 import ConvectivePanel from '../ConvectivePanel/ConvectivePanel'
 import FirePanel from '../FirePanel/FirePanel'
 import ForecastPanel from '../ForecastPanel/ForecastPanel'
@@ -69,8 +70,8 @@ const TextSidebarPanels = () => {
 			</SidebarSubPanel>
 
 			{/* Climatology */}
-			<SidebarSubPanel matchesPath={`${basepath}/cpc-climate`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="Climatology" linkUrl={basepath} />
+			<SidebarSubPanel includesPath={`${basepath}/cpc-climate`} activeX="0%" inactiveX="100%">
+				<ClimatePanel basepath={basepath} />
 			</SidebarSubPanel>
 
 			{/* Convective */}

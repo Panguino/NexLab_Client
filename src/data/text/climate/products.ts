@@ -12,10 +12,10 @@ export const CLIMATE_TEXT_PRODUCT_OLR_1_DAY_MEAN_ID = 'olr_1day_mean'
 export const CLIMATE_TEXT_PRODUCT_OLR_7_DAY_MEAN_ID = 'olr_7day_mean'
 export const CLIMATE_TEXT_PRODUCT_OLR_30_DAY_MEAN_ID = 'olr_30day_mean'
 export const CLIMATE_TEXT_PRODUCT_OLR_90_DAY_MEAN_ID = 'olr_90day_mean'
-export const CLIMATE_TEXT_PRODUCT_OLR_ANOMALY_1_DAY_MEAN_ID = 'olr_1day_anom'
-export const CLIMATE_TEXT_PRODUCT_OLR_ANOMALY_7_DAY_MEAN_ID = 'olr_7day_anom'
-export const CLIMATE_TEXT_PRODUCT_OLR_ANOMALY_30_DAY_MEAN_ID = 'olr_30day_anom'
-export const CLIMATE_TEXT_PRODUCT_OLR_ANOMALY_90_DAY_MEAN_ID = 'olr_90day_anom'
+export const CLIMATE_TEXT_PRODUCT_OLR_1_DAY_ANOMALY_ID = 'olr_1day_anom'
+export const CLIMATE_TEXT_PRODUCT_OLR_7_DAY_ANOMALY_ID = 'olr_7day_anom'
+export const CLIMATE_TEXT_PRODUCT_OLR_30_DAY_ANOMALY_ID = 'olr_30day_anom'
+export const CLIMATE_TEXT_PRODUCT_OLR_90_DAY_ANOMALY_ID = 'olr_90day_anom'
 
 export const CLIMATE_TEXT_PRODUCTS = {
 	[CLIMATE_TEXT_PRODUCT_6_14_OUTLOOK_ID]: {
@@ -45,14 +45,14 @@ export const CLIMATE_TEXT_PRODUCTS = {
 }
 
 export const CLIMATE_SSTOLR_PRODUCTS = [
-	{ id: CLIMATE_TEXT_PRODUCT_SST_ID, name: 'Sea Surface Temperature (SST)' },
+	{ id: CLIMATE_TEXT_PRODUCT_SST_ID, name: 'Sea Surface Temperature' },
 	{ id: CLIMATE_TEXT_PRODUCT_SST_ANOMALY_ID, name: 'SST Anomaly' },
 	{ id: CLIMATE_TEXT_PRODUCT_OLR_1_DAY_MEAN_ID, name: 'OLR 1-Day Mean' },
 	{ id: CLIMATE_TEXT_PRODUCT_OLR_7_DAY_MEAN_ID, name: 'OLR 7-Day Mean' },
 	{ id: CLIMATE_TEXT_PRODUCT_OLR_30_DAY_MEAN_ID, name: 'OLR 30-Day Mean' },
 	{ id: CLIMATE_TEXT_PRODUCT_OLR_90_DAY_MEAN_ID, name: 'OLR 90-Day Mean' },
-	{ id: CLIMATE_TEXT_PRODUCT_OLR_ANOMALY_1_DAY_MEAN_ID, name: 'OLR Anomaly 1-Day Mean' },
-	{ id: CLIMATE_TEXT_PRODUCT_OLR_ANOMALY_7_DAY_MEAN_ID, name: 'OLR Anomaly 7-Day Mean' },
-	{ id: CLIMATE_TEXT_PRODUCT_OLR_ANOMALY_30_DAY_MEAN_ID, name: 'OLR Anomaly 30-Day Mean' },
-	{ id: CLIMATE_TEXT_PRODUCT_OLR_ANOMALY_90_DAY_MEAN_ID, name: 'OLR Anomaly 90-Day Mean' },
+	{ id: CLIMATE_TEXT_PRODUCT_OLR_1_DAY_ANOMALY_ID, name: 'OLR 1-Day Anomaly' },
+	{ id: CLIMATE_TEXT_PRODUCT_OLR_7_DAY_ANOMALY_ID, name: 'OLR 7-Day Anomaly' },
+	{ id: CLIMATE_TEXT_PRODUCT_OLR_30_DAY_ANOMALY_ID, name: 'OLR 30-Day Anomaly' },
+	{ id: CLIMATE_TEXT_PRODUCT_OLR_90_DAY_ANOMALY_ID, name: 'OLR 90-Day Anomaly' },
 ]

@@ -1,14 +1,16 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import SSTOLRAnimator from '@/components/blocks/_animators/SSTOLRAnimator/SSTOLRAnimator'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="SST and OLR Products"
-			purpose="An animator for SST and OLR products."
-			etaText="This section is being implemented."
-		/>
-	)
+interface PageProps {
+	params: Promise<{
+		sstolrProdId: string
+		sstolrSectorId: string
+	}>
+}
+
+const Page = async ({ params }: PageProps) => {
+	const { sstolrProdId, sstolrSectorId } = await params
+
+	return <SSTOLRAnimator productId={sstolrProdId} sectorId={sstolrSectorId} />
 }
 
 export default Page

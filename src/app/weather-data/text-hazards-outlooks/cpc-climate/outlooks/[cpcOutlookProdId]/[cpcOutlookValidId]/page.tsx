@@ -1,14 +1,16 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { ClimateOutlooksPage } from '@/components/blocks/ClimateOutlooksPage/ClimateOutlooksPage'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Climatology Products"
-			purpose="CPC climate-related text products and outlooks organized for long-range situational context."
-			etaText="This section is being implemented."
-		/>
-	)
+interface PageProps {
+	params: Promise<{
+		cpcOutlookProdId: string
+		cpcOutlookValidId: string
+	}>
+}
+
+const Page = async ({ params }: PageProps) => {
+	const { cpcOutlookProdId, cpcOutlookValidId } = await params
+
+	return <ClimateOutlooksPage productId={cpcOutlookProdId} validTime={cpcOutlookValidId} />
 }
 
 export default Page
