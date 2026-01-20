@@ -63,49 +63,25 @@
 	}
 }
 
-.graphicsSection {
+.animatorSection {
 	margin-bottom: 30px;
 }
 
-.graphicsGrid {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 20px;
-}
-
-.graphicsGridTwo {
-	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 20px;
-}
-
-.graphicItem {
+.animatorWrapper {
+	max-width: 1200px;
+	margin: 0 auto;
 	background: var(--color-grey4-grey16);
 	border-radius: 8px;
-	padding: 16px;
-
-	h3 {
-		font-size: 14px;
-		font-weight: 600;
-		color: var(--color-grey18-grey4);
-		margin: 0 0 12px;
-		text-align: center;
-	}
-
-	img {
-		width: 100%;
-		height: auto;
-		border-radius: 4px;
-	}
+	overflow: hidden;
+	// Animator needs an explicit height since it's not full-page
+	aspect-ratio: 800 / 500;
 }
 
-.placeholder {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	min-height: 200px;
-	background: var(--color-grey6-grey14);
-	border-radius: 4px;
+.noFrames {
+	background: var(--color-grey4-grey16);
+	border-radius: 8px;
+	padding: 60px 20px;
+	text-align: center;
 	color: var(--color-grey14-grey8);
 	font-size: 14px;
 }
@@ -146,20 +122,4 @@
 	padding: 60px 20px;
 	color: var(--color-grey14-grey8);
 	font-size: 1rem;
-}
-
-.noGraphics {
-	text-align: center;
-	padding: 40px 20px;
-	color: var(--color-grey14-grey8);
-	font-size: 1rem;
-	background: var(--color-grey4-grey16);
-	border-radius: 8px;
-}
-
-@media (max-width: 768px) {
-	.graphicsGrid,
-	.graphicsGridTwo {
-		grid-template-columns: 1fr;
-	}
 }

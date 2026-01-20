@@ -3,14 +3,14 @@
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import Select from '@/components/elements/Select/Select'
-import SelectSearchable from '@/components/elements/SelectSearchable/SelectSearchable'
+import { Accordian } from '@/components/elements/Accordian/Accordian'
 import SidebarGrid from '@/components/elements/SidebarGrid/SidebarGrid'
 import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
 import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
 import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import { HYDRO_FFG_PRODUCTS, HYDRO_TEXT_MRMS_QPE_PRODUCTS, HYDRO_TEXT_PRODUCTS, HYDRO_TEXT_QPF_PRODUCTS } from '@/data/text/hydrological/products'
 import { getHydroGeneralTextProducts } from '@/util/dataCalls/text/query-hydrological'
+import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import styles from './HydrologicalPanel.module.scss'
 
 interface HydrologicalPanelProps {
@@ -39,7 +39,9 @@ const HydrologicalPanel = ({ basepath }: HydrologicalPanelProps) => {
 
 	// State for general text products
 	const [generalTextProducts, setGeneralTextProducts] = useState<GeneralTextProducts | null>(null)
-	const [selectedTextProducts, setSelectedTextProducts] = useState<Record<string, string>>({})
+
+	// State for accordion - only one open at a time
+	const [openAccordionIndex, setOpenAccordionIndex] = useState<number | null>(null)
 
 	// Full path to Hydrological section
 	const hydroBasePath = `${basepath}/nws-rfc-hydrological`
@@ -64,36 +66,22 @@ const HydrologicalPanel = ({ basepath }: HydrologicalPanelProps) => {
 
 		const products = generalTextProducts[categoryId]
 		return Object.values(products).map((product) => ({
-			label: `For: ${product.location} - By: ${product.office}`,
+			label: product.location,
 			value: product.productQueryString,
 		}))
 	}
 
-	// Handle general text product selection
-	const handleTextProductChange = (categoryId: string, value: string) => {
-		setSelectedTextProducts((prev) => ({ ...prev, [categoryId]: value }))
-		router.push(`${hydroBasePath}/text/${value}/latest`)
+	// Check if a text product is active
+	const isTextProductActive = (productId: string) => {
+		return hydroTextProdId === productId
+	}
+
+	// Handle accordion toggle - only one open at a time
+	const handleAccordionToggle = (index: number) => {
+		setOpenAccordionIndex(openAccordionIndex === index ? null : index)
 	}
 
 	// Sync select state from URL params
-	useEffect(() => {
-		if (typeof hydroTextProdId === 'string') {
-			// Find which category contains this product
-			if (generalTextProducts) {
-				for (const categoryId of Object.keys(HYDRO_TEXT_PRODUCTS)) {
-					if (generalTextProducts[categoryId]) {
-						const products = generalTextProducts[categoryId]
-						const found = Object.values(products).find((p) => p.productQueryString === hydroTextProdId)
-						if (found) {
-							setSelectedTextProducts((prev) => ({ ...prev, [categoryId]: hydroTextProdId }))
-							break
-						}
-					}
-				}
-			}
-		}
-	}, [hydroTextProdId, generalTextProducts])
-
 	// Check if ERO is active
 	const isEROActive = pathname.includes('/ero/')
 
@@ -116,7 +104,7 @@ const HydrologicalPanel = ({ basepath }: HydrologicalPanelProps) => {
 
 			<SidebarGroup title="Excessive Rainfall Outlook">
 				<SidebarGrid columns={1}>
-					<SidebarLink name="ERO Discussion & Graphics" linkUrl={`${hydroBasePath}/ero/latest`} active={isEROActive} />
+					<SidebarLink name="Excessive Rainfall Outlook" linkUrl={`${hydroBasePath}/ero/latest`} active={isEROActive} />
 				</SidebarGrid>
 			</SidebarGroup>
 
@@ -145,23 +133,30 @@ const HydrologicalPanel = ({ basepath }: HydrologicalPanelProps) => {
 			</SidebarGroup>
 
 			<SidebarGroup title="General Text Products">
-				{Object.entries(HYDRO_TEXT_PRODUCTS).map(([categoryId, product]) => {
+				{Object.entries(HYDRO_TEXT_PRODUCTS).map(([categoryId, product], index) => {
 					const options = buildTextProductOptions(categoryId)
-					const SelectComponent = options.length > 12 ? SelectSearchable : Select
 
 					return (
-						<div key={categoryId} className={styles.textProductGroup}>
-							<div className={styles.textProductLabel}>{product.label}</div>
-							<div className={styles.selectWrapper}>
-								<SelectComponent
-									value={selectedTextProducts[categoryId] || null}
-									options={options}
-									onChange={(value) => handleTextProductChange(categoryId, value)}
-									placeholder="Select Location"
-									optionsEmptyText="No products available"
-								/>
-							</div>
-						</div>
+						<Accordian
+							key={categoryId}
+							title={product.label}
+							variant="sidebar"
+							isOpen={openAccordionIndex === index}
+							onToggle={() => handleAccordionToggle(index)}
+						>
+							<SidebarPanelPad>
+								<SidebarGrid columns={4}>
+									{options.map((option) => (
+										<SidebarLink
+											key={option.value}
+											name={option.label}
+											linkUrl={`${hydroBasePath}/text/${option.value}/latest`}
+											active={isTextProductActive(option.value)}
+										/>
+									))}
+								</SidebarGrid>
+							</SidebarPanelPad>
+						</Accordian>
 					)
 				})}
 			</SidebarGroup>

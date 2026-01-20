@@ -1,11 +1,14 @@
 'use client'
 
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
+import { Animator } from '@/components/elements/Animator/Animator'
 import Select from '@/components/elements/Select/Select'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
+import { useRootStore } from '@/store/useRootStore'
 import { getERODiscussions, getEROGraphics } from '@/util/dataCalls/text/query-hydrological'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styles from './HydroEROPage.module.scss'
 
 interface HydroEROPageProps {
@@ -26,13 +29,32 @@ interface EROGraphicsResponse {
 }
 
 export const HydroEROPage = ({ validTime }: HydroEROPageProps) => {
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const router = useRouter()
+
+	// Store state for animator
+	const hydroEROFrameRate = useRootStore.use.hydroEROFrameRate()
+	const hydroEROLastFrameDwell = useRootStore.use.hydroEROLastFrameDwell()
+	const hydroEROLastFrameDwellTime = useRootStore.use.hydroEROLastFrameDwellTime()
+	const hydroEROZoomState = useRootStore.use.hydroEROZoomState()
+	const setHydroEROZoomState = useRootStore.use.setHydroEROZoomState()
+	const hydroEROZoomFill = useRootStore.use.hydroEROZoomFill()
+	const setHydroEROZoomFill = useRootStore.use.setHydroEROZoomFill()
+
+	// Local state
 	const [textData, setTextData] = useState<Record<string, string> | null>(null)
 	const [displayText, setDisplayText] = useState<string | null>(null)
-	const [eroGraphics, setEROGraphics] = useState<EROGraphicsResponse | null>(null)
 	const [isLoadingData, setIsLoadingData] = useState(true)
 	const [isLoadingText, setIsLoadingText] = useState(true)
-	const [isLoadingGraphics, setIsLoadingGraphics] = useState(true)
+	const [isLoadingFrames, setIsLoadingFrames] = useState(true)
+
+	// Animator state
+	const [imageInfo, setImageInfo] = useState({ width: 800, height: 600 })
+	const [frames, setFrames] = useState<string[]>([])
+	const [startFrame, setStartFrame] = useState(0)
+	const frameLabels = useMemo(() => ['Day 1', 'Day 2', 'Day 3'], [])
 
 	const hydroBasePath = '/weather-data/text-hazards-outlooks/nws-rfc-hydrological'
 
@@ -90,30 +112,40 @@ export const HydroEROPage = ({ validTime }: HydroEROPageProps) => {
 		fetchData()
 	}, [])
 
-	// Fetch ERO graphics when validtime changes
-	useEffect(() => {
-		const fetchGraphics = async () => {
-			if (!actualValidtimeId) {
-				setEROGraphics(null)
-				setIsLoadingGraphics(false)
-				return
-			}
-
-			setIsLoadingGraphics(true)
-			try {
-				const data = await getEROGraphics(actualValidtimeId)
-				if (data) {
-					setEROGraphics(data as EROGraphicsResponse)
-				}
-			} catch (error) {
-				console.error('Failed to fetch ERO graphics:', error)
-			} finally {
-				setIsLoadingGraphics(false)
-			}
+	// Fetch ERO graphics frames when validtime changes
+	const getData = useCallback(async () => {
+		if (!actualValidtimeId) {
+			setFrames([])
+			setIsLoadingFrames(false)
+			return
 		}
 
-		fetchGraphics()
+		setIsLoadingFrames(true)
+		try {
+			const data = await getEROGraphics(actualValidtimeId)
+			if (data && !data.error && data.files) {
+				const eroData = data as EROGraphicsResponse
+				// Build frames array from the 3 ERO graphics
+				const framesList: string[] = []
+				if (eroData.files?.eroday1) framesList.push(eroData.files.eroday1)
+				if (eroData.files?.eroday2) framesList.push(eroData.files.eroday2)
+				if (eroData.files?.eroday3) framesList.push(eroData.files.eroday3)
+				setFrames(framesList)
+				setStartFrame(0)
+				if (eroData.img) {
+					setImageInfo(eroData.img)
+				}
+			}
+		} catch (error) {
+			console.error('Failed to fetch ERO graphics:', error)
+		} finally {
+			setIsLoadingFrames(false)
+		}
 	}, [actualValidtimeId])
+
+	useEffect(() => {
+		getData()
+	}, [getData])
 
 	// Fetch text content when validtime changes
 	useEffect(() => {
@@ -162,13 +194,6 @@ export const HydroEROPage = ({ validTime }: HydroEROPageProps) => {
 		router.push(`${hydroBasePath}/ero/${newValidtime}`)
 	}
 
-	// Graphics for each day
-	const eroGraphicsList = [
-		{ key: 'eroday1', label: 'Day 1' },
-		{ key: 'eroday2', label: 'Day 2' },
-		{ key: 'eroday3', label: 'Day 3' },
-	]
-
 	if (isLoadingData) {
 		return (
 			<ScrollArea>
@@ -207,25 +232,35 @@ export const HydroEROPage = ({ validTime }: HydroEROPageProps) => {
 						</div>
 					)}
 
-					<div className={styles.graphicsGrid}>
-						{eroGraphicsList.map(({ key, label }) => {
-							const graphicUrl = eroGraphics?.files?.[key as keyof EROGraphicsResponse['files']] || ''
-							return (
-								<div key={key} className={styles.graphicCard}>
-									<h3>{label}</h3>
-									{isLoadingGraphics ? (
-										<div className={styles.graphicLoading}>Loading...</div>
-									) : graphicUrl ? (
-										<img src={graphicUrl} alt={`ERO ${label}`} className={styles.graphic} />
-									) : (
-										<div className={styles.noGraphic}>No graphic available</div>
-									)}
-								</div>
-							)
-						})}
+					<div className={styles.animatorSection}>
+						{isLoadingFrames ? (
+							<div className={styles.loadingMessage}>Loading frames...</div>
+						) : frames.length > 0 ? (
+							<div className={styles.animatorWrapper}>
+								<Animator
+									frames={frames}
+									frameLabels={frameLabels}
+									startFrame={startFrame}
+									imageInfo={imageInfo}
+									initialZoomState={hydroEROZoomState}
+									setZoomState={setHydroEROZoomState}
+									zoomFill={hydroEROZoomFill}
+									setZoomFill={setHydroEROZoomFill}
+									fullScreen={false}
+									setFullScreen={() => {}}
+									disableZoom={true}
+									interval={1000 / hydroEROFrameRate}
+									lastFrameDwell={hydroEROLastFrameDwell}
+									lastFrameDwellTime={hydroEROLastFrameDwellTime * 1000}
+								/>
+							</div>
+						) : (
+							<div className={styles.noFrames}>No frames available for this outlook</div>
+						)}
 					</div>
 
 					<div className={styles.textContent}>
+						<h2>Discussion</h2>
 						{isLoadingText ? (
 							<p>Loading content...</p>
 						) : displayText ? (

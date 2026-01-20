@@ -1,12 +1,15 @@
 'use client'
 
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
+import { Animator } from '@/components/elements/Animator/Animator'
 import Select from '@/components/elements/Select/Select'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { CLIMATE_TEXT_PRODUCT_6_14_OUTLOOK_ID, CLIMATE_TEXT_PRODUCT_MONTHLY_OUTLOOK_ID, CLIMATE_TEXT_PRODUCTS } from '@/data/text/climate/products'
+import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
+import { useRootStore } from '@/store/useRootStore'
 import { getClimateOutlookData, getClimateTextHistory } from '@/util/dataCalls/text/query-climate'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import styles from './ClimateOutlooksPage.module.scss'
 
 interface ClimateOutlooksPageProps {
@@ -27,19 +30,48 @@ interface OutlookGraphicsResponse {
 }
 
 export const ClimateOutlooksPage = ({ productId, validTime }: ClimateOutlooksPageProps) => {
+	// Initialize zoom fill from localStorage on client side
+	useZoomFillHydration()
+
 	const router = useRouter()
+
+	// Store state for animator
+	const climateOutlooksFrameRate = useRootStore.use.climateOutlooksFrameRate()
+	const climateOutlooksLastFrameDwell = useRootStore.use.climateOutlooksLastFrameDwell()
+	const climateOutlooksLastFrameDwellTime = useRootStore.use.climateOutlooksLastFrameDwellTime()
+	const climateOutlooksZoomState = useRootStore.use.climateOutlooksZoomState()
+	const setClimateOutlooksZoomState = useRootStore.use.setClimateOutlooksZoomState()
+	const climateOutlooksZoomFill = useRootStore.use.climateOutlooksZoomFill()
+	const setClimateOutlooksZoomFill = useRootStore.use.setClimateOutlooksZoomFill()
+
+	// Local state
 	const [textData, setTextData] = useState<Record<string, string> | null>(null)
 	const [displayText, setDisplayText] = useState<string | null>(null)
-	const [outlookGraphics, setOutlookGraphics] = useState<OutlookGraphicsResponse | null>(null)
 	const [isLoadingData, setIsLoadingData] = useState(true)
 	const [isLoadingText, setIsLoadingText] = useState(true)
-	const [isLoadingGraphics, setIsLoadingGraphics] = useState(true)
+	const [isLoadingFrames, setIsLoadingFrames] = useState(true)
+
+	// Animator state
+	const [imageInfo, setImageInfo] = useState({ width: 800, height: 600 })
+	const [frames, setFrames] = useState<string[]>([])
+	const [startFrame, setStartFrame] = useState(0)
 
 	const product = CLIMATE_TEXT_PRODUCTS[productId]
 	const climateBasePath = '/weather-data/text-hazards-outlooks/cpc-climate'
 
 	const is6to14Outlook = productId === CLIMATE_TEXT_PRODUCT_6_14_OUTLOOK_ID
 	const isMonthlyOutlook = productId === CLIMATE_TEXT_PRODUCT_MONTHLY_OUTLOOK_ID
+
+	// Frame labels based on product type
+	const frameLabels = useMemo(() => {
+		if (is6to14Outlook) {
+			return ['6-10 Day Temperature', '6-10 Day Precipitation', '8-14 Day Temperature', '8-14 Day Precipitation']
+		}
+		if (isMonthlyOutlook) {
+			return ['Monthly Temperature', 'Monthly Precipitation']
+		}
+		return []
+	}, [is6to14Outlook, isMonthlyOutlook])
 
 	// Page title
 	const pageTitle = useMemo(() => {
@@ -102,30 +134,51 @@ export const ClimateOutlooksPage = ({ productId, validTime }: ClimateOutlooksPag
 		fetchData()
 	}, [productId, product?.prodQueryString])
 
-	// Fetch outlook graphics when validtime changes
-	useEffect(() => {
-		const fetchGraphics = async () => {
-			if (!actualValidtimeId) {
-				setOutlookGraphics(null)
-				setIsLoadingGraphics(false)
-				return
-			}
-
-			setIsLoadingGraphics(true)
-			try {
-				const data = await getClimateOutlookData(productId, actualValidtimeId)
-				if (data) {
-					setOutlookGraphics(data)
-				}
-			} catch (error) {
-				console.error('Failed to fetch outlook graphics:', error)
-			} finally {
-				setIsLoadingGraphics(false)
-			}
+	// Fetch outlook graphics frames when validtime changes
+	const getData = useCallback(async () => {
+		if (!actualValidtimeId) {
+			setFrames([])
+			setIsLoadingFrames(false)
+			return
 		}
 
-		fetchGraphics()
-	}, [productId, actualValidtimeId])
+		setIsLoadingFrames(true)
+		try {
+			const data = await getClimateOutlookData(productId, actualValidtimeId)
+			if (data && !data.error && data.files) {
+				const outlookData = data as OutlookGraphicsResponse
+				const { temp, prcp } = outlookData.files || {}
+
+				// Build frames array based on product type
+				const framesList: string[] = []
+				if (is6to14Outlook) {
+					// 6-14 Day: temp[0], prcp[0], temp[1], prcp[1]
+					if (temp?.[0]) framesList.push(temp[0])
+					if (prcp?.[0]) framesList.push(prcp[0])
+					if (temp?.[1]) framesList.push(temp[1])
+					if (prcp?.[1]) framesList.push(prcp[1])
+				} else if (isMonthlyOutlook) {
+					// Monthly: temp[0], prcp[0]
+					if (temp?.[0]) framesList.push(temp[0])
+					if (prcp?.[0]) framesList.push(prcp[0])
+				}
+
+				setFrames(framesList)
+				setStartFrame(0)
+				if (outlookData.img) {
+					setImageInfo(outlookData.img)
+				}
+			}
+		} catch (error) {
+			console.error('Failed to fetch outlook graphics:', error)
+		} finally {
+			setIsLoadingFrames(false)
+		}
+	}, [productId, actualValidtimeId, is6to14Outlook, isMonthlyOutlook])
+
+	useEffect(() => {
+		getData()
+	}, [getData])
 
 	// Fetch the actual text content when actualValidtimeId changes
 	useEffect(() => {
@@ -174,86 +227,6 @@ export const ClimateOutlooksPage = ({ productId, validTime }: ClimateOutlooksPag
 		router.push(newPath)
 	}
 
-	// Render graphics grid based on product type
-	const renderGraphics = () => {
-		if (isLoadingGraphics) {
-			return <div className={styles.loadingMessage}>Loading graphics...</div>
-		}
-
-		if (!outlookGraphics || !outlookGraphics.files) {
-			return <div className={styles.noGraphics}>No graphics available</div>
-		}
-
-		const { temp, prcp } = outlookGraphics.files
-
-		if (is6to14Outlook) {
-			// 6-14 Day Outlook has 4 graphics: temp and prcp for both 6-10 and 8-14 periods
-			// Arrays: [0] = 6-10 day, [1] = 8-14 day
-			return (
-				<div className={styles.graphicsGrid}>
-					<div className={styles.graphicItem}>
-						<h3>6-10 Day Temperature</h3>
-						{temp?.[0] ? (
-							<img src={temp[0]} alt="6-10 Day Temperature Outlook" />
-						) : (
-							<div className={styles.placeholder}>Not available</div>
-						)}
-					</div>
-					<div className={styles.graphicItem}>
-						<h3>6-10 Day Precipitation</h3>
-						{prcp?.[0] ? (
-							<img src={prcp[0]} alt="6-10 Day Precipitation Outlook" />
-						) : (
-							<div className={styles.placeholder}>Not available</div>
-						)}
-					</div>
-					<div className={styles.graphicItem}>
-						<h3>8-14 Day Temperature</h3>
-						{temp?.[1] ? (
-							<img src={temp[1]} alt="8-14 Day Temperature Outlook" />
-						) : (
-							<div className={styles.placeholder}>Not available</div>
-						)}
-					</div>
-					<div className={styles.graphicItem}>
-						<h3>8-14 Day Precipitation</h3>
-						{prcp?.[1] ? (
-							<img src={prcp[1]} alt="8-14 Day Precipitation Outlook" />
-						) : (
-							<div className={styles.placeholder}>Not available</div>
-						)}
-					</div>
-				</div>
-			)
-		}
-
-		if (isMonthlyOutlook) {
-			// Monthly Outlook has 2 graphics: temp and prcp (first item in each array)
-			return (
-				<div className={styles.graphicsGridTwo}>
-					<div className={styles.graphicItem}>
-						<h3>Monthly Temperature Outlook</h3>
-						{temp?.[0] ? (
-							<img src={temp[0]} alt="Monthly Temperature Outlook" />
-						) : (
-							<div className={styles.placeholder}>Not available</div>
-						)}
-					</div>
-					<div className={styles.graphicItem}>
-						<h3>Monthly Precipitation Outlook</h3>
-						{prcp?.[0] ? (
-							<img src={prcp[0]} alt="Monthly Precipitation Outlook" />
-						) : (
-							<div className={styles.placeholder}>Not available</div>
-						)}
-					</div>
-				</div>
-			)
-		}
-
-		return null
-	}
-
 	if (isLoadingData) {
 		return (
 			<ScrollArea>
@@ -289,7 +262,32 @@ export const ClimateOutlooksPage = ({ productId, validTime }: ClimateOutlooksPag
 						</div>
 					)}
 
-					<div className={styles.graphicsSection}>{renderGraphics()}</div>
+					<div className={styles.animatorSection}>
+						{isLoadingFrames ? (
+							<div className={styles.loadingMessage}>Loading frames...</div>
+						) : frames.length > 0 ? (
+							<div className={styles.animatorWrapper}>
+								<Animator
+									frames={frames}
+									frameLabels={frameLabels}
+									startFrame={startFrame}
+									imageInfo={imageInfo}
+									initialZoomState={climateOutlooksZoomState}
+									setZoomState={setClimateOutlooksZoomState}
+									zoomFill={climateOutlooksZoomFill}
+									setZoomFill={setClimateOutlooksZoomFill}
+									fullScreen={false}
+									setFullScreen={() => {}}
+									disableZoom={true}
+									interval={1000 / climateOutlooksFrameRate}
+									lastFrameDwell={climateOutlooksLastFrameDwell}
+									lastFrameDwellTime={climateOutlooksLastFrameDwellTime * 1000}
+								/>
+							</div>
+						) : (
+							<div className={styles.noFrames}>No frames available for this outlook</div>
+						)}
+					</div>
 
 					<div className={styles.textContent}>
 						<h2>Discussion</h2>

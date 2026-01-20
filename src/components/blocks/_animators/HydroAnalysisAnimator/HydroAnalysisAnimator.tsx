@@ -94,9 +94,6 @@ const HydroAnalysisAnimator: React.FC<HydroAnalysisAnimatorProps> = ({ productId
 	return (
 		<>
 			<div className={styles.hydroAnalysisAnimatorContainer}>
-				<div className={styles.titleBar}>
-					<h1>{pageTitle}</h1>
-				</div>
 				<Animator
 					frames={frames}
 					startFrame={startFrame}

@@ -20,6 +20,18 @@ export interface IClimateSlice {
 	resetClimateSeasonalZoomState: () => void
 	climateSeasonalZoomFill: boolean
 	setClimateSeasonalZoomFill: (zoomFill: boolean) => void
+	// Outlooks animator settings
+	climateOutlooksFrameRate: number
+	setClimateOutlooksFrameRate: (frameRate: number) => void
+	climateOutlooksLastFrameDwell: boolean
+	setClimateOutlooksLastFrameDwell: (dwell: boolean) => void
+	climateOutlooksLastFrameDwellTime: number
+	setClimateOutlooksLastFrameDwellTime: (dwellTime: number) => void
+	climateOutlooksZoomState: zoomState
+	setClimateOutlooksZoomState: (zoomState: zoomState) => void
+	resetClimateOutlooksZoomState: () => void
+	climateOutlooksZoomFill: boolean
+	setClimateOutlooksZoomFill: (zoomFill: boolean) => void
 	// SST-OLR animator settings
 	climateSSTOLRNumberOfFrames: number
 	setClimateSSTOLRNumberOfFrames: (frames: number) => void
@@ -51,6 +63,18 @@ export const createClimateSlice: ZustandStateSlice<IClimateSlice> = (set) => ({
 	resetClimateSeasonalZoomState: () => set(() => ({ climateSeasonalZoomState: { ...defaultClimateZoomState } })),
 	climateSeasonalZoomFill: false,
 	setClimateSeasonalZoomFill: (zoomFill: boolean) => set(() => ({ climateSeasonalZoomFill: zoomFill })),
+	// Outlooks animator settings
+	climateOutlooksFrameRate: 2,
+	setClimateOutlooksFrameRate: (frameRate: number) => set(() => ({ climateOutlooksFrameRate: frameRate })),
+	climateOutlooksLastFrameDwell: true,
+	setClimateOutlooksLastFrameDwell: (dwell: boolean) => set(() => ({ climateOutlooksLastFrameDwell: dwell })),
+	climateOutlooksLastFrameDwellTime: 2,
+	setClimateOutlooksLastFrameDwellTime: (dwellTime: number) => set(() => ({ climateOutlooksLastFrameDwellTime: dwellTime })),
+	climateOutlooksZoomState: { ...defaultClimateZoomState },
+	setClimateOutlooksZoomState: (climateOutlooksZoomState) => set(() => ({ climateOutlooksZoomState })),
+	resetClimateOutlooksZoomState: () => set(() => ({ climateOutlooksZoomState: { ...defaultClimateZoomState } })),
+	climateOutlooksZoomFill: false,
+	setClimateOutlooksZoomFill: (zoomFill: boolean) => set(() => ({ climateOutlooksZoomFill: zoomFill })),
 	// SST-OLR animator settings
 	climateSSTOLRNumberOfFrames: 24,
 	setClimateSSTOLRNumberOfFrames: (frames: number) => set(() => ({ climateSSTOLRNumberOfFrames: frames })),

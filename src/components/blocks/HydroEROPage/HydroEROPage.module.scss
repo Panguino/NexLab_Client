@@ -69,43 +69,28 @@
 	}
 }
 
-.graphicsGrid {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 20px;
+.animatorSection {
 	margin-bottom: 24px;
-
-	@media (max-width: 900px) {
-		grid-template-columns: 1fr;
-	}
 }
 
-.graphicCard {
+.animatorWrapper {
+	max-width: 1200px;
+	margin: 0 auto;
 	background: var(--color-grey4-grey16);
 	border-radius: 8px;
-	padding: 16px;
+	overflow: hidden;
+	// Animator needs an explicit height since it's not full-page
+	// Using aspect ratio based on typical ERO images
+	aspect-ratio: 800 / 500;
+}
+
+.noFrames {
+	background: var(--color-grey4-grey16);
+	border-radius: 8px;
+	padding: 60px 20px;
 	text-align: center;
-
-	h3 {
-		font-family: var(--font-secondary);
-		font-size: 18px;
-		font-weight: 400;
-		margin: 0 0 12px;
-		color: var(--color-grey20-grey2);
-	}
-}
-
-.graphic {
-	max-width: 100%;
-	height: auto;
-	border-radius: 4px;
-}
-
-.graphicLoading,
-.noGraphic {
 	color: var(--color-grey14-grey8);
 	font-size: 14px;
-	padding: 40px 20px;
 }
 
 .textContent {
@@ -113,6 +98,14 @@
 	padding: 24px;
 	border-radius: 8px;
 	min-height: 400px;
+
+	h2 {
+		font-family: var(--font-secondary);
+		font-size: 24px;
+		font-weight: 400;
+		margin: 0 0 16px;
+		color: var(--color-grey20-grey2);
+	}
 
 	p {
 		color: var(--color-grey19-grey2);

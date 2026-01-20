@@ -1,6 +1,6 @@
 'use client'
 
-import { GraphicLink } from '@/components/elements/GraphicLink/GraphicLink'
+import { Button } from '@/components/elements/Button/Button'
 import { getHydroLatestGraphics } from '@/util/dataCalls/text/query-hydrological'
 import { useEffect, useState } from 'react'
 import styles from './EROSection.module.scss'
@@ -34,17 +34,17 @@ export const EROSection = () => {
 	const eroProducts = [
 		{
 			id: 'eroday1',
-			label: 'Day 1 ERO',
+			label: 'Day 1',
 			graphicKey: 'eroday1' as const,
 		},
 		{
 			id: 'eroday2',
-			label: 'Day 2 ERO',
+			label: 'Day 2',
 			graphicKey: 'eroday2' as const,
 		},
 		{
 			id: 'eroday3',
-			label: 'Day 3 ERO',
+			label: 'Day 3',
 			graphicKey: 'eroday3' as const,
 		},
 	]
@@ -64,8 +64,20 @@ export const EROSection = () => {
 					{eroProducts.map(({ id, label, graphicKey }) => {
 						const graphicUrl = latestGraphics?.files?.[graphicKey] || ''
 
-						return <GraphicLink key={id} imageUrl={graphicUrl} label={`View ${label}`} linkUrl={`${hydroBasePath}/ero/latest`} />
+						return (
+							<div key={id} className={styles.graphicItem}>
+								<span className={styles.graphicLabel}>{label}</span>
+								{graphicUrl ? (
+									<img src={graphicUrl} alt={`ERO ${label}`} className={styles.graphicImage} />
+								) : (
+									<div className={styles.graphicPlaceholder}>Loading...</div>
+								)}
+							</div>
+						)
 					})}
+				</div>
+				<div className={styles.buttonWrapper}>
+					<Button label="View Excessive Rainfall Outlook" link={`${hydroBasePath}/ero/latest`} target="_self" />
 				</div>
 			</div>
 		</section>
