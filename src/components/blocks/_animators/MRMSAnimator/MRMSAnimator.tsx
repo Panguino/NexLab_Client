@@ -5,7 +5,7 @@ import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSet
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
-import { getAnalysisMRMRData } from '@/util/dataCalls/text/query-analysis'
+import { getAnalysisMRMSData } from '@/util/dataCalls/text/query-analysis'
 import React, { useCallback, useEffect, useState } from 'react'
 import MRMSAnimatorSettings from '../../_animatorSettingPanels/MRMSAnimatorSettings/MRMSAnimatorSettings'
 import styles from './MRMSAnimator.module.scss'
@@ -35,7 +35,7 @@ const MRMSAnimator: React.FC<MRMSAnimatorProps> = ({ productId }) => {
 	const [frameValidTimes, setFrameValidTimes] = useState<number[]>([])
 
 	const getData = useCallback(async () => {
-		const data = await getAnalysisMRMRData(productId, mrmsNumberOfFrames)
+		const data = await getAnalysisMRMSData(productId, mrmsNumberOfFrames)
 
 		if (data && !data.error && data.files) {
 			setFrames(data.files)
