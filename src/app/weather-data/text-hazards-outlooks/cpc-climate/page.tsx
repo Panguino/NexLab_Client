@@ -1,14 +1,7 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { TextClimatePage } from '@/components/blocks/TextClimatePage/TextClimatePage'
 
 const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Climatology Products"
-			purpose="CPC climate-related text products and outlooks organized for long-range situational context."
-			etaText="This section is being implemented."
-		/>
-	)
+	return <TextClimatePage />
 }
 
 export default Page

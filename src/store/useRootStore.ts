@@ -1,11 +1,13 @@
 import { enableMapSet } from 'immer'
 import { StateCreator, create } from 'zustand'
 import { IAnalysisSlice, createAnalysisSlice } from './analysisSlice'
+import { IClimateSlice, createClimateSlice } from './climateSlice'
 import createSelectors from './createSelectors'
 import { IFireAnalysisSlice, createFireAnalysisSlice } from './fireAnalysisSlice'
 import { IForecastSlice, createForecastSlice } from './forecastSlice'
 import { IGlobalSettingsSlice, createGlobalSettingsSlice } from './globalSettingsSlice'
 import { IHazardsSlice, createHazardsSlice } from './hazardsSlice'
+import { IHydrologicalSlice, createHydrologicalSlice } from './hydrologicalSlice'
 import { IMobileMenuSlice, createMobileMenuSlice } from './mobileMenuSlice'
 import { INexradSlice, createNexradSlice } from './nexradSlice'
 import { ISatradSlice, createSatradSlice } from './satradSlice'
@@ -28,7 +30,9 @@ export interface IGlobalStore
 		IAnalysisSlice,
 		ISoundingPickerPanelSlice,
 		IWinterSlice,
-		IFireAnalysisSlice {}
+		IFireAnalysisSlice,
+		IClimateSlice,
+		IHydrologicalSlice {}
 
 export type ZustandStateSlice<T> = StateCreator<IGlobalStore, [], [], T>
 
@@ -45,6 +49,8 @@ const useRootStoreBase = create<IGlobalStore>((...args) => ({
 	...createAnalysisSlice(...args),
 	...createWinterSlice(...args),
 	...createFireAnalysisSlice(...args),
+	...createClimateSlice(...args),
+	...createHydrologicalSlice(...args),
 }))
 
 export const useRootStore = createSelectors(useRootStoreBase as any)
