@@ -1,6 +1,6 @@
 'use client'
 
-import { WinterHazardsAnimator } from '@/components/elements/WinterHazardsAnimator'
+import { WinterHazardsAnimator } from '@/components/elements/WinterHazardsAnimator/WinterHazardsAnimator'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { useEffect } from 'react'
