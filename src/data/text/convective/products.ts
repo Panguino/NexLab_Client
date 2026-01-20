@@ -13,8 +13,7 @@ export const CONVECTIVE_PRODUCT_SPC_DAY_ONE_OUTLOOK_ID = 'DY1'
 export const CONVECTIVE_PRODUCT_SPC_DAY_TWO_OUTLOOK_ID = 'DY2'
 export const CONVECTIVE_PRODUCT_SPC_DAY_THREE_OUTLOOK_ID = 'DY3'
 export const CONVECTIVE_PRODUCT_SPC_DAY_FOUR_THRU_EIGHT_OUTLOOK_ID = 'DY48'
-export const CONVECTIVE_PRODUCT_WARNINGS_MAP_ID = 'warnings-map'
-export const CONVECTIVE_PRODUCT_WARNINGS_TABLE_ID = 'warnings-table'
+export const CONVECTIVE_PRODUCT_HAZARDS_MAP_TABLE_ID = 'hazards-map-table'
 export const CONVECTIVE_PRODUCT_LOCAL_STORM_REPORTS_ID = 'storm-reports'
 export const CONVECTIVE_PRODUCT_WATCHES_ID = 'watches'
 export const CONVECTIVE_PRODUCT_MESO_DISCUSSIONS_ID = 'mesoscale-discussions'
@@ -41,13 +40,9 @@ export const CONVECTIVE_PRODUCTS = {
 		title: 'Day 4 - 8',
 		linkUrl: `/outlooks/${CONVECTIVE_PRODUCT_SPC_DAY_FOUR_THRU_EIGHT_OUTLOOK_ID}/latest`,
 	},
-	[CONVECTIVE_PRODUCT_WARNINGS_MAP_ID]: {
-		title: 'Warnings Map',
-		linkUrl: '/warnings/map',
-	},
-	[CONVECTIVE_PRODUCT_WARNINGS_TABLE_ID]: {
-		title: 'Warnings Table',
-		linkUrl: '/warnings/table',
+	[CONVECTIVE_PRODUCT_HAZARDS_MAP_TABLE_ID]: {
+		title: 'Hazards Map & Table',
+		linkUrl: '/warnings',
 	},
 	[CONVECTIVE_PRODUCT_LOCAL_STORM_REPORTS_ID]: {
 		title: 'Local Storm Reports',
@@ -100,7 +95,7 @@ export const CONVECTIVE_CATEGORIES = {
 	},
 	[CONVECTIVE_CATEGORY_WARNINGS_AND_REPORTS]: {
 		title: 'Warnings and Reports',
-		products: [CONVECTIVE_PRODUCT_WARNINGS_MAP_ID, CONVECTIVE_PRODUCT_WARNINGS_TABLE_ID, CONVECTIVE_PRODUCT_LOCAL_STORM_REPORTS_ID],
+		products: [CONVECTIVE_PRODUCT_HAZARDS_MAP_TABLE_ID, CONVECTIVE_PRODUCT_LOCAL_STORM_REPORTS_ID],
 	},
 	[CONVECTIVE_CATEGORY_AREAS_OF_CONCERN]: {
 		title: 'Areas of Concern',

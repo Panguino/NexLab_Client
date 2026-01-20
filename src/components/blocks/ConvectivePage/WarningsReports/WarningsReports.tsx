@@ -1,44 +1,42 @@
 'use client'
 
 import { ConvectiveProductCard } from '@/components/elements/ConvectiveProductCard/ConvectiveProductCard'
-import { getLocalStormReports } from '@/util/dataCalls/text/query-convective'
-import { faTable } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/navigation'
+import { getConvectiveHazardsCount, getLocalStormReports } from '@/util/dataCalls/text/query-convective'
+import { faExclamationTriangle, faTable } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
 import styles from './WarningsReports.module.scss'
 
 export const WarningsReports = () => {
-	const router = useRouter()
+	const [hazardCount, setHazardCount] = useState<number | null>(null)
 	const [reportCount, setReportCount] = useState<number | null>(null)
-	const [isLoading, setIsLoading] = useState(true)
+	const [isLoadingHazards, setIsLoadingHazards] = useState(true)
+	const [isLoadingReports, setIsLoadingReports] = useState(true)
 
 	useEffect(() => {
-		const fetchReportCount = async () => {
+		const fetchCounts = async () => {
 			try {
-				const data = await getLocalStormReports()
-				if (data && Array.isArray(data)) {
-					setReportCount(data.length)
+				const [hazardsCount, reportsData] = await Promise.all([getConvectiveHazardsCount(), getLocalStormReports()])
+
+				setHazardCount(hazardsCount)
+				setIsLoadingHazards(false)
+
+				if (reportsData && Array.isArray(reportsData)) {
+					setReportCount(reportsData.length)
 				} else {
 					setReportCount(0)
 				}
+				setIsLoadingReports(false)
 			} catch (error) {
-				console.error('Error fetching local storm reports:', error)
+				console.error('Error fetching warnings and reports data:', error)
+				setHazardCount(0)
 				setReportCount(0)
-			} finally {
-				setIsLoading(false)
+				setIsLoadingHazards(false)
+				setIsLoadingReports(false)
 			}
 		}
 
-		fetchReportCount()
+		fetchCounts()
 	}, [])
-
-	const handleViewWarningsMap = () => {
-		router.push('/weather-data/text-hazards-outlooks/spc-convective-weather/warnings/map')
-	}
-
-	const handleViewWarningsTable = () => {
-		router.push('/weather-data/text-hazards-outlooks/spc-convective-weather/warnings/table')
-	}
 
 	return (
 		<section className={styles.warningsReports}>
@@ -51,27 +49,20 @@ export const WarningsReports = () => {
 					</p>
 				</div>
 				<div className={styles.content}>
-					<div className={styles.warningsSection}>
-						<h2>Active Convective Warnings</h2>
-						<p>
-							View current tornado warnings, severe thunderstorm warnings, and flash flood warnings across the United States. Track
-							active severe weather in real-time and access detailed warning information.
-						</p>
-						<div className={styles.buttonGroup}>
-							<button className={styles.viewButton} onClick={handleViewWarningsMap}>
-								View Warnings Map
-							</button>
-							<button className={`${styles.viewButton} ${styles.secondary}`} onClick={handleViewWarningsTable}>
-								View Warnings Table
-							</button>
-						</div>
-					</div>
+					<ConvectiveProductCard
+						icon={faExclamationTriangle}
+						title="Active Convective Hazards"
+						description="View current convective warnings"
+						stat={`${hazardCount} currently active`}
+						isLoading={isLoadingHazards}
+						linkUrl="/weather-data/text-hazards-outlooks/spc-convective-weather/warnings"
+					/>
 					<ConvectiveProductCard
 						icon={faTable}
 						title="Local Storm Reports"
 						description="View recent local storm reports"
 						stat={`${reportCount} reports in last 3 days`}
-						isLoading={isLoading}
+						isLoading={isLoadingReports}
 						linkUrl="/weather-data/text-hazards-outlooks/spc-convective-weather/reports"
 					/>
 				</div>

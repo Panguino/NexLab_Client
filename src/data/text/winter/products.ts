@@ -52,7 +52,7 @@ export const WINTER_TEXT_OUTLOOKS = [
 
 export const WINTER_TEXT_PRODUCTS = {
 	[WINTER_TEXT_PRODUCT_HAZARDS_ID]: {
-		label: 'Winter Hazards Map',
+		label: 'Hazards Map & Table',
 	},
 	[WINTER_TEXT_PRODUCT_SNOW_DEPTH_ID]: {
 		label: 'Snow Depth',
