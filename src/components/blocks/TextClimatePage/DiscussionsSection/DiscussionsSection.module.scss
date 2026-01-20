@@ -1,0 +1,138 @@
+.discussionsSection {
+	padding: 80px 20px 60px;
+	background: var(--color-grey2-grey19);
+
+	.container {
+		max-width: 1400px;
+		margin: 0 auto;
+	}
+
+	.header {
+		margin-bottom: 50px;
+		text-align: center;
+		max-width: 900px;
+		margin-left: auto;
+		margin-right: auto;
+
+		h1 {
+			font-family: var(--font-secondary);
+			font-size: 54px;
+			font-weight: 400;
+			line-height: 1.1;
+			margin: 0 0 20px;
+			color: var(--color-grey20-grey2);
+		}
+	}
+
+	.subtitle {
+		font-size: 18px;
+		line-height: 1.6;
+		margin: 0;
+		color: var(--color-grey16-grey6);
+	}
+
+	.content {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: 30px;
+	}
+
+	.textLinks {
+		margin-top: 60px;
+
+		h2 {
+			font-family: var(--font-secondary);
+			font-size: 36px;
+			font-weight: 400;
+			margin: 0 0 30px;
+			text-align: center;
+			color: var(--color-grey20-grey2);
+		}
+	}
+
+	.splitContent {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 60px;
+		align-items: start;
+	}
+
+	.descriptionSection {
+		p {
+			font-size: 18px;
+			line-height: 1.6;
+			margin: 0;
+			color: var(--color-grey16-grey6);
+		}
+	}
+
+	.linksSection {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.linkItem {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		padding: 16px 20px;
+		background: var(--color-grey4-grey16);
+		border-radius: 8px;
+		cursor: pointer;
+		transition:
+			background 0.2s ease,
+			transform 0.2s ease;
+		border: 1px solid var(--color-grey6-grey14);
+
+		&:hover {
+			background: var(--color-grey6-grey14);
+			transform: translateX(4px);
+
+			.linkIcon {
+				color: var(--color-blue3);
+			}
+		}
+	}
+
+	.linkIcon {
+		font-size: 20px;
+		color: var(--color-grey14-grey8);
+		transition: color 0.2s ease;
+		flex-shrink: 0;
+	}
+
+	.linkText {
+		font-size: 16px;
+		font-weight: 500;
+		color: var(--color-grey18-grey4);
+	}
+
+	@media (max-width: 900px) {
+		padding: 60px 20px 40px;
+
+		.header h1 {
+			font-size: 40px;
+		}
+
+		.splitContent {
+			grid-template-columns: 1fr;
+			gap: 40px;
+		}
+
+		.descriptionSection p {
+			font-size: 16px;
+			text-align: center;
+		}
+
+		.textLinks h2 {
+			font-size: 28px;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.header h1 {
+			font-size: 32px;
+		}
+	}
+}
