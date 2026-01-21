@@ -42,3 +42,42 @@ export const getFireDroughtGraphicsByValidTime = async (productId, validTime) =>
 	const data = await getData(endpoint)
 	return data
 }
+
+// Fire hazard type ID (matches hazardMapVars.ts)
+const FIRE_HAZARD_TYPE = 'FIRE'
+
+/**
+ * Get count of active fire hazards (fire warning, red flag warning, fire weather watch)
+ * Uses the Apollo GraphQL hazards data
+ */
+export const getFireHazardsCount = async (): Promise<number> => {
+	// Dynamic import to avoid circular dependencies and keep this file client-compatible
+	const { getHazards } = await import('@/apollo/data/getHazards')
+	const { prepareAlertsFromAPI } = await import('@/util/hazardMapUtils')
+
+	try {
+		const hazardsData = await getHazards()
+		const alerts = prepareAlertsFromAPI(hazardsData)
+
+		let count = 0
+
+		// Iterate through all regions and counties to count fire hazards
+		Object.values(alerts).forEach((regionAlerts: any) => {
+			Object.values(regionAlerts).forEach((countyData: any) => {
+				if (countyData.alerts && Array.isArray(countyData.alerts)) {
+					countyData.alerts.forEach((alert: any) => {
+						const hazardType = alert.hazardInfo?.type?.type
+						if (hazardType && hazardType === FIRE_HAZARD_TYPE) {
+							count++
+						}
+					})
+				}
+			})
+		})
+
+		return count
+	} catch (error) {
+		console.error('Error fetching fire hazards count:', error)
+		return 0
+	}
+}

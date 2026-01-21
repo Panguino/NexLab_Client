@@ -40,7 +40,7 @@ const FirePanel = ({ basepath }: FirePanelProps) => {
 				</SidebarGroup>
 
 				<SidebarGroup title="Active Fire & Drought Hazards">
-					<SidebarLink name="View Hazards Map/Table" linkUrl={`${fireBasePath}/hazards`} />
+					<SidebarLink name="Hazards Map & Table" linkUrl={`${fireBasePath}/hazards`} />
 				</SidebarGroup>
 
 				<SidebarGroup title="Graphical Analysis Products">

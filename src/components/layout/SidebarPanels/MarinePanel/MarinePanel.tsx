@@ -55,7 +55,7 @@ const MarinePanel = ({ basepath }: MarinePanelProps) => {
 		<>
 			<SidebarSectionHeader name="Marine" linkUrl={basepath} />
 			<SidebarGroup title="Hazards">
-				<SidebarLink name="Marine Hazards Map & Table" linkUrl={`${marineBasePath}/hazards`} />
+				<SidebarLink name="Hazards Map & Table" linkUrl={`${marineBasePath}/hazards`} />
 			</SidebarGroup>
 			{MARINE_TEXT_PRODUCT_IDS.map((productId) => {
 				const productCategory = marineData?.[productId]
