@@ -1,6 +1,6 @@
 .generalTextSection {
 	padding: 80px 20px 60px;
-	background: var(--color-grey2-grey19);
+	background: var(--color-white-black);
 
 	.container {
 		max-width: 1400px;
@@ -29,6 +29,25 @@
 		line-height: 1.6;
 		margin: 0;
 		color: var(--color-grey16-grey6);
+	}
+
+	.sidebarCallout {
+		display: inline-flex;
+		align-items: center;
+		margin-top: 24px;
+		padding: 16px 28px;
+		background: linear-gradient(135deg, var(--color-blue3) 0%, var(--color-blue4) 100%);
+		border-radius: 10px;
+		color: var(--color-white);
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 1.5;
+		box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+
+		.calloutIcon {
+			margin-right: 12px;
+			font-size: 18px;
+		}
 	}
 
 	.categories {

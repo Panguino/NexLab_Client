@@ -1,33 +1,41 @@
 'use client'
 
 import { ConvectiveProductCard } from '@/components/elements/ConvectiveProductCard/ConvectiveProductCard'
-import { getLocalStormReports } from '@/util/dataCalls/text/query-convective'
-import { faTable } from '@fortawesome/free-solid-svg-icons'
+import { getConvectiveHazardsCount, getLocalStormReports } from '@/util/dataCalls/text/query-convective'
+import { faExclamationTriangle, faTable } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
 import styles from './WarningsReports.module.scss'
 
 export const WarningsReports = () => {
+	const [hazardCount, setHazardCount] = useState<number | null>(null)
 	const [reportCount, setReportCount] = useState<number | null>(null)
-	const [isLoading, setIsLoading] = useState(true)
+	const [isLoadingHazards, setIsLoadingHazards] = useState(true)
+	const [isLoadingReports, setIsLoadingReports] = useState(true)
 
 	useEffect(() => {
-		const fetchReportCount = async () => {
+		const fetchCounts = async () => {
 			try {
-				const data = await getLocalStormReports()
-				if (data && Array.isArray(data)) {
-					setReportCount(data.length)
+				const [hazardsCount, reportsData] = await Promise.all([getConvectiveHazardsCount(), getLocalStormReports()])
+
+				setHazardCount(hazardsCount)
+				setIsLoadingHazards(false)
+
+				if (reportsData && Array.isArray(reportsData)) {
+					setReportCount(reportsData.length)
 				} else {
 					setReportCount(0)
 				}
+				setIsLoadingReports(false)
 			} catch (error) {
-				console.error('Error fetching local storm reports:', error)
+				console.error('Error fetching warnings and reports data:', error)
+				setHazardCount(0)
 				setReportCount(0)
-			} finally {
-				setIsLoading(false)
+				setIsLoadingHazards(false)
+				setIsLoadingReports(false)
 			}
 		}
 
-		fetchReportCount()
+		fetchCounts()
 	}, [])
 
 	return (
@@ -41,16 +49,21 @@ export const WarningsReports = () => {
 					</p>
 				</div>
 				<div className={styles.content}>
-					<div className={styles.graphicPlaceholder}>
-						<p>Active Warnings Map</p>
-					</div>
+					<ConvectiveProductCard
+						icon={faExclamationTriangle}
+						title="Active Convective Hazards"
+						description="View current convective warnings"
+						stat={`${hazardCount} currently active`}
+						isLoading={isLoadingHazards}
+						linkUrl="/weather-data/text-hazards-outlooks/spc-convective-weather/warnings"
+					/>
 					<ConvectiveProductCard
 						icon={faTable}
 						title="Local Storm Reports"
 						description="View recent local storm reports"
 						stat={`${reportCount} reports in last 3 days`}
-						isLoading={isLoading}
-						linkUrl="/weather-data/text-hazards-outlooks/spc-convective-weather/local-storm-reports"
+						isLoading={isLoadingReports}
+						linkUrl="/weather-data/text-hazards-outlooks/spc-convective-weather/reports"
 					/>
 				</div>
 			</div>

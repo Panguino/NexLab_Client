@@ -1,14 +1,49 @@
-import { ComingSoon } from '@/components/blocks/PageBlocks/ComingSoon/ComingSoon'
+import { getHazards } from '@/apollo/data/getHazards'
+import ConvectiveHazardsViewToggle from '@/components/blocks/ConvectiveHazards/ConvectiveHazardsViewToggle/ConvectiveHazardsViewToggle'
+import { prepareAlertsFromAPI } from '@/util/hazardMapUtils'
+import { AllGeoJSON, rewind } from '@turf/turf'
 
-const Page = () => {
-	return (
-		<ComingSoon
-			fullWidth
-			pageName="Convective Warnings Map and Table"
-			purpose="Deck.gl or D3.js visualizations of convective warnings (Tornado, Severe Thunderstorm, Flash Flood, etc.). Optional Table View."
-			etaText="This section is being implemented."
-		/>
-	)
+/**
+ * Combined Convective Weather Warnings page with Map/Table toggle
+ */
+const Page = async () => {
+	// Fetch hazard data
+	const conusCountiesData = await getHazards()
+
+	// Prepare offshore/coastal regions for map display
+	const displayOffshoreRegions: AllGeoJSON[] = []
+	if (conusCountiesData && conusCountiesData.getRegions) {
+		conusCountiesData.getRegions.forEach((region) => {
+			if (region && region.coasts) {
+				region.coasts.forEach((coasts) => {
+					if (coasts && coasts.type && coasts.geometry) {
+						const optimizedCoast = { type: coasts.type, geometry: coasts.geometry, properties: coasts.properties || {} }
+						displayOffshoreRegions.push(rewind(optimizedCoast as AllGeoJSON, { reverse: true }))
+					}
+				})
+			}
+			if (region && region.offshores) {
+				region.offshores.forEach((offshores) => {
+					if (offshores && offshores.type && offshores.geometry) {
+						const optimizedOffshore = { type: offshores.type, geometry: offshores.geometry, properties: offshores.properties || {} }
+						displayOffshoreRegions.push(rewind(optimizedOffshore as AllGeoJSON, { reverse: true }))
+					}
+				})
+			}
+		})
+	}
+
+	const displayOffshores = {
+		type: 'FeatureCollection',
+		features: displayOffshoreRegions,
+	}
+
+	// Prepare alerts data
+	const alerts = prepareAlertsFromAPI(conusCountiesData)
+
+	return <ConvectiveHazardsViewToggle alerts={alerts} displayOffshores={displayOffshores} />
 }
 
 export default Page
+
+export const dynamic = 'force-dynamic'

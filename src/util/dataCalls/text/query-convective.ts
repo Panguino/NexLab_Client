@@ -108,3 +108,42 @@ export const getLocalStormReports = async () => {
 	const data = await getData(endpoint)
 	return data
 }
+
+// Convective hazard type IDs (matches hazardMapVars.ts)
+const CONVECTIVE_HAZARD_TYPES = ['TORNADO', 'SEVERE', 'HYDROLOGICAL']
+
+/**
+ * Get count of active convective hazards (tornado, severe thunderstorm, hydrological)
+ * Uses the Apollo GraphQL hazards data
+ */
+export const getConvectiveHazardsCount = async (): Promise<number> => {
+	// Dynamic import to avoid circular dependencies and keep this file client-compatible
+	const { getHazards } = await import('@/apollo/data/getHazards')
+	const { prepareAlertsFromAPI } = await import('@/util/hazardMapUtils')
+
+	try {
+		const hazardsData = await getHazards()
+		const alerts = prepareAlertsFromAPI(hazardsData)
+
+		let count = 0
+
+		// Iterate through all regions and counties to count convective hazards
+		Object.values(alerts).forEach((regionAlerts: any) => {
+			Object.values(regionAlerts).forEach((countyData: any) => {
+				if (countyData.alerts && Array.isArray(countyData.alerts)) {
+					countyData.alerts.forEach((alert: any) => {
+						const hazardType = alert.hazardInfo?.type?.type
+						if (hazardType && CONVECTIVE_HAZARD_TYPES.includes(hazardType)) {
+							count++
+						}
+					})
+				}
+			})
+		})
+
+		return count
+	} catch (error) {
+		console.error('Error fetching convective hazards count:', error)
+		return 0
+	}
+}
