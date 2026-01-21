@@ -8,8 +8,8 @@
 	}
 
 	.header {
-		margin-bottom: 50px;
 		text-align: center;
+		margin-bottom: 40px;
 
 		h1 {
 			font-family: var(--font-secondary);
@@ -21,97 +21,64 @@
 		}
 	}
 
-	.splitContent {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 60px;
+	.splitLayout {
+		display: flex;
 		align-items: center;
+		gap: 60px;
 	}
 
-	.descriptionSection {
-		p {
+	.descriptionColumn {
+		flex: 1;
+
+		.description {
 			font-size: 18px;
 			line-height: 1.6;
-			margin: 0 0 16px;
+			margin: 0;
 			color: var(--color-grey16-grey6);
-
-			&:last-child {
-				margin-bottom: 0;
-			}
 		}
 	}
 
-	.actionSection {
+	.cardColumn {
+		flex: 1;
 		display: flex;
 		justify-content: center;
-		align-items: center;
-	}
-
-	.viewButton {
-		padding: 20px 40px;
-		font-size: 18px;
-		font-weight: 600;
-		color: #fff;
-		background: #e65100;
-		border: none;
-		border-radius: 8px;
-		cursor: pointer;
-		transition:
-			background 0.2s ease,
-			transform 0.2s ease,
-			box-shadow 0.2s ease;
-
-		&:hover {
-			background: #bf360c;
-			transform: translateY(-2px);
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-		}
-
-		&:active {
-			transform: translateY(0);
-		}
 	}
 
 	@media (max-width: 900px) {
 		padding: 60px 20px 40px;
 
 		.header {
-			margin-bottom: 40px;
+			margin-bottom: 30px;
 
 			h1 {
 				font-size: 40px;
 			}
 		}
 
-		.splitContent {
-			grid-template-columns: 1fr;
+		.splitLayout {
+			flex-direction: column;
 			gap: 40px;
 		}
 
-		.descriptionSection {
-			p {
+		.descriptionColumn {
+			text-align: center;
+
+			.description {
 				font-size: 16px;
 			}
 		}
 
-		.actionSection {
-			justify-content: flex-start;
+		.cardColumn {
+			width: 100%;
+			max-width: 400px;
 		}
 	}
 
 	@media (max-width: 600px) {
 		padding: 40px 20px;
 
-		.header {
-			h1 {
-				font-size: 32px;
-			}
-		}
-
-		.viewButton {
-			width: 100%;
-			padding: 16px 24px;
-			font-size: 16px;
+		.header h1 {
+			font-size: 32px;
 		}
 	}
 }
