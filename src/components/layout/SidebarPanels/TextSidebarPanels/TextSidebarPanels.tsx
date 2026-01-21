@@ -1,8 +1,5 @@
 'use client'
 
-import { SidebarGroup } from '@/components/elements/SidebarGroup/SidebarGroup'
-import { SidebarLink } from '@/components/elements/SidebarLink/SidebarLink'
-import { SidebarSectionHeader } from '@/components/elements/SidebarSectionHeader/SidebarSectionHeader'
 import { SidebarSectionLink } from '@/components/elements/SidebarSectionLink/SidebarSectionLink'
 import SidebarPanelPad from '../../SidebarPanelPad/SidebarPanelPad'
 import SidebarSubPanel from '../../SidebarSubPanel/SidebarSubPanel'
@@ -43,19 +40,12 @@ const TextSidebarPanels = () => {
 					<SidebarSectionLink name="Administrative" linkUrl={`${basepath}/admin-products/KWBC/NOUS41_PNSWSH/latest`} />
 				</SidebarPanelPad>
 			</SidebarSubPanel>
-			<SidebarSubPanel matchesPath={`${basepath}/NWF-WFO`} activeX="0%" inactiveX="100%">
-				<SidebarSectionHeader name="NWS WFO" linkUrl={basepath} />
-				<SidebarPanelPad>
-					<SidebarGroup title="Sector Selection">
-						<SidebarLink name="Conus" linkUrl={''} />
-						<SidebarLink name="Alaska" linkUrl={''} />
-						<SidebarLink name="Hawaii" linkUrl={''} />
-						<SidebarLink name="Puerto Rico" linkUrl={''} />
-						<SidebarLink name="Guam" linkUrl={''} />
-						<SidebarLink name="Amer. Samoa" linkUrl={''} />
-					</SidebarGroup>
-				</SidebarPanelPad>
+			{/* NWS WFO */}
+			<SidebarSubPanel includesPath={`${basepath}/nws-wfo-national-weather-service-forecast-offices`} activeX="0%" inactiveX="100%">
+				<WFOPanel basepath={basepath} />
 			</SidebarSubPanel>
+
+			{/* Hazards */}
 			<SidebarSubPanel matchesPath={`${basepath}/active-weather-hazards`} activeX="0%" inactiveX="100%">
 				<HazardsPanel basepath={basepath} />
 			</SidebarSubPanel>
@@ -113,11 +103,6 @@ const TextSidebarPanels = () => {
 			{/* Administrative */}
 			<SidebarSubPanel includesPath={`${basepath}/admin-products`} activeX="0%" inactiveX="100%">
 				<AdminPanel basepath={basepath} />
-			</SidebarSubPanel>
-
-			{/* NWS WFO */}
-			<SidebarSubPanel includesPath={`${basepath}/nws-wfo-national-weather-service-forecast-offices`} activeX="0%" inactiveX="100%">
-				<WFOPanel basepath={basepath} />
 			</SidebarSubPanel>
 		</div>
 	)
