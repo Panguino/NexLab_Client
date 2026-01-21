@@ -85,6 +85,9 @@ const HydrologicalPanel = ({ basepath }: HydrologicalPanelProps) => {
 	// Check if ERO is active
 	const isEROActive = pathname.includes('/ero/')
 
+	// Check if Hazards Map & Table is active
+	const isHazardsActive = pathname.includes('/hazards')
+
 	// Check if a specific graphics product is active
 	const isGraphicsProductActive = (productId: string) => {
 		return hydroAnalysisProdId === productId
@@ -129,6 +132,12 @@ const HydrologicalPanel = ({ basepath }: HydrologicalPanelProps) => {
 					{Object.entries(HYDRO_FFG_PRODUCTS).map(([id, product]) => (
 						<SidebarLink key={id} name={product.label} linkUrl={`${hydroBasePath}/graphics/${id}`} active={isGraphicsProductActive(id)} />
 					))}
+				</SidebarGrid>
+			</SidebarGroup>
+
+			<SidebarGroup title="Hazards Map & Table">
+				<SidebarGrid columns={1}>
+					<SidebarLink name="Hazards Map & Table" linkUrl={`${hydroBasePath}/hazards`} active={isHazardsActive} />
 				</SidebarGrid>
 			</SidebarGroup>
 

@@ -67,3 +67,42 @@ export const getHydroLatestGraphics = async () => {
 	}
 	return data
 }
+
+// Hydrological hazard type ID (matches hazardMapVars.ts)
+const HYDROLOGICAL_HAZARD_TYPE = 'HYDROLOGICAL'
+
+/**
+ * Get count of active hydrological hazards (flood, flash flood, coastal flood, etc.)
+ * Uses the Apollo GraphQL hazards data
+ */
+export const getHydrologicalHazardsCount = async (): Promise<number> => {
+	// Dynamic import to avoid circular dependencies and keep this file client-compatible
+	const { getHazards } = await import('@/apollo/data/getHazards')
+	const { prepareAlertsFromAPI } = await import('@/util/hazardMapUtils')
+
+	try {
+		const hazardsData = await getHazards()
+		const alerts = prepareAlertsFromAPI(hazardsData)
+
+		let count = 0
+
+		// Iterate through all regions and counties to count hydrological hazards
+		Object.values(alerts).forEach((regionAlerts: any) => {
+			Object.values(regionAlerts).forEach((countyData: any) => {
+				if (countyData.alerts && Array.isArray(countyData.alerts)) {
+					countyData.alerts.forEach((alert: any) => {
+						const hazardType = alert.hazardInfo?.type?.type
+						if (hazardType && hazardType === HYDROLOGICAL_HAZARD_TYPE) {
+							count++
+						}
+					})
+				}
+			})
+		})
+
+		return count
+	} catch (error) {
+		console.error('Error fetching hydrological hazards count:', error)
+		return 0
+	}
+}

@@ -5,6 +5,7 @@ import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { AnalysisSection } from './AnalysisSection/AnalysisSection'
 import { EROSection } from './EROSection/EROSection'
 import { GeneralTextSection } from './GeneralTextSection/GeneralTextSection'
+import { HazardsSection } from './HazardsSection/HazardsSection'
 import styles from './TextHydrologicalPage.module.scss'
 
 export const TextHydrologicalPage = () => {
@@ -13,6 +14,7 @@ export const TextHydrologicalPage = () => {
 			<div className={styles.textHydrologicalPage}>
 				<EROSection />
 				<AnalysisSection />
+				<HazardsSection />
 				<GeneralTextSection />
 			</div>
 			<Footer />
