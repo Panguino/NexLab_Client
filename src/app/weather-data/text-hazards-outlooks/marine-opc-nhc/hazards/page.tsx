@@ -3,9 +3,7 @@ import MarineHazardsViewToggle from '@/components/blocks/MarineHazards/MarineHaz
 import { prepareAlertsFromAPI } from '@/util/hazardMapUtils'
 import { AllGeoJSON, rewind } from '@turf/turf'
 
-/**
- * Marine Hazards page with Map/Table toggle
- */
+// Marine Hazards page with Map/Table toggle
 const Page = async () => {
 	// Fetch hazard data
 	const conusCountiesData = await getHazards()
