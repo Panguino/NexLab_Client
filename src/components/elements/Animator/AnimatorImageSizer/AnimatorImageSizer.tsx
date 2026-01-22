@@ -88,17 +88,26 @@ const AnimatorImageSizer = () => {
 	useEffect(() => {
 		if (!transformRef.current) return
 
-		// Calculate manual center position for default state
+		// Calculate manual center position
 		const manualCenterY = Math.ceil((_height - adjustedHeight) / 2)
 		const manualCenterX = Math.ceil((_width - adjustedWidth) / 2)
 
-		// Check if the zoom state is at default (no zoom AND no pan)
-		const isAtDefault = initialZoomState.scale === 1 && initialZoomState.positionX === 0 && initialZoomState.positionY === 0
+		// Check if the zoom state is at default (matches manual center position)
+		// Use a small tolerance to account for rounding differences
+		const tolerance = 2
+		const isAtDefault =
+			initialZoomState.scale === 1 &&
+			Math.abs(initialZoomState.positionX - manualCenterX) <= tolerance &&
+			Math.abs(initialZoomState.positionY - manualCenterY) <= tolerance
 
 		console.log('🔍 AnimatorImageSizer - Setting transform:', {
 			isAtDefault,
 			initialZoomState,
 			manualCenter: { x: manualCenterX, y: manualCenterY },
+			diff: {
+				x: Math.abs(initialZoomState.positionX - manualCenterX),
+				y: Math.abs(initialZoomState.positionY - manualCenterY),
+			},
 			willUse: isAtDefault ? 'MANUAL CENTER' : 'STORED STATE',
 		})
 
