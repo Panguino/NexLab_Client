@@ -87,7 +87,11 @@ const AnimatorImageSizer = () => {
 		// this is the only way to keep the zoom position and level intact when you change expand
 		const manualCenterY = Math.ceil((_height - adjustedHeight) / 2)
 		const manualCenterX = Math.ceil((_width - adjustedWidth) / 2)
-		if (initialZoomState.scale === 1) {
+
+		// Check if the zoom state is at default (no zoom AND no pan)
+		const isAtDefault = initialZoomState.scale === 1 && initialZoomState.positionX === 0 && initialZoomState.positionY === 0
+
+		if (isAtDefault) {
 			transformRef.current.setTransform(manualCenterX, manualCenterY, initialZoomState.scale, 0)
 		} else {
 			transformRef.current.setTransform(initialZoomState.positionX, initialZoomState.positionY, initialZoomState.scale, 0)
