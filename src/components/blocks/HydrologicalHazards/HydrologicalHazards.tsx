@@ -61,7 +61,7 @@ const HydrologicalHazards = ({ alerts, displayOffshores, view = 'map' }: Hydrolo
 					)}
 				</>
 			) : null}
-			<MobileIconNav />
+			<MobileIconNav tab />
 		</>
 	)
 }

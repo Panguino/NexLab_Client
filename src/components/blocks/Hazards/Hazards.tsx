@@ -49,7 +49,7 @@ const Hazards = ({ displayRegions, displayStates, displayOffshores, alerts }) =>
 					{selectedView === 'table' ? <HazardsTable /> : null}
 				</>
 			) : null}
-			<MobileIconNav />
+			<MobileIconNav tab />
 		</>
 	)
 }

@@ -55,7 +55,7 @@ const WinterHazards = ({ alerts, displayOffshores, view = 'map' }: WinterHazards
 			{Object.keys(alerts).length !== 0 ? (
 				<>{view === 'map' ? <WinterHazardsAnimator alerts={alerts} allCoastalRegions={displayOffshores} /> : <WinterHazardsTable />}</>
 			) : null}
-			<MobileIconNav />
+			<MobileIconNav tab />
 		</>
 	)
 }

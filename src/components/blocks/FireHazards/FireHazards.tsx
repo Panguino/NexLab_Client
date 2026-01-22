@@ -55,7 +55,7 @@ const FireHazards = ({ alerts, displayOffshores, view = 'map' }: FireHazardsProp
 			{Object.keys(alerts).length !== 0 ? (
 				<>{view === 'map' ? <FireHazardsAnimator alerts={alerts} allCoastalRegions={displayOffshores} /> : <FireHazardsTable />}</>
 			) : null}
-			<MobileIconNav />
+			<MobileIconNav tab />
 		</>
 	)
 }

@@ -57,7 +57,7 @@ const ConvectiveHazards = ({ alerts, displayOffshores, view = 'map' }: Convectiv
 					{view === 'map' ? <ConvectiveHazardsAnimator alerts={alerts} allCoastalRegions={displayOffshores} /> : <ConvectiveHazardsTable />}
 				</>
 			) : null}
-			<MobileIconNav />
+			<MobileIconNav tab />
 		</>
 	)
 }

@@ -55,7 +55,7 @@ const MarineHazards = ({ alerts, displayOffshores, view = 'map' }: MarineHazards
 			{Object.keys(alerts).length !== 0 ? (
 				<>{view === 'map' ? <MarineHazardsAnimator alerts={alerts} allCoastalRegions={displayOffshores} /> : <MarineHazardsTable />}</>
 			) : null}
-			<MobileIconNav />
+			<MobileIconNav tab />
 		</>
 	)
 }
