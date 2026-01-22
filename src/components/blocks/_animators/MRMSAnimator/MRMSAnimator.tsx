@@ -2,7 +2,6 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getAnalysisMRMSData } from '@/util/dataCalls/text/query-analysis'
@@ -76,7 +75,6 @@ const MRMSAnimator: React.FC<MRMSAnimatorProps> = ({ productId }) => {
 					}
 				/>
 			</div>
-			<MobileIconNav tab />
 		</>
 	)
 }

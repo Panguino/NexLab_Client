@@ -1,7 +1,6 @@
 'use client'
 
 import { ConvectiveHazardsAnimator } from '@/components/elements/ConvectiveHazardsAnimator'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { useEffect } from 'react'
 import ConvectiveHazardsTable from './ConvectiveHazardsTable/ConvectiveHazardsTable'
@@ -57,7 +56,6 @@ const ConvectiveHazards = ({ alerts, displayOffshores, view = 'map' }: Convectiv
 					{view === 'map' ? <ConvectiveHazardsAnimator alerts={alerts} allCoastalRegions={displayOffshores} /> : <ConvectiveHazardsTable />}
 				</>
 			) : null}
-			<MobileIconNav tab />
 		</>
 	)
 }

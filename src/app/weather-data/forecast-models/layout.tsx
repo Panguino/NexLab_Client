@@ -1,5 +1,6 @@
 'use client'
 
+import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import SidebarNavigation from '@/components/layout/SidebarNavigation/SidebarNavigation'
 import ForecastCompareHeightSidebarPanel from '@/components/layout/SidebarPanels/ForecastCompareHeightSidebarPanel/ForecastCompareHeightSidebarPanel'
 import ForecastCompareModelsSidebarPanel from '@/components/layout/SidebarPanels/ForecastCompareModelsSidebarPanel/ForecastCompareModelsSidebarPanel'
@@ -30,6 +31,7 @@ export default function Layout({ children }) {
 		<SidebarWrapper>
 			<SidebarNavigation>{getSidebarPanel()}</SidebarNavigation>
 			{children}
+			<MobileIconNav tab />
 		</SidebarWrapper>
 	)
 }

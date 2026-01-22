@@ -1,7 +1,6 @@
 'use client'
 
 import { WinterHazardsAnimator } from '@/components/elements/WinterHazardsAnimator/WinterHazardsAnimator'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { useEffect } from 'react'
 import WinterHazardsTable from './WinterHazardsTable/WinterHazardsTable'
@@ -55,7 +54,6 @@ const WinterHazards = ({ alerts, displayOffshores, view = 'map' }: WinterHazards
 			{Object.keys(alerts).length !== 0 ? (
 				<>{view === 'map' ? <WinterHazardsAnimator alerts={alerts} allCoastalRegions={displayOffshores} /> : <WinterHazardsTable />}</>
 			) : null}
-			<MobileIconNav tab />
 		</>
 	)
 }
