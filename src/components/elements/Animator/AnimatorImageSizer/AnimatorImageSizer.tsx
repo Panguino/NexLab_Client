@@ -70,33 +70,45 @@ const AnimatorImageSizer = () => {
 	}, [updateDimensions, loadedFrames])
 
 	const handleZoomChange = (e: any) => {
+		console.log('🔄 handleZoomChange:', e?.state)
 		setZoomState(e?.state)
 	}
 	const handlePanningStart = (e: any) => {
+		console.log('🟢 handlePanningStart:', e?.state)
 		setZoomState(e?.state)
 		isPanningRef.current = true
 		panStopTimeRef.current = performance.now()
 	}
 	const handlePanningStop = (e: any) => {
+		console.log('🛑 handlePanningStop:', e?.state)
 		setZoomState(e?.state)
 		isPanningRef.current = false
 	}
 
 	useEffect(() => {
 		if (!transformRef.current) return
-		// this is the only way to keep the zoom position and level intact when you change expand
+
+		// Calculate manual center position for default state
 		const manualCenterY = Math.ceil((_height - adjustedHeight) / 2)
 		const manualCenterX = Math.ceil((_width - adjustedWidth) / 2)
 
 		// Check if the zoom state is at default (no zoom AND no pan)
 		const isAtDefault = initialZoomState.scale === 1 && initialZoomState.positionX === 0 && initialZoomState.positionY === 0
 
+		console.log('🔍 AnimatorImageSizer - Setting transform:', {
+			isAtDefault,
+			initialZoomState,
+			manualCenter: { x: manualCenterX, y: manualCenterY },
+			willUse: isAtDefault ? 'MANUAL CENTER' : 'STORED STATE',
+		})
+
 		if (isAtDefault) {
+			// Use manual centering for fresh/default state
 			transformRef.current.setTransform(manualCenterX, manualCenterY, initialZoomState.scale, 0)
 		} else {
+			// Use stored position for panned/zoomed state
 			transformRef.current.setTransform(initialZoomState.positionX, initialZoomState.positionY, initialZoomState.scale, 0)
 		}
-		// I know this is stupid, but it works
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
 
 	const handleImageClick = (e: React.MouseEvent | React.TouchEvent) => {
