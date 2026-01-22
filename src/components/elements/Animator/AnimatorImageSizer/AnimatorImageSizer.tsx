@@ -166,9 +166,9 @@ const AnimatorImageSizer = () => {
 			<TransformWrapper
 				ref={transformRef}
 				disablePadding
-				initialScale={initialZoomState.scale}
-				initialPositionX={initialZoomState.positionX}
-				initialPositionY={initialZoomState.positionY}
+				initialScale={initialZoomState?.scale ?? 1}
+				initialPositionX={initialZoomState?.positionX ?? 0}
+				initialPositionY={initialZoomState?.positionY ?? 0}
 				onZoomStop={handleZoomChange}
 				onPanningStart={handlePanningStart}
 				onPanningStop={handlePanningStop}
