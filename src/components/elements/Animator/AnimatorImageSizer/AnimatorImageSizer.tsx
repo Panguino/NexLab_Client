@@ -92,30 +92,22 @@ const AnimatorImageSizer = () => {
 		const manualCenterY = Math.ceil((_height - adjustedHeight) / 2)
 		const manualCenterX = Math.ceil((_width - adjustedWidth) / 2)
 
-		// Check if the zoom state is at default (matches manual center position)
-		// Use a small tolerance to account for rounding differences
-		const tolerance = 2
-		const isAtDefault =
-			initialZoomState.scale === 1 &&
-			Math.abs(initialZoomState.positionX - manualCenterX) <= tolerance &&
-			Math.abs(initialZoomState.positionY - manualCenterY) <= tolerance
+		// If initialZoomState is null, it's the first visit - apply centering
+		// Otherwise, use the stored state (even if it happens to be at edges)
+		const isFirstVisit = initialZoomState === null
 
 		console.log('🔍 AnimatorImageSizer - Setting transform:', {
-			isAtDefault,
+			isFirstVisit,
 			initialZoomState,
 			manualCenter: { x: manualCenterX, y: manualCenterY },
-			diff: {
-				x: Math.abs(initialZoomState.positionX - manualCenterX),
-				y: Math.abs(initialZoomState.positionY - manualCenterY),
-			},
-			willUse: isAtDefault ? 'MANUAL CENTER' : 'STORED STATE',
+			willUse: isFirstVisit ? 'MANUAL CENTER (first visit)' : 'STORED STATE',
 		})
 
-		if (isAtDefault) {
-			// Use manual centering for fresh/default state
-			transformRef.current.setTransform(manualCenterX, manualCenterY, initialZoomState.scale, 0)
+		if (isFirstVisit) {
+			// First visit - center the image
+			transformRef.current.setTransform(manualCenterX, manualCenterY, 1, 0)
 		} else {
-			// Use stored position for panned/zoomed state
+			// Use stored position
 			transformRef.current.setTransform(initialZoomState.positionX, initialZoomState.positionY, initialZoomState.scale, 0)
 		}
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
