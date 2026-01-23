@@ -73,9 +73,9 @@ const AnimatorImageSizer = () => {
 	}, [updateDimensions])
 
 	useLayoutEffect(() => {
-		console.log('🔧 AnimatorImageSizer useLayoutEffect - updateDimensions triggered, loadedFrames.length:', loadedFrames?.length)
+		console.log('🔧 AnimatorImageSizer useLayoutEffect - updateDimensions triggered')
 		updateDimensions()
-	}, [updateDimensions, loadedFrames])
+	}, [updateDimensions]) // Removed loadedFrames - we don't use it anymore with sub-component architecture
 
 	const handleZoomChange = (e: any) => {
 		setZoomState(e?.state)
