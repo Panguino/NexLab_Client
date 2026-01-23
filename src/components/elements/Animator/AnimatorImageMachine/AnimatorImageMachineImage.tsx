@@ -15,6 +15,9 @@ export const AnimatorImageMachineImage: FC<AnimatorImageMachineImageProps> = ({ 
 	const disableLocalStorageRef = useRef(false)
 
 	useEffect(() => {
+		// Only load once per src change
+		if (loadState !== 'pending') return
+
 		// Priority frames load immediately, others load with stagger
 		const loadDelay = isPriority ? 0 : index * 50
 
@@ -23,7 +26,8 @@ export const AnimatorImageMachineImage: FC<AnimatorImageMachineImageProps> = ({ 
 		}, loadDelay)
 
 		return () => clearTimeout(timer)
-	}, [src, isPriority, index])
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [src]) // Only reload when src changes, not when isPriority changes
 
 	const loadImage = async (url: string) => {
 		// Check cache first
