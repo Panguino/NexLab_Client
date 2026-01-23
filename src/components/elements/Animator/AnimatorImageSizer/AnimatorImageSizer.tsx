@@ -10,6 +10,9 @@ import ViewControls from '../ViewControls/ViewControls'
 import styles from './AnimatorImageSizer.module.scss'
 
 const AnimatorImageSizer = () => {
+	const renderCountRef = useRef(0)
+	renderCountRef.current++
+
 	const {
 		setLoadedFrames,
 		loadedFrames,
@@ -30,6 +33,10 @@ const AnimatorImageSizer = () => {
 		imageInfo,
 		sectorId,
 	} = useAnimator()
+
+	console.log(
+		`📐 AnimatorImageSizer render #${renderCountRef.current} - loadedFrames.length: ${loadedFrames?.length}, frames.length: ${frames?.length}`,
+	)
 	const transformRef = useRef(null)
 	const ImageMachineRef = useRef(null)
 	// retain state for tooltip hover position (not required for click-through)
@@ -66,6 +73,7 @@ const AnimatorImageSizer = () => {
 	}, [updateDimensions])
 
 	useLayoutEffect(() => {
+		console.log('🔧 AnimatorImageSizer useLayoutEffect - updateDimensions triggered, loadedFrames.length:', loadedFrames?.length)
 		updateDimensions()
 	}, [updateDimensions, loadedFrames])
 
@@ -173,14 +181,7 @@ const AnimatorImageSizer = () => {
 								onClick: handleImageClick,
 							}}
 						>
-							<AnimatorImageMachine
-								ref={ImageMachineRef}
-								frames={frames ? frames : []}
-								currentFrame={currentFrame}
-								loadedFrames={loadedFrames}
-								setLoadedFrames={setLoadedFrames}
-								baseOpacity={1}
-							/>
+							<AnimatorImageMachine ref={ImageMachineRef} frames={frames ? frames : []} currentFrame={currentFrame} baseOpacity={1} />
 							{activeOverlays &&
 								Array.isArray(activeOverlays) &&
 								activeOverlays.map((overlay, index) => {
