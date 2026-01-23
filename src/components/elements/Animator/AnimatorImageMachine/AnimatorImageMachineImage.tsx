@@ -6,9 +6,10 @@ interface AnimatorImageMachineImageProps {
 	index: number
 	isCurrentFrame: boolean
 	baseOpacity: number
+	onLoaded?: (index: number, src: string) => void
 }
 
-export const AnimatorImageMachineImage: FC<AnimatorImageMachineImageProps> = ({ src, index, isCurrentFrame, baseOpacity }) => {
+export const AnimatorImageMachineImage: FC<AnimatorImageMachineImageProps> = ({ src, index, isCurrentFrame, baseOpacity, onLoaded }) => {
 	console.log(`🖼️ AnimatorImageMachineImage[${index}] render - isCurrentFrame: ${isCurrentFrame}, src: ${src.substring(0, 50)}...`)
 
 	const [loadState, setLoadState] = useState<'pending' | 'loading' | 'loaded' | 'error'>('pending')
@@ -57,6 +58,7 @@ export const AnimatorImageMachineImage: FC<AnimatorImageMachineImageProps> = ({ 
 			console.log(`✅ AnimatorImageMachineImage[${index}] found in cache`)
 			setImageSrc(cached)
 			setLoadState('loaded')
+			onLoaded?.(index, cached) // Notify parent
 			return
 		}
 
@@ -68,6 +70,7 @@ export const AnimatorImageMachineImage: FC<AnimatorImageMachineImageProps> = ({ 
 			console.log(`✅ AnimatorImageMachineImage[${index}] loaded successfully`)
 			setImageSrc(url)
 			setLoadState('loaded')
+			onLoaded?.(index, url) // Notify parent
 			// Try to cache
 			if (!disableLocalStorageRef.current) {
 				try {
