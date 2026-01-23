@@ -22,7 +22,6 @@ export const AnimatorImageMachine = forwardRef<HTMLDivElement, IAnimatorImageMac
 						src={frameUrl}
 						index={index}
 						isCurrentFrame={index === currentFrame}
-						isPriority={index === currentFrame}
 						baseOpacity={baseOpacity}
 					/>
 				))}

@@ -5,21 +5,20 @@ interface AnimatorImageMachineImageProps {
 	src: string
 	index: number
 	isCurrentFrame: boolean
-	isPriority: boolean
 	baseOpacity: number
 }
 
-export const AnimatorImageMachineImage: FC<AnimatorImageMachineImageProps> = ({ src, index, isCurrentFrame, isPriority, baseOpacity }) => {
+export const AnimatorImageMachineImage: FC<AnimatorImageMachineImageProps> = ({ src, index, isCurrentFrame, baseOpacity }) => {
 	const [loadState, setLoadState] = useState<'pending' | 'loading' | 'loaded' | 'error'>('pending')
 	const [imageSrc, setImageSrc] = useState<string | null>(null)
 	const disableLocalStorageRef = useRef(false)
 
 	useEffect(() => {
-		// Only load once per src change
+		// Only load once on mount, use isCurrentFrame captured at mount time
 		if (loadState !== 'pending') return
 
-		// Priority frames load immediately, others load with stagger
-		const loadDelay = isPriority ? 0 : index * 50
+		// Current frame loads immediately, others load with stagger
+		const loadDelay = isCurrentFrame ? 0 : index * 50
 
 		const timer = setTimeout(() => {
 			loadImage(src)
@@ -27,7 +26,7 @@ export const AnimatorImageMachineImage: FC<AnimatorImageMachineImageProps> = ({ 
 
 		return () => clearTimeout(timer)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [src]) // Only reload when src changes, not when isPriority changes
+	}, []) // Only load once on mount, never re-run
 
 	const loadImage = async (url: string) => {
 		// Check cache first
