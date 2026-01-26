@@ -1,5 +1,6 @@
 'use client'
 
+import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
 import { Animator } from '@/components/elements/Animator/Animator'
 import { LAYER_CONFIG_PRESETS } from '@/components/elements/Animator/AnimatorMapMachine/config/layerConfigTypes'
 import { MapFrame } from '@/components/elements/Animator/AnimatorMapMachine/types'
@@ -95,6 +96,7 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 	const setHazardMapFullScreen = useRootStore.use.setHazardMapFullScreen()
 
 	const [frames, setFrames] = useState<MapFrame[]>([])
+	const [isLoading, setIsLoading] = useState<boolean>(true)
 	const [filteredRegionHazards, setFilteredRegionHazards] = useState<Record<string, any>>({})
 	const [mapLayerVisibility, setMapLayerVisibility] = useState<Record<string, boolean>>({})
 	const [targetZoomState, setTargetZoomState] = useState<mapZoomState | undefined>(REGION_VIEW_STATES.conus)
@@ -146,9 +148,16 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 
 	// Convert filteredRegionHazards to MapFrame format
 	useEffect(() => {
+		// Show loading while we compute/prepare frames. Use a small debounce so rapid updates don't flash the loader.
+		const showLoader = setTimeout(() => setIsLoading(true), 60)
+
 		if (!filteredRegionHazards || Object.keys(filteredRegionHazards).length === 0) {
 			setFrames([])
-			return
+			// clear pending showLoader and keep loading briefly so the map/animator can finish mounting,
+			// then show the empty state. This prevents the "No active winter hazards" flash while the map renders.
+			clearTimeout(showLoader)
+			const t = setTimeout(() => setIsLoading(false), 350)
+			return () => clearTimeout(t)
 		}
 
 		const hexToRgba = (hex: string): [number, number, number, number] => {
@@ -219,7 +228,11 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 			},
 		}
 
+		// Frames ready — cancel any pending loader-show and hide immediately
+		clearTimeout(showLoader)
 		setFrames([frame])
+		setIsLoading(false)
+		return () => clearTimeout(showLoader)
 	}, [filteredRegionHazards, selectedRegion])
 
 	// Handle county click - open slideout panel with details
@@ -253,8 +266,8 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 		[],
 	)
 
-	// Show empty state if no winter hazards for this region
-	if (frames.length === 0) {
+	// Show empty state if no winter hazards for this region (when not loading)
+	if (frames.length === 0 && !isLoading) {
 		return (
 			<div className={styles.winterHazardsAnimator}>
 				<div className={styles.emptyState}>
@@ -290,6 +303,11 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 				fullScreen={hazardMapFullScreen}
 				setFullScreen={setHazardMapFullScreen}
 			/>
+			{isLoading && (
+				<div className={styles.loadingIndicator}>
+					<LoadingPanel size={0.35} hideText />
+				</div>
+			)}
 		</div>
 	)
 }
