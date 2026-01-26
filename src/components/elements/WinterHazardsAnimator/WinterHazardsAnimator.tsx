@@ -106,6 +106,9 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 
 	// Filter and set region hazards when alerts or selected region changes
 	useEffect(() => {
+		// When alerts prop changes, assume data is being (re)fetched and show loading
+		setIsLoading(true)
+
 		if (selectedRegion && alerts) {
 			const regionName = REGION_NAME_MAP[selectedRegion]
 
@@ -148,16 +151,10 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 
 	// Convert filteredRegionHazards to MapFrame format
 	useEffect(() => {
-		// Show loading while we compute/prepare frames. Use a small debounce so rapid updates don't flash the loader.
-		const showLoader = setTimeout(() => setIsLoading(true), 60)
-
 		if (!filteredRegionHazards || Object.keys(filteredRegionHazards).length === 0) {
 			setFrames([])
-			// clear pending showLoader and keep loading briefly so the map/animator can finish mounting,
-			// then show the empty state. This prevents the "No active winter hazards" flash while the map renders.
-			clearTimeout(showLoader)
-			const t = setTimeout(() => setIsLoading(false), 350)
-			return () => clearTimeout(t)
+			setIsLoading(false)
+			return
 		}
 
 		const hexToRgba = (hex: string): [number, number, number, number] => {
@@ -228,11 +225,8 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 			},
 		}
 
-		// Frames ready — cancel any pending loader-show and hide immediately
-		clearTimeout(showLoader)
 		setFrames([frame])
 		setIsLoading(false)
-		return () => clearTimeout(showLoader)
 	}, [filteredRegionHazards, selectedRegion])
 
 	// Handle county click - open slideout panel with details
@@ -266,7 +260,7 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 		[],
 	)
 
-	// Show empty state if no winter hazards for this region (when not loading)
+	// Show empty state if no winter hazards for this region
 	if (frames.length === 0 && !isLoading) {
 		return (
 			<div className={styles.winterHazardsAnimator}>
@@ -305,7 +299,7 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 			/>
 			{isLoading && (
 				<div className={styles.loadingIndicator}>
-					<LoadingPanel size={0.35} hideText />
+					<LoadingPanel />
 				</div>
 			)}
 		</div>
