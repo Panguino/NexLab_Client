@@ -1,6 +1,5 @@
 'use client'
 
-import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
 import { Animator } from '@/components/elements/Animator/Animator'
 import { LAYER_CONFIG_PRESETS } from '@/components/elements/Animator/AnimatorMapMachine/config/layerConfigTypes'
 import { MapFrame } from '@/components/elements/Animator/AnimatorMapMachine/types'
@@ -76,6 +75,8 @@ interface WinterHazardsAnimatorProps {
 	alerts: Record<string, Record<string, any>>
 	/** All coastal/offshore regions (for showing inactive borders) */
 	allCoastalRegions?: any
+	/** Callback when component is ready to be displayed */
+	onReady?: () => void
 }
 
 /**
@@ -85,7 +86,7 @@ interface WinterHazardsAnimatorProps {
  * winter weather hazards (Blizzard, Winter Storm, Ice Storm, Wind Chill, Snow, Freeze warnings/watches/advisories).
  * It filters the hazard data to only show winter-related alerts.
  */
-export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazardsAnimatorProps) => {
+export const WinterHazardsAnimator = ({ alerts, allCoastalRegions, onReady }: WinterHazardsAnimatorProps) => {
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 	const setSelectedCounty = useRootStore.use.setSelectedCounty()
 	const selectedRegion = useRootStore.use.selectedRegion()
@@ -96,7 +97,7 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 	const setHazardMapFullScreen = useRootStore.use.setHazardMapFullScreen()
 
 	const [frames, setFrames] = useState<MapFrame[]>([])
-	const [isLoading, setIsLoading] = useState<boolean>(true)
+	const [isDataLoading, setIsDataLoading] = useState<boolean>(true)
 	const [filteredRegionHazards, setFilteredRegionHazards] = useState<Record<string, any>>({})
 	const [mapLayerVisibility, setMapLayerVisibility] = useState<Record<string, boolean>>({})
 	const [targetZoomState, setTargetZoomState] = useState<mapZoomState | undefined>(REGION_VIEW_STATES.conus)
@@ -107,7 +108,7 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 	// Filter and set region hazards when alerts or selected region changes
 	useEffect(() => {
 		// When alerts prop changes, assume data is being (re)fetched and show loading
-		setIsLoading(true)
+		setIsDataLoading(true)
 
 		if (selectedRegion && alerts) {
 			const regionName = REGION_NAME_MAP[selectedRegion]
@@ -137,6 +138,13 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 		}
 	}, [selectedRegion, alerts])
 
+	// Call onReady when data loading completes
+	useEffect(() => {
+		if (!isDataLoading && onReady) {
+			onReady()
+		}
+	}, [isDataLoading, onReady])
+
 	// Update zoom state when region changes (only if not triggered by panning)
 	useEffect(() => {
 		if (regionChangeFromPanRef.current) {
@@ -151,82 +159,88 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 
 	// Convert filteredRegionHazards to MapFrame format
 	useEffect(() => {
+		let timer: NodeJS.Timeout | undefined
+
 		if (!filteredRegionHazards || Object.keys(filteredRegionHazards).length === 0) {
 			setFrames([])
-			setIsLoading(false)
-			return
-		}
-
-		const hexToRgba = (hex: string): [number, number, number, number] => {
-			const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-			if (result) {
-				return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16), 255]
+			// Delay setting loading to false to allow map to render before showing "No hazards"
+			timer = setTimeout(() => setIsDataLoading(false), 400)
+		} else {
+			const hexToRgba = (hex: string): [number, number, number, number] => {
+				const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+				if (result) {
+					return [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16), 255]
+				}
+				return [128, 128, 128, 255]
 			}
-			return [128, 128, 128, 255]
-		}
 
-		const isCoastalId = (id: string): boolean => /^[A-Za-z]/.test(id)
+			const isCoastalId = (id: string): boolean => /^[A-Za-z]/.test(id)
 
-		const countyFeatures: any[] = []
-		const coastalFeatures: any[] = []
+			const countyFeatures: any[] = []
+			const coastalFeatures: any[] = []
 
-		Object.entries(filteredRegionHazards).forEach(([regionId, data]: [string, any]) => {
-			const { shape, alerts: regionAlerts, properties } = data
-			const firstAlert = regionAlerts[0]
-			const alertColor = firstAlert?.hazardInfo?.color?.HEX || '#808080'
+			Object.entries(filteredRegionHazards).forEach(([regionId, data]: [string, any]) => {
+				const { shape, alerts: regionAlerts, properties } = data
+				const firstAlert = regionAlerts[0]
+				const alertColor = firstAlert?.hazardInfo?.color?.HEX || '#808080'
 
-			const feature = {
-				type: 'Feature' as const,
-				geometry: shape.geometry,
-				properties: {
-					...properties,
-					id: regionId,
-					ID: regionId,
-					alertColor: hexToRgba(alertColor),
-					hasAlert: true,
-					alerts: regionAlerts.map((alert: any) => ({
-						...alert,
-						event: alert.event,
-						headline: alert.headline,
-						hazardType: alert.hazardInfo?.type?.type,
-						hazardLevel: alert.hazardInfo?.level?.level,
-						color: hexToRgba(alert.hazardInfo?.color?.HEX || '#808080'),
-					})),
+				const feature = {
+					type: 'Feature' as const,
+					geometry: shape.geometry,
+					properties: {
+						...properties,
+						id: regionId,
+						ID: regionId,
+						alertColor: hexToRgba(alertColor),
+						hasAlert: true,
+						alerts: regionAlerts.map((alert: any) => ({
+							...alert,
+							event: alert.event,
+							headline: alert.headline,
+							hazardType: alert.hazardInfo?.type?.type,
+							hazardLevel: alert.hazardInfo?.level?.level,
+							color: hexToRgba(alert.hazardInfo?.color?.HEX || '#808080'),
+						})),
+					},
+				}
+
+				if (isCoastalId(regionId)) {
+					coastalFeatures.push(feature)
+				} else {
+					countyFeatures.push(feature)
+				}
+			})
+
+			const countyGeoJSON = {
+				type: 'FeatureCollection' as const,
+				features: countyFeatures,
+			}
+
+			const coastalGeoJSON = {
+				type: 'FeatureCollection' as const,
+				features: coastalFeatures,
+			}
+
+			const frame: MapFrame = {
+				id: 'current-winter-hazards',
+				timestamp: new Date(),
+				data: countyGeoJSON,
+				coastalData: coastalFeatures.length > 0 ? coastalGeoJSON : undefined,
+				metadata: {
+					alertCount: countyFeatures.length + coastalFeatures.length,
+					countyAlerts: countyFeatures.length,
+					coastalAlerts: coastalFeatures.length,
+					region: selectedRegion,
 				},
 			}
 
-			if (isCoastalId(regionId)) {
-				coastalFeatures.push(feature)
-			} else {
-				countyFeatures.push(feature)
-			}
-		})
-
-		const countyGeoJSON = {
-			type: 'FeatureCollection' as const,
-			features: countyFeatures,
+			setFrames([frame])
+			setIsDataLoading(false)
 		}
 
-		const coastalGeoJSON = {
-			type: 'FeatureCollection' as const,
-			features: coastalFeatures,
+		return () => {
+			if (timer) clearTimeout(timer)
 		}
-
-		const frame: MapFrame = {
-			id: 'current-winter-hazards',
-			timestamp: new Date(),
-			data: countyGeoJSON,
-			coastalData: coastalFeatures.length > 0 ? coastalGeoJSON : undefined,
-			metadata: {
-				alertCount: countyFeatures.length + coastalFeatures.length,
-				countyAlerts: countyFeatures.length,
-				coastalAlerts: coastalFeatures.length,
-				region: selectedRegion,
-			},
-		}
-
-		setFrames([frame])
-		setIsLoading(false)
 	}, [filteredRegionHazards, selectedRegion])
 
 	// Handle county click - open slideout panel with details
@@ -261,7 +275,7 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 	)
 
 	// Show empty state if no winter hazards for this region
-	if (frames.length === 0 && !isLoading) {
+	if (frames.length === 0 && !isDataLoading) {
 		return (
 			<div className={styles.winterHazardsAnimator}>
 				<div className={styles.emptyState}>
@@ -297,11 +311,6 @@ export const WinterHazardsAnimator = ({ alerts, allCoastalRegions }: WinterHazar
 				fullScreen={hazardMapFullScreen}
 				setFullScreen={setHazardMapFullScreen}
 			/>
-			{isLoading && (
-				<div className={styles.loadingIndicator}>
-					<LoadingPanel />
-				</div>
-			)}
 		</div>
 	)
 }
