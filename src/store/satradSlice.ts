@@ -1,11 +1,7 @@
 import { zoomState } from '@/types/general'
 import { ZustandStateSlice } from './useRootStore'
 
-const defaultSatradZoomState = {
-	positionX: 0,
-	positionY: 0,
-	scale: 1,
-}
+const defaultSatradZoomState: zoomState | null = null
 
 export interface ISatradSlice {
 	satradFrameValidTime: number
@@ -16,7 +12,7 @@ export interface ISatradSlice {
 	setSatradFrameStep: (frameStep: number) => void
 	satradFrameRate: number
 	setSatradFrameRate: (frameRate: number) => void
-	satradZoomState: zoomState
+	satradZoomState: zoomState | null
 	setSatradZoomState: (zoomState: zoomState) => void
 	resetSatradZoomState: () => void
 	activeOverlays: string[]
@@ -44,9 +40,9 @@ export const createSatradSlice: ZustandStateSlice<ISatradSlice> = (set) => ({
 	setSatradFrameStep: (frameStep: number) => set(() => ({ satradFrameStep: frameStep })),
 	satradFrameRate: 8,
 	setSatradFrameRate: (frameRate: number) => set(() => ({ satradFrameRate: frameRate })),
-	satradZoomState: { ...defaultSatradZoomState },
+	satradZoomState: defaultSatradZoomState,
 	setSatradZoomState: (satradZoomState) => set(() => ({ satradZoomState })),
-	resetSatradZoomState: () => set(() => ({ satradZoomState: { ...defaultSatradZoomState } })),
+	resetSatradZoomState: () => set(() => ({ satradZoomState: defaultSatradZoomState })),
 	activeOverlays: ['data', 'map', 'meso-map', 'meso-latlon'],
 	setActiveOverlays: (overlays: string[]) =>
 		set(() => {
