@@ -2,7 +2,6 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { CLIMATE_SSTOLR_PRODUCTS } from '@/data/text/climate/products'
 import { CLIMATE_TEXT_SSTOLR_SECTORS } from '@/data/text/climate/sectors'
 import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
@@ -90,7 +89,6 @@ const SSTOLRAnimator: React.FC<SSTOLRAnimatorProps> = ({ productId, sectorId }) 
 					}
 				/>
 			</div>
-			<MobileIconNav tab />
 		</>
 	)
 }

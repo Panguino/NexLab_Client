@@ -7,7 +7,7 @@ import { ColDef } from 'ag-grid-community'
 import 'ag-grid-community/styles/ag-grid.css'
 import 'ag-grid-community/styles/ag-theme-material.css'
 import { AgGridReact } from 'ag-grid-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './WinterHazardsTable.module.scss'
 
 // Winter hazard type to filter for
@@ -20,11 +20,25 @@ const isWinterHazard = (hazardType: string): boolean => {
 	return WINTER_HAZARD_TYPES.includes(hazardType)
 }
 
-const WinterHazardsTable = () => {
+interface WinterHazardsTableProps {
+	/** Callback when component is ready to be displayed */
+	onReady?: () => void
+}
+
+const WinterHazardsTable = ({ onReady }: WinterHazardsTableProps) => {
 	const [searchText, setSearchText] = useState('')
 	const regionHazards = useRootStore.use.regionHazards()
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 	const setSelectedCounty = useRootStore.use.setSelectedCounty()
+
+	// Signal ready after component mounts and renders (table can display with or without data)
+	useEffect(() => {
+		if (onReady) {
+			// Small delay to ensure component is rendered
+			const timer = setTimeout(() => onReady(), 50)
+			return () => clearTimeout(timer)
+		}
+	}, [onReady])
 
 	// Build row data filtered for winter hazards only
 	const rowData: any[] = []

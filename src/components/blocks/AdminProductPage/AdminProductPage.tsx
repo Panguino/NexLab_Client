@@ -2,6 +2,7 @@
 
 import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import Select from '@/components/elements/Select/Select'
+import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
 import { ADMIN_TEXT_PRODUCTS } from '@/data/text/administrative/products'
 import { getAdminTextProductHistory } from '@/util/dataCalls/text/query-administrative'
@@ -193,6 +194,7 @@ export const AdminProductPage = ({ officeId, productId, validTime }: AdminProduc
 					</div>
 				</div>
 			</div>
+			<MobileIconNav tab />
 			<Footer />
 		</ScrollArea>
 	)

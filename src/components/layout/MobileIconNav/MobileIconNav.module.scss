@@ -2,13 +2,14 @@
 
 .MobileIconNav {
 	display: none;
-	position: fixed;
+	position: absolute;
 	bottom: 10px;
-	right: 10px;
+	right: -50px; // Adjust as needed to sit just outside SidebarWrapper
 	border-radius: 7px;
 	overflow: hidden;
 	z-index: 145;
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+	transition: $sidebar-slide-transition;
 
 	&.topRight {
 		top: 60px;

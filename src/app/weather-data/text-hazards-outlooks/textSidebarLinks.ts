@@ -1,0 +1,15 @@
+export const TEXT_SIDEBAR_LINKS = [
+	{ id: 'nws-wfo', title: 'NWS WFO', url: 'nws-wfo-national-weather-service-forecast-offices' },
+	{ id: 'hazards', title: 'Hazards', url: 'active-weather-hazards' },
+	{ id: 'analysis', title: 'Analysis', url: 'analysis' },
+	{ id: 'forecast', title: 'Forecast', url: 'forecast' },
+	{ id: 'climatology', title: 'Climatology', url: 'cpc-climate' },
+	{ id: 'convective', title: 'Convective', url: 'spc-convective-weather' },
+	{ id: 'tropical', title: 'Tropical', url: 'nhc-tropical-hurricane-weather/overview/latest' },
+	{ id: 'winter', title: 'Winter', url: 'wpc-winter-weather' },
+	{ id: 'hydrological', title: 'Hydrological', url: 'nws-rfc-hydrological' },
+	{ id: 'fire-drought', title: 'Fire & Drought', url: 'fire-drought' },
+	{ id: 'marine', title: 'Marine', url: 'marine-opc-nhc/hazards' },
+	{ id: 'space', title: 'Space', url: 'swpc-space-weather/KWNP/NWXX04_ADVOUT/latest' },
+	{ id: 'administrative', title: 'Administrative', url: 'admin-products/KWBC/NOUS41_PNSWSH/latest' },
+]

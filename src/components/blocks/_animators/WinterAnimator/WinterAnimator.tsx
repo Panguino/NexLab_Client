@@ -2,7 +2,6 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getWinterData } from '@/util/dataCalls/text/query-winter'
@@ -77,7 +76,6 @@ const WinterAnimator: React.FC<WinterAnimatorProps> = ({ productId }) => {
 					/>
 				</div>
 			</div>
-			<MobileIconNav tab />
 		</>
 	)
 }
