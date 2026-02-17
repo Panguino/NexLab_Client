@@ -38,7 +38,7 @@ const Navigation = ({ mobileMenuItems }) => {
 					<Link href="/donate/">
 						<div className={styles.NavItem}>Donate</div>
 					</Link>
-					<Link href="/feedback/">
+					<Link href="/feedback/webform">
 						<div className={styles.NavItem}>BETA Feedback</div>
 					</Link>
 				</div>

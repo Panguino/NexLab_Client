@@ -1,6 +1,3 @@
-import { Button } from '@/components/elements/Button/Button'
-import { faDiscord } from '@fortawesome/free-brands-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './WebFormHero.module.scss'
 
 export const WebFormHero = () => {
@@ -13,11 +10,11 @@ export const WebFormHero = () => {
 						Submit your feedback using the form below. For a more collaborative experience with faster responses and community
 						interaction, we recommend joining our Discord community.
 					</p>
-					<div className={styles.discordCTA}>
+					{/* <div className={styles.discordCTA}>
 						<FontAwesomeIcon icon={faDiscord} className={styles.discordIcon} />
 						<span>Prefer Discord?</span>
 						<Button label="Join Our Community" link="https://discord.gg/8NKZKEXpMv" target="_blank" />
-					</div>
+					</div> */}
 				</div>
 			</div>
 		</section>
