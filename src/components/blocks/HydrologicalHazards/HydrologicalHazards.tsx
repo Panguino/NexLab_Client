@@ -1,7 +1,6 @@
 'use client'
 
 import { HydrologicalHazardsAnimator } from '@/components/elements/HydrologicalHazardsAnimator/HydrologicalHazardsAnimator'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { useEffect } from 'react'
 import HydrologicalHazardsTable from './HydrologicalHazardsTable/HydrologicalHazardsTable'
@@ -61,7 +60,6 @@ const HydrologicalHazards = ({ alerts, displayOffshores, view = 'map' }: Hydrolo
 					)}
 				</>
 			) : null}
-			<MobileIconNav />
 		</>
 	)
 }

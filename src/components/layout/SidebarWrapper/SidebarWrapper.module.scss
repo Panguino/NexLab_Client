@@ -1,9 +1,9 @@
 .SidebarWrapper {
-  width: 100%;
-  display: flex;
-  align-items: stretch;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  position: relative;
+	width: 100%;
+	display: flex;
+	align-items: stretch;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+	position: relative; // Needed for absolute positioning of MobileIconNav
 }

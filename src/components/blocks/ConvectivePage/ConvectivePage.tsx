@@ -17,6 +17,7 @@ export const ConvectivePage = () => {
 				<AreasOfConcern />
 				<StatsMessages />
 			</div>
+
 			<Footer />
 		</ScrollArea>
 	)

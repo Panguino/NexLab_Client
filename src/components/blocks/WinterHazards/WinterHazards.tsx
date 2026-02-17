@@ -1,9 +1,10 @@
 'use client'
 
+import LoadingPanel from '@/components/blocks/LoadingPanel/LoadingPanel'
 import { WinterHazardsAnimator } from '@/components/elements/WinterHazardsAnimator/WinterHazardsAnimator'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import styles from './WinterHazards.module.scss'
 import WinterHazardsTable from './WinterHazardsTable/WinterHazardsTable'
 
 interface WinterHazardsProps {
@@ -35,6 +36,22 @@ const WinterHazards = ({ alerts, displayOffshores, view = 'map' }: WinterHazards
 	const setAllHazards = useRootStore.use.setAllHazards()
 	const setRegionHazards = useRootStore.use.setRegionHazards()
 	const selectedRegion = useRootStore.use.selectedRegion()
+	const [isViewLoading, setIsViewLoading] = useState<boolean>(false)
+
+	// Set loading when view changes, cleared by each view's onReady callback
+	useEffect(() => {
+		setIsViewLoading(true)
+	}, [view])
+
+	// Callback for when map view is ready to display
+	const handleMapReady = useCallback(() => {
+		setIsViewLoading(false)
+	}, [])
+
+	// Callback for when table view is ready to display
+	const handleTableReady = useCallback(() => {
+		setIsViewLoading(false)
+	}, [])
 
 	useEffect(() => {
 		setAllHazards(alerts)
@@ -51,12 +68,22 @@ const WinterHazards = ({ alerts, displayOffshores, view = 'map' }: WinterHazards
 	}, [view, selectedRegion, alerts, setRegionHazards])
 
 	return (
-		<>
+		<div className={styles.winterHazards}>
+			{isViewLoading && (
+				<div className={styles.loadingOverlay}>
+					<LoadingPanel />
+				</div>
+			)}
 			{Object.keys(alerts).length !== 0 ? (
-				<>{view === 'map' ? <WinterHazardsAnimator alerts={alerts} allCoastalRegions={displayOffshores} /> : <WinterHazardsTable />}</>
+				<>
+					{view === 'map' ? (
+						<WinterHazardsAnimator alerts={alerts} allCoastalRegions={displayOffshores} onReady={handleMapReady} />
+					) : (
+						<WinterHazardsTable onReady={handleTableReady} />
+					)}
+				</>
 			) : null}
-			<MobileIconNav />
-		</>
+		</div>
 	)
 }
 

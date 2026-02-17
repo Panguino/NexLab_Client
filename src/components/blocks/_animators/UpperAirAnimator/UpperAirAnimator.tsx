@@ -2,7 +2,6 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
 import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
@@ -108,7 +107,6 @@ const UpperAirAnimator: React.FC = () => {
 					/>
 				</div>
 			</div>
-			<MobileIconNav tab />
 		</>
 	)
 }

@@ -1,7 +1,6 @@
 'use client'
 
 import { MarineHazardsAnimator } from '@/components/elements/MarineHazardsAnimator/MarineHazardsAnimator'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { useEffect } from 'react'
 import MarineHazardsTable from './MarineHazardsTable/MarineHazardsTable'
@@ -55,7 +54,6 @@ const MarineHazards = ({ alerts, displayOffshores, view = 'map' }: MarineHazards
 			{Object.keys(alerts).length !== 0 ? (
 				<>{view === 'map' ? <MarineHazardsAnimator alerts={alerts} allCoastalRegions={displayOffshores} /> : <MarineHazardsTable />}</>
 			) : null}
-			<MobileIconNav />
 		</>
 	)
 }

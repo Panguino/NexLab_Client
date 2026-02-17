@@ -6,6 +6,7 @@ import styles from './MobileIconNav.module.scss'
 
 const MobileIconNav = ({ topRight = false, tab = false }) => {
 	const toggleMobileSidebarMenu = useRootStore.use.toggleMobileSidebarMenu()
+	const mobileSidebarMenuIsOpen = useRootStore.use.mobileSidebarMenuIsOpen()
 	const iconNavItems = [
 		{
 			icon: <FontAwesomeIcon icon={faSliders} />,
@@ -14,8 +15,10 @@ const MobileIconNav = ({ topRight = false, tab = false }) => {
 			},
 		},
 	]
+	// Use CSS variable so sidebar width can be configured per-theme/layout
+	const iconTranslate = mobileSidebarMenuIsOpen ? 'translateX(var(--sidebar-width))' : 'translateX(0)'
 	return (
-		<div className={`${styles.MobileIconNav} ${topRight ? styles.topRight : null} ${tab ? styles.tab : null}`}>
+		<div className={`${styles.MobileIconNav} ${topRight ? styles.topRight : ''} ${tab ? styles.tab : ''}`} style={{ transform: iconTranslate }}>
 			{iconNavItems.map((item, index) => (
 				<div key={index} className={styles.icon} onClick={item.onClick}>
 					{item.icon}
