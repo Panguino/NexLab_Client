@@ -40,6 +40,10 @@ const AnimatorImageSizer = () => {
 	const isPanningRef = useRef(false)
 	const panStopTimeRef = useRef(0)
 
+	// Track previous zoomFill state to detect mode changes and force remount
+	const previousZoomFillRef = useRef(zoomFill)
+	const [transformKey, setTransformKey] = useState(0)
+
 	const allOverlayImages = useMemo(() => {
 		if (!overlays) return {}
 		return {
@@ -69,6 +73,45 @@ const AnimatorImageSizer = () => {
 		updateDimensions()
 	}, [updateDimensions, loadedFrames])
 
+	// Calculate centered position - used for both initial render and repositioning
+	const calculateCenteredPosition = useMemo(() => {
+		const manualCenterY = Math.ceil((_height - adjustedHeight) / 2)
+		const manualCenterX = Math.ceil((_width - adjustedWidth) / 2)
+		return { x: manualCenterX, y: manualCenterY }
+	}, [_width, _height, adjustedHeight, adjustedWidth])
+
+	// Calculate initial transform values for first mount
+	// Only use saved zoom state if dimensions are valid
+	const initialTransform = useMemo(() => {
+		const isFirstVisit = initialZoomState === null
+		const hasDimensions = _width > 0 && _height > 0
+
+		if (isFirstVisit || !hasDimensions) {
+			return {
+				scale: 1,
+				positionX: calculateCenteredPosition.x,
+				positionY: calculateCenteredPosition.y,
+			}
+		} else {
+			return {
+				scale: initialZoomState.scale,
+				positionX: initialZoomState.positionX,
+				positionY: initialZoomState.positionY,
+			}
+		}
+	}, [initialZoomState, calculateCenteredPosition, _width, _height])
+
+	// Force remount of TransformWrapper when zoomFill mode changes
+	// This ensures proper repositioning with new dimensions
+	useEffect(() => {
+		const zoomFillChanged = previousZoomFillRef.current !== zoomFill
+		if (zoomFillChanged) {
+			previousZoomFillRef.current = zoomFill
+			// Increment key to force TransformWrapper remount with new dimensions
+			setTransformKey((prev) => prev + 1)
+		}
+	}, [zoomFill])
+
 	const handleZoomChange = (e: any) => {
 		console.log('🔄 handleZoomChange:', e?.state)
 		setZoomState(e?.state)
@@ -84,33 +127,6 @@ const AnimatorImageSizer = () => {
 		setZoomState(e?.state)
 		isPanningRef.current = false
 	}
-
-	useEffect(() => {
-		if (!transformRef.current) return
-
-		// Calculate manual center position
-		const manualCenterY = Math.ceil((_height - adjustedHeight) / 2)
-		const manualCenterX = Math.ceil((_width - adjustedWidth) / 2)
-
-		// If initialZoomState is null, it's the first visit - apply centering
-		// Otherwise, use the stored state (even if it happens to be at edges)
-		const isFirstVisit = initialZoomState === null
-
-		console.log('🔍 AnimatorImageSizer - Setting transform:', {
-			isFirstVisit,
-			initialZoomState,
-			manualCenter: { x: manualCenterX, y: manualCenterY },
-			willUse: isFirstVisit ? 'MANUAL CENTER (first visit)' : 'STORED STATE',
-		})
-
-		if (isFirstVisit) {
-			// First visit - center the image
-			transformRef.current.setTransform(manualCenterX, manualCenterY, 1, 0)
-		} else {
-			// Use stored position
-			transformRef.current.setTransform(initialZoomState.positionX, initialZoomState.positionY, initialZoomState.scale, 0)
-		}
-	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
 
 	const handleImageClick = (e: React.MouseEvent | React.TouchEvent) => {
 		// console.log('🖱️ Click handler called')
@@ -164,11 +180,12 @@ const AnimatorImageSizer = () => {
 			ref={animatorRef}
 		>
 			<TransformWrapper
+				key={`transform-${zoomFill}-${transformKey}`}
 				ref={transformRef}
 				disablePadding
-				initialScale={initialZoomState?.scale ?? 1}
-				initialPositionX={initialZoomState?.positionX ?? 0}
-				initialPositionY={initialZoomState?.positionY ?? 0}
+				initialScale={initialTransform.scale}
+				initialPositionX={initialTransform.positionX}
+				initialPositionY={initialTransform.positionY}
 				onZoomStop={handleZoomChange}
 				onPanningStart={handlePanningStart}
 				onPanningStop={handlePanningStop}
