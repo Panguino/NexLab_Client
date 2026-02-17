@@ -1,6 +1,4 @@
-import { DiscordConnectButton } from '@/components/elements/DiscordConnectButton/DiscordConnectButton'
 import { auth } from '@/lib/auth'
-import { faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styles from './DashboardSettings.module.scss'
@@ -14,13 +12,19 @@ export const DashboardSettings = async () => {
 	const response = await fetch(meEndpointUrl, { cache: 'no-cache', headers: { Authorization: `Bearer ${session.user.jwt}` } })
 	const data = await response.json()
 
-	const isDiscordConnected = !!data.discordId
-	const discordUsername = data.discordUsername
-	const discordAvatar = data.discordAvatar
-	const discordId = data.discordId
+	// const isDiscordConnected = !!data.discordId
+	// const discordUsername = data.discordUsername
+	// const discordAvatar = data.discordAvatar
+	// const discordId = data.discordId
 
 	return (
 		<div className={styles.DashboardSettings}>
+			<div className={styles.developmentNotice}>
+				<p>
+					<strong>Note:</strong> User profile settings and customization features are still under development and will be implemented at a
+					later time.
+				</p>
+			</div>
 			<div className={styles.sections}>
 				<div className={styles.section}>
 					<div className={styles.sectionHeader}>
@@ -43,7 +47,7 @@ export const DashboardSettings = async () => {
 					</div>
 				</div>
 
-				<div className={styles.section}>
+				{/* <div className={styles.section}>
 					<div className={styles.sectionHeader}>
 						<div>
 							<h3>
@@ -66,7 +70,7 @@ export const DashboardSettings = async () => {
 						discordAvatar={discordAvatar}
 						discordId={discordId}
 					/>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	)

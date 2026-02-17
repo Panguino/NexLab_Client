@@ -1,8 +1,7 @@
 'use client'
 
 import { Button } from '@/components/elements/Button/Button'
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState } from 'react'
 import styles from './DonationTiers.module.scss'
 
 interface DonationTiersProps {
@@ -10,31 +9,29 @@ interface DonationTiersProps {
 }
 
 export const DonationTiers = ({ onOpenModal }: DonationTiersProps) => {
-	const tiers = [
-		{
-			name: 'Standard',
-			price: '$5/mo or $100 lifetime',
-			highlight: false,
-			monthlyAmount: 5,
-			lifetimeAmount: 100,
-		},
-		{
-			name: 'Advanced',
-			price: '$25/mo or $250 lifetime',
-			highlight: true,
-			monthlyAmount: 25,
-			lifetimeAmount: 250,
-		},
-		{
-			name: 'Premium',
-			price: '$50/mo or $1,000 lifetime',
-			highlight: false,
-			monthlyAmount: 50,
-			lifetimeAmount: 1000,
-		},
-	]
+	const donationAmounts = [10, 25, 50, 100, 500]
+	const [selectedAmount, setSelectedAmount] = useState<number>(25)
+	const [isRecurring, setIsRecurring] = useState<boolean>(false)
 
-	const features = [
+	const handleSubmit = () => {
+		onOpenModal(selectedAmount, !isRecurring, '')
+	}
+
+	const handleAmountChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		const amount = parseInt(e.target.value)
+		setSelectedAmount(amount)
+		// Disable recurring if amount is over $50
+		if (amount > 50 && isRecurring) {
+			setIsRecurring(false)
+		}
+	}
+
+	const handleRecurringChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setIsRecurring(e.target.checked)
+	}
+
+	// Features array preserved for future use
+	/* const features = [
 		{ name: 'Acknowledgement on Donor Wall', standard: true, advanced: true, premium: true },
 		{ name: 'Donor Badge (site & Discord)', standard: true, advanced: true, premium: true },
 		{ name: 'Private Discord Channels', standard: true, advanced: true, premium: true },
@@ -58,17 +55,7 @@ export const DonationTiers = ({ onOpenModal }: DonationTiersProps) => {
 		{ name: 'HRRR Soundings', standard: false, advanced: false, premium: true },
 		{ name: 'VIP Weather Alert Feed', standard: false, advanced: false, premium: true },
 		{ name: 'Monthly Donor Newsletter & Impact Insights', standard: true, advanced: true, premium: true },
-	]
-
-	const renderFeatureValue = (value: boolean | string) => {
-		if (value === true) {
-			return <FontAwesomeIcon icon={faCheck} className={styles.checkIcon} />
-		}
-		if (value === false) {
-			return <FontAwesomeIcon icon={faTimes} className={styles.timesIcon} />
-		}
-		return <span className={styles.textValue}>{value}</span>
-	}
+	] */
 
 	return (
 		<section className={styles.donationTiers} id="donation-tiers">
@@ -77,95 +64,48 @@ export const DonationTiers = ({ onOpenModal }: DonationTiersProps) => {
 					<h2>Become a donating Member</h2>
 					<p className={styles.betaNotice}>
 						NexLab is <span className={styles.highlight}>currently in beta</span>, and we're grateful for your support during this
-						exciting phase of development. As we continue to refine our platform and expand our features,{' '}
-						<span className={styles.highlight}>donation perks, pricing, and access levels may evolve</span>. We're committed to delivering
+						exciting phase of development. As we continue to refine our platform and expand our features, we're committed to delivering
 						exceptional value to our donors and appreciate your understanding as we optimize the experience. Your contribution today
 						directly supports the development of cutting-edge weather tools and ensures free access to vital data for the entire
 						community.
 					</p>
 				</div>
 
-				{/* Desktop Table View */}
-				<div className={styles.tableWrapper}>
-					<table className={styles.tiersTable}>
-						<thead>
-							<tr>
-								<th className={styles.featureHeader}></th>
-								{tiers.map((tier, index) => (
-									<th key={index} className={`${styles.tierHeader} ${tier.highlight ? styles.highlighted : ''}`}>
-										<div className={styles.tierName}>{tier.name}</div>
-										<div className={styles.tierPrice}>choose type</div>
-										<div className={styles.tierActions}>
-											<Button
-												label={`$${tier.monthlyAmount} / month`}
-												onClick={() => onOpenModal(tier.monthlyAmount, false, tier.name)}
-												className={styles.tierButton}
-											/>
-											<Button
-												label={`$${tier.lifetimeAmount} lifetime`}
-												onClick={() => onOpenModal(tier.lifetimeAmount, true, tier.name)}
-												className={styles.tierButton}
-											/>
-										</div>
-									</th>
+				<div className={styles.donationFormWrapper}>
+					<div className={styles.donationForm}>
+						<div className={styles.formGroup}>
+							<label htmlFor="donation-amount" className={styles.label}>
+								Select Donation Amount
+							</label>
+							<select id="donation-amount" value={selectedAmount} onChange={handleAmountChange} className={styles.select}>
+								{donationAmounts.map((amount) => (
+									<option key={amount} value={amount}>
+										${amount}
+									</option>
 								))}
-							</tr>
-						</thead>
-						<tbody>
-							{features.map((feature, index) => (
-								<tr key={index} className={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
-									<td className={styles.featureCell}>{feature.name}</td>
-									<td className={styles.valueCell}>{renderFeatureValue(feature.standard)}</td>
-									<td className={`${styles.valueCell} ${styles.highlighted}`}>{renderFeatureValue(feature.advanced)}</td>
-									<td className={styles.valueCell}>{renderFeatureValue(feature.premium)}</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-
-				{/* Mobile Card View */}
-				<div className={styles.mobileCardsWrapper}>
-					{tiers.map((tier, tierIndex) => (
-						<div key={tierIndex} className={`${styles.tierCard} ${tier.highlight ? styles.tierCardHighlighted : ''}`}>
-							{tier.highlight && <div className={styles.mostPopularBadge}>Most Popular</div>}
-							<div className={styles.tierCardHeader}>
-								<h3 className={styles.tierCardName}>{tier.name}</h3>
-								<p className={styles.tierCardPrice}>{tier.price}</p>
-							</div>
-
-							<div className={styles.tierCardActions}>
-								<Button
-									label={`$${tier.monthlyAmount} / month`}
-									onClick={() => onOpenModal(tier.monthlyAmount, false, tier.name)}
-									className={styles.tierCardButton}
-								/>
-								<Button
-									label={`$${tier.lifetimeAmount} lifetime`}
-									onClick={() => onOpenModal(tier.lifetimeAmount, true, tier.name)}
-									className={styles.tierCardButton}
-								/>
-							</div>
-
-							<div className={styles.tierCardFeatures}>
-								<h4 className={styles.featuresTitle}>Includes:</h4>
-								<ul className={styles.featuresList}>
-									{features.map((feature, featureIndex) => {
-										const tierKey = tier.name.toLowerCase() as keyof typeof feature
-										const value = feature[tierKey]
-										if (value === false) return null
-
-										return (
-											<li key={featureIndex} className={styles.featureItem}>
-												<span className={styles.featureIcon}>{renderFeatureValue(value)}</span>
-												<span className={styles.featureName}>{feature.name}</span>
-											</li>
-										)
-									})}
-								</ul>
-							</div>
+							</select>
 						</div>
-					))}
+
+						<div className={styles.formGroup}>
+							<label className={styles.checkboxLabel}>
+								<input
+									type="checkbox"
+									checked={isRecurring}
+									onChange={handleRecurringChange}
+									disabled={selectedAmount > 50}
+									className={styles.checkbox}
+								/>
+								<span className={styles.checkboxText}>
+									Make this a recurring monthly donation
+									{selectedAmount > 50 && <span className={styles.disabledNote}> (not available for amounts over $50)</span>}
+								</span>
+							</label>
+						</div>
+
+						<div className={styles.submitGroup}>
+							<Button label="Submit Your Donation" onClick={handleSubmit} className={styles.submitButton} />
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>
