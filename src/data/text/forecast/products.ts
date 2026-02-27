@@ -32,18 +32,18 @@ export const FORECAST_TEXT_PRODUCTS = {
 export const FORECAST_TEXT_WPC_FRONT_PRODUCTS = {
 	[FORECAST_TEXT_PRODUCT_WPC_FRONTS_12HR_ID]: {
 		label: '12 Hour',
-		latest: 'https://weather.cod.edu/cdata/text/images/wpc/fronts/fcst/12/wpc_fcstfronts_f12_latest.png',
+		latest: 'https://weather.cod.edu/wxdata/text/images/wpc/fronts/fcst/12/wpc_fcstfronts_f12_latest.png',
 	},
 	[FORECAST_TEXT_PRODUCT_WPC_FRONTS_24HR_ID]: {
 		label: '24 Hour',
-		latest: 'https://weather.cod.edu/cdata/text/images/wpc/fronts/fcst/24/wpc_fcstfronts_f24_latest.png',
+		latest: 'https://weather.cod.edu/wxdata/text/images/wpc/fronts/fcst/24/wpc_fcstfronts_f24_latest.png',
 	},
 	[FORECAST_TEXT_PRODUCT_WPC_FRONTS_36HR_ID]: {
 		label: '36 Hour',
-		latest: 'https://weather.cod.edu/cdata/text/images/wpc/fronts/fcst/36/wpc_fcstfronts_f36_latest.png',
+		latest: 'https://weather.cod.edu/wxdata/text/images/wpc/fronts/fcst/36/wpc_fcstfronts_f36_latest.png',
 	},
 	[FORECAST_TEXT_PRODUCT_WPC_FRONTS_48HR_ID]: {
 		label: '48 Hour',
-		latest: 'https://weather.cod.edu/cdata/text/images/wpc/fronts/fcst/48/wpc_fcstfronts_f48_latest.png',
+		latest: 'https://weather.cod.edu/wxdata/text/images/wpc/fronts/fcst/48/wpc_fcstfronts_f48_latest.png',
 	},
 }
