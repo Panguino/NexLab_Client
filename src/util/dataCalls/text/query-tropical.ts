@@ -58,7 +58,7 @@ export const getTropicalGeneralData = async (productId) => {
 }
 
 export const getActiveTropicalStorms = async () => {
-	const endpoint = 'https://climate.cod.edu/data/tropical/gis/CurrentStorms.json' // live/operational endpoint
+	const endpoint = 'https://weather.cod.edu/wxdata/tropical/gis/CurrentStorms.json' // live/operational endpoint
 	const data = await getData(endpoint)
 
 	if (data && Object.keys(data).length > 0) {

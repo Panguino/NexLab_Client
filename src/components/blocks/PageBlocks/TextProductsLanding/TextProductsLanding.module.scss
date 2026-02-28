@@ -1,0 +1,74 @@
+.textProductsLanding {
+	padding: 24px 24px 64px;
+}
+
+.header {
+	max-width: 1200px;
+	margin: 0 auto 48px;
+	text-align: center;
+}
+
+.eyebrow {
+	color: var(--color-blue3);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	font-size: 12px;
+	margin-bottom: 8px;
+}
+
+.title {
+	font-family: var(--font-secondary);
+	font-size: 48px;
+	font-weight: 400;
+	line-height: 1.1;
+	margin: 0 0 16px;
+	letter-spacing: 0.02em;
+}
+
+.subtitle {
+	color: var(--color-grey14-grey7);
+	font-size: 16px;
+	line-height: 1.6;
+	max-width: 640px;
+	margin: 0 auto;
+}
+
+// Grid Layout
+.grid {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 20px;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+// Responsive Adjustments
+@media (max-width: 900px) {
+	.textProductsLanding {
+		padding: 32px 16px 48px;
+	}
+
+	.header {
+		margin-bottom: 32px;
+	}
+
+	.title {
+		font-size: 36px;
+	}
+
+	.grid {
+		gap: 16px;
+	}
+}
+
+@media (max-width: 600px) {
+	.title {
+		font-size: 28px;
+	}
+
+	.subtitle {
+		font-size: 14px;
+	}
+}

@@ -1,0 +1,123 @@
+// Card Styles
+.card {
+	display: flex;
+	flex-direction: column;
+	width: calc(33.333% - 14px);
+	min-width: 320px;
+	max-width: 400px;
+	background: var(--color-grey2-grey18);
+	border: 1px solid var(--color-grey3-grey16);
+	border-radius: 12px;
+	padding: 24px;
+	text-decoration: none;
+	color: inherit;
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease,
+		transform 0.2s ease;
+
+	&:hover {
+		text-decoration: none;
+		border-color: var(--color-blue3);
+		box-shadow:
+			0 4px 12px rgba(0, 0, 0, 0.08),
+			0 0 0 1px var(--color-blue3);
+		transform: translateY(-2px);
+
+		.iconWrapper {
+			background-position: 100% 50%;
+			box-shadow:
+				0 8px 24px rgba(14, 197, 255, 0.35),
+				0 0 20px rgba(38, 119, 240, 0.2),
+				0 0 0 1px rgba(14, 197, 255, 0.3);
+			transform: scale(1.05) rotate(-2deg);
+
+			svg {
+				transform: scale(1.1);
+			}
+		}
+
+		.exploreLink {
+			color: var(--color-blue3);
+
+			svg {
+				transform: translateX(4px);
+			}
+		}
+	}
+}
+
+.cardHeader {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 16px;
+}
+
+.iconWrapper {
+	width: 64px;
+	height: 64px;
+	border-radius: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	position: relative;
+	background: linear-gradient(135deg, #2677f0 0%, #0ec5ff 50%, #8aadcf 100%);
+	background-size: 200% 200%;
+	background-position: 0% 50%;
+	box-shadow:
+		0 4px 12px rgba(38, 119, 240, 0.25),
+		0 0 0 1px rgba(38, 119, 240, 0.1);
+	transition:
+		background-position 0.4s ease,
+		box-shadow 0.3s ease,
+		transform 0.3s ease;
+
+	svg {
+		width: 30px;
+		height: 30px;
+		color: #fff;
+		filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+		transition: transform 0.3s ease;
+	}
+}
+
+.cardTitle {
+	font-family: var(--font-primary);
+	font-size: 18px;
+	font-weight: 600;
+	margin: 0 0 8px;
+	color: var(--color-grey20-grey0);
+}
+
+.cardDescription {
+	font-size: 14px;
+	line-height: 1.6;
+	color: var(--color-grey14-grey7);
+	margin: 0;
+}
+
+.exploreLink {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--color-grey10-grey10);
+	transition: color 0.2s ease;
+	white-space: nowrap;
+
+	svg {
+		transition: transform 0.2s ease;
+	}
+}
+
+// Responsive Adjustments
+@media (max-width: 900px) {
+	.card {
+		width: 100%;
+		max-width: none;
+		padding: 20px;
+	}
+}

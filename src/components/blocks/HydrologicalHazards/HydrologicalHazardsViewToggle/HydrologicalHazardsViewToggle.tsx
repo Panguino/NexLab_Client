@@ -2,6 +2,8 @@
 
 import Select from '@/components/elements/Select/Select'
 import { useRootStore } from '@/store/useRootStore'
+import { faGear } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import HydrologicalHazards from '../HydrologicalHazards'
 import styles from './HydrologicalHazardsViewToggle.module.scss'
@@ -33,6 +35,7 @@ const HydrologicalHazardsViewToggle = ({ alerts, displayOffshores, initialView =
 	const [view, setView] = useState<'map' | 'table'>(initialView)
 	const selectedRegion = useRootStore.use.selectedRegion()
 	const setSelectedRegion = useRootStore.use.setSelectedRegion()
+	const [settingsOpen, setSettingsOpen] = useState(false)
 
 	return (
 		<div className={styles.hydrologicalHazardsViewToggle}>
@@ -41,6 +44,29 @@ const HydrologicalHazardsViewToggle = ({ alerts, displayOffshores, initialView =
 				<h1 className={styles.title}>Hydrological Hazards</h1>
 				<div className={styles.controls}>
 					<div className={`${styles.regionSelector} ${view === 'table' ? styles.hidden : ''}`}>
+						<Select value={selectedRegion} options={REGION_OPTIONS} onChange={setSelectedRegion} placeholder="Select Region" />
+					</div>
+					<div className={styles.toggleContainer}>
+						<span className={styles.label}>Switch Mode:</span>
+						<button onClick={() => setView('map')} className={`${styles.toggleButton} ${view === 'map' ? styles.active : ''}`}>
+							Map
+						</button>
+						<button onClick={() => setView('table')} className={`${styles.toggleButton} ${view === 'table' ? styles.active : ''}`}>
+							Table
+						</button>
+					</div>
+				</div>
+			</div>
+
+			{/* Mobile gear anchor (contains gear + popup) */}
+			<div className={styles.settingsAnchor}>
+				<div className={styles.settingsGear} onClick={() => setSettingsOpen((v) => !v)}>
+					<FontAwesomeIcon icon={faGear} size="lg" />
+				</div>
+				{/* Mobile settings popup */}
+				<div className={`${styles.settingsPopup} ${settingsOpen ? styles.open : ''}`}>
+					<h2 className={styles.title}>Hydrological Hazards</h2>
+					<div className={styles.regionSelector}>
 						<Select value={selectedRegion} options={REGION_OPTIONS} onChange={setSelectedRegion} placeholder="Select Region" />
 					</div>
 					<div className={styles.toggleContainer}>

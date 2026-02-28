@@ -1,7 +1,6 @@
 'use client'
 
 import { FireHazardsAnimator } from '@/components/elements/FireHazardsAnimator/FireHazardsAnimator'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useRootStore } from '@/store/useRootStore'
 import { useEffect } from 'react'
 import FireHazardsTable from './FireHazardsTable/FireHazardsTable'
@@ -55,7 +54,6 @@ const FireHazards = ({ alerts, displayOffshores, view = 'map' }: FireHazardsProp
 			{Object.keys(alerts).length !== 0 ? (
 				<>{view === 'map' ? <FireHazardsAnimator alerts={alerts} allCoastalRegions={displayOffshores} /> : <FireHazardsTable />}</>
 			) : null}
-			<MobileIconNav />
 		</>
 	)
 }

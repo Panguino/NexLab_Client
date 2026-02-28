@@ -70,29 +70,46 @@ const AnimatorImageSizer = () => {
 	}, [updateDimensions, loadedFrames])
 
 	const handleZoomChange = (e: any) => {
+		console.log('🔄 handleZoomChange:', e?.state)
 		setZoomState(e?.state)
 	}
 	const handlePanningStart = (e: any) => {
+		console.log('🟢 handlePanningStart:', e?.state)
 		setZoomState(e?.state)
 		isPanningRef.current = true
 		panStopTimeRef.current = performance.now()
 	}
 	const handlePanningStop = (e: any) => {
+		console.log('🛑 handlePanningStop:', e?.state)
 		setZoomState(e?.state)
 		isPanningRef.current = false
 	}
 
 	useEffect(() => {
 		if (!transformRef.current) return
-		// this is the only way to keep the zoom position and level intact when you change expand
+
+		// Calculate manual center position
 		const manualCenterY = Math.ceil((_height - adjustedHeight) / 2)
 		const manualCenterX = Math.ceil((_width - adjustedWidth) / 2)
-		if (initialZoomState.scale === 1) {
-			transformRef.current.setTransform(manualCenterX, manualCenterY, initialZoomState.scale, 0)
+
+		// If initialZoomState is null, it's the first visit - apply centering
+		// Otherwise, use the stored state (even if it happens to be at edges)
+		const isFirstVisit = initialZoomState === null
+
+		console.log('🔍 AnimatorImageSizer - Setting transform:', {
+			isFirstVisit,
+			initialZoomState,
+			manualCenter: { x: manualCenterX, y: manualCenterY },
+			willUse: isFirstVisit ? 'MANUAL CENTER (first visit)' : 'STORED STATE',
+		})
+
+		if (isFirstVisit) {
+			// First visit - center the image
+			transformRef.current.setTransform(manualCenterX, manualCenterY, 1, 0)
 		} else {
+			// Use stored position
 			transformRef.current.setTransform(initialZoomState.positionX, initialZoomState.positionY, initialZoomState.scale, 0)
 		}
-		// I know this is stupid, but it works
 	}, [_width, _height, adjustedHeight, adjustedWidth, initialZoomState, fullScreen])
 
 	const handleImageClick = (e: React.MouseEvent | React.TouchEvent) => {
@@ -149,9 +166,9 @@ const AnimatorImageSizer = () => {
 			<TransformWrapper
 				ref={transformRef}
 				disablePadding
-				initialScale={initialZoomState.scale}
-				initialPositionX={initialZoomState.positionX}
-				initialPositionY={initialZoomState.positionY}
+				initialScale={initialZoomState?.scale ?? 1}
+				initialPositionX={initialZoomState?.positionX ?? 0}
+				initialPositionY={initialZoomState?.positionY ?? 0}
 				onZoomStop={handleZoomChange}
 				onPanningStart={handlePanningStart}
 				onPanningStop={handlePanningStop}

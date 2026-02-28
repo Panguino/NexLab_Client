@@ -2,7 +2,6 @@
 
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useIsUserIdle } from '@/hooks/useIsUserIdle'
 import { useRootStore } from '@/store/useRootStore'
@@ -110,7 +109,6 @@ const SurfaceMapsAnimator: React.FC = () => {
 					/>
 				</div>
 			</div>
-			<MobileIconNav tab />
 		</>
 	)
 }

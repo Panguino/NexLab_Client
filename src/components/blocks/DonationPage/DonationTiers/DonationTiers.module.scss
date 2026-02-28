@@ -381,3 +381,161 @@
 		padding-left: 12px !important;
 	}
 }
+
+// Donation Form Styles
+.donationFormWrapper {
+	display: flex;
+	justify-content: center;
+	margin-top: 40px;
+	padding: 0 20px;
+}
+
+.donationForm {
+	background-color: var(--color-white-grey18);
+	border: 2px solid var(--color-grey3-grey15);
+	border-radius: 16px;
+	padding: 40px;
+	max-width: 600px;
+	width: 100%;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+	transition: all var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		padding: 24px;
+		margin-top: 24px;
+	}
+}
+
+.formGroup {
+	margin-bottom: 28px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.label {
+	display: block;
+	font-size: 16px;
+	font-weight: 600;
+	color: var(--color-grey18-grey2);
+	margin-bottom: 12px;
+	text-align: center;
+	transition: color var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		font-size: 15px;
+	}
+}
+
+.select {
+	width: 100%;
+	max-width: 200px;
+	margin: 0 auto;
+	padding: 14px 16px;
+	font-size: 18px;
+	font-weight: 600;
+	color: var(--color-grey20-grey0);
+	background-color: var(--color-white-grey19);
+	border: 2px solid var(--color-grey4-grey14);
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all var(--themeChange);
+	font-family: inherit;
+
+	&:hover {
+		border-color: var(--color-blue3-blue4);
+	}
+
+	&:focus {
+		outline: none;
+		border-color: var(--color-blue3);
+		box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+	}
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		font-size: 16px;
+		padding: 12px 14px;
+	}
+}
+
+.checkboxLabel {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 12px;
+	cursor: pointer;
+	user-select: none;
+
+	&:has(:disabled) {
+		cursor: not-allowed;
+		opacity: 0.6;
+	}
+}
+
+.checkbox {
+	margin-top: 2px;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	flex-shrink: 0;
+	accent-color: var(--color-blue3);
+
+	&:disabled {
+		cursor: not-allowed;
+	}
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		width: 18px;
+		height: 18px;
+	}
+}
+
+.checkboxText {
+	font-size: 15px;
+	line-height: 1.5;
+	color: var(--color-grey16-grey4);
+	transition: color var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		font-size: 14px;
+	}
+}
+
+.disabledNote {
+	font-size: 13px;
+	color: var(--color-grey12-grey8);
+	font-style: italic;
+	transition: color var(--themeChange);
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		font-size: 12px;
+	}
+}
+
+.submitGroup {
+	margin-top: 32px;
+	display: flex;
+	justify-content: center;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		margin-top: 24px;
+	}
+}
+
+.submitButton {
+	font-size: 18px !important;
+	font-weight: 700 !important;
+	padding: 16px 48px !important;
+	min-height: auto !important;
+	width: 100%;
+	max-width: 400px;
+
+	@media (max-width: $mobile-menu-breakpoint) {
+		font-size: 16px !important;
+		padding: 14px 32px !important;
+	}
+}

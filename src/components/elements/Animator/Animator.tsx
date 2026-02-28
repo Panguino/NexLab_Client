@@ -31,7 +31,7 @@ export interface IAnimatorProps {
 	lastFrameDwell?: boolean
 	lastFrameDwellTime?: number
 	settingsComponent?: React.ReactNode | null
-	initialZoomState?: zoomState
+	initialZoomState?: zoomState | null
 	setZoomState?: (zoomState: zoomState) => void
 	activeOverlays?: string[]
 	setActiveOverlays?: (overlays: string[]) => void
@@ -136,7 +136,7 @@ export const Animator = ({
 	hideZoomControls = false,
 	zoomFill = true,
 	settingsComponent = null,
-	initialZoomState = { scale: 1, positionX: 0, positionY: 0, previousScale: 1 },
+	initialZoomState = null,
 	activeOverlays = ['data', 'map'],
 	fullScreen = false,
 	soundingsPicker = false,
