@@ -130,10 +130,15 @@ const AnimatorImageSizer = () => {
 		const zoomFillChanged = previousZoomFillRef.current !== zoomFill
 		if (zoomFillChanged) {
 			previousZoomFillRef.current = zoomFill
+			// Clear saved zoom state: the old position was calculated for the previous mode's
+			// dimensions and is meaningless in the new mode. Resetting to null makes
+			// initialTransform treat this as a first visit and use calculateCenteredPosition
+			// for the new mode instead of restoring the stale position.
+			setZoomState(null)
 			// Increment key to force TransformWrapper remount with new dimensions
 			setTransformKey((prev) => prev + 1)
 		}
-	}, [zoomFill])
+	}, [zoomFill, setZoomState])
 
 	const handleZoomChange = (e: any) => {
 		console.log('🔄 handleZoomChange:', e?.state)
