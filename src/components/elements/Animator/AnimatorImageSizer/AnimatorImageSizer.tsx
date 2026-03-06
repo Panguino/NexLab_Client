@@ -44,6 +44,11 @@ const AnimatorImageSizer = () => {
 	const previousZoomFillRef = useRef(zoomFill)
 	const [transformKey, setTransformKey] = useState(0)
 
+	// Track when container dimensions are first measured so we can remount
+	// TransformWrapper with correct initial transform (before browser paint)
+	const hasDimensionedRef = useRef(false)
+	const [dimensionedKey, setDimensionedKey] = useState(0)
+
 	const allOverlayImages = useMemo(() => {
 		if (!overlays) return {}
 		return {
@@ -100,6 +105,16 @@ const AnimatorImageSizer = () => {
 			}
 		}
 	}, [initialZoomState, calculateCenteredPosition, _width, _height])
+
+	// Once container dimensions are first measured, remount TransformWrapper so that
+	// initialTransform (centering or saved zoom restore) is applied with real dimensions.
+	// useLayoutEffect ensures this happens synchronously before browser paint.
+	useLayoutEffect(() => {
+		if (_width > 0 && _height > 0 && !hasDimensionedRef.current) {
+			hasDimensionedRef.current = true
+			setDimensionedKey(1)
+		}
+	}, [_width, _height])
 
 	// Force remount of TransformWrapper when zoomFill mode changes
 	// This ensures proper repositioning with new dimensions
@@ -180,7 +195,7 @@ const AnimatorImageSizer = () => {
 			ref={animatorRef}
 		>
 			<TransformWrapper
-				key={`transform-${zoomFill}-${transformKey}`}
+				key={`transform-${zoomFill}-${transformKey}-${dimensionedKey}`}
 				ref={transformRef}
 				disablePadding
 				initialScale={initialTransform.scale}
