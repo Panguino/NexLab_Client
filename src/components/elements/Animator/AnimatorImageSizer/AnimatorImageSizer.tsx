@@ -47,6 +47,7 @@ const AnimatorImageSizer = () => {
 	// Track when container dimensions are first measured so we can remount
 	// TransformWrapper with correct initial transform (before browser paint)
 	const hasDimensionedRef = useRef(false)
+	const lastCenteringRatioRef = useRef<number>(0)
 	const [dimensionedKey, setDimensionedKey] = useState(0)
 
 	const allOverlayImages = useMemo(() => {
@@ -106,15 +107,22 @@ const AnimatorImageSizer = () => {
 		}
 	}, [initialZoomState, calculateCenteredPosition, _width, _height])
 
-	// Once container dimensions are first measured, remount TransformWrapper so that
-	// initialTransform (centering or saved zoom restore) is applied with real dimensions.
-	// useLayoutEffect ensures this happens synchronously before browser paint.
+	// Remount TransformWrapper when:
+	// 1. Container dimensions are first measured (always) - so initial position uses real dimensions
+	// 2. The image ratio changes while on a first visit (no saved zoom state) - so centering
+	//    stays correct when actual imageInfo differs from the default placeholder imageInfo
 	useLayoutEffect(() => {
-		if (_width > 0 && _height > 0 && !hasDimensionedRef.current) {
-			hasDimensionedRef.current = true
-			setDimensionedKey(1)
+		if (_width > 0 && _height > 0) {
+			const isFirstVisit = initialZoomState === null
+			const notYetDimensioned = !hasDimensionedRef.current
+			const ratioChangedOnFirstVisit = isFirstVisit && hasDimensionedRef.current && ratio !== lastCenteringRatioRef.current
+			if (notYetDimensioned || ratioChangedOnFirstVisit) {
+				hasDimensionedRef.current = true
+				lastCenteringRatioRef.current = ratio
+				setDimensionedKey((prev) => prev + 1)
+			}
 		}
-	}, [_width, _height])
+	}, [_width, _height, ratio, initialZoomState])
 
 	// Force remount of TransformWrapper when zoomFill mode changes
 	// This ensures proper repositioning with new dimensions

@@ -1,12 +1,6 @@
 import { zoomState } from '@/types/general'
 import { ZustandStateSlice } from './useRootStore'
 
-const defaultForecastZoomState = {
-	positionX: 0,
-	positionY: 0,
-	scale: 1,
-}
-
 export interface IForecastSlice {
 	forecastSoundingsPickMode: boolean
 	setForecastSoundingsPickMode: (mode: boolean) => void
@@ -14,7 +8,7 @@ export interface IForecastSlice {
 	setForecastFrameValidTime: (validTime: number) => void
 	forecastSoundingRunId?: number
 	setForecastSoundingRunId?: (runId: number) => void
-	forecastZoomState: zoomState
+	forecastZoomState: zoomState | null
 	setForecastZoomState: (zoomState: zoomState) => void
 	resetForecastZoomState: () => void
 	forecastZoomFill: boolean
@@ -32,7 +26,7 @@ export interface IForecastSlice {
 	forecastDataRefreshActive: boolean
 	setForecastDataRefreshActive: (active: boolean) => void
 	// forecast sounding state
-	forecastSoundingZoomState: zoomState
+	forecastSoundingZoomState: zoomState | null
 	setForecastSoundingZoomState: (zoomState: zoomState) => void
 	resetForecastSoundingZoomState: () => void
 	forecastSoundingZoomFill: boolean
@@ -57,9 +51,9 @@ export const createForecastSlice: ZustandStateSlice<IForecastSlice> = (set) => (
 	setForecastFrameValidTime: (validTime: number) => set(() => ({ forecastFrameValidTime: validTime })),
 	forecastSoundingRunId: null,
 	setForecastSoundingRunId: (runId: number) => set(() => ({ forecastSoundingRunId: runId })),
-	forecastZoomState: { ...defaultForecastZoomState },
+	forecastZoomState: null,
 	setForecastZoomState: (forecastZoomState) => set(() => ({ forecastZoomState })),
-	resetForecastZoomState: () => set(() => ({ forecastZoomState: { ...defaultForecastZoomState } })),
+	resetForecastZoomState: () => set(() => ({ forecastZoomState: null })),
 	forecastZoomFill: false,
 	setForecastZoomFill: (zoomFill: boolean) => set(() => ({ forecastZoomFill: zoomFill })),
 	forecastMapFullScreen: false,
@@ -75,9 +69,9 @@ export const createForecastSlice: ZustandStateSlice<IForecastSlice> = (set) => (
 	forecastDataRefreshActive: true,
 	setForecastDataRefreshActive: (active: boolean) => set(() => ({ forecastDataRefreshActive: active })),
 	// forecast sounding state
-	forecastSoundingZoomState: { ...defaultForecastZoomState },
+	forecastSoundingZoomState: null,
 	setForecastSoundingZoomState: (forecastSoundingZoomState) => set(() => ({ forecastSoundingZoomState })),
-	resetForecastSoundingZoomState: () => set(() => ({ forecastSoundingZoomState: { ...defaultForecastZoomState } })),
+	resetForecastSoundingZoomState: () => set(() => ({ forecastSoundingZoomState: null })),
 	forecastSoundingZoomFill: false,
 	setForecastSoundingZoomFill: (zoomFill: boolean) => set(() => ({ forecastSoundingZoomFill: zoomFill })),
 	forecastSoundingMapFullScreen: false,
