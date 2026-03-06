@@ -1,12 +1,6 @@
 import { zoomState } from '@/types/general'
 import { ZustandStateSlice } from './useRootStore'
 
-const defaultClimateZoomState = {
-	positionX: 0,
-	positionY: 0,
-	scale: 1,
-}
-
 export interface IClimateSlice {
 	// Seasonal animator settings
 	climateSeasonalFrameRate: number
@@ -15,7 +9,7 @@ export interface IClimateSlice {
 	setClimateSeasonalLastFrameDwell: (dwell: boolean) => void
 	climateSeasonalLastFrameDwellTime: number
 	setClimateSeasonalLastFrameDwellTime: (dwellTime: number) => void
-	climateSeasonalZoomState: zoomState
+	climateSeasonalZoomState: zoomState | null
 	setClimateSeasonalZoomState: (zoomState: zoomState) => void
 	resetClimateSeasonalZoomState: () => void
 	climateSeasonalZoomFill: boolean
@@ -27,7 +21,7 @@ export interface IClimateSlice {
 	setClimateOutlooksLastFrameDwell: (dwell: boolean) => void
 	climateOutlooksLastFrameDwellTime: number
 	setClimateOutlooksLastFrameDwellTime: (dwellTime: number) => void
-	climateOutlooksZoomState: zoomState
+	climateOutlooksZoomState: zoomState | null
 	setClimateOutlooksZoomState: (zoomState: zoomState) => void
 	resetClimateOutlooksZoomState: () => void
 	climateOutlooksZoomFill: boolean
@@ -41,7 +35,7 @@ export interface IClimateSlice {
 	setClimateSSTOLRLastFrameDwell: (dwell: boolean) => void
 	climateSSTOLRLastFrameDwellTime: number
 	setClimateSSTOLRLastFrameDwellTime: (dwellTime: number) => void
-	climateSSTOLRZoomState: zoomState
+	climateSSTOLRZoomState: zoomState | null
 	setClimateSSTOLRZoomState: (zoomState: zoomState) => void
 	resetClimateSSTOLRZoomState: () => void
 	climateSSTOLRZoomFill: boolean
@@ -58,9 +52,9 @@ export const createClimateSlice: ZustandStateSlice<IClimateSlice> = (set) => ({
 	setClimateSeasonalLastFrameDwell: (dwell: boolean) => set(() => ({ climateSeasonalLastFrameDwell: dwell })),
 	climateSeasonalLastFrameDwellTime: 2,
 	setClimateSeasonalLastFrameDwellTime: (dwellTime: number) => set(() => ({ climateSeasonalLastFrameDwellTime: dwellTime })),
-	climateSeasonalZoomState: { ...defaultClimateZoomState },
+	climateSeasonalZoomState: null,
 	setClimateSeasonalZoomState: (climateSeasonalZoomState) => set(() => ({ climateSeasonalZoomState })),
-	resetClimateSeasonalZoomState: () => set(() => ({ climateSeasonalZoomState: { ...defaultClimateZoomState } })),
+	resetClimateSeasonalZoomState: () => set(() => ({ climateSeasonalZoomState: null })),
 	climateSeasonalZoomFill: false,
 	setClimateSeasonalZoomFill: (zoomFill: boolean) => set(() => ({ climateSeasonalZoomFill: zoomFill })),
 	// Outlooks animator settings
@@ -70,9 +64,9 @@ export const createClimateSlice: ZustandStateSlice<IClimateSlice> = (set) => ({
 	setClimateOutlooksLastFrameDwell: (dwell: boolean) => set(() => ({ climateOutlooksLastFrameDwell: dwell })),
 	climateOutlooksLastFrameDwellTime: 2,
 	setClimateOutlooksLastFrameDwellTime: (dwellTime: number) => set(() => ({ climateOutlooksLastFrameDwellTime: dwellTime })),
-	climateOutlooksZoomState: { ...defaultClimateZoomState },
+	climateOutlooksZoomState: null,
 	setClimateOutlooksZoomState: (climateOutlooksZoomState) => set(() => ({ climateOutlooksZoomState })),
-	resetClimateOutlooksZoomState: () => set(() => ({ climateOutlooksZoomState: { ...defaultClimateZoomState } })),
+	resetClimateOutlooksZoomState: () => set(() => ({ climateOutlooksZoomState: null })),
 	climateOutlooksZoomFill: false,
 	setClimateOutlooksZoomFill: (zoomFill: boolean) => set(() => ({ climateOutlooksZoomFill: zoomFill })),
 	// SST-OLR animator settings
@@ -84,9 +78,9 @@ export const createClimateSlice: ZustandStateSlice<IClimateSlice> = (set) => ({
 	setClimateSSTOLRLastFrameDwell: (dwell: boolean) => set(() => ({ climateSSTOLRLastFrameDwell: dwell })),
 	climateSSTOLRLastFrameDwellTime: 1,
 	setClimateSSTOLRLastFrameDwellTime: (dwellTime: number) => set(() => ({ climateSSTOLRLastFrameDwellTime: dwellTime })),
-	climateSSTOLRZoomState: { ...defaultClimateZoomState },
+	climateSSTOLRZoomState: null,
 	setClimateSSTOLRZoomState: (climateSSTOLRZoomState) => set(() => ({ climateSSTOLRZoomState })),
-	resetClimateSSTOLRZoomState: () => set(() => ({ climateSSTOLRZoomState: { ...defaultClimateZoomState } })),
+	resetClimateSSTOLRZoomState: () => set(() => ({ climateSSTOLRZoomState: null })),
 	climateSSTOLRZoomFill: false,
 	setClimateSSTOLRZoomFill: (zoomFill: boolean) => set(() => ({ climateSSTOLRZoomFill: zoomFill })),
 	climateSSTOLRMapFullScreen: false,
