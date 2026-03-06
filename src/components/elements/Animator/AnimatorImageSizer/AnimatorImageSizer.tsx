@@ -50,6 +50,10 @@ const AnimatorImageSizer = () => {
 	const lastCenteringRatioRef = useRef<number>(0)
 	const [dimensionedKey, setDimensionedKey] = useState(0)
 
+	// Track whether the pending dimension change came from a window resize event
+	// so we can programmatically re-center after the DOM has been updated
+	const isResizeRef = useRef(false)
+
 	const allOverlayImages = useMemo(() => {
 		if (!overlays) return {}
 		return {
@@ -66,6 +70,7 @@ const AnimatorImageSizer = () => {
 
 	useEffect(() => {
 		const handleResize = () => {
+			isResizeRef.current = true
 			updateDimensions()
 		}
 
@@ -74,6 +79,17 @@ const AnimatorImageSizer = () => {
 			window.removeEventListener('resize', handleResize)
 		}
 	}, [updateDimensions])
+
+	// After a window resize updates the container dimensions, re-center the content
+	// at the current scale so the position stays sensible in the new container size.
+	// This runs synchronously after the DOM has been updated with the new dimensions,
+	// ensuring centerView has the correct container bounds to work with.
+	useLayoutEffect(() => {
+		if (!isResizeRef.current || _width === 0 || _height === 0) return
+		isResizeRef.current = false
+		const scale = (transformRef.current as any)?.instance?.transformState?.scale ?? 1
+		;(transformRef.current as any)?.centerView?.(scale, 0)
+	}, [_width, _height])
 
 	useLayoutEffect(() => {
 		updateDimensions()
