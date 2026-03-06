@@ -1,12 +1,6 @@
 import { zoomState } from '@/types/general'
 import { ZustandStateSlice } from './useRootStore'
 
-const defaultHydroZoomState = {
-	positionX: 0,
-	positionY: 0,
-	scale: 1,
-}
-
 export interface IHydrologicalSlice {
 	// ERO animator settings
 	hydroEROFrameRate: number
@@ -15,7 +9,7 @@ export interface IHydrologicalSlice {
 	setHydroEROLastFrameDwell: (dwell: boolean) => void
 	hydroEROLastFrameDwellTime: number
 	setHydroEROLastFrameDwellTime: (dwellTime: number) => void
-	hydroEROZoomState: zoomState
+	hydroEROZoomState: zoomState | null
 	setHydroEROZoomState: (zoomState: zoomState) => void
 	resetHydroEROZoomState: () => void
 	hydroEROZoomFill: boolean
@@ -30,9 +24,9 @@ export const createHydrologicalSlice: ZustandStateSlice<IHydrologicalSlice> = (s
 	setHydroEROLastFrameDwell: (dwell: boolean) => set(() => ({ hydroEROLastFrameDwell: dwell })),
 	hydroEROLastFrameDwellTime: 2,
 	setHydroEROLastFrameDwellTime: (dwellTime: number) => set(() => ({ hydroEROLastFrameDwellTime: dwellTime })),
-	hydroEROZoomState: { ...defaultHydroZoomState },
+	hydroEROZoomState: null,
 	setHydroEROZoomState: (hydroEROZoomState) => set(() => ({ hydroEROZoomState })),
-	resetHydroEROZoomState: () => set(() => ({ hydroEROZoomState: { ...defaultHydroZoomState } })),
+	resetHydroEROZoomState: () => set(() => ({ hydroEROZoomState: null })),
 	hydroEROZoomFill: false,
 	setHydroEROZoomFill: (zoomFill: boolean) => set(() => ({ hydroEROZoomFill: zoomFill })),
 })

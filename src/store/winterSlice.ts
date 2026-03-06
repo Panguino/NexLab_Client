@@ -1,16 +1,10 @@
 import { zoomState } from '@/types/general'
 import { ZustandStateSlice } from './useRootStore'
 
-const defaultWinterZoomState = {
-	positionX: 0,
-	positionY: 0,
-	scale: 1,
-}
-
 export interface IWinterSlice {
 	winterFrameRate: number
 	setWinterFrameRate: (frameRate: number) => void
-	winterZoomState: zoomState
+	winterZoomState: zoomState | null
 	setWinterZoomState: (zoomState: zoomState) => void
 	resetWinterZoomState: () => void
 	winterMapFullScreen: boolean
@@ -24,9 +18,9 @@ export interface IWinterSlice {
 export const createWinterSlice: ZustandStateSlice<IWinterSlice> = (set) => ({
 	winterFrameRate: 5,
 	setWinterFrameRate: (frameRate: number) => set(() => ({ winterFrameRate: frameRate })),
-	winterZoomState: { ...defaultWinterZoomState },
+	winterZoomState: null,
 	setWinterZoomState: (winterZoomState) => set(() => ({ winterZoomState })),
-	resetWinterZoomState: () => set(() => ({ winterZoomState: { ...defaultWinterZoomState } })),
+	resetWinterZoomState: () => set(() => ({ winterZoomState: null })),
 	winterMapFullScreen: false,
 	setWinterMapFullScreen: (fullScreen) => set({ winterMapFullScreen: fullScreen }),
 	winterLastFrameDwell: true,

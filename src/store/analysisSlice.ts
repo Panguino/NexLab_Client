@@ -1,12 +1,6 @@
 import { zoomState } from '@/types/general'
 import { ZustandStateSlice } from './useRootStore'
 
-const defaultAnalysisZoomState = {
-	positionX: 0,
-	positionY: 0,
-	scale: 1,
-}
-
 export interface IAnalysisSlice {
 	surfaceFrameValidTime: number
 	setSurfaceFrameValidTime: (validTime: number) => void
@@ -26,7 +20,7 @@ export interface IAnalysisSlice {
 	setUpperAirNumberOfFrames: (frames: number) => void
 	setSoundingNumberOfFrames: (frames: number) => void
 	setMrmsNumberOfFrames: (frames: number) => void
-	analysisZoomState: zoomState
+	analysisZoomState: zoomState | null
 	setAnalysisZoomState: (zoomState: zoomState) => void
 	resetAnalysisZoomState: () => void
 	analysisZoomFill: boolean
@@ -64,9 +58,9 @@ export const createAnalysisSlice: ZustandStateSlice<IAnalysisSlice> = (set) => (
 	setSoundingNumberOfFrames: (frames: number) => set(() => ({ soundingNumberOfFrames: frames })),
 	mrmsNumberOfFrames: 24,
 	setMrmsNumberOfFrames: (frames: number) => set(() => ({ mrmsNumberOfFrames: frames })),
-	analysisZoomState: { ...defaultAnalysisZoomState },
+	analysisZoomState: null,
 	setAnalysisZoomState: (analysisZoomState) => set(() => ({ analysisZoomState })),
-	resetAnalysisZoomState: () => set(() => ({ analysisZoomState: { ...defaultAnalysisZoomState } })),
+	resetAnalysisZoomState: () => set(() => ({ analysisZoomState: null })),
 	analysisZoomFill: false,
 	setAnalysisZoomFill: (zoomFill: boolean) => set(() => ({ analysisZoomFill: zoomFill })),
 	analysisMapFullScreen: false,
