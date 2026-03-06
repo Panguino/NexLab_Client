@@ -43,6 +43,16 @@ export interface ISlideoutPanelSlice {
 			officeName?: string
 		} | null,
 	) => void
+	winterTextContent: {
+		productData: Record<string, string>
+		productName: string
+	} | null
+	setWinterTextContent: (
+		content: {
+			productData: Record<string, string>
+			productName: string
+		} | null,
+	) => void
 	slideoutPanelIsOpen: boolean
 	currentSlideoutPanel: string
 	openSlideoutPanel: (panel: string) => void
@@ -79,6 +89,13 @@ export const createSlideoutPanelSlice: ZustandStateSlice<ISlideoutPanelSlice> = 
 			officeName?: string
 		} | null,
 	) => set(() => ({ wfoTextContent: content })),
+	winterTextContent: null,
+	setWinterTextContent: (
+		content: {
+			productData: Record<string, string>
+			productName: string
+		} | null,
+	) => set(() => ({ winterTextContent: content })),
 	slideoutPanelIsOpen: false,
 	currentSlideoutPanel: '',
 	openSlideoutPanel: (panel: string) => set(() => ({ slideoutPanelIsOpen: true, currentSlideoutPanel: panel })),
@@ -90,6 +107,7 @@ export const createSlideoutPanelSlice: ZustandStateSlice<ISlideoutPanelSlice> = 
 			metarContent: null,
 			tropicalTextContent: null,
 			wfoTextContent: null,
+			winterTextContent: null,
 		}))
 	},
 })

@@ -1,0 +1,114 @@
+// this first pass likely won't pan out - will use easier var ids and hand to endpoints
+// export const CONVECTIVE_SPC_DAY_ONE_OUTLOOK_TEXT_ID = 'ACUS01_SWODY1'
+// export const CONVECTIVE_SPC_DAY_TWO_OUTLOOK_TEXT_ID = 'ACUS02_SWODY2'
+// export const CONVECTIVE_SPC_DAY_THREE_OUTLOOK_TEXT_ID = 'ACUS03_SWODY3'
+// export const CONVECTIVE_SPC_DAY_FOUR_THRU_EIGHT_OUTLOOK_TEXT_ID = 'ACUS48_SWOD48'
+// export const CONVECTIVE_HOURLY_TOR_AND_SVR_REPORTS_TEXT_ID = 'NWUS22_STAHRY'
+// export const CONVECTIVE_DAILY_TOR_AND_SVR_REPORTS_TEXT_ID = 'NWUS20_STADTS'
+// export const CONVECTIVE_PRELIM_KILLER_TORNADO_TEXT_ID = 'NWUS23_STATIJ'
+// export const CONVECTIVE_TORNADO_TOTALS_AND_DEATHS_TEXT_ID = 'NWUS21_STAMTS'
+
+// export const CONVECTIVE_ADMIN_MESSAGES_TEXT_ID = 'NOUS74_ADMSPC'
+export const CONVECTIVE_PRODUCT_SPC_DAY_ONE_OUTLOOK_ID = 'DY1'
+export const CONVECTIVE_PRODUCT_SPC_DAY_TWO_OUTLOOK_ID = 'DY2'
+export const CONVECTIVE_PRODUCT_SPC_DAY_THREE_OUTLOOK_ID = 'DY3'
+export const CONVECTIVE_PRODUCT_SPC_DAY_FOUR_THRU_EIGHT_OUTLOOK_ID = 'DY48'
+export const CONVECTIVE_PRODUCT_HAZARDS_MAP_TABLE_ID = 'hazards-map-table'
+export const CONVECTIVE_PRODUCT_LOCAL_STORM_REPORTS_ID = 'storm-reports'
+export const CONVECTIVE_PRODUCT_WATCHES_ID = 'watches'
+export const CONVECTIVE_PRODUCT_MESO_DISCUSSIONS_ID = 'mesoscale-discussions'
+export const CONVECTIVE_PRODUCT_PRELIM_KILLER_TORNADO_ID = 'prelim-killer-tornado'
+export const CONVECTIVE_PRODUCT_TORNADO_TOTALS_AND_DEATHS_ID = 'tornado-totals-and-deaths'
+export const CONVECTIVE_PRODUCT_HOURLY_TOR_AND_SVR_REPORTS_ID = 'hourly-tor-and-svr-reports'
+export const CONVECTIVE_PRODUCT_DAILY_TOR_AND_SVR_REPORTS_ID = 'daily-tor-and-svr-reports'
+export const CONVECTIVE_PRODUCT_ADMIN_MESSAGES_ID = 'admin-messages'
+
+export const CONVECTIVE_PRODUCTS = {
+	[CONVECTIVE_PRODUCT_SPC_DAY_ONE_OUTLOOK_ID]: {
+		title: 'Day 1',
+		linkUrl: `/outlooks/${CONVECTIVE_PRODUCT_SPC_DAY_ONE_OUTLOOK_ID}/latest`,
+	},
+	[CONVECTIVE_PRODUCT_SPC_DAY_TWO_OUTLOOK_ID]: {
+		title: 'Day 2',
+		linkUrl: `/outlooks/${CONVECTIVE_PRODUCT_SPC_DAY_TWO_OUTLOOK_ID}/latest`,
+	},
+	[CONVECTIVE_PRODUCT_SPC_DAY_THREE_OUTLOOK_ID]: {
+		title: 'Day 3',
+		linkUrl: `/outlooks/${CONVECTIVE_PRODUCT_SPC_DAY_THREE_OUTLOOK_ID}/latest`,
+	},
+	[CONVECTIVE_PRODUCT_SPC_DAY_FOUR_THRU_EIGHT_OUTLOOK_ID]: {
+		title: 'Day 4 - 8',
+		linkUrl: `/outlooks/${CONVECTIVE_PRODUCT_SPC_DAY_FOUR_THRU_EIGHT_OUTLOOK_ID}/latest`,
+	},
+	[CONVECTIVE_PRODUCT_HAZARDS_MAP_TABLE_ID]: {
+		title: 'Hazards Map & Table',
+		linkUrl: '/warnings',
+	},
+	[CONVECTIVE_PRODUCT_LOCAL_STORM_REPORTS_ID]: {
+		title: 'Local Storm Reports',
+		linkUrl: '/reports',
+	},
+	[CONVECTIVE_PRODUCT_WATCHES_ID]: {
+		title: 'Watches',
+		linkUrl: '/watches',
+	},
+	[CONVECTIVE_PRODUCT_MESO_DISCUSSIONS_ID]: {
+		title: 'Mesoscale Discussions',
+		linkUrl: '/mesoscale-discussions',
+	},
+	[CONVECTIVE_PRODUCT_PRELIM_KILLER_TORNADO_ID]: {
+		title: 'Preliminary Killer Tornado',
+		linkUrl: `/stats-and-messages/${CONVECTIVE_PRODUCT_PRELIM_KILLER_TORNADO_ID}/latest`,
+	},
+	[CONVECTIVE_PRODUCT_TORNADO_TOTALS_AND_DEATHS_ID]: {
+		title: 'Tornado Totals and Deaths',
+		linkUrl: `/stats-and-messages/${CONVECTIVE_PRODUCT_TORNADO_TOTALS_AND_DEATHS_ID}/latest`,
+	},
+	[CONVECTIVE_PRODUCT_HOURLY_TOR_AND_SVR_REPORTS_ID]: {
+		title: 'Hourly Tornado and Severe Reports',
+		linkUrl: `/stats-and-messages/${CONVECTIVE_PRODUCT_HOURLY_TOR_AND_SVR_REPORTS_ID}/latest`,
+	},
+	[CONVECTIVE_PRODUCT_DAILY_TOR_AND_SVR_REPORTS_ID]: {
+		title: 'Daily Tornado and Severe Reports',
+		linkUrl: `/stats-and-messages/${CONVECTIVE_PRODUCT_DAILY_TOR_AND_SVR_REPORTS_ID}/latest`,
+	},
+	[CONVECTIVE_PRODUCT_ADMIN_MESSAGES_ID]: {
+		title: 'Admin Messages',
+		linkUrl: `/stats-and-messages/${CONVECTIVE_PRODUCT_ADMIN_MESSAGES_ID}/latest`,
+	},
+}
+
+export const CONVECTIVE_CATEGORY_OUTLOOKS = 'outlooks'
+export const CONVECTIVE_CATEGORY_WARNINGS_AND_REPORTS = 'warnings_reports'
+export const CONVECTIVE_CATEGORY_AREAS_OF_CONCERN = 'areas_of_concern'
+export const CONVECTIVE_CATEGORY_STATS_AND_MESSAGES = 'stats_and_messages'
+
+export const CONVECTIVE_CATEGORIES = {
+	[CONVECTIVE_CATEGORY_OUTLOOKS]: {
+		title: 'SPC Convective Outlooks',
+		products: [
+			CONVECTIVE_PRODUCT_SPC_DAY_ONE_OUTLOOK_ID,
+			CONVECTIVE_PRODUCT_SPC_DAY_TWO_OUTLOOK_ID,
+			CONVECTIVE_PRODUCT_SPC_DAY_THREE_OUTLOOK_ID,
+			CONVECTIVE_PRODUCT_SPC_DAY_FOUR_THRU_EIGHT_OUTLOOK_ID,
+		],
+	},
+	[CONVECTIVE_CATEGORY_WARNINGS_AND_REPORTS]: {
+		title: 'Warnings and Reports',
+		products: [CONVECTIVE_PRODUCT_HAZARDS_MAP_TABLE_ID, CONVECTIVE_PRODUCT_LOCAL_STORM_REPORTS_ID],
+	},
+	[CONVECTIVE_CATEGORY_AREAS_OF_CONCERN]: {
+		title: 'Areas of Concern',
+		products: [CONVECTIVE_PRODUCT_WATCHES_ID, CONVECTIVE_PRODUCT_MESO_DISCUSSIONS_ID],
+	},
+	[CONVECTIVE_CATEGORY_STATS_AND_MESSAGES]: {
+		title: 'Stats and Messages',
+		products: [
+			CONVECTIVE_PRODUCT_PRELIM_KILLER_TORNADO_ID,
+			CONVECTIVE_PRODUCT_TORNADO_TOTALS_AND_DEATHS_ID,
+			CONVECTIVE_PRODUCT_HOURLY_TOR_AND_SVR_REPORTS_ID,
+			CONVECTIVE_PRODUCT_DAILY_TOR_AND_SVR_REPORTS_ID,
+			CONVECTIVE_PRODUCT_ADMIN_MESSAGES_ID,
+		],
+	},
+}

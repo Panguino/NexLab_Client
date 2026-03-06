@@ -1,9 +1,12 @@
 'use client'
-import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
+import { HazardsAnimator } from '@/components/elements/HazardsAnimator'
 import { useRootStore } from '@/store/useRootStore'
 import { useEffect } from 'react'
 import HazardsMap from './HazardsMap/HazardsMap'
 import HazardsTable from './HazardsTable/HazardsTable'
+
+// Feature flag to toggle between old D3 map and new Animator map
+const USE_ANIMATOR_MAP = true
 
 const Hazards = ({ displayRegions, displayStates, displayOffshores, alerts }) => {
 	const selectedView = useRootStore.use.selectedView()
@@ -16,8 +19,9 @@ const Hazards = ({ displayRegions, displayStates, displayOffshores, alerts }) =>
 		setAllHazards(alerts)
 	}, [setAllHazards, alerts])
 
+	// Only set region hazards for the old D3 map - HazardsAnimator handles this internally
 	useEffect(() => {
-		if (selectedRegion && Object.keys(allHazards).length !== 0) {
+		if (!USE_ANIMATOR_MAP && selectedRegion && Object.keys(allHazards).length !== 0) {
 			const ids = {
 				conus: 'Continental United States',
 				ak: 'Alaska',
@@ -35,12 +39,15 @@ const Hazards = ({ displayRegions, displayStates, displayOffshores, alerts }) =>
 			{Object.keys(allHazards).length !== 0 ? (
 				<>
 					{selectedView === 'map' ? (
-						<HazardsMap displayRegions={displayRegions} displayStates={displayStates} displayOffshores={displayOffshores} />
+						USE_ANIMATOR_MAP ? (
+							<HazardsAnimator alerts={allHazards} allCoastalRegions={displayOffshores} />
+						) : (
+							<HazardsMap displayRegions={displayRegions} displayStates={displayStates} displayOffshores={displayOffshores} />
+						)
 					) : null}
 					{selectedView === 'table' ? <HazardsTable /> : null}
 				</>
 			) : null}
-			<MobileIconNav />
 		</>
 	)
 }

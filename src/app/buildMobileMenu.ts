@@ -4,6 +4,7 @@ import { academicsSubnav } from './academics/subnav.config'
 import { stormChasingSubnav } from './storm-chasing/subnav.config'
 import { topNav } from './topNav.config'
 import { weatherDataSubnav } from './weather-data/subnav.config'
+import { TEXT_SIDEBAR_LINKS } from './weather-data/text-hazards-outlooks/textSidebarLinks'
 
 export type MobileMenuItem = {
 	id: string
@@ -40,6 +41,20 @@ export async function buildMobileMenuItems(): Promise<MobileMenuItem[]> {
 				items.push({
 					id: `${analysisParentId}-${child.id}`,
 					parentId: analysisParentId,
+					title: child.title,
+					url: `/${child.url}`,
+					target: '_self',
+				})
+			})
+		}
+
+		// Weather Data > Text Products children (mirror TextSidebarPanels)
+		if (s.title === 'Text Products') {
+			const textParentId = 'wd-Text Products'
+			TEXT_SIDEBAR_LINKS.forEach((child) => {
+				items.push({
+					id: `${textParentId}-${child.id}`,
+					parentId: textParentId,
 					title: child.title,
 					url: `/${child.url}`,
 					target: '_self',

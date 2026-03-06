@@ -1,8 +1,8 @@
 @import '/src/styles/vars';
 
 .SidebarNavigation {
-	width: 300px;
-	min-width: 300px;
+	width: var(--sidebar-width);
+	min-width: var(--sidebar-width);
 	background: #222;
 	color: #fff;
 	z-index: 220;
@@ -14,6 +14,6 @@
 		position: absolute;
 		top: 0;
 		height: 100%;
-		transition: transform 0.3s;
+		transition: $sidebar-slide-transition;
 	}
 }

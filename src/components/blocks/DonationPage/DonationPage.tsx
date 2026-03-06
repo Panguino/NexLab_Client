@@ -9,7 +9,6 @@ import styles from './DonationPage.module.scss'
 import { DonationPerks } from './DonationPerks/DonationPerks'
 import { DonationTiers } from './DonationTiers/DonationTiers'
 import { DonationUse } from './DonationUse/DonationUse'
-import { SponsorshipInfo } from './SponsorshipInfo/SponsorshipInfo'
 import { TestimonialsSection } from './TestimonialsSection/TestimonialsSection'
 
 export const DonationPage = () => {
@@ -70,7 +69,7 @@ export const DonationPage = () => {
 				<DonationPerks />
 				<DonationUse />
 				<DonationTiers onOpenModal={openModal} />
-				<SponsorshipInfo />
+				{/* <SponsorshipInfo /> */}
 				<TestimonialsSection />
 			</div>
 			<Footer />

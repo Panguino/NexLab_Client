@@ -1,0 +1,102 @@
+export const WINTER_TEXT_PRODUCT_HAZARDS_ID = 'hazards'
+export const WINTER_TEXT_PRODUCT_SNOW_DEPTH_ID = 'snow-depth'
+export const WINTER_TEXT_PRODUCT_LIQUID_EQUIV_ID = 'liquid-equivalent'
+export const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_FOUR_ID = 'dy1-snow-prob-4'
+export const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_EIGHT_ID = 'dy1-snow-prob-8'
+export const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_TWELVE_ID = 'dy1-snow-prob-12'
+export const WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_ICE_ID = 'dy1-snow-prob-ice'
+export const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_FOUR_ID = 'dy2-snow-prob-4'
+export const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_EIGHT_ID = 'dy2-snow-prob-8'
+export const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_TWELVE_ID = 'dy2-snow-prob-12'
+export const WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_ICE_ID = 'dy2-snow-prob-ice'
+export const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_FOUR_ID = 'dy3-snow-prob-4'
+export const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_EIGHT_ID = 'dy3-snow-prob-8'
+export const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_TWELVE_ID = 'dy3-snow-prob-12'
+export const WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_ICE_ID = 'dy3-snow-prob-ice'
+export const WINTER_TEXT_PRODUCT_HEAVY_SNOW_ICING_DISCUSSION_ID = 'discussion'
+
+export const WINTER_TEXT_REPORTS = [WINTER_TEXT_PRODUCT_SNOW_DEPTH_ID, WINTER_TEXT_PRODUCT_LIQUID_EQUIV_ID]
+
+export const WINTER_TEXT_OUTLOOKS = [
+	{
+		id: 'dy1',
+		label: 'Day 1',
+		products: [
+			WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_FOUR_ID,
+			WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_EIGHT_ID,
+			WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_TWELVE_ID,
+			WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_ICE_ID,
+		],
+	},
+	{
+		id: 'dy2',
+		label: 'Day 2',
+		products: [
+			WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_FOUR_ID,
+			WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_EIGHT_ID,
+			WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_TWELVE_ID,
+			WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_ICE_ID,
+		],
+	},
+	{
+		id: 'dy3',
+		label: 'Day 3',
+		products: [
+			WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_FOUR_ID,
+			WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_EIGHT_ID,
+			WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_TWELVE_ID,
+			WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_ICE_ID,
+		],
+	},
+]
+
+export const WINTER_TEXT_PRODUCTS = {
+	[WINTER_TEXT_PRODUCT_HAZARDS_ID]: {
+		label: 'Hazards Map & Table',
+	},
+	[WINTER_TEXT_PRODUCT_SNOW_DEPTH_ID]: {
+		label: 'Snow Depth',
+	},
+	[WINTER_TEXT_PRODUCT_LIQUID_EQUIV_ID]: {
+		label: 'Liquid Equivalent',
+	},
+	[WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_FOUR_ID]: {
+		label: 'Snow > 4"',
+	},
+	[WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_EIGHT_ID]: {
+		label: 'Snow > 8"',
+	},
+	[WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_TWELVE_ID]: {
+		label: 'Snow > 12"',
+	},
+	[WINTER_TEXT_PRODUCT_DY1_SNOW_PROB_ICE_ID]: {
+		label: 'Ice > 0.25"',
+	},
+	[WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_FOUR_ID]: {
+		label: 'Snow > 4"',
+	},
+	[WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_EIGHT_ID]: {
+		label: 'Snow > 8"',
+	},
+	[WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_TWELVE_ID]: {
+		label: 'Snow > 12"',
+	},
+	[WINTER_TEXT_PRODUCT_DY2_SNOW_PROB_ICE_ID]: {
+		label: 'Ice > 0.25"',
+	},
+	[WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_FOUR_ID]: {
+		label: 'Snow > 4"',
+	},
+	[WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_EIGHT_ID]: {
+		label: 'Snow > 8"',
+	},
+	[WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_TWELVE_ID]: {
+		label: 'Snow > 12"',
+	},
+	[WINTER_TEXT_PRODUCT_DY3_SNOW_PROB_ICE_ID]: {
+		label: 'Ice > 0.25"',
+	},
+	[WINTER_TEXT_PRODUCT_HEAVY_SNOW_ICING_DISCUSSION_ID]: {
+		label: 'Heavy Snow and Icing Discussion',
+	},
+}

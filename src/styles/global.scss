@@ -43,9 +43,11 @@ $themes: (
 		'blue4': #0ec5ff,
 		'blue5': #154da1,
 		'blue6': #0c2a58,
-		'blue7': #080d29
-	)
+		'blue7': #080d29,
+	),
 );
+
+@import 'vars';
 
 @mixin theme() {
 	@each $theme, $map in $themes {
@@ -80,9 +82,12 @@ $themes: (
 	--font-primary: 'Inter', sans-serif;
 	--font-secondary: 'Bebas Neue', sans-serif;
 	--font-mono: monospace;
+	--color-orange-high-threat: #ef6c00;
+	--color-yellow-moderate-threat: #f9a825;
 	color-scheme: var(--initial-color-mode);
 	--themeChange: 0.5s ease;
 	--hoverChange: 0.3s ease;
+	--sidebar-width: #{$sidebar-width};
 }
 html,
 body {

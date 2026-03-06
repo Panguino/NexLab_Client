@@ -1,0 +1,176 @@
+.detailsPanel {
+	padding: 24px;
+	background: var(--color-grey4-grey16);
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.graphicSection {
+	width: 100%;
+
+	.graphic {
+		width: 100%;
+		height: auto;
+		border-radius: 8px;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+}
+
+.infoSection {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.timeInfo {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 12px;
+	padding: 16px;
+	background: var(--color-white-black);
+	border-radius: 8px;
+}
+
+.infoItem {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+
+	.label {
+		font-weight: 600;
+		color: var(--color-grey14-grey8);
+		font-size: 14px;
+		min-width: 50px;
+	}
+
+	.value {
+		color: var(--color-grey20-grey1);
+		font-size: 14px;
+		flex: 1;
+	}
+}
+
+.statesInfo {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	padding: 16px;
+	background: var(--color-white-black);
+	border-radius: 8px;
+
+	.label {
+		font-weight: 600;
+		color: var(--color-grey14-grey8);
+		font-size: 14px;
+	}
+
+	.value {
+		color: var(--color-grey20-grey1);
+		font-size: 14px;
+		flex: 1;
+	}
+}
+
+.attributesSection,
+.probabilitiesSection {
+	padding: 16px;
+	background: var(--color-white-black);
+	border-radius: 8px;
+}
+
+.sectionTitle {
+	font-size: 18px;
+	font-weight: 600;
+	margin: 0;
+	color: var(--color-grey20-grey2);
+}
+
+.attributesGrid {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-top: 12px;
+}
+
+.attributeItem {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	flex: 1 1 auto;
+	min-width: 0;
+
+	.attrLabel {
+		font-size: 11px;
+		font-weight: 600;
+		text-transform: uppercase;
+		color: var(--color-grey12-grey10);
+		letter-spacing: 0.3px;
+	}
+
+	.attrValue {
+		font-size: 13px;
+		font-weight: 600;
+		color: var(--color-grey18-grey4);
+
+		&.highThreshold {
+			color: var(--color-orange-high-threat);
+		}
+	}
+}
+
+.probsList {
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	gap: 6px;
+	margin-top: 12px;
+
+	& > :nth-child(-n + 4) {
+		grid-column: span 3;
+	}
+
+	& > :nth-child(n + 5) {
+		grid-column: span 4;
+	}
+}
+
+.probItem {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 8px;
+	background: var(--color-grey4-grey16);
+	border-radius: 3px;
+	font-size: 12px;
+	white-space: nowrap;
+
+	.probLabel {
+		color: var(--color-grey16-grey6);
+	}
+
+	.probValue {
+		font-weight: 600;
+		color: var(--color-grey18-grey4);
+
+		&.moderateProb {
+			color: var(--color-yellow-moderate-threat);
+		}
+
+		&.highProb {
+			color: var(--color-orange-high-threat);
+		}
+	}
+}
+
+@media (max-width: 768px) {
+	.detailsPanel {
+		padding: 24px 20px;
+	}
+}
+
+@media (max-width: 480px) {
+	.detailsPanel {
+		padding: 20px 16px;
+	}
+}

@@ -16,7 +16,7 @@ export const DonationHero = () => {
 						</p>
 						<div className={styles.heroActions}>
 							<Button label="Make a Donation" link="#donation-tiers" target="_self" />
-							<Button label="Become a Sponsor" link="/donate/sponsors" target="_self" />
+							{/* <Button label="Become a Sponsor" link="/donate/sponsors" target="_self" /> */}
 						</div>
 					</div>
 				</div>
