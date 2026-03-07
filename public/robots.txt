@@ -1,5 +1,47 @@
+# Block OpenAI crawler
 User-agent: GPTBot
 Disallow: /
 
+# Block Bing crawler
+User-agent: bingbot
+Disallow: /
+
+# Block Google AI training crawler
+User-agent: Google-Extended
+Disallow: /
+
+# Block Common Crawl
+User-agent: CCBot
+Disallow: /
+
+# Block Anthropic crawler
+User-agent: ClaudeBot
+Disallow: /
+
+# Block Facebook crawler
+User-agent: FacebookBot
+Disallow: /
+
+# Block Amazon crawler
+User-agent: Amazonbot
+Disallow: /
+
+# Block Apple crawler
+User-agent: Applebot
+Disallow: /
+
+# Block generic scraping frameworks
+User-agent: Bytespider
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: Baiduspider
+Disallow: /
+
+# Default rule for everything else
 User-agent: *
-Allow: /
