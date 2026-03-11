@@ -23,6 +23,9 @@ export const ALL_SURFACE_PRODUCTS = {
 	[SURFACE_PRODUCT_THETAE]: {
 		label: 'Theta-E',
 	},
+	[SURFACE_PRODUCT_PRESSURE_FALLS]: {
+		label: 'Pressure Falls',
+	},
 	[SURFACE_PRODUCT_TEMPERATURE_SLP]: {
 		label: 'Temperature and SLP',
 	},
