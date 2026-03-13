@@ -1,0 +1,72 @@
+.suggestedQueries {
+	padding: 20px;
+}
+
+.title {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--color-grey14-grey6);
+	margin: 0 0 12px 0;
+}
+
+.queriesGrid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.queryButton {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 14px;
+	background-color: var(--color-grey2-grey18);
+	border: 1px solid var(--color-grey5-grey15);
+	border-radius: 20px;
+	color: var(--color-grey18-grey2);
+	font-size: 13px;
+	font-family: var(--font-primary);
+	cursor: pointer;
+	transition: all 0.2s ease;
+
+	&:hover:not(:disabled) {
+		background-color: var(--color-blue3-blue4);
+		border-color: var(--color-blue3-blue4);
+		color: var(--color-white);
+		transform: translateY(-1px);
+	}
+
+	&:active:not(:disabled) {
+		transform: translateY(0);
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}
+
+.icon {
+	font-size: 14px;
+}
+
+.text {
+	white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+	.queriesGrid {
+		flex-direction: column;
+	}
+
+	.queryButton {
+		width: 100%;
+		justify-content: flex-start;
+	}
+
+	.text {
+		white-space: normal;
+		text-align: left;
+	}
+}
+
