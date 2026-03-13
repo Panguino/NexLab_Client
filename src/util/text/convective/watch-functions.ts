@@ -32,8 +32,14 @@ export function getTypeClass(watchType?: string, notActive?: boolean, styles?: R
  * @param attributes - Raw attribute values from API
  * @returns Object mapping attribute IDs to { value: string, isHighThreshold: boolean }
  */
-export function decodeAttributes(attributes: WatchAttributes): Record<string, { value: string; isHighThreshold: boolean }> {
+export function decodeAttributes(attributes: WatchAttributes | null | undefined): Record<string, { value: string; isHighThreshold: boolean }> {
 	const decoded: Record<string, { value: string; isHighThreshold: boolean }> = {}
+
+	// Guard clause: return empty object if attributes is null or undefined
+	if (!attributes) {
+		console.warn('decodeAttributes called with null or undefined attributes')
+		return decoded
+	}
 
 	// Max Hail (threshold: 2)
 	if (attributes[ATTR_MAX_HAIL]) {
