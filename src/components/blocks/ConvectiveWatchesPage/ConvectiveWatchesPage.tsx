@@ -14,14 +14,14 @@ interface ConvectiveWatch {
 	time_begin: string
 	time_end: string
 	states: string[]
-	attributes: {
+	attributes?: {
 		'MAX HAIL /INCHES/'?: string
 		'MAX TOPS /X 100 FEET/'?: string
 		'MAX WIND GUSTS SURFACE /KNOTS/'?: string
 		'MEAN STORM MOTION VECTOR /DEGREES AND KNOTS/'?: string
 		'PARTICULARLY DANGEROUS SITUATION'?: string
 	}
-	probabilities: {
+	probabilities?: {
 		'PROB OF 1 OR MORE HAIL EVENTS >= 2 INCHES'?: string
 		'PROB OF 1 OR MORE STRONG /EF2-EF5/ TORNADOES'?: string
 		'PROB OF 1 OR MORE WIND EVENTS >= 65 KNOTS'?: string
@@ -41,11 +41,38 @@ export const ConvectiveWatchesPage = () => {
 		const fetchWatches = async () => {
 			try {
 				const data = await getConvectiveWatches()
-				if (data && Array.isArray(data)) {
-					setWatches(data)
+
+				// Validate response is an array
+				if (!Array.isArray(data)) {
+					console.error('getConvectiveWatches returned non-array data:', { dataType: typeof data })
+					setWatches([])
+					return
 				}
+
+				// Validate and filter each watch entry
+				const validWatches = data.filter((watch, index) => {
+					// Check required fields
+					if (!watch.number || !watch.watch_type) {
+						console.warn(`Watch at index ${index} missing required fields:`, { watch })
+						return false
+					}
+
+					// Log if attributes are missing
+					if (!watch.attributes) {
+						console.warn(`Watch ${watch.number} has missing or null attributes`, { watch })
+					}
+
+					return true
+				})
+
+				if (validWatches.length < data.length) {
+					console.warn(`Filtered ${data.length - validWatches.length} invalid watches from response`)
+				}
+
+				setWatches(validWatches)
 			} catch (error) {
 				console.error('Failed to fetch convective watches:', error)
+				setWatches([])
 			} finally {
 				setLoading(false)
 			}

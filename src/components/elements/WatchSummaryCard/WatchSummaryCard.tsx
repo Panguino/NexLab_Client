@@ -20,8 +20,8 @@ interface WatchSummaryCardProps {
 	timeBegin: string
 	timeEnd: string
 	states: string[]
-	attributes: WatchAttributes
-	probabilities: WatchProbabilities
+	attributes?: WatchAttributes
+	probabilities?: WatchProbabilities
 	graphic: string
 }
 
@@ -36,6 +36,10 @@ export const WatchSummaryCard = ({
 	probabilities,
 	graphic,
 }: WatchSummaryCardProps) => {
+	// Guard against null/undefined attributes with detailed logging
+	if (!attributes) {
+		console.warn(`Watch ${number} has null or undefined attributes. Expected attributes object.`, { attributes })
+	}
 	const decodedAttributes = decodeAttributes(attributes)
 	const router = useRouter()
 
@@ -89,7 +93,7 @@ export const WatchSummaryCard = ({
 					</div>
 				</div>
 
-				{Object.keys(probabilities).length > 0 && (
+				{probabilities && Object.keys(probabilities).length > 0 && (
 					<div className={styles.probabilitiesSection}>
 						<div className={styles.sectionTitle}>Probabilities</div>
 						<div className={styles.probsList}>
