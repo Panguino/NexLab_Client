@@ -1,0 +1,20 @@
+@import '/src/styles/vars';
+
+.TrackerPageLayout {
+	display: grid;
+	grid-template-columns: 3fr 1fr;
+	gap: 16px;
+	height: 100%;
+	min-height: 600px;
+}
+
+.mapPanel {
+	min-width: 0;
+	height: 100%;
+}
+
+.feedPanel {
+	min-width: 0;
+	height: 100%;
+	overflow: hidden;
+}

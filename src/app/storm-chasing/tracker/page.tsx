@@ -1,11 +1,16 @@
+import { Footer } from '@/components/blocks/PageBlocks/Footer/Footer'
 import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
-import StormChaseTrackerMap from '@/components/layout/StormChaseTrackerMap/StormChaseTrackerMap'
+import ScrollArea from '@/components/layout/ScrollArea/ScrollArea'
+import TrackerPageLayout from '@/components/layout/TrackerPageLayout/TrackerPageLayout'
 
 const Page = () => {
 	return (
-		<PageContentWrapper>
-			<StormChaseTrackerMap />
-		</PageContentWrapper>
+		<ScrollArea>
+			<PageContentWrapper>
+				<TrackerPageLayout />
+			</PageContentWrapper>
+			<Footer />
+		</ScrollArea>
 	)
 }
 
