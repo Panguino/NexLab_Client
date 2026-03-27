@@ -33,6 +33,7 @@ module.exports = {
 	},
 	reactStrictMode: false,
 	swcMinify: true,
+	transpilePackages: ['ol'],
 	// redirects: async () => [
 	// 	{
 	// 		source: '/weather-data/nexrad-dual-pol-radar',
