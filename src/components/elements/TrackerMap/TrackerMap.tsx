@@ -1,6 +1,9 @@
 'use client'
 
-import { TrackerData } from '@/types/tracker'
+import TrackerLayersDrawer from '@/components/elements/TrackerLayersDrawer/TrackerLayersDrawer'
+import { TrackerData, TrackerMapLayer } from '@/types/tracker'
+import { faCrosshairs } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Feature from 'ol/Feature'
 import Map from 'ol/Map'
 import Overlay from 'ol/Overlay'
@@ -17,6 +20,8 @@ import styles from './TrackerMap.module.scss'
 
 export type TrackerMapProps = {
 	data: TrackerData
+	layers?: TrackerMapLayer[]
+	onToggleLayer?: (layerId: string) => void
 }
 
 const formatCoord = (val: number, pos: 'lat' | 'lon') => {
@@ -25,16 +30,18 @@ const formatCoord = (val: number, pos: 'lat' | 'lon') => {
 	return `${abs}° ${val >= 0 ? 'E' : 'W'}`
 }
 
-const TrackerMap = ({ data }: TrackerMapProps) => {
+const TrackerMap = ({ data, layers, onToggleLayer }: TrackerMapProps) => {
 	const mapRef = useRef<HTMLDivElement>(null)
 	const popupRef = useRef<HTMLDivElement>(null)
 	const mapInstanceRef = useRef<Map | null>(null)
+	const teamCoordsRef = useRef<number[]>([0, 0])
 	const [popupOpen, setPopupOpen] = useState(false)
 
 	useEffect(() => {
 		if (!mapRef.current || !popupRef.current) return undefined
 
 		const teamCoords = fromLonLat([data.longitude, data.latitude])
+		teamCoordsRef.current = teamCoords
 
 		const teamFeature = new Feature({
 			geometry: new Point(teamCoords),
@@ -108,8 +115,22 @@ const TrackerMap = ({ data }: TrackerMapProps) => {
 		}
 	}, [data.latitude, data.longitude])
 
+	const handleRecenter = () => {
+		if (!mapInstanceRef.current) return
+		mapInstanceRef.current.getView().animate({
+			center: teamCoordsRef.current,
+			duration: 400,
+		})
+	}
+
 	return (
 		<div className={styles.TrackerMap} ref={mapRef}>
+			{layers && onToggleLayer && <TrackerLayersDrawer layers={layers} onToggleLayer={onToggleLayer} />}
+			<div className={styles.mapControls}>
+				<button className={styles.recenterButton} onClick={handleRecenter} title="Recenter on team">
+					<FontAwesomeIcon icon={faCrosshairs} />
+				</button>
+			</div>
 			<div ref={popupRef} className={styles.popup}>
 				<div className={`${styles.popupContent} ${popupOpen ? styles.popupContentVisible : ''}`}>
 					<button
