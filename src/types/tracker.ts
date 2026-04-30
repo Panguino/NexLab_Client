@@ -15,4 +15,5 @@ export type TrackerMapLayer = {
 	label: string
 	description?: string
 	active: boolean
+	strapiProductId?: string
 }

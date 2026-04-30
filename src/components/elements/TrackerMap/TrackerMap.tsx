@@ -1,7 +1,6 @@
 'use client'
 
-import TrackerLayersDrawer from '@/components/elements/TrackerLayersDrawer/TrackerLayersDrawer'
-import { TrackerData, TrackerMapLayer } from '@/types/tracker'
+import { TrackerData } from '@/types/tracker'
 import { faCrosshairs } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Feature from 'ol/Feature'
@@ -30,7 +29,7 @@ const formatCoord = (val: number, pos: 'lat' | 'lon') => {
 	return `${abs}° ${val >= 0 ? 'E' : 'W'}`
 }
 
-const TrackerMap = ({ data, layers, onToggleLayer }: TrackerMapProps) => {
+const TrackerMap = ({ data }: TrackerMapProps) => {
 	const mapRef = useRef<HTMLDivElement>(null)
 	const popupRef = useRef<HTMLDivElement>(null)
 	const mapInstanceRef = useRef<Map | null>(null)
@@ -125,7 +124,6 @@ const TrackerMap = ({ data, layers, onToggleLayer }: TrackerMapProps) => {
 
 	return (
 		<div className={styles.TrackerMap} ref={mapRef}>
-			{layers && onToggleLayer && <TrackerLayersDrawer layers={layers} onToggleLayer={onToggleLayer} />}
 			<div className={styles.mapControls}>
 				<button className={styles.recenterButton} onClick={handleRecenter} title="Recenter on team">
 					<FontAwesomeIcon icon={faCrosshairs} />

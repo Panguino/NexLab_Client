@@ -5,37 +5,33 @@ import styles from './ChasingFeed.module.scss'
 const PLACEHOLDER_POSTS = [
 	{
 		id: 1,
-		title: 'Chasing the Dryline: A Day on the Southern Plains',
-		excerpt:
-			"We intercepted a supercell near Childress, TX with a wall cloud that persisted for nearly two hours. Here's a full breakdown of the chase.",
-		date: 'June 12, 2025',
+		date: 'June 30, 2025',
+		title: 'Storm Intercept: Northern Illinois Supercell',
+		excerpt: 'The team intercepted a discrete supercell near Rockford producing softball-sized hail and a brief EF1 tornado.',
 	},
 	{
 		id: 2,
-		title: 'Chase Debrief: May 28 — Tornado Warned Supercell in Kansas',
-		excerpt:
-			'An elevated storm environment made for a tricky intercept, but we were rewarded with a brief tornado near Pratt. Full video and analysis inside.',
-		date: 'May 30, 2025',
+		date: 'June 28, 2025',
+		title: 'SPC Day 2 Outlook and Target Area',
+		excerpt: 'Breaking down our target selection for tomorrow\'s potential significant severe weather event across the central Plains.',
 	},
 	{
 		id: 3,
-		title: 'Equipment Update: New Dashcam + Atmospheric Sensor Array',
-		excerpt:
-			"We've upgraded our in-vehicle sensor suite for this season. Read about the new instruments we're running and what data they collect.",
-		date: 'April 18, 2025',
+		date: 'June 25, 2025',
+		title: 'Dryline Chase — Kansas Panhandle',
+		excerpt: 'A classic dryline setup produced several photogenic supercells. The team logged four tornadoes over five hours.',
 	},
 	{
 		id: 4,
-		title: "Season Preview: What We're Watching This Spring",
-		excerpt:
-			'La Niña patterns, an active subtropical jet, and a favorable ENSO transition — this season has the ingredients for a memorable chase year.',
-		date: 'March 3, 2025',
+		date: 'June 20, 2025',
+		title: 'Equipment Update: New Dashcam Array',
+		excerpt: 'We\'ve upgraded our vehicle camera system with four 4K units offering full 360° coverage for improved documentation.',
 	},
 	{
 		id: 5,
-		title: 'Year in Review: 2024 Chase Season Recap',
-		excerpt: "From the Nebraska panhandle to the Florida panhandle — we logged over 14,000 miles in pursuit of storms. Here's everything we saw.",
-		date: 'January 8, 2025',
+		date: 'June 15, 2025',
+		title: 'Season Recap: First Three Weeks',
+		excerpt: 'An unusually active early season has the team already logging 12 chase days and 7 tornado observations.',
 	},
 ]
 
@@ -43,16 +39,16 @@ const ChasingFeed = () => {
 	return (
 		<div className={styles.ChasingFeed}>
 			<div className={styles.header}>
-				<span className={styles.label}>Chase Feed</span>
-				<span className={styles.source}>via Substack</span>
+				<span className={styles.headerTitle}>Chase Feed</span>
+				<span className={styles.headerSub}>via Substack</span>
 			</div>
 			<div className={styles.posts}>
 				{PLACEHOLDER_POSTS.map((post) => (
 					<div key={post.id} className={styles.post}>
-						<span className={styles.postDate}>{post.date}</span>
-						<h4 className={styles.postTitle}>{post.title}</h4>
-						<p className={styles.postExcerpt}>{post.excerpt}</p>
-						<span className={styles.readMore}>Read more →</span>
+						<div className={styles.postDate}>{post.date}</div>
+						<div className={styles.postTitle}>{post.title}</div>
+						<div className={styles.postExcerpt}>{post.excerpt}</div>
+						<span className={styles.postReadMore}>Read more →</span>
 					</div>
 				))}
 			</div>
