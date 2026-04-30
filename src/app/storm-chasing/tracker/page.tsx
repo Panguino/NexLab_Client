@@ -1,12 +1,7 @@
-import PageContentWrapper from '@/components/layout/PageContentWrapper/PageContentWrapper'
-import StormChaseTrackerMap from '@/components/layout/StormChaseTrackerMap/StormChaseTrackerMap'
+import TrackerPageLayout from '@/components/layout/TrackerPageLayout/TrackerPageLayout'
 
 const Page = () => {
-	return (
-		<PageContentWrapper>
-			<StormChaseTrackerMap />
-		</PageContentWrapper>
-	)
+	return <TrackerPageLayout />
 }
 
 export default Page

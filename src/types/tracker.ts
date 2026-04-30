@@ -9,3 +9,11 @@ export type TrackerData = {
 	generated_at: string
 	status_message: string
 }
+
+export type TrackerMapLayer = {
+	id: string
+	label: string
+	description?: string
+	active: boolean
+	strapiProductId?: string
+}

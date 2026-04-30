@@ -9,6 +9,7 @@ import { IGlobalSettingsSlice, createGlobalSettingsSlice } from './globalSetting
 import { IHazardsSlice, createHazardsSlice } from './hazardsSlice'
 import { IHydrologicalSlice, createHydrologicalSlice } from './hydrologicalSlice'
 import { IMobileMenuSlice, createMobileMenuSlice } from './mobileMenuSlice'
+import { ITrackerLayersSlice, createTrackerLayersSlice } from './trackerLayersSlice'
 import { INexradSlice, createNexradSlice } from './nexradSlice'
 import { ISatradSlice, createSatradSlice } from './satradSlice'
 import { ISectorSelectorPanelSlice, createSectorSelectorPanelSlice } from './sectorSelectorPanelSlice'
@@ -32,7 +33,8 @@ export interface IGlobalStore
 		IWinterSlice,
 		IFireAnalysisSlice,
 		IClimateSlice,
-		IHydrologicalSlice {}
+		IHydrologicalSlice,
+		ITrackerLayersSlice {}
 
 export type ZustandStateSlice<T> = StateCreator<IGlobalStore, [], [], T>
 
@@ -51,6 +53,7 @@ const useRootStoreBase = create<IGlobalStore>((...args) => ({
 	...createFireAnalysisSlice(...args),
 	...createClimateSlice(...args),
 	...createHydrologicalSlice(...args),
+	...createTrackerLayersSlice(...args),
 }))
 
 export const useRootStore = createSelectors(useRootStoreBase as any)
