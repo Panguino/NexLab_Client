@@ -7,25 +7,26 @@ export const DEFAULT_TRACKER_LAYERS: TrackerMapLayer[] = [
 		label: 'Convective Outlook',
 		description:
 			'Categorical outlooks issued by the Storm Prediction Center (SPC) depicting areas of expected severe weather risk, ranging from Marginal to High threat levels.',
-		active: false,
+		active: true,
 	},
-	{
-		id: 'convective-watches',
-		label: 'Convective Watches',
-		description:
-			'Active Tornado and Severe Thunderstorm Watch polygons issued by the SPC when conditions are favorable for severe weather development in a specific area.',
-		active: false,
-	},
+	// {
+	// 	id: 'convective-watches',
+	// 	label: 'Convective Watches',
+	// 	description:
+	// 		'Active Tornado and Severe Thunderstorm Watch polygons issued by the SPC when conditions are favorable for severe weather development in a specific area.',
+	// 	active: false,
+	// },
 	{
 		id: 'live-radar',
 		label: 'Live Radar',
 		description: 'Real-time composite NEXRAD radar reflectivity mosaic showing current precipitation intensity across the area.',
-		active: false,
+		active: true,
 	},
 	{
-		id: 'spotter-reports',
-		label: 'Spotter Reports',
-		description: 'Real-time storm reports submitted by trained NWS spotters and the public, including tornadoes, hail, and damaging winds.',
+		id: 'spotter-network',
+		label: 'Spotter Network',
+		description:
+			'Live chaser and spotter position reports from the Spotter Network RSS feed, including report time, name, optional note, and geolocation.',
 		active: false,
 	},
 ]

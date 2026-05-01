@@ -17,3 +17,12 @@ export type TrackerMapLayer = {
 	active: boolean
 	strapiProductId?: string
 }
+
+export type SpotterNetworkReport = {
+	publicId: string
+	name: string
+	reportedAt: string
+	note?: string
+	latitude: number
+	longitude: number
+}

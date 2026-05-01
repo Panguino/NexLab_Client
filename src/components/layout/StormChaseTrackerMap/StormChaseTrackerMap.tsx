@@ -1,6 +1,8 @@
 'use client'
 
-import { TrackerData, TrackerMapLayer } from '@/types/tracker'
+import { SpotterNetworkReport, TrackerData } from '@/types/tracker'
+import { getConvectiveOutlookData } from '@/util/dataCalls/stormChasing/query-convective-outlook'
+import { getSpotterNetworkData } from '@/util/dataCalls/stormChasing/query-spotter-network'
 import { getTrackerData } from '@/util/dataCalls/stormChasing/query-tracker'
 import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
@@ -10,59 +12,39 @@ const TrackerMap = dynamic(() => import('@/components/elements/TrackerMap/Tracke
 	ssr: false,
 })
 
-const DEFAULT_LAYERS: TrackerMapLayer[] = [
-	{
-		id: 'convective-outlook',
-		label: 'Convective Outlook',
-		description:
-			'Categorical outlooks issued by the Storm Prediction Center (SPC) depicting areas of expected severe weather risk, ranging from Marginal to High threat levels.',
-		active: false,
-	},
-	{
-		id: 'convective-watches',
-		label: 'Convective Watches',
-		description:
-			'Active Tornado and Severe Thunderstorm Watch polygons issued by the SPC when conditions are favorable for severe weather development in a specific area.',
-		active: false,
-	},
-	{
-		id: 'live-radar',
-		label: 'Live Radar',
-		description: 'Real-time composite NEXRAD radar reflectivity mosaic showing current precipitation intensity across the area.',
-		active: false,
-	},
-	{
-		id: 'spotter-reports',
-		label: 'Spotter Reports',
-		description: 'Real-time storm reports submitted by trained NWS spotters and the public, including tornadoes, hail, and damaging winds.',
-		active: false,
-	},
-]
-
 const StormChaseTrackerMap = () => {
 	const [trackerData, setTrackerData] = useState<TrackerData | null>(null)
+	const [convectiveData, setConvectiveData] = useState<object | null>(null)
+	const [spotterNetworkData, setSpotterNetworkData] = useState<SpotterNetworkReport[]>([])
 	const [error, setError] = useState<string | null>(null)
 	const [loading, setLoading] = useState(true)
-	const [layers, setLayers] = useState<TrackerMapLayer[]>(DEFAULT_LAYERS)
-
-	const handleToggleLayer = (layerId: string) => {
-		setLayers((prev) => prev.map((layer) => (layer.id === layerId ? { ...layer, active: !layer.active } : layer)))
-	}
 
 	useEffect(() => {
-		const fetchTrackerData = async () => {
+		const fetchData = async () => {
 			try {
-				const data = await getTrackerData()
-				setTrackerData(data)
-			} catch (err) {
-				console.error('Failed to fetch tracker data:', err)
-				setError('Unable to load tracker data.')
+				const [trackerResult, convectiveResult, spotterNetworkResult] = await Promise.allSettled([
+					getTrackerData(),
+					getConvectiveOutlookData(),
+					getSpotterNetworkData(),
+				])
+
+				if (trackerResult.status === 'fulfilled') {
+					setTrackerData(trackerResult.value)
+				} else {
+					setError('Unable to load tracker data.')
+				}
+				if (convectiveResult.status === 'fulfilled') {
+					setConvectiveData(convectiveResult.value)
+				}
+				if (spotterNetworkResult.status === 'fulfilled') {
+					setSpotterNetworkData(spotterNetworkResult.value)
+				}
 			} finally {
 				setLoading(false)
 			}
 		}
 
-		fetchTrackerData()
+		fetchData()
 	}, [])
 
 	if (loading) {
@@ -75,7 +57,7 @@ const StormChaseTrackerMap = () => {
 
 	return (
 		<div className={styles.StormChaseTrackerMap}>
-			<TrackerMap data={trackerData} layers={layers} onToggleLayer={handleToggleLayer} />
+			<TrackerMap data={trackerData} convectiveOutlookData={convectiveData} spotterNetworkData={spotterNetworkData} />
 		</div>
 	)
 }
