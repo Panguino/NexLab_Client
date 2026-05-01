@@ -1,6 +1,7 @@
 import '@/lib/fontawesome'
 import '@/styles/global.scss'
 import { GoogleAnalytics } from '@next/third-parties/google'
+import 'ol/ol.css'
 
 import Navigation from '@/components/layout/Navigation/Navigation'
 import SlideoutPanel from '@/components/layout/SlideoutPanel/SlideoutPanel'

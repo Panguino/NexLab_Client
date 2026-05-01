@@ -1,0 +1,164 @@
+@import '/src/styles/vars';
+
+$drawer-width: 260px;
+$tab-width: 32px;
+
+.drawer {
+	position: absolute;
+	top: 90px;
+	left: -$drawer-width;
+	z-index: 10;
+	display: flex;
+	transition: left 0.25s ease;
+	pointer-events: none;
+}
+
+.drawerOpen {
+	left: 0;
+}
+
+.tab {
+	pointer-events: all;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	width: $tab-width;
+	padding: 10px 0;
+	background-color: var(--color-grey1-grey19);
+	border: 1px solid var(--color-grey4-grey16);
+	border-right: none;
+	border-radius: 6px 0 0 6px;
+	color: var(--color-grey12-grey8);
+	cursor: pointer;
+	font-size: 12px;
+	transition:
+		color 0.15s ease,
+		background-color 0.15s ease;
+
+	&:hover {
+		color: var(--color-grey20-grey0);
+		background-color: var(--color-grey2-grey18);
+	}
+
+	.tabLabel {
+		writing-mode: vertical-rl;
+		text-orientation: mixed;
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+}
+
+.panel {
+	pointer-events: all;
+	width: $drawer-width;
+	background-color: var(--color-grey1-grey19);
+	border: 1px solid var(--color-grey4-grey16);
+	border-radius: 0 0 0 6px;
+	overflow-y: auto;
+	max-height: 400px;
+}
+
+.panelHeader {
+	padding: 12px 14px;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--color-grey20-grey0);
+	border-bottom: 1px solid var(--color-grey3-grey17);
+}
+
+.layerList {
+	display: flex;
+	flex-direction: column;
+}
+
+.layerItem {
+	border-bottom: 1px solid var(--color-grey3-grey17);
+
+	&:last-child {
+		border-bottom: none;
+	}
+}
+
+.layerRow {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 14px;
+}
+
+.layerToggle {
+	position: relative;
+	background: none;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	flex-shrink: 0;
+}
+
+.toggleTrack {
+	display: block;
+	width: 32px;
+	height: 18px;
+	border-radius: 9px;
+	background-color: var(--color-grey5-grey15);
+	position: relative;
+	transition: background-color 0.2s ease;
+}
+
+.layerToggleActive .toggleTrack {
+	background-color: var(--color-blue4);
+}
+
+.toggleThumb {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background-color: var(--color-white);
+	transition: left 0.2s ease;
+}
+
+.layerToggleActive .toggleThumb {
+	left: 16px;
+}
+
+.layerLabel {
+	flex: 1;
+	font-size: 13px;
+	color: var(--color-grey12-grey8);
+	transition: color 0.15s ease;
+}
+
+.layerLabelActive {
+	color: var(--color-grey20-grey0);
+}
+
+.infoButton {
+	background: none;
+	border: none;
+	color: var(--color-grey9-grey10);
+	cursor: pointer;
+	padding: 2px;
+	font-size: 13px;
+	transition: color 0.15s ease;
+	flex-shrink: 0;
+
+	&:hover {
+		color: var(--color-blue4);
+	}
+}
+
+.layerDescription {
+	padding: 0 14px 12px 56px;
+	font-size: 12px;
+	line-height: 1.5;
+	color: var(--color-grey13-grey7);
+}
