@@ -1,0 +1,51 @@
+@import '/src/styles/vars';
+
+.TrackerSidebarPanel {
+	padding: 8px 0;
+}
+
+.layerItem {
+	padding: 2px 0;
+}
+
+.layerRow {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 4px 0;
+}
+
+.layerLabel {
+	flex: 1;
+	font-size: 13px;
+	font-weight: 400;
+	color: var(--color-grey5);
+	transition: color 0.2s ease;
+
+	&.layerLabelActive {
+		color: var(--color-white);
+	}
+}
+
+.infoBtn {
+	background: transparent;
+	border: none;
+	cursor: pointer;
+	color: var(--color-grey7);
+	padding: 2px 4px;
+	font-size: 13px;
+	display: flex;
+	align-items: center;
+	transition: color 0.15s ease;
+
+	&:hover {
+		color: var(--color-grey4);
+	}
+}
+
+.layerDescription {
+	font-size: 12px;
+	line-height: 1.5;
+	color: var(--color-grey6);
+	padding: 6px 0 4px 50px;
+}
