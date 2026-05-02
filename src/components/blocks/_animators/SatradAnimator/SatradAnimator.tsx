@@ -22,6 +22,7 @@ const SatradAnimator: React.FC = () => {
 	const { satradProductId: productId, satradRegionId: regionId, satradSectorId: sectorId } = useParams()
 	const satradNumberOfFrames = useRootStore.use.satradNumberOfFrames()
 	const satradFrameRate = useRootStore.use.satradFrameRate()
+	const setSatradFrameRate = useRootStore.use.setSatradFrameRate()
 	const satradFrameStep = useRootStore.use.satradFrameStep()
 	const activeOverlays = useRootStore.use.activeOverlays()
 	const setActiveOverlays = useRootStore.use.setActiveOverlays()
@@ -33,6 +34,7 @@ const SatradAnimator: React.FC = () => {
 	const setSatradMapFullScreen = useRootStore.use.setSatradMapFullScreen()
 	const satradLastFrameDwell = useRootStore.use.satradLastFrameDwell()
 	const satradLastFrameDwellTime = useRootStore.use.satradLastFrameDwellTime()
+	const setSatradLastFrameDwellTime = useRootStore.use.setSatradLastFrameDwellTime()
 	const satradFrameValidTime = useRootStore.use.satradFrameValidTime()
 	const setSatradFrameValidTime = useRootStore.use.setSatradFrameValidTime()
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
@@ -95,7 +97,11 @@ const SatradAnimator: React.FC = () => {
 						setZoomState={setSatradZoomState}
 						activeOverlays={activeOverlays}
 						setActiveOverlays={setActiveOverlays}
+						playbackFps={satradFrameRate}
+						setPlaybackFps={setSatradFrameRate}
 						lastFrameDwell={satradLastFrameDwell}
+						edgeDwellSeconds={satradLastFrameDwellTime}
+						setEdgeDwellSeconds={setSatradLastFrameDwellTime}
 						lastFrameDwellTime={satradLastFrameDwellTime * 1000}
 						zoomFill={globalZoomFill}
 						setZoomFill={setGlobalZoomFill}

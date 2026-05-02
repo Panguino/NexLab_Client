@@ -38,6 +38,7 @@ const ForecastSoundingAnimator: React.FC = () => {
 		fcstSndWeather: weatherId,
 	} = useParams()
 	const forecastSoundingFrameRate = useRootStore.use.forecastSoundingFrameRate()
+	const setForecastSoundingFrameRate = useRootStore.use.setForecastSoundingFrameRate()
 	const forecastSoundingZoomState = useRootStore.use.forecastSoundingZoomState()
 	const setForecastSoundingZoomState = useRootStore.use.setForecastSoundingZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
@@ -46,6 +47,7 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const setForecastSoundingMapFullScreen = useRootStore.use.setForecastSoundingMapFullScreen()
 	const forecastSoundingLastFrameDwell = useRootStore.use.forecastSoundingLastFrameDwell()
 	const forecastSoundingLastFrameDwellTime = useRootStore.use.forecastSoundingLastFrameDwellTime()
+	const setForecastSoundingLastFrameDwellTime = useRootStore.use.setForecastSoundingLastFrameDwellTime()
 	// data prep
 	const locationId = tempLocId ? decodeURIComponent(tempLocId as string) : null // removes encoding from URL, specifically commas
 	const isStationId = locationId?.length === 4 && !locationId?.includes(',')
@@ -175,8 +177,12 @@ const ForecastSoundingAnimator: React.FC = () => {
 								setZoomFill={setGlobalZoomFill}
 								fullScreen={forecastSoundingMapFullScreen}
 								setFullScreen={setForecastSoundingMapFullScreen}
+								playbackFps={forecastSoundingFrameRate}
+								setPlaybackFps={setForecastSoundingFrameRate}
 								interval={1000 / forecastSoundingFrameRate}
 								lastFrameDwell={forecastSoundingLastFrameDwell}
+								edgeDwellSeconds={forecastSoundingLastFrameDwellTime}
+								setEdgeDwellSeconds={setForecastSoundingLastFrameDwellTime}
 								lastFrameDwellTime={forecastSoundingLastFrameDwellTime * 1000}
 								scrubberPlaceholderImageUrl={placeholderImage}
 								scrubberFrameLoadStates={forecastSoundingData.map((frame) => frame !== placeholderImage)}

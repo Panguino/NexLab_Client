@@ -18,6 +18,7 @@ const WPCFrontsAnimator: React.FC<WPCFrontsAnimatorProps> = ({ productId }) => {
 	useZoomFillHydration()
 
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
+	const setForecastFrameRate = useRootStore.use.setForecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
@@ -26,6 +27,7 @@ const WPCFrontsAnimator: React.FC<WPCFrontsAnimatorProps> = ({ productId }) => {
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
 	const forecastLastFrameDwellTime = useRootStore.use.forecastLastFrameDwellTime()
+	const setForecastLastFrameDwellTime = useRootStore.use.setForecastLastFrameDwellTime()
 
 	const [imageInfo, setImageInfo] = useState({ width: 800, height: 600 })
 	const [frames, setFrames] = useState<string[]>([])
@@ -64,8 +66,12 @@ const WPCFrontsAnimator: React.FC<WPCFrontsAnimatorProps> = ({ productId }) => {
 					setZoomFill={setGlobalZoomFill}
 					fullScreen={forecastMapFullScreen}
 					setFullScreen={setForecastMapFullScreen}
+					playbackFps={forecastFrameRate}
+					setPlaybackFps={setForecastFrameRate}
 					interval={1000 / forecastFrameRate}
 					lastFrameDwell={forecastLastFrameDwell}
+					edgeDwellSeconds={forecastLastFrameDwellTime}
+					setEdgeDwellSeconds={setForecastLastFrameDwellTime}
 					lastFrameDwellTime={forecastLastFrameDwellTime * 1000}
 					settingsComponent={
 						<AnimatorSettings title="WPC Fronts Settings">
