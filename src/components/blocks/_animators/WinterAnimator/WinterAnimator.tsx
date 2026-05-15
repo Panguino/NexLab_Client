@@ -18,6 +18,7 @@ const WinterAnimator: React.FC<WinterAnimatorProps> = ({ productId }) => {
 	useZoomFillHydration()
 
 	const winterFrameRate = useRootStore.use.winterFrameRate()
+	const setWinterFrameRate = useRootStore.use.setWinterFrameRate()
 	const winterZoomState = useRootStore.use.winterZoomState()
 	const setWinterZoomState = useRootStore.use.setWinterZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
@@ -26,6 +27,7 @@ const WinterAnimator: React.FC<WinterAnimatorProps> = ({ productId }) => {
 	const setWinterMapFullScreen = useRootStore.use.setWinterMapFullScreen()
 	const winterLastFrameDwell = useRootStore.use.winterLastFrameDwell()
 	const winterLastFrameDwellTime = useRootStore.use.winterLastFrameDwellTime()
+	const setWinterLastFrameDwellTime = useRootStore.use.setWinterLastFrameDwellTime()
 
 	const [imageInfo, setImageInfo] = useState({ width: 800, height: 500 })
 	const [frames, setFrames] = useState<string[]>([])
@@ -65,8 +67,13 @@ const WinterAnimator: React.FC<WinterAnimatorProps> = ({ productId }) => {
 						setZoomFill={setGlobalZoomFill}
 						fullScreen={winterMapFullScreen}
 						setFullScreen={setWinterMapFullScreen}
+						playbackFps={winterFrameRate}
+						setPlaybackFps={setWinterFrameRate}
+						playbackFpsMax={20}
 						interval={1000 / winterFrameRate}
 						lastFrameDwell={winterLastFrameDwell}
+						edgeDwellSeconds={winterLastFrameDwellTime}
+						setEdgeDwellSeconds={setWinterLastFrameDwellTime}
 						lastFrameDwellTime={winterLastFrameDwellTime * 1000}
 						settingsComponent={
 							<AnimatorSettings title="Settings">

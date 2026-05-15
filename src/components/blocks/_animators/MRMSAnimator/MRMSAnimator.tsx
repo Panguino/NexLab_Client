@@ -19,6 +19,7 @@ const MRMSAnimator: React.FC<MRMSAnimatorProps> = ({ productId }) => {
 
 	const mrmsNumberOfFrames = useRootStore.use.mrmsNumberOfFrames()
 	const analysisFrameRate = useRootStore.use.analysisFrameRate()
+	const setAnalysisFrameRate = useRootStore.use.setAnalysisFrameRate()
 	const analysisZoomState = useRootStore.use.analysisZoomState()
 	const setAnalysisZoomState = useRootStore.use.setAnalysisZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
@@ -27,6 +28,7 @@ const MRMSAnimator: React.FC<MRMSAnimatorProps> = ({ productId }) => {
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const analysisLastFrameDwell = useRootStore.use.analysisLastFrameDwell()
 	const analysisLastFrameDwellTime = useRootStore.use.analysisLastFrameDwellTime()
+	const setAnalysisLastFrameDwellTime = useRootStore.use.setAnalysisLastFrameDwellTime()
 
 	const [imageInfo, setImageInfo] = useState({ width: 800, height: 600 })
 	const [frames, setFrames] = useState<string[]>([])
@@ -65,8 +67,12 @@ const MRMSAnimator: React.FC<MRMSAnimatorProps> = ({ productId }) => {
 					setZoomFill={setGlobalZoomFill}
 					fullScreen={analysisMapFullScreen}
 					setFullScreen={setAnalysisMapFullScreen}
+					playbackFps={analysisFrameRate}
+					setPlaybackFps={setAnalysisFrameRate}
 					interval={1000 / analysisFrameRate}
 					lastFrameDwell={analysisLastFrameDwell}
+					edgeDwellSeconds={analysisLastFrameDwellTime}
+					setEdgeDwellSeconds={setAnalysisLastFrameDwellTime}
 					lastFrameDwellTime={analysisLastFrameDwellTime * 1000}
 					settingsComponent={
 						<AnimatorSettings title="MRMS Settings">

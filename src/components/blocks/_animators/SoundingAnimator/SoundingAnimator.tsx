@@ -29,8 +29,10 @@ const SoundingAnimator: React.FC = () => {
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const soundingNumberOfFrames = useRootStore.use.soundingNumberOfFrames()
 	const analysisFrameRate = useRootStore.use.analysisFrameRate()
+	const setAnalysisFrameRate = useRootStore.use.setAnalysisFrameRate()
 	const analysisLastFrameDwell = useRootStore.use.analysisLastFrameDwell()
 	const analysisLastFrameDwellTime = useRootStore.use.analysisLastFrameDwellTime()
+	const setAnalysisLastFrameDwellTime = useRootStore.use.setAnalysisLastFrameDwellTime()
 	const soundingFrameValidTime = useRootStore.use.soundingFrameValidTime()
 	const setSoundingFrameValidTime = useRootStore.use.setSoundingFrameValidTime()
 	const [startFrame, setStartFrame] = useState(0)
@@ -107,8 +109,12 @@ const SoundingAnimator: React.FC = () => {
 						setZoomFill={setGlobalZoomFill}
 						fullScreen={analysisMapFullScreen}
 						setFullScreen={setAnalysisMapFullScreen}
+						playbackFps={analysisFrameRate}
+						setPlaybackFps={setAnalysisFrameRate}
 						interval={1000 / analysisFrameRate}
 						lastFrameDwell={analysisLastFrameDwell}
+						edgeDwellSeconds={analysisLastFrameDwellTime}
+						setEdgeDwellSeconds={setAnalysisLastFrameDwellTime}
 						lastFrameDwellTime={analysisLastFrameDwellTime * 1000}
 						settingsComponent={
 							<AnimatorSettings title="Settings">

@@ -31,8 +31,10 @@ const UpperAirAnimator: React.FC = () => {
 	const analysisMapFullScreen = useRootStore.use.analysisMapFullScreen()
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const analysisFrameRate = useRootStore.use.analysisFrameRate()
+	const setAnalysisFrameRate = useRootStore.use.setAnalysisFrameRate()
 	const analysisLastFrameDwell = useRootStore.use.analysisLastFrameDwell()
 	const analysisLastFrameDwellTime = useRootStore.use.analysisLastFrameDwellTime()
+	const setAnalysisLastFrameDwellTime = useRootStore.use.setAnalysisLastFrameDwellTime()
 	const upperAirFrameValidTime = useRootStore.use.upperAirFrameValidTime()
 	const setUpperAirFrameValidTime = useRootStore.use.setUpperAirFrameValidTime()
 	const [startFrame, setStartFrame] = useState(0)
@@ -94,8 +96,12 @@ const UpperAirAnimator: React.FC = () => {
 						setZoomFill={setGlobalZoomFill}
 						fullScreen={analysisMapFullScreen}
 						setFullScreen={setAnalysisMapFullScreen}
+						playbackFps={analysisFrameRate}
+						setPlaybackFps={setAnalysisFrameRate}
 						interval={1000 / analysisFrameRate}
 						lastFrameDwell={analysisLastFrameDwell}
+						edgeDwellSeconds={analysisLastFrameDwellTime}
+						setEdgeDwellSeconds={setAnalysisLastFrameDwellTime}
 						lastFrameDwellTime={analysisLastFrameDwellTime * 1000}
 						pdfs={pdfs}
 						pdfButtonClick={handlePdfButtonClick}
