@@ -1,9 +1,45 @@
 import Providers from '@/components/providers/Providers/Providers'
 import { formatRunToZDate } from '@/util/dateFormat'
 import { Meta, StoryFn } from '@storybook/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Animator } from './Animator'
 import { testDataFrameLabels, testDataFrameLabels2, testDataWithOverlays, testFrames, testFrames16x9, testFrames8x6 } from './AnimatorTestData'
+
+const intervalToPlaybackFps = (value?: number) => {
+	if (!value || value <= 0) {
+		return 4
+	}
+
+	return Math.max(1, Math.round(1000 / value))
+}
+
+const dwellMsToSeconds = (value?: number) => {
+	if (!value || value <= 0) {
+		return 1
+	}
+
+	return Math.max(0.1, Math.round((value / 1000) * 10) / 10)
+}
+
+const HotkeyDemoSettings = ({ playbackFps, edgeDwellSeconds, showFrames, activeOverlays }) => {
+	return (
+		<div
+			style={{
+				display: 'flex',
+				alignItems: 'center',
+				gap: 12,
+				flexWrap: 'wrap',
+				fontSize: 12,
+				fontWeight: 600,
+			}}
+		>
+			<span>Speed: {playbackFps} fps</span>
+			<span>Dwell: {edgeDwellSeconds.toFixed(1)}s</span>
+			<span>Data: {showFrames ? 'Shown' : 'Hidden'}</span>
+			<span>Overlays: {activeOverlays.length > 0 ? activeOverlays.join(', ') : 'Hidden'}</span>
+		</div>
+	)
+}
 
 /**
  * # Animator Component
@@ -58,7 +94,49 @@ export default meta
 
 const TemplateFactory = () => {
 	const Template: StoryFn<typeof Animator> = (args) => {
-		return <Animator {...args} />
+		const [playbackFps, setPlaybackFps] = useState(args.playbackFps ?? intervalToPlaybackFps(args.interval))
+		const [edgeDwellSeconds, setEdgeDwellSeconds] = useState(args.edgeDwellSeconds ?? dwellMsToSeconds(args.lastFrameDwellTime))
+		const [showFrames, setShowFrames] = useState(args.showFrames ?? true)
+		const [activeOverlays, setActiveOverlays] = useState<string[]>(Array.isArray(args.activeOverlays) ? args.activeOverlays : ['data', 'map'])
+		const [soundingsPickerMode, setSoundingsPickerMode] = useState(args.soundingsPickerMode ?? false)
+
+		useEffect(() => {
+			setPlaybackFps(args.playbackFps ?? intervalToPlaybackFps(args.interval))
+		}, [args.interval, args.playbackFps])
+
+		useEffect(() => {
+			setEdgeDwellSeconds(args.edgeDwellSeconds ?? dwellMsToSeconds(args.lastFrameDwellTime))
+		}, [args.lastFrameDwellTime, args.edgeDwellSeconds])
+
+		useEffect(() => {
+			setShowFrames(args.showFrames ?? true)
+		}, [args.showFrames])
+
+		useEffect(() => {
+			setActiveOverlays(Array.isArray(args.activeOverlays) ? args.activeOverlays : ['data', 'map'])
+		}, [args.activeOverlays])
+
+		useEffect(() => {
+			setSoundingsPickerMode(args.soundingsPickerMode ?? false)
+		}, [args.soundingsPickerMode])
+
+		return (
+			<Animator
+				{...args}
+				interval={1000 / playbackFps}
+				playbackFps={playbackFps}
+				setPlaybackFps={setPlaybackFps}
+				lastFrameDwellTime={edgeDwellSeconds * 1000}
+				edgeDwellSeconds={edgeDwellSeconds}
+				setEdgeDwellSeconds={setEdgeDwellSeconds}
+				showFrames={showFrames}
+				setShowFrames={setShowFrames}
+				activeOverlays={activeOverlays}
+				setActiveOverlays={setActiveOverlays}
+				soundingsPickerMode={soundingsPickerMode}
+				setSoundingsPickerMode={setSoundingsPickerMode}
+			/>
+		)
 	}
 	return Template
 }
@@ -196,12 +274,62 @@ overlays.args = {
 	interval: 250,
 	frames: testDataWithOverlays.files,
 	overlays: testDataWithOverlays.overlays,
+	activeOverlays: ['map', 'acha', 'actp'],
+	showFrames: true,
 	imageInfo: { width: 1600, height: 900 },
 }
 overlays.parameters = {
 	docs: {
 		description: {
 			story: 'Animator with static and dynamic overlay layers. Users can toggle overlays via the overlay panel button.',
+		},
+	},
+}
+
+export const hotkeyDemo: StoryFn<typeof Animator> = (args) => {
+	const [playbackFps, setPlaybackFps] = useState(args.playbackFps ?? 4)
+	const [edgeDwellSeconds, setEdgeDwellSeconds] = useState(args.edgeDwellSeconds ?? 1)
+	const [showFrames, setShowFrames] = useState(args.showFrames ?? true)
+	const [activeOverlays, setActiveOverlays] = useState<string[]>(args.activeOverlays ?? ['map', 'acha', 'actp'])
+
+	return (
+		<Animator
+			{...args}
+			interval={1000 / playbackFps}
+			playbackFps={playbackFps}
+			setPlaybackFps={setPlaybackFps}
+			lastFrameDwellTime={edgeDwellSeconds * 1000}
+			edgeDwellSeconds={edgeDwellSeconds}
+			setEdgeDwellSeconds={setEdgeDwellSeconds}
+			showFrames={showFrames}
+			setShowFrames={setShowFrames}
+			activeOverlays={activeOverlays}
+			setActiveOverlays={setActiveOverlays}
+			settingsComponent={
+				<HotkeyDemoSettings
+					playbackFps={playbackFps}
+					edgeDwellSeconds={edgeDwellSeconds}
+					showFrames={showFrames}
+					activeOverlays={activeOverlays}
+				/>
+			}
+		/>
+	)
+}
+hotkeyDemo.args = {
+	frames: testDataWithOverlays.files,
+	overlays: testDataWithOverlays.overlays,
+	imageInfo: { width: 1600, height: 900 },
+	autoPlay: true,
+	playbackFps: 4,
+	edgeDwellSeconds: 1,
+	activeOverlays: ['map', 'acha', 'actp'],
+	showFrames: true,
+}
+hotkeyDemo.parameters = {
+	docs: {
+		description: {
+			story: 'Hotkey demo with live state readouts. Try Space, Left/Right, +/-, Up/Down, <, >, H, and D to verify playback, speed, dwell, direction, overlay visibility, and base data visibility.',
 		},
 	},
 }

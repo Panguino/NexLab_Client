@@ -28,6 +28,7 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 		fcstCompareValid: validTimeId,
 	} = useParams()
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
+	const setForecastFrameRate = useRootStore.use.setForecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
@@ -36,6 +37,7 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
 	const forecastLastFrameDwellTime = useRootStore.use.forecastLastFrameDwellTime()
+	const setForecastLastFrameDwellTime = useRootStore.use.setForecastLastFrameDwellTime()
 	const runFlag = useRootStore.use.runFlag()
 
 	// Sounding picker state
@@ -186,8 +188,12 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 						setZoomFill={setGlobalZoomFill}
 						fullScreen={forecastMapFullScreen}
 						setFullScreen={setForecastMapFullScreen}
+						playbackFps={forecastFrameRate}
+						setPlaybackFps={setForecastFrameRate}
 						interval={1000 / forecastFrameRate}
 						lastFrameDwell={forecastLastFrameDwell}
+						edgeDwellSeconds={forecastLastFrameDwellTime}
+						setEdgeDwellSeconds={setForecastLastFrameDwellTime}
 						lastFrameDwellTime={forecastLastFrameDwellTime * 1000}
 						onFrameUpdate={handleFrameUpdate}
 						soundingsPicker={true}

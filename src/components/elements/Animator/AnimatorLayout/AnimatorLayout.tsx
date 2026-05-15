@@ -7,7 +7,7 @@ import styles from './AnimatorLayout.module.scss'
 
 const AnimatorLayout = () => {
 	const closeMobileSidebarMenu = useRootStore.use.closeMobileSidebarMenu()
-	const { hideControls, mode } = useAnimator() || { hideControls: false, mode: 'image' }
+	const { hideControls, mode, hotkeyFeedback } = useAnimator() || { hideControls: false, mode: 'image', hotkeyFeedback: null }
 
 	// Render appropriate sizer based on mode
 	const renderSizer = () => {
@@ -24,7 +24,10 @@ const AnimatorLayout = () => {
 				closeMobileSidebarMenu()
 			}}
 		>
-			<div className={styles.animatorOuterImageContainer}>{renderSizer()}</div>
+			<div className={styles.animatorOuterImageContainer}>
+				{renderSizer()}
+				{hotkeyFeedback && <div className={styles.hotkeyFeedback}>{hotkeyFeedback}</div>}
+			</div>
 			<AnimatorControls />
 		</div>
 	)

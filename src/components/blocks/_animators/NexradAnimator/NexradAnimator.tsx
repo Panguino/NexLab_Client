@@ -22,6 +22,7 @@ const NexradAnimator: React.FC = () => {
 	const { nexradProductId: productId, nexradSiteId: siteId } = useParams()
 	const nexradNumberOfFrames = useRootStore.use.nexradNumberOfFrames()
 	const nexradFrameRate = useRootStore.use.nexradFrameRate()
+	const setNexradFrameRate = useRootStore.use.setNexradFrameRate()
 	const nexradZoomState = useRootStore.use.nexradZoomState()
 	const setNexradZoomState = useRootStore.use.setNexradZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
@@ -30,6 +31,7 @@ const NexradAnimator: React.FC = () => {
 	const setNexradMapFullScreen = useRootStore.use.setNexradMapFullScreen()
 	const nexradLastFrameDwell = useRootStore.use.nexradLastFrameDwell()
 	const nexradLastFrameDwellTime = useRootStore.use.nexradLastFrameDwellTime()
+	const setNexradLastFrameDwellTime = useRootStore.use.setNexradLastFrameDwellTime()
 	const nexradFrameValidTime = useRootStore.use.nexradFrameValidTime()
 	const setNexradFrameValidTime = useRootStore.use.setNexradFrameValidTime()
 	const [imageInfo, setImageInfo] = useState({ width: 500, height: 500 })
@@ -88,8 +90,12 @@ const NexradAnimator: React.FC = () => {
 						setZoomFill={setGlobalZoomFill}
 						fullScreen={nexradMapFullScreen}
 						setFullScreen={setNexradMapFullScreen}
+						playbackFps={nexradFrameRate}
+						setPlaybackFps={setNexradFrameRate}
 						interval={1000 / nexradFrameRate}
 						lastFrameDwell={nexradLastFrameDwell}
+						edgeDwellSeconds={nexradLastFrameDwellTime}
+						setEdgeDwellSeconds={setNexradLastFrameDwellTime}
 						lastFrameDwellTime={nexradLastFrameDwellTime * 1000}
 						settingsComponent={
 							<AnimatorSettings title="Settings">

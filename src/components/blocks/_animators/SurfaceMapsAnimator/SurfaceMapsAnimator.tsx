@@ -28,8 +28,10 @@ const SurfaceMapsAnimator: React.FC = () => {
 	const setAnalysisMapFullScreen = useRootStore.use.setAnalysisMapFullScreen()
 	const surfaceMapsNumberOfFrames = useRootStore.use.surfaceMapsNumberOfFrames()
 	const analysisFrameRate = useRootStore.use.analysisFrameRate()
+	const setAnalysisFrameRate = useRootStore.use.setAnalysisFrameRate()
 	const analysisLastFrameDwell = useRootStore.use.analysisLastFrameDwell()
 	const analysisLastFrameDwellTime = useRootStore.use.analysisLastFrameDwellTime()
+	const setAnalysisLastFrameDwellTime = useRootStore.use.setAnalysisLastFrameDwellTime()
 	const surfaceFrameValidTime = useRootStore.use.surfaceFrameValidTime()
 	const setSurfaceFrameValidTime = useRootStore.use.setSurfaceFrameValidTime()
 	const [startFrame, setStartFrame] = useState(0)
@@ -96,8 +98,12 @@ const SurfaceMapsAnimator: React.FC = () => {
 						setZoomFill={setAnalysisZoomFill}
 						fullScreen={analysisMapFullScreen}
 						setFullScreen={setAnalysisMapFullScreen}
+						playbackFps={analysisFrameRate}
+						setPlaybackFps={setAnalysisFrameRate}
 						interval={1000 / analysisFrameRate}
 						lastFrameDwell={analysisLastFrameDwell}
+						edgeDwellSeconds={analysisLastFrameDwellTime}
+						setEdgeDwellSeconds={setAnalysisLastFrameDwellTime}
 						lastFrameDwellTime={analysisLastFrameDwellTime * 1000}
 						pdfs={pdfs}
 						pdfButtonClick={handlePdfButtonClick}

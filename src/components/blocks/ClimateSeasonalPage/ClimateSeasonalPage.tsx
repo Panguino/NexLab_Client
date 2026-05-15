@@ -27,8 +27,10 @@ export const ClimateSeasonalPage = ({ productId, validTime }: ClimateSeasonalPag
 
 	// Store state for animator
 	const climateSeasonalFrameRate = useRootStore.use.climateSeasonalFrameRate()
+	const setClimateSeasonalFrameRate = useRootStore.use.setClimateSeasonalFrameRate()
 	const climateSeasonalLastFrameDwell = useRootStore.use.climateSeasonalLastFrameDwell()
 	const climateSeasonalLastFrameDwellTime = useRootStore.use.climateSeasonalLastFrameDwellTime()
+	const setClimateSeasonalLastFrameDwellTime = useRootStore.use.setClimateSeasonalLastFrameDwellTime()
 	const climateSeasonalZoomState = useRootStore.use.climateSeasonalZoomState()
 	const setClimateSeasonalZoomState = useRootStore.use.setClimateSeasonalZoomState()
 	const climateSeasonalZoomFill = useRootStore.use.climateSeasonalZoomFill()
@@ -240,8 +242,13 @@ export const ClimateSeasonalPage = ({ productId, validTime }: ClimateSeasonalPag
 									fullScreen={false}
 									setFullScreen={() => {}}
 									disableZoom={true}
+									playbackFps={climateSeasonalFrameRate}
+									setPlaybackFps={setClimateSeasonalFrameRate}
+									playbackFpsMax={20}
 									interval={1000 / climateSeasonalFrameRate}
 									lastFrameDwell={climateSeasonalLastFrameDwell}
+									edgeDwellSeconds={climateSeasonalLastFrameDwellTime}
+									setEdgeDwellSeconds={setClimateSeasonalLastFrameDwellTime}
 									lastFrameDwellTime={climateSeasonalLastFrameDwellTime * 1000}
 									settingsComponent={
 										<AnimatorSettings title="Seasonal Outlook Settings">
