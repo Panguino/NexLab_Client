@@ -6,6 +6,22 @@ import AnimatorLayout from './AnimatorLayout/AnimatorLayout'
 // Default map zoom state - defined outside component to prevent new object creation on every render
 const DEFAULT_MAP_ZOOM_STATE: mapZoomState = { zoom: 3, latitude: 37, longitude: -95 }
 
+const intervalToPlaybackFps = (value: number) => {
+	if (!value || value <= 0) {
+		return 1
+	}
+
+	return Math.max(1, Math.round(1000 / value))
+}
+
+const dwellMsToSeconds = (value: number) => {
+	if (!value || value <= 0) {
+		return 0.1
+	}
+
+	return Math.max(0.1, Math.round((value / 1000) * 10) / 10)
+}
+
 export interface IAnimatorProps {
 	frames: string[] | any[] // Can be image URLs or MapFrame objects
 	frameValidTimes?: number[]
@@ -28,13 +44,23 @@ export interface IAnimatorProps {
 	autoPlay?: boolean
 	disableZoom?: boolean
 	interval?: number
+	playbackFps?: number
+	setPlaybackFps?: (fps: number) => void
+	playbackFpsMin?: number
+	playbackFpsMax?: number
 	lastFrameDwell?: boolean
 	lastFrameDwellTime?: number
+	edgeDwellSeconds?: number
+	setEdgeDwellSeconds?: (seconds: number) => void
+	edgeDwellSecondsMin?: number
+	edgeDwellSecondsMax?: number
 	settingsComponent?: React.ReactNode | null
 	initialZoomState?: zoomState | null
 	setZoomState?: (zoomState: zoomState) => void
 	activeOverlays?: string[]
 	setActiveOverlays?: (overlays: string[]) => void
+	showFrames?: boolean
+	setShowFrames?: (showFrames: boolean) => void
 	setZoomFill?: (zoomFill: boolean) => void
 	zoomFill?: boolean
 	fullScreen?: boolean
@@ -89,6 +115,18 @@ interface IAnimatorProvider extends IAnimatorProps {
 	setCurrentFrame: Dispatch<SetStateAction<number>>
 	isPlaying: boolean
 	setIsPlaying: Dispatch<SetStateAction<boolean>>
+	hotkeyFeedback: string | null
+	setHotkeyFeedback: Dispatch<SetStateAction<string | null>>
+	playbackFps: number
+	setPlaybackFps: (fps: number) => void
+	playbackFpsMin: number
+	playbackFpsMax: number
+	edgeDwellSeconds: number
+	setEdgeDwellSeconds: (seconds: number) => void
+	edgeDwellSecondsMin: number
+	edgeDwellSecondsMax: number
+	showFrames: boolean
+	setShowFrames: (showFrames: boolean) => void
 	ratio: number
 	mode: 'image' | 'map'
 	mapRegion: 'conus' | 'alaska' | 'hawaii' | 'namer'
@@ -128,8 +166,16 @@ export const Animator = ({
 	requestReadoutData,
 	imageInfo = { width: 500, height: 500 },
 	interval = 200,
+	playbackFps,
+	setPlaybackFps,
+	playbackFpsMin = 1,
+	playbackFpsMax = 40,
 	lastFrameDwell = true,
 	lastFrameDwellTime = 1000,
+	edgeDwellSeconds,
+	setEdgeDwellSeconds,
+	edgeDwellSecondsMin = 0.1,
+	edgeDwellSecondsMax = 5,
 	hideControls = false,
 	autoPlay = false,
 	disableZoom = false,
@@ -138,6 +184,7 @@ export const Animator = ({
 	settingsComponent = null,
 	initialZoomState = null,
 	activeOverlays = ['data', 'map'],
+	showFrames,
 	fullScreen = false,
 	soundingsPicker = false,
 	soundingsPickerMode = false,
@@ -158,6 +205,9 @@ export const Animator = ({
 	},
 	setActiveOverlays = (overlays: string[]) => {
 		console.warn('setActiveOverlays function not provided, active overlays will not be updated.', overlays)
+	},
+	setShowFrames = () => {
+		// Silently ignore if not provided - this is optional
 	},
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	setZoomState = (_zoomState: zoomState) => {
@@ -194,8 +244,58 @@ export const Animator = ({
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [loadedFrames, setLoadedFrames] = useState([])
 	const [currentFrame, setCurrentFrame] = useState(startFrame !== undefined ? startFrame : frames.length - 1)
+	const [hotkeyFeedback, setHotkeyFeedback] = useState<string | null>(null)
+	const [playbackFpsLocal, setPlaybackFpsLocal] = useState(playbackFps ?? intervalToPlaybackFps(interval))
+	const [edgeDwellSecondsLocal, setEdgeDwellSecondsLocal] = useState(edgeDwellSeconds ?? dwellMsToSeconds(lastFrameDwellTime))
+	const [showFramesLocal, setShowFramesLocal] = useState(showFrames ?? true)
 	const [mapZoomState, setMapZoomStateLocal] = useState<mapZoomState>(initialMapZoomState)
 	const [targetMapZoomState, setTargetMapZoomState] = useState<mapZoomState | null>(null)
+
+	useEffect(() => {
+		if (playbackFps === undefined) {
+			setPlaybackFpsLocal(intervalToPlaybackFps(interval))
+		}
+	}, [interval, playbackFps])
+
+	useEffect(() => {
+		if (edgeDwellSeconds === undefined) {
+			setEdgeDwellSecondsLocal(dwellMsToSeconds(lastFrameDwellTime))
+		}
+	}, [lastFrameDwellTime, edgeDwellSeconds])
+
+	useEffect(() => {
+		if (showFrames !== undefined) {
+			setShowFramesLocal(showFrames)
+		}
+	}, [showFrames])
+
+	const resolvedPlaybackFps = playbackFps ?? playbackFpsLocal
+	const resolvedEdgeDwellSeconds = edgeDwellSeconds ?? edgeDwellSecondsLocal
+	const resolvedShowFrames = showFrames ?? showFramesLocal
+
+	const handleSetPlaybackFps = (nextPlaybackFps: number) => {
+		const clampedPlaybackFps = Math.min(playbackFpsMax, Math.max(playbackFpsMin, nextPlaybackFps))
+		if (playbackFps === undefined) {
+			setPlaybackFpsLocal(clampedPlaybackFps)
+		}
+		setPlaybackFps?.(clampedPlaybackFps)
+	}
+
+	const handleSetEdgeDwellSeconds = (nextEdgeDwellSeconds: number) => {
+		const roundedEdgeDwellSeconds = Math.round(nextEdgeDwellSeconds * 10) / 10
+		const clampedEdgeDwellSeconds = Math.min(edgeDwellSecondsMax, Math.max(edgeDwellSecondsMin, roundedEdgeDwellSeconds))
+		if (edgeDwellSeconds === undefined) {
+			setEdgeDwellSecondsLocal(clampedEdgeDwellSeconds)
+		}
+		setEdgeDwellSeconds?.(clampedEdgeDwellSeconds)
+	}
+
+	const handleSetShowFrames = (nextShowFrames: boolean) => {
+		if (showFrames === undefined) {
+			setShowFramesLocal(nextShowFrames)
+		}
+		setShowFrames?.(nextShowFrames)
+	}
 
 	// Update target map zoom state when initialMapZoomState prop changes
 	// This triggers smooth animation instead of instant snap
@@ -287,6 +387,18 @@ export const Animator = ({
 			value={{
 				isPlaying,
 				setIsPlaying,
+				hotkeyFeedback,
+				setHotkeyFeedback,
+				playbackFps: resolvedPlaybackFps,
+				setPlaybackFps: handleSetPlaybackFps,
+				playbackFpsMin,
+				playbackFpsMax,
+				edgeDwellSeconds: resolvedEdgeDwellSeconds,
+				setEdgeDwellSeconds: handleSetEdgeDwellSeconds,
+				edgeDwellSecondsMin,
+				edgeDwellSecondsMax,
+				showFrames: resolvedShowFrames,
+				setShowFrames: handleSetShowFrames,
 				loadedFrames,
 				setLoadedFrames,
 				currentFrame,

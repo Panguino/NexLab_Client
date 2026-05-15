@@ -1,24 +1,50 @@
 .animator {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  display: flex;
-  flex-direction: column;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	max-width: 100%;
+	max-height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 .animatorOuterImageContainer {
-  overflow: hidden;
-  flex-grow: 1;
+	position: relative;
+	overflow: hidden;
+	flex-grow: 1;
+}
+
+.hotkeyFeedback {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	padding: 8px 16px;
+	border-radius: 999px;
+	background: rgb(17 24 39 / 88%);
+	color: var(--color-white);
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 0.02em;
+	pointer-events: none;
+	z-index: 3;
+	white-space: nowrap;
+	box-shadow: 0 10px 30px rgb(0 0 0 / 25%);
+}
+
+@media screen and (max-width: 700px) {
+	.hotkeyFeedback {
+		font-size: 11px;
+		padding: 6px 12px;
+	}
 }
 
 /* Utility class to hide controls visually while keeping them mounted */
 .hideControls {
-  .controlsContainer {
-    visibility: hidden;
-    pointer-events: none;
-    height: 0;
-    min-height: 0;
-    padding: 0;
-  }
+	.controlsContainer {
+		visibility: hidden;
+		pointer-events: none;
+		height: 0;
+		min-height: 0;
+		padding: 0;
+	}
 }

@@ -23,6 +23,7 @@ const AnimatorImageSizer = () => {
 		activeOverlays,
 		disableZoom,
 		frames,
+		showFrames,
 		hideZoomControls,
 		soundingsPickerMode,
 		onSoundingsClickthrough,
@@ -257,7 +258,7 @@ const AnimatorImageSizer = () => {
 								currentFrame={currentFrame}
 								loadedFrames={loadedFrames}
 								setLoadedFrames={setLoadedFrames}
-								baseOpacity={1}
+								baseOpacity={showFrames ? 1 : 0}
 							/>
 							{activeOverlays &&
 								Array.isArray(activeOverlays) &&

@@ -29,6 +29,7 @@ const ForecastAnimator: React.FC = () => {
 	const { fcstModel: modelId, fcstRun: runId, fcstSector: sectorId, fcstLevel: levelId, fcstProduct: productId } = useParams()
 	const setForecastSoundingRunId = useRootStore.use.setForecastSoundingRunId()
 	const forecastFrameRate = useRootStore.use.forecastFrameRate()
+	const setForecastFrameRate = useRootStore.use.setForecastFrameRate()
 	const forecastZoomState = useRootStore.use.forecastZoomState()
 	const setForecastZoomState = useRootStore.use.setForecastZoomState()
 	const globalZoomFill = useRootStore.use.globalZoomFill()
@@ -37,6 +38,7 @@ const ForecastAnimator: React.FC = () => {
 	const setForecastMapFullScreen = useRootStore.use.setForecastMapFullScreen()
 	const forecastLastFrameDwell = useRootStore.use.forecastLastFrameDwell()
 	const forecastLastFrameDwellTime = useRootStore.use.forecastLastFrameDwellTime()
+	const setForecastLastFrameDwellTime = useRootStore.use.setForecastLastFrameDwellTime()
 	const [forecastData, setForecastData] = useState([])
 	const [forecastRuns, setForecastRuns] = useState<Record<string, runsProps>>({})
 	const [startFrame, setStartFrame] = useState(0)
@@ -191,8 +193,12 @@ const ForecastAnimator: React.FC = () => {
 						setZoomFill={setGlobalZoomFill}
 						fullScreen={forecastMapFullScreen}
 						setFullScreen={setForecastMapFullScreen}
+						playbackFps={forecastFrameRate}
+						setPlaybackFps={setForecastFrameRate}
 						interval={1000 / forecastFrameRate}
 						lastFrameDwell={forecastLastFrameDwell}
+						edgeDwellSeconds={forecastLastFrameDwellTime}
+						setEdgeDwellSeconds={setForecastLastFrameDwellTime}
 						lastFrameDwellTime={forecastLastFrameDwellTime * 1000}
 						soundingsPicker={true}
 						soundingsPickerMode={forecastSoundingsPickMode}
