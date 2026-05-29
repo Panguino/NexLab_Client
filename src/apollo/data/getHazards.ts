@@ -81,7 +81,6 @@ export const getHazards = async (): Promise<GetHazardsQuery> => {
 						geometry
 						properties {
 							ID
-							NAME
 							LAT
 							LON
 						}
