@@ -13,6 +13,9 @@ export const getTitleFromFeature = (properties) => {
 		if (properties.NAME) {
 			return properties.NAME
 		}
+		if (properties.ID) {
+			return `Offshore ${properties.ID}`
+		}
 	}
 	return ''
 }
