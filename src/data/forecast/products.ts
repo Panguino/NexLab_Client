@@ -197,6 +197,7 @@ export const FORECAST_PRODUCTS = {
 				general: 'fmxumhhc4sr21zi1oskldmp6', // circular dependancy problem if model IDs pulled from models.ts
 				HRRR: 'b4w0dydusq2hrxhntc0vrgwi',
 				NAMNST: 'b4w0dydusq2hrxhntc0vrgwi',
+				RRFSHR: 'b4w0dydusq2hrxhntc0vrgwi',
 			},
 		},
 	},
@@ -1281,6 +1282,19 @@ export const FORECAST_NAMNST_PRODUCTS_BY_LEVEL = {
 		],
 	},
 }
+// RRFSHR mirrors the NAMNST products, minus freezing rain
+export const FORECAST_RRFSHR_PRODUCTS_BY_LEVEL = Object.fromEntries(
+	Object.entries(FORECAST_NAMNST_PRODUCTS_BY_LEVEL).map(([sector, levels]) => [
+		sector,
+		Object.fromEntries(
+			Object.entries(levels as Record<string, string[]>).map(([level, products]) => [
+				level,
+				products.filter((product) => product !== FORECAST_PRODUCT_FRZRA_ID),
+			]),
+		),
+	]),
+) as typeof FORECAST_NAMNST_PRODUCTS_BY_LEVEL
+
 export const FORECAST_RDPS_PRODUCTS_BY_LEVEL = {
 	[FORECAST_SECTOR_NORTHERN_ILLINOIS_ID]: {
 		[FORECAST_LEVEL_500MB_ID]: [FORECAST_PRODUCT_AVORT_ID, FORECAST_PRODUCT_VVEL_ID],
