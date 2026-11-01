@@ -1,24 +1,23 @@
-const sassExtract = require('sass-extract')
 const fs = require('fs')
 const path = require('path')
 
-function isOdd(num) {
-	return num % 2 === 1
+// Reads the colors out of the $themes map at the top of global.scss (everything before the first @import)
+function readThemeColors() {
+	const source = fs.readFileSync('src/styles/global.scss', 'utf8')
+	const themesBlock = source.split('@import')[0]
+	const colors = []
+	for (const match of themesBlock.matchAll(/^\s*['"]([^'"]+)['"]\s*:\s*([^,\s]+)\s*,/gm)) {
+		colors.push({ color: match[1], value: match[2] })
+	}
+	return colors
 }
 
-sassExtract
-	.render({
-		file: 'src/styles/global.scss',
-	})
-	.then((rendered) => {
-		const colors = []
-		let stripped = rendered.vars.global.$themes.declarations[0].expression.split('"')
-		stripped = stripped.slice(1)
-		stripped.map((value, index) => {
-			if (!isOdd(index)) {
-				colors.push({ color: value, value: stripped[index + 1].split(',')[0].split(' ')[1] })
-			}
-		})
+Promise.resolve()
+	.then(() => {
+		const colors = readThemeColors()
+		if (colors.length === 0) {
+			throw new Error('No theme colors found in src/styles/global.scss')
+		}
 		const colorVars = []
 		colors.map((value1) => {
 			colors.map((value2) => {
