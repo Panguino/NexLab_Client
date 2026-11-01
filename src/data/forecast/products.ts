@@ -1131,6 +1131,19 @@ export const FORECAST_NAM_PRODUCTS_BY_LEVEL = {
 	},
 }
 
+// RRFS mirrors the NAM products, minus convective precipitation
+export const FORECAST_RRFS_PRODUCTS_BY_LEVEL = Object.fromEntries(
+	Object.entries(FORECAST_NAM_PRODUCTS_BY_LEVEL).map(([sector, levels]) => [
+		sector,
+		Object.fromEntries(
+			Object.entries(levels as Record<string, string[]>).map(([level, products]) => [
+				level,
+				products.filter((product) => product !== FORECAST_PRODUCT_CPREC_ID),
+			]),
+		),
+	]),
+) as typeof FORECAST_NAM_PRODUCTS_BY_LEVEL
+
 export const FORECAST_NAMNST_PRODUCTS_BY_LEVEL = {
 	[FORECAST_SECTOR_FLOAT_TWO_ID]: {
 		[FORECAST_LEVEL_700MB_ID]: [FORECAST_PRODUCT_VVEL_ID],
@@ -1360,23 +1373,6 @@ export const FORECAST_RDPS_PRODUCTS_BY_LEVEL = {
 			FORECAST_PRODUCT_KUCHSNOW24_ID,
 			FORECAST_PRODUCT_KRATIO_ID,
 			FORECAST_PRODUCT_CTHK_ID,
-		],
-	},
-}
-export const FORECAST_SREF_PRODUCTS_BY_LEVEL = {
-	general: {
-		[FORECAST_LEVEL_CONVECTIVE_ID]: [
-			FORECAST_PRODUCT_CAPE500_ID,
-			FORECAST_PRODUCT_CAPE1000_ID,
-			FORECAST_PRODUCT_CAPE2000_ID,
-			FORECAST_PRODUCT_CAPE3000_ID,
-		],
-		[FORECAST_LEVEL_PRECIPITATION_ID]: [
-			FORECAST_PRODUCT_SNOWPROB1_ID,
-			FORECAST_PRODUCT_SNOWPROB4_ID,
-			FORECAST_PRODUCT_SNOWPROB8_ID,
-			FORECAST_PRODUCT_SNOWPROB12_ID,
-			FORECAST_PRODUCT_SNOWMN12_ID,
 		],
 	},
 }
