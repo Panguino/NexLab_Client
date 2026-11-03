@@ -124,7 +124,6 @@ export const mobileMenuItems: MenuItemProps[] = [
 	{ id: '91', parentId: '6', title: 'ECMWF', url: '/ecmwf', target: LinkTarget.self },
 	{ id: '92', parentId: '6', title: 'GFS', url: '/gfs', target: null },
 	{ id: '93', parentId: '6', title: 'CFSv2', url: '/cfs-v2', target: LinkTarget.self },
-	{ id: '94', parentId: '6', title: 'SREF', url: '/sref', target: LinkTarget.self },
 	{ id: '95', parentId: '6', title: 'GEFS', url: '/gefs', target: LinkTarget.self },
 	{ id: '96', parentId: '6', title: 'Model Comparison', url: '/compare', target: LinkTarget.self },
 	{ id: '97', parentId: '96', title: 'Previous Runs', url: '/previous-run-comparison', target: LinkTarget.self },

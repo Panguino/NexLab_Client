@@ -156,6 +156,15 @@ const ForecastAnimator: React.FC = () => {
 		label: value.readable,
 	}))
 
+	const soundingsSupported = FORECAST_MODELS[modelId as string]?.allowForecastSounding === true
+
+	// Turn off the picker if the selected model doesn't support soundings
+	useEffect(() => {
+		if (!soundingsSupported && forecastSoundingsPickMode) {
+			setForecastSoundingsPickMode(false)
+		}
+	}, [soundingsSupported, forecastSoundingsPickMode, setForecastSoundingsPickMode])
+
 	// Use useMemo to derive the runsPerRow value based on modelId
 	const runsPerRow = useMemo(() => {
 		// Default to 4 if model doesn't exist or doesn't specify runsPerRow
@@ -201,6 +210,7 @@ const ForecastAnimator: React.FC = () => {
 						setEdgeDwellSeconds={setForecastLastFrameDwellTime}
 						lastFrameDwellTime={forecastLastFrameDwellTime * 1000}
 						soundingsPicker={true}
+						soundingsPickerDisabled={!soundingsSupported}
 						soundingsPickerMode={forecastSoundingsPickMode}
 						setSoundingsPickerMode={setForecastSoundingsPickMode}
 						onSoundingsClickthrough={onSoundingsClickthrough}
