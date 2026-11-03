@@ -158,17 +158,14 @@ const AnimatorImageSizer = () => {
 	}, [zoomFill, setZoomState])
 
 	const handleZoomChange = (e: any) => {
-		console.log('🔄 handleZoomChange:', e?.state)
 		setZoomState(e?.state)
 	}
 	const handlePanningStart = (e: any) => {
-		console.log('🟢 handlePanningStart:', e?.state)
 		setZoomState(e?.state)
 		isPanningRef.current = true
 		panStopTimeRef.current = performance.now()
 	}
 	const handlePanningStop = (e: any) => {
-		console.log('🛑 handlePanningStop:', e?.state)
 		setZoomState(e?.state)
 		isPanningRef.current = false
 	}

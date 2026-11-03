@@ -1339,9 +1339,8 @@ export const AnimatorMapMachine = forwardRef<HTMLDivElement, IAnimatorMapMachine
 							return
 						}
 					}
-				} catch (error) {
-					// Fallback if unproject fails
-					console.debug('DeckGL unproject failed, using fallback', error)
+				} catch {
+					// Fall through to the approximate coordinate conversion below.
 				}
 
 				// Fallback: use approximate conversion if DeckGL unproject is not available
