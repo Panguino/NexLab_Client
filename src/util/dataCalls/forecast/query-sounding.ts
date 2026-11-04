@@ -1,5 +1,7 @@
 import { getData } from '../dataCall-generic'
 
+const SOUNDING_FETCH_TIMEOUT_MS = 300_000
+
 export const getSoundingData = async (model, run, sector, level, product, validtime, location, parcel, weather) => {
 	// this function actually makes the request to generate a sounding
 	// location will contain '-' for longitude, so delimiter is '|' : making note because this is atypical
@@ -7,7 +9,8 @@ export const getSoundingData = async (model, run, sector, level, product, validt
 	// so that it can accept unix timestamps, but for now we will just use the HHH format
 	const params = [run, model, sector, level, product, validtime, location, parcel, weather].join('|')
 	const endpoint = `https://weather.cod.edu/datapoints/forecast/get-sounding.php?parms=${params}`
-	const data = await getData(endpoint)
+	// generating a sounding can be slow (notably RRFS), so allow up to 5 minutes
+	const data = await getData(endpoint, SOUNDING_FETCH_TIMEOUT_MS)
 	if (!data.err) {
 		return {
 			frames: data.frames,

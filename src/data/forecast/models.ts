@@ -158,7 +158,7 @@ export const FORECAST_MODELS = {
 		},
 		runsPerRow: 4,
 		validPerRow: 4,
-		allowForecastSounding: false,
+		allowForecastSounding: true,
 	},
 	[FORECAST_RRFS3KM_ID]: {
 		name: 'RRFS3KM',
@@ -188,7 +188,7 @@ export const FORECAST_MODELS = {
 		},
 		runsPerRow: 4,
 		validPerRow: 6,
-		allowForecastSounding: false,
+		allowForecastSounding: true,
 	},
 	[FORECAST_RDPS_ID]: {
 		name: 'RDPS',
