@@ -17,8 +17,8 @@ import {
 	FORECAST_RAP_PRODUCTS_BY_LEVEL,
 	FORECAST_RDPS_PRODUCTS_BY_LEVEL,
 	FORECAST_REFS_PRODUCTS_BY_LEVEL,
+	FORECAST_RRFS3KM_PRODUCTS_BY_LEVEL,
 	FORECAST_RRFS_PRODUCTS_BY_LEVEL,
-	FORECAST_RRFSHR_PRODUCTS_BY_LEVEL,
 } from './products'
 import {
 	FORECAST_SECTOR_ALASKA_ID,
@@ -54,7 +54,7 @@ const FORECAST_RAP_ID = 'RAP'
 const FORECAST_NAM_ID = 'NAM'
 const FORECAST_RRFS_ID = 'RRFS'
 const FORECAST_NAMNST_ID = 'NAMNST'
-const FORECAST_RRFSHR_ID = 'RRFSHR'
+const FORECAST_RRFS3KM_ID = 'RRFS3KM'
 const FORECAST_RDPS_ID = 'RDPS'
 const FORECAST_GDPS_ID = 'GDPS'
 const FORECAST_ECMWF_ID = 'ECMWF'
@@ -194,7 +194,7 @@ export const FORECAST_MODELS = {
 		},
 		runsPerRow: 4,
 		validPerRow: 4,
-		allowForecastSounding: false,
+		allowForecastSounding: true,
 	},
 	[FORECAST_NAMNST_ID]: {
 		name: 'NAMNST',
@@ -226,8 +226,8 @@ export const FORECAST_MODELS = {
 		validPerRow: 6,
 		allowForecastSounding: true,
 	},
-	[FORECAST_RRFSHR_ID]: {
-		name: 'RRFSHR',
+	[FORECAST_RRFS3KM_ID]: {
+		name: 'RRFS3KM',
 		title: 'Rapid Refresh Forecast System 3km',
 		sectors: [
 			FORECAST_SECTOR_NORTHWEST_ID,
@@ -246,7 +246,7 @@ export const FORECAST_MODELS = {
 			FORECAST_SECTOR_FLOAT_ONE_ID,
 			FORECAST_SECTOR_FLOAT_TWO_ID,
 		],
-		products: FORECAST_RRFSHR_PRODUCTS_BY_LEVEL,
+		products: FORECAST_RRFS3KM_PRODUCTS_BY_LEVEL,
 		defaults: {
 			sector: FORECAST_SECTOR_MIDWEST_ID,
 			level: FORECAST_LEVEL_SURFACE_ID,
@@ -254,7 +254,7 @@ export const FORECAST_MODELS = {
 		},
 		runsPerRow: 4,
 		validPerRow: 6,
-		allowForecastSounding: false,
+		allowForecastSounding: true,
 	},
 	[FORECAST_RDPS_ID]: {
 		name: 'RDPS',
