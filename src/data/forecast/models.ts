@@ -65,7 +65,26 @@ const FORECAST_AIGEFS_ID = 'AIGEFS'
 
 export const DEFAULT_FORECAST_MODEL = FORECAST_RRFS_ID
 
-export const FORECAST_MODELS = {
+// Display order for every model menu; all sidebars derive their options from FORECAST_MODELS' key order
+const FORECAST_MODEL_ORDER = [
+	FORECAST_HRRR_ID,
+	FORECAST_RAP_ID,
+	FORECAST_RRFS_ID,
+	FORECAST_RRFS3KM_ID,
+	FORECAST_REFS_ID,
+	FORECAST_RDPS_ID,
+	FORECAST_GDPS_ID,
+	FORECAST_ECMWF_ID,
+	FORECAST_AIFS_ID,
+	FORECAST_AIFSENS_ID,
+	FORECAST_GFS_ID,
+	FORECAST_GEFS_ID,
+	FORECAST_AIGFS_ID,
+	FORECAST_AIGEFS_ID,
+	FORECAST_CFS_ID,
+]
+
+const FORECAST_MODEL_CONFIGS = {
 	[FORECAST_HRRR_ID]: {
 		name: 'HRRR',
 		title: 'High-Resolution Rapid Refresh',
@@ -458,3 +477,5 @@ export const FORECAST_MODELS = {
 		allowForecastSounding: false,
 	},
 }
+
+export const FORECAST_MODELS = Object.fromEntries(FORECAST_MODEL_ORDER.map((id) => [id, FORECAST_MODEL_CONFIGS[id]])) as typeof FORECAST_MODEL_CONFIGS
