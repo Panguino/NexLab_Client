@@ -36,7 +36,7 @@ const ForecastCompareHeightSidebarPanel = () => {
 	const setSectorSelectorD3config = useRootStore.use.setSectorSelectorD3config()
 	const updateOnChangeSectorSelectorSectorHandler = useRootStore.use.updateOnChangeSectorSelectorSectorHandler()
 	// models to omit from the Model Select
-	const OMIT_MODELS = ['HRRR', 'NAMNST', 'RRFS3KM', 'CFS', 'GEFS', 'AIFSENS', 'AIGEFS']
+	const OMIT_MODELS = ['HRRR', 'RRFS3KM', 'CFS', 'GEFS', 'AIFSENS', 'AIGEFS']
 	const allowedModelKeys = Object.keys(FORECAST_MODELS).filter((m) => !OMIT_MODELS.includes(m))
 	// region/sector state (used by the sector selector)
 	const regionInitial = (FORECAST_SECTORS as any)[sectorId as string]?.region || ''

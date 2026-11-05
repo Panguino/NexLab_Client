@@ -1,10 +1,11 @@
-export const getData = async (url) => {
+export const getData = async (url, timeoutMs?: number) => {
 	try {
 		// TODO add guardrails for sites, products and frames that we don't support
 
 		// Fetch the weather data
 		const data_res = await fetch(url, {
 			method: 'GET',
+			...(timeoutMs ? { signal: AbortSignal.timeout(timeoutMs) } : {}),
 			headers: {
 				// Origin: window.location.origin, // helpful for avoiding CORS errors
 				// user agent not allowed - investigate later
