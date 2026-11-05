@@ -134,6 +134,8 @@ export const FORECAST_PRODUCT_LTNG_ID = 'ltng'
 export const FORECAST_PRODUCT_ETOP_ID = 'etop'
 export const FORECAST_PRODUCT_MEANWIND_ID = 'meanwind'
 export const FORECAST_PRODUCT_HODOMAP_ID = 'hodomap'
+export const FORECAST_PRODUCT_DCAPE_ID = 'dcape'
+export const FORECAST_PRODUCT_EFHL_ID = 'efhl'
 export const FORECAST_PRODUCT_SNDEPTH_ID = 'sndepth'
 export const FORECAST_PRODUCT_PBLH_ID = 'pblh'
 export const FORECAST_PRODUCT_HAILSWSFC_ID = 'hailswsfc'
@@ -196,8 +198,7 @@ export const FORECAST_PRODUCTS = {
 			[FORECAST_LEVEL_700MB_ID]: {
 				general: 'fmxumhhc4sr21zi1oskldmp6', // circular dependancy problem if model IDs pulled from models.ts
 				HRRR: 'b4w0dydusq2hrxhntc0vrgwi',
-				NAMNST: 'b4w0dydusq2hrxhntc0vrgwi',
-				RRFSHR: 'b4w0dydusq2hrxhntc0vrgwi',
+				RRFS3KM: 'b4w0dydusq2hrxhntc0vrgwi',
 			},
 		},
 	},
@@ -263,6 +264,8 @@ export const FORECAST_PRODUCTS = {
 	[FORECAST_PRODUCT_ETOP_ID]: { name: 'Simulated Echo Tops' },
 	[FORECAST_PRODUCT_MEANWIND_ID]: { name: 'Mean Wind' },
 	[FORECAST_PRODUCT_HODOMAP_ID]: { name: 'Hodograph Map' },
+	[FORECAST_PRODUCT_DCAPE_ID]: { name: 'Downdraft CAPE' },
+	[FORECAST_PRODUCT_EFHL_ID]: { name: 'Eff. Inflow Helicity' },
 	[FORECAST_PRODUCT_SNDEPTH_ID]: { name: 'Total Snow Depth' },
 	[FORECAST_PRODUCT_PBLH_ID]: { name: 'PBL Height' },
 	[FORECAST_PRODUCT_HAILSWSFC_ID]: { name: 'Hail Swath (SFC)' },
@@ -756,7 +759,7 @@ export const FORECAST_RAP_PRODUCTS_BY_LEVEL = {
 	},
 }
 
-export const FORECAST_NAM_PRODUCTS_BY_LEVEL = {
+const RRFS_BASE_PRODUCTS_BY_LEVEL = {
 	[FORECAST_SECTOR_FLOAT_ONE_ID]: {
 		[FORECAST_LEVEL_250MB_ID]: [FORECAST_PRODUCT_SPD_ID, FORECAST_PRODUCT_RHUM_ID],
 		[FORECAST_LEVEL_500MB_ID]: [
@@ -1132,20 +1135,38 @@ export const FORECAST_NAM_PRODUCTS_BY_LEVEL = {
 	},
 }
 
-// RRFS mirrors the NAM products, minus convective precipitation
-export const FORECAST_RRFS_PRODUCTS_BY_LEVEL = Object.fromEntries(
-	Object.entries(FORECAST_NAM_PRODUCTS_BY_LEVEL).map(([sector, levels]) => [
+// RRFS excludes convective precipitation; DCAPE and EFHL are added for every sector except AK, NIL and NA
+const RRFS_SECTORS_WITHOUT_DCAPE_EFHL: string[] = [
+	FORECAST_SECTOR_ALASKA_ID,
+	FORECAST_SECTOR_NORTHERN_ILLINOIS_ID,
+	FORECAST_SECTOR_NORTH_AMERICA_ID,
+]
+
+const RRFS_PRODUCTS_BY_LEVEL_BASE = Object.fromEntries(
+	Object.entries(RRFS_BASE_PRODUCTS_BY_LEVEL).map(([sector, levels]) => [
 		sector,
 		Object.fromEntries(
-			Object.entries(levels as Record<string, string[]>).map(([level, products]) => [
-				level,
-				products.filter((product) => product !== FORECAST_PRODUCT_CPREC_ID),
-			]),
+			Object.entries(levels as Record<string, string[]>).map(([level, products]) => {
+				const filtered = products.filter((product) => product !== FORECAST_PRODUCT_CPREC_ID)
+				const addNewProducts = level === FORECAST_LEVEL_CONVECTIVE_ID && !RRFS_SECTORS_WITHOUT_DCAPE_EFHL.includes(sector)
+				return [level, addNewProducts ? [...filtered, FORECAST_PRODUCT_DCAPE_ID, FORECAST_PRODUCT_EFHL_ID] : filtered]
+			}),
 		),
 	]),
-) as typeof FORECAST_NAM_PRODUCTS_BY_LEVEL
+) as typeof RRFS_BASE_PRODUCTS_BY_LEVEL
 
-export const FORECAST_NAMNST_PRODUCTS_BY_LEVEL = {
+export const FORECAST_RRFS_PRODUCTS_BY_LEVEL = {
+	...RRFS_PRODUCTS_BY_LEVEL_BASE,
+	// NA has its own product list, which excludes DCAPE and EFHL
+	[FORECAST_SECTOR_NORTH_AMERICA_ID]: Object.fromEntries(
+		Object.entries(RRFS_BASE_PRODUCTS_BY_LEVEL.general as Record<string, string[]>).map(([level, products]) => [
+			level,
+			products.filter((product) => product !== FORECAST_PRODUCT_CPREC_ID),
+		]),
+	) as typeof RRFS_BASE_PRODUCTS_BY_LEVEL.general,
+}
+
+const NAMNST_PRODUCTS_BY_LEVEL = {
 	[FORECAST_SECTOR_FLOAT_TWO_ID]: {
 		[FORECAST_LEVEL_700MB_ID]: [FORECAST_PRODUCT_VVEL_ID],
 		[FORECAST_LEVEL_SURFACE_ID]: [
@@ -1282,9 +1303,9 @@ export const FORECAST_NAMNST_PRODUCTS_BY_LEVEL = {
 		],
 	},
 }
-// RRFSHR mirrors the NAMNST products, minus freezing rain
-export const FORECAST_RRFSHR_PRODUCTS_BY_LEVEL = Object.fromEntries(
-	Object.entries(FORECAST_NAMNST_PRODUCTS_BY_LEVEL).map(([sector, levels]) => [
+// RRFS3KM mirrors the former NAMNST products, minus freezing rain
+export const FORECAST_RRFS3KM_PRODUCTS_BY_LEVEL = Object.fromEntries(
+	Object.entries(NAMNST_PRODUCTS_BY_LEVEL).map(([sector, levels]) => [
 		sector,
 		Object.fromEntries(
 			Object.entries(levels as Record<string, string[]>).map(([level, products]) => [
@@ -1293,7 +1314,7 @@ export const FORECAST_RRFSHR_PRODUCTS_BY_LEVEL = Object.fromEntries(
 			]),
 		),
 	]),
-) as typeof FORECAST_NAMNST_PRODUCTS_BY_LEVEL
+) as typeof NAMNST_PRODUCTS_BY_LEVEL
 
 export const FORECAST_RDPS_PRODUCTS_BY_LEVEL = {
 	[FORECAST_SECTOR_NORTHERN_ILLINOIS_ID]: {
