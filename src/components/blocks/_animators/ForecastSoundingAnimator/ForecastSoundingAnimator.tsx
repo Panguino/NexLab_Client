@@ -63,48 +63,66 @@ const ForecastSoundingAnimator: React.FC = () => {
 	const setSoundingTextURL = useRootStore.use.setSoundingTextURL()
 	const closeSlideoutPanel = useRootStore.use.closeSlideoutPanel()
 	const [isLoading, setIsLoading] = useState(false)
+	const [loadError, setLoadError] = useState(false)
 
 	const getData = useCallback(async () => {
 		// Location need special handling as it can accept either station ID or lat,lon format
 		setIsLoading(true)
-		let sanitizedLocationId = locationId
-		if (isStationId) {
-			sanitizedLocationId = await fetchStationCoordinates(locationId)
-		} else if (locationId && locationId.includes(',') && locationId.split(',').length === 2) {
-			const [lat, lon] = locationId.split(',')
-			if (parseFloat(lat) < -90 || parseFloat(lat) > 90 || parseFloat(lon) < -180 || parseFloat(lon) > 180) {
-				sanitizedLocationId = '0,0' // Default to 0,0 if coordinates are invalid
+		setLoadError(false)
+		try {
+			let sanitizedLocationId = locationId
+			if (isStationId) {
+				sanitizedLocationId = await fetchStationCoordinates(locationId)
+			} else if (locationId && locationId.includes(',') && locationId.split(',').length === 2) {
+				const [lat, lon] = locationId.split(',')
+				if (parseFloat(lat) < -90 || parseFloat(lat) > 90 || parseFloat(lon) < -180 || parseFloat(lon) > 180) {
+					sanitizedLocationId = '0,0' // Default to 0,0 if coordinates are invalid
+				}
 			}
+
+			const runs = await getSoundingRuns(modelId)
+
+			if (!runs.runs[runId as string]) {
+				// If this works then this would be where we'd make a more intelligent choice of run
+				// e.g. if runId is properly formatted but not found, we could look for the closest match
+				// ex: I don't have a 19Z but I've got an 18Z
+				const currentRun = Object.keys(runs.runs).at(-1)
+				const baseParmString = `${currentRun}/${modelId}/${sectorId}/${levelId}/${productId}`
+				const soundingParmString = `${validTimeId}/${sanitizedLocationId}/${parcelId}/${weatherId}`
+				router.push(`/weather-data/forecast-models/${baseParmString}/sounding/${soundingParmString}`)
+			}
+			const unixRun = runs.runs[runId as string]?.unix
+			const typeSafeValidTimeId = parseInt(validTimeId as string)
+			const paddedForecastHour = forecastHourFromUnixValidtime(unixRun, typeSafeValidTimeId) // this is kind of a bandaid solution, see get snd fn for details
+			const data = await getSoundingData(
+				modelId,
+				runId,
+				sectorId,
+				levelId,
+				productId,
+				paddedForecastHour,
+				sanitizedLocationId,
+				parcelId,
+				weatherId,
+			)
+			const sanitizedValidTimeId = data.validtimes.indexOf(typeSafeValidTimeId) !== -1 ? typeSafeValidTimeId : data.validtimes[0] // Fallback to first valid time if not found
+			const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, sanitizedValidTimeId)
+
+			setStartFrame(closestValidTimeIndex)
+			setImageInfo(data.imageInfo)
+			setForecastSoundingData(data.frames)
+			setFrameTexts(data.text)
+			setForecastRuns(runs.runs)
+			setFrameValidTimes(data.validtimes)
+			setPlaceholderImage(data.placeholderImage)
+			if (!data.frames?.length) setLoadError(true)
+		} catch (error) {
+			// timeouts (504s or the client abort) land here; a refresh usually succeeds once the image has been generated
+			console.error('ForecastSoundingAnimator: failed to load sounding', error)
+			setLoadError(true)
+		} finally {
+			setIsLoading(false)
 		}
-
-		const runs = await getSoundingRuns(modelId)
-
-		if (!runs.runs[runId as string]) {
-			// If this works then this would be where we'd make a more intelligent choice of run
-			// e.g. if runId is properly formatted but not found, we could look for the closest match
-			// ex: I don't have a 19Z but I've got an 18Z
-			const currentRun = Object.keys(runs.runs).at(-1)
-			const baseParmString = `${currentRun}/${modelId}/${sectorId}/${levelId}/${productId}`
-			const soundingParmString = `${validTimeId}/${sanitizedLocationId}/${parcelId}/${weatherId}`
-			router.push(`/weather-data/forecast-models/${baseParmString}/sounding/${soundingParmString}`)
-		}
-		const unixRun = runs.runs[runId as string]?.unix
-		const typeSafeValidTimeId = parseInt(validTimeId as string)
-		const paddedForecastHour = forecastHourFromUnixValidtime(unixRun, typeSafeValidTimeId) // this is kind of a bandaid solution, see get snd fn for details
-		const data = await getSoundingData(modelId, runId, sectorId, levelId, productId, paddedForecastHour, sanitizedLocationId, parcelId, weatherId)
-		const sanitizedValidTimeId = data.validtimes.indexOf(typeSafeValidTimeId) !== -1 ? typeSafeValidTimeId : data.validtimes[0] // Fallback to first valid time if not found
-		const closestValidTimeIndex = findClosestValidTimeIndex(data.validtimes, sanitizedValidTimeId)
-
-		console.log('ForecastSoundingAnimator: data fetched', data)
-
-		setStartFrame(closestValidTimeIndex)
-		setImageInfo(data.imageInfo)
-		setForecastSoundingData(data.frames)
-		setFrameTexts(data.text)
-		setForecastRuns(runs.runs)
-		setFrameValidTimes(data.validtimes)
-		setPlaceholderImage(data.placeholderImage)
-		setIsLoading(false)
 	}, [
 		runId,
 		modelId,
@@ -156,6 +174,11 @@ const ForecastSoundingAnimator: React.FC = () => {
 		<>
 			{isLoading ? (
 				<LoadingPanel />
+			) : loadError ? (
+				<div className={styles.forecastSoundingError}>
+					<p>The sounding image is unavailable. It may still be generating or failed to generate.</p>
+					<p>Please refresh the page to try again.</p>
+				</div>
 			) : (
 				<>
 					<div className={styles.forecastSoundingAnimatorContainer}>

@@ -117,8 +117,6 @@ export const mobileMenuItems: MenuItemProps[] = [
 	// { id: '83', parentId: '5', title: 'Vertical Wind Profile', url: '/vad-wind-profile', target: LinkTarget.self },
 	{ id: '85', parentId: '6', title: 'HRRR', url: '/hrrr', target: LinkTarget.self },
 	{ id: '86', parentId: '6', title: 'RAP', url: '/rapid-refresh', target: LinkTarget.self },
-	{ id: '87', parentId: '6', title: 'NAM', url: '/nam', target: null },
-	{ id: '88', parentId: '6', title: 'NAMNST', url: '/nam-nst-nest', target: LinkTarget.self },
 	{ id: '89', parentId: '6', title: 'GEM-RDPS', url: '/weather-data/forecast-models/gem-rdps', target: LinkTarget.self },
 	{ id: '90', parentId: '6', title: 'GEM-GDPS', url: '/gem-gpds', target: LinkTarget.self },
 	{ id: '91', parentId: '6', title: 'ECMWF', url: '/ecmwf', target: LinkTarget.self },
