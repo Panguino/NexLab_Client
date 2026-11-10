@@ -61,7 +61,7 @@ const ForecastCompareModelsSidebarPanel = () => {
 		const data = await getCompareModelsData(runId, sectorId, levelId, productId, validTimeId, runFlag)
 		console.log('Comparison Models Data:', data)
 		if (data.frames.length === 0) {
-			const sanitizedModelId = FORECAST_MODELS[modelId as string] || DEFAULT_FORECAST_MODEL
+			const sanitizedModelId = FORECAST_MODELS[modelId as string] ? modelId : DEFAULT_FORECAST_MODEL
 			const sanitizedSectorId = FORECAST_MODELS[sanitizedModelId as string].sectors.includes(sectorId as string)
 				? sectorId
 				: FORECAST_MODELS[sanitizedModelId as string].defaults.sector
@@ -72,7 +72,7 @@ const ForecastCompareModelsSidebarPanel = () => {
 			const productOptions = productsByLevel.find((entry) => entry.level === sanitizedLevelId)?.products || []
 			const defaultProduct = productOptions[0] || null
 			const sanitizedProductId = productOptions.some((opt) => opt === productId) ? productId : defaultProduct
-			const sanitizedValidTimeId = !data.validtimes.includes(validTimeId)
+			const sanitizedValidTimeId = data.validtimes.length && !data.validtimes.includes(validTimeId)
 				? findClosestNumber(Number(validTimeId), data.validtimes)
 				: validTimeId
 			if (

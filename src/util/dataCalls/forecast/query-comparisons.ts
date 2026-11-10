@@ -1,3 +1,4 @@
+import { FORECAST_MODELS } from '../../../data/forecast/models'
 import { getData } from '../dataCall-generic'
 
 export const getCompareHeightData = async (model, run, sector, product, validtime) => {
@@ -55,9 +56,12 @@ export const getCompareModelsData = async (run, sector, level, product, validtim
 	const data = await getData(endpoint)
 	// capture data.warn for more information if needed for debugging
 	if (!data.err) {
+		const frames = (data.models as string[])
+			.map((model, index) => ({ model, frame: data.frames[index] }))
+			.filter(({ model }) => Boolean(FORECAST_MODELS[model]))
 		return {
-			frames: data.frames,
-			models: data.models,
+			frames: frames.map(({ frame }) => frame),
+			models: frames.map(({ model }) => model),
 			validtimes: data.validtimes,
 			imageInfo: data.img,
 		}

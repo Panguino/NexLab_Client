@@ -9,6 +9,7 @@ import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
+import { supportsForecastSounding } from '@/util/forecast/sounding-availability'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -87,6 +88,7 @@ const ForecastAnimator: React.FC = () => {
 	}, [forecastFrameValidTime])
 
 	const onSoundingsClickthrough = ({ xPercent, yPercent }) => {
+		if (!supportsForecastSounding(modelId, runId)) return
 		// console.log('🎯 [ForecastAnimator] onSoundingsClickthrough called')
 		// console.log('  📍 Input percentages:', { xPercent, yPercent })
 		// console.log('  🗺️  Sector:', sectorId)
@@ -156,7 +158,7 @@ const ForecastAnimator: React.FC = () => {
 		label: value.readable,
 	}))
 
-	const soundingsSupported = FORECAST_MODELS[modelId as string]?.allowForecastSounding === true
+	const soundingsSupported = supportsForecastSounding(modelId, runId)
 
 	// Turn off the picker if the selected model doesn't support soundings
 	useEffect(() => {
@@ -211,7 +213,7 @@ const ForecastAnimator: React.FC = () => {
 						lastFrameDwellTime={forecastLastFrameDwellTime * 1000}
 						soundingsPicker={true}
 						soundingsPickerDisabled={!soundingsSupported}
-						soundingsPickerMode={forecastSoundingsPickMode}
+						soundingsPickerMode={forecastSoundingsPickMode && soundingsSupported}
 						setSoundingsPickerMode={setForecastSoundingsPickMode}
 						onSoundingsClickthrough={onSoundingsClickthrough}
 						sectorId={sectorId as string}
