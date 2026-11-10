@@ -3,12 +3,12 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareModelsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
+import { soundingRunFromFrame, supportsForecastSounding } from '@/util/forecast/sounding-availability'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ForecastCompareModelsAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareModelsAnimatorSettings/ForecastCompareModelsAnimatorSettings'
@@ -62,11 +62,8 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 		return forecastModels[currentFrame]
 	}, [forecastModels, currentFrame])
 
-	const soundingsSupported = useMemo(() => {
-		if (!currentActiveModel) return false
-		const modelConfig = FORECAST_MODELS[currentActiveModel]
-		return modelConfig?.allowForecastSounding === true
-	}, [currentActiveModel])
+	const currentActiveRun = soundingRunFromFrame(forecastData[currentFrame], currentActiveModel)
+	const soundingsSupported = supportsForecastSounding(currentActiveModel, currentActiveRun)
 
 	// Handle frame updates to track current active model
 	const handleFrameUpdate = useCallback(
@@ -85,7 +82,7 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 
 			const { xPercent, yPercent } = event
 			const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
-			const baseParams = `/weather-data/forecast-models/${runId}/${currentActiveModel}/${sectorId}/${levelId}/${productId}`
+			const baseParams = `/weather-data/forecast-models/${currentActiveRun}/${currentActiveModel}/${sectorId}/${levelId}/${productId}`
 			const soundingParams = `/sounding/${validTimeId}/${locationId}/ml/severe`
 			const route = `${baseParams}${soundingParams}`
 
@@ -96,7 +93,7 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 
 			router.push(route)
 		},
-		[currentActiveModel, soundingsSupported, sectorId, runId, levelId, productId, validTimeId, router],
+		[currentActiveModel, currentActiveRun, soundingsSupported, sectorId, levelId, productId, validTimeId, router],
 	)
 
 	const getData = useCallback(async () => {
@@ -108,7 +105,7 @@ const ForecastCompareModelsAnimator: React.FC = () => {
 		const initialFrame = Math.max(0, data.models.indexOf(modelId as string))
 		setStartFrame(initialFrame)
 		setCurrentFrame(initialFrame)
-		setForecastModels(data.models || [])
+		setForecastModels(data.models)
 		setImageInfo(data.imageInfo)
 		setForecastData(data.frames)
 	}, [runId, modelId, sectorId, levelId, productId, validTimeId, setForecastData, runFlag, setForecastModels])

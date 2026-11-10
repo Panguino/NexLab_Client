@@ -217,7 +217,7 @@ const ViewControls = ({
 					onClick={() => !soundingsPickerDisabled && setSoundingsPickerMode(!soundingsPickerMode)}
 					className={`${styles.controlButton} ${soundingsPickerDisabled ? styles.disabled : ''}`}
 					disabled={soundingsPickerDisabled}
-					title={soundingsPickerDisabled ? 'Soundings not supported for current model' : 'Toggle sounding picker'}
+					title={soundingsPickerDisabled ? 'Soundings unavailable for this model or run' : 'Toggle sounding picker'}
 				>
 					<WeatherBalloonIcon className={soundingsPickerMode && !soundingsPickerDisabled ? styles.active : ''} />
 				</button>

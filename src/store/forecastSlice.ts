@@ -6,8 +6,8 @@ export interface IForecastSlice {
 	setForecastSoundingsPickMode: (mode: boolean) => void
 	forecastFrameValidTime: number
 	setForecastFrameValidTime: (validTime: number) => void
-	forecastSoundingRunId?: number
-	setForecastSoundingRunId?: (runId: number) => void
+	forecastSoundingRunId: string | null
+	setForecastSoundingRunId: (runId: string) => void
 	forecastZoomState: zoomState | null
 	setForecastZoomState: (zoomState: zoomState) => void
 	resetForecastZoomState: () => void
@@ -50,7 +50,7 @@ export const createForecastSlice: ZustandStateSlice<IForecastSlice> = (set) => (
 	forecastFrameValidTime: 0,
 	setForecastFrameValidTime: (validTime: number) => set(() => ({ forecastFrameValidTime: validTime })),
 	forecastSoundingRunId: null,
-	setForecastSoundingRunId: (runId: number) => set(() => ({ forecastSoundingRunId: runId })),
+	setForecastSoundingRunId: (runId: string) => set(() => ({ forecastSoundingRunId: runId })),
 	forecastZoomState: null,
 	setForecastZoomState: (forecastZoomState) => set(() => ({ forecastZoomState })),
 	resetForecastZoomState: () => set(() => ({ forecastZoomState: null })),

@@ -15,7 +15,6 @@ import {
 	FORECAST_RAP_PRODUCTS_BY_LEVEL,
 	FORECAST_RDPS_PRODUCTS_BY_LEVEL,
 	FORECAST_REFS_PRODUCTS_BY_LEVEL,
-	FORECAST_RRFS3KM_PRODUCTS_BY_LEVEL,
 	FORECAST_RRFS_PRODUCTS_BY_LEVEL,
 } from './products'
 import {
@@ -24,7 +23,6 @@ import {
 	FORECAST_SECTOR_CANADA_ID,
 	FORECAST_SECTOR_CENTRAL_GREAT_PLAINS_ID,
 	FORECAST_SECTOR_DENVER_ID,
-	FORECAST_SECTOR_DUGWAY_ID,
 	FORECAST_SECTOR_FLOAT_ONE_ID,
 	FORECAST_SECTOR_FLOAT_THREE_ID,
 	FORECAST_SECTOR_FLOAT_TWO_ID,
@@ -50,7 +48,6 @@ import {
 const FORECAST_HRRR_ID = 'HRRR'
 const FORECAST_RAP_ID = 'RAP'
 const FORECAST_RRFS_ID = 'RRFS'
-const FORECAST_RRFS3KM_ID = 'RRFS3KM'
 const FORECAST_RDPS_ID = 'RDPS'
 const FORECAST_GDPS_ID = 'GDPS'
 const FORECAST_ECMWF_ID = 'ECMWF'
@@ -70,7 +67,6 @@ const FORECAST_MODEL_ORDER = [
 	FORECAST_HRRR_ID,
 	FORECAST_RAP_ID,
 	FORECAST_RRFS_ID,
-	FORECAST_RRFS3KM_ID,
 	FORECAST_REFS_ID,
 	FORECAST_RDPS_ID,
 	FORECAST_GDPS_ID,
@@ -115,7 +111,7 @@ const FORECAST_MODEL_CONFIGS = {
 		},
 		runsPerRow: 6,
 		validPerRow: 6,
-		allowForecastSounding: false,
+		allowForecastSounding: true,
 	},
 	[FORECAST_RAP_ID]: {
 		name: 'RAP',
@@ -179,36 +175,6 @@ const FORECAST_MODEL_CONFIGS = {
 		validPerRow: 4,
 		allowForecastSounding: true,
 	},
-	[FORECAST_RRFS3KM_ID]: {
-		name: 'RRFS3KM',
-		title: 'Rapid Refresh Forecast System 3km',
-		sectors: [
-			FORECAST_SECTOR_NORTHWEST_ID,
-			FORECAST_SECTOR_SOUTHWEST_ID,
-			FORECAST_SECTOR_SOUTHEAST_ID,
-			FORECAST_SECTOR_NORTHEAST_ID,
-			FORECAST_SECTOR_GREAT_BASIN_ID,
-			FORECAST_SECTOR_MID_ATLANTIC_ID,
-			FORECAST_SECTOR_GREAT_LAKES_ID,
-			FORECAST_SECTOR_MIDWEST_ID,
-			FORECAST_SECTOR_NORTHERN_GREAT_PLAINS_ID,
-			FORECAST_SECTOR_CENTRAL_GREAT_PLAINS_ID,
-			FORECAST_SECTOR_SOUTHERN_GREAT_PLAINS_ID,
-			FORECAST_SECTOR_NORTHERN_ILLINOIS_ID,
-			FORECAST_SECTOR_DUGWAY_ID,
-			FORECAST_SECTOR_FLOAT_ONE_ID,
-			FORECAST_SECTOR_FLOAT_TWO_ID,
-		],
-		products: FORECAST_RRFS3KM_PRODUCTS_BY_LEVEL,
-		defaults: {
-			sector: FORECAST_SECTOR_MIDWEST_ID,
-			level: FORECAST_LEVEL_SURFACE_ID,
-			product: FORECAST_PRODUCT_TEMP_ID,
-		},
-		runsPerRow: 4,
-		validPerRow: 6,
-		allowForecastSounding: true,
-	},
 	[FORECAST_RDPS_ID]: {
 		name: 'RDPS',
 		title: 'Regional Deterministic Prediction System',
@@ -236,7 +202,7 @@ const FORECAST_MODEL_CONFIGS = {
 		},
 		runsPerRow: 4,
 		validPerRow: 6,
-		allowForecastSounding: false,
+		allowForecastSounding: true,
 	},
 	[FORECAST_GDPS_ID]: {
 		name: 'GDPS',
@@ -256,7 +222,7 @@ const FORECAST_MODEL_CONFIGS = {
 		},
 		runsPerRow: 2,
 		validPerRow: 4,
-		allowForecastSounding: false,
+		allowForecastSounding: true,
 	},
 	[FORECAST_ECMWF_ID]: {
 		name: 'ECMWF',
@@ -288,7 +254,7 @@ const FORECAST_MODEL_CONFIGS = {
 		},
 		runsPerRow: 4,
 		validPerRow: 4,
-		allowForecastSounding: false,
+		allowForecastSounding: true,
 	},
 	[FORECAST_GFS_ID]: {
 		name: 'GFS',
@@ -410,7 +376,7 @@ const FORECAST_MODEL_CONFIGS = {
 		},
 		runsPerRow: 4,
 		validPerRow: 4,
-		allowForecastSounding: false,
+		allowForecastSounding: true,
 	},
 	[FORECAST_AIFSENS_ID]: {
 		name: 'AIFSENS',

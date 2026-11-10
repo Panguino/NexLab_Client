@@ -4,6 +4,7 @@ import { Animator } from '@/components/elements/Animator/Animator'
 import { FORECAST_SECTORS } from '@/data/forecast/sectors'
 import { useRootStore } from '@/store/useRootStore'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
+import { supportsForecastSounding } from '@/util/forecast/sounding-availability'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useParams, usePathname, useRouter } from 'next/navigation'
@@ -76,6 +77,8 @@ const SoundingPickerPanel = () => {
 	}, [loc, sectorId, imageInfo])
 
 	const onSoundingsClickthrough = ({ xPercent, yPercent }) => {
+		const effectiveRunId = storeRunId || runId
+		if (!supportsForecastSounding(modelId, effectiveRunId)) return
 		// console.log('🎯 [SoundingPickerPanel] onSoundingsClickthrough called')
 		// console.log('  📍 Input percentages:', { xPercent, yPercent })
 		// console.log('  🗺️  Sector:', sectorId)
@@ -83,7 +86,6 @@ const SoundingPickerPanel = () => {
 		const locationId = getLatLonFromXYandSector(xPercent, yPercent, sectorId as string)
 		// console.log('  📌 Calculated locationId:', locationId)
 
-		const effectiveRunId = storeRunId || runId
 		const effectiveValidTime = storeValidTime || validTimeId
 		const baseParmsString = `${effectiveRunId}/${modelId}/${sectorId}/${levelId}/${productId}`
 		const soundingParmsString = `${effectiveValidTime}/${locationId}/${parcelId}/${weatherId}`

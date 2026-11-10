@@ -11,6 +11,7 @@ import { getCompareHeightData } from '@/util/dataCalls/forecast/query-comparison
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getModelRuns } from '@/util/dataCalls/forecast/query-runs'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
+import { supportsForecastSounding } from '@/util/forecast/sounding-availability'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ForecastCompareHeightAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareHeightAnimatorSettings/ForecastCompareHeightAnimatorSettings'
@@ -63,10 +64,11 @@ const ForecastCompareHeightAnimator: React.FC = () => {
 	const frameDataTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
 	// Determine if the current model supports soundings
-	const soundingsSupported = useMemo(() => {
-		const modelConfig = FORECAST_MODELS[modelId as string]
-		return modelConfig?.allowForecastSounding === true
-	}, [modelId])
+	const soundingsSupported = supportsForecastSounding(modelId, runId)
+
+	useEffect(() => {
+		if (!soundingsSupported) setForecastSoundingsPickMode(false)
+	}, [soundingsSupported, setForecastSoundingsPickMode])
 
 	const getData = useCallback(async () => {
 		console.log('ForecastCompareHeightAnimator: Fetching data', modelId, runId, sectorId, productId, validTimeId)

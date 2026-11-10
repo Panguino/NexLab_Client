@@ -3,12 +3,12 @@
 import { Animator } from '@/components/elements/Animator/Animator'
 import AnimatorSettings from '@/components/elements/AnimatorSettings/AnimatorSettings'
 import MobileIconNav from '@/components/layout/MobileIconNav/MobileIconNav'
-import { FORECAST_MODELS } from '@/data/forecast/models'
 import { useZoomFillHydration } from '@/hooks/useZoomFillHydration'
 import { useRootStore } from '@/store/useRootStore'
 import { getCompareRunsData } from '@/util/dataCalls/forecast/query-comparisons'
 import { getFrameReadoutData } from '@/util/dataCalls/forecast/query-readout'
 import { getLatLonFromXYandSector } from '@/util/forecast/common-functions'
+import { supportsForecastSounding } from '@/util/forecast/sounding-availability'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ForecastCompareRunsAnimatorSettings from '../../_animatorSettingPanels/ForecastCompareRunsAnimatorSettings/ForecastCompareRunsAnimatorSettings'
@@ -54,12 +54,6 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 	const [frameReadoutData, setFrameReadoutData] = useState<any>(null)
 	const [isLoadingReadoutData, setIsLoadingReadoutData] = useState<boolean>(false)
 	const frameDataTimeoutRef = useRef<NodeJS.Timeout | null>(null)
-
-	// Determine if the current model supports soundings
-	const soundingsSupported = useMemo(() => {
-		const modelConfig = FORECAST_MODELS[modelId as string]
-		return modelConfig?.allowForecastSounding === true
-	}, [modelId])
 
 	const getData = useCallback(async () => {
 		console.log('ForecastCompareRunsAnimator: Fetching data', modelId, sectorId, levelId, productId, validTimeId)
@@ -107,6 +101,11 @@ const ForecastCompareRunsAnimator: React.FC = () => {
 		if (!forecastRuns.length || currentFrame >= forecastRuns.length) return null
 		return forecastRuns[currentFrame]
 	}, [forecastRuns, currentFrame])
+
+	const soundingsSupported = supportsForecastSounding(modelId, currentActiveRun)
+	useEffect(() => {
+		if (!soundingsSupported) setForecastSoundingsPickMode(false)
+	}, [soundingsSupported, setForecastSoundingsPickMode])
 
 	// Handle frame updates to track current active run
 	const handleFrameUpdate = useCallback((frameIndex: number) => {

@@ -16,7 +16,9 @@ import {
 } from '@/data/forecast/soundingOptions'
 import { useRootStore } from '@/store/useRootStore'
 import { getForecastData } from '@/util/dataCalls/forecast/query-forecast'
+import { getSoundingRuns } from '@/util/dataCalls/forecast/query-sounding'
 import { buildProductsByLevel, fetchStationCoordinates } from '@/util/forecast/common-functions'
+import { supportsForecastSounding } from '@/util/forecast/sounding-availability'
 import { findClosestValidTimeIndex } from '@/util/getClosestValidtime'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
@@ -100,6 +102,8 @@ const ForecastSoundingsSidebarPanel = () => {
 	const openSlideoutPanel = useRootStore.use.openSlideoutPanel()
 
 	const [allowGenerateSounding, setAllowGenerateSounding] = useState(false)
+	const [generateError, setGenerateError] = useState('')
+	const [generating, setGenerating] = useState(false)
 	const [returnLink, setReturnLink] = useState('')
 	const [returnText, setReturnText] = useState('Return to Forecast Models')
 	const forecastSoundingRunId = useRootStore.use.forecastSoundingRunId() // this version from the store helps to keep the sidebar in sync with the animator
@@ -257,7 +261,7 @@ const ForecastSoundingsSidebarPanel = () => {
 			setAllowGenerateSounding(true)
 		}
 	}
-	const handleGenerateSounding = () => {
+	const handleGenerateSounding = async () => {
 		if (
 			allowGenerateSounding &&
 			(internalModelId !== modelId ||
@@ -267,9 +271,26 @@ const ForecastSoundingsSidebarPanel = () => {
 				internalParcelId !== parcelId ||
 				internalWeatherId !== weatherId)
 		) {
-			const baseParmsString = `${forecastSoundingRunId}/${internalModelId}/${sectorId}/${levelId}/${productId}`
-			const soundingParmsString = `${forecastSoundingValidTime}/${internalLocationId}/${internalParcelId}/${internalWeatherId}`
-			router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
+			setGenerateError('')
+			setGenerating(true)
+			try {
+				const selectedRun = forecastSoundingRunId || runId
+				const runs = await getSoundingRuns(internalModelId)
+				if (runs.error) throw new Error(`Could not load model runs: ${runs.error}`)
+				const availableRuns = Object.keys(runs.runs)
+					.filter((run) => supportsForecastSounding(internalModelId, run))
+					.sort()
+				const soundingRun = typeof selectedRun === 'string' && availableRuns.includes(selectedRun) ? selectedRun : availableRuns.at(-1)
+				if (!soundingRun) throw new Error('No supported sounding runs are available for this model.')
+				const baseParmsString = `${soundingRun}/${internalModelId}/${sectorId}/${levelId}/${productId}`
+				const soundingParmsString = `${forecastSoundingValidTime || validTimeId}/${internalLocationId}/${internalParcelId}/${internalWeatherId}`
+				router.push(`/weather-data/forecast-models/${baseParmsString}/sounding/${soundingParmsString}`)
+			} catch (error) {
+				console.error('Failed to select a forecast sounding run:', error)
+				setGenerateError('Unable to find an available sounding run. Please try again.')
+			} finally {
+				setGenerating(false)
+			}
 		} else {
 			alert(
 				'Current parameters match existing sounding.\n\nChange any of the following:\nModel, Run, Location, Valid Time, Parcel Type, or Weather Type.',
@@ -300,7 +321,13 @@ const ForecastSoundingsSidebarPanel = () => {
 							title="Pick on map"
 							onClick={async () => {
 								try {
-									const data = await getForecastData(modelId, runId, sectorId, levelId, productId)
+									const selectedRun = forecastSoundingRunId || runId
+									if (!supportsForecastSounding(modelId, selectedRun)) {
+										setGenerateError('Select a supported sounding run before picking a location.')
+										return
+									}
+									setGenerateError('')
+									const data = await getForecastData(modelId, selectedRun, sectorId, levelId, productId)
 									const currentVT = forecastSoundingValidTime || data.validtimes[data.validtimes.length - 1]
 									const index = findClosestValidTimeIndex(data.validtimes, currentVT)
 									setSoundingPickerFrames([data.frames[index]])
@@ -334,7 +361,9 @@ const ForecastSoundingsSidebarPanel = () => {
 						}))}
 						onChange={handleWeatherChange}
 					/>
-					<Button label="Generate Sounding" disabled={!allowGenerateSounding} onClick={handleGenerateSounding} />
+					<Button label="Generate Sounding" disabled={!allowGenerateSounding || generating} onClick={handleGenerateSounding} />
+					<p>If the selected run is unavailable for the chosen model, its latest supported run will be used.</p>
+					{generateError && <p role="alert">{generateError}</p>}
 					{soundingTextURL && (
 						<button className={styles.viewSoundingTextButton} onClick={() => openSlideoutPanel(SOUNDING_TEXT_SLIDEOUT)}>
 							<span className={styles.soundingTextLabel}>View Sounding Text</span>
